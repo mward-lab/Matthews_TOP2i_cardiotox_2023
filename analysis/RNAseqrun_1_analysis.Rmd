@@ -10,10 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+Hello!   I am first loading all the beautiful libraryies I will need.
 
 
-
-```{r library loading, warning=FALSE, echo=FALSE, message=FALSE}
+```{r library loading, warning=FALSE, echo=TRUE, message=FALSE}
 
 library(Biobase)
 library(edgeR)
@@ -37,7 +37,7 @@ library(cowplot)
 
 
 
-
+Now to load in the data.  Note:  this first bit uses files from my actual computer.  I will change this in the future.
 
 
 
@@ -127,7 +127,7 @@ table(rowSums(mymatrix$counts==0)==72)
 keep <- filterByExpr.DGEList(mymatrix, group = group)
 filter_test <- mymatrix[keep, , keep.lib.sizes=FALSE]
 dim(filter_test)
-##this gives me 14448 genes left using a minimum of 10 read counts in a 
+##this gives me 14448 genes left using a minimum of 10 read counts in each set
 # minimum number of samples (I think this is 2)
 
 ##another way to filter using subset
@@ -135,23 +135,14 @@ filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
 dim(lcpm)
 dim(filcpm_matrix)
 
-####another wayt to do it
+####another way to do it but this keeps the matrix DGElist set up
 
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 ###14823 genes left##
 
-### and yet another filter method
 
 
-
-condition <- row_means > 0
-keep <- filterByExpr(mymatrix, condition)
-filt_matrix <- mymatrix[keep, , keep.lib.sizes=FALSE]
-dim(filt_matrix)
-
-## now I have 16
-lcpm <- cpm(mymatrix, log=TRUE)
 
 ```
 
@@ -180,7 +171,7 @@ print(oranges[setdiff(oranges$ENTREZID, filter_test$genes$ENTREZID)])
 # x <- calcNormFactors(lcpm, method = "TMM")
 x$samples$norm.factors
 x$samples  ###checking to make sure all is well
-
+```
 
 ###this is the pretty filtered boxplot set up###
 bpcounts <- boxplot(filcpm, yaxt="n", xaxt="n",)

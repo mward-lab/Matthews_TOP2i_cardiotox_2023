@@ -10,4 +10,4 @@ editor_options:
 
 Welcome to my research website.  This is my first attempt at using workflowr.   I hope this works!
 
-Click on this [link](first-analysis.html) to see my results.
+Click on this [link](RNAseqrun_1_analysis.html) to see my results.
