@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-```{r library loading, warning=FALSE, echo=FALSE}
+```{r library loading, warning=FALSE, echo=FALSE, message=FALSE}
 
 library(Biobase)
 library(edgeR)
@@ -67,7 +67,7 @@ mymatrix$samples$time <- time
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
 mymatrix$samples$indv <- indv
 
-
+group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
 drug <- c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone", "Trastuzumab", "Vehicle")
 drug <- rep(drug,12)
 RINsamplelist <- read.csv("~/Ward Lab/Cardiotoxicity/Data/sequencing things/RINsamplelist.csv")
@@ -79,7 +79,7 @@ mymatrix$samples$drug <- drug
  
  ###annotation/design file can be made with the things above!
  
- anno <- cbind(samplenames, indv, drug, time, RIN)
+ anno <- cbind(samplenames, indv, drug, time, RIN, group)
  
 ```
  
@@ -96,7 +96,7 @@ mymatrix$samples$drug <- drug
   keytype="ENTREZID")
  genes <- genes[!duplicated(genes$ENTREZID),]
  ###using biomart to pull info following the vignette
- ensembl <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
+ #ensembl <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
  
 ### following limma  I will add names of genes to mymatrix
 mymatrix$genes <- genes
@@ -121,27 +121,63 @@ c(L, M)
 
 
 table(rowSums(mymatrix$counts==0)==72)
-###filtering here would leave 24931 genes and remove 3464
+###filtering here would leave 24931 genes and remove 3464,  That is too many!
 
 ###if I use the filter by expression
-keep <- filterByExpr.DGEList(mymatrix)
+keep <- filterByExpr.DGEList(mymatrix, group = group)
 filter_test <- mymatrix[keep, , keep.lib.sizes=FALSE]
 dim(filter_test)
-##3 is gives me 14448 genes left
-##another filtered subset
-filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
+##this gives me 14448 genes left using a minimum of 10 read counts in a 
+# minimum number of samples (I think this is 2)
 
+##another way to filter using subset
+filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
+dim(lcpm)
 dim(filcpm_matrix)
+
+####another wayt to do it
+
+row_means <- rowMeans(lcpm)
+x <- mymatrix[row_means > 0,]
 ###14823 genes left##
-hist(filcpm_matrix)
-hist(cpm(filter_test$counts))
+
+### and yet another filter method
+
+
+
+condition <- row_means > 0
+keep <- filterByExpr(mymatrix, condition)
+filt_matrix <- mymatrix[keep, , keep.lib.sizes=FALSE]
+dim(filt_matrix)
+
+## now I have 16
+lcpm <- cpm(mymatrix, log=TRUE)
+
+```
+
+
+```{r testing if they are the same}
+###
+hist(cpm(filt_matrix, log = TRUE))
+hist(cpm(filter_test$counts, log = TRUE))
 hist(cpm(mymatrix, log = TRUE))
+##to test which genes are not in one or the other set)
+apples <- rownames(filcpm_matrix)
+oranges <- filt_matrix$genes
+
+match(oranges$ENTREZID,apples)
+not_matching_indices <- which(!(apples %in% filt_matrix$genes))
+
+print(apples[not_matching_indices])
+
+print(oranges[setdiff(oranges$ENTREZID, filter_test$genes$ENTREZID)])
+
 ```
 
 
 
 ```{r calculations, echo= FALSE}
-x <- calcNormFactors(lcpm, method = "TMM")
+# x <- calcNormFactors(lcpm, method = "TMM")
 x$samples$norm.factors
 x$samples  ###checking to make sure all is well
 
