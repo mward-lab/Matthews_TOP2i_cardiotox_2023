@@ -95,12 +95,12 @@ plot_versus_pc <- function(df, pc_num, fac) {
 
 
 ```{r file loading, eval=TRUE, include=FALSE}
-
+design <- read.csv("../data/data_outline.txt", row.names = 1)
+mymatrix <- readRDS('../data/mymatrix.RDS')
 samplenames <- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
 
 #counts_file <- read.csv("../data/RUN_1_counts.txt", row.names=1)
-#design <- read.csv("../data/data_outline.txt", row.names = 1)
-#mymatrix <- readRDS('../data/mymatrix.RDS')
+
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
 design$time <- ordered(time, levels =c("3h", "24h"))
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
