@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-Hello!   I am first loading all the beautiful libraryies I will need.
+Hello!   I am first loading all the beautiful libraries I will need.
 
 
 ```{r library loading, warning=FALSE, echo=TRUE, message=FALSE}
@@ -34,43 +34,82 @@ library(Homo.sapiens)
 library(cowplot)
 
 ```
+```{r ggplot-theme-and-functions}
+theme_set(theme_bw(base_size = 16))
+
+pca_plot <- function(df, col_var = NULL, shape_var = NULL, title = "") {
+  ggplot(df) + geom_point(aes_string(x = "PC1", y = "PC2", color = col_var,
+                                     shape = shape_var), size = 5) +
+    labs(title = title, x = "PC1", y = "PC2")
+}
+
+pca_var_plot <- function(pca) {
+  # x: class == prcomp
+  pca.var <- pca$sdev^2
+  pca.prop <- pca.var / sum(pca.var)
+  var.plot <- qplot(PC, prop, data = data.frame(PC = 1:length(pca.prop),
+                                                prop = pca.prop)) +
+    labs(title = 'Variance contributed by each PC',
+         x = 'PC', y = 'Proportion of variance')
+}
+
+calc_pca <- function(x) {
+  # Performs principal components analysis with prcomp
+  # x: a sample-by-gene numeric matrix
+  prcomp(x, scale. = TRUE, retx = TRUE)
+}
+
+get_regr_pval <- function(mod) {
+  # Returns the p-value for the Fstatistic of a linear model
+  # mod: class lm
+  stopifnot(class(mod) == "lm")
+  fstat <- summary(mod)$fstatistic
+  pval <- 1 - pf(fstat[1], fstat[2], fstat[3])
+  return(pval)
+}
+
+plot_versus_pc <- function(df, pc_num, fac) {
+  # df: data.frame
+  # pc_num: numeric, specific PC for plotting
+  # fac: column name of df for plotting against PC
+  pc_char <- paste0("PC", pc_num)
+  # Calculate F-statistic p-value for linear model
+  pval <- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
+  if (is.numeric(df[, f])) {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
+      geom_smooth(method = "lm") + labs(title = sprintf("p-val: %.2f", pval))
+  } else {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
+      labs(title = sprintf("p-val: %.2f", pval))
+  }
+}
+```
 
 
-
-Now to load in the data.  Note:  this first bit uses files from my actual computer.  I will change this in the future.
+Now to load in the data.  This part 'should' be easy, right?
 
 
 
 ```{r file loading, echo=TRUE, }
-### concatenate all the files for readDGE  
-myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
-###use reaDGE to concatenate txt files together)   You can rename soon###
-
-mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
-
-dim(mymatrix)
-head(mymatrix)
-###I might change later to individual names too)
-samplenames <- substring(colnames(mymatrix), 0, 15)
-##this pulls the column names from the matrix and clips charc 0-15 to rename)
 
 
-colnames(mymatrix) <- samplenames
-samplenames
-### adding dimensions
-time <- (rep(c("3h", "24h"), c(6,6)))
-time <- rep(time,6)
-time <- ordered(time, levels =c("3h", "24h"))
-mymatrix$samples$time <- time
+counts_file <- read.csv("../data/RUN_1_counts.txt", row.names=1)
+lib.size
+design <- read.csv("../data/data_outline.txt", row.names = 1)
+### adding data annotations
+
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
+design$time <- ordered(time, levels =c("3h", "24h"))
+# mymatrix$samples$time <- time
 
 
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
-mymatrix$samples$indv <- indv
+# mymatrix$samples$indv <- indv
 
 group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
-drug <- c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone", "Trastuzumab", "Vehicle")
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone", "Trastuzumab", "Vehicle"),12)
 drug <- rep(drug,12)
-RINsamplelist <- read.csv("~/Ward Lab/Cardiotoxicity/Data/sequencing things/RINsamplelist.csv")
+)
 RIN <- RINsamplelist$RIN
 mymatrix$samples$RIN <- RINsamplelist$RIN ### adding the RIN too
 mymatrix$samples$drug <- drug
