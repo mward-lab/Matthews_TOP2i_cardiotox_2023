@@ -10,10 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-Hello!   I am first loading all the beautiful libraries I will need.
 
 
-```{r library loading, warning=FALSE, echo=TRUE, message=FALSE}
+
+```{r library loading, warning=FALSE, echo=FALSE}
 
 library(Biobase)
 library(edgeR)
@@ -37,115 +37,68 @@ library(cowplot)
 
 
 
-The next step is to load all the data I will be using.  Currently, I am not posting the raw data, but I will release in the future.
-
-```{r ggplot-theme-and-functions}
-theme_set(theme_bw(base_size = 16))
-
-pca_plot <- function(df, col_var = NULL, shape_var = NULL, title = "") {
-  ggplot(df) + geom_point(aes_string(x = "PC1", y = "PC2", color = col_var,
-                                     shape = shape_var), size = 5) +
-    labs(title = title, x = "PC1", y = "PC2")
-}
-
-pca_var_plot <- function(pca) {
-  # x: class == prcomp
-  pca.var <- pca$sdev^2
-  pca.prop <- pca.var / sum(pca.var)
-  var.plot <- qplot(PC, prop, data = data.frame(PC = 1:length(pca.prop),
-                                                prop = pca.prop)) +
-    labs(title = 'Variance contributed by each PC',
-         x = 'PC', y = 'Proportion of variance')
-}
-
-calc_pca <- function(x) {
-  # Performs principal components analysis with prcomp
-  # x: a sample-by-gene numeric matrix
-  prcomp(x, scale. = TRUE, retx = TRUE)
-}
-
-get_regr_pval <- function(mod) {
-  # Returns the p-value for the Fstatistic of a linear model
-  # mod: class lm
-  stopifnot(class(mod) == "lm")
-  fstat <- summary(mod)$fstatistic
-  pval <- 1 - pf(fstat[1], fstat[2], fstat[3])
-  return(pval)
-}
-
-plot_versus_pc <- function(df, pc_num, fac) {
-  # df: data.frame
-  # pc_num: numeric, specific PC for plotting
-  # fac: column name of df for plotting against PC
-  pc_char <- paste0("PC", pc_num)
-  # Calculate F-statistic p-value for linear model
-  pval <- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
-  if (is.numeric(df[, f])) {
-    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
-      geom_smooth(method = "lm") + labs(title = sprintf("p-val: %.2f", pval))
-  } else {
-    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
-      labs(title = sprintf("p-val: %.2f", pval))
-  }
-}
-```
 
 
 
 
+```{r file loading, echo=TRUE, }
+### concatenate all the files for readDGE  
+myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
+###use reaDGE to concatenate txt files together)   You can rename soon###
 
-```{r file loading, eval=TRUE, include=FALSE}
+mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
 
-samplenames <- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
+dim(mymatrix)
+head(mymatrix)
+###I might change later to individual names too)
+samplenames <- substring(colnames(mymatrix), 0, 15)
+##this pulls the column names from the matrix and clips charc 0-15 to rename)
 
-#counts_file <- read.csv("../data/RUN_1_counts.txt", row.names=1)
-#design <- read.csv("../data/data_outline.txt", row.names = 1)
-#mymatrix <- readRDS('../data/mymatrix.RDS')
-time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
-design$time <- ordered(time, levels =c("3h", "24h"))
-indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
-group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
-drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone", "Trastuzumab", "Vehicle"),12)
-drug <- rep(drug,12)
-RIN <- design$RIN
+
+colnames(mymatrix) <- samplenames
 samplenames
+### adding dimensions
+time <- (rep(c("3h", "24h"), c(6,6)))
+time <- rep(time,6)
+time <- ordered(time, levels =c("3h", "24h"))
+mymatrix$samples$time <- time
+
+
+indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
+mymatrix$samples$indv <- indv
+
+
+drug <- c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone", "Trastuzumab", "Vehicle")
+drug <- rep(drug,12)
+
+
+mymatrix$samples$RIN <- RINsamplelist$RIN ### adding the RIN too
+mymatrix$samples$drug <- drug
  summary (mymatrix)
  summary(mymatrix$samples)
  
  ###annotation/design file can be made with the things above!
  
-anno <- cbind(samplenames, indv, drug, time, RIN, group)
+ anno <- cbind(samplenames, indv, drug, time, RIN)
  
 ```
  
  
- 
-```{r  current data import, echo =FALSE}
 
-myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
-
-
-mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
-
-
-
-```
- 
-
- This is how I retrieved the gene symbols.
- 
 
 ```{r gene id infromation}
  
  
  ###now we add genenames to the geneid###
  
- geneid <- rownames(mymatrix) ### pulls the names we have in the counts file
+ geneid <- rownames(mymatrix) ### pulls the names we have
  genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
   keytype="ENTREZID")
  genes <- genes[!duplicated(genes$ENTREZID),]
+ ###using biomart to pull info following the vignette
+ ensembl <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
  
-
+### following limma  I will add names of genes to mymatrix
 mymatrix$genes <- genes
 
 mymatrix
@@ -157,78 +110,43 @@ mymatrix
 
 ##okay, now to transform data
 
-
-Filtering the genes that are lowly expressed using several methods.  
-
-First method, removing only those rows with zero counts across all samples.
-
-```{r first filter method}
-
-table(rowSums(mymatrix$counts==0)==72)
-```
-
-This filtering would leave 24931 genes and remove 3464,  That is too many leftover genes!  
-
-So now to try something a little more stringent using the built in function from the edgeR package.
-
-```{r second filter method}
-
-
-keep <- filterByExpr.DGEList(mymatrix, group = group)
-filter_test <- mymatrix[keep, , keep.lib.sizes=FALSE]
-dim(filter_test)
-
-```
-
-This method effectively uses a cutoff off that leaves 14448 genes.  The cutoff is determined by keeping genes that have a count-per-million (CPM) above 10, (the default minimum set) in 6 samples.  A set is determined using the design matrix.  For my design, I grouped my 72 samples into sets of 6, one set includes each individual + a specific treatment + a specific time. 
-
-The standard in our lab is to start by using the rowMeans >0 cutoff on the log10 of cpm.  
-```{r third filter method}
+```{r working on the filtering}
 cpm <- cpm(mymatrix)
 lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
-dim(lcpm)
+
 L <- mean(mymatrix$samples$lib.size) * 1e-6
 M <- median(mymatrix$samples$lib.size) * 1e-6
 c(L, M)
+####Filtering the genes that are lowly expressed using rowMeans>0
 
+
+table(rowSums(mymatrix$counts==0)==72)
+###filtering here would leave 24931 genes and remove 3464
+#### to reset plots back to one perscreen, par(mfrow=c(1, 1))####
+
+
+x <- mymatrix[rowMeans>0,]
+dim(x)
+###this leaves 14448 genes out of  28395
+
+##another filtered subset
 filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
 
 dim(filcpm_matrix)
-##method 2 with rowMeans
-row_means <- rowMeans(lcpm)
-x <- mymatrix[row_means > 0,]
-dim(x)
-```
-Both of the rowMeans methods leave 14823 genes left, however, the second method keeps the DGEList format of the data, which I prefer at this time.
-
-```{r plots of before and after filter, echo=FALSE, warning=FALSE}
-###
-hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
-     xlab =expression("Log"[10]*" counts-per-million"), col =4 )
-hist(cpm(filter_test$counts, log = TRUE), 
-     main = "Histogram of filtered counts using filterByExpr method", 
-     xlab =expression("Log"[10]*" counts-per-million"), 
-     col = 5 )
-hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMeans > 0 method", 
-     xlab =expression("Log"[10]*" counts-per-million"), col =2 ) 
-
-```
-
-
-```
+###14823 genes left##
+hist(filcpm)
 
 
 
-```{r calculations, echo= FALSE}
-# x <- calcNormFactors(lcpm, method = "TMM")
+
+
+x <- calcNormFactors(x, method = "TMM")
 x$samples$norm.factors
 x$samples  ###checking to make sure all is well
-```
 
 
-```{r}
 ###this is the pretty filtered boxplot set up###
-bpcounts <- boxplot(filcpm_matrix, yaxt="n", xaxt="n",)
+bpcounts <- boxplot(filcpm, yaxt="n", xaxt="n",)
 tick <- seq_along(bpcounts$names)
 axis(1, at =tick, labels = FALSE)
 axis(side=2, las=2,mgp = c(3,2,1))
@@ -237,16 +155,11 @@ title("Boxplot of filtered Log-cpm counts")
 plot.new()
 
 
+hist(x=lcpm, main = "Histogram of Total counts (unfiltered)", xlab = "counts", col =4 )
+hist(x=filcpm, main = "Histogram of Total (filtered)", xlab = "counts", col =2 )
 
 boxplot(lcpm, main = "Boxplots of log cpm per sample")
 boxplot(filcpm, main ="boxplots of log cpm per sample filtered")
-```
-
-
-
-
-
-
 
 library(cowplot)
 
