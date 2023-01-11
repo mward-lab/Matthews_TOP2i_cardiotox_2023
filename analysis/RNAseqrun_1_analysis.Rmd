@@ -34,6 +34,11 @@ library(Homo.sapiens)
 library(cowplot)
 
 ```
+
+
+
+The next step is to load all the data I will be using.  Currently, I am not posting the raw data, but I will release in the future.
+
 ```{r ggplot-theme-and-functions}
 theme_set(theme_bw(base_size = 16))
 
@@ -86,33 +91,23 @@ plot_versus_pc <- function(df, pc_num, fac) {
 ```
 
 
-Now to load in the data.  This part 'should' be easy, right?
 
 
 
-```{r file loading, echo=TRUE, }
+```{r file loading, eval=FALSE, include=FALSE}
 
 
 counts_file <- read.csv("../data/RUN_1_counts.txt", row.names=1)
-lib.size
 design <- read.csv("../data/data_outline.txt", row.names = 1)
-### adding data annotations
-
+mymatrix <- readRDS('../data/mymatrix.RDS')
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
 design$time <- ordered(time, levels =c("3h", "24h"))
-# mymatrix$samples$time <- time
-
-
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
-# mymatrix$samples$indv <- indv
-
 group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
 drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone", "Trastuzumab", "Vehicle"),12)
 drug <- rep(drug,12)
-)
-RIN <- RINsamplelist$RIN
-mymatrix$samples$RIN <- RINsamplelist$RIN ### adding the RIN too
-mymatrix$samples$drug <- drug
+RIN <- design$RIN
+
  summary (mymatrix)
  summary(mymatrix$samples)
  
@@ -123,7 +118,21 @@ mymatrix$samples$drug <- drug
 ```
  
  
+ 
+```{r  current data import, echo =FALSE}
 
+myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
+
+
+mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
+
+
+
+```
+ 
+
+ This is how I retrieved the gene symbols.
+ 
 
 ```{r gene id infromation}
  
