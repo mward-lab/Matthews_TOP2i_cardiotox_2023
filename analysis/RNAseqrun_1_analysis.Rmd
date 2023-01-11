@@ -113,7 +113,7 @@ RIN <- design$RIN
  
  ###annotation/design file can be made with the things above!
  
- anno <- cbind(samplenames, indv, drug, time, RIN, group)
+anno <- cbind(samplenames, indv, drug, time, RIN, group)
  
 ```
  
@@ -139,14 +139,12 @@ mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/coun
  
  ###now we add genenames to the geneid###
  
- geneid <- rownames(mymatrix) ### pulls the names we have
+ geneid <- rownames(mymatrix) ### pulls the names we have in the counts file
  genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
   keytype="ENTREZID")
  genes <- genes[!duplicated(genes$ENTREZID),]
- ###using biomart to pull info following the vignette
- #ensembl <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
  
-### following limma  I will add names of genes to mymatrix
+
 mymatrix$genes <- genes
 
 mymatrix
@@ -158,58 +156,63 @@ mymatrix
 
 ##okay, now to transform data
 
-```{r working on the filtering}
-cpm <- cpm(mymatrix)
-lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
 
-L <- mean(mymatrix$samples$lib.size) * 1e-6
-M <- median(mymatrix$samples$lib.size) * 1e-6
-c(L, M)
-####Filtering the genes that are lowly expressed using rowMeans>0
+Filtering the genes that are lowly expressed using several methods.  
 
+First method, removing only those rows with zero counts across all samples.
+
+```{r first filter method}
 
 table(rowSums(mymatrix$counts==0)==72)
-###filtering here would leave 24931 genes and remove 3464,  That is too many!
+```
 
-###if I use the filter by expression
+This filtering would leave 24931 genes and remove 3464,  That is too many leftover genes!  
+
+So now to try something a little more stringent using the built in function from the edgeR package.
+
+```{r second filter method}
+
+
 keep <- filterByExpr.DGEList(mymatrix, group = group)
 filter_test <- mymatrix[keep, , keep.lib.sizes=FALSE]
 dim(filter_test)
-##this gives me 14448 genes left using a minimum of 10 read counts in each set
-# minimum number of samples (I think this is 2)
-
-##another way to filter using subset
-filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
-dim(lcpm)
-dim(filcpm_matrix)
-
-####another way to do it but this keeps the matrix DGElist set up
-
-row_means <- rowMeans(lcpm)
-x <- mymatrix[row_means > 0,]
-###14823 genes left##
-
-
-
 
 ```
 
+This method effectively uses a cutoff off that leaves 14448 genes.  The cutoff is determined by keeping genes that have a count-per-million (CPM) above 10, (the default minimum set) in 6 samples.  A set is determined using the design matrix.  For my design, I grouped my 72 samples into sets of 6, one set includes each individual + a specific treatment + a specific time. 
 
-```{r testing if they are the same}
+The standard in our lab is to start by using the rowMeans >0 cutoff on the log10 of cpm.  
+```{r third filter method}
+cpm <- cpm(mymatrix)
+lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
+dim(lcpm)
+L <- mean(mymatrix$samples$lib.size) * 1e-6
+M <- median(mymatrix$samples$lib.size) * 1e-6
+c(L, M)
+
+filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
+
+dim(filcpm_matrix)
+##method 2 with rowMeans
+row_means <- rowMeans(lcpm)
+x <- mymatrix[row_means > 0,]
+dim(x)
+```
+Both of the rowMeans methods leave 14823 genes left, however, the second method keeps the DGEList format of the data, which I prefer at this time.
+
+```{r plots of before and after filter, echo=FALSE, warning=FALSE}
 ###
-hist(cpm(filt_matrix, log = TRUE))
-hist(cpm(filter_test$counts, log = TRUE))
-hist(cpm(mymatrix, log = TRUE))
-##to test which genes are not in one or the other set)
-apples <- rownames(filcpm_matrix)
-oranges <- filt_matrix$genes
+hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
+     xlab =expression("Log"[10]*" counts-per-million"), col =4 )
+hist(cpm(filter_test$counts, log = TRUE), 
+     main = "Histogram of filtered counts using filterByExpr method", 
+     xlab =expression("Log"[10]*" counts-per-million"), 
+     col = 5 )
+hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMeans > 0 method", 
+     xlab =expression("Log"[10]*" counts-per-million"), col =2 ) 
 
-match(oranges$ENTREZID,apples)
-not_matching_indices <- which(!(apples %in% filt_matrix$genes))
+```
 
-print(apples[not_matching_indices])
-
-print(oranges[setdiff(oranges$ENTREZID, filter_test$genes$ENTREZID)])
 
 ```
 
@@ -221,8 +224,10 @@ x$samples$norm.factors
 x$samples  ###checking to make sure all is well
 ```
 
+
+```{r}
 ###this is the pretty filtered boxplot set up###
-bpcounts <- boxplot(filcpm, yaxt="n", xaxt="n",)
+bpcounts <- boxplot(filcpm_matrix, yaxt="n", xaxt="n",)
 tick <- seq_along(bpcounts$names)
 axis(1, at =tick, labels = FALSE)
 axis(side=2, las=2,mgp = c(3,2,1))
@@ -231,11 +236,16 @@ title("Boxplot of filtered Log-cpm counts")
 plot.new()
 
 
-hist(x=lcpm, main = "Histogram of Total counts (unfiltered)", xlab = "counts", col =4 )
-hist(x=filcpm, main = "Histogram of Total (filtered)", xlab = "counts", col =2 )
 
 boxplot(lcpm, main = "Boxplots of log cpm per sample")
 boxplot(filcpm, main ="boxplots of log cpm per sample filtered")
+```
+
+
+
+
+
+
 
 library(cowplot)
 
