@@ -105,24 +105,29 @@ mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/coun
 
 
 ```
+
+
 ```{r setting up the files used, warning=FALSE}
 #samplenames <- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
 
-#counts_file <- read.csv("../data/RUN_1_counts.txt", row.names=1)
 
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
 time <- ordered(time, levels =c("3h", "24h"))
-indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
+mymatrix$samples$time <- time
+indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) 
+mymatrix$samples$indv <- indv
 group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
+
 drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
-drug <- rep(drug,12)
+
+mymatrix$samples$drug <- drug
 RIN <- c(9.3,9.8,  9.8, 10.0,  9.6,  9.9,  7.8,  8.7,  8.6,  9.1,  9.4,  9.3,  9.4,  9.6,  9.9,  9.4,  9.9,  9.8,9.5,  9.9,  9.6,  9.9,  8.8,  9.5,  9.3, 10.0,  9.3,  9.6,  9.7,  9.4,  8.9,  7.5,  8.6,  8.5,  8.6,  9.3,9.6,  9.6,  9.4,  9.7,  9.9, 10.0,  9.4,  9.6,  9.4,  9.5,  9.8,  9.5,  9.6,  9.7,  9.6,  9.9,  9.6, 10.0,8.3, 8.4,9.4,9.7, 10.0, 10.0,  9.6,  9.6,  9.7,  9.5,  9.8,  9.5,  9.8,  8.6,  8.9,  9.1,  9.3,9.6)
 samplenames <- c("MCW_RM_R_11_S72", "MCW_RM_R_12_S1_", "MCW_RM_R_13_S2_", "MCW_RM_R_14_S3_", "MCW_RM_R_15_S4_","MCW_RM_R_16_S5_", "MCW_RM_R_17_S6_", "MCW_RM_R_18_S7_", "MCW_RM_R_19_S8_", "MCW_RM_R_20_S9_","MCW_RM_R_21_S10", "MCW_RM_R_22_S11", "MCW_RM_R_23_S12", "MCW_RM_R_24_S13", "MCW_RM_R_25_S14","MCW_RM_R_26_S15", "MCW_RM_R_27_S16", "MCW_RM_R_28_S17", "MCW_RM_R_29_S18", "MCW_RM_R_30_S19","MCW_RM_R_31_S20", "MCW_RM_R_32_S21", "MCW_RM_R_33_S22", "MCW_RM_R_34_S23", "MCW_RM_R_35_S60","MCW_RM_R_36_S61", "MCW_RM_R_37_S62", "MCW_RM_R_38_S63", "MCW_RM_R_39_S64", "MCW_RM_R_40_S65","MCW_RM_R_41_S66", "MCW_RM_R_42_S67", "MCW_RM_R_43_S68", "MCW_RM_R_44_S69","MCW_RM_R_45_S70","MCW_RM_R_46_S71","MCW_RM_R_47_S24","MCW_RM_R_48_S25", "MCW_RM_R_49_S26", "MCW_RM_R_50_S27","MCW_RM_R_51_S28", "MCW_RM_R_52_S29", "MCW_RM_R_53_S30", "MCW_RM_R_54_S31", "MCW_RM_R_55_S32","MCW_RM_R_56_S33","MCW_RM_R_57_S34", "MCW_RM_R_58_S35", "MCW_RM_R_59_S36", "MCW_RM_R_60_S37","MCW_RM_R_61_S38", "MCW_RM_R_62_S39", "MCW_RM_R_63_S40", "MCW_RM_R_64_S41", "MCW_RM_R_65_S42","MCW_RM_R_66_S43", "MCW_RM_R_67_S44", "MCW_RM_R_68_S45", "MCW_RM_R_69_S46", "MCW_RM_R_70_S47","MCW_RM_R_71_S48","MCW_RM_R_72_S49", "MCW_RM_R_73_S50", "MCW_RM_R_74_S51", "MCW_RM_R_75_S52","MCW_RM_R_76_S53", "MCW_RM_R_77_S54", "MCW_RM_R_78_S55", "MCW_RM_R_79_S56", "MCW_RM_R_80_S57","MCW_RM_R_81_S58","MCW_RM_R_82_S59")
  
- ###annotation/design file can be made with the things above!
+
  
-anno <- cbind(samplenames, indv, drug, time, RIN, group)
- 
+anno <- (cbind(samplenames, indv, drug, time, RIN, group))
+anno <- as.data.frame(anno)
 ```
 
 
@@ -134,15 +139,15 @@ This is how I retrieved the gene symbols.
  
  ###now we add genenames to the geneid###
  
- geneid <- rownames(mymatrix) ### pulls the names we have in the counts file
- genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
+geneid <- rownames(mymatrix) ### pulls the names we have in the counts file
+genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
   keytype="ENTREZID")
- genes <- genes[!duplicated(genes$ENTREZID),]
+genes <- genes[!duplicated(genes$ENTREZID),]
  
 
 mymatrix$genes <- genes
 
-mymatrix
+
 
 ```
 
@@ -220,7 +225,7 @@ hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMe
 #x$samples  ###checking to make sure all is well
 ```
 
-```{r boxplot counts per sample, fig.height=5, fig.width=7}
+```{r boxplot counts per sample, fig.height=5, fig.width=7, message=FALSE, warning=FALSE}
 
 x_axis_labels=function(labels,every_nth=1,...) {
     axis(side=1,at=seq_along(labels),labels=F)
@@ -234,143 +239,151 @@ boxplot(filcpm_matrix, main ="boxplots of log cpm per sample filtered",xaxt = "n
 x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
 ```
 
-library(cowplot)
 
-calcNormFactors(lcpm)
 
-lcpm
 
-\#### now I will produce the RIN x sample plots:###
 
-ggplot(x\$samples, aes(x = as.factor(indv), y = RIN)) +
+ now I will produce the RIN x sample plots:###
+```{r sample quality checks, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(x$samples, aes(x = as.factor(indv), y = RIN)) +
 geom_boxplot(aes(fill=as.factor(indv)))+ theme_cowplot(font_size =12, )+
-labs(x= "", fill ="Individual")+ ggtitle("Average RIN by Individual")+
-facet_wrap(\~drug)
+labs(x= "", fill ="Individual",y ="RNA Integrity Number")+ ggtitle("Average RIN by Individual")
 
-ggplot(x\$samples, aes(x = as.factor(time), y = RIN)) +
+ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
 geom_boxplot(aes(fill=as.factor(time)))+ theme_cowplot(font_size =12, )+
-labs(x= "", fill ="Time in hours")+ ggtitle("Average RIN by Time")+
-facet_wrap(\~drug)
+labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ ggtitle("Average RIN by time")
 
-ggplot(x\$samples, aes(x = as.factor(drug), y = c(RIN))) +
-geom_boxplot(aes(fill=as.factor(drug)))+ theme_cowplot(font_size =12, )+
-labs(x= "", fill ="Drug")+ ggtitle("Average RIN by Drug and
-Individual")+ facet_wrap(\~indv)
+ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
+geom_boxplot(aes(fill=as.factor(time)))+ theme_cowplot(font_size =12, )+
+labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ ggtitle("Average RIN by time and drug")+
+facet_wrap(~drug)
 
-#### \# of reads by drug, time, concentration?
+ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
+geom_boxplot(aes(fill=as.factor(time)))+ theme_cowplot(font_size =12, )+
+labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ ggtitle("Average RIN by individual and time")+
+facet_wrap(~indv)
 
-snames \<- colnames(x) snames
+ggplot(x$samples, aes(x = as.factor(drug), y = c(RIN))) +
+geom_boxplot(aes(fill=as.factor(drug)))+ 
+  theme_cowplot(font_size =12, )+ labs(x= "", fill ="Drug", y ="RNA Integrity Number")+ 
+  theme(axis.text.x = element_blank()) + ggtitle("Average RIN by drug and individual")+ facet_wrap(~indv)
+```
 
-x$samples$group \<- group \#
-ggplot(x$samples,aes(x = x$samples$indv))+ # stat_boxplot(aes(y=x$counts,
-group = x\$genes))+ \# facet_wrap(\~drug) \# geom_boxplot() \#
-theme_cowplot(font_size =12, )+ \# labs(x= "", fill ="Individual")+ \#
-ggtitle("Average RIN by Individual")
+Principal Component Analysis
 
-x ####PCA under here##### label \<- (interaction(substring(drug,0,2),
-indv,time)) smlabel \<- (interaction(substring(drug,0,2),time))
-plotMDS(x, col =as.numeric(group), labels = label, dim=c(1,2),main=
-"dim1 v dim2") plotMDS(x, col =as.numeric(group), labels = label,
-dim=c(2,3),main= "dim2 v dim3") plotMDS(x, col =as.numeric(group),
-labels = label, dim=c(3,4),main= "dim3 v dim4") plotMDS(x, col
-=as.numeric(group), labels = label, dim=c(4,5),main= "dim4 v dim5")
-plotMDS(x, col =as.numeric(group), labels = label, dim=c(5,6),main=
-"dim5 v dim6") plotMDS(x, col =as.numeric(group), labels = label,
-dim=c(1,3),main= "dim1 v dim3") plotMDS(x, col =as.numeric(group),
-labels = label, dim=c(1,4),main= "dim1 v dim4") \### Using
-jdbrmdbacteria.R code
-\###`{r per-infection, fig.width = 12, fig.height = 12, results = "asis"} #`{r
-input-data, message = FALSE} #load("../data/model-fit.rda")
-normalized_lib_size \<- x$samples$lib.size \* x$samples$norm.factors
-dat_cpm \<- cpm(x\$counts, lib.size = normalized_lib_size)
-colnames(dat_cpm) \<- group
 
-anno \<- cbind(samplenames, indv, drug, time,"RIN" =RINsamplelist\$RIN)
-samplenames \<- as.data.frame(samplenames) str(anno)
+PCA was done using code adopted from J. Blischak.   
+```{r individual PCA by drug and time steps, echo=FALSE}
 
-# bact_vec \<- c("BCG", "Rv", "Staph") \# for debugging
+label <- (interaction(substring(drug, 0, 2), indv, time))
+smlabel <- (interaction(substring(drug, 0, 2), time))
+x <- calcNormFactors(x, method = "TMM")
+normalized_lib_size <- x$samples$lib.size * x$samples$norm.factors
+dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size)
+colnames(dat_cpm) <- label
+anno$time <- ordered(time, levels =c("3h", "24h"))
+anno$group <- group
+cpm_per_sample <- cbind(anno, t(dat_cpm)) 
+treattype <-c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab","Vehicle")
 
-#anno \<- read.table("../data/annotation.txt", header = TRUE,
-#stringsAsFactors = TRUE) \# Convert time to a factor
-
-cpm_per_sample \<- cbind(anno, t(dat_cpm)) treattype \<-
-c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab","Vehicle")
-
-for (b in treattype) { dat \<- dat_cpm[,
-anno$drug %in% c("none", b)] cat("\n\n### ", b, "\n\n") # PCA pca <- calc_pca(t(dat))$x
-pca \<- data.frame(anno[anno\$drug %in% c("none", b), c("drug", "time",
-"indv")], pca) pca \<- droplevels(pca) for (cat_var in c("drug", "time",
-"indv")) { assign(paste0(cat_var, "\_pca"), arrangeGrob(pca_plot(pca,
-cat_var))) } drug_time_pca \<- pca_plot(pca, "drug", "time")
-grid.arrange(drug_pca, time_pca, indv_pca, drug_time_pca, nrow = 2) }
+for (b in treattype) { 
+  dat <- dat_cpm[,anno$drug %in% c("none", b)] 
+  cat("\n\n### ", b, "\n\n") 
+  # PCA 
+  pca <- calc_pca(t(dat))$x
+  pca <- data.frame(anno[anno$drug %in% c("none", b), c("drug", "time","indv")], pca) 
+  pca <- droplevels(pca) 
+  for (cat_var in c("drug", "time", "indv")) {
+    assign(paste0(cat_var, "_pca"), arrangeGrob(pca_plot(pca, cat_var)))
+  } 
+  drug_time_pca <- pca_plot(pca, "drug", "time")
+  grid.arrange(drug_pca, time_pca, indv_pca, drug_time_pca, nrow = 2) 
+  }
 
 # PCA of all 72 samples
+```
 
-#\`\`\`{r all-samples, fig.width = 12} pca_all \<- calc_pca(t(dat_cpm))
-pca_all_anno \<- data.frame(anno, pca_all\$x)
 
+```{r all-samples, echo=FALSE, fig.width=}
+pca_all <- calc_pca(t(dat_cpm))
+pca_all_anno <- data.frame(anno, pca_all$x)
 print(pca_var_plot(pca_all))
+```
 
-facs \<- c("indv", "drug", "time","RIN") names(facs) \<- c("Individual",
-"Treatment", "Time", "RIN") for (f in facs) { \# PC1 v PC2
-pca_plot(pca_all_anno, col_var = f, shape_var = indv, title =
-names(facs)[which(facs == f)]) print(last_plot())
+```{r variance by treatment time and individual, echo = TRUE}
+facs <- c("indv", "drug", "time") 
+names(facs) <- c("Individual","Treatment", "Time") 
+for (f in facs) { 
+  # PC1 v PC2
+  pca_plot(pca_all_anno,
+    col_var = f,
+    shape_var = indv,
+    title =names(facs)[which(facs == f)]) 
+  print(last_plot())
+  f_v_pc1 <-arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)) 
+  f_v_pc2 <-arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)) 
+grid.arrange(f_v_pc1,f_v_pc2, ncol = 2)
+}
+```
 
-\# Plot f versus PC1 and PC2 f_v\_pc1 \<-
-arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)) f_v\_pc2 \<-
-arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)) grid.arrange(f_v\_pc1,
-f_v\_pc2, ncol = 2) }
 
-###setting up colrs in brewer.pal for MDS plotting col.group \<- indv
-levels(col.group)\<- brewer.pal(nlevels(col.group), "Set1") col.group
-\<- as.character(col.group) col.time \<- time levels(col.time) \<-
-c(2,3) col.time \<- as.character(col.time) col.drug \<-
-as.factor(rep(drug,6)) levels(col.drug) \<-
-brewer.pal(nlevels(col.drug), "Set2") col.drug \<-
-as.character(col.drug)
 
-brewer.pal("Set1",6) plotMDS(lcpm, labels=samplenames, col =col.drug)
+```{r Differential expression}
+mm <- model.matrix(~0 +drug +time)
+colnames(mm) <- gsub("group", "", colnames(mm))
+mm2 <- model.matrix(~0 + label)
+colnames(mm2) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
 
-plotMDS(lcpm, labels =samplenames, col =col.group)
+mm
+y <- voom(x, mm, plot =TRUE)
+dim(y)
 
-##how to pull legend(I think) \# store \<- plotMDS(x, labels =label, col
-=col.drug, dim=c(1,4))
 
-# toplot \<- data.frame(Dim1 = store$x, Dim4 = store$y, Group = drug)
+colnames(mm2) <- c("A24", "X24", "E24","M24","T24", "V24","A3", "X3", "E3","M3","T3", "V3") ### renamed to make contrasts easier 1-6 is 24 hour, 7-12 is 3 hour A X E M T V order
 
-# 
+##now apply correlations and things   I chose block of indv in the mm.  with my model only looking and drug and time contrasts
+y2 <- voom(x, mm2)
+y <- voom(x, mm)##not plotting
+corfit <- duplicateCorrelation(y, mm, block = indv)
+corfit2 <- duplicateCorrelation(y2, mm2, block = indv)
+v <- voom(x, mm, block = indv, correlation = corfit$consensus)
+v2 <- voom(x, mm2, block = indv, correlation = corfit2$consensus)
+fit <- lmFit(v, mm, block = indv, correlation = corfit$consensus)
+fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
+fit2
+mm2
+# Make contrasts
+cm <- makeContrasts(
+ VvDA = drugVehicle -drugDaunorubicin,
+ VvDX = drugVehicle-drugDoxorubicin,
+ VvEP = drugVehicle-drugEpirubicin,
+ VvMT = drugVehicle-drugMitoxantrone,
+ VvTR = drugVehicle-drugTrastuzumab,
+ # VvDA24 = drugVehicleA-B,
+ # VvDX24= drugVehicleA-C,
+ # VvEP24= A-D,
+ # VvMT24= B-C,
+ # VvTR24= B-D,
+  levels=mm)
+cm2 <- makeContrasts(
+  V.DA = V3 - A3,
+  V.DX = V3 - X3,
+  V.EP = V3 - E3,
+  V.MT = V3 - M3,
+  V.TR = V3 - T3,
+  V.DA24 = V24-A24,
+  V.DX24= V24-X24,
+  V.EP24= V24-E24,
+  V.MT24= V24-M24,
+  V.TR24= V24-T24,
+  levels = mm2)
 
-# ggplot(toplot, aes(Dim1, Dim4, colour = Group)) + geom_point()+theme(element_text= paste0(group))
-
-mm \<- model.matrix(\~0 +drug +time) colnames(mm) \<- gsub("group", "",
-colnames(mm)) mm y \<- voom(x, mm, plot =TRUE) dim(y)
-
-mm2 \<- model.matrix(\~0 +group) colnames(mm2) \<- c("A24", "X24",
-"E24","M24","T24", "V24","A3", "X3", "E3","M3","T3", "V3") \### renamed
-to make contrasts easier 1-6 is 24 hour, 7-12 is 3 hour A X E M T V
-order
-
-##now apply correlations and things I chose block of indv in the mm.
-with my model only looking and drug and time contrasts y2 \<- voom(x,
-mm2) y \<- voom(x, mm)##not plotting corfit \<- duplicateCorrelation(y,
-mm, block = indv) corfit2 \<- duplicateCorrelation(y2, mm2, block =
-indv) v \<- voom(x, mm, block = indv, correlation =
-corfit$consensus) v2 <- voom(x, mm2, block = indv, correlation = corfit2$consensus)
-fit \<- lmFit(v, mm, block = indv, correlation =
-corfit$consensus) fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
-fit2 mm2 \# Make contrasts cm \<- makeContrasts( VvDA = drugVehicle
--drugDaunorubicin, VvDX = drugVehicle-drugDoxorubicin, VvEP =
-drugVehicle-drugEpirubicin, VvMT = drugVehicle-drugMitoxantrone, VvTR =
-drugVehicle-drugTrastuzumab, \# VvDA24 = drugVehicleA-B, \# VvDX24=
-drugVehicleA-C, \# VvEP24= A-D, \# VvMT24= B-C, \# VvTR24= B-D,
-levels=mm) cm2 \<- makeContrasts( V.DA = V3 - A3, V.DX = V3 - X3, V.EP =
-V3 - E3, V.MT = V3 - M3, V.TR = V3 - T3, V.DA24 = V24-A24, V.DX24=
-V24-X24, V.EP24= V24-E24, V.MT24= V24-M24, V.TR24= V24-T24, levels =
-mm2)
-
-vfit \<- lmFit(y, mm) vfit2 \<- lmFit(y2, mm2) vfit \<-
-contrasts.fit(vfit, contrasts=cm) vfit2\<- contrasts.fit(vfit2,
-contrasts=cm2) efit \<- eBayes(vfit) efit2 \<- eBayes(vfit2)
+vfit <- lmFit(y, mm)
+vfit2 <- lmFit(y2, mm2)
+vfit <- contrasts.fit(vfit, contrasts=cm)
+vfit2<- contrasts.fit(vfit2, contrasts=cm2)
+efit <- eBayes(vfit)
+efit2 <- eBayes(vfit2)
 plotSA(efit)
 
 plotSA(efit2)
@@ -380,297 +393,338 @@ V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
 V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
 V.MT.top= topTable(efit2, coef=4, adjust="BH", number=Inf, sort.by="p")
 V.TR.top= topTable(efit2, coef=5, adjust="BH", number=Inf, sort.by="p")
-V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf,
-sort.by="p") V.DX24.top= topTable(efit2, coef=7, adjust="BH",
-number=Inf, sort.by="p") V.EP24.top= topTable(efit2, coef=8,
-adjust="BH", number=Inf, sort.by="p") V.MT24.top= topTable(efit2,
-coef=9, adjust="BH", number=Inf, sort.by="p") V.TR24.top=
-topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
+V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf, sort.by="p")
+V.DX24.top= topTable(efit2, coef=7, adjust="BH", number=Inf, sort.by="p")
+V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
+V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
+V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
 
-sigVDA3 =
-V.DA.top[V.DA.top$adj.P.Val < .1 , ] sigVDX3 = V.DX.top[V.DX.top$adj.P.Val
-\< .1 , ] sigVEP3 =
-V.EP.top[V.EP.top$adj.P.Val < .1 , ] sigVMT3 = V.MT.top[V.MT.top$adj.P.Val
-\< .1 , ] sigVTR3 =
-V.TR.top[V.TR.top$adj.P.Val < .1 , ] sigVDA24 = V.DA24.top[V.DA24.top$adj.P.Val
-\< .1 , ] sigVDX24 =
-V.DX24.top[V.DX24.top$adj.P.Val < .1 , ] sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val
-\< .1 , ] sigVMT24 =
-V.MT24.top[V.MT24.top$adj.P.Val < .1 , ] sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val
-\< .1 , ] siglist \<- c("sigVDA3", "sigVDX3", "sigVEP3", "sigVMT3",
-"sigVTR3", "sigVDA24", "sigVDX24", "sigVEP24", "sigVMT24", "sigVTR24")
 
-### trying to graph the genes from siglists
+sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < .1 , ]
+sigVDX3 = V.DX.top[V.DX.top$adj.P.Val < .1 , ]
+sigVEP3 = V.EP.top[V.EP.top$adj.P.Val < .1 , ]
+sigVMT3 = V.MT.top[V.MT.top$adj.P.Val < .1 , ]
+sigVTR3 = V.TR.top[V.TR.top$adj.P.Val < .1 , ]
+sigVDA24 = V.DA24.top[V.DA24.top$adj.P.Val < .1 , ]
+sigVDX24 = V.DX24.top[V.DX24.top$adj.P.Val < .1 , ]
+sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val < .1 , ]
+sigVMT24 = V.MT24.top[V.MT24.top$adj.P.Val < .1 , ]
+sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val < .1 , ]
+siglist <- c("sigVDA3",
+             "sigVDX3",
+             "sigVEP3",
+             "sigVMT3",
+             "sigVTR3",
+             "sigVDA24",
+             "sigVDX24",
+             "sigVEP24",
+             "sigVMT24",
+             "sigVTR24")
 
-##first I will pull all data into a frame for ggplots ##the
-voomtransformed data is in y2 (line 226ish above) countstotal \<-
-y2$E colnames(countstotal) <- smlabel boxplot(countstotal) boxplot(Da24counts$Tags)
+```
+### trying to graph the genes from siglists###
+##first I will pull all data into a frame for ggplots
+##the voomtransformed data is in y2  (line 226ish above)
+countstotal <- y2$E
+colnames(countstotal) <- smlabel
+boxplot(countstotal)
+boxplot(Da24counts$Tags)
 
 ### I made an object called countstotal from the EList y2
-
 ### (subsetting out specific columns for ggplot graphing of specific counts comparisons)
+Da24counts <- as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
+Dx24counts <- as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
+Ep24counts <- as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
+Mt24counts <- as.data.frame(as.table(countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]))
+TR24counts <- as.data.frame(as.table(countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]))
+Da3counts <- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
+Dx3counts <- as.data.frame(as.table(countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]))
+Ep3counts <- as.data.frame(as.table(countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]))
+Mt3counts <- as.data.frame(as.table(countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]))
+TR3counts <- as.data.frame(as.table(countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]))
+library(cowplot)
+###then convert to data frame I think
+colnames(Da24counts) <- c("ENTREZID", "Samples",  "Counts")
+# grep('da$' %in% Da24counts$Samples,)
+# Da24counts$Samples[grep("da")]
 
-Da24counts \<-
-as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
-Dx24counts \<-
-as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
-Ep24counts \<-
-as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
-Mt24counts \<-
-as.data.frame(as.table(countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]))
-TR24counts \<-
-as.data.frame(as.table(countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]))
-Da3counts \<-
-as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
-Dx3counts \<-
-as.data.frame(as.table(countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]))
-Ep3counts \<-
-as.data.frame(as.table(countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]))
-Mt3counts \<-
-as.data.frame(as.table(countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]))
-TR3counts \<-
-as.data.frame(as.table(countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]))
-library(cowplot) ###then convert to data frame I think
-colnames(Da24counts) \<- c("ENTREZID", "Samples", "Counts") \#
-grep('da$' %in% Da24counts$Samples,) \# Da24counts\$Samples[grep("da")]
 
-#### graph the gene expression
-
+#### graph the gene expression####
 #make the list of gene wanted
 
-apple \<- c('CDKN1A',"BBC3", "MDM2", "BCL2", 'IGFBP3', "BAX", "GPX1",
-'MFN2',"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD',
-'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
-##find the index number for each gene indices \<- match(apple,
-mymatrix$genes$SYMBOL)
+apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", 'IGFBP3', "BAX", "GPX1", 'MFN2',"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
+##find the index number for each gene
+indices <- match(apple, mymatrix$genes$SYMBOL)
 
-###subset the matrix entreset \<- mymatrix$genes$ENTREZID[indices]
-entreset gnames \<- cbind(entreset,apple) ###voila!
+###subset the matrix
+entreset <- mymatrix$genes$ENTREZID[indices]
+entreset
+gnames <- cbind(entreset,apple)
+###voila!
+  
+colnames(gnames) <- c("ENTREZID","SYMBOL" )
+#which(gnames$SYMBOL== sigVDA24$SYMBOL)
+# match(Da24counts[%in% x,])
+#i <- which(x$genes$ENTREZID %in% Da24counts$ENTREZID)
 
-colnames(gnames) \<- c("ENTREZID","SYMBOL" )
-#which(gnames$SYMBOL== sigVDA24$SYMBOL) \# match(Da24counts[%in% x,]) #i
-\<- which(x$genes$ENTREZID %in% Da24counts\$ENTREZID)
-
-###now to ggplot### for (gn in indices){ print(Da24counts %\>%
-filter(Tags == gn) %\>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-geom_boxplot(aes(fill = as.factor(Samples)))+ theme_cowplot(font_size
-=12,)+
-
+###now to ggplot###
+for (gn in indices){
+  print(Da24counts %>% filter(Tags == gn) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+  geom_boxplot(aes(fill = as.factor(Samples)))+
+    theme_cowplot(font_size =12,)+
+    
     ggtitle(paste0(gnames$gnames," expression in Daunorubicin at 24 hours"))+
-
+    
     labs(y = "Log2(cpm)",x= "", fill = "Treatment"))
-
 }
 
-plot_function \<- function(index, df) { for (i in index) { data \<- df
-%\>% filter(Tags == i) if (!nrow(data)) next print(data %\>%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ theme_cowplot(font_size =12,)+
-
+plot_function <- function(index, df) {
+  for (i in index) {
+    data <- df %>% filter(Tags == i)
+    if (!nrow(data)) next
+   print(data %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+            geom_boxplot(aes(fill = as.factor(Samples)))+
+            theme_cowplot(font_size =12,)+
+            
             ggtitle(paste0(i," expression "))+
             
             labs(y = "Log2(cpm)",x= "", fill = "Treatment")) 
     }
-
-} gname \<- gnames\$ENTREZID gnames \<- as.data.frame(gnames)
+}
+gname <- gnames$ENTREZID
+gnames <- as.data.frame(gnames)
 plotDA_function(gname,TR3counts)
 
 plot_saving(gname, Da3counts)
 
+
 print(gnames[2,2])
 
-plot_saving \<- function(index, df) { for (i in index) { data \<- df
-%\>% filter(Tags==i) if (!nrow(data)) next p \<- data %\>%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ theme_cowplot(font_size =12,)+
 
+
+plot_saving <- function(index, df) {
+  for (i in index) {
+    data <- df %>% filter(Tags==i)
+    if (!nrow(data)) next
+    p <- data %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+            geom_boxplot(aes(fill = as.factor(Samples)))+
+            theme_cowplot(font_size =12,)+
+            
             ggtitle(paste0(i," expression "))+
             
             labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-
+    
     plot_name <- c(paste(i,substr(df,1,5),sep="_"))
     ggsave(file.path("~/Ward Lab/Cardiotoxicity/Data/R code output"), filename= (plot_name,".pdf"), plot = p)
     }
-
-} plotDA_function \<- function(indices, Da24counts) { for (i in indices)
-{ data \<- Da24counts %\>% filter(Tags==i) if (!nrow(data)) next p \<-
-data %\>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-geom_boxplot(aes(fill = as.factor(Samples)))+ theme_cowplot(font_size
-=12,)+
-
+}
+plotDA_function <- function(indices, Da24counts) {
+  for (i in indices) {
+    data <- Da24counts %>% filter(Tags==i)
+    if (!nrow(data)) next
+    p <- data %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+      geom_boxplot(aes(fill = as.factor(Samples)))+
+      theme_cowplot(font_size =12,)+
+      
       ggtitle(paste0(i," expression"))+
       
       labs(y = "Log2(cpm)",x= "", fill = "Treatment")
     ggsave(file.path("~/Ward Lab/Cardiotoxicity/Data/R_code_output/3hours", paste0(deparse(substitute(Da24counts)), "_", i, ".pdf")), plot = p)
+  }
+}
 
-} }
 
-Da24counts %\>% filter(Tags==gnames\$ENTREZID) %\>%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ #ggplot(Da24counts, aes(x=as.factor(Samples),
-y=Freq))+ #geom_boxplot(aes(fill = as.factor(Samples))) +
-theme_cowplot(font_size =12,)+
 
-ggtitle(paste0("BRCA1 expression in Daunorubicin at 24 hours"))+
 
-labs(y = "Log2(cpm)",x= "", fill ="Treatment")
 
-Dx24counts %\>% filter(Tags==7155) %\>% ggplot(aes(x=as.factor(Samples),
-y=Freq))+ geom_boxplot(aes(fill = as.factor(Samples)))+
+
+
+Da24counts %>% filter(Tags==gnames$ENTREZID) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+  geom_boxplot(aes(fill = as.factor(Samples)))+
 #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-#geom_boxplot(aes(fill = as.factor(Samples))) + theme_cowplot(font_size
-=12,)+
+  #geom_boxplot(aes(fill = as.factor(Samples))) +
+  theme_cowplot(font_size =12,)+
 
-ggtitle("Top2b expression in Doxorubicin at 24 hours")+
+  ggtitle(paste0("BRCA1 expression in Daunorubicin at 24 hours"))+
 
-labs(y = "Log2(cpm)",x= "", fill ="Treatment")
+  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
+  
 
-Ep24counts %\>% filter(Tags==7155) %\>% ggplot(aes(x=as.factor(Samples),
-y=Freq))+ geom_boxplot(aes(fill = as.factor(Samples)))+
-#ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-#geom_boxplot(aes(fill = as.factor(Samples))) + theme_cowplot(font_size
-=12,)+
+Dx24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+  geom_boxplot(aes(fill = as.factor(Samples)))+
+  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
+  #geom_boxplot(aes(fill = as.factor(Samples))) +
+  theme_cowplot(font_size =12,)+
+  
+  ggtitle("Top2b expression in Doxorubicin at 24 hours")+
+  
+  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
 
-ggtitle("Top2b expression in Epirubicin at 24 hours")+
 
-labs(y = "Log2(cpm)",x= "", fill ="Treatment")
 
-Mt24counts %\>% filter(Tags==7155) %\>% ggplot(aes(x=as.factor(Samples),
-y=Freq))+ geom_boxplot(aes(fill = as.factor(Samples)))+
-#ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-#geom_boxplot(aes(fill = as.factor(Samples))) + theme_cowplot(font_size
-=12,)+
+Ep24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+  geom_boxplot(aes(fill = as.factor(Samples)))+
+  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
+  #geom_boxplot(aes(fill = as.factor(Samples))) +
+  theme_cowplot(font_size =12,)+
+  
+  ggtitle("Top2b expression in Epirubicin at 24 hours")+
+  
+  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
 
-ggtitle("Top2b expression in Mito at 24 hours")+
+Mt24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+  geom_boxplot(aes(fill = as.factor(Samples)))+
+  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
+  #geom_boxplot(aes(fill = as.factor(Samples))) +
+  theme_cowplot(font_size =12,)+
+  
+  ggtitle("Top2b expression in Mito at 24 hours")+
+  
+  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
 
-labs(y = "Log2(cpm)",x= "", fill ="Treatment")
+TR24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+  geom_boxplot(aes(fill = as.factor(Samples)))+
+  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
+  #geom_boxplot(aes(fill = as.factor(Samples))) +
+  theme_cowplot(font_size =12,)+
+  
+  ggtitle("Top2b expression in Trastuzumab at 24 hours")+
+  
+  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
 
-TR24counts %\>% filter(Tags==7155) %\>% ggplot(aes(x=as.factor(Samples),
-y=Freq))+ geom_boxplot(aes(fill = as.factor(Samples)))+
-#ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-#geom_boxplot(aes(fill = as.factor(Samples))) + theme_cowplot(font_size
-=12,)+
 
-ggtitle("Top2b expression in Trastuzumab at 24 hours")+
 
-labs(y = "Log2(cpm)",x= "", fill ="Treatment")
 
-plot(Mt24counts) plot(Da24counts) venn.diagram(x = list("Daunorubicin" =
-rownames(sigVDA24), "Filtering" = rownames(sigVDX24)), fill =
-brewer.pal(3, "Set2")[1:2], filename = NULL) x$samples$group vd
+
+  plot(Mt24counts)
+plot(Da24counts)
+venn.diagram(x = list("Daunorubicin" = rownames(sigVDA24),
+                            "Filtering" = rownames(sigVDX24)),
+                   fill = brewer.pal(3, "Set2")[1:2], filename = NULL)
+x$samples$group
+vd
 
 coef(efit2)
 
-dim(efit2) sigVDA24
+dim(efit2)
+sigVDA24
 
-V.DA24.top sum \<- summary(decideTests(efit2)) sum
+V.DA24.top
+sum <- summary(decideTests(efit2))
+sum
 
-### next is way to add the names to each sample in the lcpm matrix
+### next is   way to add the names to each sample in the lcpm matrix
+colnames(lcpm) <- label
+# de.common <- which(#addname of the list here using sig...)##
+#     [,1]!=0 & dt[,2]!=0)
+# length(de.common)
 
-colnames(lcpm) \<- label \# de.common \<- which(#addname of the list
-here using sig...)\## \# [,1]!=0 & dt[,2]!=0) \# length(de.common)
 
 ####volcanoplot code: (go lower for ENHANCED!)
 
-V.DA.volp \<- volcanoplot(efit2, coef = 1,style = "p-value", highlight =
-0.05, names = fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold
-Change", ylab = NULL, pch = 16, cex = 0.35, main = "3 hour V DA" )
-V.DA.volp + geom_hline(yintercept = 2, linetype = "dashed") +
-geom_vline(xintercept = c(log2(0.5), log2(2)), linetype = "dashed")
-V.DX.volp \<- volcanoplot(efit2,coef = 2, style = "p-value", highlight =
-40, names = fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change",
-ylab = NULL, pch = 16, cex = 0.35, main = "3 hour V DX" ) V.EP.volp \<-
-volcanoplot(efit2,coef = 3, style = "p-value", highlight = 40, names =
-fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change", ylab =
-NULL, pch = 16, cex = 0.35, main = "3 hour V EP" ) V.MT.volp =
-volcanoplot(efit2,coef = 4, style = "p-value", highlight = 100, names =
-fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change", ylab =
-NULL, pch = 16, cex = 0.35, main = "3 hour V MT" ) V.TR.volp =
-volcanoplot(efit2,coef = 5, style = "p-value", highlight = 100, names =
-fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change", ylab =
-NULL, pch = 16, cex = 0.35, main = "3 hour V TR" ) V.DA24.volp =
-volcanoplot(efit2,coef = 6, style = "p-value", highlight = 100, names =
-fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change", ylab =
-NULL, pch = 16, cex = 0.35, main = "24 hour V DA" ) V.DX24.volp =
-volcanoplot(efit2,coef = 7, style = "p-value", highlight = 100, names =
-fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change", ylab =
-NULL, pch = 16, cex = 0.35, main = "24 hour V DX" ) V.EP24.volp =
-volcanoplot(efit2,coef = 8, style = "p-value", highlight = 100, names =
-fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change", ylab =
-NULL, pch = 16, cex = 0.35, main = "24 hour V EP" ) V.MT24.volp =
-volcanoplot(efit2,coef = 9, style = "p-value",\
-highlight = 100, names = fit$genes$SYMBOL, hl.col = "red", xlab = "Log2
-Fold Change", ylab = NULL, pch = 16, cex = 0.35, main = "24 hour V MT" )
-V.TR24.volp = volcanoplot(efit2,coef = 10,style = "p-value", highlight =
-20, names = fit$genes$SYMBOL, hl.col = "red", xlab = "Log2 Fold Change",
-ylab = NULL, pch = 16, cex = 0.35, main = "24 hour V TR" )
 
-####Enhanced volcanoplots if (!requireNamespace('BiocManager', quietly =
-TRUE)) install.packages('BiocManager')
+V.DA.volp <-  volcanoplot(efit2, coef = 1,style = "p-value",
+                        highlight = 0.05,
+                        names = fit$genes$SYMBOL,
+                        hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "3 hour V DA"
+)
+V.DA.volp + geom_hline(yintercept = 2,
+                      linetype = "dashed") + 
+  geom_vline(xintercept = c(log2(0.5), log2(2)),
+             linetype = "dashed") 
+V.DX.volp <-  volcanoplot(efit2,coef = 2, style = "p-value",
+                        highlight = 40,
+                        names = fit$genes$SYMBOL,
+                        hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "3 hour V DX"
+)
+V.EP.volp <- volcanoplot(efit2,coef = 3,  style = "p-value",
+                        highlight = 40,
+                        names = fit$genes$SYMBOL,
+                        hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "3 hour V EP"
+)
+V.MT.volp = volcanoplot(efit2,coef = 4, style = "p-value",
+                        highlight = 100,
+                        names = fit$genes$SYMBOL,
+                        hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "3 hour V MT"
+)
+V.TR.volp = volcanoplot(efit2,coef = 5, style = "p-value",
+                        highlight = 100,
+                        names = fit$genes$SYMBOL,
+                        hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "3 hour V TR"
+)
+V.DA24.volp = volcanoplot(efit2,coef = 6, style = "p-value",
+                          highlight = 100,
+                          names = fit$genes$SYMBOL,
+                          hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "24 hour V DA"
+)
+V.DX24.volp = volcanoplot(efit2,coef = 7, style = "p-value",
+                          highlight = 100,
+                          names = fit$genes$SYMBOL,
+                          hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "24 hour V DX"
+)
+V.EP24.volp = volcanoplot(efit2,coef = 8, style = "p-value",
+                          highlight = 100,
+                          names = fit$genes$SYMBOL,
+                          hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "24 hour V EP"
+)
+V.MT24.volp = volcanoplot(efit2,coef = 9, style = "p-value",  
+                          highlight = 100,
+                          names = fit$genes$SYMBOL,
+                          hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "24 hour V MT"
+)
+V.TR24.volp = volcanoplot(efit2,coef = 10,style = "p-value",
+                          highlight = 20,
+                          names = fit$genes$SYMBOL,
+                          hl.col = "red",
+  xlab = "Log2 Fold Change",
+  ylab = NULL,
+  pch = 16,
+  cex = 0.35,
+  main = "24 hour V TR"
+)
 
-BiocManager::install('EnhancedVolcano') library(EnhancedVolcano)
-
-EnhancedVolcano(efit2,coef =1)
-
-# resPCA \<- pca(t(cpm(lister, log=TRUE)))
-
-# plot(resPCA, main = "PCA")
-
-# plotIndiv(resPCA,col.per.group=TRUE)#, cex = 3,
-
-# title = "Principal component analysis",style = "graphics", theme = "bw",
-
-# \# x.label = "PC1: 81% of variance",
-
-# size.axis =2)
-
-# #y.label = "PC2: 13% of variance")#,)
-
-# 
-
-# topgenes[-1,] \<- as.data.frame(x =length(siglist),)
-
-# library(gplots)
-
-# sigVDA24tg \<-sigVDA24$ENTREZID[1:20] # i <- which(x$genes$ENTREZID %in% sigVDA24tg) # mycol <- colorpanel(1000,"blue","white","red") # # heatmap(cpm(sigVDA24tg)[i,], # scale="row", # labRow=x$genes$SYMBOL[i], # main = "significant 24 V DA", # col=mycol, trace="none", density.info="none", # margin=c(8,6), lhei=c(2,10), dendrogram="column") # # pheatmap::pheatmap(cpm(x[i,]), scale ="row", annotation_row =x$genes$SYMBOL[i]) # # Amymatrix <- calcNormFactors.DGEList(mymatrix, method= "TMM") # # Amymatrix$samples\$norm.factors
-
-# df \<- prcomp(lcpm)
-
-# 
-
-# df
-
-# pca_all \<- calc_pca(t(lcpm))
-
-# print(pca_var_plot(pca_all))
-
-# 
-
-# tnmatrix \<- mymatrix
-
-# tnmatrix
-
-###combining all the pdfs together note: did not work right the first
-time I tried. did in adobe#### mypdf \<- list.files(path = "\~/Ward
-Lab/Cardiotoxicity/Data/R_Code_output/3hours", pattern ="\*.pdf") mypdf
-qpdf::pdf_combine(path ="\~/Ward
-Lab/Cardiotoxicity/Data/R_Code_output/3hours/",input = mypdf[[1]],
-output = "threehour_output.pdf")
-
-corrplot library(corrplot)
-
-pdf_info(mypdf)
-
-row.names(coreplots) \<- label colnames(coreplots) \<- label coreplots
-\<- cor(x\$counts, method = "spearman") corrplot(coreplots, method =
-'square', diag = FALSE, order = 'hclust', cl.pos =
-'full',col.lim=c(0.65,1)) coreplots
-
-corrplot(coreplots, method = 'color',type = 'lower', order = 'hclust',
-is.corr = FALSE,tl.col = 'black', cl.ratio = 0.2, tl.srt = 45,tl.cex
-=.6, col = COL2('RdYlBu', 80), cl.pos = 'b',col.lim = c(.65,1))
-
-corrplot() plot(pressure) \`\`\`
-
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.

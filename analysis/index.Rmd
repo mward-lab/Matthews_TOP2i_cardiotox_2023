@@ -8,5 +8,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website. This is my first attempt at using workflowr. I am currently uploading my code.
-Click on this [link](RNAseqrun_1_analysis.html) to see my results.
+Welcome to my research website. This is my first attempt at using workflowr. I am currently uploading my code.  
+
+Click on this [link](docs/RNAseqrun_1_analysis.html) to see my results from the first analysis so far! Fair warning, it is a mess of code!
