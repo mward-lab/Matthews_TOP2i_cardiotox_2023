@@ -304,7 +304,7 @@ for (b in treattype) {
 ```
 
 
-```{r all-samples, echo=FALSE, fig.width=}
+```{r all-samples, echo=FALSE}
 pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
 print(pca_var_plot(pca_all))
@@ -327,8 +327,7 @@ grid.arrange(f_v_pc1,f_v_pc2, ncol = 2)
 ```
 
 
-
-```{r Differential expression}
+{r  Differential expression, eval=FALSE, include=FALSE}
 mm <- model.matrix(~0 +drug +time)
 colnames(mm) <- gsub("group", "", colnames(mm))
 mm2 <- model.matrix(~0 + label)
@@ -421,7 +420,7 @@ siglist <- c("sigVDA3",
              "sigVMT24",
              "sigVTR24")
 
-```
+
 ### trying to graph the genes from siglists###
 ##first I will pull all data into a frame for ggplots
 ##the voomtransformed data is in y2  (line 226ish above)
