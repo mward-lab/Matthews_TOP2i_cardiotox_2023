@@ -95,6 +95,16 @@ mymatrix <- readRDS('../data/mymatrix.RDS')
 
 ```
 
+```{r  current data import,eval=TRUE, echo =FALSE}
+
+myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
+
+
+mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
+
+
+
+```
 ```{r setting up the files used, warning=FALSE}
 #samplenames <- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
 
@@ -106,10 +116,8 @@ indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be i
 group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
 drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
 drug <- rep(drug,12)
-RIN <- design$RIN
-samplenames <- mymatrix$samples$files 
- summary (mymatrix)
- summary(mymatrix$samples)
+RIN <- c(9.3,9.8,  9.8, 10.0,  9.6,  9.9,  7.8,  8.7,  8.6,  9.1,  9.4,  9.3,  9.4,  9.6,  9.9,  9.4,  9.9,  9.8,9.5,  9.9,  9.6,  9.9,  8.8,  9.5,  9.3, 10.0,  9.3,  9.6,  9.7,  9.4,  8.9,  7.5,  8.6,  8.5,  8.6,  9.3,9.6,  9.6,  9.4,  9.7,  9.9, 10.0,  9.4,  9.6,  9.4,  9.5,  9.8,  9.5,  9.6,  9.7,  9.6,  9.9,  9.6, 10.0,8.3, 8.4,9.4,9.7, 10.0, 10.0,  9.6,  9.6,  9.7,  9.5,  9.8,  9.5,  9.8,  8.6,  8.9,  9.1,  9.3,9.6)
+samplenames <- c("MCW_RM_R_11_S72", "MCW_RM_R_12_S1_", "MCW_RM_R_13_S2_", "MCW_RM_R_14_S3_", "MCW_RM_R_15_S4_","MCW_RM_R_16_S5_", "MCW_RM_R_17_S6_", "MCW_RM_R_18_S7_", "MCW_RM_R_19_S8_", "MCW_RM_R_20_S9_","MCW_RM_R_21_S10", "MCW_RM_R_22_S11", "MCW_RM_R_23_S12", "MCW_RM_R_24_S13", "MCW_RM_R_25_S14","MCW_RM_R_26_S15", "MCW_RM_R_27_S16", "MCW_RM_R_28_S17", "MCW_RM_R_29_S18", "MCW_RM_R_30_S19","MCW_RM_R_31_S20", "MCW_RM_R_32_S21", "MCW_RM_R_33_S22", "MCW_RM_R_34_S23", "MCW_RM_R_35_S60","MCW_RM_R_36_S61", "MCW_RM_R_37_S62", "MCW_RM_R_38_S63", "MCW_RM_R_39_S64", "MCW_RM_R_40_S65","MCW_RM_R_41_S66", "MCW_RM_R_42_S67", "MCW_RM_R_43_S68", "MCW_RM_R_44_S69","MCW_RM_R_45_S70","MCW_RM_R_46_S71","MCW_RM_R_47_S24","MCW_RM_R_48_S25", "MCW_RM_R_49_S26", "MCW_RM_R_50_S27","MCW_RM_R_51_S28", "MCW_RM_R_52_S29", "MCW_RM_R_53_S30", "MCW_RM_R_54_S31", "MCW_RM_R_55_S32","MCW_RM_R_56_S33","MCW_RM_R_57_S34", "MCW_RM_R_58_S35", "MCW_RM_R_59_S36", "MCW_RM_R_60_S37","MCW_RM_R_61_S38", "MCW_RM_R_62_S39", "MCW_RM_R_63_S40", "MCW_RM_R_64_S41", "MCW_RM_R_65_S42","MCW_RM_R_66_S43", "MCW_RM_R_67_S44", "MCW_RM_R_68_S45", "MCW_RM_R_69_S46", "MCW_RM_R_70_S47","MCW_RM_R_71_S48","MCW_RM_R_72_S49", "MCW_RM_R_73_S50", "MCW_RM_R_74_S51", "MCW_RM_R_75_S52","MCW_RM_R_76_S53", "MCW_RM_R_77_S54", "MCW_RM_R_78_S55", "MCW_RM_R_79_S56", "MCW_RM_R_80_S57","MCW_RM_R_81_S58","MCW_RM_R_82_S59")
  
  ###annotation/design file can be made with the things above!
  
@@ -117,16 +125,7 @@ anno <- cbind(samplenames, indv, drug, time, RIN, group)
  
 ```
 
-```{r  current data import,eval=FALSE, echo =FALSE}
 
-myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
-
-
-mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
-
-
-
-```
 
 This is how I retrieved the gene symbols.
 
