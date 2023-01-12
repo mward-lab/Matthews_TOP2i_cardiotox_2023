@@ -520,15 +520,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree82fa5e5431108cb03183140f60e98e3c476fa0b0targetblank82fa5e5a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree56eab44892e7fa8fc5580e15e5a68b48e6c656bftargetblank56eab44a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/82fa5e5431108cb03183140f60e98e3c476fa0b0" target="_blank">82fa5e5</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/56eab44892e7fa8fc5580e15e5a68b48e6c656bf" target="_blank">56eab44</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree82fa5e5431108cb03183140f60e98e3c476fa0b0targetblank82fa5e5a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree56eab44892e7fa8fc5580e15e5a68b48e6c656bftargetblank56eab44a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -538,7 +538,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/82fa5e5431108cb03183140f60e98e3c476fa0b0" target="_blank">82fa5e5</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/56eab44892e7fa8fc5580e15e5a68b48e6c656bf" target="_blank">56eab44</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -606,6 +606,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/56eab44892e7fa8fc5580e15e5a68b48e6c656bf/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">56eab44</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-12
+</td>
+<td>
+end of day
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/ae8266e811dcf8952b7e8770b17e97d68c4e0f80/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">ae8266e</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-12
+</td>
+<td>
+updating the rmarkdown
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/f6c386f7517825baaed8d426adf7669097464b37/docs/RNAseqrun_1_analysis.html" target="_blank">f6c386f</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -854,312 +905,35 @@ plot_versus_pc &lt;- function(df, pc_num, fac) {
 }</code></pre>
 <pre class="r"><code>#samplenames &lt;- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
 
-#counts_file &lt;- read.csv(&quot;../data/RUN_1_counts.txt&quot;, row.names=1)
 
 time &lt;- rep((rep(c(&quot;3h&quot;, &quot;24h&quot;), c(6,6))), 6) 
 time &lt;- ordered(time, levels =c(&quot;3h&quot;, &quot;24h&quot;))
-indv &lt;- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) ###may already be in the processing
+mymatrix$samples$time &lt;- time
+indv &lt;- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) 
+mymatrix$samples$indv &lt;- indv
 group &lt;- as.factor(rep((c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;)),6))
+
 drug &lt;- rep(c(&quot;Daunorubicin&quot;,&quot;Doxorubicin&quot;,&quot;Epirubicin&quot;,&quot;Mitoxantrone&quot;,&quot;Trastuzumab&quot;, &quot;Vehicle&quot;),12)
-drug &lt;- rep(drug,12)
+
+mymatrix$samples$drug &lt;- drug
 RIN &lt;- c(9.3,9.8,  9.8, 10.0,  9.6,  9.9,  7.8,  8.7,  8.6,  9.1,  9.4,  9.3,  9.4,  9.6,  9.9,  9.4,  9.9,  9.8,9.5,  9.9,  9.6,  9.9,  8.8,  9.5,  9.3, 10.0,  9.3,  9.6,  9.7,  9.4,  8.9,  7.5,  8.6,  8.5,  8.6,  9.3,9.6,  9.6,  9.4,  9.7,  9.9, 10.0,  9.4,  9.6,  9.4,  9.5,  9.8,  9.5,  9.6,  9.7,  9.6,  9.9,  9.6, 10.0,8.3, 8.4,9.4,9.7, 10.0, 10.0,  9.6,  9.6,  9.7,  9.5,  9.8,  9.5,  9.8,  8.6,  8.9,  9.1,  9.3,9.6)
 samplenames &lt;- c(&quot;MCW_RM_R_11_S72&quot;, &quot;MCW_RM_R_12_S1_&quot;, &quot;MCW_RM_R_13_S2_&quot;, &quot;MCW_RM_R_14_S3_&quot;, &quot;MCW_RM_R_15_S4_&quot;,&quot;MCW_RM_R_16_S5_&quot;, &quot;MCW_RM_R_17_S6_&quot;, &quot;MCW_RM_R_18_S7_&quot;, &quot;MCW_RM_R_19_S8_&quot;, &quot;MCW_RM_R_20_S9_&quot;,&quot;MCW_RM_R_21_S10&quot;, &quot;MCW_RM_R_22_S11&quot;, &quot;MCW_RM_R_23_S12&quot;, &quot;MCW_RM_R_24_S13&quot;, &quot;MCW_RM_R_25_S14&quot;,&quot;MCW_RM_R_26_S15&quot;, &quot;MCW_RM_R_27_S16&quot;, &quot;MCW_RM_R_28_S17&quot;, &quot;MCW_RM_R_29_S18&quot;, &quot;MCW_RM_R_30_S19&quot;,&quot;MCW_RM_R_31_S20&quot;, &quot;MCW_RM_R_32_S21&quot;, &quot;MCW_RM_R_33_S22&quot;, &quot;MCW_RM_R_34_S23&quot;, &quot;MCW_RM_R_35_S60&quot;,&quot;MCW_RM_R_36_S61&quot;, &quot;MCW_RM_R_37_S62&quot;, &quot;MCW_RM_R_38_S63&quot;, &quot;MCW_RM_R_39_S64&quot;, &quot;MCW_RM_R_40_S65&quot;,&quot;MCW_RM_R_41_S66&quot;, &quot;MCW_RM_R_42_S67&quot;, &quot;MCW_RM_R_43_S68&quot;, &quot;MCW_RM_R_44_S69&quot;,&quot;MCW_RM_R_45_S70&quot;,&quot;MCW_RM_R_46_S71&quot;,&quot;MCW_RM_R_47_S24&quot;,&quot;MCW_RM_R_48_S25&quot;, &quot;MCW_RM_R_49_S26&quot;, &quot;MCW_RM_R_50_S27&quot;,&quot;MCW_RM_R_51_S28&quot;, &quot;MCW_RM_R_52_S29&quot;, &quot;MCW_RM_R_53_S30&quot;, &quot;MCW_RM_R_54_S31&quot;, &quot;MCW_RM_R_55_S32&quot;,&quot;MCW_RM_R_56_S33&quot;,&quot;MCW_RM_R_57_S34&quot;, &quot;MCW_RM_R_58_S35&quot;, &quot;MCW_RM_R_59_S36&quot;, &quot;MCW_RM_R_60_S37&quot;,&quot;MCW_RM_R_61_S38&quot;, &quot;MCW_RM_R_62_S39&quot;, &quot;MCW_RM_R_63_S40&quot;, &quot;MCW_RM_R_64_S41&quot;, &quot;MCW_RM_R_65_S42&quot;,&quot;MCW_RM_R_66_S43&quot;, &quot;MCW_RM_R_67_S44&quot;, &quot;MCW_RM_R_68_S45&quot;, &quot;MCW_RM_R_69_S46&quot;, &quot;MCW_RM_R_70_S47&quot;,&quot;MCW_RM_R_71_S48&quot;,&quot;MCW_RM_R_72_S49&quot;, &quot;MCW_RM_R_73_S50&quot;, &quot;MCW_RM_R_74_S51&quot;, &quot;MCW_RM_R_75_S52&quot;,&quot;MCW_RM_R_76_S53&quot;, &quot;MCW_RM_R_77_S54&quot;, &quot;MCW_RM_R_78_S55&quot;, &quot;MCW_RM_R_79_S56&quot;, &quot;MCW_RM_R_80_S57&quot;,&quot;MCW_RM_R_81_S58&quot;,&quot;MCW_RM_R_82_S59&quot;)
  
- ###annotation/design file can be made with the things above!
+
  
-anno &lt;- cbind(samplenames, indv, drug, time, RIN, group)</code></pre>
+anno &lt;- (cbind(samplenames, indv, drug, time, RIN, group))
+anno &lt;- as.data.frame(anno)</code></pre>
 <p>This is how I retrieved the gene symbols.</p>
 <pre class="r"><code> ###now we add genenames to the geneid###
  
- geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
- genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
+geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
+genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
   keytype=&quot;ENTREZID&quot;)</code></pre>
 <pre><code>&#39;select()&#39; returned 1:1 mapping between keys and columns</code></pre>
-<pre class="r"><code> genes &lt;- genes[!duplicated(genes$ENTREZID),]
+<pre class="r"><code>genes &lt;- genes[!duplicated(genes$ENTREZID),]
  
 
-mymatrix$genes &lt;- genes
-
-mymatrix</code></pre>
-<pre><code>An object of class &quot;DGEList&quot;
-$samples
-                                                          files group lib.size
-MCW_RM_R_11_S72_R1_001.counts MCW_RM_R_11_S72_R1_001.counts.txt     1  4808109
-MCW_RM_R_12_S1_R1_001.counts   MCW_RM_R_12_S1_R1_001.counts.txt     2  5048664
-MCW_RM_R_13_S2_R1_001.counts   MCW_RM_R_13_S2_R1_001.counts.txt     3  7223366
-MCW_RM_R_14_S3_R1_001.counts   MCW_RM_R_14_S3_R1_001.counts.txt     4  4450969
-MCW_RM_R_15_S4_R1_001.counts   MCW_RM_R_15_S4_R1_001.counts.txt     5  4023154
-                              norm.factors
-MCW_RM_R_11_S72_R1_001.counts            1
-MCW_RM_R_12_S1_R1_001.counts             1
-MCW_RM_R_13_S2_R1_001.counts             1
-MCW_RM_R_14_S3_R1_001.counts             1
-MCW_RM_R_15_S4_R1_001.counts             1
-67 more rows ...
-
-$counts
-           Samples
-Tags        MCW_RM_R_11_S72_R1_001.counts MCW_RM_R_12_S1_R1_001.counts
-  100287102                             1                            0
-  653635                               25                           18
-  102466751                             1                            0
-  100302278                             0                            0
-  645520                                0                            0
-           Samples
-Tags        MCW_RM_R_13_S2_R1_001.counts MCW_RM_R_14_S3_R1_001.counts
-  100287102                            1                            0
-  653635                              37                           17
-  102466751                            0                            1
-  100302278                            0                            0
-  645520                               0                            0
-           Samples
-Tags        MCW_RM_R_15_S4_R1_001.counts MCW_RM_R_16_S5_R1_001.counts
-  100287102                            0                            1
-  653635                              19                           15
-  102466751                            2                            0
-  100302278                            0                            0
-  645520                               0                            0
-           Samples
-Tags        MCW_RM_R_17_S6_R1_001.counts MCW_RM_R_18_S7_R1_001.counts
-  100287102                            0                            0
-  653635                              25                            2
-  102466751                            0                            0
-  100302278                            0                            0
-  645520                               0                            0
-           Samples
-Tags        MCW_RM_R_19_S8_R1_001.counts MCW_RM_R_20_S9_R1_001.counts
-  100287102                            0                            1
-  653635                              38                           19
-  102466751                            0                            0
-  100302278                            1                            0
-  645520                               0                            0
-           Samples
-Tags        MCW_RM_R_21_S10_R1_001.counts MCW_RM_R_22_S11_R1_001.counts
-  100287102                             1                             2
-  653635                               32                            16
-  102466751                             1                             2
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_23_S12_R1_001.counts MCW_RM_R_24_S13_R1_001.counts
-  100287102                             0                             0
-  653635                               20                            15
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_25_S14_R1_001.counts MCW_RM_R_26_S15_R1_001.counts
-  100287102                             1                             0
-  653635                               12                            36
-  102466751                             0                             2
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_27_S16_R1_001.counts MCW_RM_R_28_S17_R1_001.counts
-  100287102                             1                             0
-  653635                               32                            31
-  102466751                             0                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_29_S18_R1_001.counts MCW_RM_R_30_S19_R1_001.counts
-  100287102                             1                             0
-  653635                               38                            17
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_31_S20_R1_001.counts MCW_RM_R_32_S21_R1_001.counts
-  100287102                             0                             1
-  653635                               12                            23
-  102466751                             0                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_33_S22_R1_001.counts MCW_RM_R_34_S23_R1_001.counts
-  100287102                             0                             0
-  653635                               20                            36
-  102466751                             0                             0
-  100302278                             1                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_35_S60_R1_001.counts MCW_RM_R_36_S61_R1_001.counts
-  100287102                             0                             0
-  653635                               20                            16
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_37_S62_R1_001.counts MCW_RM_R_38_S63_R1_001.counts
-  100287102                             0                             1
-  653635                               26                            26
-  102466751                             0                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_39_S64_R1_001.counts MCW_RM_R_40_S65_R1_001.counts
-  100287102                             0                             0
-  653635                               32                            28
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_41_S66_R1_001.counts MCW_RM_R_42_S67_R1_001.counts
-  100287102                             0                             0
-  653635                               19                            16
-  102466751                             1                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_43_S68_R1_001.counts MCW_RM_R_44_S69_R1_001.counts
-  100287102                             0                             1
-  653635                               20                            24
-  102466751                             0                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_45_S70_R1_001.counts MCW_RM_R_46_S71_R1_001.counts
-  100287102                             0                             0
-  653635                               25                            19
-  102466751                             2                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_47_S24_R1_001.counts MCW_RM_R_48_S25_R1_001.counts
-  100287102                             0                             1
-  653635                               12                            26
-  102466751                             0                             0
-  100302278                             0                             1
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_49_S26_R1_001.counts MCW_RM_R_50_S27_R1_001.counts
-  100287102                             0                             0
-  653635                               26                            28
-  102466751                             1                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_51_S28_R1_001.counts MCW_RM_R_52_S29_R1_001.counts
-  100287102                             2                             1
-  653635                               51                            16
-  102466751                             1                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_53_S30_R1_001.counts MCW_RM_R_54_S31_R1_001.counts
-  100287102                             1                             0
-  653635                               29                            34
-  102466751                             1                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_55_S32_R1_001.counts MCW_RM_R_56_S33_R1_001.counts
-  100287102                             2                             0
-  653635                               61                            33
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_57_S34_R1_001.counts MCW_RM_R_58_S35_R1_001.counts
-  100287102                             1                             0
-  653635                               43                            19
-  102466751                             2                             2
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_59_S36_R1_001.counts MCW_RM_R_60_S37_R1_001.counts
-  100287102                             0                             0
-  653635                               14                            21
-  102466751                             0                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_61_S38_R1_001.counts MCW_RM_R_62_S39_R1_001.counts
-  100287102                             0                             0
-  653635                               27                            19
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_63_S40_R1_001.counts MCW_RM_R_64_S41_R1_001.counts
-  100287102                             0                             0
-  653635                               18                             5
-  102466751                             1                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_65_S42_R1_001.counts MCW_RM_R_66_S43_R1_001.counts
-  100287102                             0                             0
-  653635                               16                            44
-  102466751                             0                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_67_S44_R1_001.counts MCW_RM_R_68_S45_R1_001.counts
-  100287102                             0                             0
-  653635                               24                            20
-  102466751                             0                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_69_S46_R1_001.counts MCW_RM_R_70_S47_R1_001.counts
-  100287102                             0                             0
-  653635                               30                            18
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_71_S48_R1_001.counts MCW_RM_R_72_S49_R1_001.counts
-  100287102                             0                             0
-  653635                               47                            25
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_73_S50_R1_001.counts MCW_RM_R_74_S51_R1_001.counts
-  100287102                             0                             0
-  653635                               18                            27
-  102466751                             1                             0
-  100302278                             0                             0
-  645520                                0                             1
-           Samples
-Tags        MCW_RM_R_75_S52_R1_001.counts MCW_RM_R_76_S53_R1_001.counts
-  100287102                             0                             0
-  653635                               56                            26
-  102466751                             3                             1
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_77_S54_R1_001.counts MCW_RM_R_78_S55_R1_001.counts
-  100287102                             0                             0
-  653635                               27                            19
-  102466751                             1                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_79_S56_R1_001.counts MCW_RM_R_80_S57_R1_001.counts
-  100287102                             0                             0
-  653635                               23                            16
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-           Samples
-Tags        MCW_RM_R_81_S58_R1_001.counts MCW_RM_R_82_S59_R1_001.counts
-  100287102                             0                             0
-  653635                               10                            13
-  102466751                             0                             0
-  100302278                             0                             0
-  645520                                0                             0
-28390 more rows ...
-
-$genes
-   ENTREZID    SYMBOL
-1 100287102   DDX11L1
-2    653635    WASH7P
-3 102466751 MIR6859-1
-4 100302278 MIR1302-2
-5    645520   FAM138A
-28390 more rows ...</code></pre>
+mymatrix$genes &lt;- genes</code></pre>
 <p>##okay, now to transform data</p>
 <p>Filtering the genes that are lowly expressed using several
 methods.</p>
@@ -1217,117 +991,67 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)</co
 <pre class="r"><code>boxplot(filcpm_matrix, main =&quot;boxplots of log cpm per sample filtered&quot;,xaxt = &quot;n&quot;, xlab=&quot;&quot;)
 x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>library(cowplot)</p>
-<p>calcNormFactors(lcpm)</p>
-<p>lcpm</p>
-<p>#### now I will produce the RIN x sample plots:###</p>
-<p>ggplot(x$samples, aes(x = as.factor(indv), y = RIN)) +
-geom_boxplot(aes(fill=as.factor(indv)))+ theme_cowplot(font_size =12, )+
-labs(x= ““, fill =”Individual”)+ ggtitle(“Average RIN by Individual”)+
-facet_wrap(~drug)</p>
-<p>ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
-geom_boxplot(aes(fill=as.factor(time)))+ theme_cowplot(font_size =12, )+
-labs(x= ““, fill =”Time in hours”)+ ggtitle(“Average RIN by Time”)+
-facet_wrap(~drug)</p>
-<p>ggplot(x$samples, aes(x = as.factor(drug), y = c(RIN))) +
-geom_boxplot(aes(fill=as.factor(drug)))+ theme_cowplot(font_size =12, )+
-labs(x= ““, fill =”Drug”)+ ggtitle(“Average RIN by Drug and
-Individual”)+ facet_wrap(~indv)</p>
-<div id="of-reads-by-drug-time-concentration" class="section level4">
-<h4># of reads by drug, time, concentration?</h4>
-<p>snames &lt;- colnames(x) snames</p>
-<p>x<span class="math inline">\(samples\)</span>group &lt;- group #
-ggplot(x<span class="math inline">\(samples,aes(x =
-x\)</span>samples<span class="math inline">\(indv))+ #
-stat_boxplot(aes(y=x\)</span>counts, group = x$genes))+ #
-facet_wrap(~drug) # geom_boxplot() # theme_cowplot(font_size =12, )+ #
-labs(x= ““, fill =”Individual”)+ # ggtitle(“Average RIN by
-Individual”)</p>
-<p>x ####PCA under here##### label &lt;-
-(interaction(substring(drug,0,2), indv,time)) smlabel &lt;-
-(interaction(substring(drug,0,2),time)) plotMDS(x, col
-=as.numeric(group), labels = label, dim=c(1,2),main= “dim1 v dim2”)
-plotMDS(x, col =as.numeric(group), labels = label, dim=c(2,3),main=
-“dim2 v dim3”) plotMDS(x, col =as.numeric(group), labels = label,
-dim=c(3,4),main= “dim3 v dim4”) plotMDS(x, col =as.numeric(group),
-labels = label, dim=c(4,5),main= “dim4 v dim5”) plotMDS(x, col
-=as.numeric(group), labels = label, dim=c(5,6),main= “dim5 v dim6”)
-plotMDS(x, col =as.numeric(group), labels = label, dim=c(1,3),main=
-“dim1 v dim3”) plotMDS(x, col =as.numeric(group), labels = label,
-dim=c(1,4),main= “dim1 v dim4”) ### Using jdbrmdbacteria.R code
-###<code>{r per-infection, fig.width = 12, fig.height = 12, results = "asis"} #</code>{r
-input-data, message = FALSE} #load(“../data/model-fit.rda”)
-normalized_lib_size &lt;- x<span
-class="math inline">\(samples\)</span>lib.size * x<span
-class="math inline">\(samples\)</span>norm.factors dat_cpm &lt;-
-cpm(x$counts, lib.size = normalized_lib_size) colnames(dat_cpm) &lt;-
-group</p>
-<p>anno &lt;- cbind(samplenames, indv, drug, time,“RIN”
-=RINsamplelist$RIN) samplenames &lt;- as.data.frame(samplenames)
-str(anno)</p>
-</div>
-<div id="bact_vec---cbcg-rv-staph-for-debugging" class="section level1">
-<h1>bact_vec &lt;- c(“BCG”, “Rv”, “Staph”) # for debugging</h1>
-<p>#anno &lt;- read.table(“../data/annotation.txt”, header = TRUE,
-#stringsAsFactors = TRUE) # Convert time to a factor</p>
-<p>cpm_per_sample &lt;- cbind(anno, t(dat_cpm)) treattype &lt;-
-c(“Daunorubicin”,“Doxorubicin”,“Epirubicin”,“Mitoxantrone”,“Trastuzumab”,“Vehicle”)</p>
-<p>for (b in treattype) { dat &lt;- dat_cpm[, anno<span
-class="math inline">\(drug %in% c(&quot;none&quot;, b)]
-cat(&quot;\n\n### &quot;, b, &quot;\n\n&quot;) # PCA pca &lt;-
-calc_pca(t(dat))\)</span>x pca &lt;- data.frame(anno[anno$drug %in%
-c(“none”, b), c(“drug”, “time”, “indv”)], pca) pca &lt;- droplevels(pca)
-for (cat_var in c(“drug”, “time”, “indv”)) { assign(paste0(cat_var,
-“_pca”), arrangeGrob(pca_plot(pca, cat_var))) } drug_time_pca &lt;-
-pca_plot(pca, “drug”, “time”) grid.arrange(drug_pca, time_pca, indv_pca,
-drug_time_pca, nrow = 2) }</p>
-</div>
-<div id="pca-of-all-72-samples" class="section level1">
-<h1>PCA of all 72 samples</h1>
-<p>#```{r all-samples, fig.width = 12} pca_all &lt;-
-calc_pca(t(dat_cpm)) pca_all_anno &lt;- data.frame(anno, pca_all$x)</p>
-<p>print(pca_var_plot(pca_all))</p>
-<p>facs &lt;- c(“indv”, “drug”, “time”,“RIN”) names(facs) &lt;-
-c(“Individual”, “Treatment”, “Time”, “RIN”) for (f in facs) { # PC1 v
-PC2 pca_plot(pca_all_anno, col_var = f, shape_var = indv, title =
-names(facs)[which(facs == f)]) print(last_plot())</p>
-<p># Plot f versus PC1 and PC2 f_v_pc1 &lt;-
-arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)) f_v_pc2 &lt;-
-arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)) grid.arrange(f_v_pc1,
-f_v_pc2, ncol = 2) }</p>
-<p>###setting up colrs in brewer.pal for MDS plotting col.group &lt;-
-indv levels(col.group)&lt;- brewer.pal(nlevels(col.group), “Set1”)
-col.group &lt;- as.character(col.group) col.time &lt;- time
-levels(col.time) &lt;- c(2,3) col.time &lt;- as.character(col.time)
-col.drug &lt;- as.factor(rep(drug,6)) levels(col.drug) &lt;-
-brewer.pal(nlevels(col.drug), “Set2”) col.drug &lt;-
-as.character(col.drug)</p>
-<p>brewer.pal(“Set1”,6) plotMDS(lcpm, labels=samplenames, col
-=col.drug)</p>
-<p>plotMDS(lcpm, labels =samplenames, col =col.group)</p>
-<p>##how to pull legend(I think) # store &lt;- plotMDS(x, labels =label,
-col =col.drug, dim=c(1,4))</p>
-</div>
-<div id="toplot---data.framedim1-storex-dim4-storey-group-drug"
-class="section level1">
-<h1>toplot &lt;- data.frame(Dim1 = store<span class="math inline">\(x,
-Dim4 = store\)</span>y, Group = drug)</h1>
-</div>
-<div id="section" class="section level1">
-<h1></h1>
-</div>
-<div
-id="ggplottoplot-aesdim1-dim4-colour-group-geom_pointthemeelement_text-paste0group"
-class="section level1">
-<h1>ggplot(toplot, aes(Dim1, Dim4, colour = Group)) +
-geom_point()+theme(element_text= paste0(group))</h1>
-<p>mm &lt;- model.matrix(~0 +drug +time) colnames(mm) &lt;-
-gsub(“group”, ““, colnames(mm)) mm y &lt;- voom(x, mm, plot =TRUE)
-dim(y)</p>
-<p>mm2 &lt;- model.matrix(~0 +group) colnames(mm2) &lt;- c(“A24”, “X24”,
-“E24”,“M24”,“T24”, “V24”,“A3”, “X3”, “E3”,“M3”,“T3”, “V3”) ### renamed
-to make contrasts easier 1-6 is 24 hour, 7-12 is 3 hour A X E M T V
-order</p>
+<p>now I will produce the RIN x sample plots:###
+<img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Principal Component Analysis</p>
+<p>PCA was done using code adopted from J. Blischak.</p>
+<pre><code>
+
+###  Daunorubicin </code></pre>
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation ideoms with `aes()`</code></pre>
+<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Doxorubicin </code></pre>
+<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Epirubicin </code></pre>
+<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Mitoxantrone </code></pre>
+<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Trastuzumab </code></pre>
+<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Vehicle </code></pre>
+<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/all-samples-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>facs &lt;- c(&quot;indv&quot;, &quot;drug&quot;, &quot;time&quot;) 
+names(facs) &lt;- c(&quot;Individual&quot;,&quot;Treatment&quot;, &quot;Time&quot;) 
+for (f in facs) { 
+  # PC1 v PC2
+  pca_plot(pca_all_anno,
+    col_var = f,
+    shape_var = indv,
+    title =names(facs)[which(facs == f)]) 
+  print(last_plot())
+  f_v_pc1 &lt;-arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)) 
+  f_v_pc2 &lt;-arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)) 
+grid.arrange(f_v_pc1,f_v_pc2, ncol = 2)
+}</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>{r Differential expression, eval=FALSE, include=FALSE} mm &lt;-
+model.matrix(~0 +drug +time) colnames(mm) &lt;- gsub(“group”, ““,
+colnames(mm)) mm2 &lt;- model.matrix(~0 + label) colnames(mm2) &lt;-
+c(”A3”, “X3”, “E3”,“M3”,“T3”, “V3”,“A24”, “X24”, “E24”,“M24”,“T24”,
+“V24”)</p>
+<p>mm y &lt;- voom(x, mm, plot =TRUE) dim(y)</p>
+<p>colnames(mm2) &lt;- c(“A24”, “X24”, “E24”,“M24”,“T24”, “V24”,“A3”,
+“X3”, “E3”,“M3”,“T3”, “V3”) ### renamed to make contrasts easier 1-6 is
+24 hour, 7-12 is 3 hour A X E M T V order</p>
 <p>##now apply correlations and things I chose block of indv in the mm.
 with my model only looking and drug and time contrasts y2 &lt;- voom(x,
 mm2) y &lt;- voom(x, mm)##not plotting corfit &lt;-
@@ -1563,105 +1287,6 @@ V.TR24.volp = volcanoplot(efit2,coef = 10,style = “p-value”, highlight =
 20, names = fit<span class="math inline">\(genes\)</span>SYMBOL, hl.col
 = “red”, xlab = “Log2 Fold Change”, ylab = NULL, pch = 16, cex = 0.35,
 main = “24 hour V TR” )</p>
-<p>####Enhanced volcanoplots if (!requireNamespace(‘BiocManager’,
-quietly = TRUE)) install.packages(‘BiocManager’)</p>
-<p>BiocManager::install(‘EnhancedVolcano’) library(EnhancedVolcano)</p>
-<p>EnhancedVolcano(efit2,coef =1)</p>
-</div>
-</div>
-<div id="respca---pcatcpmlister-logtrue" class="section level1">
-<h1>resPCA &lt;- pca(t(cpm(lister, log=TRUE)))</h1>
-</div>
-<div id="plotrespca-main-pca" class="section level1">
-<h1>plot(resPCA, main = “PCA”)</h1>
-</div>
-<div id="plotindivrespcacol.per.grouptrue-cex-3" class="section level1">
-<h1>plotIndiv(resPCA,col.per.group=TRUE)#, cex = 3,</h1>
-</div>
-<div id="title-principal-component-analysisstyle-graphics-theme-bw"
-class="section level1">
-<h1>title = “Principal component analysis”,style = “graphics”, theme =
-“bw”,</h1>
-</div>
-<div id="x.label-pc1-81-of-variance" class="section level1">
-<h1># x.label = “PC1: 81% of variance”,</h1>
-</div>
-<div id="size.axis-2" class="section level1">
-<h1>size.axis =2)</h1>
-</div>
-<div id="y.label-pc2-13-of-variance" class="section level1">
-<h1>#y.label = “PC2: 13% of variance”)#,)</h1>
-</div>
-<div id="section-1" class="section level1">
-<h1></h1>
-</div>
-<div id="topgenes-1---as.data.framex-lengthsiglist"
-class="section level1">
-<h1>topgenes[-1,] &lt;- as.data.frame(x =length(siglist),)</h1>
-</div>
-<div id="librarygplots" class="section level1">
-<h1>library(gplots)</h1>
-</div>
-<div
-id="sigvda24tg--sigvda24entrezid120-i---whichxgenesentrezid-in-sigvda24tg-mycol---colorpanel1000bluewhitered-heatmapcpmsigvda24tgi-scalerow-labrowxgenessymboli-main-significant-24-v-da-colmycol-tracenone-density.infonone-marginc86-lheic210-dendrogramcolumn-pheatmappheatmapcpmxi-scale-row-annotation_row-xgenessymboli-amymatrix---calcnormfactors.dgelistmymatrix-method-tmm-amymatrixsamplesnorm.factors"
-class="section level1">
-<h1>sigVDA24tg &lt;-sigVDA24<span class="math inline">\(ENTREZID[1:20] #
-i &lt;- which(x\)</span>genes<span class="math inline">\(ENTREZID %in%
-sigVDA24tg) # mycol &lt;-
-colorpanel(1000,&quot;blue&quot;,&quot;white&quot;,&quot;red&quot;) # #
-heatmap(cpm(sigVDA24tg)[i,], # scale=&quot;row&quot;, #
-labRow=x\)</span>genes<span class="math inline">\(SYMBOL[i], # main =
-&quot;significant 24 V DA&quot;, # col=mycol, trace=&quot;none&quot;,
-density.info=&quot;none&quot;, # margin=c(8,6), lhei=c(2,10),
-dendrogram=&quot;column&quot;) # # pheatmap::pheatmap(cpm(x[i,]), scale
-=&quot;row&quot;, annotation_row =x\)</span>genes<span
-class="math inline">\(SYMBOL[i]) # # Amymatrix &lt;-
-calcNormFactors.DGEList(mymatrix, method= &quot;TMM&quot;) # #
-Amymatrix\)</span>samples$norm.factors</h1>
-</div>
-<div id="df---prcomplcpm" class="section level1">
-<h1>df &lt;- prcomp(lcpm)</h1>
-</div>
-<div id="section-2" class="section level1">
-<h1></h1>
-</div>
-<div id="df" class="section level1">
-<h1>df</h1>
-</div>
-<div id="pca_all---calc_pcatlcpm" class="section level1">
-<h1>pca_all &lt;- calc_pca(t(lcpm))</h1>
-</div>
-<div id="printpca_var_plotpca_all" class="section level1">
-<h1>print(pca_var_plot(pca_all))</h1>
-</div>
-<div id="section-3" class="section level1">
-<h1></h1>
-</div>
-<div id="tnmatrix---mymatrix" class="section level1">
-<h1>tnmatrix &lt;- mymatrix</h1>
-</div>
-<div id="tnmatrix" class="section level1">
-<h1>tnmatrix</h1>
-<p>###combining all the pdfs together note: did not work right the first
-time I tried. did in adobe#### mypdf &lt;- list.files(path = “~/Ward
-Lab/Cardiotoxicity/Data/R_Code_output/3hours”, pattern =“*.pdf”) mypdf
-qpdf::pdf_combine(path =“~/Ward
-Lab/Cardiotoxicity/Data/R_Code_output/3hours/”,input = mypdf[[1]],
-output = “threehour_output.pdf”)</p>
-<p>corrplot library(corrplot)</p>
-<p>pdf_info(mypdf)</p>
-<p>row.names(coreplots) &lt;- label colnames(coreplots) &lt;- label
-coreplots &lt;- cor(x$counts, method = “spearman”) corrplot(coreplots,
-method = ‘square’, diag = FALSE, order = ‘hclust’, cl.pos =
-‘full’,col.lim=c(0.65,1)) coreplots</p>
-<p>corrplot(coreplots, method = ‘color’,type = ‘lower’, order =
-‘hclust’, is.corr = FALSE,tl.col = ‘black’, cl.ratio = 0.2, tl.srt =
-45,tl.cex =.6, col = COL2(‘RdYlBu’, 80), cl.pos = ‘b’,col.lim =
-c(.65,1))</p>
-<p>corrplot() plot(pressure) ```</p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the
-code chunk to prevent printing of the R code that generated the
-plot.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1740,66 +1365,68 @@ loaded via a namespace (and not attached):
   [9] withr_2.5.0                   colorspace_2.0-3             
  [11] filelock_1.0.2                highr_0.10                   
  [13] knitr_1.41                    rstudioapi_0.14              
- [15] MatrixGenerics_1.8.1          git2r_0.30.1                 
- [17] GenomeInfoDbData_1.2.8        bit64_4.0.5                  
- [19] rprojroot_2.0.3               vctrs_0.5.1                  
- [21] generics_0.1.3                lambda.r_1.2.4               
- [23] xfun_0.36                     timechange_0.1.1             
- [25] R6_2.5.1                      locfit_1.5-9.7               
- [27] bitops_1.0-7                  cachem_1.0.6                 
- [29] DelayedArray_0.22.0           assertthat_0.2.1             
- [31] promises_1.2.0.1              BiocIO_1.6.0                 
- [33] googlesheets4_1.0.1           gtable_0.3.1                 
- [35] processx_3.8.0                rlang_1.0.6                  
- [37] genefilter_1.78.0             splines_4.2.2                
- [39] rtracklayer_1.56.1            gargle_1.2.1                 
- [41] broom_1.0.2                   BiocManager_1.30.19          
- [43] yaml_2.3.6                    modelr_0.1.10                
- [45] backports_1.4.1               httpuv_1.6.7                 
- [47] RBGL_1.72.0                   tools_4.2.2                  
- [49] ellipsis_0.3.2                jquerylib_0.1.4              
- [51] sessioninfo_1.2.2             Rcpp_1.0.9                   
- [53] plyr_1.8.8                    progress_1.2.2               
- [55] zlibbioc_1.42.0               RCurl_1.98-1.9               
- [57] ps_1.7.2                      prettyunits_1.1.1            
- [59] urlchecker_1.0.1              SummarizedExperiment_1.26.1  
- [61] haven_2.5.1                   ggrepel_0.9.2                
- [63] fs_1.5.2                      magrittr_2.0.3               
- [65] RSpectra_0.16-1               futile.options_1.0.1         
- [67] reprex_2.0.2                  googledrive_2.0.0            
- [69] whisker_0.4.1                 matrixStats_0.63.0           
- [71] pkgload_1.3.2                 hms_1.1.2                    
- [73] mime_0.12                     evaluate_0.19                
- [75] xtable_1.8-4                  XML_3.99-0.13                
- [77] readxl_1.4.1                  compiler_4.2.2               
- [79] ellipse_0.4.3                 crayon_1.5.2                 
- [81] htmltools_0.5.4               corpcor_1.6.10               
- [83] later_1.3.0                   tzdb_0.3.0                   
- [85] geneplotter_1.74.0            lubridate_1.9.0              
- [87] DBI_1.1.3                     formatR_1.13                 
- [89] rappdirs_0.3.3                Matrix_1.5-3                 
- [91] cli_3.5.0                     parallel_4.2.2               
- [93] igraph_1.3.5                  pkgconfig_2.0.3              
- [95] getPass_0.2-2                 GenomicAlignments_1.32.1     
- [97] xml2_1.3.3                    rARPACK_0.11-0               
- [99] annotate_1.74.0               bslib_0.4.2                  
-[101] XVector_0.36.0                rvest_1.0.3                  
-[103] callr_3.7.3                   digest_0.6.31                
-[105] graph_1.74.0                  Biostrings_2.64.1            
-[107] rmarkdown_2.19                cellranger_1.1.0             
-[109] restfulr_0.0.15               curl_4.3.3                   
-[111] shiny_1.7.4                   Rsamtools_2.12.0             
-[113] rjson_0.2.21                  lifecycle_1.0.3              
-[115] jsonlite_1.8.4                fansi_1.0.3                  
-[117] pillar_1.8.1                  KEGGREST_1.36.3              
-[119] fastmap_1.1.0                 httr_1.4.4                   
-[121] pkgbuild_1.4.0                survival_3.4-0               
-[123] interactiveDisplayBase_1.34.0 glue_1.6.2                   
-[125] remotes_2.4.2                 png_0.1-8                    
-[127] BiocVersion_3.15.2            bit_4.0.5                    
-[129] stringi_1.7.8                 sass_0.4.4                   
-[131] profvis_0.3.7                 blob_1.2.3                   
-[133] DESeq2_1.36.0                 memoise_2.0.1                </code></pre>
+ [15] labeling_0.4.2                MatrixGenerics_1.8.1         
+ [17] git2r_0.30.1                  GenomeInfoDbData_1.2.8       
+ [19] farver_2.1.1                  bit64_4.0.5                  
+ [21] rprojroot_2.0.3               vctrs_0.5.1                  
+ [23] generics_0.1.3                lambda.r_1.2.4               
+ [25] xfun_0.36                     timechange_0.1.1             
+ [27] R6_2.5.1                      locfit_1.5-9.7               
+ [29] bitops_1.0-7                  cachem_1.0.6                 
+ [31] DelayedArray_0.22.0           assertthat_0.2.1             
+ [33] promises_1.2.0.1              BiocIO_1.6.0                 
+ [35] googlesheets4_1.0.1           gtable_0.3.1                 
+ [37] processx_3.8.0                rlang_1.0.6                  
+ [39] genefilter_1.78.0             splines_4.2.2                
+ [41] rtracklayer_1.56.1            gargle_1.2.1                 
+ [43] broom_1.0.2                   BiocManager_1.30.19          
+ [45] yaml_2.3.6                    modelr_0.1.10                
+ [47] backports_1.4.1               httpuv_1.6.7                 
+ [49] RBGL_1.72.0                   tools_4.2.2                  
+ [51] ellipsis_0.3.2                jquerylib_0.1.4              
+ [53] sessioninfo_1.2.2             Rcpp_1.0.9                   
+ [55] plyr_1.8.8                    progress_1.2.2               
+ [57] zlibbioc_1.42.0               RCurl_1.98-1.9               
+ [59] ps_1.7.2                      prettyunits_1.1.1            
+ [61] urlchecker_1.0.1              SummarizedExperiment_1.26.1  
+ [63] haven_2.5.1                   ggrepel_0.9.2                
+ [65] fs_1.5.2                      magrittr_2.0.3               
+ [67] RSpectra_0.16-1               futile.options_1.0.1         
+ [69] reprex_2.0.2                  googledrive_2.0.0            
+ [71] whisker_0.4.1                 matrixStats_0.63.0           
+ [73] pkgload_1.3.2                 hms_1.1.2                    
+ [75] mime_0.12                     evaluate_0.19                
+ [77] xtable_1.8-4                  XML_3.99-0.13                
+ [79] readxl_1.4.1                  compiler_4.2.2               
+ [81] ellipse_0.4.3                 crayon_1.5.2                 
+ [83] htmltools_0.5.4               corpcor_1.6.10               
+ [85] later_1.3.0                   tzdb_0.3.0                   
+ [87] geneplotter_1.74.0            lubridate_1.9.0              
+ [89] DBI_1.1.3                     formatR_1.13                 
+ [91] rappdirs_0.3.3                Matrix_1.5-3                 
+ [93] cli_3.5.0                     parallel_4.2.2               
+ [95] igraph_1.3.5                  pkgconfig_2.0.3              
+ [97] getPass_0.2-2                 GenomicAlignments_1.32.1     
+ [99] xml2_1.3.3                    rARPACK_0.11-0               
+[101] annotate_1.74.0               bslib_0.4.2                  
+[103] XVector_0.36.0                rvest_1.0.3                  
+[105] callr_3.7.3                   digest_0.6.31                
+[107] graph_1.74.0                  Biostrings_2.64.1            
+[109] rmarkdown_2.19                cellranger_1.1.0             
+[111] restfulr_0.0.15               curl_4.3.3                   
+[113] shiny_1.7.4                   Rsamtools_2.12.0             
+[115] rjson_0.2.21                  lifecycle_1.0.3              
+[117] jsonlite_1.8.4                viridisLite_0.4.1            
+[119] fansi_1.0.3                   pillar_1.8.1                 
+[121] KEGGREST_1.36.3               fastmap_1.1.0                
+[123] httr_1.4.4                    pkgbuild_1.4.0               
+[125] survival_3.4-0                interactiveDisplayBase_1.34.0
+[127] glue_1.6.2                    remotes_2.4.2                
+[129] png_0.1-8                     BiocVersion_3.15.2           
+[131] bit_4.0.5                     stringi_1.7.8                
+[133] sass_0.4.4                    profvis_0.3.7                
+[135] blob_1.2.3                    DESeq2_1.36.0                
+[137] memoise_2.0.1                </code></pre>
 </div>
 </div>
 
