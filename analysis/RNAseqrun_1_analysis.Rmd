@@ -41,6 +41,7 @@ not posting the raw data, but I will release in the future.
 ```{r ggplot-theme-and-functions, echo = TRUE}
 theme_set(theme_bw(base_size = 16))
 
+
 pca_plot <- function(df, col_var = NULL, shape_var = NULL, title = "") {
   ggplot(df) + geom_point(aes_string(x = "PC1", y = "PC2", color = col_var,
                                      shape = shape_var), size = 5) +
@@ -273,7 +274,7 @@ Principal Component Analysis
 
 
 PCA was done using code adopted from J. Blischak.   
-```{r individual PCA by drug and time steps, echo=FALSE}
+```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE, fig.width= 7}
 
 label <- (interaction(substring(drug, 0, 2), indv, time))
 smlabel <- (interaction(substring(drug, 0, 2), time))
@@ -311,46 +312,51 @@ print(pca_var_plot(pca_all))
 ```
 
 ```{r variance by treatment time and individual, echo = TRUE}
-facs <- c("indv", "drug", "time") 
-names(facs) <- c("Individual","Treatment", "Time") 
-for (f in facs) { 
+facs <- c("indv", "drug", "time")
+names(facs) <- c("Individual", "Treatment", "Time")
+drug1 <- unique(drug)
+for (f in facs) {
   # PC1 v PC2
-  pca_plot(pca_all_anno,
-    col_var = f,
-    shape_var = indv,
-    title =names(facs)[which(facs == f)]) 
+  pca_plot(pca_all_anno, col_var = f, shape_var = indv,
+           title = names(facs)[which(facs == f)])
   print(last_plot())
-  f_v_pc1 <-arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)) 
-  f_v_pc2 <-arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)) 
-grid.arrange(f_v_pc1,f_v_pc2, ncol = 2)
+  
+  # Plot f versus PC1 and PC2
+  f_v_pc1 <- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f))
+  f_v_pc2 <- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f))
+  grid.arrange(f_v_pc1, f_v_pc2, ncol = 2)
 }
+
+```
+
+# Differential Expression
+
+```{r Differential expression, echo=FALSE}
+mm <- model.matrix(~0 +drug +time)
+colnames(mm) <- gsub("group", "", colnames(mm))
+group1 <- interaction(drug,time)
+mm2 <- model.matrix(~0 + group1)
+colnames(mm2) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
+
+y <- voom(x, mm, plot =TRUE)
+
+y2 <- voom(x, mm2,plot =TRUE)
+
 ```
 
 
-{r  Differential expression, eval=FALSE, include=FALSE}
-mm <- model.matrix(~0 +drug +time)
-colnames(mm) <- gsub("group", "", colnames(mm))
-mm2 <- model.matrix(~0 + label)
-colnames(mm2) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
 
-mm
-y <- voom(x, mm, plot =TRUE)
-dim(y)
-
-
-colnames(mm2) <- c("A24", "X24", "E24","M24","T24", "V24","A3", "X3", "E3","M3","T3", "V3") ### renamed to make contrasts easier 1-6 is 24 hour, 7-12 is 3 hour A X E M T V order
-
-##now apply correlations and things   I chose block of indv in the mm.  with my model only looking and drug and time contrasts
-y2 <- voom(x, mm2)
-y <- voom(x, mm)##not plotting
+```{r  Differential expression2, eval=FALSE, include=FALSE}
 corfit <- duplicateCorrelation(y, mm, block = indv)
 corfit2 <- duplicateCorrelation(y2, mm2, block = indv)
 v <- voom(x, mm, block = indv, correlation = corfit$consensus)
 v2 <- voom(x, mm2, block = indv, correlation = corfit2$consensus)
 fit <- lmFit(v, mm, block = indv, correlation = corfit$consensus)
 fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
-fit2
-mm2
+
+```
+
+```{r Differential expression3 contrasts, eval = TRUE }
 # Make contrasts
 cm <- makeContrasts(
  VvDA = drugVehicle -drugDaunorubicin,
@@ -358,11 +364,6 @@ cm <- makeContrasts(
  VvEP = drugVehicle-drugEpirubicin,
  VvMT = drugVehicle-drugMitoxantrone,
  VvTR = drugVehicle-drugTrastuzumab,
- # VvDA24 = drugVehicleA-B,
- # VvDX24= drugVehicleA-C,
- # VvEP24= A-D,
- # VvMT24= B-C,
- # VvTR24= B-D,
   levels=mm)
 cm2 <- makeContrasts(
   V.DA = V3 - A3,
@@ -383,9 +384,6 @@ vfit <- contrasts.fit(vfit, contrasts=cm)
 vfit2<- contrasts.fit(vfit2, contrasts=cm2)
 efit <- eBayes(vfit)
 efit2 <- eBayes(vfit2)
-plotSA(efit)
-
-plotSA(efit2)
 
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
 V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
@@ -420,27 +418,74 @@ siglist <- c("sigVDA3",
              "sigVMT24",
              "sigVTR24")
 
+```
 
-### trying to graph the genes from siglists###
-##first I will pull all data into a frame for ggplots
-##the voomtransformed data is in y2  (line 226ish above)
+```{r sample code of DEG setup, eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
+mm2 <- model.matrix(~0 + group1)
+##made the matrix model using the interaction between Treatment and Time
+colnames(mm2) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
+y2 <- voom(x, mm2)
+
+corfit2 <- duplicateCorrelation(y2, mm2, block = indv)
+
+v2 <- voom(x, mm2, block = indv, correlation = corfit2$consensus)
+
+fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
+
+vfit2 <- lmFit(y2, mm2)
+
+vfit2<- contrasts.fit(vfit2, contrasts=cm2)
+
+efit2 <- eBayes(vfit2)
+
+V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
+### sorting all top expressed genes for the Vehicle and Daunorubicin 3 hour treatments
+sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < .1 , ]
+### this helped pull only those files that were at an adjusted p value of less than 0.1
+### This p-value was used as the beginning examination of the data, considering I will run multiple runs of this RNA seq library.
+```
+
+This is the example code I used to process my data.  I used two model matrix initially, one set up was /~0 +drug +time and the second was /~0+group1, then blocking by individual.
+That is why you see the number 2 in the code above.
+
+
+##Graphing DEgenes##
+I then created a counts table for each set of genes.  Luckily, the counts are stored in the y2 object, which is an EList class object. I can 'simplify' this process because I kept the DEGList format initially.
+I first made an object called 'countstotal' from the EList y2. For ggploting later, I subsetted 'countstotal' by treatments.
+
+```{r counts files}
 countstotal <- y2$E
 colnames(countstotal) <- smlabel
 boxplot(countstotal)
-boxplot(Da24counts$Tags)
+Da3counts <- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
+```
 
-### I made an object called countstotal from the EList y2
-### (subsetting out specific columns for ggplot graphing of specific counts comparisons)
-Da24counts <- as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
-Dx24counts <- as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
-Ep24counts <- as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
-Mt24counts <- as.data.frame(as.table(countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]))
-TR24counts <- as.data.frame(as.table(countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]))
+```{r processing files, include=FALSE}
 Da3counts <- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
 Dx3counts <- as.data.frame(as.table(countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]))
 Ep3counts <- as.data.frame(as.table(countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]))
 Mt3counts <- as.data.frame(as.table(countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]))
 TR3counts <- as.data.frame(as.table(countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]))
+
+Da24counts <- as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
+Dx24counts <- as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
+Ep24counts <- as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
+Mt24counts <- as.data.frame(as.table(countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]))
+TR24counts <- as.data.frame(as.table(countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]))
+
+
+
+colnames(Da24counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(Dx24counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(Ep24counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(Mt24counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(TR24counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(Da3counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(Dx3counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(Ep3counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(Mt3counts) <- c("ENTREZID", "Samples",  "Counts")
+colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
+```
 library(cowplot)
 ###then convert to data frame I think
 colnames(Da24counts) <- c("ENTREZID", "Samples",  "Counts")
