@@ -10,4 +10,4 @@ You can access my data [here].
 
 
 [workflowr]: https://github.com/workflowr/workflowr
-[here]: https://reneeisnowhere.github.io/Cardiotoxicity/
+[here]: https://reneeisnowhere.github.io/Cardiotoxicity/index.html
