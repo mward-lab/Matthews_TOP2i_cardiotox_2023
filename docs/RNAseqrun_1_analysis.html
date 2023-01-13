@@ -520,15 +520,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree56eab44892e7fa8fc5580e15e5a68b48e6c656bftargetblank56eab44a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree93c440954bacc490b38f71f2247daa5f3b1f298etargetblank93c4409a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/56eab44892e7fa8fc5580e15e5a68b48e6c656bf" target="_blank">56eab44</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/93c440954bacc490b38f71f2247daa5f3b1f298e" target="_blank">93c4409</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree56eab44892e7fa8fc5580e15e5a68b48e6c656bftargetblank56eab44a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree93c440954bacc490b38f71f2247daa5f3b1f298etargetblank93c4409a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -538,7 +538,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/56eab44892e7fa8fc5580e15e5a68b48e6c656bf" target="_blank">56eab44</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/93c440954bacc490b38f71f2247daa5f3b1f298e" target="_blank">93c4409</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -606,6 +606,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/93c440954bacc490b38f71f2247daa5f3b1f298e/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">93c4409</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-12
+</td>
+<td>
+try again
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/8ebcfd816046362034045a93dc8c4f48a3de8463/docs/RNAseqrun_1_analysis.html" target="_blank">8ebcfd8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -903,26 +937,6 @@ plot_versus_pc &lt;- function(df, pc_num, fac) {
       labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
   }
 }</code></pre>
-<pre class="r"><code>#samplenames &lt;- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
-
-
-time &lt;- rep((rep(c(&quot;3h&quot;, &quot;24h&quot;), c(6,6))), 6) 
-time &lt;- ordered(time, levels =c(&quot;3h&quot;, &quot;24h&quot;))
-mymatrix$samples$time &lt;- time
-indv &lt;- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) 
-mymatrix$samples$indv &lt;- indv
-group &lt;- as.factor(rep((c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;)),6))
-
-drug &lt;- rep(c(&quot;Daunorubicin&quot;,&quot;Doxorubicin&quot;,&quot;Epirubicin&quot;,&quot;Mitoxantrone&quot;,&quot;Trastuzumab&quot;, &quot;Vehicle&quot;),12)
-
-mymatrix$samples$drug &lt;- drug
-RIN &lt;- c(9.3,9.8,  9.8, 10.0,  9.6,  9.9,  7.8,  8.7,  8.6,  9.1,  9.4,  9.3,  9.4,  9.6,  9.9,  9.4,  9.9,  9.8,9.5,  9.9,  9.6,  9.9,  8.8,  9.5,  9.3, 10.0,  9.3,  9.6,  9.7,  9.4,  8.9,  7.5,  8.6,  8.5,  8.6,  9.3,9.6,  9.6,  9.4,  9.7,  9.9, 10.0,  9.4,  9.6,  9.4,  9.5,  9.8,  9.5,  9.6,  9.7,  9.6,  9.9,  9.6, 10.0,8.3, 8.4,9.4,9.7, 10.0, 10.0,  9.6,  9.6,  9.7,  9.5,  9.8,  9.5,  9.8,  8.6,  8.9,  9.1,  9.3,9.6)
-samplenames &lt;- c(&quot;MCW_RM_R_11_S72&quot;, &quot;MCW_RM_R_12_S1_&quot;, &quot;MCW_RM_R_13_S2_&quot;, &quot;MCW_RM_R_14_S3_&quot;, &quot;MCW_RM_R_15_S4_&quot;,&quot;MCW_RM_R_16_S5_&quot;, &quot;MCW_RM_R_17_S6_&quot;, &quot;MCW_RM_R_18_S7_&quot;, &quot;MCW_RM_R_19_S8_&quot;, &quot;MCW_RM_R_20_S9_&quot;,&quot;MCW_RM_R_21_S10&quot;, &quot;MCW_RM_R_22_S11&quot;, &quot;MCW_RM_R_23_S12&quot;, &quot;MCW_RM_R_24_S13&quot;, &quot;MCW_RM_R_25_S14&quot;,&quot;MCW_RM_R_26_S15&quot;, &quot;MCW_RM_R_27_S16&quot;, &quot;MCW_RM_R_28_S17&quot;, &quot;MCW_RM_R_29_S18&quot;, &quot;MCW_RM_R_30_S19&quot;,&quot;MCW_RM_R_31_S20&quot;, &quot;MCW_RM_R_32_S21&quot;, &quot;MCW_RM_R_33_S22&quot;, &quot;MCW_RM_R_34_S23&quot;, &quot;MCW_RM_R_35_S60&quot;,&quot;MCW_RM_R_36_S61&quot;, &quot;MCW_RM_R_37_S62&quot;, &quot;MCW_RM_R_38_S63&quot;, &quot;MCW_RM_R_39_S64&quot;, &quot;MCW_RM_R_40_S65&quot;,&quot;MCW_RM_R_41_S66&quot;, &quot;MCW_RM_R_42_S67&quot;, &quot;MCW_RM_R_43_S68&quot;, &quot;MCW_RM_R_44_S69&quot;,&quot;MCW_RM_R_45_S70&quot;,&quot;MCW_RM_R_46_S71&quot;,&quot;MCW_RM_R_47_S24&quot;,&quot;MCW_RM_R_48_S25&quot;, &quot;MCW_RM_R_49_S26&quot;, &quot;MCW_RM_R_50_S27&quot;,&quot;MCW_RM_R_51_S28&quot;, &quot;MCW_RM_R_52_S29&quot;, &quot;MCW_RM_R_53_S30&quot;, &quot;MCW_RM_R_54_S31&quot;, &quot;MCW_RM_R_55_S32&quot;,&quot;MCW_RM_R_56_S33&quot;,&quot;MCW_RM_R_57_S34&quot;, &quot;MCW_RM_R_58_S35&quot;, &quot;MCW_RM_R_59_S36&quot;, &quot;MCW_RM_R_60_S37&quot;,&quot;MCW_RM_R_61_S38&quot;, &quot;MCW_RM_R_62_S39&quot;, &quot;MCW_RM_R_63_S40&quot;, &quot;MCW_RM_R_64_S41&quot;, &quot;MCW_RM_R_65_S42&quot;,&quot;MCW_RM_R_66_S43&quot;, &quot;MCW_RM_R_67_S44&quot;, &quot;MCW_RM_R_68_S45&quot;, &quot;MCW_RM_R_69_S46&quot;, &quot;MCW_RM_R_70_S47&quot;,&quot;MCW_RM_R_71_S48&quot;,&quot;MCW_RM_R_72_S49&quot;, &quot;MCW_RM_R_73_S50&quot;, &quot;MCW_RM_R_74_S51&quot;, &quot;MCW_RM_R_75_S52&quot;,&quot;MCW_RM_R_76_S53&quot;, &quot;MCW_RM_R_77_S54&quot;, &quot;MCW_RM_R_78_S55&quot;, &quot;MCW_RM_R_79_S56&quot;, &quot;MCW_RM_R_80_S57&quot;,&quot;MCW_RM_R_81_S58&quot;,&quot;MCW_RM_R_82_S59&quot;)
- 
-
- 
-anno &lt;- (cbind(samplenames, indv, drug, time, RIN, group))
-anno &lt;- as.data.frame(anno)</code></pre>
 <p>This is how I retrieved the gene symbols.</p>
 <pre class="r"><code> ###now we add genenames to the geneid###
  
