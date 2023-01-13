@@ -32,6 +32,7 @@ library(scales)
 library(biomaRt)
 library(Homo.sapiens)
 library(cowplot)
+library(ggrepel)
 
 ```
 
@@ -487,31 +488,63 @@ colnames(Mt3counts) <- c("ENTREZID", "Samples",  "Counts")
 colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
 ```
 library(cowplot)
-###then convert to data frame I think
-colnames(Da24counts) <- c("ENTREZID", "Samples",  "Counts")
-# grep('da$' %in% Da24counts$Samples,)
-# Da24counts$Samples[grep("da")]
+
+###Volcano Plots###
+```{r Volcanoplots}
+
+plot_filenames <- c("V.DA.top","V.DX.top","V.EP.top","V.MT.top","V.TR.top","V.DA24.top",
+"V.DX24.top","V.EP24.top","V.MT24.top","V.TR24.top")
+
+volcanosig <- function(df, psig.lvl, fcsig.lvl,topg) {
+    df <- df %>% 
+    mutate(threshold = ifelse(-log(adj.P.Val) >= psig.lvl & logFC >= fcsig.lvl,"A",
+      ifelse(-log(adj.P.Val) >= psig.lvl & logFC <= -fcsig.lvl,"B", "C")))
+    
+    df <- df %>% mutate(genelabels = "")
+    df$genelabels[1:topg] <- df$SYMBOL[1:topg]
+  ggplot(df, aes(x=logFC, y=-log(adj.P.Val))) + 
+    geom_point(aes(color=threshold))+
+    geom_text_repel(aes(label = genelabels), segment.curvature = -1e-20,
+    arrow = arrow(length = unit(0.015, "npc")), max.overlaps = Inf) +
+    geom_hline(yintercept = -log(psig.lvl))+
+    xlab(expression("Log"[2]*" FC"))+
+    ylab(expression("-log"[10]*" adj. P Value"))+
+    scale_color_manual(values = c("green", "red","black"))+
+    theme_cowplot()+
+    theme(legend.position = "none",
+              plot.title = element_text(size = rel(1.5), hjust = 0.5),
+              axis.title = element_text(size = rel(1.00))) 
+}
+
+volcanosig(V.DA.top, 0.01,1,15)+ ggtitle("Daunorubicin 3 hour")
+volcanosig(V.DA24.top, 0.01,1,15)+ ggtitle("Daunorubicin 24 hour")
+volcanosig(V.DX.top, 0.01,1,15)+ ggtitle("Doxorubicin 3 hour")
+volcanosig(V.DX24.top, 0.01,1,15)+ ggtitle("Doxorubicin 24 hour")
+volcanosig(V.EP.top, 0.01,1,15)+ ggtitle("Epirubicin 3 hour")
+volcanosig(V.EP24.top, 0.01,1,15)+ ggtitle("Epirubicin 24 hour")
+volcanosig(V.MT.top, 0.01,1,15)+ ggtitle("Mitoxatrone 3 hour")
+volcanosig(V.MT24.top, 0.01,1,15)+ ggtitle("Mitoxatrone 24 hour")
+volcanosig(V.TR.top, 0.01,1,15)+ ggtitle("Trastuzumab 3 hour")
+volcanosig(V.TR24.top, 0.01,1,15)+ ggtitle("Trastuzumab 24 hour")
+
+```
 
 
-#### graph the gene expression####
-#make the list of gene wanted
-
-apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", 'IGFBP3', "BAX", "GPX1", 'MFN2',"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
+# Graphing specific gene expression#
+ First get a list of genes you want to see.  There are multiple was to "see" these.  I used the word 'apple' to store my list
+```{r}
+apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", "BAX", "GPX1", 'MFN2')#,"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
 ##find the index number for each gene
-indices <- match(apple, mymatrix$genes$SYMBOL)
-
+indices <- match(apple, x$genes$SYMBOL)
 ###subset the matrix
-entreset <- mymatrix$genes$ENTREZID[indices]
-entreset
+entreset <- x$genes$ENTREZID[indices]
 gnames <- cbind(entreset,apple)
-###voila!
-  
 colnames(gnames) <- c("ENTREZID","SYMBOL" )
-#which(gnames$SYMBOL== sigVDA24$SYMBOL)
-# match(Da24counts[%in% x,])
-#i <- which(x$genes$ENTREZID %in% Da24counts$ENTREZID)
+```
+_Voila_!
 
 ###now to ggplot###
+The nextstep is to make plots of all the genes you want to see.  I am stopping here, because I would like to add 
 for (gn in indices){
   print(Da24counts %>% filter(Tags == gn) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
   geom_boxplot(aes(fill = as.factor(Samples)))+
@@ -524,7 +557,7 @@ for (gn in indices){
 
 plot_function <- function(index, df) {
   for (i in index) {
-    data <- df %>% filter(Tags == i)
+    data <- df %>% filter(E == i)
     if (!nrow(data)) next
    print(data %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
             geom_boxplot(aes(fill = as.factor(Samples)))+
@@ -535,240 +568,5 @@ plot_function <- function(index, df) {
             labs(y = "Log2(cpm)",x= "", fill = "Treatment")) 
     }
 }
-gname <- gnames$ENTREZID
-gnames <- as.data.frame(gnames)
-plotDA_function(gname,TR3counts)
 
-plot_saving(gname, Da3counts)
-
-
-print(gnames[2,2])
-
-
-
-plot_saving <- function(index, df) {
-  for (i in index) {
-    data <- df %>% filter(Tags==i)
-    if (!nrow(data)) next
-    p <- data %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-            geom_boxplot(aes(fill = as.factor(Samples)))+
-            theme_cowplot(font_size =12,)+
-            
-            ggtitle(paste0(i," expression "))+
-            
-            labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-    
-    plot_name <- c(paste(i,substr(df,1,5),sep="_"))
-    ggsave(file.path("~/Ward Lab/Cardiotoxicity/Data/R code output"), filename= (plot_name,".pdf"), plot = p)
-    }
-}
-plotDA_function <- function(indices, Da24counts) {
-  for (i in indices) {
-    data <- Da24counts %>% filter(Tags==i)
-    if (!nrow(data)) next
-    p <- data %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-      geom_boxplot(aes(fill = as.factor(Samples)))+
-      theme_cowplot(font_size =12,)+
-      
-      ggtitle(paste0(i," expression"))+
-      
-      labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-    ggsave(file.path("~/Ward Lab/Cardiotoxicity/Data/R_code_output/3hours", paste0(deparse(substitute(Da24counts)), "_", i, ".pdf")), plot = p)
-  }
-}
-
-
-
-
-
-
-
-Da24counts %>% filter(Tags==gnames$ENTREZID) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-  geom_boxplot(aes(fill = as.factor(Samples)))+
-#ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-  #geom_boxplot(aes(fill = as.factor(Samples))) +
-  theme_cowplot(font_size =12,)+
-
-  ggtitle(paste0("BRCA1 expression in Daunorubicin at 24 hours"))+
-
-  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-  
-
-Dx24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-  geom_boxplot(aes(fill = as.factor(Samples)))+
-  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-  #geom_boxplot(aes(fill = as.factor(Samples))) +
-  theme_cowplot(font_size =12,)+
-  
-  ggtitle("Top2b expression in Doxorubicin at 24 hours")+
-  
-  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-
-
-
-Ep24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-  geom_boxplot(aes(fill = as.factor(Samples)))+
-  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-  #geom_boxplot(aes(fill = as.factor(Samples))) +
-  theme_cowplot(font_size =12,)+
-  
-  ggtitle("Top2b expression in Epirubicin at 24 hours")+
-  
-  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-
-Mt24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-  geom_boxplot(aes(fill = as.factor(Samples)))+
-  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-  #geom_boxplot(aes(fill = as.factor(Samples))) +
-  theme_cowplot(font_size =12,)+
-  
-  ggtitle("Top2b expression in Mito at 24 hours")+
-  
-  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-
-TR24counts %>% filter(Tags==7155) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-  geom_boxplot(aes(fill = as.factor(Samples)))+
-  #ggplot(Da24counts, aes(x=as.factor(Samples), y=Freq))+
-  #geom_boxplot(aes(fill = as.factor(Samples))) +
-  theme_cowplot(font_size =12,)+
-  
-  ggtitle("Top2b expression in Trastuzumab at 24 hours")+
-  
-  labs(y = "Log2(cpm)",x= "", fill = "Treatment")
-
-
-
-
-
-  plot(Mt24counts)
-plot(Da24counts)
-venn.diagram(x = list("Daunorubicin" = rownames(sigVDA24),
-                            "Filtering" = rownames(sigVDX24)),
-                   fill = brewer.pal(3, "Set2")[1:2], filename = NULL)
-x$samples$group
-vd
-
-coef(efit2)
-
-dim(efit2)
-sigVDA24
-
-V.DA24.top
-sum <- summary(decideTests(efit2))
-sum
-
-### next is   way to add the names to each sample in the lcpm matrix
-colnames(lcpm) <- label
-# de.common <- which(#addname of the list here using sig...)##
-#     [,1]!=0 & dt[,2]!=0)
-# length(de.common)
-
-
-####volcanoplot code: (go lower for ENHANCED!)
-
-
-V.DA.volp <-  volcanoplot(efit2, coef = 1,style = "p-value",
-                        highlight = 0.05,
-                        names = fit$genes$SYMBOL,
-                        hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "3 hour V DA"
-)
-V.DA.volp + geom_hline(yintercept = 2,
-                      linetype = "dashed") + 
-  geom_vline(xintercept = c(log2(0.5), log2(2)),
-             linetype = "dashed") 
-V.DX.volp <-  volcanoplot(efit2,coef = 2, style = "p-value",
-                        highlight = 40,
-                        names = fit$genes$SYMBOL,
-                        hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "3 hour V DX"
-)
-V.EP.volp <- volcanoplot(efit2,coef = 3,  style = "p-value",
-                        highlight = 40,
-                        names = fit$genes$SYMBOL,
-                        hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "3 hour V EP"
-)
-V.MT.volp = volcanoplot(efit2,coef = 4, style = "p-value",
-                        highlight = 100,
-                        names = fit$genes$SYMBOL,
-                        hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "3 hour V MT"
-)
-V.TR.volp = volcanoplot(efit2,coef = 5, style = "p-value",
-                        highlight = 100,
-                        names = fit$genes$SYMBOL,
-                        hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "3 hour V TR"
-)
-V.DA24.volp = volcanoplot(efit2,coef = 6, style = "p-value",
-                          highlight = 100,
-                          names = fit$genes$SYMBOL,
-                          hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "24 hour V DA"
-)
-V.DX24.volp = volcanoplot(efit2,coef = 7, style = "p-value",
-                          highlight = 100,
-                          names = fit$genes$SYMBOL,
-                          hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "24 hour V DX"
-)
-V.EP24.volp = volcanoplot(efit2,coef = 8, style = "p-value",
-                          highlight = 100,
-                          names = fit$genes$SYMBOL,
-                          hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "24 hour V EP"
-)
-V.MT24.volp = volcanoplot(efit2,coef = 9, style = "p-value",  
-                          highlight = 100,
-                          names = fit$genes$SYMBOL,
-                          hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "24 hour V MT"
-)
-V.TR24.volp = volcanoplot(efit2,coef = 10,style = "p-value",
-                          highlight = 20,
-                          names = fit$genes$SYMBOL,
-                          hl.col = "red",
-  xlab = "Log2 Fold Change",
-  ylab = NULL,
-  pch = 16,
-  cex = 0.35,
-  main = "24 hour V TR"
-)
 
