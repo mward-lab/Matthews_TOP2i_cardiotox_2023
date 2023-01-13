@@ -389,7 +389,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-01-12
+<strong>Last updated:</strong> 2023-01-13
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -520,15 +520,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree93c440954bacc490b38f71f2247daa5f3b1f298etargetblank93c4409a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7dd21e18f73150045927382375f5c5b5b4e482dctargetblank7dd21e1a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/93c440954bacc490b38f71f2247daa5f3b1f298e" target="_blank">93c4409</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7dd21e18f73150045927382375f5c5b5b4e482dc" target="_blank">7dd21e1</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree93c440954bacc490b38f71f2247daa5f3b1f298etargetblank93c4409a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7dd21e18f73150045927382375f5c5b5b4e482dctargetblank7dd21e1a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -538,7 +538,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/93c440954bacc490b38f71f2247daa5f3b1f298e" target="_blank">93c4409</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7dd21e18f73150045927382375f5c5b5b4e482dc" target="_blank">7dd21e1</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -606,6 +606,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/7dd21e18f73150045927382375f5c5b5b4e482dc/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">7dd21e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-13
+</td>
+<td>
+updating the Rmarkdown code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7eccdb84d817f81cadf1a04d155d3831b5dbe007/docs/RNAseqrun_1_analysis.html" target="_blank">7eccdb8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -891,6 +925,7 @@ library(cowplot)</code></pre>
 am not posting the raw data, but I will release in the future.</p>
 <pre class="r"><code>theme_set(theme_bw(base_size = 16))
 
+
 pca_plot &lt;- function(df, col_var = NULL, shape_var = NULL, title = &quot;&quot;) {
   ggplot(df) + geom_point(aes_string(x = &quot;PC1&quot;, y = &quot;PC2&quot;, color = col_var,
                                      shape = shape_var), size = 5) +
@@ -1012,145 +1047,145 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)</co
 <pre><code>
 
 ###  Daunorubicin </code></pre>
-<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-ℹ Please use tidy evaluation ideoms with `aes()`</code></pre>
-<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Doxorubicin </code></pre>
-<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Epirubicin </code></pre>
-<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Mitoxantrone </code></pre>
-<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Trastuzumab </code></pre>
-<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Vehicle </code></pre>
-<pre><code>Warning: Using shapes for an ordinal variable is not advised</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/all-samples-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>facs &lt;- c(&quot;indv&quot;, &quot;drug&quot;, &quot;time&quot;) 
-names(facs) &lt;- c(&quot;Individual&quot;,&quot;Treatment&quot;, &quot;Time&quot;) 
-for (f in facs) { 
+<pre class="r"><code>facs &lt;- c(&quot;indv&quot;, &quot;drug&quot;, &quot;time&quot;)
+names(facs) &lt;- c(&quot;Individual&quot;, &quot;Treatment&quot;, &quot;Time&quot;)
+drug1 &lt;- unique(drug)
+for (f in facs) {
   # PC1 v PC2
-  pca_plot(pca_all_anno,
-    col_var = f,
-    shape_var = indv,
-    title =names(facs)[which(facs == f)]) 
+  pca_plot(pca_all_anno, col_var = f, shape_var = indv,
+           title = names(facs)[which(facs == f)])
   print(last_plot())
-  f_v_pc1 &lt;-arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)) 
-  f_v_pc2 &lt;-arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)) 
-grid.arrange(f_v_pc1,f_v_pc2, ncol = 2)
+  
+  # Plot f versus PC1 and PC2
+  f_v_pc1 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f))
+  f_v_pc2 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f))
+  grid.arrange(f_v_pc1, f_v_pc2, ncol = 2)
 }</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p>{r Differential expression, eval=FALSE, include=FALSE} mm &lt;-
-model.matrix(~0 +drug +time) colnames(mm) &lt;- gsub(“group”, ““,
-colnames(mm)) mm2 &lt;- model.matrix(~0 + label) colnames(mm2) &lt;-
-c(”A3”, “X3”, “E3”,“M3”,“T3”, “V3”,“A24”, “X24”, “E24”,“M24”,“T24”,
-“V24”)</p>
-<p>mm y &lt;- voom(x, mm, plot =TRUE) dim(y)</p>
-<p>colnames(mm2) &lt;- c(“A24”, “X24”, “E24”,“M24”,“T24”, “V24”,“A3”,
-“X3”, “E3”,“M3”,“T3”, “V3”) ### renamed to make contrasts easier 1-6 is
-24 hour, 7-12 is 3 hour A X E M T V order</p>
-<p>##now apply correlations and things I chose block of indv in the mm.
-with my model only looking and drug and time contrasts y2 &lt;- voom(x,
-mm2) y &lt;- voom(x, mm)##not plotting corfit &lt;-
-duplicateCorrelation(y, mm, block = indv) corfit2 &lt;-
-duplicateCorrelation(y2, mm2, block = indv) v &lt;- voom(x, mm, block =
-indv, correlation = corfit<span class="math inline">\(consensus) v2
-&lt;- voom(x, mm2, block = indv, correlation =
-corfit2\)</span>consensus) fit &lt;- lmFit(v, mm, block = indv,
-correlation = corfit<span class="math inline">\(consensus) fit2 &lt;-
-lmFit(v2, mm2, block = indv, correlation = corfit2\)</span>consensus)
-fit2 mm2 # Make contrasts cm &lt;- makeContrasts( VvDA = drugVehicle
--drugDaunorubicin, VvDX = drugVehicle-drugDoxorubicin, VvEP =
-drugVehicle-drugEpirubicin, VvMT = drugVehicle-drugMitoxantrone, VvTR =
-drugVehicle-drugTrastuzumab, # VvDA24 = drugVehicleA-B, # VvDX24=
-drugVehicleA-C, # VvEP24= A-D, # VvMT24= B-C, # VvTR24= B-D, levels=mm)
-cm2 &lt;- makeContrasts( V.DA = V3 - A3, V.DX = V3 - X3, V.EP = V3 - E3,
-V.MT = V3 - M3, V.TR = V3 - T3, V.DA24 = V24-A24, V.DX24= V24-X24,
-V.EP24= V24-E24, V.MT24= V24-M24, V.TR24= V24-T24, levels = mm2)</p>
-<p>vfit &lt;- lmFit(y, mm) vfit2 &lt;- lmFit(y2, mm2) vfit &lt;-
-contrasts.fit(vfit, contrasts=cm) vfit2&lt;- contrasts.fit(vfit2,
-contrasts=cm2) efit &lt;- eBayes(vfit) efit2 &lt;- eBayes(vfit2)
-plotSA(efit)</p>
-<p>plotSA(efit2)</p>
-<p>V.DA.top= topTable(efit2, coef=1, adjust=“BH”, number=Inf,
-sort.by=“p”) V.DX.top= topTable(efit2, coef=2, adjust=“BH”, number=Inf,
-sort.by=“p”) V.EP.top= topTable(efit2, coef=3, adjust=“BH”, number=Inf,
-sort.by=“p”) V.MT.top= topTable(efit2, coef=4, adjust=“BH”, number=Inf,
-sort.by=“p”) V.TR.top= topTable(efit2, coef=5, adjust=“BH”, number=Inf,
-sort.by=“p”) V.DA24.top= topTable(efit2, coef=6, adjust=“BH”,
-number=Inf, sort.by=“p”) V.DX24.top= topTable(efit2, coef=7,
-adjust=“BH”, number=Inf, sort.by=“p”) V.EP24.top= topTable(efit2,
-coef=8, adjust=“BH”, number=Inf, sort.by=“p”) V.MT24.top=
-topTable(efit2, coef=9, adjust=“BH”, number=Inf, sort.by=“p”)
-V.TR24.top= topTable(efit2, coef=10, adjust=“BH”, number=Inf,
-sort.by=“p”)</p>
-<p>sigVDA3 = V.DA.top[V.DA.top<span class="math inline">\(adj.P.Val &lt;
-.1 , ] sigVDX3 = V.DX.top[V.DX.top\)</span>adj.P.Val &lt; .1 , ] sigVEP3
-= V.EP.top[V.EP.top<span class="math inline">\(adj.P.Val &lt; .1 , ]
-sigVMT3 = V.MT.top[V.MT.top\)</span>adj.P.Val &lt; .1 , ] sigVTR3 =
-V.TR.top[V.TR.top<span class="math inline">\(adj.P.Val &lt; .1 , ]
-sigVDA24 = V.DA24.top[V.DA24.top\)</span>adj.P.Val &lt; .1 , ] sigVDX24
-= V.DX24.top[V.DX24.top<span class="math inline">\(adj.P.Val &lt; .1 , ]
-sigVEP24 = V.EP24.top[V.EP24.top\)</span>adj.P.Val &lt; .1 , ] sigVMT24
-= V.MT24.top[V.MT24.top<span class="math inline">\(adj.P.Val &lt; .1 , ]
-sigVTR24 = V.TR24.top[V.TR24.top\)</span>adj.P.Val &lt; .1 , ] siglist
-&lt;- c(“sigVDA3”, “sigVDX3”, “sigVEP3”, “sigVMT3”, “sigVTR3”,
-“sigVDA24”, “sigVDX24”, “sigVEP24”, “sigVMT24”, “sigVTR24”)</p>
-<div id="trying-to-graph-the-genes-from-siglists"
-class="section level3">
-<h3>trying to graph the genes from siglists</h3>
-<p>##first I will pull all data into a frame for ggplots ##the
-voomtransformed data is in y2 (line 226ish above) countstotal &lt;-
-y2<span class="math inline">\(E colnames(countstotal) &lt;- smlabel
-boxplot(countstotal) boxplot(Da24counts\)</span>Tags)</p>
-</div>
-<div id="i-made-an-object-called-countstotal-from-the-elist-y2"
-class="section level3">
-<h3>I made an object called countstotal from the EList y2</h3>
-</div>
-<div
-id="subsetting-out-specific-columns-for-ggplot-graphing-of-specific-counts-comparisons"
-class="section level3">
-<h3>(subsetting out specific columns for ggplot graphing of specific
-counts comparisons)</h3>
-<p>Da24counts &lt;-
-as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
-Dx24counts &lt;-
-as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
-Ep24counts &lt;-
-as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
-Mt24counts &lt;-
-as.data.frame(as.table(countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]))
-TR24counts &lt;-
-as.data.frame(as.table(countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]))
-Da3counts &lt;-
-as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
-Dx3counts &lt;-
-as.data.frame(as.table(countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]))
-Ep3counts &lt;-
-as.data.frame(as.table(countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]))
-Mt3counts &lt;-
-as.data.frame(as.table(countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]))
-TR3counts &lt;-
-as.data.frame(as.table(countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]))
-library(cowplot) ###then convert to data frame I think
+<div id="differential-expression" class="section level1">
+<h1>Differential Expression</h1>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Make contrasts
+cm &lt;- makeContrasts(
+ VvDA = drugVehicle -drugDaunorubicin,
+ VvDX = drugVehicle-drugDoxorubicin,
+ VvEP = drugVehicle-drugEpirubicin,
+ VvMT = drugVehicle-drugMitoxantrone,
+ VvTR = drugVehicle-drugTrastuzumab,
+  levels=mm)
+cm2 &lt;- makeContrasts(
+  V.DA = V3 - A3,
+  V.DX = V3 - X3,
+  V.EP = V3 - E3,
+  V.MT = V3 - M3,
+  V.TR = V3 - T3,
+  V.DA24 = V24-A24,
+  V.DX24= V24-X24,
+  V.EP24= V24-E24,
+  V.MT24= V24-M24,
+  V.TR24= V24-T24,
+  levels = mm2)
+
+vfit &lt;- lmFit(y, mm)
+vfit2 &lt;- lmFit(y2, mm2)
+vfit &lt;- contrasts.fit(vfit, contrasts=cm)
+vfit2&lt;- contrasts.fit(vfit2, contrasts=cm2)
+efit &lt;- eBayes(vfit)
+efit2 &lt;- eBayes(vfit2)
+
+V.DA.top= topTable(efit2, coef=1, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.DX.top= topTable(efit2, coef=2, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.EP.top= topTable(efit2, coef=3, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.MT.top= topTable(efit2, coef=4, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.TR.top= topTable(efit2, coef=5, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.DA24.top= topTable(efit2, coef=6, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.DX24.top= topTable(efit2, coef=7, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.EP24.top= topTable(efit2, coef=8, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.MT24.top= topTable(efit2, coef=9, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+V.TR24.top= topTable(efit2, coef=10, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+
+
+sigVDA3 = V.DA.top[V.DA.top$adj.P.Val &lt; .1 , ]
+sigVDX3 = V.DX.top[V.DX.top$adj.P.Val &lt; .1 , ]
+sigVEP3 = V.EP.top[V.EP.top$adj.P.Val &lt; .1 , ]
+sigVMT3 = V.MT.top[V.MT.top$adj.P.Val &lt; .1 , ]
+sigVTR3 = V.TR.top[V.TR.top$adj.P.Val &lt; .1 , ]
+sigVDA24 = V.DA24.top[V.DA24.top$adj.P.Val &lt; .1 , ]
+sigVDX24 = V.DX24.top[V.DX24.top$adj.P.Val &lt; .1 , ]
+sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val &lt; .1 , ]
+sigVMT24 = V.MT24.top[V.MT24.top$adj.P.Val &lt; .1 , ]
+sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val &lt; .1 , ]
+siglist &lt;- c(&quot;sigVDA3&quot;,
+             &quot;sigVDX3&quot;,
+             &quot;sigVEP3&quot;,
+             &quot;sigVMT3&quot;,
+             &quot;sigVTR3&quot;,
+             &quot;sigVDA24&quot;,
+             &quot;sigVDX24&quot;,
+             &quot;sigVEP24&quot;,
+             &quot;sigVMT24&quot;,
+             &quot;sigVTR24&quot;)</code></pre>
+<pre class="r"><code>mm2 &lt;- model.matrix(~0 + group1)
+##made the matrix model using the interaction between Treatment and Time
+colnames(mm2) &lt;- c(&quot;A3&quot;, &quot;X3&quot;, &quot;E3&quot;,&quot;M3&quot;,&quot;T3&quot;, &quot;V3&quot;,&quot;A24&quot;, &quot;X24&quot;, &quot;E24&quot;,&quot;M24&quot;,&quot;T24&quot;, &quot;V24&quot;)
+y2 &lt;- voom(x, mm2)
+
+corfit2 &lt;- duplicateCorrelation(y2, mm2, block = indv)
+
+v2 &lt;- voom(x, mm2, block = indv, correlation = corfit2$consensus)
+
+fit2 &lt;- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
+
+vfit2 &lt;- lmFit(y2, mm2)
+
+vfit2&lt;- contrasts.fit(vfit2, contrasts=cm2)
+
+efit2 &lt;- eBayes(vfit2)
+
+V.DA.top= topTable(efit2, coef=1, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+### sorting all top expressed genes for the Vehicle and Daunorubicin 3 hour treatments
+sigVDA3 = V.DA.top[V.DA.top$adj.P.Val &lt; .1 , ]
+### this helped pull only those files that were at an adjusted p value of less than 0.1
+### This p-value was used as the beginning examination of the data, considering I will run multiple runs of this RNA seq library.</code></pre>
+<p>This is the example code I used to process my data. I used two model
+matrix initially, one set up was /~0 +drug +time and the second was
+/~0+group1, then blocking by individual. That is why you see the number
+2 in the code above.</p>
+<p>##Graphing DEgenes## I then created a counts table for each set of
+genes. Luckily, the counts are stored in the y2 object, which is an
+EList class object. I can ‘simplify’ this process because I kept the
+DEGList format initially. I first made an object called ‘countstotal’
+from the EList y2. For ggploting later, I subsetted ‘countstotal’ by
+treatments.</p>
+<pre class="r"><code>countstotal &lt;- y2$E
+colnames(countstotal) &lt;- smlabel
+boxplot(countstotal)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/counts%20files-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Da3counts &lt;- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))</code></pre>
+<p>library(cowplot) ###then convert to data frame I think
 colnames(Da24counts) &lt;- c(“ENTREZID”, “Samples”, “Counts”) #
 grep(’da<span class="math inline">\(&#39; %in%
 Da24counts\)</span>Samples,) # Da24counts$Samples[grep(“da”)]</p>
@@ -1253,7 +1288,6 @@ x<span class="math inline">\(samples\)</span>group vd</p>
 <p>coef(efit2)</p>
 <p>dim(efit2) sigVDA24</p>
 <p>V.DA24.top sum &lt;- summary(decideTests(efit2)) sum</p>
-</div>
 </div>
 <div id="next-is-way-to-add-the-names-to-each-sample-in-the-lcpm-matrix"
 class="section level3">
@@ -1369,7 +1403,6 @@ other attached packages:
 [39] limma_3.52.4                           
 [40] Biobase_2.56.0                         
 [41] BiocGenerics_0.42.0                    
-[42] workflowr_1.7.0                        
 
 loaded via a namespace (and not attached):
   [1] utf8_1.2.2                    tidyselect_1.2.0             
@@ -1390,37 +1423,37 @@ loaded via a namespace (and not attached):
  [31] DelayedArray_0.22.0           assertthat_0.2.1             
  [33] promises_1.2.0.1              BiocIO_1.6.0                 
  [35] googlesheets4_1.0.1           gtable_0.3.1                 
- [37] processx_3.8.0                rlang_1.0.6                  
- [39] genefilter_1.78.0             splines_4.2.2                
- [41] rtracklayer_1.56.1            gargle_1.2.1                 
- [43] broom_1.0.2                   BiocManager_1.30.19          
- [45] yaml_2.3.6                    modelr_0.1.10                
- [47] backports_1.4.1               httpuv_1.6.7                 
- [49] RBGL_1.72.0                   tools_4.2.2                  
- [51] ellipsis_0.3.2                jquerylib_0.1.4              
- [53] sessioninfo_1.2.2             Rcpp_1.0.9                   
- [55] plyr_1.8.8                    progress_1.2.2               
- [57] zlibbioc_1.42.0               RCurl_1.98-1.9               
- [59] ps_1.7.2                      prettyunits_1.1.1            
- [61] urlchecker_1.0.1              SummarizedExperiment_1.26.1  
- [63] haven_2.5.1                   ggrepel_0.9.2                
- [65] fs_1.5.2                      magrittr_2.0.3               
- [67] RSpectra_0.16-1               futile.options_1.0.1         
- [69] reprex_2.0.2                  googledrive_2.0.0            
- [71] whisker_0.4.1                 matrixStats_0.63.0           
- [73] pkgload_1.3.2                 hms_1.1.2                    
- [75] mime_0.12                     evaluate_0.19                
- [77] xtable_1.8-4                  XML_3.99-0.13                
- [79] readxl_1.4.1                  compiler_4.2.2               
- [81] ellipse_0.4.3                 crayon_1.5.2                 
- [83] htmltools_0.5.4               corpcor_1.6.10               
- [85] later_1.3.0                   tzdb_0.3.0                   
- [87] geneplotter_1.74.0            lubridate_1.9.0              
- [89] DBI_1.1.3                     formatR_1.13                 
- [91] rappdirs_0.3.3                Matrix_1.5-3                 
- [93] cli_3.5.0                     parallel_4.2.2               
- [95] igraph_1.3.5                  pkgconfig_2.0.3              
- [97] getPass_0.2-2                 GenomicAlignments_1.32.1     
+ [37] processx_3.8.0                workflowr_1.7.0              
+ [39] rlang_1.0.6                   genefilter_1.78.0            
+ [41] splines_4.2.2                 rtracklayer_1.56.1           
+ [43] gargle_1.2.1                  broom_1.0.2                  
+ [45] BiocManager_1.30.19           yaml_2.3.6                   
+ [47] modelr_0.1.10                 backports_1.4.1              
+ [49] httpuv_1.6.7                  RBGL_1.72.0                  
+ [51] tools_4.2.2                   ellipsis_0.3.2               
+ [53] jquerylib_0.1.4               sessioninfo_1.2.2            
+ [55] Rcpp_1.0.9                    plyr_1.8.8                   
+ [57] progress_1.2.2                zlibbioc_1.42.0              
+ [59] RCurl_1.98-1.9                ps_1.7.2                     
+ [61] prettyunits_1.1.1             urlchecker_1.0.1             
+ [63] SummarizedExperiment_1.26.1   haven_2.5.1                  
+ [65] ggrepel_0.9.2                 fs_1.5.2                     
+ [67] magrittr_2.0.3                RSpectra_0.16-1              
+ [69] futile.options_1.0.1          reprex_2.0.2                 
+ [71] googledrive_2.0.0             whisker_0.4.1                
+ [73] matrixStats_0.63.0            pkgload_1.3.2                
+ [75] hms_1.1.2                     mime_0.12                    
+ [77] evaluate_0.19                 xtable_1.8-4                 
+ [79] XML_3.99-0.13                 readxl_1.4.1                 
+ [81] compiler_4.2.2                ellipse_0.4.3                
+ [83] crayon_1.5.2                  htmltools_0.5.4              
+ [85] corpcor_1.6.10                later_1.3.0                  
+ [87] tzdb_0.3.0                    geneplotter_1.74.0           
+ [89] lubridate_1.9.0               DBI_1.1.3                    
+ [91] formatR_1.13                  rappdirs_0.3.3               
+ [93] Matrix_1.5-3                  cli_3.5.0                    
+ [95] parallel_4.2.2                igraph_1.3.5                 
+ [97] pkgconfig_2.0.3               GenomicAlignments_1.32.1     
  [99] xml2_1.3.3                    rARPACK_0.11-0               
 [101] annotate_1.74.0               bslib_0.4.2                  
 [103] XVector_0.36.0                rvest_1.0.3                  
@@ -1441,6 +1474,7 @@ loaded via a namespace (and not attached):
 [133] sass_0.4.4                    profvis_0.3.7                
 [135] blob_1.2.3                    DESeq2_1.36.0                
 [137] memoise_2.0.1                </code></pre>
+</div>
 </div>
 </div>
 
