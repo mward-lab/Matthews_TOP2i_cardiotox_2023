@@ -520,15 +520,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7dd21e18f73150045927382375f5c5b5b4e482dctargetblank7dd21e1a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree4932a54661ae1024e0ec1b1f1f2731a6b1314d3ctargetblank4932a54a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7dd21e18f73150045927382375f5c5b5b4e482dc" target="_blank">7dd21e1</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/4932a54661ae1024e0ec1b1f1f2731a6b1314d3c" target="_blank">4932a54</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7dd21e18f73150045927382375f5c5b5b4e482dctargetblank7dd21e1a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree4932a54661ae1024e0ec1b1f1f2731a6b1314d3ctargetblank4932a54a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -538,7 +538,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7dd21e18f73150045927382375f5c5b5b4e482dc" target="_blank">7dd21e1</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/4932a54661ae1024e0ec1b1f1f2731a6b1314d3c" target="_blank">4932a54</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -606,6 +606,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/ecdefdfce1da048fed7208a00cc8fdf90c4b30f0/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">ecdefdf</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-13
+</td>
+<td>
+volcanoplot update
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/057a3be673a8b54a9ef16cd6c24f42ed59a3c699/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">057a3be</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-13
+</td>
+<td>
+adding in volcano plot code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/b73e8abbf17fab7d0533c0243f293bc74990dfa3/docs/RNAseqrun_1_analysis.html" target="_blank">b73e8ab</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-13
+</td>
+<td>
+updating DEGs
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -920,7 +971,8 @@ library(tidyverse)
 library(scales)
 library(biomaRt)
 library(Homo.sapiens)
-library(cowplot)</code></pre>
+library(cowplot)
+library(ggrepel)</code></pre>
 <p>The next step is to load all the data I will be using. Currently, I
 am not posting the raw data, but I will release in the future.</p>
 <pre class="r"><code>theme_set(theme_bw(base_size = 16))
@@ -1185,156 +1237,84 @@ colnames(countstotal) &lt;- smlabel
 boxplot(countstotal)</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/counts%20files-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>Da3counts &lt;- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))</code></pre>
-<p>library(cowplot) ###then convert to data frame I think
-colnames(Da24counts) &lt;- c(“ENTREZID”, “Samples”, “Counts”) #
-grep(’da<span class="math inline">\(&#39; %in%
-Da24counts\)</span>Samples,) # Da24counts$Samples[grep(“da”)]</p>
-<div id="graph-the-gene-expression" class="section level4">
-<h4>graph the gene expression</h4>
-<p>#make the list of gene wanted</p>
-<p>apple &lt;- c(‘CDKN1A’,“BBC3”, “MDM2”, “BCL2”, ‘IGFBP3’, “BAX”,
-“GPX1”, ‘MFN2’,“HAS3”,‘CYBA’,‘TOP2B’, ‘TP53’, ‘ABCC1’, ‘ABCC5’, ‘RRAGD’,
-‘DUSP13’, ‘NDUFAF1’, ‘TDP2’, ‘TXNIP’,‘BRCA1’, ‘CTCF’,‘RAD21’,‘RYR2’)
-##find the index number for each gene indices &lt;- match(apple,
-mymatrix<span class="math inline">\(genes\)</span>SYMBOL)</p>
-<p>###subset the matrix entreset &lt;- mymatrix<span
-class="math inline">\(genes\)</span>ENTREZID[indices] entreset gnames
-&lt;- cbind(entreset,apple) ###voila!</p>
-<p>colnames(gnames) &lt;- c(“ENTREZID”,“SYMBOL” ) #which(gnames<span
-class="math inline">\(SYMBOL== sigVDA24\)</span>SYMBOL) #
-match(Da24counts[%in% x,]) #i &lt;- which(x<span
-class="math inline">\(genes\)</span>ENTREZID %in%
-Da24counts$ENTREZID)</p>
-<p>###now to ggplot### for (gn in indices){ print(Da24counts %&gt;%
-filter(Tags == gn) %&gt;% ggplot(aes(x=as.factor(Samples), y=Freq))+
-geom_boxplot(aes(fill = as.factor(Samples)))+ theme_cowplot(font_size
-=12,)+</p>
+<p>library(cowplot)</p>
+<p>###Volcano Plots###</p>
+<pre class="r"><code>plot_filenames &lt;- c(&quot;V.DA.top&quot;,&quot;V.DX.top&quot;,&quot;V.EP.top&quot;,&quot;V.MT.top&quot;,&quot;V.TR.top&quot;,&quot;V.DA24.top&quot;,
+&quot;V.DX24.top&quot;,&quot;V.EP24.top&quot;,&quot;V.MT24.top&quot;,&quot;V.TR24.top&quot;)
+
+volcanosig &lt;- function(df, psig.lvl, fcsig.lvl,topg) {
+    df &lt;- df %&gt;% 
+    mutate(threshold = ifelse(-log(adj.P.Val) &gt;= psig.lvl &amp; logFC &gt;= fcsig.lvl,&quot;A&quot;,
+      ifelse(-log(adj.P.Val) &gt;= psig.lvl &amp; logFC &lt;= -fcsig.lvl,&quot;B&quot;, &quot;C&quot;)))
+    
+    df &lt;- df %&gt;% mutate(genelabels = &quot;&quot;)
+    df$genelabels[1:topg] &lt;- df$SYMBOL[1:topg]
+  ggplot(df, aes(x=logFC, y=-log(adj.P.Val))) + 
+    geom_point(aes(color=threshold))+
+    geom_text_repel(aes(label = genelabels), segment.curvature = -1e-20,
+    arrow = arrow(length = unit(0.015, &quot;npc&quot;)), max.overlaps = Inf) +
+    geom_hline(yintercept = -log(psig.lvl))+
+    xlab(expression(&quot;Log&quot;[2]*&quot; FC&quot;))+
+    ylab(expression(&quot;-log&quot;[10]*&quot; adj. P Value&quot;))+
+    scale_color_manual(values = c(&quot;green&quot;, &quot;red&quot;,&quot;black&quot;))+
+    theme_cowplot()+
+    theme(legend.position = &quot;none&quot;,
+              plot.title = element_text(size = rel(1.5), hjust = 0.5),
+              axis.title = element_text(size = rel(1.00))) 
+}
+
+volcanosig(V.DA.top, 0.01,1,15)+ ggtitle(&quot;Daunorubicin 3 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.DA24.top, 0.01,1,15)+ ggtitle(&quot;Daunorubicin 24 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.DX.top, 0.01,1,15)+ ggtitle(&quot;Doxorubicin 3 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.DX24.top, 0.01,1,15)+ ggtitle(&quot;Doxorubicin 24 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.EP.top, 0.01,1,15)+ ggtitle(&quot;Epirubicin 3 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.EP24.top, 0.01,1,15)+ ggtitle(&quot;Epirubicin 24 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.MT.top, 0.01,1,15)+ ggtitle(&quot;Mitoxatrone 3 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.MT24.top, 0.01,1,15)+ ggtitle(&quot;Mitoxatrone 24 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.TR.top, 0.01,1,15)+ ggtitle(&quot;Trastuzumab 3 hour&quot;)</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>volcanosig(V.TR24.top, 0.01,1,15)+ ggtitle(&quot;Trastuzumab 24 hour&quot;)</code></pre>
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_text_repel()`).</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-10.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="graphing-specific-gene-expression" class="section level1">
+<h1>Graphing specific gene expression</h1>
+<p>First get a list of genes you want to see. There are multiple was to
+“see” these. I used the word ‘apple’ to store my list</p>
+<pre class="r"><code>apple &lt;- c(&#39;CDKN1A&#39;,&quot;BBC3&quot;, &quot;MDM2&quot;, &quot;BCL2&quot;, &quot;BAX&quot;, &quot;GPX1&quot;, &#39;MFN2&#39;)#,&quot;HAS3&quot;,&#39;CYBA&#39;,&#39;TOP2B&#39;, &#39;TP53&#39;, &#39;ABCC1&#39;, &#39;ABCC5&#39;, &#39;RRAGD&#39;, &#39;DUSP13&#39;, &#39;NDUFAF1&#39;, &#39;TDP2&#39;, &#39;TXNIP&#39;,&#39;BRCA1&#39;, &#39;CTCF&#39;,&#39;RAD21&#39;,&#39;RYR2&#39;)
+##find the index number for each gene
+indices &lt;- match(apple, x$genes$SYMBOL)
+###subset the matrix
+entreset &lt;- x$genes$ENTREZID[indices]
+gnames &lt;- cbind(entreset,apple)
+colnames(gnames) &lt;- c(&quot;ENTREZID&quot;,&quot;SYMBOL&quot; )</code></pre>
+<p><em>Voila</em>!</p>
+<p>###now to ggplot### The nextstep is to make plots of all the genes
+you want to see. I am stopping here, because I would like to add for (gn
+in indices){ print(Da24counts %&gt;% filter(Tags == gn) %&gt;%
+ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
+as.factor(Samples)))+ theme_cowplot(font_size =12,)+</p>
 <pre><code>ggtitle(paste0(gnames$gnames,&quot; expression in Daunorubicin at 24 hours&quot;))+
 
 labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;))</code></pre>
 <p>}</p>
 <p>plot_function &lt;- function(index, df) { for (i in index) { data
-&lt;- df %&gt;% filter(Tags == i) if (!nrow(data)) next print(data
-%&gt;% ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill
-= as.factor(Samples)))+ theme_cowplot(font_size =12,)+</p>
-<pre><code>        ggtitle(paste0(i,&quot; expression &quot;))+
-        
-        labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;)) 
-}</code></pre>
-<p>} gname &lt;- gnames$ENTREZID gnames &lt;- as.data.frame(gnames)
-plotDA_function(gname,TR3counts)</p>
-<p>plot_saving(gname, Da3counts)</p>
-<p>print(gnames[2,2])</p>
-<p>plot_saving &lt;- function(index, df) { for (i in index) { data &lt;-
-df %&gt;% filter(Tags==i) if (!nrow(data)) next p &lt;- data %&gt;%
+&lt;- df %&gt;% filter(E == i) if (!nrow(data)) next print(data %&gt;%
 ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
 as.factor(Samples)))+ theme_cowplot(font_size =12,)+</p>
 <pre><code>        ggtitle(paste0(i,&quot; expression &quot;))+
         
-        labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;)
-
-plot_name &lt;- c(paste(i,substr(df,1,5),sep=&quot;_&quot;))
-ggsave(file.path(&quot;~/Ward Lab/Cardiotoxicity/Data/R code output&quot;), filename= (plot_name,&quot;.pdf&quot;), plot = p)
+        labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;)) 
 }</code></pre>
-<p>} plotDA_function &lt;- function(indices, Da24counts) { for (i in
-indices) { data &lt;- Da24counts %&gt;% filter(Tags==i) if (!nrow(data))
-next p &lt;- data %&gt;% ggplot(aes(x=as.factor(Samples), y=Freq))+
-geom_boxplot(aes(fill = as.factor(Samples)))+ theme_cowplot(font_size
-=12,)+</p>
-<pre><code>  ggtitle(paste0(i,&quot; expression&quot;))+
-  
-  labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;)
-ggsave(file.path(&quot;~/Ward Lab/Cardiotoxicity/Data/R_code_output/3hours&quot;, paste0(deparse(substitute(Da24counts)), &quot;_&quot;, i, &quot;.pdf&quot;)), plot = p)</code></pre>
-<p>} }</p>
-<p>Da24counts %&gt;% filter(Tags==gnames$ENTREZID) %&gt;%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ #ggplot(Da24counts, aes(x=as.factor(Samples),
-y=Freq))+ #geom_boxplot(aes(fill = as.factor(Samples))) +
-theme_cowplot(font_size =12,)+</p>
-<p>ggtitle(paste0(“BRCA1 expression in Daunorubicin at 24 hours”))+</p>
-<p>labs(y = “Log2(cpm)”,x= ““, fill =”Treatment”)</p>
-<p>Dx24counts %&gt;% filter(Tags==7155) %&gt;%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ #ggplot(Da24counts, aes(x=as.factor(Samples),
-y=Freq))+ #geom_boxplot(aes(fill = as.factor(Samples))) +
-theme_cowplot(font_size =12,)+</p>
-<p>ggtitle(“Top2b expression in Doxorubicin at 24 hours”)+</p>
-<p>labs(y = “Log2(cpm)”,x= ““, fill =”Treatment”)</p>
-<p>Ep24counts %&gt;% filter(Tags==7155) %&gt;%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ #ggplot(Da24counts, aes(x=as.factor(Samples),
-y=Freq))+ #geom_boxplot(aes(fill = as.factor(Samples))) +
-theme_cowplot(font_size =12,)+</p>
-<p>ggtitle(“Top2b expression in Epirubicin at 24 hours”)+</p>
-<p>labs(y = “Log2(cpm)”,x= ““, fill =”Treatment”)</p>
-<p>Mt24counts %&gt;% filter(Tags==7155) %&gt;%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ #ggplot(Da24counts, aes(x=as.factor(Samples),
-y=Freq))+ #geom_boxplot(aes(fill = as.factor(Samples))) +
-theme_cowplot(font_size =12,)+</p>
-<p>ggtitle(“Top2b expression in Mito at 24 hours”)+</p>
-<p>labs(y = “Log2(cpm)”,x= ““, fill =”Treatment”)</p>
-<p>TR24counts %&gt;% filter(Tags==7155) %&gt;%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ #ggplot(Da24counts, aes(x=as.factor(Samples),
-y=Freq))+ #geom_boxplot(aes(fill = as.factor(Samples))) +
-theme_cowplot(font_size =12,)+</p>
-<p>ggtitle(“Top2b expression in Trastuzumab at 24 hours”)+</p>
-<p>labs(y = “Log2(cpm)”,x= ““, fill =”Treatment”)</p>
-<p>plot(Mt24counts) plot(Da24counts) venn.diagram(x =
-list(“Daunorubicin” = rownames(sigVDA24), “Filtering” =
-rownames(sigVDX24)), fill = brewer.pal(3, “Set2”)[1:2], filename = NULL)
-x<span class="math inline">\(samples\)</span>group vd</p>
-<p>coef(efit2)</p>
-<p>dim(efit2) sigVDA24</p>
-<p>V.DA24.top sum &lt;- summary(decideTests(efit2)) sum</p>
-</div>
-<div id="next-is-way-to-add-the-names-to-each-sample-in-the-lcpm-matrix"
-class="section level3">
-<h3>next is way to add the names to each sample in the lcpm matrix</h3>
-<p>colnames(lcpm) &lt;- label # de.common &lt;- which(#addname of the
-list here using sig…)## # [,1]!=0 &amp; dt[,2]!=0) #
-length(de.common)</p>
-<p>####volcanoplot code: (go lower for ENHANCED!)</p>
-<p>V.DA.volp &lt;- volcanoplot(efit2, coef = 1,style = “p-value”,
-highlight = 0.05, names = fit<span
-class="math inline">\(genes\)</span>SYMBOL, hl.col = “red”, xlab = “Log2
-Fold Change”, ylab = NULL, pch = 16, cex = 0.35, main = “3 hour V DA” )
-V.DA.volp + geom_hline(yintercept = 2, linetype = “dashed”) +
-geom_vline(xintercept = c(log2(0.5), log2(2)), linetype = “dashed”)
-V.DX.volp &lt;- volcanoplot(efit2,coef = 2, style = “p-value”, highlight
-= 40, names = fit<span class="math inline">\(genes\)</span>SYMBOL,
-hl.col = “red”, xlab = “Log2 Fold Change”, ylab = NULL, pch = 16, cex =
-0.35, main = “3 hour V DX” ) V.EP.volp &lt;- volcanoplot(efit2,coef = 3,
-style = “p-value”, highlight = 40, names = fit<span
-class="math inline">\(genes\)</span>SYMBOL, hl.col = “red”, xlab = “Log2
-Fold Change”, ylab = NULL, pch = 16, cex = 0.35, main = “3 hour V EP” )
-V.MT.volp = volcanoplot(efit2,coef = 4, style = “p-value”, highlight =
-100, names = fit<span class="math inline">\(genes\)</span>SYMBOL, hl.col
-= “red”, xlab = “Log2 Fold Change”, ylab = NULL, pch = 16, cex = 0.35,
-main = “3 hour V MT” ) V.TR.volp = volcanoplot(efit2,coef = 5, style =
-“p-value”, highlight = 100, names = fit<span
-class="math inline">\(genes\)</span>SYMBOL, hl.col = “red”, xlab = “Log2
-Fold Change”, ylab = NULL, pch = 16, cex = 0.35, main = “3 hour V TR” )
-V.DA24.volp = volcanoplot(efit2,coef = 6, style = “p-value”, highlight =
-100, names = fit<span class="math inline">\(genes\)</span>SYMBOL, hl.col
-= “red”, xlab = “Log2 Fold Change”, ylab = NULL, pch = 16, cex = 0.35,
-main = “24 hour V DA” ) V.DX24.volp = volcanoplot(efit2,coef = 7, style
-= “p-value”, highlight = 100, names = fit<span
-class="math inline">\(genes\)</span>SYMBOL, hl.col = “red”, xlab = “Log2
-Fold Change”, ylab = NULL, pch = 16, cex = 0.35, main = “24 hour V DX” )
-V.EP24.volp = volcanoplot(efit2,coef = 8, style = “p-value”, highlight =
-100, names = fit<span class="math inline">\(genes\)</span>SYMBOL, hl.col
-= “red”, xlab = “Log2 Fold Change”, ylab = NULL, pch = 16, cex = 0.35,
-main = “24 hour V EP” ) V.MT24.volp = volcanoplot(efit2,coef = 9, style
-= “p-value”,<br />
-highlight = 100, names = fit<span
-class="math inline">\(genes\)</span>SYMBOL, hl.col = “red”, xlab = “Log2
-Fold Change”, ylab = NULL, pch = 16, cex = 0.35, main = “24 hour V MT” )
-V.TR24.volp = volcanoplot(efit2,coef = 10,style = “p-value”, highlight =
-20, names = fit<span class="math inline">\(genes\)</span>SYMBOL, hl.col
-= “red”, xlab = “Log2 Fold Change”, ylab = NULL, pch = 16, cex = 0.35,
-main = “24 hour V TR” )</p>
+<p>}</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1362,47 +1342,49 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] cowplot_1.1.1                          
- [2] Homo.sapiens_1.3.1                     
- [3] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
- [4] org.Hs.eg.db_3.15.0                    
- [5] GO.db_3.15.0                           
- [6] OrganismDbi_1.38.1                     
- [7] GenomicFeatures_1.48.4                 
- [8] GenomicRanges_1.48.0                   
- [9] GenomeInfoDb_1.32.4                    
-[10] AnnotationDbi_1.58.0                   
-[11] IRanges_2.30.1                         
-[12] S4Vectors_0.34.0                       
-[13] biomaRt_2.52.0                         
-[14] scales_1.2.1                           
-[15] forcats_0.5.2                          
-[16] stringr_1.5.0                          
-[17] dplyr_1.0.10                           
-[18] purrr_1.0.0                            
-[19] readr_2.1.3                            
-[20] tidyr_1.2.1                            
-[21] tibble_3.1.8                           
-[22] tidyverse_1.3.2                        
-[23] AnnotationHub_3.4.0                    
-[24] BiocFileCache_2.4.0                    
-[25] dbplyr_2.2.1                           
-[26] devtools_2.4.5                         
-[27] usethis_2.1.6                          
-[28] reshape2_1.4.4                         
-[29] gridExtra_2.3                          
-[30] HTSFilter_1.36.0                       
-[31] VennDiagram_1.7.3                      
-[32] futile.logger_1.4.3                    
-[33] mixOmics_6.20.0                        
-[34] ggplot2_3.4.0                          
-[35] lattice_0.20-45                        
-[36] MASS_7.3-58.1                          
-[37] RColorBrewer_1.1-3                     
-[38] edgeR_3.38.4                           
-[39] limma_3.52.4                           
-[40] Biobase_2.56.0                         
-[41] BiocGenerics_0.42.0                    
+ [1] ggrepel_0.9.2                          
+ [2] cowplot_1.1.1                          
+ [3] Homo.sapiens_1.3.1                     
+ [4] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+ [5] org.Hs.eg.db_3.15.0                    
+ [6] GO.db_3.15.0                           
+ [7] OrganismDbi_1.38.1                     
+ [8] GenomicFeatures_1.48.4                 
+ [9] GenomicRanges_1.48.0                   
+[10] GenomeInfoDb_1.32.4                    
+[11] AnnotationDbi_1.58.0                   
+[12] IRanges_2.30.1                         
+[13] S4Vectors_0.34.0                       
+[14] biomaRt_2.52.0                         
+[15] scales_1.2.1                           
+[16] forcats_0.5.2                          
+[17] stringr_1.5.0                          
+[18] dplyr_1.0.10                           
+[19] purrr_1.0.0                            
+[20] readr_2.1.3                            
+[21] tidyr_1.2.1                            
+[22] tibble_3.1.8                           
+[23] tidyverse_1.3.2                        
+[24] AnnotationHub_3.4.0                    
+[25] BiocFileCache_2.4.0                    
+[26] dbplyr_2.2.1                           
+[27] devtools_2.4.5                         
+[28] usethis_2.1.6                          
+[29] reshape2_1.4.4                         
+[30] gridExtra_2.3                          
+[31] HTSFilter_1.36.0                       
+[32] VennDiagram_1.7.3                      
+[33] futile.logger_1.4.3                    
+[34] mixOmics_6.20.0                        
+[35] ggplot2_3.4.0                          
+[36] lattice_0.20-45                        
+[37] MASS_7.3-58.1                          
+[38] RColorBrewer_1.1-3                     
+[39] edgeR_3.38.4                           
+[40] limma_3.52.4                           
+[41] Biobase_2.56.0                         
+[42] BiocGenerics_0.42.0                    
+[43] workflowr_1.7.0                        
 
 loaded via a namespace (and not attached):
   [1] utf8_1.2.2                    tidyselect_1.2.0             
@@ -1423,58 +1405,56 @@ loaded via a namespace (and not attached):
  [31] DelayedArray_0.22.0           assertthat_0.2.1             
  [33] promises_1.2.0.1              BiocIO_1.6.0                 
  [35] googlesheets4_1.0.1           gtable_0.3.1                 
- [37] processx_3.8.0                workflowr_1.7.0              
- [39] rlang_1.0.6                   genefilter_1.78.0            
- [41] splines_4.2.2                 rtracklayer_1.56.1           
- [43] gargle_1.2.1                  broom_1.0.2                  
- [45] BiocManager_1.30.19           yaml_2.3.6                   
- [47] modelr_0.1.10                 backports_1.4.1              
- [49] httpuv_1.6.7                  RBGL_1.72.0                  
- [51] tools_4.2.2                   ellipsis_0.3.2               
- [53] jquerylib_0.1.4               sessioninfo_1.2.2            
- [55] Rcpp_1.0.9                    plyr_1.8.8                   
- [57] progress_1.2.2                zlibbioc_1.42.0              
- [59] RCurl_1.98-1.9                ps_1.7.2                     
- [61] prettyunits_1.1.1             urlchecker_1.0.1             
- [63] SummarizedExperiment_1.26.1   haven_2.5.1                  
- [65] ggrepel_0.9.2                 fs_1.5.2                     
- [67] magrittr_2.0.3                RSpectra_0.16-1              
- [69] futile.options_1.0.1          reprex_2.0.2                 
- [71] googledrive_2.0.0             whisker_0.4.1                
- [73] matrixStats_0.63.0            pkgload_1.3.2                
- [75] hms_1.1.2                     mime_0.12                    
- [77] evaluate_0.19                 xtable_1.8-4                 
- [79] XML_3.99-0.13                 readxl_1.4.1                 
- [81] compiler_4.2.2                ellipse_0.4.3                
- [83] crayon_1.5.2                  htmltools_0.5.4              
- [85] corpcor_1.6.10                later_1.3.0                  
- [87] tzdb_0.3.0                    geneplotter_1.74.0           
- [89] lubridate_1.9.0               DBI_1.1.3                    
- [91] formatR_1.13                  rappdirs_0.3.3               
- [93] Matrix_1.5-3                  cli_3.5.0                    
- [95] parallel_4.2.2                igraph_1.3.5                 
- [97] pkgconfig_2.0.3               GenomicAlignments_1.32.1     
- [99] xml2_1.3.3                    rARPACK_0.11-0               
-[101] annotate_1.74.0               bslib_0.4.2                  
-[103] XVector_0.36.0                rvest_1.0.3                  
-[105] callr_3.7.3                   digest_0.6.31                
-[107] graph_1.74.0                  Biostrings_2.64.1            
-[109] rmarkdown_2.19                cellranger_1.1.0             
-[111] restfulr_0.0.15               curl_4.3.3                   
-[113] shiny_1.7.4                   Rsamtools_2.12.0             
-[115] rjson_0.2.21                  lifecycle_1.0.3              
-[117] jsonlite_1.8.4                viridisLite_0.4.1            
-[119] fansi_1.0.3                   pillar_1.8.1                 
-[121] KEGGREST_1.36.3               fastmap_1.1.0                
-[123] httr_1.4.4                    pkgbuild_1.4.0               
-[125] survival_3.4-0                interactiveDisplayBase_1.34.0
-[127] glue_1.6.2                    remotes_2.4.2                
-[129] png_0.1-8                     BiocVersion_3.15.2           
-[131] bit_4.0.5                     stringi_1.7.8                
-[133] sass_0.4.4                    profvis_0.3.7                
-[135] blob_1.2.3                    DESeq2_1.36.0                
-[137] memoise_2.0.1                </code></pre>
-</div>
+ [37] processx_3.8.0                rlang_1.0.6                  
+ [39] genefilter_1.78.0             splines_4.2.2                
+ [41] rtracklayer_1.56.1            gargle_1.2.1                 
+ [43] broom_1.0.2                   BiocManager_1.30.19          
+ [45] yaml_2.3.6                    modelr_0.1.10                
+ [47] backports_1.4.1               httpuv_1.6.7                 
+ [49] RBGL_1.72.0                   tools_4.2.2                  
+ [51] ellipsis_0.3.2                jquerylib_0.1.4              
+ [53] sessioninfo_1.2.2             Rcpp_1.0.9                   
+ [55] plyr_1.8.8                    progress_1.2.2               
+ [57] zlibbioc_1.42.0               RCurl_1.98-1.9               
+ [59] ps_1.7.2                      prettyunits_1.1.1            
+ [61] urlchecker_1.0.1              SummarizedExperiment_1.26.1  
+ [63] haven_2.5.1                   fs_1.5.2                     
+ [65] magrittr_2.0.3                RSpectra_0.16-1              
+ [67] futile.options_1.0.1          reprex_2.0.2                 
+ [69] googledrive_2.0.0             whisker_0.4.1                
+ [71] matrixStats_0.63.0            pkgload_1.3.2                
+ [73] hms_1.1.2                     mime_0.12                    
+ [75] evaluate_0.19                 xtable_1.8-4                 
+ [77] XML_3.99-0.13                 readxl_1.4.1                 
+ [79] compiler_4.2.2                ellipse_0.4.3                
+ [81] crayon_1.5.2                  htmltools_0.5.4              
+ [83] corpcor_1.6.10                later_1.3.0                  
+ [85] tzdb_0.3.0                    geneplotter_1.74.0           
+ [87] lubridate_1.9.0               DBI_1.1.3                    
+ [89] formatR_1.13                  rappdirs_0.3.3               
+ [91] Matrix_1.5-3                  cli_3.5.0                    
+ [93] parallel_4.2.2                igraph_1.3.5                 
+ [95] pkgconfig_2.0.3               getPass_0.2-2                
+ [97] GenomicAlignments_1.32.1      xml2_1.3.3                   
+ [99] rARPACK_0.11-0                annotate_1.74.0              
+[101] bslib_0.4.2                   XVector_0.36.0               
+[103] rvest_1.0.3                   callr_3.7.3                  
+[105] digest_0.6.31                 graph_1.74.0                 
+[107] Biostrings_2.64.1             rmarkdown_2.19               
+[109] cellranger_1.1.0              restfulr_0.0.15              
+[111] curl_4.3.3                    shiny_1.7.4                  
+[113] Rsamtools_2.12.0              rjson_0.2.21                 
+[115] lifecycle_1.0.3               jsonlite_1.8.4               
+[117] viridisLite_0.4.1             fansi_1.0.3                  
+[119] pillar_1.8.1                  KEGGREST_1.36.3              
+[121] fastmap_1.1.0                 httr_1.4.4                   
+[123] pkgbuild_1.4.0                survival_3.4-0               
+[125] interactiveDisplayBase_1.34.0 glue_1.6.2                   
+[127] remotes_2.4.2                 png_0.1-8                    
+[129] BiocVersion_3.15.2            bit_4.0.5                    
+[131] stringi_1.7.8                 sass_0.4.4                   
+[133] profvis_0.3.7                 blob_1.2.3                   
+[135] DESeq2_1.36.0                 memoise_2.0.1                </code></pre>
 </div>
 </div>
 
