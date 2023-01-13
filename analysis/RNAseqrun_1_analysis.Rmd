@@ -107,7 +107,7 @@ mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/coun
 ```
 
 
-```{r setting up the files used, warning=FALSE}
+```{r setting up the files used, warning=FALSE, echo=FALSE}
 #samplenames <- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
 
 
