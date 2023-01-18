@@ -39,7 +39,7 @@ library(ggrepel)
 The next step is to load all the data I will be using. Currently, I am
 not posting the raw data, but I will release in the future.
 
-```{r ggplot-theme-and-functions, echo=, warning=FALSE}
+```{r ggplot-theme-and-functions, echo=FALSE, warning=FALSE}
 theme_set(theme_bw(base_size = 16))
 
 
@@ -136,7 +136,7 @@ anno <- as.data.frame(anno)
 
 This is how I retrieved the gene symbols.
 
-```{r gene id infromation}
+```{r gene id infromation, echo=TRUE, message=FALSE, warning=FALSE}
  
  
  ###now we add genenames to the geneid###
@@ -160,7 +160,7 @@ Filtering the genes that are lowly expressed using several methods.
 First method, removing only those rows with zero counts across all
 samples.
 
-```{r first filter method}
+```{r first filter method, echo=TRUE}
 
 table(rowSums(mymatrix$counts==0)==72)
 ```
@@ -171,7 +171,7 @@ leftover genes!
 So now to try something a little more stringent using the built in
 function from the edgeR package.
 
-```{r second filter method}
+```{r second filter method, echo=TRUE}
 keep <- filterByExpr.DGEList(mymatrix, group = group)
 filter_test <- mymatrix[keep, , keep.lib.sizes=FALSE]
 dim(filter_test)
@@ -188,7 +188,7 @@ each individual + a specific treatment + a specific time.
 The beginning cutoff-standard in our lab is to start by using the
 rowMeans \>0 cutoff on the log10 of cpm.
 
-```{r third filter method}
+```{r third filter method, echo=TRUE}
 cpm <- cpm(mymatrix)
 lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
 dim(lcpm)
@@ -315,7 +315,7 @@ print(pca_var_plot(pca_all))
 ```
 ##Variance contribution from treatment, extraction time, or individual on PC1 and PC2
 
-```{r variance by treatment time and individual, echo=, message=FALSE, warning=FALSE}
+```{r variance by treatment time and individual, echo=FALSE, message=FALSE, warning=FALSE}
 facs <- c("indv", "drug", "time")
 names(facs) <- c("Individual", "Treatment", "Time")
 drug1 <- unique(drug)##for changing shapes and colors
@@ -455,6 +455,18 @@ sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < .1 , ]
 
 This is the example code I used to process my data.  I used two model matrix initially, one set up was /~0 +drug +time and the second was /~0+group1, then blocking by individual.
 That is why you see the number 2 in the code above.
+#DEG summary
+```{r prcompish stuff, echo=FALSE, warning=FALSE}
+prdat_cpm <- calc_pca(t(dat_cpm)) 
+summary(prdat_cpm)
+ sum <- summary(decideTests(efit2))
+sum
+# biplot(prdat_cpm, ind.names = FALSE)
+#  biplot(prdat_cpm, y=choices = 1:2, scale = 1, pc.biplot = FALSE)
+
+```
+
+
 
 
 ##Graphing DEgenes##
@@ -497,7 +509,7 @@ colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
 library(cowplot)
 
 ###Volcano Plots
-```{r Volcanoplots, echo=FALSE}
+```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
 
 plot_filenames <- c("V.DA.top","V.DX.top","V.EP.top","V.MT.top","V.TR.top","V.DA24.top",
 "V.DX24.top","V.EP24.top","V.MT24.top","V.TR24.top")
@@ -536,7 +548,7 @@ volcanosig(V.TR.top, 0.01,10)+ ggtitle("Trastuzumab 3 hour")
 volcanosig(V.TR24.top, 0.01,10)+ ggtitle("Trastuzumab 24 hour")
 volcanoplot(efit2,coef = 10,style = "p-value",
                           highlight = 8,
-                          names = fit$genes$SYMBOL,
+                          names = efit2$genes$SYMBOL,
                           hl.col = "red",xlab = "Log2 Fold Change",
                           ylab = NULL,pch = 16,cex = 0.35,
                           main = "Using Trastuzuman 24 hour data and volcanoplot function")
@@ -550,7 +562,7 @@ volcanoplot(efit2,coef = 10,style = "p-value",
 
 # Graphing specific gene expression#
  First get a list of genes you want to see.  There are multiple was to "see" these.  I used the word 'apple' to store my list
-```{r}
+```{r gene stuff, echo=TRUE}
 apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", "BAX", "GPX1", 'MFN2')#,"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
 ##find the index number for each gene
 indices <- match(apple, x$genes$SYMBOL)
@@ -561,7 +573,7 @@ colnames(gnames) <- c("ENTREZID","SYMBOL" )
 ```
 _Voila_!
 
-###now to ggplot###
+###now to ggplot
 The nextstep is to make plots of all the genes you want to see.  I am stopping here, because I would like to add 
 for (gn in indices){
   print(Da24counts %>% filter(Tags == gn) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
@@ -588,14 +600,7 @@ plot_function <- function(index, df) {
 }
 
 
-```{r  prcompish stuff} 
-prdat_cpm <- calc_pca(t(dat_cpm)) 
-summary(prdat_cpm)
- 
-biplot(prdat_cpm, ind.names = FALSE)
- biplot(prdat_cpm, y=choices = 1:2, scale = 1, pc.biplot = FALSE)
 
-```
 
 
 
