@@ -1,7 +1,7 @@
 ---
 title: "Run1_analysis"
 author: "ERM"
-date: "20230109`"
+date: "20230118"
 output: html_document
 editor_options: 
   markdown: 
@@ -39,7 +39,7 @@ library(ggrepel)
 The next step is to load all the data I will be using. Currently, I am
 not posting the raw data, but I will release in the future.
 
-```{r ggplot-theme-and-functions, echo=FALSE, warning=FALSE}
+```{r ggplot-theme-and-functions, warning=FALSE, include=FALSE}
 theme_set(theme_bw(base_size = 16))
 
 
@@ -104,10 +104,7 @@ myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern =
 
 mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
 
-
-
 ```
-
 
 ```{r setting up the files used, echo=FALSE, message=FALSE, warning=FALSE}
 #samplenames <- substring(colnames(mymatrix), 0, 15)##this pulls the column names from the matrix and clips charc 0-15 to rename)
@@ -126,18 +123,14 @@ mymatrix$samples$drug <- drug
 RIN <- c(9.3,9.8,  9.8, 10.0,  9.6,  9.9,  7.8,  8.7,  8.6,  9.1,  9.4,  9.3,  9.4,  9.6,  9.9,  9.4,  9.9,  9.8,9.5,  9.9,  9.6,  9.9,  8.8,  9.5,  9.3, 10.0,  9.3,  9.6,  9.7,  9.4,  8.9,  7.5,  8.6,  8.5,  8.6,  9.3,9.6,  9.6,  9.4,  9.7,  9.9, 10.0,  9.4,  9.6,  9.4,  9.5,  9.8,  9.5,  9.6,  9.7,  9.6,  9.9,  9.6, 10.0,8.3, 8.4,9.4,9.7, 10.0, 10.0,  9.6,  9.6,  9.7,  9.5,  9.8,  9.5,  9.8,  8.6,  8.9,  9.1,  9.3,9.6)
 samplenames <- c("MCW_RM_R_11_S72", "MCW_RM_R_12_S1_", "MCW_RM_R_13_S2_", "MCW_RM_R_14_S3_", "MCW_RM_R_15_S4_","MCW_RM_R_16_S5_", "MCW_RM_R_17_S6_", "MCW_RM_R_18_S7_", "MCW_RM_R_19_S8_", "MCW_RM_R_20_S9_","MCW_RM_R_21_S10", "MCW_RM_R_22_S11", "MCW_RM_R_23_S12", "MCW_RM_R_24_S13", "MCW_RM_R_25_S14","MCW_RM_R_26_S15", "MCW_RM_R_27_S16", "MCW_RM_R_28_S17", "MCW_RM_R_29_S18", "MCW_RM_R_30_S19","MCW_RM_R_31_S20", "MCW_RM_R_32_S21", "MCW_RM_R_33_S22", "MCW_RM_R_34_S23", "MCW_RM_R_35_S60","MCW_RM_R_36_S61", "MCW_RM_R_37_S62", "MCW_RM_R_38_S63", "MCW_RM_R_39_S64", "MCW_RM_R_40_S65","MCW_RM_R_41_S66", "MCW_RM_R_42_S67", "MCW_RM_R_43_S68", "MCW_RM_R_44_S69","MCW_RM_R_45_S70","MCW_RM_R_46_S71","MCW_RM_R_47_S24","MCW_RM_R_48_S25", "MCW_RM_R_49_S26", "MCW_RM_R_50_S27","MCW_RM_R_51_S28", "MCW_RM_R_52_S29", "MCW_RM_R_53_S30", "MCW_RM_R_54_S31", "MCW_RM_R_55_S32","MCW_RM_R_56_S33","MCW_RM_R_57_S34", "MCW_RM_R_58_S35", "MCW_RM_R_59_S36", "MCW_RM_R_60_S37","MCW_RM_R_61_S38", "MCW_RM_R_62_S39", "MCW_RM_R_63_S40", "MCW_RM_R_64_S41", "MCW_RM_R_65_S42","MCW_RM_R_66_S43", "MCW_RM_R_67_S44", "MCW_RM_R_68_S45", "MCW_RM_R_69_S46", "MCW_RM_R_70_S47","MCW_RM_R_71_S48","MCW_RM_R_72_S49", "MCW_RM_R_73_S50", "MCW_RM_R_74_S51", "MCW_RM_R_75_S52","MCW_RM_R_76_S53", "MCW_RM_R_77_S54", "MCW_RM_R_78_S55", "MCW_RM_R_79_S56", "MCW_RM_R_80_S57","MCW_RM_R_81_S58","MCW_RM_R_82_S59")
  
-
- 
 anno <- (cbind(samplenames, indv, drug, time, RIN, group))
 anno <- as.data.frame(anno)
 ```
 
 
-
 This is how I retrieved the gene symbols.
 
 ```{r gene id infromation, echo=TRUE, message=FALSE, warning=FALSE}
- 
  
  ###now we add genenames to the geneid###
  
@@ -145,15 +138,11 @@ geneid <- rownames(mymatrix) ### pulls the names we have in the counts file
 genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
   keytype="ENTREZID")
 genes <- genes[!duplicated(genes$ENTREZID),]
- 
-
 mymatrix$genes <- genes
-
-
 
 ```
 
-##okay, now to transform data
+##Filtering out low count genes  
 
 Filtering the genes that are lowly expressed using several methods.
 
@@ -271,8 +260,7 @@ geom_boxplot(aes(fill=as.factor(drug)))+
   theme(axis.text.x = element_blank()) + ggtitle("Boxplot of RIN by drug and individual")+ facet_wrap(~indv)
 ```
 
-##Principal Component Analysis
-
+##Principal Component Analysis  
 
 PCA was done using code adopted from J. Blischak.   
 ```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE, fig.height=8, fig.width= 5}
@@ -454,8 +442,11 @@ sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < .1 , ]
 ```
 
 This is the example code I used to process my data.  I used two model matrix initially, one set up was /~0 +drug +time and the second was /~0+group1, then blocking by individual.
-That is why you see the number 2 in the code above.
-#DEG summary
+That is why you see the number 2 in the code above.  
+
+
+#DEG summary  
+
 ```{r prcompish stuff, echo=FALSE, warning=FALSE}
 prdat_cpm <- calc_pca(t(dat_cpm)) 
 summary(prdat_cpm)
@@ -469,7 +460,8 @@ sum
 
 
 
-##Graphing DEgenes##
+##Graphing DEgenes  
+
 I then created a counts table for each set of genes.  Luckily, the counts are stored in the y2 object, which is an EList class object. I can 'simplify' this process because I kept the DEGList format initially.
 I first made an object called 'countstotal' from the EList y2. For ggploting later, I subsetted 'countstotal' by treatments.
 
@@ -508,7 +500,8 @@ colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
 ```
 library(cowplot)
 
-###Volcano Plots
+###Volcano Plots  
+
 ```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
 
 plot_filenames <- c("V.DA.top","V.DX.top","V.EP.top","V.MT.top","V.TR.top","V.DA24.top",
