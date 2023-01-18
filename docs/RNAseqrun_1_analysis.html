@@ -389,7 +389,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-01-13
+<strong>Last updated:</strong> 2023-01-18
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -520,15 +520,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree4932a54661ae1024e0ec1b1f1f2731a6b1314d3ctargetblank4932a54a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0ea0bad6458efeaf92363c29b203c3483f5e1442targetblank0ea0bada">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/4932a54661ae1024e0ec1b1f1f2731a6b1314d3c" target="_blank">4932a54</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0ea0bad6458efeaf92363c29b203c3483f5e1442" target="_blank">0ea0bad</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree4932a54661ae1024e0ec1b1f1f2731a6b1314d3ctargetblank4932a54a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0ea0bad6458efeaf92363c29b203c3483f5e1442targetblank0ea0bada"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -538,7 +538,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/4932a54661ae1024e0ec1b1f1f2731a6b1314d3c" target="_blank">4932a54</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0ea0bad6458efeaf92363c29b203c3483f5e1442" target="_blank">0ea0bad</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -556,6 +556,7 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
     Ignored:    data/data_outline.txt
     Ignored:    data/mymatrix.RDS
 
@@ -606,6 +607,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/0ea0bad6458efeaf92363c29b203c3483f5e1442/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">0ea0bad</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-18
+</td>
+<td>
+volcano plot updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b8d76c62f22219f0a63eb822cbb33c23a9690f85/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">b8d76c6</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-18
+</td>
+<td>
+volcano plot updates
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/0f77ca389fc37aa1674d0d700db90da43eb03b6a/docs/RNAseqrun_1_analysis.html" target="_blank">0f77ca3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -975,63 +1027,13 @@ library(cowplot)
 library(ggrepel)</code></pre>
 <p>The next step is to load all the data I will be using. Currently, I
 am not posting the raw data, but I will release in the future.</p>
-<pre class="r"><code>theme_set(theme_bw(base_size = 16))
-
-
-pca_plot &lt;- function(df, col_var = NULL, shape_var = NULL, title = &quot;&quot;) {
-  ggplot(df) + geom_point(aes_string(x = &quot;PC1&quot;, y = &quot;PC2&quot;, color = col_var,
-                                     shape = shape_var), size = 5) +
-    labs(title = title, x = &quot;PC1&quot;, y = &quot;PC2&quot;)
-}
-
-pca_var_plot &lt;- function(pca) {
-  # x: class == prcomp
-  pca.var &lt;- pca$sdev^2
-  pca.prop &lt;- pca.var / sum(pca.var)
-  var.plot &lt;- qplot(PC, prop, data = data.frame(PC = 1:length(pca.prop),
-                                                prop = pca.prop)) +
-    labs(title = &#39;Variance contributed by each PC&#39;,
-         x = &#39;PC&#39;, y = &#39;Proportion of variance&#39;)
-}
-
-calc_pca &lt;- function(x) {
-  # Performs principal components analysis with prcomp
-  # x: a sample-by-gene numeric matrix
-  prcomp(x, scale. = TRUE, retx = TRUE)
-}
-
-get_regr_pval &lt;- function(mod) {
-  # Returns the p-value for the Fstatistic of a linear model
-  # mod: class lm
-  stopifnot(class(mod) == &quot;lm&quot;)
-  fstat &lt;- summary(mod)$fstatistic
-  pval &lt;- 1 - pf(fstat[1], fstat[2], fstat[3])
-  return(pval)
-}
-
-plot_versus_pc &lt;- function(df, pc_num, fac) {
-  # df: data.frame
-  # pc_num: numeric, specific PC for plotting
-  # fac: column name of df for plotting against PC
-  pc_char &lt;- paste0(&quot;PC&quot;, pc_num)
-  # Calculate F-statistic p-value for linear model
-  pval &lt;- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
-  if (is.numeric(df[, f])) {
-    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
-      geom_smooth(method = &quot;lm&quot;) + labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
-  } else {
-    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
-      labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
-  }
-}</code></pre>
 <p>This is how I retrieved the gene symbols.</p>
 <pre class="r"><code> ###now we add genenames to the geneid###
  
 geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
 genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
-  keytype=&quot;ENTREZID&quot;)</code></pre>
-<pre><code>&#39;select()&#39; returned 1:1 mapping between keys and columns</code></pre>
-<pre class="r"><code>genes &lt;- genes[!duplicated(genes$ENTREZID),]
+  keytype=&quot;ENTREZID&quot;)
+genes &lt;- genes[!duplicated(genes$ENTREZID),]
  
 
 mymatrix$genes &lt;- genes</code></pre>
@@ -1080,126 +1082,46 @@ dim(x)</code></pre>
 <p>Both of the above methods leave 14823 genes from 28,395. I prefer the
 second method, which keeps the DGEList format of the data.</p>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/plots%20of%20before%20and%20after%20filter-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/plots%20of%20before%20and%20after%20filter-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/plots%20of%20before%20and%20after%20filter-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>x_axis_labels=function(labels,every_nth=1,...) {
-    axis(side=1,at=seq_along(labels),labels=F)
-    text(x=(seq_along(labels))[seq_len(every_nth)==1],
-        y=par(&quot;usr&quot;)[3]-0.075*(par(&quot;usr&quot;)[4]-par(&quot;usr&quot;)[3]),
-        labels=labels[seq_len(every_nth)==1],xpd=TRUE,...)
-}
-boxplot(lcpm, main = &quot;Boxplots of log cpm per sample&quot;,xaxt = &quot;n&quot;, xlab= &quot;&quot;)#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
-x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>boxplot(filcpm_matrix, main =&quot;boxplots of log cpm per sample filtered&quot;,xaxt = &quot;n&quot;, xlab=&quot;&quot;)
-x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>now I will produce the RIN x sample plots:###
 <img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Principal Component Analysis</p>
+<p>##Principal Component Analysis</p>
 <p>PCA was done using code adopted from J. Blischak.</p>
 <pre><code>
 
 ###  Daunorubicin </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Doxorubicin </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Epirubicin </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Mitoxantrone </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Trastuzumab </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Vehicle </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="480" style="display: block; margin: auto;" /></p>
+<div id="pca-of-all-72-samples" class="section level3">
+<h3>PCA of all 72 samples</h3>
 <pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/all-samples-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>facs &lt;- c(&quot;indv&quot;, &quot;drug&quot;, &quot;time&quot;)
-names(facs) &lt;- c(&quot;Individual&quot;, &quot;Treatment&quot;, &quot;Time&quot;)
-drug1 &lt;- unique(drug)
-for (f in facs) {
-  # PC1 v PC2
-  pca_plot(pca_all_anno, col_var = f, shape_var = indv,
-           title = names(facs)[which(facs == f)])
-  print(last_plot())
-  
-  # Plot f versus PC1 and PC2
-  f_v_pc1 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f))
-  f_v_pc2 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f))
-  grid.arrange(f_v_pc1, f_v_pc2, ncol = 2)
-}</code></pre>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/all-samples-1.png" width="672" style="display: block; margin: auto;" />
+##Variance contribution from treatment, extraction time, or individual
+on PC1 and PC2</p>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 <div id="differential-expression" class="section level1">
 <h1>Differential Expression</h1>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># Make contrasts
-cm &lt;- makeContrasts(
- VvDA = drugVehicle -drugDaunorubicin,
- VvDX = drugVehicle-drugDoxorubicin,
- VvEP = drugVehicle-drugEpirubicin,
- VvMT = drugVehicle-drugMitoxantrone,
- VvTR = drugVehicle-drugTrastuzumab,
-  levels=mm)
-cm2 &lt;- makeContrasts(
-  V.DA = V3 - A3,
-  V.DX = V3 - X3,
-  V.EP = V3 - E3,
-  V.MT = V3 - M3,
-  V.TR = V3 - T3,
-  V.DA24 = V24-A24,
-  V.DX24= V24-X24,
-  V.EP24= V24-E24,
-  V.MT24= V24-M24,
-  V.TR24= V24-T24,
-  levels = mm2)
-
-vfit &lt;- lmFit(y, mm)
-vfit2 &lt;- lmFit(y2, mm2)
-vfit &lt;- contrasts.fit(vfit, contrasts=cm)
-vfit2&lt;- contrasts.fit(vfit2, contrasts=cm2)
-efit &lt;- eBayes(vfit)
-efit2 &lt;- eBayes(vfit2)
-
-V.DA.top= topTable(efit2, coef=1, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.DX.top= topTable(efit2, coef=2, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.EP.top= topTable(efit2, coef=3, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.MT.top= topTable(efit2, coef=4, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.TR.top= topTable(efit2, coef=5, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.DA24.top= topTable(efit2, coef=6, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.DX24.top= topTable(efit2, coef=7, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.EP24.top= topTable(efit2, coef=8, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.MT24.top= topTable(efit2, coef=9, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-V.TR24.top= topTable(efit2, coef=10, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
-
-
-sigVDA3 = V.DA.top[V.DA.top$adj.P.Val &lt; .1 , ]
-sigVDX3 = V.DX.top[V.DX.top$adj.P.Val &lt; .1 , ]
-sigVEP3 = V.EP.top[V.EP.top$adj.P.Val &lt; .1 , ]
-sigVMT3 = V.MT.top[V.MT.top$adj.P.Val &lt; .1 , ]
-sigVTR3 = V.TR.top[V.TR.top$adj.P.Val &lt; .1 , ]
-sigVDA24 = V.DA24.top[V.DA24.top$adj.P.Val &lt; .1 , ]
-sigVDX24 = V.DX24.top[V.DX24.top$adj.P.Val &lt; .1 , ]
-sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val &lt; .1 , ]
-sigVMT24 = V.MT24.top[V.MT24.top$adj.P.Val &lt; .1 , ]
-sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val &lt; .1 , ]
-siglist &lt;- c(&quot;sigVDA3&quot;,
-             &quot;sigVDX3&quot;,
-             &quot;sigVEP3&quot;,
-             &quot;sigVMT3&quot;,
-             &quot;sigVTR3&quot;,
-             &quot;sigVDA24&quot;,
-             &quot;sigVDX24&quot;,
-             &quot;sigVEP24&quot;,
-             &quot;sigVMT24&quot;,
-             &quot;sigVTR24&quot;)</code></pre>
 <pre class="r"><code>mm2 &lt;- model.matrix(~0 + group1)
 ##made the matrix model using the interaction between Treatment and Time
 colnames(mm2) &lt;- c(&quot;A3&quot;, &quot;X3&quot;, &quot;E3&quot;,&quot;M3&quot;,&quot;T3&quot;, &quot;V3&quot;,&quot;A24&quot;, &quot;X24&quot;, &quot;E24&quot;,&quot;M24&quot;,&quot;T24&quot;, &quot;V24&quot;)
@@ -1225,7 +1147,56 @@ sigVDA3 = V.DA.top[V.DA.top$adj.P.Val &lt; .1 , ]
 <p>This is the example code I used to process my data. I used two model
 matrix initially, one set up was /~0 +drug +time and the second was
 /~0+group1, then blocking by individual. That is why you see the number
-2 in the code above.</p>
+2 in the code above. #DEG summary</p>
+<pre><code>Importance of components:
+                           PC1     PC2     PC3      PC4     PC5      PC6
+Standard deviation     60.2067 44.5108 32.3037 30.98489 27.1431 24.07762
+Proportion of Variance  0.2445  0.1337  0.0704  0.06477  0.0497  0.03911
+Cumulative Proportion   0.2445  0.3782  0.4486  0.51337  0.5631  0.60218
+                            PC7      PC8      PC9     PC10     PC11     PC12
+Standard deviation     23.26775 21.37712 20.13091 18.19509 17.63059 16.30004
+Proportion of Variance  0.03652  0.03083  0.02734  0.02233  0.02097  0.01792
+Cumulative Proportion   0.63870  0.66953  0.69687  0.71921  0.74018  0.75810
+                           PC13     PC14     PC15     PC16     PC17     PC18
+Standard deviation     15.87695 14.24554 13.51806 12.67177 11.84085 11.44481
+Proportion of Variance  0.01701  0.01369  0.01233  0.01083  0.00946  0.00884
+Cumulative Proportion   0.77511  0.78880  0.80113  0.81196  0.82142  0.83025
+                           PC19    PC20    PC21    PC22    PC23    PC24    PC25
+Standard deviation     11.08484 10.4711 9.86347 9.53287 9.25138 9.06027 8.70778
+Proportion of Variance  0.00829  0.0074 0.00656 0.00613 0.00577 0.00554 0.00512
+Cumulative Proportion   0.83854  0.8459 0.85250 0.85863 0.86441 0.86995 0.87506
+                          PC26    PC27    PC28    PC29    PC30    PC31    PC32
+Standard deviation     8.40220 8.26732 8.04037 7.85926 7.76676 7.67958 7.48930
+Proportion of Variance 0.00476 0.00461 0.00436 0.00417 0.00407 0.00398 0.00378
+Cumulative Proportion  0.87982 0.88444 0.88880 0.89296 0.89703 0.90101 0.90480
+                          PC33    PC34    PC35   PC36    PC37    PC38    PC39
+Standard deviation     7.34178 7.28566 7.22861 7.1043 6.99972 6.94542 6.83650
+Proportion of Variance 0.00364 0.00358 0.00353 0.0034 0.00331 0.00325 0.00315
+Cumulative Proportion  0.90843 0.91201 0.91554 0.9189 0.92225 0.92550 0.92866
+                          PC40    PC41    PC42    PC43    PC44   PC45    PC46
+Standard deviation     6.75717 6.73038 6.57835 6.54307 6.53123 6.4395 6.37432
+Proportion of Variance 0.00308 0.00306 0.00292 0.00289 0.00288 0.0028 0.00274
+Cumulative Proportion  0.93174 0.93479 0.93771 0.94060 0.94348 0.9463 0.94902
+                          PC47    PC48    PC49   PC50    PC51   PC52    PC53
+Standard deviation     6.34772 6.23190 6.17748 6.0816 6.01946 5.9644 5.89730
+Proportion of Variance 0.00272 0.00262 0.00257 0.0025 0.00244 0.0024 0.00235
+Cumulative Proportion  0.95173 0.95435 0.95693 0.9594 0.96187 0.9643 0.96661
+                         PC54    PC55    PC56    PC57    PC58    PC59    PC60
+Standard deviation     5.8378 5.80173 5.72099 5.69367 5.65008 5.60128 5.47568
+Proportion of Variance 0.0023 0.00227 0.00221 0.00219 0.00215 0.00212 0.00202
+Cumulative Proportion  0.9689 0.97118 0.97339 0.97558 0.97773 0.97985 0.98187
+                          PC61    PC62    PC63    PC64    PC65   PC66    PC67
+Standard deviation     5.46660 5.38710 5.31872 5.25710 5.11760 5.0166 4.83245
+Proportion of Variance 0.00202 0.00196 0.00191 0.00186 0.00177 0.0017 0.00158
+Cumulative Proportion  0.98389 0.98585 0.98776 0.98962 0.99139 0.9931 0.99466
+                          PC68    PC69    PC70    PC71      PC72
+Standard deviation     4.73475 4.57831 4.51242 3.92680 4.923e-14
+Proportion of Variance 0.00151 0.00141 0.00137 0.00104 0.000e+00
+Cumulative Proportion  0.99617 0.99759 0.99896 1.00000 1.000e+00</code></pre>
+<pre><code>        V.DA  V.DX  V.EP  V.MT  V.TR V.DA24 V.DX24 V.EP24 V.MT24 V.TR24
+Down      63     3    11    13     0   3342   3013   2871    320      0
+NotSig 14456 14814 14714 14780 14823   8279   8993   9034  13970  14823
+Up       304     6    98    30     0   3202   2817   2918    533      0</code></pre>
 <p>##Graphing DEgenes## I then created a counts table for each set of
 genes. Luckily, the counts are stored in the y2 object, which is an
 EList class object. I can ‘simplify’ this process because I kept the
@@ -1238,52 +1209,8 @@ boxplot(countstotal)</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/counts%20files-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>Da3counts &lt;- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))</code></pre>
 <p>library(cowplot)</p>
-<p>###Volcano Plots###</p>
-<pre class="r"><code>plot_filenames &lt;- c(&quot;V.DA.top&quot;,&quot;V.DX.top&quot;,&quot;V.EP.top&quot;,&quot;V.MT.top&quot;,&quot;V.TR.top&quot;,&quot;V.DA24.top&quot;,
-&quot;V.DX24.top&quot;,&quot;V.EP24.top&quot;,&quot;V.MT24.top&quot;,&quot;V.TR24.top&quot;)
-
-volcanosig &lt;- function(df, psig.lvl, fcsig.lvl,topg) {
-    df &lt;- df %&gt;% 
-    mutate(threshold = ifelse(-log(adj.P.Val) &gt;= psig.lvl &amp; logFC &gt;= fcsig.lvl,&quot;A&quot;,
-      ifelse(-log(adj.P.Val) &gt;= psig.lvl &amp; logFC &lt;= -fcsig.lvl,&quot;B&quot;, &quot;C&quot;)))
-    
-    df &lt;- df %&gt;% mutate(genelabels = &quot;&quot;)
-    df$genelabels[1:topg] &lt;- df$SYMBOL[1:topg]
-  ggplot(df, aes(x=logFC, y=-log(adj.P.Val))) + 
-    geom_point(aes(color=threshold))+
-    geom_text_repel(aes(label = genelabels), segment.curvature = -1e-20,
-    arrow = arrow(length = unit(0.015, &quot;npc&quot;)), max.overlaps = Inf) +
-    geom_hline(yintercept = -log(psig.lvl))+
-    xlab(expression(&quot;Log&quot;[2]*&quot; FC&quot;))+
-    ylab(expression(&quot;-log&quot;[10]*&quot; adj. P Value&quot;))+
-    scale_color_manual(values = c(&quot;green&quot;, &quot;red&quot;,&quot;black&quot;))+
-    theme_cowplot()+
-    theme(legend.position = &quot;none&quot;,
-              plot.title = element_text(size = rel(1.5), hjust = 0.5),
-              axis.title = element_text(size = rel(1.00))) 
-}
-
-volcanosig(V.DA.top, 0.01,1,15)+ ggtitle(&quot;Daunorubicin 3 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.DA24.top, 0.01,1,15)+ ggtitle(&quot;Daunorubicin 24 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.DX.top, 0.01,1,15)+ ggtitle(&quot;Doxorubicin 3 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.DX24.top, 0.01,1,15)+ ggtitle(&quot;Doxorubicin 24 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.EP.top, 0.01,1,15)+ ggtitle(&quot;Epirubicin 3 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.EP24.top, 0.01,1,15)+ ggtitle(&quot;Epirubicin 24 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-6.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.MT.top, 0.01,1,15)+ ggtitle(&quot;Mitoxatrone 3 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-7.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.MT24.top, 0.01,1,15)+ ggtitle(&quot;Mitoxatrone 24 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-8.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.TR.top, 0.01,1,15)+ ggtitle(&quot;Trastuzumab 3 hour&quot;)</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-9.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>volcanosig(V.TR24.top, 0.01,1,15)+ ggtitle(&quot;Trastuzumab 24 hour&quot;)</code></pre>
-<pre><code>Warning: Removed 1 rows containing missing values (`geom_text_repel()`).</code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>###Volcano Plots
+<img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-12.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="graphing-specific-gene-expression" class="section level1">
 <h1>Graphing specific gene expression</h1>
@@ -1297,9 +1224,9 @@ entreset &lt;- x$genes$ENTREZID[indices]
 gnames &lt;- cbind(entreset,apple)
 colnames(gnames) &lt;- c(&quot;ENTREZID&quot;,&quot;SYMBOL&quot; )</code></pre>
 <p><em>Voila</em>!</p>
-<p>###now to ggplot### The nextstep is to make plots of all the genes
-you want to see. I am stopping here, because I would like to add for (gn
-in indices){ print(Da24counts %&gt;% filter(Tags == gn) %&gt;%
+<p>###now to ggplot The nextstep is to make plots of all the genes you
+want to see. I am stopping here, because I would like to add for (gn in
+indices){ print(Da24counts %&gt;% filter(Tags == gn) %&gt;%
 ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
 as.factor(Samples)))+ theme_cowplot(font_size =12,)+</p>
 <pre><code>ggtitle(paste0(gnames$gnames,&quot; expression in Daunorubicin at 24 hours&quot;))+
