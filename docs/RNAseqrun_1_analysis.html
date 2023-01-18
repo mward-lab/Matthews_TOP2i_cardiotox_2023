@@ -11,6 +11,7 @@
 
 <meta name="author" content="ERM" />
 
+<meta name="date" content="2023-01-18" />
 
 <title>Run1_analysis</title>
 
@@ -360,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Run1_analysis</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">20230109`</h4>
+<h4 class="date">20230118</h4>
 
 </div>
 
@@ -520,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0ea0bad6458efeaf92363c29b203c3483f5e1442targetblank0ea0bada">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree1d0236c9195387aaff47d5ba6de46f6a8ba317eatargetblank1d0236ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0ea0bad6458efeaf92363c29b203c3483f5e1442" target="_blank">0ea0bad</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/1d0236c9195387aaff47d5ba6de46f6a8ba317ea" target="_blank">1d0236c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0ea0bad6458efeaf92363c29b203c3483f5e1442targetblank0ea0bada"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree1d0236c9195387aaff47d5ba6de46f6a8ba317eatargetblank1d0236ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -538,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0ea0bad6458efeaf92363c29b203c3483f5e1442" target="_blank">0ea0bad</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/1d0236c9195387aaff47d5ba6de46f6a8ba317ea" target="_blank">1d0236c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -556,7 +557,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/data_outline.txt
     Ignored:    data/mymatrix.RDS
 
@@ -607,6 +607,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1d0236c9195387aaff47d5ba6de46f6a8ba317ea/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">1d0236c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-18
+</td>
+<td>
+volcano plot updates again
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/39b0d24214a097f8f518f030c53e045d4b6cb2d2/docs/RNAseqrun_1_analysis.html" target="_blank">39b0d24</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1034,10 +1068,8 @@ geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
 genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
   keytype=&quot;ENTREZID&quot;)
 genes &lt;- genes[!duplicated(genes$ENTREZID),]
- 
-
 mymatrix$genes &lt;- genes</code></pre>
-<p>##okay, now to transform data</p>
+<p>##Filtering out low count genes</p>
 <p>Filtering the genes that are lowly expressed using several
 methods.</p>
 <p>First method, removing only those rows with zero counts across all
@@ -1147,7 +1179,8 @@ sigVDA3 = V.DA.top[V.DA.top$adj.P.Val &lt; .1 , ]
 <p>This is the example code I used to process my data. I used two model
 matrix initially, one set up was /~0 +drug +time and the second was
 /~0+group1, then blocking by individual. That is why you see the number
-2 in the code above. #DEG summary</p>
+2 in the code above.</p>
+<p>#DEG summary</p>
 <pre><code>Importance of components:
                            PC1     PC2     PC3      PC4     PC5      PC6
 Standard deviation     60.2067 44.5108 32.3037 30.98489 27.1431 24.07762
@@ -1197,20 +1230,20 @@ Cumulative Proportion  0.99617 0.99759 0.99896 1.00000 1.000e+00</code></pre>
 Down      63     3    11    13     0   3342   3013   2871    320      0
 NotSig 14456 14814 14714 14780 14823   8279   8993   9034  13970  14823
 Up       304     6    98    30     0   3202   2817   2918    533      0</code></pre>
-<p>##Graphing DEgenes## I then created a counts table for each set of
-genes. Luckily, the counts are stored in the y2 object, which is an
-EList class object. I can ‘simplify’ this process because I kept the
-DEGList format initially. I first made an object called ‘countstotal’
-from the EList y2. For ggploting later, I subsetted ‘countstotal’ by
-treatments.</p>
+<p>##Graphing DEgenes</p>
+<p>I then created a counts table for each set of genes. Luckily, the
+counts are stored in the y2 object, which is an EList class object. I
+can ‘simplify’ this process because I kept the DEGList format initially.
+I first made an object called ‘countstotal’ from the EList y2. For
+ggploting later, I subsetted ‘countstotal’ by treatments.</p>
 <pre class="r"><code>countstotal &lt;- y2$E
 colnames(countstotal) &lt;- smlabel
 boxplot(countstotal)</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/counts%20files-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>Da3counts &lt;- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))</code></pre>
 <p>library(cowplot)</p>
-<p>###Volcano Plots
-<img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>###Volcano Plots</p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-12.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="graphing-specific-gene-expression" class="section level1">
 <h1>Graphing specific gene expression</h1>
