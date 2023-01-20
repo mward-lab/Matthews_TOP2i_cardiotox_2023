@@ -15,10 +15,10 @@
 
 <title>Run1_analysis</title>
 
-<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -369,7 +369,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -380,8 +380,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -390,13 +390,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-01-18
+<strong>Last updated:</strong> 2023-01-20
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
@@ -506,30 +506,64 @@ run.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
 </p>
 </div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr
-project makes it easier to run your code on other machines.</p>
+<p>
+Using absolute paths to the files within your workflowr project makes it
+difficult for you and others to run your code on a different machine.
+Change the absolute path(s) below to the suggested relative path(s) to
+make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C:/Program Files/R_WD/Cardiotoxicity/data/
+</td>
+<td style="text-align:left;">
+data
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C:/Program Files/R_WD/Cardiotoxicity/data/siglist.txt
+</td>
+<td style="text-align:left;">
+data/siglist.txt
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree1d0236c9195387aaff47d5ba6de46f6a8ba317eatargetblank1d0236ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree443a9f393601e6c682c88350ddbe45f4e46f9617targetblank443a9f3a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/1d0236c9195387aaff47d5ba6de46f6a8ba317ea" target="_blank">1d0236c</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/443a9f393601e6c682c88350ddbe45f4e46f9617" target="_blank">443a9f3</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree1d0236c9195387aaff47d5ba6de46f6a8ba317eatargetblank1d0236ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree443a9f393601e6c682c88350ddbe45f4e46f9617targetblank443a9f3a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +573,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/1d0236c9195387aaff47d5ba6de46f6a8ba317ea" target="_blank">1d0236c</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/443a9f393601e6c682c88350ddbe45f4e46f9617" target="_blank">443a9f3</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,11 +591,27 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    data/.txt
+    Ignored:    data/allgenes.txt
     Ignored:    data/data_outline.txt
     Ignored:    data/mymatrix.RDS
+    Ignored:    data/sigVDA24.txt
+    Ignored:    data/sigVDA3.txt
+    Ignored:    data/sigVDX24.txt
+    Ignored:    data/sigVDX3.txt
+    Ignored:    data/sigVEP24.txt
+    Ignored:    data/sigVEP3.txt
+    Ignored:    data/sigVMT24.txt
+    Ignored:    data/sigVMT3.txt
+    Ignored:    data/sigVTR24.txt
+    Ignored:    data/sigVTR3.txt
 
 Untracked files:
+    Untracked:  analysis/.txt
     Untracked:  reneebasecode.R
+
+Unstaged changes:
+    Deleted:    analysis/first-try.Rmd
 
 </code></pre>
 <p>
@@ -607,6 +657,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/443a9f393601e6c682c88350ddbe45f4e46f9617/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">443a9f3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-20
+</td>
+<td>
+adding in GO analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/c8cca5b166baf53f06955eee93f3d7001bfbbc62/docs/RNAseqrun_1_analysis.html" target="_blank">c8cca5b</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1117,7 +1201,8 @@ second method, which keeps the DGEList format of the data.</p>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>now I will produce the RIN x sample plots:###
 <img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>##Principal Component Analysis</p>
+<div id="principal-component-analysis" class="section level2">
+<h2>Principal Component Analysis</h2>
 <p>PCA was done using code adopted from J. Blischak.</p>
 <pre><code>
 
@@ -1143,17 +1228,58 @@ second method, which keeps the DGEList format of the data.</p>
 
 ###  Vehicle </code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="480" style="display: block; margin: auto;" /></p>
-<div id="pca-of-all-72-samples" class="section level3">
-<h3>PCA of all 72 samples</h3>
+</div>
+<div id="pca-of-all-72-samples" class="section level2">
+<h2>PCA of all 72 samples</h2>
 <pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/all-samples-1.png" width="672" style="display: block; margin: auto;" />
-##Variance contribution from treatment, extraction time, or individual
+## Variance contribution from treatment, extraction time, or individual
 on PC1 and PC2</p>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/variance%20by%20treatment%20time%20and%20individual-6.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="differential-expression" class="section level1">
 <h1>Differential Expression</h1>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;col.names&#39; ignored</code></pre>
+<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
+attempt to set &#39;sep&#39; ignored</code></pre>
 <pre class="r"><code>mm2 &lt;- model.matrix(~0 + group1)
 ##made the matrix model using the interaction between Treatment and Time
 colnames(mm2) &lt;- c(&quot;A3&quot;, &quot;X3&quot;, &quot;E3&quot;,&quot;M3&quot;,&quot;T3&quot;, &quot;V3&quot;,&quot;A24&quot;, &quot;X24&quot;, &quot;E24&quot;,&quot;M24&quot;,&quot;T24&quot;, &quot;V24&quot;)
@@ -1265,25 +1391,38 @@ as.factor(Samples)))+ theme_cowplot(font_size =12,)+</p>
 <pre><code>ggtitle(paste0(gnames$gnames,&quot; expression in Daunorubicin at 24 hours&quot;))+
 
 labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;))</code></pre>
-<p>}</p>
-<p>plot_function &lt;- function(index, df) { for (i in index) { data
-&lt;- df %&gt;% filter(E == i) if (!nrow(data)) next print(data %&gt;%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ theme_cowplot(font_size =12,)+</p>
-<pre><code>        ggtitle(paste0(i,&quot; expression &quot;))+
-        
-        labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;)) 
+<p>} `{r} plot_function &lt;- function(index, df) { for (i in index) {
+data &lt;- df %&gt;% filter(ENTREZID == i) if (!nrow(data)) next
+print(data %&gt;% ggplot(aes(x=as.factor(Samples), y=Counts))+
+geom_boxplot(aes(fill = as.factor(Samples)))+ theme_cowplot(font_size
+=12,)+ ggtitle(paste0(i,” expression “))+</p>
+<pre><code>        labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;)) 
 }</code></pre>
 <p>}</p>
-<br>
-<p>
-<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
-<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-Session information
-</button>
-</p>
-<div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
+<p>apple &lt;- as.data.frame(sigVDA24$ENTREZID)</p>
+<p>plot_function(apple,Dx3counts)+theme(axis.text.x = element_text(size=
+8,angle = 90))+scale_x_discrete(labels=ENTREZID)</p>
+<pre><code>
+
+
+
+
+
+
+&lt;br&gt;
+&lt;p&gt;
+&lt;button type=&quot;button&quot; class=&quot;btn btn-default btn-workflowr btn-workflowr-sessioninfo&quot;
+  data-toggle=&quot;collapse&quot; data-target=&quot;#workflowr-sessioninfo&quot;
+  style = &quot;display: block;&quot;&gt;
+  &lt;span class=&quot;glyphicon glyphicon-wrench&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+  Session information
+&lt;/button&gt;
+&lt;/p&gt;
+
+&lt;div id=&quot;workflowr-sessioninfo&quot; class=&quot;collapse&quot;&gt;
+
+```r
+sessionInfo()</code></pre>
 <pre><code>R version 4.2.2 (2022-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19044)
@@ -1320,14 +1459,14 @@ other attached packages:
 [16] forcats_0.5.2                          
 [17] stringr_1.5.0                          
 [18] dplyr_1.0.10                           
-[19] purrr_1.0.0                            
+[19] purrr_1.0.1                            
 [20] readr_2.1.3                            
 [21] tidyr_1.2.1                            
 [22] tibble_3.1.8                           
 [23] tidyverse_1.3.2                        
 [24] AnnotationHub_3.4.0                    
 [25] BiocFileCache_2.4.0                    
-[26] dbplyr_2.2.1                           
+[26] dbplyr_2.3.0                           
 [27] devtools_2.4.5                         
 [28] usethis_2.1.6                          
 [29] reshape2_1.4.4                         
@@ -1359,7 +1498,7 @@ loaded via a namespace (and not attached):
  [19] farver_2.1.1                  bit64_4.0.5                  
  [21] rprojroot_2.0.3               vctrs_0.5.1                  
  [23] generics_0.1.3                lambda.r_1.2.4               
- [25] xfun_0.36                     timechange_0.1.1             
+ [25] xfun_0.36                     timechange_0.2.0             
  [27] R6_2.5.1                      locfit_1.5-9.7               
  [29] bitops_1.0-7                  cachem_1.0.6                 
  [31] DelayedArray_0.22.0           assertthat_0.2.1             
@@ -1370,7 +1509,7 @@ loaded via a namespace (and not attached):
  [41] rtracklayer_1.56.1            gargle_1.2.1                 
  [43] broom_1.0.2                   BiocManager_1.30.19          
  [45] yaml_2.3.6                    modelr_0.1.10                
- [47] backports_1.4.1               httpuv_1.6.7                 
+ [47] backports_1.4.1               httpuv_1.6.8                 
  [49] RBGL_1.72.0                   tools_4.2.2                  
  [51] ellipsis_0.3.2                jquerylib_0.1.4              
  [53] sessioninfo_1.2.2             Rcpp_1.0.9                   
@@ -1384,15 +1523,15 @@ loaded via a namespace (and not attached):
  [69] googledrive_2.0.0             whisker_0.4.1                
  [71] matrixStats_0.63.0            pkgload_1.3.2                
  [73] hms_1.1.2                     mime_0.12                    
- [75] evaluate_0.19                 xtable_1.8-4                 
+ [75] evaluate_0.20                 xtable_1.8-4                 
  [77] XML_3.99-0.13                 readxl_1.4.1                 
  [79] compiler_4.2.2                ellipse_0.4.3                
  [81] crayon_1.5.2                  htmltools_0.5.4              
  [83] corpcor_1.6.10                later_1.3.0                  
  [85] tzdb_0.3.0                    geneplotter_1.74.0           
  [87] lubridate_1.9.0               DBI_1.1.3                    
- [89] formatR_1.13                  rappdirs_0.3.3               
- [91] Matrix_1.5-3                  cli_3.5.0                    
+ [89] formatR_1.14                  rappdirs_0.3.3               
+ [91] Matrix_1.5-3                  cli_3.6.0                    
  [93] parallel_4.2.2                igraph_1.3.5                 
  [95] pkgconfig_2.0.3               getPass_0.2-2                
  [97] GenomicAlignments_1.32.1      xml2_1.3.3                   
@@ -1400,19 +1539,19 @@ loaded via a namespace (and not attached):
 [101] bslib_0.4.2                   XVector_0.36.0               
 [103] rvest_1.0.3                   callr_3.7.3                  
 [105] digest_0.6.31                 graph_1.74.0                 
-[107] Biostrings_2.64.1             rmarkdown_2.19               
+[107] Biostrings_2.64.1             rmarkdown_2.20               
 [109] cellranger_1.1.0              restfulr_0.0.15              
-[111] curl_4.3.3                    shiny_1.7.4                  
+[111] curl_5.0.0                    shiny_1.7.4                  
 [113] Rsamtools_2.12.0              rjson_0.2.21                 
 [115] lifecycle_1.0.3               jsonlite_1.8.4               
 [117] viridisLite_0.4.1             fansi_1.0.3                  
 [119] pillar_1.8.1                  KEGGREST_1.36.3              
 [121] fastmap_1.1.0                 httr_1.4.4                   
-[123] pkgbuild_1.4.0                survival_3.4-0               
+[123] pkgbuild_1.4.0                survival_3.5-0               
 [125] interactiveDisplayBase_1.34.0 glue_1.6.2                   
 [127] remotes_2.4.2                 png_0.1-8                    
 [129] BiocVersion_3.15.2            bit_4.0.5                    
-[131] stringi_1.7.8                 sass_0.4.4                   
+[131] stringi_1.7.12                sass_0.4.4                   
 [133] profvis_0.3.7                 blob_1.2.3                   
 [135] DESeq2_1.36.0                 memoise_2.0.1                </code></pre>
 </div>
