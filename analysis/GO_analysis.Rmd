@@ -1,0 +1,154 @@
+---
+title: "GO_analysis"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# GO Anlysis #
+
+
+Importing data is the first thing.  I have created several files from the RNA analysis that
+contain the significant genes(determined by adj.P.val < 0.1) from each Time and Condition. The names of the files are in the following format: 'sigV'+Drug(2 letters)+time.  
+
+example:   'sigVDA3.txt' means this file contains the significant DE genes from the Daunorubicin 3 hour compared to Vehicle Control 3 hour analysis
+```{r Import libraries, message=FALSE, warning=FALSE}
+library(gprofiler2)
+library(tidyverse)
+library(readr)
+library(BiocGenerics)
+library(gridExtra)
+```
+
+```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
+ ##this code check the directory and searches for the pattern, returing the full name of the file
+file.names <- dir("C:/Program Files/R_WD/Cardiotoxicity/data/", pattern="sig*", recursive = FALSE, full.names = TRUE)
+##Next I use the list of names an lapply to read all of them into a list
+#filelist <- lapply(file.names, read.csv) ### nah!  I dont need right now!
+filenameonly <- substr(file.names,43,nchar(file.names)-4)
+
+for (k in 1:length(file.names)){
+  assign(filenameonly[[k]] , read.csv(file.names[[k]]))
+}
+
+#loop through the list of files and make a separate dataframefor each file
+
+colnames(sigVDA24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVDX24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVEP24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVMT24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVTR24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVDA3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVDX3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVEP3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+```
+
+
+The analysis is based on all genes that passed the rowMeans>0 from the previous page[link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html) 
+
+
+```{r uploading the background genes, include=FALSE, fig.cap="with underrepresentation set to TRUE"}
+backGL <- read_csv("~/Ward Lab/Cardiotoxicity/sequencing analysis folder/gProfiler_hsapiens_1-20-2023_10-33-15 AM.csv")
+
+gostres <- gost(query = sigVDA3$ENTREZID,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",measure_underrepresentation = TRUE,
+  evcodes = FALSE,
+  user_threshold = 0.05,
+  correction_method = c("bonferroni"),
+  custom_bg = backGL$converted_alias)
+p <- gostplot(gostres, capped = FALSE, interactive = TRUE)
+p
+publish_gosttable(
+  gostres,
+  highlight_terms = NULL,
+  use_colors = TRUE,
+  show_columns = c("source", "term_name", "term_size", "intersection_size"),
+  filename = NULL,
+  ggplot = FALSE
+)
+
+```
+
+I first looked at the data setting 'measure_underrepresentation = TRUE' in this interactive plot with all genes from the sigDA3 dataset
+
+
+```{r only the Da3 data2, include=FALSE, fig.cap="with underrepresentation set to FALSE"}
+gostres_nrp <- gost(query = sigVDA3$ENTREZID,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.05,
+  correction_method = c("bonferroni"),
+  custom_bg = backGL$converted_alias)
+p2 <- gostplot(gostres_nrp, capped = FALSE, interactive = TRUE)
+p2
+publish_gosttable(
+  gostres_nrp,
+  highlight_terms = NULL,
+  use_colors = TRUE,
+  show_columns = c("source", "term_name", "term_size", "intersection_size"),
+  filename = NULL,
+  ggplot = TRUE
+)
+
+```
+then I looked at the same data with 'measure_underrepresentation = FALSE'
+
+
+
+### Analysis of Up versus Down
+
+I then separated the VDA3 file by log2 Fold Change to see how the gene sets are enriched.
+
+```{r only the Da3 data3, include=FALSE, fig.cap="with underrepresentation still set to FALSE"}
+#results_sig = subset(sigVDA3,adj.P.Val < 0.05)
+# get the significant up-regulated genes
+  up = subset(sigVDA3, logFC > 0)
+# get the significant down-regulated genes
+down = subset(sigVDA3, logFC < 0)
+gp_up = gost(query = up$ENTREZID,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.05,
+  correction_method = c("bonferroni"),
+  custom_bg = backGL$converted_alias)
+  
+  
+gp_down = gost(query = down$ENTREZID,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.05,
+  correction_method = c("bonferroni"),
+  custom_bg = backGL$converted_alias)
+p2_up <- gostplot(gp_up, capped = FALSE, interactive = TRUE)
+
+p2_up #+ ggtitle("Duanorubicin up regulated gene enrichment at 3 hours")
+
+```
+
+
+```{r} 
+
+
+
+p2_down <- gostplot(gp_down, capped = FALSE, interactive = TRUE)
+
+p2_down #+ ggtitle("Duanorubicin down regulated gene enrichment at 3 hours")
+
+
+```
+
+
+
+
+
+

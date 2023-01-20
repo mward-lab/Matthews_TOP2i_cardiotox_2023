@@ -121,6 +121,7 @@ drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzu
 
 mymatrix$samples$drug <- drug
 RIN <- c(9.3,9.8,  9.8, 10.0,  9.6,  9.9,  7.8,  8.7,  8.6,  9.1,  9.4,  9.3,  9.4,  9.6,  9.9,  9.4,  9.9,  9.8,9.5,  9.9,  9.6,  9.9,  8.8,  9.5,  9.3, 10.0,  9.3,  9.6,  9.7,  9.4,  8.9,  7.5,  8.6,  8.5,  8.6,  9.3,9.6,  9.6,  9.4,  9.7,  9.9, 10.0,  9.4,  9.6,  9.4,  9.5,  9.8,  9.5,  9.6,  9.7,  9.6,  9.9,  9.6, 10.0,8.3, 8.4,9.4,9.7, 10.0, 10.0,  9.6,  9.6,  9.7,  9.5,  9.8,  9.5,  9.8,  8.6,  8.9,  9.1,  9.3,9.6)
+mymatrix$samples$RIN <- RIN
 samplenames <- c("MCW_RM_R_11_S72", "MCW_RM_R_12_S1_", "MCW_RM_R_13_S2_", "MCW_RM_R_14_S3_", "MCW_RM_R_15_S4_","MCW_RM_R_16_S5_", "MCW_RM_R_17_S6_", "MCW_RM_R_18_S7_", "MCW_RM_R_19_S8_", "MCW_RM_R_20_S9_","MCW_RM_R_21_S10", "MCW_RM_R_22_S11", "MCW_RM_R_23_S12", "MCW_RM_R_24_S13", "MCW_RM_R_25_S14","MCW_RM_R_26_S15", "MCW_RM_R_27_S16", "MCW_RM_R_28_S17", "MCW_RM_R_29_S18", "MCW_RM_R_30_S19","MCW_RM_R_31_S20", "MCW_RM_R_32_S21", "MCW_RM_R_33_S22", "MCW_RM_R_34_S23", "MCW_RM_R_35_S60","MCW_RM_R_36_S61", "MCW_RM_R_37_S62", "MCW_RM_R_38_S63", "MCW_RM_R_39_S64", "MCW_RM_R_40_S65","MCW_RM_R_41_S66", "MCW_RM_R_42_S67", "MCW_RM_R_43_S68", "MCW_RM_R_44_S69","MCW_RM_R_45_S70","MCW_RM_R_46_S71","MCW_RM_R_47_S24","MCW_RM_R_48_S25", "MCW_RM_R_49_S26", "MCW_RM_R_50_S27","MCW_RM_R_51_S28", "MCW_RM_R_52_S29", "MCW_RM_R_53_S30", "MCW_RM_R_54_S31", "MCW_RM_R_55_S32","MCW_RM_R_56_S33","MCW_RM_R_57_S34", "MCW_RM_R_58_S35", "MCW_RM_R_59_S36", "MCW_RM_R_60_S37","MCW_RM_R_61_S38", "MCW_RM_R_62_S39", "MCW_RM_R_63_S40", "MCW_RM_R_64_S41", "MCW_RM_R_65_S42","MCW_RM_R_66_S43", "MCW_RM_R_67_S44", "MCW_RM_R_68_S45", "MCW_RM_R_69_S46", "MCW_RM_R_70_S47","MCW_RM_R_71_S48","MCW_RM_R_72_S49", "MCW_RM_R_73_S50", "MCW_RM_R_74_S51", "MCW_RM_R_75_S52","MCW_RM_R_76_S53", "MCW_RM_R_77_S54", "MCW_RM_R_78_S55", "MCW_RM_R_79_S56", "MCW_RM_R_80_S57","MCW_RM_R_81_S58","MCW_RM_R_82_S59")
  
 anno <- (cbind(samplenames, indv, drug, time, RIN, group))
@@ -260,7 +261,7 @@ geom_boxplot(aes(fill=as.factor(drug)))+
   theme(axis.text.x = element_blank()) + ggtitle("Boxplot of RIN by drug and individual")+ facet_wrap(~indv)
 ```
 
-##Principal Component Analysis  
+## Principal Component Analysis  
 
 PCA was done using code adopted from J. Blischak.   
 ```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE, fig.height=8, fig.width= 5}
@@ -294,14 +295,16 @@ for (b in treattype) {
 
 ```
 
-### PCA of all 72 samples
+## PCA of all 72 samples  
+ 
+ 
 
 ```{r all-samples, echo=FALSE}
 pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
 print(pca_var_plot(pca_all))
 ```
-##Variance contribution from treatment, extraction time, or individual on PC1 and PC2
+## Variance contribution from treatment, extraction time, or individual on PC1 and PC2
 
 ```{r variance by treatment time and individual, echo=FALSE, message=FALSE, warning=FALSE}
 facs <- c("indv", "drug", "time")
@@ -326,13 +329,13 @@ for (f in facs) {
 # Differential Expression
 
 ```{r Differential expression, echo=FALSE}
-mm <- model.matrix(~0 +drug +time)
-colnames(mm) <- gsub("group", "", colnames(mm))
+#mm <- model.matrix(~0 +drug +time)
+#colnames(mm) <- gsub("group", "", colnames(mm))
 group1 <- interaction(drug,time)
 mm2 <- model.matrix(~0 + group1)
 colnames(mm2) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
 
-y <- voom(x, mm, plot =TRUE)
+#y <- voom(x, mm, plot =TRUE)
 
 y2 <- voom(x, mm2,plot =TRUE)
 
@@ -343,24 +346,24 @@ y2 <- voom(x, mm2,plot =TRUE)
 ```{r  Differential expression2, eval=FALSE, include=FALSE}
 ###this is enabled when first running program, otherwise processing slows down
 
-corfit <- duplicateCorrelation(y, mm, block = indv)
+#corfit <- duplicateCorrelation(y, mm, block = indv)
 corfit2 <- duplicateCorrelation(y2, mm2, block = indv)
-v <- voom(x, mm, block = indv, correlation = corfit$consensus)
+#v <- voom(x, mm, block = indv, correlation = corfit$consensus)
 v2 <- voom(x, mm2, block = indv, correlation = corfit2$consensus)
-fit <- lmFit(v, mm, block = indv, correlation = corfit$consensus)
+#fit <- lmFit(v, mm, block = indv, correlation = corfit$consensus)
 fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
 
 ```
 
 ```{r Differential expression3 contrasts, eval = TRUE ,echo=FALSE}
 # Make contrasts
-cm <- makeContrasts(
- VvDA = drugVehicle -drugDaunorubicin,
- VvDX = drugVehicle-drugDoxorubicin,
- VvEP = drugVehicle-drugEpirubicin,
- VvMT = drugVehicle-drugMitoxantrone,
- VvTR = drugVehicle-drugTrastuzumab,
-  levels=mm)
+#cm <- makeContrasts(
+ # VvDA = drugVehicle -drugDaunorubicin,
+ # VvDX = drugVehicle-drugDoxorubicin,
+ # VvEP = drugVehicle-drugEpirubicin,
+ # VvMT = drugVehicle-drugMitoxantrone,
+ # VvTR = drugVehicle-drugTrastuzumab,
+ #  levels=mm)
 cm2 <- makeContrasts(
   V.DA = V3 - A3,
   V.DX = V3 - X3,
@@ -374,11 +377,11 @@ cm2 <- makeContrasts(
   V.TR24= V24-T24,
   levels = mm2)
 
-vfit <- lmFit(y, mm)
+#vfit <- lmFit(y, mm)
 vfit2 <- lmFit(y2, mm2)
-vfit <- contrasts.fit(vfit, contrasts=cm)
+#vfit <- contrasts.fit(vfit, contrasts=cm)
 vfit2<- contrasts.fit(vfit2, contrasts=cm2)
-efit <- eBayes(vfit)
+#efit <- eBayes(vfit)
 efit2 <- eBayes(vfit2)
 
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
@@ -403,7 +406,18 @@ sigVDX24 = V.DX24.top[V.DX24.top$adj.P.Val < .1 , ]
 sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val < .1 , ]
 sigVMT24 = V.MT24.top[V.MT24.top$adj.P.Val < .1 , ]
 sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val < .1 , ]
-siglist <- c("sigVDA3",
+
+siglist <- list(sigVDA3,
+             sigVDX3,
+             sigVEP3,
+             sigVMT3,
+             sigVTR3,
+             sigVDA24,
+             sigVDX24,
+             sigVEP24,
+             sigVMT24,
+             sigVTR24)
+names(siglist) <- c("sigVDA3",
              "sigVDX3",
              "sigVEP3",
              "sigVMT3",
@@ -413,7 +427,19 @@ siglist <- c("sigVDA3",
              "sigVEP24",
              "sigVMT24",
              "sigVTR24")
+siglist <- lapply(siglist, function(x) {colnames(x) <- gsub(pattern = "^siglist\\.", replacement = "", x = colnames(x))
+return(x)})
 
+
+#make the list, and rename the items on the list
+ ##print count files to data directory (write.table needs the full file name) 
+for(i in seq_along(siglist)) {
+  fnl <- paste0("C:/Program Files/R_WD/Cardiotoxicity/data/",names(siglist)[i],".txt")
+    write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="") 
+             
+}
+
+#write.csv(names(siglist),"C:/Program Files/R_WD/Cardiotoxicity/data/siglist.txt", col.names = FALSE,row.names = FALSE)
 ```
 
 ```{r sample code of DEG setup, eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
@@ -545,11 +571,7 @@ volcanoplot(efit2,coef = 10,style = "p-value",
                           hl.col = "red",xlab = "Log2 Fold Change",
                           ylab = NULL,pch = 16,cex = 0.35,
                           main = "Using Trastuzuman 24 hour data and volcanoplot function")
-# lp <- -log10(efit2$p.value[,10])
-# ord <- order(lp, decreasing = TRUE)
-# x <- efit2$coef[ord,10]
-# y <- lp[ord]
-# text(x, y, fit2$genes$NAME[ord], cex=0.8, col="red")
+
 ```
 
 
@@ -577,22 +599,25 @@ for (gn in indices){
     
     labs(y = "Log2(cpm)",x= "", fill = "Treatment"))
 }
-
+`{r}
 plot_function <- function(index, df) {
   for (i in index) {
-    data <- df %>% filter(E == i)
+    data <- df %>% filter(ENTREZID == i)
     if (!nrow(data)) next
-   print(data %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
+   print(data %>% ggplot(aes(x=as.factor(Samples), y=Counts))+
             geom_boxplot(aes(fill = as.factor(Samples)))+
             theme_cowplot(font_size =12,)+
-            
             ggtitle(paste0(i," expression "))+
             
             labs(y = "Log2(cpm)",x= "", fill = "Treatment")) 
     }
 }
 
+apple <- as.data.frame(sigVDA24$ENTREZID)
 
+
+plot_function(apple,Dx3counts)+theme(axis.text.x = element_text(size= 8,angle = 90))+scale_x_discrete(labels=ENTREZID)
+```
 
 
 
