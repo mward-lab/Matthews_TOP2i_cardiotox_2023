@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# GO Anlysis #
+# GO Analysis #
 
 
 Importing data is the first thing.  I have created several files from the RNA analysis that
@@ -26,13 +26,13 @@ library(gridExtra)
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
  ##this code check the directory and searches for the pattern, returing the full name of the file
-file.names <- dir("C:/Program Files/R_WD/Cardiotoxicity/data/", pattern="sig*", recursive = FALSE, full.names = TRUE)
+file.names <- dir("../data/", pattern="sig*", recursive = FALSE, full.names = TRUE)
 ##Next I use the list of names an lapply to read all of them into a list
 #filelist <- lapply(file.names, read.csv) ### nah!  I dont need right now!
-filenameonly <- substr(file.names,43,nchar(file.names)-4)
+filenameonly <- substr(file.names,9,nchar(file.names)-4)
 
 for (k in 1:length(file.names)){
-  assign(filenameonly[[k]] , read.csv(file.names[[k]]))
+  assign(filenameonly[[k]] , read.csv(paste0(file.names[[k]])))
 }
 
 #loop through the list of files and make a separate dataframefor each file
@@ -50,10 +50,10 @@ colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P
 ```
 
 
-The analysis is based on all genes that passed the rowMeans>0 from the previous page[link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html) 
+The analysis is based on all genes that passed the rowMeans>0 from the [previous page] (https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html) 
 
 
-```{r uploading the background genes, include=FALSE, fig.cap="with underrepresentation set to TRUE"}
+```{r uploading the background genes, include=FALSE}
 backGL <- read_csv("~/Ward Lab/Cardiotoxicity/sequencing analysis folder/gProfiler_hsapiens_1-20-2023_10-33-15 AM.csv")
 
 gostres <- gost(query = sigVDA3$ENTREZID,  organism = "hsapiens",

@@ -17,4 +17,5 @@ Welcome to my research website. I am using workflowr to create reproducible code
 Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html) to see my results from the first analysis so far! Fair warning, it is a mess of code!
 
 
-You can also look at my __NEW__ page of analysis.  This page will eventually contain all my Gene Enrichment analysis.[GSEA analysis]https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html
+You can also look at my __NEW__ page of analysis.  This page will eventually contain all my Gene Enrichment analysis   
+[GSEA analysis]https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html
