@@ -143,7 +143,7 @@ mymatrix$genes <- genes
 
 ```
 
-##Filtering out low count genes  
+## Filtering out low count genes  
 
 Filtering the genes that are lowly expressed using several methods.
 
@@ -261,7 +261,7 @@ geom_boxplot(aes(fill=as.factor(drug)))+
   theme(axis.text.x = element_blank()) + ggtitle("Boxplot of RIN by drug and individual")+ facet_wrap(~indv)
 ```
 
-## Principal Component Analysis  
+# Principal Component Analysis  
 
 PCA was done using code adopted from J. Blischak.   
 ```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE, fig.height=8, fig.width= 5}
@@ -295,9 +295,8 @@ for (b in treattype) {
 
 ```
 
-## PCA of all 72 samples  
- 
- 
+# PCA of all 72 samples  
+
 
 ```{r all-samples, echo=FALSE}
 pca_all <- calc_pca(t(dat_cpm))
@@ -355,7 +354,7 @@ fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
 
 ```
 
-```{r Differential expression3 contrasts, eval = TRUE ,echo=FALSE}
+```{r Differential expression3 contrasts, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 # Make contrasts
 #cm <- makeContrasts(
  # VvDA = drugVehicle -drugDaunorubicin,
@@ -434,12 +433,12 @@ return(x)})
 #make the list, and rename the items on the list
  ##print count files to data directory (write.table needs the full file name) 
 for(i in seq_along(siglist)) {
-  fnl <- paste0("C:/Program Files/R_WD/Cardiotoxicity/data/",names(siglist)[i],".txt")
+  fnl <- paste0("../data/",names(siglist)[i],".txt")
     write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="") 
              
 }
 
-#write.csv(names(siglist),"C:/Program Files/R_WD/Cardiotoxicity/data/siglist.txt", col.names = FALSE,row.names = FALSE)
+#write.csv(names(siglist),data/siglist.txt", col.names = FALSE,row.names = FALSE)
 ```
 
 ```{r sample code of DEG setup, eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
@@ -486,7 +485,7 @@ sum
 
 
 
-##Graphing DEgenes  
+## Graphing DE genes  
 
 I then created a counts table for each set of genes.  Luckily, the counts are stored in the y2 object, which is an EList class object. I can 'simplify' this process because I kept the DEGList format initially.
 I first made an object called 'countstotal' from the EList y2. For ggploting later, I subsetted 'countstotal' by treatments.
@@ -526,7 +525,7 @@ colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
 ```
 library(cowplot)
 
-###Volcano Plots  
+# Volcano Plots  
 
 ```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
 
