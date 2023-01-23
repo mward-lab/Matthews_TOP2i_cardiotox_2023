@@ -369,7 +369,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -380,8 +380,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -390,13 +390,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-01-20
+<strong>Last updated:</strong> 2023-01-23
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
@@ -506,64 +506,30 @@ run.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
 </p>
 </div>
-<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
 <div class="panel-body">
-<p>
-Using absolute paths to the files within your workflowr project makes it
-difficult for you and others to run your code on a different machine.
-Change the absolute path(s) below to the suggested relative path(s) to
-make your code more reproducible.
-</p>
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th style="text-align:left;">
-absolute
-</th>
-<th style="text-align:left;">
-relative
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-C:/Program Files/R_WD/Cardiotoxicity/data/
-</td>
-<td style="text-align:left;">
-data
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C:/Program Files/R_WD/Cardiotoxicity/data/siglist.txt
-</td>
-<td style="text-align:left;">
-data/siglist.txt
-</td>
-</tr>
-</tbody>
-</table>
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree443a9f393601e6c682c88350ddbe45f4e46f9617targetblank443a9f3a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreedc890ec898b2a62c0dbde4a99422a81adee1e7b7targetblankdc890eca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/443a9f393601e6c682c88350ddbe45f4e46f9617" target="_blank">443a9f3</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/dc890ec898b2a62c0dbde4a99422a81adee1e7b7" target="_blank">dc890ec</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree443a9f393601e6c682c88350ddbe45f4e46f9617targetblank443a9f3a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreedc890ec898b2a62c0dbde4a99422a81adee1e7b7targetblankdc890eca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -573,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/443a9f393601e6c682c88350ddbe45f4e46f9617" target="_blank">443a9f3</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/dc890ec898b2a62c0dbde4a99422a81adee1e7b7" target="_blank">dc890ec</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -593,7 +559,9 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    data/.txt
     Ignored:    data/allgenes.txt
+    Ignored:    data/backGL.txt
     Ignored:    data/data_outline.txt
+    Ignored:    data/filenameonly.txt
     Ignored:    data/mymatrix.RDS
     Ignored:    data/sigVDA24.txt
     Ignored:    data/sigVDA3.txt
@@ -609,9 +577,6 @@ Ignored files:
 Untracked files:
     Untracked:  analysis/.txt
     Untracked:  reneebasecode.R
-
-Unstaged changes:
-    Deleted:    analysis/first-try.Rmd
 
 </code></pre>
 <p>
@@ -657,6 +622,74 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/dc890ec898b2a62c0dbde4a99422a81adee1e7b7/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">dc890ec</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-23
+</td>
+<td>
+Updating the source dir
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/badb4794a7f24e383f23a929692a4554bc811794/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">badb479</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-23
+</td>
+<td>
+pushed more to GO analysis
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d9edc0612095d04009afd65ed97fa6fd1c703c83/analysis/RNAseqrun_1_analysis.Rmd" target="_blank">d9edc06</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-20
+</td>
+<td>
+try a little update later
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/6c21cf8cca434fdf262799bdc3b685ce23a91ad2/docs/RNAseqrun_1_analysis.html" target="_blank">6c21cf8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1153,7 +1186,8 @@ genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
   keytype=&quot;ENTREZID&quot;)
 genes &lt;- genes[!duplicated(genes$ENTREZID),]
 mymatrix$genes &lt;- genes</code></pre>
-<p>##Filtering out low count genes</p>
+<div id="filtering-out-low-count-genes" class="section level2">
+<h2>Filtering out low count genes</h2>
 <p>Filtering the genes that are lowly expressed using several
 methods.</p>
 <p>First method, removing only those rows with zero counts across all
@@ -1201,36 +1235,37 @@ second method, which keeps the DGEList format of the data.</p>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/boxplot%20counts%20per%20sample-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>now I will produce the RIN x sample plots:###
 <img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/sample%20quality%20checks-5.png" width="672" style="display: block; margin: auto;" /></p>
-<div id="principal-component-analysis" class="section level2">
-<h2>Principal Component Analysis</h2>
+</div>
+<div id="principal-component-analysis" class="section level1">
+<h1>Principal Component Analysis</h1>
 <p>PCA was done using code adopted from J. Blischak.</p>
 <pre><code>
 
 ###  Daunorubicin </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="576" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Doxorubicin </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="576" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Epirubicin </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="576" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Mitoxantrone </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="576" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Trastuzumab </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="576" style="display: block; margin: auto;" /></p>
 <pre><code>
 
 ###  Vehicle </code></pre>
-<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqrun_1_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
-<div id="pca-of-all-72-samples" class="section level2">
-<h2>PCA of all 72 samples</h2>
+<div id="pca-of-all-72-samples" class="section level1">
+<h1>PCA of all 72 samples</h1>
 <pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/all-samples-1.png" width="672" style="display: block; margin: auto;" />
 ## Variance contribution from treatment, extraction time, or individual
@@ -1240,46 +1275,6 @@ on PC1 and PC2</p>
 <div id="differential-expression" class="section level1">
 <h1>Differential Expression</h1>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/Differential%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;col.names&#39; ignored</code></pre>
-<pre><code>Warning in write.csv(siglist[i], fnl, col.names = TRUE, row.names = FALSE, :
-attempt to set &#39;sep&#39; ignored</code></pre>
 <pre class="r"><code>mm2 &lt;- model.matrix(~0 + group1)
 ##made the matrix model using the interaction between Treatment and Time
 colnames(mm2) &lt;- c(&quot;A3&quot;, &quot;X3&quot;, &quot;E3&quot;,&quot;M3&quot;,&quot;T3&quot;, &quot;V3&quot;,&quot;A24&quot;, &quot;X24&quot;, &quot;E24&quot;,&quot;M24&quot;,&quot;T24&quot;, &quot;V24&quot;)
@@ -1356,7 +1351,8 @@ Cumulative Proportion  0.99617 0.99759 0.99896 1.00000 1.000e+00</code></pre>
 Down      63     3    11    13     0   3342   3013   2871    320      0
 NotSig 14456 14814 14714 14780 14823   8279   8993   9034  13970  14823
 Up       304     6    98    30     0   3202   2817   2918    533      0</code></pre>
-<p>##Graphing DEgenes</p>
+<div id="graphing-de-genes" class="section level2">
+<h2>Graphing DE genes</h2>
 <p>I then created a counts table for each set of genes. Luckily, the
 counts are stored in the y2 object, which is an EList class object. I
 can ‘simplify’ this process because I kept the DEGList format initially.
@@ -1364,65 +1360,29 @@ I first made an object called ‘countstotal’ from the EList y2. For
 ggploting later, I subsetted ‘countstotal’ by treatments.</p>
 <pre class="r"><code>countstotal &lt;- y2$E
 colnames(countstotal) &lt;- smlabel
-boxplot(countstotal)</code></pre>
+boxplot(countstotal, xaxt = &quot;n&quot;, xlab=&quot;&quot;)
+Da3counts &lt;- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
+x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)</code></pre>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/counts%20files-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>Da3counts &lt;- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))</code></pre>
 <p>library(cowplot)</p>
-<p>###Volcano Plots</p>
+</div>
+</div>
+<div id="volcano-plots" class="section level1">
+<h1>Volcano Plots</h1>
 <p><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqrun_1_analysis.Rmd/Volcanoplots-12.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="graphing-specific-gene-expression" class="section level1">
-<h1>Graphing specific gene expression</h1>
-<p>First get a list of genes you want to see. There are multiple was to
-“see” these. I used the word ‘apple’ to store my list</p>
-<pre class="r"><code>apple &lt;- c(&#39;CDKN1A&#39;,&quot;BBC3&quot;, &quot;MDM2&quot;, &quot;BCL2&quot;, &quot;BAX&quot;, &quot;GPX1&quot;, &#39;MFN2&#39;)#,&quot;HAS3&quot;,&#39;CYBA&#39;,&#39;TOP2B&#39;, &#39;TP53&#39;, &#39;ABCC1&#39;, &#39;ABCC5&#39;, &#39;RRAGD&#39;, &#39;DUSP13&#39;, &#39;NDUFAF1&#39;, &#39;TDP2&#39;, &#39;TXNIP&#39;,&#39;BRCA1&#39;, &#39;CTCF&#39;,&#39;RAD21&#39;,&#39;RYR2&#39;)
-##find the index number for each gene
-indices &lt;- match(apple, x$genes$SYMBOL)
-###subset the matrix
-entreset &lt;- x$genes$ENTREZID[indices]
-gnames &lt;- cbind(entreset,apple)
-colnames(gnames) &lt;- c(&quot;ENTREZID&quot;,&quot;SYMBOL&quot; )</code></pre>
-<p><em>Voila</em>!</p>
-<p>###now to ggplot The nextstep is to make plots of all the genes you
-want to see. I am stopping here, because I would like to add for (gn in
-indices){ print(Da24counts %&gt;% filter(Tags == gn) %&gt;%
-ggplot(aes(x=as.factor(Samples), y=Freq))+ geom_boxplot(aes(fill =
-as.factor(Samples)))+ theme_cowplot(font_size =12,)+</p>
-<pre><code>ggtitle(paste0(gnames$gnames,&quot; expression in Daunorubicin at 24 hours&quot;))+
-
-labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;))</code></pre>
-<p>} `{r} plot_function &lt;- function(index, df) { for (i in index) {
-data &lt;- df %&gt;% filter(ENTREZID == i) if (!nrow(data)) next
-print(data %&gt;% ggplot(aes(x=as.factor(Samples), y=Counts))+
-geom_boxplot(aes(fill = as.factor(Samples)))+ theme_cowplot(font_size
-=12,)+ ggtitle(paste0(i,” expression “))+</p>
-<pre><code>        labs(y = &quot;Log2(cpm)&quot;,x= &quot;&quot;, fill = &quot;Treatment&quot;)) 
-}</code></pre>
-<p>}</p>
-<p>apple &lt;- as.data.frame(sigVDA24$ENTREZID)</p>
-<p>plot_function(apple,Dx3counts)+theme(axis.text.x = element_text(size=
-8,angle = 90))+scale_x_discrete(labels=ENTREZID)</p>
-<pre><code>
-
-
-
-
-
-
-&lt;br&gt;
-&lt;p&gt;
-&lt;button type=&quot;button&quot; class=&quot;btn btn-default btn-workflowr btn-workflowr-sessioninfo&quot;
-  data-toggle=&quot;collapse&quot; data-target=&quot;#workflowr-sessioninfo&quot;
-  style = &quot;display: block;&quot;&gt;
-  &lt;span class=&quot;glyphicon glyphicon-wrench&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
-  Session information
-&lt;/button&gt;
-&lt;/p&gt;
-
-&lt;div id=&quot;workflowr-sessioninfo&quot; class=&quot;collapse&quot;&gt;
-
-```r
-sessionInfo()</code></pre>
+<div id="go-analysis-link" class="section level1">
+<h1>GO analysis <a
+href="https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html">link</a></h1>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.2.2 (2022-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19044)
