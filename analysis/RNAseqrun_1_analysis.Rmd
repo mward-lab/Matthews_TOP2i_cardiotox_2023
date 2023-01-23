@@ -95,15 +95,16 @@ plot_versus_pc <- function(df, pc_num, fac) {
 ```
 
 ```{r file loading, eval=FALSE, include=FALSE}
-design <- read.csv("../data/data_outline.txt", row.names = 1)
-mymatrix <- readRDS('../data/mymatrix.RDS')
+print(getwd())
+design <- read.csv("data/data_outline.txt", row.names = 1)
+mymatrix <- readRDS('data/mymatrix.RDS')
 
 ```
 
 ```{r  current data import,eval=TRUE, echo =FALSE}
 
 myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
-design <- read.csv("../data/data_outline.txt", row.names = 1)
+design <- read.csv("data/data_outline.txt", row.names = 1)
 
 mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
 
@@ -435,11 +436,11 @@ return(x)})
 
 #make the list, and rename the items on the list
  ##print count files to data directory (write.table needs the full file name) 
-for(i in seq_along(siglist)) {
-  fnl <- paste0("../data/",names(siglist)[i],".txt")
-    write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="") 
-             
-}
+# for(i in seq_along(siglist)) {
+#   fnl <- paste0("data/",names(siglist)[i],".txt")
+#     write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="") 
+#              
+# }
 
 #write.csv(names(siglist),data/siglist.txt", col.names = FALSE,row.names = FALSE)
 ```

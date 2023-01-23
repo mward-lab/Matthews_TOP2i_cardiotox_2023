@@ -28,14 +28,16 @@ library(gridExtra)
  ##this code check the directory and searches for the pattern, returing the full name of the file
 ##note, in this chuck the .rmd file is in the c/analysis folder.   need to back out with .. 
 
-file.names <- list.files(path = "../data/", pattern = "sig*", ignore.case = TRUE,full.names = TRUE)
+file.names <- list.files(path = "data/", pattern = "sig*", ignore.case = TRUE,full.names = TRUE)
 
 ##Next I use the list of names an lapply to read all of them into a list
 #filelist <- lapply(file.names, read.csv) ### nah!  I dont need right now!
-filenameonly <- substr(file.names,9,nchar(file.names)-4)
+#write.csv(filenameonly,"data/filenameonly.txt", col.names = FALSE,row.names = FALSE)
+filenameonly <- read_csv("data/filenameonly.txt")
 #setwd("../data/")
 for (k in 1:length(file.names)){
-  assign(filenameonly[k] , read.csv(file.names[k]))
+  
+  assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
 }
 
 #loop through the list of files and make a separate dataframefor each file
@@ -62,7 +64,7 @@ a note of working dir for me,  remember that rmd files render from its working d
 
 #write.csv(backGL, "../data/backGL.txt")
 ##read the  .csv the render into txt in the data file!
- backGL <- read_csv("../data/backGL.txt", 
+ backGL <- read_csv("data/backGL.txt", 
     col_types = cols(...1 = col_skip()))
 #View(backGL)
 gostres <- gost(query = sigVDA3$SYMBOL,  organism = "hsapiens",
