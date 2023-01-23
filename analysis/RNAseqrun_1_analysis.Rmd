@@ -2,7 +2,10 @@
 title: "Run1_analysis"
 author: "ERM"
 date: "20230118"
-output: html_document
+output: 
+  html_document: 
+    toc: yes
+    theme: flatly
 editor_options: 
   markdown: 
     wrap: 72
@@ -100,7 +103,7 @@ mymatrix <- readRDS('../data/mymatrix.RDS')
 ```{r  current data import,eval=TRUE, echo =FALSE}
 
 myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
-
+design <- read.csv("../data/data_outline.txt", row.names = 1)
 
 mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
 
@@ -264,7 +267,7 @@ geom_boxplot(aes(fill=as.factor(drug)))+
 # Principal Component Analysis  
 
 PCA was done using code adopted from J. Blischak.   
-```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE, fig.height=8, fig.width= 5}
+```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE, fig.height=8, fig.width= 6}
 
 label <- (interaction(substring(drug, 0, 2), indv, time))
 smlabel <- (interaction(substring(drug, 0, 2), time))
@@ -493,8 +496,9 @@ I first made an object called 'countstotal' from the EList y2. For ggploting lat
 ```{r counts files, message=FALSE, warning=FALSE}
 countstotal <- y2$E
 colnames(countstotal) <- smlabel
-boxplot(countstotal)
+boxplot(countstotal, xaxt = "n", xlab="")
 Da3counts <- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
+x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
 ```
 
 ```{r processing files, message=FALSE, warning=FALSE, include=FALSE}
@@ -573,52 +577,7 @@ volcanoplot(efit2,coef = 10,style = "p-value",
 
 ```
 
-
-# Graphing specific gene expression#
- First get a list of genes you want to see.  There are multiple was to "see" these.  I used the word 'apple' to store my list
-```{r gene stuff, echo=TRUE}
-apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", "BAX", "GPX1", 'MFN2')#,"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
-##find the index number for each gene
-indices <- match(apple, x$genes$SYMBOL)
-###subset the matrix
-entreset <- x$genes$ENTREZID[indices]
-gnames <- cbind(entreset,apple)
-colnames(gnames) <- c("ENTREZID","SYMBOL" )
-```
-_Voila_!
-
-###now to ggplot
-The nextstep is to make plots of all the genes you want to see.  I am stopping here, because I would like to add 
-for (gn in indices){
-  print(Da24counts %>% filter(Tags == gn) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-  geom_boxplot(aes(fill = as.factor(Samples)))+
-    theme_cowplot(font_size =12,)+
-    
-    ggtitle(paste0(gnames$gnames," expression in Daunorubicin at 24 hours"))+
-    
-    labs(y = "Log2(cpm)",x= "", fill = "Treatment"))
-}
-`{r}
-plot_function <- function(index, df) {
-  for (i in index) {
-    data <- df %>% filter(ENTREZID == i)
-    if (!nrow(data)) next
-   print(data %>% ggplot(aes(x=as.factor(Samples), y=Counts))+
-            geom_boxplot(aes(fill = as.factor(Samples)))+
-            theme_cowplot(font_size =12,)+
-            ggtitle(paste0(i," expression "))+
-            
-            labs(y = "Log2(cpm)",x= "", fill = "Treatment")) 
-    }
-}
-
-apple <- as.data.frame(sigVDA24$ENTREZID)
-
-
-plot_function(apple,Dx3counts)+theme(axis.text.x = element_text(size= 8,angle = 90))+scale_x_discrete(labels=ENTREZID)
-```
-
-
+# GO analysis   [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html)
 
 
 
