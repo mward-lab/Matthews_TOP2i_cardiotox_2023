@@ -578,7 +578,7 @@ volcanoplot(efit2,coef = 10,style = "p-value",
 
 ```
 
-# GO analysis   [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html)
+# [GO analysi](https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html)
 
 
 

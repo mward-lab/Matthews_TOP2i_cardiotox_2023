@@ -9,13 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# GO Analysis 
+# GO Analysis
 
+I have created several files from the RNA analysis that contain the significant genes(determined by adj.P.val \< 0.1) from each Time and Condition. The names of the files are in the following format: 'sigV'+Drug(2 letters)+time.
 
- I have created several files from the RNA analysis that
-contain the significant genes(determined by adj.P.val < 0.1) from each Time and Condition. The names of the files are in the following format: 'sigV'+Drug(2 letters)+time.  
+example: 'sigVDA3.txt' means this file contains the significant DE genes from the Daunorubicin 3 hour compared to Vehicle Control 3 hour analysis
 
-example:   'sigVDA3.txt' means this file contains the significant DE genes from the Daunorubicin 3 hour compared to Vehicle Control 3 hour analysis
 ```{r Import libraries, message=FALSE, warning=FALSE}
 library(gprofiler2)
 library(tidyverse)
@@ -25,22 +24,23 @@ library(gridExtra)
 ```
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
- ##this code check the directory and searches for the pattern, returing the full name of the file
-##note, in this chuck the .rmd file is in the c/analysis folder.   need to back out with .. 
-
+ 
+##note, in this chunk the .rmd file is in the cm/analysis folder.   need to back out with .. 
+##this code check the directory and searches for the pattern, returning the full name of the file
 file.names <- list.files(path = "data/", pattern = "sig*", ignore.case = TRUE,full.names = TRUE)
 
 ##Next I use the list of names an lapply to read all of them into a list
-#filelist <- lapply(file.names, read.csv) ### nah!  I dont need right now!
+##made the csv file to reimport
 #write.csv(filenameonly,"data/filenameonly.txt", col.names = FALSE,row.names = FALSE)
+##readin the filenameonly.txt file from data to use for naming and filtering.
 filenameonly <- read_csv("data/filenameonly.txt")
-#setwd("../data/")
+#loop through the list of files and make a separate dataframe for each file under it's real name
 for (k in 1:length(file.names)){
   
   assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
 }
 
-#loop through the list of files and make a separate dataframefor each file
+##rename the columns to the previous names
 
 colnames(sigVDA24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 colnames(sigVDX24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
@@ -54,41 +54,43 @@ colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P
 colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 ```
 
+The analysis is based on all genes that passed the rowMeans\>0 from the previous page [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html)
 
-The analysis is based on all genes that passed the rowMeans>0 from the previous page[] (https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html) 
+```{r uploading the background genes, echo=FALSE,  message=FALSE, warning=FALSE, paged.print=FALSE}
+#backGL <- efit2$genes   ***making the list
 
-a note of working dir for me,  remember that rmd files render from its working dir, therefore relative files need to do the /.. to get to the right relative dir.  
-
-```{r uploading the background genes, echo=FALSE, fig.width=8, message=FALSE, warning=FALSE, paged.print=FALSE}
-#backGL <- read_csv("~/Ward Lab/Cardiotoxicity/sequencing analysis folder/gProfiler_hsapiens_1-20-2023_10-33-15 AM.csv")
-
-#write.csv(backGL, "../data/backGL.txt")
+#write.csv(backGL, "data/backGL.txt", row.names = FALSE)
 ##read the  .csv the render into txt in the data file!
  backGL <- read_csv("data/backGL.txt", 
     col_types = cols(...1 = col_skip()))
-#View(backGL)
+```
+
+Below is the analysis of differentially expressed genes for each treatment at 3 hours and 24 hours.
+
+```{r intial analysis, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 gostres <- gost(query = sigVDA3$SYMBOL,  organism = "hsapiens",
   ordered_query = TRUE,
   domain_scope = "custom",measure_underrepresentation = FALSE,
   evcodes = FALSE,
   user_threshold = 0.05,
   correction_method = c("bonferroni"),
-  custom_bg = backGL$name)
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","GO:MF", "GO:CC", "KEGG"))
 p <- gostplot(gostres, capped = FALSE, interactive = TRUE)
 p
-publish_gosttable(
+store<- publish_gosttable(
   gostres,
   highlight_terms = NULL,
   use_colors = TRUE,
   show_columns = c("source", "term_name", "term_size", "intersection_size"),
   filename = NULL,
-  ggplot = TRUE
+  ggplot = FALSE
 )
+store
 
 ```
 
-I first looked at the data setting 'measure_underrepresentation = TRUE' in this interactive plot with all genes from the sigDA3 dataset
-
+I first looked at the data with all genes from the sigDA3 dataset. I used the list of all genes based on my rowMeans\>0 filtering as background.
 
 ```{r only the Da3 data2, echo=FALSE,  message=FALSE, warning=FALSE}
 gostres_nrp <- gost(query = sigVDA3$SYMBOL,  organism = "hsapiens",
@@ -110,9 +112,8 @@ publish_gosttable(
 )
 
 ```
+
 then I looked at the same data with 'measure_underrepresentation = FALSE'
-
-
 
 ### Analysis of Up versus Down
 
@@ -146,8 +147,7 @@ p2_up #+ ggtitle("Duanorubicin up regulated gene enrichment at 3 hours")
 
 ```
 
-
-```{r showing it all} 
+```{r showing it all}
 
 
 
@@ -158,17 +158,10 @@ p2_down #+ ggtitle("Duanorubicin down regulated gene enrichment at 3 hours")
 
 ```
 
-
-
-
-
-# Graphing specific gene expression 
-
-
+# Graphing specific gene expression
 
 ```{r eval=FALSE, include=FALSE}
  First get a list of genes you want to see.  There are multiple was to "see" these.  I used the word 'apple' to store my list
-```{r gene stuff, echo=TRUE, eval=FALSE}
 apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", "BAX", "GPX1", 'MFN2')#,"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
 ##find the index number for each gene
 indices <- match(apple, x$genes$SYMBOL)
@@ -208,6 +201,3 @@ apple <- as.data.frame(sigVDA24$ENTREZID)
 
 plot_function(apple,Dx3counts)+theme(axis.text.x = element_text(size= 8,angle = 90))+scale_x_discrete(labels=ENTREZID)
 ```
-
-
-
