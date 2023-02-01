@@ -22,6 +22,8 @@ library(readr)
 library(BiocGenerics)
 library(gridExtra)
 library(VennDiagram)
+library(kableExtra)
+library(scales)
 ```
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -68,26 +70,34 @@ The analysis is based on all genes that passed the rowMeans\>0 from the previous
 
 Below is the analysis of differentially expressed genes for each treatment at 3 hours and 24 hours.
 
-```{r intial analysis, eval=TRUE, echo=FALSE, fig.height=19, fig.width=10, message=FALSE, warning=FALSE}
+```{r intial analysis, eval=TRUE, echo=FALSE,  fig.width=10, message=FALSE, warning=FALSE}
 gostres <- gost(query = sigVDA3$SYMBOL,  organism = "hsapiens",
   ordered_query = TRUE,
   domain_scope = "custom",
   measure_underrepresentation = FALSE,
   evcodes = FALSE,
   user_threshold = 0.0001,
-  correction_method = c("bonferroni"),
+  correction_method = c("fdr"),
   custom_bg = backGL$ENTREZID,
   sources=c("GO:BP","GO:MF", "GO:CC"))
 p <- gostplot(gostres, capped = FALSE, interactive = TRUE)
 p
-publish_gosttable(
-  gostres,
-  highlight_terms = NULL,
-  use_colors = TRUE,
-  show_columns = c("source", "term_name", "term_size", "intersection_size"),
-  filename = "../output/test.pdf",
-  ggplot = TRUE
-)
+
+table1 <- gostres$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) %>% 
+   mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  table1
+# publish_gosttable(
+#   gostres,
+#   highlight_terms = NULL,
+#   use_colors = TRUE,
+#   show_columns = c("source", "term_name", "term_size", "intersection_size"),
+#   filename = "../output/test.pdf",
+#   ggplot = TRUE
+# )
 ```
 
 I first looked at the data with all genes from the sigDA3 dataset. I used the list of all genes based on my rowMeans\>0 filtering as background.
@@ -109,8 +119,8 @@ gp_up = gost(query = up$ENTREZID,  organism = "hsapiens",
   domain_scope = "custom",
   measure_underrepresentation = FALSE,
   evcodes = FALSE,
-  user_threshold = 0.01,
-  correction_method = c("bonferroni"),
+  user_threshold = 0.001,
+  correction_method = c("fdr"),
   custom_bg = backGL$ENTREZID,
   sources=c("GO:BP","GO:MF", "GO:CC"))
   
@@ -130,7 +140,7 @@ p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
 
 ```
 
-```{r showing it all, echo=FALSE, message=FALSE, warning=FALSE}
+```{r showing it all, eval = FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 
@@ -142,27 +152,35 @@ p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
 ```
 
 #### I next wanted to see what happened at 24 hours with daunorubicin.  I used the sigVDA24 file to do this.
- unfortunately the enrichment below 0.0001
-```{r DA24, eval=TRUE, echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+
+```{r DA24, eval=TRUE, echo=FALSE,  message=FALSE, warning=FALSE}
 gostresDA24 <- gost(query = sigVDA24$SYMBOL,  organism = "hsapiens",
   ordered_query = TRUE,
   domain_scope = "custom",
   measure_underrepresentation = FALSE,
   evcodes = FALSE,
-  user_threshold = 0.001,
-  correction_method = c("bonferroni"),
+  user_threshold = 0.0001,
+  correction_method = c("fdr"),
   custom_bg = backGL$ENTREZID,
   sources=c("GO:BP","GO:MF", "GO:CC"))
 pDA24 <- gostplot(gostres, capped = FALSE, interactive = TRUE)
 pDA24
 
-publish_gosttable(gostresDA24,
-  highlight_terms = NULL,
-  use_colors = TRUE,
-  show_columns = c("source", "term_name", "term_size", "intersection_size"),
-  filename = "../output/test.pdf",
-  ggplot = TRUE
-)
+# (gostres$result$p_value)
+table2 <- gostresDA24$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) %>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  table2
+# publish_gosttable(gostresDA24,
+#   highlight_terms = gostresDA24$result,
+#   use_colors = TRUE,
+#   show_columns = c("source", "term_name", "term_size", "intersection_size"),
+#   filename = "../output/test.pdf",
+#   ggplot = TRUE
+# )
 
 ```
 
@@ -172,7 +190,7 @@ publish_gosttable(gostresDA24,
 
 
 # Graphing specific gene expression
- First get a list of genes you want to see.  There are multiple was to "see" these.  I used the word 'apple' to store my list
+ First get a list of genes you want to see.  There are multiple ways to "see" these.  I used the word 'apple' to store my list
 ```{r genelist, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", "BAX", "GPX1", 'MFN2')#,"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
