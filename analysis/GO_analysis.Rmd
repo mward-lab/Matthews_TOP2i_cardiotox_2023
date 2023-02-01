@@ -21,20 +21,21 @@ library(tidyverse)
 library(readr)
 library(BiocGenerics)
 library(gridExtra)
+library(VennDiagram)
 ```
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
  
 ##note, in this chunk the .rmd file is in the cm/analysis folder.   need to back out with .. 
-##this code check the directory and searches for the pattern, returning the full name of the file
+##this code checks the directory and searches for the pattern, returning the full name of the file
 file.names <- list.files(path = "data/", pattern = "sig*", ignore.case = TRUE,full.names = TRUE)
 
-##Next I use the list of names an lapply to read all of them into a list
+##Next I use the list of names and lapply to read all files into a list
 ##made the csv file to reimport
 #write.csv(filenameonly,"data/filenameonly.txt", col.names = FALSE,row.names = FALSE)
 ##readin the filenameonly.txt file from data to use for naming and filtering.
 filenameonly <- read_csv("data/filenameonly.txt")
-#loop through the list of files and make a separate dataframe for each file under it's real name
+#loop through the list of files and make a separate dataframe for each file under the 'real'  name of the data set
 for (k in 1:length(file.names)){
   
   assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
@@ -67,53 +68,31 @@ The analysis is based on all genes that passed the rowMeans\>0 from the previous
 
 Below is the analysis of differentially expressed genes for each treatment at 3 hours and 24 hours.
 
-```{r intial analysis, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+```{r intial analysis, eval=TRUE, echo=FALSE, fig.height=19, fig.width=10, message=FALSE, warning=FALSE}
 gostres <- gost(query = sigVDA3$SYMBOL,  organism = "hsapiens",
   ordered_query = TRUE,
-  domain_scope = "custom",measure_underrepresentation = FALSE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
   evcodes = FALSE,
-  user_threshold = 0.05,
+  user_threshold = 0.0001,
   correction_method = c("bonferroni"),
   custom_bg = backGL$ENTREZID,
-  sources=c("GO:BP","GO:MF", "GO:CC", "KEGG"))
+  sources=c("GO:BP","GO:MF", "GO:CC"))
 p <- gostplot(gostres, capped = FALSE, interactive = TRUE)
 p
-store<- publish_gosttable(
+publish_gosttable(
   gostres,
   highlight_terms = NULL,
   use_colors = TRUE,
   show_columns = c("source", "term_name", "term_size", "intersection_size"),
-  filename = NULL,
-  ggplot = FALSE
+  filename = "../output/test.pdf",
+  ggplot = TRUE
 )
-store
-
 ```
 
 I first looked at the data with all genes from the sigDA3 dataset. I used the list of all genes based on my rowMeans\>0 filtering as background.
 
-```{r only the Da3 data2, echo=FALSE,  message=FALSE, warning=FALSE}
-gostres_nrp <- gost(query = sigVDA3$SYMBOL,  organism = "hsapiens",
-  ordered_query = TRUE,
-  domain_scope = "custom",measure_underrepresentation = FALSE,
-  evcodes = FALSE,
-  user_threshold = 0.05,
-  correction_method = c("bonferroni"),
-  custom_bg = backGL$converted_alias)
-p2 <- gostplot(gostres_nrp, capped = FALSE, interactive = TRUE)
-p2
-publish_gosttable(
-  gostres_nrp,
-  highlight_terms = NULL,
-  use_colors = TRUE,
-  show_columns = c("source", "term_name", "term_size", "intersection_size"),
-  filename = NULL,
-  ggplot = TRUE
-)
 
-```
-
-then I looked at the same data with 'measure_underrepresentation = FALSE'
 
 ### Analysis of Up versus Down
 
@@ -127,23 +106,27 @@ I then separated the VDA3 file by log2 Fold Change to see how the gene sets are 
 down = subset(sigVDA3, logFC < 0)
 gp_up = gost(query = up$ENTREZID,  organism = "hsapiens",
   ordered_query = TRUE,
-  domain_scope = "custom",measure_underrepresentation = FALSE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
   evcodes = FALSE,
-  user_threshold = 0.05,
+  user_threshold = 0.0001,
   correction_method = c("bonferroni"),
-  custom_bg = backGL$converted_alias)
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","GO:MF", "GO:CC"))
   
   
 gp_down = gost(query = down$ENTREZID,  organism = "hsapiens",
   ordered_query = TRUE,
-  domain_scope = "custom",measure_underrepresentation = FALSE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
   evcodes = FALSE,
-  user_threshold = 0.05,
+  user_threshold = 0.0001,
   correction_method = c("bonferroni"),
-  custom_bg = backGL$converted_alias)
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","GO:MF", "GO:CC"))
 p2_up <- gostplot(gp_up, capped = FALSE, interactive = TRUE)
 
-p2_up #+ ggtitle("Duanorubicin up regulated gene enrichment at 3 hours")
+p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
 
 ```
 
@@ -158,10 +141,40 @@ p2_down #+ ggtitle("Duanorubicin down regulated gene enrichment at 3 hours")
 
 ```
 
-# Graphing specific gene expression
+#### I next wanted to see what happened at 24 hours with daunorubicin.  I used the sigVDA24 file to do this.
+ unfortunately the enrichment below 0.0001
+```{r DA24, eval=TRUE, echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+gostresDA24 <- gost(query = sigVDA24$SYMBOL,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.001,
+  correction_method = c("bonferroni"),
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","GO:MF", "GO:CC"))
+pDA24 <- gostplot(gostres, capped = FALSE, interactive = TRUE)
+pDA24
 
-```{r eval=FALSE, include=FALSE}
+publish_gosttable(gostresDA24,
+  highlight_terms = NULL,
+  use_colors = TRUE,
+  show_columns = c("source", "term_name", "term_size", "intersection_size"),
+  filename = "../output/test.pdf",
+  ggplot = TRUE
+)
+
+```
+
+
+
+
+
+
+# Graphing specific gene expression
  First get a list of genes you want to see.  There are multiple was to "see" these.  I used the word 'apple' to store my list
+```{r genelist, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
 apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", "BAX", "GPX1", 'MFN2')#,"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
 ##find the index number for each gene
 indices <- match(apple, x$genes$SYMBOL)
@@ -172,7 +185,7 @@ colnames(gnames) <- c("ENTREZID","SYMBOL" )
 
 
 ## Now to investigate specific gene expression and analyse similar vs difference of genes up and down between drug "classes"  (anthracycline vs non-anthracycline).
-The nextstep is to make plots of all the genes you want to see.  I am stopping here, because I would like to add 
+
 for (gn in indices){
   print(Da24counts %>% filter(Tags == gn) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
   geom_boxplot(aes(fill = as.factor(Samples)))+
@@ -182,7 +195,8 @@ for (gn in indices){
     
     labs(y = "Log2(cpm)",x= "", fill = "Treatment"))
 }
-`{r}
+```
+```{r function for plotting, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 plot_function <- function(index, df) {
   for (i in index) {
     data <- df %>% filter(ENTREZID == i)
