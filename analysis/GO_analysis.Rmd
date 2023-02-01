@@ -96,7 +96,7 @@ I first looked at the data with all genes from the sigDA3 dataset. I used the li
 
 ### Analysis of Up versus Down
 
-I then separated the VDA3 file by log2 Fold Change to see how the gene sets are enriched.
+I then separated the VDA3 file by log2 Fold Change to see how the gene sets are enriched.  Nothing showed up in the GO-BP/CC/MG-down regulated gene-set at a significant level, p<0.05.
 
 ```{r only the Da3 data3, echo=FALSE, message=FALSE, warning=FALSE}
 #results_sig = subset(sigVDA3,adj.P.Val < 0.05)
@@ -109,34 +109,34 @@ gp_up = gost(query = up$ENTREZID,  organism = "hsapiens",
   domain_scope = "custom",
   measure_underrepresentation = FALSE,
   evcodes = FALSE,
-  user_threshold = 0.0001,
+  user_threshold = 0.01,
   correction_method = c("bonferroni"),
   custom_bg = backGL$ENTREZID,
   sources=c("GO:BP","GO:MF", "GO:CC"))
   
   
-gp_down = gost(query = down$ENTREZID,  organism = "hsapiens",
-  ordered_query = TRUE,
-  domain_scope = "custom",
-  measure_underrepresentation = FALSE,
-  evcodes = FALSE,
-  user_threshold = 0.0001,
-  correction_method = c("bonferroni"),
-  custom_bg = backGL$ENTREZID,
-  sources=c("GO:BP","GO:MF", "GO:CC"))
+#gp_down = gost(query = down$ENTREZID,  organism = "hsapiens",
+  # ordered_query = TRUE,
+  # domain_scope = "custom",
+  # measure_underrepresentation = FALSE,
+  # evcodes = FALSE,
+  # user_threshold = 0.05,
+  # correction_method = c("bonferroni"),
+  # custom_bg = backGL$ENTREZID,
+  # sources=c("GO:BP","GO:MF", "GO:CC"))
 p2_up <- gostplot(gp_up, capped = FALSE, interactive = TRUE)
 
 p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
 
 ```
 
-```{r showing it all}
+```{r showing it all, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 
-p2_down <- gostplot(gp_down, capped = FALSE, interactive = TRUE)
+#p2_down <- gostplot(gp_down, capped = FALSE, interactive = TRUE)
 
-p2_down #+ ggtitle("Duanorubicin down regulated gene enrichment at 3 hours")
+#p2_down #+ ggtitle("Daunorubicin down regulated gene enrichment at 3 hours")
 
 
 ```
