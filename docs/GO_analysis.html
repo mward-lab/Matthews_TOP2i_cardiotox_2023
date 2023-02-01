@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-01-31" />
+<meta name="date" content="2023-02-01" />
 
 <title>GO analysis</title>
 
@@ -44,6 +44,8 @@
 <script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
 <link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -368,7 +370,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GO analysis</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-01-31</h4>
+<h4 class="date">2023-02-01</h4>
 
 </div>
 
@@ -397,7 +399,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-01-31
+<strong>Last updated:</strong> 2023-02-01
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -528,15 +530,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree848eb1a472661b66bb74e2dfb3785359937f2236targetblank848eb1aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree1657edd95cd01397225032e17151d0362103f524targetblank1657edda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/848eb1a472661b66bb74e2dfb3785359937f2236" target="_blank">848eb1a</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/1657edd95cd01397225032e17151d0362103f524" target="_blank">1657edd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree848eb1a472661b66bb74e2dfb3785359937f2236targetblank848eb1aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree1657edd95cd01397225032e17151d0362103f524targetblank1657edda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -546,7 +548,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/848eb1a472661b66bb74e2dfb3785359937f2236" target="_blank">848eb1a</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/1657edd95cd01397225032e17151d0362103f524" target="_blank">1657edd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -629,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1657edd95cd01397225032e17151d0362103f524/analysis/GO_analysis.Rmd" target="_blank">1657edd</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-01
+</td>
+<td>
+updating Go tables
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/eed4dc56e35c44277f0f938e144f31fbc8284f84/docs/GO_analysis.html" target="_blank">eed4dc5</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-01-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -820,15 +856,1443 @@ library(tidyverse)
 library(readr)
 library(BiocGenerics)
 library(gridExtra)
-library(VennDiagram)</code></pre>
+library(VennDiagram)
+library(kableExtra)
+library(scales)</code></pre>
 <p>The analysis is based on all genes that passed the rowMeans&gt;0 from
 the previous page <a
 href="https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html">link</a></p>
 <p>Below is the analysis of differentially expressed genes for each
 treatment at 3 hours and 24 hours.</p>
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d3736c7f9cf5f559c042" style="width:960px;height:1824px;"></div>
-<script type="application/json" data-for="htmlwidget-d3736c7f9cf5f559c042">{"x":{"data":[{"x":[87.1877575065437,87.1596578126843,87.1355723608048,165.553789438535,113.878452431029,140.689574614913,87.1516293287245,184.2721997909,199.345678425499,96.5971407074754,103.678263560054,117.84452350719,110.84368549421,101.84375497523,104.489140439997,94.5980482014754,176.685282448852,92.4022578384594,128.642834433174,110.83164276827,161.33482111764,140.420620402258,128.594663529415,77.9750721626281,177.476088118897,132.239595247182,184.27621403288,181.349831629519,140.693588856893,92.3982435964794,96.6051691914352,132.400164926379,96.3643146726401,132.243609489162,184.28022827486,140.697603098873,181.353845871499,110.84769973619,96.6011549494553,94.6020624434553,110.85171397817,132.436293104198,94.6060766854352,132.404179168359,110.83565701025],"y":[30.8218061586451,30.2130593694013,25.8366358523072,25.8168142591415,25.4420477032675,24.1981302351936,24.0627104900628,24.0432452713857,23.8685082534042,21.4494150529683,21.066399688473,19.4137452104842,19.3024609804777,18.9891586490655,18.688275637665,18.4210634298515,17.7173321992548,17.2502658006679,14.1243289392766,13.4235836358112,11.1295841985649,10.9740191013083,10.2439728169115,10.1558558025663,9.59505063452015,9.56222755972271,9.52046256014854,9.47880969822171,9.30499437784419,9.19080705994493,7.42824430291614,7.34468903177387,6.94706733768896,6.93106565962437,6.93106565962437,6.88919167640844,6.83736910790214,6.43351260007848,6.34941958303546,5.95537310341777,5.82655472623194,5.43759488755844,5.35114407375997,5.00860645953812,4.43912434261483],"text":["GO:0006366 (2055) <br> transcription by RNA polymerase II <br> 1.507e-31","GO:0006357 (1978) <br> regulation of transcription by RNA polymerase II <br> 6.123e-31","GO:0006351 (2766) <br> DNA-templated transcription <br> 1.457e-26","GO:0097659 (2767) <br> nucleic acid-templated transcription <br> 1.525e-26","GO:0032774 (2782) <br> RNA biosynthetic process <br> 3.614e-26","GO:0051252 (2921) <br> regulation of RNA metabolic process <br> 6.337e-25","GO:0006355 (2662) <br> regulation of DNA-templated transcription <br> 8.655e-25","GO:1903506 (2663) <br> regulation of nucleic acid-templated transcription <br> 9.052e-25","GO:2001141 (2670) <br> regulation of RNA biosynthetic process <br> 1.354e-24","GO:0010556 (3088) <br> regulation of macromolecule biosynthetic process <br> 3.553e-22","GO:0019219 (3181) <br> regulation of nucleobase-containing compound metabolic process <br> 8.582e-22","GO:0034654 (3149) <br> nucleobase-containing compound biosynthetic process <br> 3.857e-20","GO:0031326 (3204) <br> regulation of cellular biosynthetic process <br> 4.984e-20","GO:0018130 (3210) <br> heterocycle biosynthetic process <br> 1.025e-19","GO:0019438 (3212) <br> aromatic compound biosynthetic process <br> 2.050e-19","GO:0009889 (3255) <br> regulation of biosynthetic process <br> 3.793e-19","GO:1901362 (3319) <br> organic cyclic compound biosynthetic process <br> 1.917e-18","GO:0009059 (3801) <br> macromolecule biosynthetic process <br> 5.620e-18","GO:0044271 (3820) <br> cellular nitrogen compound biosynthetic process <br> 7.511e-15","GO:0031323 (4432) <br> regulation of cellular metabolic process <br> 3.771e-14","GO:0080090 (4567) <br> regulation of primary metabolic process <br> 7.420e-12","GO:0051171 (4443) <br> regulation of nitrogen compound metabolic process <br> 1.062e-11","GO:0044249 (4569) <br> cellular biosynthetic process <br> 5.702e-11","GO:0000122 (761) <br> negative regulation of transcription by RNA polymerase II <br> 6.985e-11","GO:1901576 (4628) <br> organic substance biosynthetic process <br> 2.541e-10","GO:0045892 (1041) <br> negative regulation of DNA-templated transcription <br> 2.740e-10","GO:1903507 (1043) <br> negative regulation of nucleic acid-templated transcription <br> 3.017e-10","GO:1902679 (1044) <br> negative regulation of RNA biosynthetic process <br> 3.320e-10","GO:0051253 (1137) <br> negative regulation of RNA metabolic process <br> 4.955e-10","GO:0009058 (4691) <br> biosynthetic process <br> 6.445e-10","GO:0010558 (1237) <br> negative regulation of macromolecule biosynthetic process <br> 3.730e-08","GO:0045934 (1239) <br> negative regulation of nucleobase-containing compound metabolic process <br> 4.522e-08","GO:0010468 (3687) <br> regulation of gene expression <br> 1.130e-07","GO:0045893 (1342) <br> positive regulation of DNA-templated transcription <br> 1.172e-07","GO:1903508 (1342) <br> positive regulation of nucleic acid-templated transcription <br> 1.172e-07","GO:0051254 (1469) <br> positive regulation of RNA metabolic process <br> 1.291e-07","GO:1902680 (1348) <br> positive regulation of RNA biosynthetic process <br> 1.454e-07","GO:0031327 (1279) <br> negative regulation of cellular biosynthetic process <br> 3.685e-07","GO:0010557 (1537) <br> positive regulation of macromolecule biosynthetic process <br> 4.473e-07","GO:0009890 (1304) <br> negative regulation of biosynthetic process <br> 1.108e-06","GO:0031328 (1614) <br> positive regulation of cellular biosynthetic process <br> 1.491e-06","GO:0045944 (952) <br> positive regulation of transcription by RNA polymerase II <br> 3.651e-06","GO:0009891 (1640) <br> positive regulation of biosynthetic process <br> 4.455e-06","GO:0045935 (1641) <br> positive regulation of nucleobase-containing compound metabolic process <br> 9.804e-06","GO:0031324 (1830) <br> negative regulation of cellular metabolic process <br> 3.638e-05"],"key":["GO:0006366","GO:0006357","GO:0006351","GO:0097659","GO:0032774","GO:0051252","GO:0006355","GO:1903506","GO:2001141","GO:0010556","GO:0019219","GO:0034654","GO:0031326","GO:0018130","GO:0019438","GO:0009889","GO:1901362","GO:0009059","GO:0044271","GO:0031323","GO:0080090","GO:0051171","GO:0044249","GO:0000122","GO:1901576","GO:0045892","GO:1903507","GO:1902679","GO:0051253","GO:0009058","GO:0010558","GO:0045934","GO:0010468","GO:0045893","GO:1903508","GO:0051254","GO:1902680","GO:0031327","GO:0010557","GO:0009890","GO:0031328","GO:0045944","GO:0009891","GO:0045935","GO:0031324"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[19.9328889998923,19.7945336813753,20.9713442387267,20.9725693673668,20.9908829468851,21.1551665518898,20.840951144652,20.8422338544322,20.8511966676227,21.3406278723253,21.4388099164726,21.4054160010167,21.4625664648654,21.4687305614409,21.4707822236613,21.5145300343105,21.5783903620437,22.0169227868673,22.0328474320382,22.5012201858246,22.5943797406809,22.5089340071967,22.5957356700136,15.8277343250134,22.6354275307425,17.2581063646558,17.2664017066207,17.2705415054242,17.634214663173,22.6771653543307,17.9843260537941,17.9909516155099,21.9193671229383,18.3146966709246,18.3146966709246,18.6727776861116,18.3325694578545,18.1206413748947,18.8487828891077,18.1990817739118,19.0366358532793,16.86603051892,19.0975483417282,19.0998670059696,19.509021462839],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDataa8945cba","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[57.0618373107918,68.5889282104043],"y":[4.21361406646978,4.10453105744516],"text":["GO:0005667 (413) <br> transcription regulator complex <br> 6.115e-05","GO:0090575 (219) <br> RNA polymerase II transcription regulator complex <br> 7.861e-05"],"key":["GO:0005667","GO:0090575"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[12.3778381165886,3.77952755905512],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDataa8945cba","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[3.60978804546664,49.193686440164,2.52990529177455,2.7346414272329,3.69007672603854,2.53391972580315,51.5742458191209,29.4105555472474,2.54596302788893,3.65796125380978,2.54997746191753,2.53793415983174,2.95142086477704,2.97149303492002,2.94740643074844,2.96747860089142,31.3615704851446],"y":[28.0099748427831,27.585010227732,26.6832303803185,26.6207985144869,26.6047605815763,25.7224197259945,25.4685915385632,24.6100747804592,23.8060664190773,23.1433130503246,20.9047468783541,20.7981338439732,5.51414599616135,5.26111233651397,5.15730375359616,4.56899837480342,4.12608104566222],"text":["GO:0003677 (1908) <br> DNA binding <br> 9.773e-29","GO:0140110 (1431) <br> transcription regulator activity <br> 2.600e-28","GO:0000976 (1082) <br> transcription cis-regulatory region binding <br> 2.074e-27","GO:0001067 (1084) <br> transcription regulatory region nucleic acid binding <br> 2.394e-27","GO:0003700 (975) <br> DNA-binding transcription factor activity <br> 2.485e-27","GO:0000977 (998) <br> RNA polymerase II transcription regulatory region sequence-specific DNA binding <br> 1.895e-26","GO:1990837 (1128) <br> sequence-specific double-stranded DNA binding <br> 3.399e-26","GO:0043565 (1220) <br> sequence-specific DNA binding <br> 2.454e-25","GO:0000981 (935) <br> DNA-binding transcription factor activity, RNA polymerase II-specific <br> 1.563e-24","GO:0003690 (1209) <br> double-stranded DNA binding <br> 7.189e-24","GO:0000987 (860) <br> cis-regulatory region sequence-specific DNA binding <br> 1.245e-21","GO:0000978 (843) <br> RNA polymerase II cis-regulatory region sequence-specific DNA binding <br> 1.592e-21","GO:0001217 (246) <br> DNA-binding transcription repressor activity <br> 3.061e-06","GO:0001228 (304) <br> DNA-binding transcription activator activity, RNA polymerase II-specific <br> 5.481e-06","GO:0001216 (308) <br> DNA-binding transcription activator activity <br> 6.961e-06","GO:0001227 (242) <br> DNA-binding transcription repressor activity, RNA polymerase II-specific <br> 2.698e-05","GO:0046872 (3328) <br> metal ion binding <br> 7.480e-05"],"key":["GO:0003677","GO:0140110","GO:0000976","GO:0001067","GO:0003700","GO:0000977","GO:1990837","GO:0043565","GO:0000981","GO:0003690","GO:0000987","GO:0000978","GO:0001217","GO:0001228","GO:0001216","GO:0001227","GO:0046872"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[19.6628950729895,18.5698805137589,17.4240870389712,17.4319713962061,16.9718997050129,17.0744865851853,17.6007501676041,17.9274452632219,16.7855515823337,17.8900919690294,16.4053806402216,16.3128978192306,7.4604324750387,9.9617919393928,10.0837982825388,7.19105305613139,21.58725367991],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDataa8945cba","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,51.7629242184649],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[55.777034424036,73.7080647123221],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[77.7221749178932,200.004014110206],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":32.6669625382871,"l":55.1930261519303},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP"],"tickvals":[26.8814621092325,64.7425495681791,138.863094514049],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,36],"tickmode":"array","ticktext":["0","10","20","30"],"tickvals":[0,10,20,30],"categoryorder":"array","categoryarray":["0","10","20","30"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-31.5483603154836},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1b9044031b3d":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"1b907c214a7c":{"x":{},"xend":{},"y":{},"yend":{}},"1b9024571b7":{"x":{},"xend":{},"y":{},"yend":{}},"1b907d76597a":{"x":{},"xend":{},"y":{},"yend":{}}},"cur_data":"1b9044031b3d","visdat":{"1b9044031b3d":["function (y) ","x"],"1b907c214a7c":["function (y) ","x"],"1b9024571b7":["function (y) ","x"],"1b907d76597a":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDataa8945cba"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<p><img src="figure/GO_analysis.Rmd/intial%20analysis-2.png" width="960" style="display: block; margin: auto;" /></p>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d3736c7f9cf5f559c042" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-d3736c7f9cf5f559c042">{"x":{"data":[{"x":[87.1877575065437,87.1596578126843,165.553789438535,87.1355723608048,113.878452431029,140.689574614913,184.2721997909,87.1516293287245,199.345678425499,96.5971407074754,103.678263560054,117.84452350719,110.84368549421,101.84375497523,104.489140439997,94.5980482014754,176.685282448852,92.4022578384594,128.642834433174,110.83164276827,161.33482111764,140.420620402258,128.594663529415,77.9750721626281,177.476088118897,132.239595247182,184.27621403288,181.349831629519,140.693588856893,92.3982435964794,96.6051691914352,132.400164926379,132.243609489162,184.28022827486,96.3643146726401,140.697603098873,181.353845871499,110.84769973619,96.6011549494553,94.6020624434553,110.85171397817,132.436293104198,94.6060766854352,132.404179168359,110.83565701025,146.004430996326,103.690306285993,110.83967125223,140.428648886218,140.424634644238],"y":[30.8218061586451,30.5140893650653,26.4188742504695,26.4188742504695,26.1410177076035,24.9762814855773,24.9463352583777,24.9463352583777,24.8227507628435,22.4494150529683,22.1077923736312,20.4929264565318,20.4164043327845,20.1352866847437,19.8643668967207,19.6251834125075,18.9477811206331,18.5055383057712,15.4030825402294,14.7246136314751,12.4518034932988,12.3164417821305,11.6057006529291,11.5360670442779,10.9929906431922,10.9772009076935,10.9518263243075,10.9259677295639,10.7673923757431,10.6679283146646,8.91960599675041,8.84983901009377,8.47513370397465,8.47513370397465,8.47513370397465,8.44549417717572,8.40557083196913,8.01329619669529,7.94048419006196,7.55743309474574,7.43933858295168,7.06084417795634,6.98461252933956,6.65205913602431,6.09233685639017,5.60394767172244,4.9568659593015,4.7486951957568,4.30113133772184,4.29937654348115],"text":["GO:0006366 (2055) <br> transcription by RNA polymerase II <br> 1.507e-31","GO:0006357 (1978) <br> regulation of transcription by RNA polymerase II <br> 3.061e-31","GO:0097659 (2767) <br> nucleic acid-templated transcription <br> 3.812e-27","GO:0006351 (2766) <br> DNA-templated transcription <br> 3.812e-27","GO:0032774 (2782) <br> RNA biosynthetic process <br> 7.227e-27","GO:0051252 (2921) <br> regulation of RNA metabolic process <br> 1.056e-25","GO:1903506 (2663) <br> regulation of nucleic acid-templated transcription <br> 1.132e-25","GO:0006355 (2662) <br> regulation of DNA-templated transcription <br> 1.132e-25","GO:2001141 (2670) <br> regulation of RNA biosynthetic process <br> 1.504e-25","GO:0010556 (3088) <br> regulation of macromolecule biosynthetic process <br> 3.553e-23","GO:0019219 (3181) <br> regulation of nucleobase-containing compound metabolic process <br> 7.802e-23","GO:0034654 (3149) <br> nucleobase-containing compound biosynthetic process <br> 3.214e-21","GO:0031326 (3204) <br> regulation of cellular biosynthetic process <br> 3.834e-21","GO:0018130 (3210) <br> heterocycle biosynthetic process <br> 7.323e-21","GO:0019438 (3212) <br> aromatic compound biosynthetic process <br> 1.367e-20","GO:0009889 (3255) <br> regulation of biosynthetic process <br> 2.370e-20","GO:1901362 (3319) <br> organic cyclic compound biosynthetic process <br> 1.128e-19","GO:0009059 (3801) <br> macromolecule biosynthetic process <br> 3.122e-19","GO:0044271 (3820) <br> cellular nitrogen compound biosynthetic process <br> 3.953e-16","GO:0031323 (4432) <br> regulation of cellular metabolic process <br> 1.885e-15","GO:0080090 (4567) <br> regulation of primary metabolic process <br> 3.533e-13","GO:0051171 (4443) <br> regulation of nitrogen compound metabolic process <br> 4.826e-13","GO:0044249 (4569) <br> cellular biosynthetic process <br> 2.479e-12","GO:0000122 (761) <br> negative regulation of transcription by RNA polymerase II <br> 2.910e-12","GO:1901576 (4628) <br> organic substance biosynthetic process <br> 1.016e-11","GO:0045892 (1041) <br> negative regulation of DNA-templated transcription <br> 1.054e-11","GO:1903507 (1043) <br> negative regulation of nucleic acid-templated transcription <br> 1.117e-11","GO:1902679 (1044) <br> negative regulation of RNA biosynthetic process <br> 1.186e-11","GO:0051253 (1137) <br> negative regulation of RNA metabolic process <br> 1.708e-11","GO:0009058 (4691) <br> biosynthetic process <br> 2.148e-11","GO:0010558 (1237) <br> negative regulation of macromolecule biosynthetic process <br> 1.203e-09","GO:0045934 (1239) <br> negative regulation of nucleobase-containing compound metabolic process <br> 1.413e-09","GO:0045893 (1342) <br> positive regulation of DNA-templated transcription <br> 3.349e-09","GO:1903508 (1342) <br> positive regulation of nucleic acid-templated transcription <br> 3.349e-09","GO:0010468 (3687) <br> regulation of gene expression <br> 3.349e-09","GO:0051254 (1469) <br> positive regulation of RNA metabolic process <br> 3.585e-09","GO:1902680 (1348) <br> positive regulation of RNA biosynthetic process <br> 3.930e-09","GO:0031327 (1279) <br> negative regulation of cellular biosynthetic process <br> 9.698e-09","GO:0010557 (1537) <br> positive regulation of macromolecule biosynthetic process <br> 1.147e-08","GO:0009890 (1304) <br> negative regulation of biosynthetic process <br> 2.771e-08","GO:0031328 (1614) <br> positive regulation of cellular biosynthetic process <br> 3.636e-08","GO:0045944 (952) <br> positive regulation of transcription by RNA polymerase II <br> 8.693e-08","GO:0009891 (1640) <br> positive regulation of biosynthetic process <br> 1.036e-07","GO:0045935 (1641) <br> positive regulation of nucleobase-containing compound metabolic process <br> 2.228e-07","GO:0031324 (1830) <br> negative regulation of cellular metabolic process <br> 8.085e-07","GO:0060255 (4772) <br> regulation of macromolecule metabolic process <br> 2.489e-06","GO:0019222 (5189) <br> regulation of metabolic process <br> 1.104e-05","GO:0031325 (2446) <br> positive regulation of cellular metabolic process <br> 1.784e-05","GO:0051173 (2497) <br> positive regulation of nitrogen compound metabolic process <br> 4.999e-05","GO:0051172 (1905) <br> negative regulation of nitrogen compound metabolic process <br> 5.019e-05"],"key":["GO:0006366","GO:0006357","GO:0097659","GO:0006351","GO:0032774","GO:0051252","GO:1903506","GO:0006355","GO:2001141","GO:0010556","GO:0019219","GO:0034654","GO:0031326","GO:0018130","GO:0019438","GO:0009889","GO:1901362","GO:0009059","GO:0044271","GO:0031323","GO:0080090","GO:0051171","GO:0044249","GO:0000122","GO:1901576","GO:0045892","GO:1903507","GO:1902679","GO:0051253","GO:0009058","GO:0010558","GO:0045934","GO:0045893","GO:1903508","GO:0010468","GO:0051254","GO:1902680","GO:0031327","GO:0010557","GO:0009890","GO:0031328","GO:0045944","GO:0009891","GO:0045935","GO:0031324","GO:0060255","GO:0019222","GO:0031325","GO:0051173","GO:0051172"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[19.6733503656404,19.5372180240896,20.6963260228525,20.6951205785497,20.7143453551683,20.8759893892929,20.5680846313889,20.5668225311113,20.5769034376305,21.0584708731174,21.1550754107043,21.1222180406134,21.1784502588456,21.1845153158984,21.1865340137348,21.2295789213338,21.2924131949974,21.7238996494186,21.7395684307759,22.2004157648357,22.2920785102679,22.2080056470097,22.2934126536678,15.6341538655732,22.3324667789407,17.0415438895527,17.0497059489355,17.0537792329314,17.4116091960596,22.3735339942614,17.7560952911351,17.7626143988943,18.0811577908759,18.0811577908759,21.6279114278991,18.4334854612886,18.098743412888,17.8902204122334,18.6066627606206,17.9674004968506,18.7914974612598,16.6557675889549,18.851431259043,18.8537126689364,19.2562931758992,22.4254019360877,22.6771653543307,20.2799969988317,20.3503987866171,19.4020133281101],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDataa8945cba","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[68.5889282104043,57.0618373107918],"y":[4.40556105310915,4.40556105310915],"text":["GO:0090575 (219) <br> RNA polymerase II transcription regulator complex <br> 3.930e-05","GO:0005667 (413) <br> transcription regulator complex <br> 3.930e-05"],"key":["GO:0090575","GO:0005667"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[3.77952755905512,12.2396876896852],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDataa8945cba","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[3.60978804546664,49.193686440164,2.52990529177455,2.7346414272329,3.69007672603854,2.53391972580315,51.5742458191209,29.4105555472474,2.54596302788893,3.65796125380978,2.54997746191753,2.53793415983174,2.95142086477704,2.97149303492002,2.94740643074844,2.96747860089142,31.3615704851446,29.1456029013601],"y":[28.0099748427831,27.886040223396,27.3037305859124,27.3037305859124,27.3037305859124,26.5005709763781,26.3136895785775,25.5131647674512,24.7603089285166,24.1433130503246,21.9461395635124,21.8773150900208,6.62808934846819,6.40724037219221,6.33339501265184,5.77311835745935,5.3565299670405,4.62501299206785],"text":["GO:0003677 (1908) <br> DNA binding <br> 9.773e-29","GO:0140110 (1431) <br> transcription regulator activity <br> 1.300e-28","GO:0000976 (1082) <br> transcription cis-regulatory region binding <br> 4.969e-28","GO:0001067 (1084) <br> transcription regulatory region nucleic acid binding <br> 4.969e-28","GO:0003700 (975) <br> DNA-binding transcription factor activity <br> 4.969e-28","GO:0000977 (998) <br> RNA polymerase II transcription regulatory region sequence-specific DNA binding <br> 3.158e-27","GO:1990837 (1128) <br> sequence-specific double-stranded DNA binding <br> 4.856e-27","GO:0043565 (1220) <br> sequence-specific DNA binding <br> 3.068e-26","GO:0000981 (935) <br> DNA-binding transcription factor activity, RNA polymerase II-specific <br> 1.737e-25","GO:0003690 (1209) <br> double-stranded DNA binding <br> 7.189e-25","GO:0000987 (860) <br> cis-regulatory region sequence-specific DNA binding <br> 1.132e-22","GO:0000978 (843) <br> RNA polymerase II cis-regulatory region sequence-specific DNA binding <br> 1.326e-22","GO:0001217 (246) <br> DNA-binding transcription repressor activity <br> 2.355e-07","GO:0001228 (304) <br> DNA-binding transcription activator activity, RNA polymerase II-specific <br> 3.915e-07","GO:0001216 (308) <br> DNA-binding transcription activator activity <br> 4.641e-07","GO:0001227 (242) <br> DNA-binding transcription repressor activity, RNA polymerase II-specific <br> 1.686e-06","GO:0046872 (3328) <br> metal ion binding <br> 4.400e-06","GO:0043169 (3392) <br> cation binding <br> 2.371e-05"],"key":["GO:0003677","GO:0140110","GO:0000976","GO:0001067","GO:0003700","GO:0000977","GO:1990837","GO:0043565","GO:0000981","GO:0003690","GO:0000987","GO:0000978","GO:0001217","GO:0001228","GO:0001216","GO:0001227","GO:0046872","GO:0043169"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[19.4076944742172,18.3322415542131,17.2048577259049,17.2126154039148,16.7599357579518,16.8608743583609,17.3786823798776,17.7001284132958,16.5765817202767,17.663375280438,16.2025190453175,16.1115221605596,7.40129078875845,9.86246051170614,9.98250655948038,7.13623953193275,21.3011341045222,21.3623553786854],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDataa8945cba","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,51.7629242184649],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[55.777034424036,73.7080647123221],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[77.7221749178932,200.004014110206],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":71.8183902982224,"l":55.1930261519303},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP"],"tickvals":[26.8814621092325,64.7425495681791,138.863094514049],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,36],"tickmode":"array","ticktext":["0","10","20","30"],"tickvals":[0,10,20,30],"categoryorder":"array","categoryarray":["0","10","20","30"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-31.5483603154836},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"32a47f7c47b9":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"32a439121a15":{"x":{},"xend":{},"y":{},"yend":{}},"32a41b443271":{"x":{},"xend":{},"y":{},"yend":{}},"32a48cc1a29":{"x":{},"xend":{},"y":{},"yend":{}}},"cur_data":"32a47f7c47b9","visdat":{"32a47f7c47b9":["function (y) ","x"],"32a439121a15":["function (y) ","x"],"32a41b443271":["function (y) ","x"],"32a48cc1a29":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDataa8945cba"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<table class=" lightable-paper lightable-striped table table-striped table-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+source
+</th>
+<th style="text-align:left;">
+term_id
+</th>
+<th style="text-align:left;">
+term_name
+</th>
+<th style="text-align:right;">
+intersection_size
+</th>
+<th style="text-align:right;">
+term_size
+</th>
+<th style="text-align:left;">
+p_value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0006366" class="uri">GO:0006366</a>
+</td>
+<td style="text-align:left;">
+transcription by RNA polymerase II
+</td>
+<td style="text-align:right;">
+212
+</td>
+<td style="text-align:right;">
+2055
+</td>
+<td style="text-align:left;">
+1.51e-31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0006357" class="uri">GO:0006357</a>
+</td>
+<td style="text-align:left;">
+regulation of transcription by RNA polymerase II
+</td>
+<td style="text-align:right;">
+206
+</td>
+<td style="text-align:right;">
+1978
+</td>
+<td style="text-align:left;">
+3.06e-31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0097659" class="uri">GO:0097659</a>
+</td>
+<td style="text-align:left;">
+nucleic acid-templated transcription
+</td>
+<td style="text-align:right;">
+243
+</td>
+<td style="text-align:right;">
+2767
+</td>
+<td style="text-align:left;">
+3.81e-27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0006351" class="uri">GO:0006351</a>
+</td>
+<td style="text-align:left;">
+DNA-templated transcription
+</td>
+<td style="text-align:right;">
+243
+</td>
+<td style="text-align:right;">
+2766
+</td>
+<td style="text-align:left;">
+3.81e-27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0032774" class="uri">GO:0032774</a>
+</td>
+<td style="text-align:left;">
+RNA biosynthetic process
+</td>
+<td style="text-align:right;">
+243
+</td>
+<td style="text-align:right;">
+2782
+</td>
+<td style="text-align:left;">
+7.23e-27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051252" class="uri">GO:0051252</a>
+</td>
+<td style="text-align:left;">
+regulation of RNA metabolic process
+</td>
+<td style="text-align:right;">
+247
+</td>
+<td style="text-align:right;">
+2921
+</td>
+<td style="text-align:left;">
+1.06e-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1903506" class="uri">GO:1903506</a>
+</td>
+<td style="text-align:left;">
+regulation of nucleic acid-templated transcription
+</td>
+<td style="text-align:right;">
+234
+</td>
+<td style="text-align:right;">
+2663
+</td>
+<td style="text-align:left;">
+1.13e-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0006355" class="uri">GO:0006355</a>
+</td>
+<td style="text-align:left;">
+regulation of DNA-templated transcription
+</td>
+<td style="text-align:right;">
+234
+</td>
+<td style="text-align:right;">
+2662
+</td>
+<td style="text-align:left;">
+1.13e-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:2001141" class="uri">GO:2001141</a>
+</td>
+<td style="text-align:left;">
+regulation of RNA biosynthetic process
+</td>
+<td style="text-align:right;">
+234
+</td>
+<td style="text-align:right;">
+2670
+</td>
+<td style="text-align:left;">
+1.50e-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0010556" class="uri">GO:0010556</a>
+</td>
+<td style="text-align:left;">
+regulation of macromolecule biosynthetic process
+</td>
+<td style="text-align:right;">
+248
+</td>
+<td style="text-align:right;">
+3088
+</td>
+<td style="text-align:left;">
+3.55e-23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0019219" class="uri">GO:0019219</a>
+</td>
+<td style="text-align:left;">
+regulation of nucleobase-containing compound metabolic process
+</td>
+<td style="text-align:right;">
+214
+</td>
+<td style="text-align:right;">
+3181
+</td>
+<td style="text-align:left;">
+7.80e-23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0034654" class="uri">GO:0034654</a>
+</td>
+<td style="text-align:left;">
+nucleobase-containing compound biosynthetic process
+</td>
+<td style="text-align:right;">
+202
+</td>
+<td style="text-align:right;">
+3149
+</td>
+<td style="text-align:left;">
+3.21e-21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0031326" class="uri">GO:0031326</a>
+</td>
+<td style="text-align:left;">
+regulation of cellular biosynthetic process
+</td>
+<td style="text-align:right;">
+211
+</td>
+<td style="text-align:right;">
+3204
+</td>
+<td style="text-align:left;">
+3.83e-21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0018130" class="uri">GO:0018130</a>
+</td>
+<td style="text-align:left;">
+heterocycle biosynthetic process
+</td>
+<td style="text-align:right;">
+249
+</td>
+<td style="text-align:right;">
+3210
+</td>
+<td style="text-align:left;">
+7.32e-21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0019438" class="uri">GO:0019438</a>
+</td>
+<td style="text-align:left;">
+aromatic compound biosynthetic process
+</td>
+<td style="text-align:right;">
+186
+</td>
+<td style="text-align:right;">
+3212
+</td>
+<td style="text-align:left;">
+1.37e-20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0009889" class="uri">GO:0009889</a>
+</td>
+<td style="text-align:left;">
+regulation of biosynthetic process
+</td>
+<td style="text-align:right;">
+211
+</td>
+<td style="text-align:right;">
+3255
+</td>
+<td style="text-align:left;">
+2.37e-20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1901362" class="uri">GO:1901362</a>
+</td>
+<td style="text-align:left;">
+organic cyclic compound biosynthetic process
+</td>
+<td style="text-align:right;">
+188
+</td>
+<td style="text-align:right;">
+3319
+</td>
+<td style="text-align:left;">
+1.13e-19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0009059" class="uri">GO:0009059</a>
+</td>
+<td style="text-align:left;">
+macromolecule biosynthetic process
+</td>
+<td style="text-align:right;">
+220
+</td>
+<td style="text-align:right;">
+3801
+</td>
+<td style="text-align:left;">
+3.12e-19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0044271" class="uri">GO:0044271</a>
+</td>
+<td style="text-align:left;">
+cellular nitrogen compound biosynthetic process
+</td>
+<td style="text-align:right;">
+222
+</td>
+<td style="text-align:right;">
+3820
+</td>
+<td style="text-align:left;">
+3.95e-16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0031323" class="uri">GO:0031323</a>
+</td>
+<td style="text-align:left;">
+regulation of cellular metabolic process
+</td>
+<td style="text-align:right;">
+234
+</td>
+<td style="text-align:right;">
+4432
+</td>
+<td style="text-align:left;">
+1.89e-15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0080090" class="uri">GO:0080090</a>
+</td>
+<td style="text-align:left;">
+regulation of primary metabolic process
+</td>
+<td style="text-align:right;">
+234
+</td>
+<td style="text-align:right;">
+4567
+</td>
+<td style="text-align:left;">
+3.53e-13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051171" class="uri">GO:0051171</a>
+</td>
+<td style="text-align:left;">
+regulation of nitrogen compound metabolic process
+</td>
+<td style="text-align:right;">
+239
+</td>
+<td style="text-align:right;">
+4443
+</td>
+<td style="text-align:left;">
+4.83e-13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0044249" class="uri">GO:0044249</a>
+</td>
+<td style="text-align:left;">
+cellular biosynthetic process
+</td>
+<td style="text-align:right;">
+208
+</td>
+<td style="text-align:right;">
+4569
+</td>
+<td style="text-align:left;">
+2.48e-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000122" class="uri">GO:0000122</a>
+</td>
+<td style="text-align:left;">
+negative regulation of transcription by RNA polymerase II
+</td>
+<td style="text-align:right;">
+83
+</td>
+<td style="text-align:right;">
+761
+</td>
+<td style="text-align:left;">
+2.91e-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1901576" class="uri">GO:1901576</a>
+</td>
+<td style="text-align:left;">
+organic substance biosynthetic process
+</td>
+<td style="text-align:right;">
+208
+</td>
+<td style="text-align:right;">
+4628
+</td>
+<td style="text-align:left;">
+1.02e-11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0045892" class="uri">GO:0045892</a>
+</td>
+<td style="text-align:left;">
+negative regulation of DNA-templated transcription
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1041
+</td>
+<td style="text-align:left;">
+1.05e-11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1903507" class="uri">GO:1903507</a>
+</td>
+<td style="text-align:left;">
+negative regulation of nucleic acid-templated transcription
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1043
+</td>
+<td style="text-align:left;">
+1.12e-11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1902679" class="uri">GO:1902679</a>
+</td>
+<td style="text-align:left;">
+negative regulation of RNA biosynthetic process
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1044
+</td>
+<td style="text-align:left;">
+1.19e-11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051253" class="uri">GO:0051253</a>
+</td>
+<td style="text-align:left;">
+negative regulation of RNA metabolic process
+</td>
+<td style="text-align:right;">
+105
+</td>
+<td style="text-align:right;">
+1137
+</td>
+<td style="text-align:left;">
+1.71e-11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0009058" class="uri">GO:0009058</a>
+</td>
+<td style="text-align:left;">
+biosynthetic process
+</td>
+<td style="text-align:right;">
+209
+</td>
+<td style="text-align:right;">
+4691
+</td>
+<td style="text-align:left;">
+2.15e-11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0010558" class="uri">GO:0010558</a>
+</td>
+<td style="text-align:left;">
+negative regulation of macromolecule biosynthetic process
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+1237
+</td>
+<td style="text-align:left;">
+1.20e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0045934" class="uri">GO:0045934</a>
+</td>
+<td style="text-align:left;">
+negative regulation of nucleobase-containing compound metabolic process
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+1239
+</td>
+<td style="text-align:left;">
+1.41e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0045893" class="uri">GO:0045893</a>
+</td>
+<td style="text-align:left;">
+positive regulation of DNA-templated transcription
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+1342
+</td>
+<td style="text-align:left;">
+3.35e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1903508" class="uri">GO:1903508</a>
+</td>
+<td style="text-align:left;">
+positive regulation of nucleic acid-templated transcription
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+1342
+</td>
+<td style="text-align:left;">
+3.35e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0010468" class="uri">GO:0010468</a>
+</td>
+<td style="text-align:left;">
+regulation of gene expression
+</td>
+<td style="text-align:right;">
+212
+</td>
+<td style="text-align:right;">
+3687
+</td>
+<td style="text-align:left;">
+3.35e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051254" class="uri">GO:0051254</a>
+</td>
+<td style="text-align:left;">
+positive regulation of RNA metabolic process
+</td>
+<td style="text-align:right;">
+114
+</td>
+<td style="text-align:right;">
+1469
+</td>
+<td style="text-align:left;">
+3.59e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1902680" class="uri">GO:1902680</a>
+</td>
+<td style="text-align:left;">
+positive regulation of RNA biosynthetic process
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+1348
+</td>
+<td style="text-align:left;">
+3.93e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0031327" class="uri">GO:0031327</a>
+</td>
+<td style="text-align:left;">
+negative regulation of cellular biosynthetic process
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+1279
+</td>
+<td style="text-align:left;">
+9.70e-09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0010557" class="uri">GO:0010557</a>
+</td>
+<td style="text-align:left;">
+positive regulation of macromolecule biosynthetic process
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+1537
+</td>
+<td style="text-align:left;">
+1.15e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0009890" class="uri">GO:0009890</a>
+</td>
+<td style="text-align:left;">
+negative regulation of biosynthetic process
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+1304
+</td>
+<td style="text-align:left;">
+2.77e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0031328" class="uri">GO:0031328</a>
+</td>
+<td style="text-align:left;">
+positive regulation of cellular biosynthetic process
+</td>
+<td style="text-align:right;">
+119
+</td>
+<td style="text-align:right;">
+1614
+</td>
+<td style="text-align:left;">
+3.64e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0045944" class="uri">GO:0045944</a>
+</td>
+<td style="text-align:left;">
+positive regulation of transcription by RNA polymerase II
+</td>
+<td style="text-align:right;">
+83
+</td>
+<td style="text-align:right;">
+952
+</td>
+<td style="text-align:left;">
+8.69e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0009891" class="uri">GO:0009891</a>
+</td>
+<td style="text-align:left;">
+positive regulation of biosynthetic process
+</td>
+<td style="text-align:right;">
+119
+</td>
+<td style="text-align:right;">
+1640
+</td>
+<td style="text-align:left;">
+1.04e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0045935" class="uri">GO:0045935</a>
+</td>
+<td style="text-align:left;">
+positive regulation of nucleobase-containing compound metabolic process
+</td>
+<td style="text-align:right;">
+117
+</td>
+<td style="text-align:right;">
+1641
+</td>
+<td style="text-align:left;">
+2.23e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0031324" class="uri">GO:0031324</a>
+</td>
+<td style="text-align:left;">
+negative regulation of cellular metabolic process
+</td>
+<td style="text-align:right;">
+127
+</td>
+<td style="text-align:right;">
+1830
+</td>
+<td style="text-align:left;">
+8.08e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0060255" class="uri">GO:0060255</a>
+</td>
+<td style="text-align:left;">
+regulation of macromolecule metabolic process
+</td>
+<td style="text-align:right;">
+111
+</td>
+<td style="text-align:right;">
+4772
+</td>
+<td style="text-align:left;">
+2.49e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0019222" class="uri">GO:0019222</a>
+</td>
+<td style="text-align:left;">
+regulation of metabolic process
+</td>
+<td style="text-align:right;">
+115
+</td>
+<td style="text-align:right;">
+5189
+</td>
+<td style="text-align:left;">
+1.10e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0031325" class="uri">GO:0031325</a>
+</td>
+<td style="text-align:left;">
+positive regulation of cellular metabolic process
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+2446
+</td>
+<td style="text-align:left;">
+1.78e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051173" class="uri">GO:0051173</a>
+</td>
+<td style="text-align:left;">
+positive regulation of nitrogen compound metabolic process
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+2497
+</td>
+<td style="text-align:left;">
+5.00e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051172" class="uri">GO:0051172</a>
+</td>
+<td style="text-align:left;">
+negative regulation of nitrogen compound metabolic process
+</td>
+<td style="text-align:right;">
+126
+</td>
+<td style="text-align:right;">
+1905
+</td>
+<td style="text-align:left;">
+5.02e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:CC" class="uri">GO:CC</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0090575" class="uri">GO:0090575</a>
+</td>
+<td style="text-align:left;">
+RNA polymerase II transcription regulator complex
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+219
+</td>
+<td style="text-align:left;">
+3.93e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:CC" class="uri">GO:CC</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0005667" class="uri">GO:0005667</a>
+</td>
+<td style="text-align:left;">
+transcription regulator complex
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+413
+</td>
+<td style="text-align:left;">
+3.93e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0003677" class="uri">GO:0003677</a>
+</td>
+<td style="text-align:left;">
+DNA binding
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:right;">
+1908
+</td>
+<td style="text-align:left;">
+9.77e-29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0140110" class="uri">GO:0140110</a>
+</td>
+<td style="text-align:left;">
+transcription regulator activity
+</td>
+<td style="text-align:right;">
+168
+</td>
+<td style="text-align:right;">
+1431
+</td>
+<td style="text-align:left;">
+1.30e-28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000976" class="uri">GO:0000976</a>
+</td>
+<td style="text-align:left;">
+transcription cis-regulatory region binding
+</td>
+<td style="text-align:right;">
+143
+</td>
+<td style="text-align:right;">
+1082
+</td>
+<td style="text-align:left;">
+4.97e-28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0001067" class="uri">GO:0001067</a>
+</td>
+<td style="text-align:left;">
+transcription regulatory region nucleic acid binding
+</td>
+<td style="text-align:right;">
+143
+</td>
+<td style="text-align:right;">
+1084
+</td>
+<td style="text-align:left;">
+4.97e-28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0003700" class="uri">GO:0003700</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription factor activity
+</td>
+<td style="text-align:right;">
+138
+</td>
+<td style="text-align:right;">
+975
+</td>
+<td style="text-align:left;">
+4.97e-28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000977" class="uri">GO:0000977</a>
+</td>
+<td style="text-align:left;">
+RNA polymerase II transcription regulatory region sequence-specific DNA
+binding
+</td>
+<td style="text-align:right;">
+136
+</td>
+<td style="text-align:right;">
+998
+</td>
+<td style="text-align:left;">
+3.16e-27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1990837" class="uri">GO:1990837</a>
+</td>
+<td style="text-align:left;">
+sequence-specific double-stranded DNA binding
+</td>
+<td style="text-align:right;">
+144
+</td>
+<td style="text-align:right;">
+1128
+</td>
+<td style="text-align:left;">
+4.86e-27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0043565" class="uri">GO:0043565</a>
+</td>
+<td style="text-align:left;">
+sequence-specific DNA binding
+</td>
+<td style="text-align:right;">
+148
+</td>
+<td style="text-align:right;">
+1220
+</td>
+<td style="text-align:left;">
+3.07e-26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000981" class="uri">GO:0000981</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription factor activity, RNA polymerase II-specific
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+935
+</td>
+<td style="text-align:left;">
+1.74e-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0003690" class="uri">GO:0003690</a>
+</td>
+<td style="text-align:left;">
+double-stranded DNA binding
+</td>
+<td style="text-align:right;">
+145
+</td>
+<td style="text-align:right;">
+1209
+</td>
+<td style="text-align:left;">
+7.19e-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000987" class="uri">GO:0000987</a>
+</td>
+<td style="text-align:left;">
+cis-regulatory region sequence-specific DNA binding
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+860
+</td>
+<td style="text-align:left;">
+1.13e-22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000978" class="uri">GO:0000978</a>
+</td>
+<td style="text-align:left;">
+RNA polymerase II cis-regulatory region sequence-specific DNA binding
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+843
+</td>
+<td style="text-align:left;">
+1.33e-22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0001217" class="uri">GO:0001217</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription repressor activity
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+246
+</td>
+<td style="text-align:left;">
+2.35e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0001228" class="uri">GO:0001228</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription activator activity, RNA polymerase II-specific
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+304
+</td>
+<td style="text-align:left;">
+3.92e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0001216" class="uri">GO:0001216</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription activator activity
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+308
+</td>
+<td style="text-align:left;">
+4.64e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0001227" class="uri">GO:0001227</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription repressor activity, RNA polymerase II-specific
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+242
+</td>
+<td style="text-align:left;">
+1.69e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0046872" class="uri">GO:0046872</a>
+</td>
+<td style="text-align:left;">
+metal ion binding
+</td>
+<td style="text-align:right;">
+204
+</td>
+<td style="text-align:right;">
+3328
+</td>
+<td style="text-align:left;">
+4.40e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:MF" class="uri">GO:MF</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0043169" class="uri">GO:0043169</a>
+</td>
+<td style="text-align:left;">
+cation binding
+</td>
+<td style="text-align:right;">
+204
+</td>
+<td style="text-align:right;">
+3392
+</td>
+<td style="text-align:left;">
+2.37e-05
+</td>
+</tr>
+</tbody>
+</table>
 <p>I first looked at the data with all genes from the sigDA3 dataset. I
 used the list of all genes based on my rowMeans&gt;0 filtering as
 background.</p>
@@ -838,22 +2302,186 @@ background.</p>
 gene sets are enriched. Nothing showed up in the GO-BP/CC/MG-down
 regulated gene-set at a significant level, p&lt;0.05.</p>
 <div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1a0d15c6ca5bba774942" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-1a0d15c6ca5bba774942">{"x":{"data":[{"x":[87.1596578126843,87.1877575065437,87.1355723608048,165.553789438535,140.689574614913,113.878452431029,87.1516293287245,184.2721997909,199.345678425499,96.5971407074754,103.678263560054,110.84368549421,117.84452350719,94.5980482014754,101.84375497523,104.489140439997,176.685282448852,92.4022578384594,110.83164276827,128.642834433174,161.33482111764,140.420620402258,96.3643146726401,128.594663529415,177.476088118897,77.9750721626281,140.693588856893,92.3982435964794,132.239595247182,184.27621403288,181.349831629519,132.400164926379,96.6051691914352,146.004430996326,140.697603098873,110.84769973619,184.28022827486,132.243609489162,181.353845871499,94.6020624434553,96.6011549494553,110.85171397817,103.690306285993,94.6060766854352,132.404179168359,132.436293104198,110.83565701025,110.83967125223,140.428648886218,140.424634644238,96.7697531126119,146.598538809355,85.1404940967847,94.6141051693951,85.1364798548048],"y":[34.9926384078061,34.9719470285102,30.9562797196672,30.9368670038422,30.8413456744103,30.5696284769525,29.9789142970439,29.9594854202717,29.7850205960405,28.1557201804136,26.8175178433716,25.3559714522605,24.9241748436204,24.3555768455875,23.7315219537352,23.5549452561497,21.7403783516825,21.0552744725141,19.0474150763866,17.7455966752712,16.0705251267004,15.9675535386176,12.3606817076219,12.2087944488686,11.570257374882,11.0762336634655,10.9293920477093,10.8197444560198,10.8174483300484,10.7776345842476,10.7379194215558,8.66784927919169,8.65029412118999,7.91568405981336,7.8522195859478,7.69896710543731,7.50711159615415,7.50711159615415,7.41986999399017,7.2391908319336,7.08637665442872,6.77413557703562,6.41193781199028,6.32073101371132,6.22792392001201,6.09293051329191,6.02995999207308,5.03316946685607,4.23397383792113,4.12361191808874,3.17908940150795,2.8983696781421,2.70735392552274,2.35492305525189,2.08848372812711],"text":["GO:0006357 (1978) <br> regulation of transcription by RNA polymerase II <br> 1.017e-35","GO:0006366 (2055) <br> transcription by RNA polymerase II <br> 1.067e-35","GO:0006351 (2766) <br> DNA-templated transcription <br> 1.106e-31","GO:0097659 (2767) <br> nucleic acid-templated transcription <br> 1.156e-31","GO:0051252 (2921) <br> regulation of RNA metabolic process <br> 1.441e-31","GO:0032774 (2782) <br> RNA biosynthetic process <br> 2.694e-31","GO:0006355 (2662) <br> regulation of DNA-templated transcription <br> 1.050e-30","GO:1903506 (2663) <br> regulation of nucleic acid-templated transcription <br> 1.098e-30","GO:2001141 (2670) <br> regulation of RNA biosynthetic process <br> 1.641e-30","GO:0010556 (3088) <br> regulation of macromolecule biosynthetic process <br> 6.987e-29","GO:0019219 (3181) <br> regulation of nucleobase-containing compound metabolic process <br> 1.522e-27","GO:0031326 (3204) <br> regulation of cellular biosynthetic process <br> 4.406e-26","GO:0034654 (3149) <br> nucleobase-containing compound biosynthetic process <br> 1.191e-25","GO:0009889 (3255) <br> regulation of biosynthetic process <br> 4.410e-25","GO:0018130 (3210) <br> heterocycle biosynthetic process <br> 1.856e-24","GO:0019438 (3212) <br> aromatic compound biosynthetic process <br> 2.786e-24","GO:1901362 (3319) <br> organic cyclic compound biosynthetic process <br> 1.818e-22","GO:0009059 (3801) <br> macromolecule biosynthetic process <br> 8.805e-22","GO:0031323 (4432) <br> regulation of cellular metabolic process <br> 8.966e-20","GO:0044271 (3820) <br> cellular nitrogen compound biosynthetic process <br> 1.796e-18","GO:0080090 (4567) <br> regulation of primary metabolic process <br> 8.501e-17","GO:0051171 (4443) <br> regulation of nitrogen compound metabolic process <br> 1.078e-16","GO:0010468 (3687) <br> regulation of gene expression <br> 4.358e-13","GO:0044249 (4569) <br> cellular biosynthetic process <br> 6.183e-13","GO:1901576 (4628) <br> organic substance biosynthetic process <br> 2.690e-12","GO:0000122 (761) <br> negative regulation of transcription by RNA polymerase II <br> 8.390e-12","GO:0051253 (1137) <br> negative regulation of RNA metabolic process <br> 1.177e-11","GO:0009058 (4691) <br> biosynthetic process <br> 1.514e-11","GO:0045892 (1041) <br> negative regulation of DNA-templated transcription <br> 1.522e-11","GO:1903507 (1043) <br> negative regulation of nucleic acid-templated transcription <br> 1.669e-11","GO:1902679 (1044) <br> negative regulation of RNA biosynthetic process <br> 1.828e-11","GO:0045934 (1239) <br> negative regulation of nucleobase-containing compound metabolic process <br> 2.149e-09","GO:0010558 (1237) <br> negative regulation of macromolecule biosynthetic process <br> 2.237e-09","GO:0060255 (4772) <br> regulation of macromolecule metabolic process <br> 1.214e-08","GO:0051254 (1469) <br> positive regulation of RNA metabolic process <br> 1.405e-08","GO:0031327 (1279) <br> negative regulation of cellular biosynthetic process <br> 2.000e-08","GO:1903508 (1342) <br> positive regulation of nucleic acid-templated transcription <br> 3.111e-08","GO:0045893 (1342) <br> positive regulation of DNA-templated transcription <br> 3.111e-08","GO:1902680 (1348) <br> positive regulation of RNA biosynthetic process <br> 3.803e-08","GO:0009890 (1304) <br> negative regulation of biosynthetic process <br> 5.765e-08","GO:0010557 (1537) <br> positive regulation of macromolecule biosynthetic process <br> 8.196e-08","GO:0031328 (1614) <br> positive regulation of cellular biosynthetic process <br> 1.682e-07","GO:0019222 (5189) <br> regulation of metabolic process <br> 3.873e-07","GO:0009891 (1640) <br> positive regulation of biosynthetic process <br> 4.778e-07","GO:0045935 (1641) <br> positive regulation of nucleobase-containing compound metabolic process <br> 5.917e-07","GO:0045944 (952) <br> positive regulation of transcription by RNA polymerase II <br> 8.074e-07","GO:0031324 (1830) <br> negative regulation of cellular metabolic process <br> 9.333e-07","GO:0031325 (2446) <br> positive regulation of cellular metabolic process <br> 9.265e-06","GO:0051173 (2497) <br> positive regulation of nitrogen compound metabolic process <br> 5.835e-05","GO:0051172 (1905) <br> negative regulation of nitrogen compound metabolic process <br> 7.523e-05","GO:0010604 (2729) <br> positive regulation of macromolecule metabolic process <br> 6.621e-04","GO:0060411 (67) <br> cardiac septum morphogenesis <br> 1.264e-03","GO:0003281 (70) <br> ventricular septum development <br> 1.962e-03","GO:0009893 (2972) <br> positive regulation of metabolic process <br> 4.416e-03","GO:0003279 (102) <br> cardiac septum development <br> 8.157e-03"],"key":["GO:0006357","GO:0006366","GO:0006351","GO:0097659","GO:0051252","GO:0032774","GO:0006355","GO:1903506","GO:2001141","GO:0010556","GO:0019219","GO:0031326","GO:0034654","GO:0009889","GO:0018130","GO:0019438","GO:1901362","GO:0009059","GO:0031323","GO:0044271","GO:0080090","GO:0051171","GO:0010468","GO:0044249","GO:1901576","GO:0000122","GO:0051253","GO:0009058","GO:0045892","GO:1903507","GO:1902679","GO:0045934","GO:0010558","GO:0060255","GO:0051254","GO:0031327","GO:1903508","GO:0045893","GO:1902680","GO:0009890","GO:0010557","GO:0031328","GO:0019222","GO:0009891","GO:0045935","GO:0045944","GO:0031324","GO:0031325","GO:0051173","GO:0051172","GO:0010604","GO:0060411","GO:0003281","GO:0009893","GO:0003279"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[20.4509081370983,20.5446836280313,21.257106944793,21.2579559548973,21.3847089888028,21.2706494989905,21.1668556404719,21.1677423917556,21.1739390805522,21.5138786939824,21.5824319374815,21.5990370116592,21.5591022394644,21.63538169264,21.6033466370339,21.6047811577455,21.6800917613345,21.9884149987099,22.3314465781081,21.9996530364737,22.3977252086938,22.3369310759708,21.9196328809265,22.398690571078,22.4269580735081,17.9042694057372,19.0266390858246,22.4567006099302,18.7872549590907,18.7925043255409,18.7951245483966,19.2562227939711,19.2519370451829,22.4942916353457,19.7014801990592,19.3402752135322,19.4666128176827,19.4666128176827,19.4782825604275,19.3912614715106,19.8177268766811,19.9423659682431,22.6771653543307,19.9829045427899,19.9844488471854,18.5407626928052,20.2582916248577,20.9658947820798,21.0151162752745,20.3580517914707,21.2254464131897,3.77952755905512,5.67593973589361,21.4250245259244,9.65377369680358],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDatad3736c7f","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[57.0176722115596,56.1986103712528,68.5889282104043,57.0618373107918],"y":[4.15854866612688,3.23780674223291,3.18703919427696,3.06446214515811],"text":["GO:0005654 (3669) <br> nucleoplasm <br> 6.941e-05","GO:0000785 (884) <br> chromatin <br> 5.784e-04","GO:0090575 (219) <br> RNA polymerase II transcription regulator complex <br> 6.501e-04","GO:0005667 (413) <br> transcription regulator complex <br> 8.621e-04"],"key":["GO:0005654","GO:0000785","GO:0090575","GO:0005667"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[21.9085541544034,18.3332036292077,13.6406885144731,15.9994872973395],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDatad3736c7f","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[49.193686440164,3.60978804546664,3.69007672603854,2.52990529177455,2.7346414272329,2.53391972580315,51.5742458191209,29.4105555472474,2.54596302788893,3.65796125380978,2.54997746191753,2.53793415983174,31.3615704851446,29.1456029013601,2.95142086477704,2.96747860089142,2.97149303492002,2.94740643074844,3.60577361143804,31.0323868947998,9.99273815093285,49.2820039887931],"y":[32.3626741405966,32.04452873889,29.2781254749774,28.569500751919,28.5109053511107,28.2449065330052,27.5240281369125,27.0898291701502,25.855734241005,25.4188771908728,25.3858106585396,25.3772829648675,7.19175409826462,6.36093657585566,6.25840197769239,5.19449660689582,4.66445241452034,4.57905970368937,4.57819818985417,2.39495836835457,2.385902276404,2.21310729614734],"text":["GO:0140110 (1431) <br> transcription regulator activity <br> 4.338e-33","GO:0003677 (1908) <br> DNA binding <br> 9.025e-33","GO:0003700 (975) <br> DNA-binding transcription factor activity <br> 5.271e-30","GO:0000976 (1082) <br> transcription cis-regulatory region binding <br> 2.695e-29","GO:0001067 (1084) <br> transcription regulatory region nucleic acid binding <br> 3.084e-29","GO:0000977 (998) <br> RNA polymerase II transcription regulatory region sequence-specific DNA binding <br> 5.690e-29","GO:1990837 (1128) <br> sequence-specific double-stranded DNA binding <br> 2.992e-28","GO:0043565 (1220) <br> sequence-specific DNA binding <br> 8.132e-28","GO:0000981 (935) <br> DNA-binding transcription factor activity, RNA polymerase II-specific <br> 1.394e-26","GO:0003690 (1209) <br> double-stranded DNA binding <br> 3.812e-26","GO:0000987 (860) <br> cis-regulatory region sequence-specific DNA binding <br> 4.113e-26","GO:0000978 (843) <br> RNA polymerase II cis-regulatory region sequence-specific DNA binding <br> 4.195e-26","GO:0046872 (3328) <br> metal ion binding <br> 6.431e-08","GO:0043169 (3392) <br> cation binding <br> 4.356e-07","GO:0001217 (246) <br> DNA-binding transcription repressor activity <br> 5.516e-07","GO:0001227 (242) <br> DNA-binding transcription repressor activity, RNA polymerase II-specific <br> 6.390e-06","GO:0001228 (304) <br> DNA-binding transcription activator activity, RNA polymerase II-specific <br> 2.165e-05","GO:0001216 (308) <br> DNA-binding transcription activator activity <br> 2.636e-05","GO:0003676 (3264) <br> nucleic acid binding <br> 2.641e-05","GO:0046332 (71) <br> SMAD binding <br> 4.028e-03","GO:0008134 (520) <br> transcription factor binding <br> 4.112e-03","GO:0140297 (423) <br> DNA-binding transcription factor binding <br> 6.122e-03"],"key":["GO:0140110","GO:0003677","GO:0003700","GO:0000976","GO:0001067","GO:0000977","GO:1990837","GO:0043565","GO:0000981","GO:0003690","GO:0000987","GO:0000978","GO:0046872","GO:0043169","GO:0001217","GO:0001227","GO:0001228","GO:0001216","GO:0003676","GO:0046332","GO:0008134","GO:0140297"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[19.633762214844,20.3619478278103,18.6070050879752,18.8925522997128,18.8975677920573,18.6714184844922,19.0052269779247,19.2151771458461,18.4905665351014,19.1910698856366,18.2553555477481,18.1986242805929,21.6863010294926,21.729916771193,14.113351312744,14.0480188207092,14.9226445813289,14.9706995141141,21.6417287051014,5.96149850414743,16.750367195814,16.079597677797],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDatad3736c7f","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,51.7629242184649],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[55.777034424036,73.7080647123221],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[77.7221749178932,200.004014110206],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":55.8781661388202,"l":55.1930261519303},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP"],"tickvals":[26.8814621092325,64.7425495681791,138.863094514049],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,40],"tickmode":"array","ticktext":["0","10","20","30","40"],"tickvals":[0,10,20,30,40],"categoryorder":"array","categoryarray":["0","10","20","30","40"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-31.5483603154836},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1b9040f918c2":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"1b9015c5666b":{"x":{},"xend":{},"y":{},"yend":{}},"1b903b9e7adb":{"x":{},"xend":{},"y":{},"yend":{}},"1b9072fecf5":{"x":{},"xend":{},"y":{},"yend":{}}},"cur_data":"1b9040f918c2","visdat":{"1b9040f918c2":["function (y) ","x"],"1b9015c5666b":["function (y) ","x"],"1b903b9e7adb":["function (y) ","x"],"1b9072fecf5":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatad3736c7f"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1a0d15c6ca5bba774942">{"x":{"data":[{"x":[87.1877575065437,87.1596578126843,165.553789438535,140.689574614913,87.1355723608048,113.878452431029,184.2721997909,87.1516293287245,199.345678425499,96.5971407074754,103.678263560054,110.84368549421,117.84452350719,94.5980482014754,101.84375497523,104.489140439997,176.685282448852,92.4022578384594,110.83164276827,128.642834433174,161.33482111764,140.420620402258,96.3643146726401,128.594663529415,177.476088118897,77.9750721626281,140.693588856893,132.239595247182,92.3982435964794,184.27621403288,181.349831629519,132.400164926379,96.6051691914352,146.004430996326,140.697603098873,110.84769973619,132.243609489162,184.28022827486,181.353845871499,94.6020624434553,96.6011549494553,110.85171397817,103.690306285993,94.6060766854352,132.404179168359,132.436293104198,110.83565701025,110.83967125223,140.428648886218,140.424634644238,96.7697531126119,146.598538809355,85.1404940967847,94.6141051693951,85.1364798548048,84.7430841407727,109.33433050976,84.7029417209735,148.260434989041,100.450813008198,156.774642228451,156.770627986471,84.0646772461663,163.177358186423,91.2461561482425],"y":[35.2729770241742,35.2729770241742,31.5403156787463,31.5403156787463,31.5403156787463,31.3477797273361,30.8625754072637,30.8625754072637,30.7392631054798,29.1557201804136,27.8589105285298,26.4351526983081,26.0381181959273,25.5017048812657,24.9076132127908,24.7590652388056,22.9708272730608,22.3105469776174,20.3261686773394,19.0466266709352,17.3927444214343,17.3099762194398,13.7224095436395,13.5890056905802,12.9681973835541,12.4912070114363,12.3607558118683,12.2798463279474,12.2798463279474,12.2547558389673,12.2292811153901,10.1729992575116,10.1688080610679,9.44716297685561,9.39628763029807,9.2552696062046,9.08689519277096,9.08689519277096,9.01093460101667,8.84125082326156,8.69916051114845,8.39738486743352,8.04540626756987,7.96418369019751,7.88113643378735,7.75568834497349,7.7020578500088,6.71441070423166,5.92416991794965,5.82258192242476,4.88665957760589,4.6143730217769,4.43162979512353,4.08731681507486,3.82884641762135,3.53308567533601,3.32648036519863,3.2803559304916,3.25939947488945,3.16717639191963,3.12905084834163,3.12905084834163,3.07772951520839,3.05373717293936,3.0282910815379],"text":["GO:0006366 (2055) <br> transcription by RNA polymerase II <br> 5.334e-36","GO:0006357 (1978) <br> regulation of transcription by RNA polymerase II <br> 5.334e-36","GO:0097659 (2767) <br> nucleic acid-templated transcription <br> 2.882e-32","GO:0051252 (2921) <br> regulation of RNA metabolic process <br> 2.882e-32","GO:0006351 (2766) <br> DNA-templated transcription <br> 2.882e-32","GO:0032774 (2782) <br> RNA biosynthetic process <br> 4.490e-32","GO:1903506 (2663) <br> regulation of nucleic acid-templated transcription <br> 1.372e-31","GO:0006355 (2662) <br> regulation of DNA-templated transcription <br> 1.372e-31","GO:2001141 (2670) <br> regulation of RNA biosynthetic process <br> 1.823e-31","GO:0010556 (3088) <br> regulation of macromolecule biosynthetic process <br> 6.987e-30","GO:0019219 (3181) <br> regulation of nucleobase-containing compound metabolic process <br> 1.384e-28","GO:0031326 (3204) <br> regulation of cellular biosynthetic process <br> 3.672e-27","GO:0034654 (3149) <br> nucleobase-containing compound biosynthetic process <br> 9.160e-27","GO:0009889 (3255) <br> regulation of biosynthetic process <br> 3.150e-26","GO:0018130 (3210) <br> heterocycle biosynthetic process <br> 1.237e-25","GO:0019438 (3212) <br> aromatic compound biosynthetic process <br> 1.742e-25","GO:1901362 (3319) <br> organic cyclic compound biosynthetic process <br> 1.069e-23","GO:0009059 (3801) <br> macromolecule biosynthetic process <br> 4.892e-23","GO:0031323 (4432) <br> regulation of cellular metabolic process <br> 4.719e-21","GO:0044271 (3820) <br> cellular nitrogen compound biosynthetic process <br> 8.982e-20","GO:0080090 (4567) <br> regulation of primary metabolic process <br> 4.048e-18","GO:0051171 (4443) <br> regulation of nitrogen compound metabolic process <br> 4.898e-18","GO:0010468 (3687) <br> regulation of gene expression <br> 1.895e-14","GO:0044249 (4569) <br> cellular biosynthetic process <br> 2.576e-14","GO:1901576 (4628) <br> organic substance biosynthetic process <br> 1.076e-13","GO:0000122 (761) <br> negative regulation of transcription by RNA polymerase II <br> 3.227e-13","GO:0051253 (1137) <br> negative regulation of RNA metabolic process <br> 4.358e-13","GO:0045892 (1041) <br> negative regulation of DNA-templated transcription <br> 5.250e-13","GO:0009058 (4691) <br> biosynthetic process <br> 5.250e-13","GO:1903507 (1043) <br> negative regulation of nucleic acid-templated transcription <br> 5.562e-13","GO:1902679 (1044) <br> negative regulation of RNA biosynthetic process <br> 5.898e-13","GO:0045934 (1239) <br> negative regulation of nucleobase-containing compound metabolic process <br> 6.714e-11","GO:0010558 (1237) <br> negative regulation of macromolecule biosynthetic process <br> 6.779e-11","GO:0060255 (4772) <br> regulation of macromolecule metabolic process <br> 3.571e-10","GO:0051254 (1469) <br> positive regulation of RNA metabolic process <br> 4.015e-10","GO:0031327 (1279) <br> negative regulation of cellular biosynthetic process <br> 5.556e-10","GO:0045893 (1342) <br> positive regulation of DNA-templated transcription <br> 8.187e-10","GO:1903508 (1342) <br> positive regulation of nucleic acid-templated transcription <br> 8.187e-10","GO:1902680 (1348) <br> positive regulation of RNA biosynthetic process <br> 9.751e-10","GO:0009890 (1304) <br> negative regulation of biosynthetic process <br> 1.441e-09","GO:0010557 (1537) <br> positive regulation of macromolecule biosynthetic process <br> 1.999e-09","GO:0031328 (1614) <br> positive regulation of cellular biosynthetic process <br> 4.005e-09","GO:0019222 (5189) <br> regulation of metabolic process <br> 9.007e-09","GO:0009891 (1640) <br> positive regulation of biosynthetic process <br> 1.086e-08","GO:0045935 (1641) <br> positive regulation of nucleobase-containing compound metabolic process <br> 1.315e-08","GO:0045944 (952) <br> positive regulation of transcription by RNA polymerase II <br> 1.755e-08","GO:0031324 (1830) <br> negative regulation of cellular metabolic process <br> 1.986e-08","GO:0031325 (2446) <br> positive regulation of cellular metabolic process <br> 1.930e-07","GO:0051173 (2497) <br> positive regulation of nitrogen compound metabolic process <br> 1.191e-06","GO:0051172 (1905) <br> negative regulation of nitrogen compound metabolic process <br> 1.505e-06","GO:0010604 (2729) <br> positive regulation of macromolecule metabolic process <br> 1.298e-05","GO:0060411 (67) <br> cardiac septum morphogenesis <br> 2.430e-05","GO:0003281 (70) <br> ventricular septum development <br> 3.701e-05","GO:0009893 (2972) <br> positive regulation of metabolic process <br> 8.179e-05","GO:0003279 (102) <br> cardiac septum development <br> 1.483e-04","GO:0003181 (24) <br> atrioventricular valve morphogenesis <br> 2.930e-04","GO:0030510 (84) <br> regulation of BMP signaling pathway <br> 4.715e-04","GO:0003171 (26) <br> atrioventricular valve development <br> 5.244e-04","GO:0060840 (84) <br> artery development <br> 5.503e-04","GO:0016070 (3676) <br> RNA metabolic process <br> 6.805e-04","GO:0071773 (135) <br> cellular response to BMP stimulus <br> 7.429e-04","GO:0071772 (135) <br> response to BMP <br> 7.429e-04","GO:0003007 (220) <br> heart morphogenesis <br> 8.361e-04","GO:0090304 (4139) <br> nucleic acid metabolic process <br> 8.836e-04","GO:0007507 (506) <br> heart development <br> 9.369e-04"],"key":["GO:0006366","GO:0006357","GO:0097659","GO:0051252","GO:0006351","GO:0032774","GO:1903506","GO:0006355","GO:2001141","GO:0010556","GO:0019219","GO:0031326","GO:0034654","GO:0009889","GO:0018130","GO:0019438","GO:1901362","GO:0009059","GO:0031323","GO:0044271","GO:0080090","GO:0051171","GO:0010468","GO:0044249","GO:1901576","GO:0000122","GO:0051253","GO:0045892","GO:0009058","GO:1903507","GO:1902679","GO:0045934","GO:0010558","GO:0060255","GO:0051254","GO:0031327","GO:0045893","GO:1903508","GO:1902680","GO:0009890","GO:0010557","GO:0031328","GO:0019222","GO:0009891","GO:0045935","GO:0045944","GO:0031324","GO:0031325","GO:0051173","GO:0051172","GO:0010604","GO:0060411","GO:0003281","GO:0009893","GO:0003279","GO:0003181","GO:0030510","GO:0003171","GO:0060840","GO:0016070","GO:0071773","GO:0071772","GO:0003007","GO:0090304","GO:0007507"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[21.0008175135841,20.9281851677968,21.5564492541126,21.6557524162785,21.5557846629589,21.5663864380496,21.4858733132642,21.4851800094043,21.4907184050969,21.7571165740971,21.8109805778366,21.8240346068605,21.7926446126046,21.8526163519806,21.8274230506663,21.8285509834849,21.8877944875132,22.1309101662798,22.4024399900763,22.1397885184862,22.4550266299634,22.4067899964028,22.0765963143767,22.4557928551951,22.4782329444957,18.9991409502118,19.8382566632033,19.6577074414125,22.5018516331779,19.6616578438261,19.663629837565,20.0121680158681,20.0089149154995,22.5317140171424,20.3514696015775,20.0760181769936,20.1721677752514,20.1721677752514,20.1810597183337,20.1147959030609,20.4404756622279,20.5360955618618,22.6771653543307,20.5672371142069,20.568423840731,19.4726644638275,20.7793154687322,21.3282730226768,21.3666647601809,20.8563643127483,21.5310066363923,12.3116332095686,12.4778093751548,21.6873714444147,13.7929987590486,6.1644257945969,13.1378425764967,7.08406274898605,13.1378425764967,22.0712582512327,14.6695376412115,14.6695376412115,16.0479769527962,22.2820118605754,18.0959608333156],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDatad3736c7f","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[57.0176722115596,68.5889282104043,57.0618373107918,56.1986103712528],"y":[4.15854866612688,3.66652213648607,3.66652213648607,3.66652213648607],"text":["GO:0005654 (3669) <br> nucleoplasm <br> 6.941e-05","GO:0090575 (219) <br> RNA polymerase II transcription regulator complex <br> 2.155e-04","GO:0005667 (413) <br> transcription regulator complex <br> 2.155e-04","GO:0000785 (884) <br> chromatin <br> 2.155e-04"],"key":["GO:0005654","GO:0090575","GO:0005667","GO:0000785"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[22.0678521647379,16.0358339750899,17.6245548924655,19.317554238947],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedDatad3736c7f","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[49.193686440164,3.60978804546664,3.69007672603854,2.52990529177455,2.7346414272329,2.53391972580315,51.5742458191209,29.4105555472474,2.54596302788893,2.54997746191753,2.53793415983174,3.65796125380978,31.3615704851446,29.1456029013601,2.95142086477704,2.96747860089142,2.97149303492002,3.60577361143804,2.94740643074844,9.99273815093285,31.0323868947998,49.2820039887931,8.65994605343928],"y":[32.3626741405966,32.345558734554,29.7552467296971,29.2098753554467,29.2098753554467,29.0230577833888,28.3691261769268,27.9929191571422,26.8099767504444,26.4564642109151,26.4564642109151,26.4564642109151,8.30569745057146,7.5070646115339,7.43449323674807,6.39861658955175,5.89490133589861,5.856951790807,5.856951790807,3.70812157113792,3.70812157113792,3.55552997696954,3.1202235382013],"text":["GO:0140110 (1431) <br> transcription regulator activity <br> 4.338e-33","GO:0003677 (1908) <br> DNA binding <br> 4.513e-33","GO:0003700 (975) <br> DNA-binding transcription factor activity <br> 1.757e-30","GO:0000976 (1082) <br> transcription cis-regulatory region binding <br> 6.168e-30","GO:0001067 (1084) <br> transcription regulatory region nucleic acid binding <br> 6.168e-30","GO:0000977 (998) <br> RNA polymerase II transcription regulatory region sequence-specific DNA binding <br> 9.483e-30","GO:1990837 (1128) <br> sequence-specific double-stranded DNA binding <br> 4.274e-29","GO:0043565 (1220) <br> sequence-specific DNA binding <br> 1.016e-28","GO:0000981 (935) <br> DNA-binding transcription factor activity, RNA polymerase II-specific <br> 1.549e-27","GO:0000987 (860) <br> cis-regulatory region sequence-specific DNA binding <br> 3.496e-27","GO:0000978 (843) <br> RNA polymerase II cis-regulatory region sequence-specific DNA binding <br> 3.496e-27","GO:0003690 (1209) <br> double-stranded DNA binding <br> 3.496e-27","GO:0046872 (3328) <br> metal ion binding <br> 4.947e-09","GO:0043169 (3392) <br> cation binding <br> 3.111e-08","GO:0001217 (246) <br> DNA-binding transcription repressor activity <br> 3.677e-08","GO:0001227 (242) <br> DNA-binding transcription repressor activity, RNA polymerase II-specific <br> 3.994e-07","GO:0001228 (304) <br> DNA-binding transcription activator activity, RNA polymerase II-specific <br> 1.274e-06","GO:0003676 (3264) <br> nucleic acid binding <br> 1.390e-06","GO:0001216 (308) <br> DNA-binding transcription activator activity <br> 1.390e-06","GO:0008134 (520) <br> transcription factor binding <br> 1.958e-04","GO:0046332 (71) <br> SMAD binding <br> 1.958e-04","GO:0140297 (423) <br> DNA-binding transcription factor binding <br> 2.783e-04","GO:0005160 (22) <br> transforming growth factor beta receptor binding <br> 7.582e-04"],"key":["GO:0140110","GO:0003677","GO:0003700","GO:0000976","GO:0001067","GO:0000977","GO:1990837","GO:0043565","GO:0000981","GO:0000987","GO:0000978","GO:0003690","GO:0046872","GO:0043169","GO:0001217","GO:0001227","GO:0001228","GO:0003676","GO:0001216","GO:0008134","GO:0046332","GO:0140297","GO:0005160"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[20.2996994299538,20.8593757407468,19.5223047539473,19.7370246520035,19.7408066308396,19.5706369559425,19.8220740759658,19.9810225344629,19.4350925889732,19.2595484444509,19.2173366948771,19.9627406141369,21.8926815205162,21.9270200701665,16.3420388970475,16.2993144720293,16.8812372629852,21.8576090247504,16.9138067541487,18.1581327817365,12.530945986727,17.6809188088616,3.77952755905512],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedDatad3736c7f","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,51.7629242184649],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[55.777034424036,73.7080647123221],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[77.7221749178932,200.004014110206],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":55.8781661388202,"l":55.1930261519303},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP"],"tickvals":[26.8814621092325,64.7425495681791,138.863094514049],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,41],"tickmode":"array","ticktext":["0","10","20","30","40"],"tickvals":[0,10,20,30,40],"categoryorder":"array","categoryarray":["0","10","20","30","40"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-31.5483603154836},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"32a4f581fed":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"32a47005671":{"x":{},"xend":{},"y":{},"yend":{}},"32a42f0b29dd":{"x":{},"xend":{},"y":{},"yend":{}},"32a4215d40c":{"x":{},"xend":{},"y":{},"yend":{}}},"cur_data":"32a4f581fed","visdat":{"32a4f581fed":["function (y) ","x"],"32a47005671":["function (y) ","x"],"32a42f0b29dd":["function (y) ","x"],"32a4215d40c":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatad3736c7f"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <div
 id="i-next-wanted-to-see-what-happened-at-24-hours-with-daunorubicin.-i-used-the-sigvda24-file-to-do-this."
 class="section level4">
 <h4>I next wanted to see what happened at 24 hours with daunorubicin. I
 used the sigVDA24 file to do this.</h4>
-<p>unfortunately the enrichment below 0.0001</p>
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-001f7902152dbd8c1251" style="width:960px;height:960px;"></div>
-<script type="application/json" data-for="htmlwidget-001f7902152dbd8c1251">{"x":{"data":[{"x":[87.1877575065437,87.1596578126843,87.1355723608048,165.553789438535,113.878452431029,140.689574614913,87.1516293287245,184.2721997909,199.345678425499,96.5971407074754,103.678263560054,117.84452350719,110.84368549421,101.84375497523,104.489140439997,94.5980482014754,176.685282448852,92.4022578384594,128.642834433174,110.83164276827,161.33482111764,140.420620402258,128.594663529415,77.9750721626281,177.476088118897,132.239595247182,184.27621403288,181.349831629519,140.693588856893,92.3982435964794,96.6051691914352,132.400164926379,96.3643146726401,132.243609489162,184.28022827486,140.697603098873,181.353845871499,110.84769973619,96.6011549494553,94.6020624434553,110.85171397817,132.436293104198,94.6060766854352,132.404179168359,110.83565701025],"y":[30.8218061586451,30.2130593694013,25.8366358523072,25.8168142591415,25.4420477032675,24.1981302351936,24.0627104900628,24.0432452713857,23.8685082534042,21.4494150529683,21.066399688473,19.4137452104842,19.3024609804777,18.9891586490655,18.688275637665,18.4210634298515,17.7173321992548,17.2502658006679,14.1243289392766,13.4235836358112,11.1295841985649,10.9740191013083,10.2439728169115,10.1558558025663,9.59505063452015,9.56222755972271,9.52046256014854,9.47880969822171,9.30499437784419,9.19080705994493,7.42824430291614,7.34468903177387,6.94706733768896,6.93106565962437,6.93106565962437,6.88919167640844,6.83736910790214,6.43351260007848,6.34941958303546,5.95537310341777,5.82655472623194,5.43759488755844,5.35114407375997,5.00860645953812,4.43912434261483],"text":["GO:0006366 (2055) <br> transcription by RNA polymerase II <br> 1.507e-31","GO:0006357 (1978) <br> regulation of transcription by RNA polymerase II <br> 6.123e-31","GO:0006351 (2766) <br> DNA-templated transcription <br> 1.457e-26","GO:0097659 (2767) <br> nucleic acid-templated transcription <br> 1.525e-26","GO:0032774 (2782) <br> RNA biosynthetic process <br> 3.614e-26","GO:0051252 (2921) <br> regulation of RNA metabolic process <br> 6.337e-25","GO:0006355 (2662) <br> regulation of DNA-templated transcription <br> 8.655e-25","GO:1903506 (2663) <br> regulation of nucleic acid-templated transcription <br> 9.052e-25","GO:2001141 (2670) <br> regulation of RNA biosynthetic process <br> 1.354e-24","GO:0010556 (3088) <br> regulation of macromolecule biosynthetic process <br> 3.553e-22","GO:0019219 (3181) <br> regulation of nucleobase-containing compound metabolic process <br> 8.582e-22","GO:0034654 (3149) <br> nucleobase-containing compound biosynthetic process <br> 3.857e-20","GO:0031326 (3204) <br> regulation of cellular biosynthetic process <br> 4.984e-20","GO:0018130 (3210) <br> heterocycle biosynthetic process <br> 1.025e-19","GO:0019438 (3212) <br> aromatic compound biosynthetic process <br> 2.050e-19","GO:0009889 (3255) <br> regulation of biosynthetic process <br> 3.793e-19","GO:1901362 (3319) <br> organic cyclic compound biosynthetic process <br> 1.917e-18","GO:0009059 (3801) <br> macromolecule biosynthetic process <br> 5.620e-18","GO:0044271 (3820) <br> cellular nitrogen compound biosynthetic process <br> 7.511e-15","GO:0031323 (4432) <br> regulation of cellular metabolic process <br> 3.771e-14","GO:0080090 (4567) <br> regulation of primary metabolic process <br> 7.420e-12","GO:0051171 (4443) <br> regulation of nitrogen compound metabolic process <br> 1.062e-11","GO:0044249 (4569) <br> cellular biosynthetic process <br> 5.702e-11","GO:0000122 (761) <br> negative regulation of transcription by RNA polymerase II <br> 6.985e-11","GO:1901576 (4628) <br> organic substance biosynthetic process <br> 2.541e-10","GO:0045892 (1041) <br> negative regulation of DNA-templated transcription <br> 2.740e-10","GO:1903507 (1043) <br> negative regulation of nucleic acid-templated transcription <br> 3.017e-10","GO:1902679 (1044) <br> negative regulation of RNA biosynthetic process <br> 3.320e-10","GO:0051253 (1137) <br> negative regulation of RNA metabolic process <br> 4.955e-10","GO:0009058 (4691) <br> biosynthetic process <br> 6.445e-10","GO:0010558 (1237) <br> negative regulation of macromolecule biosynthetic process <br> 3.730e-08","GO:0045934 (1239) <br> negative regulation of nucleobase-containing compound metabolic process <br> 4.522e-08","GO:0010468 (3687) <br> regulation of gene expression <br> 1.130e-07","GO:0045893 (1342) <br> positive regulation of DNA-templated transcription <br> 1.172e-07","GO:1903508 (1342) <br> positive regulation of nucleic acid-templated transcription <br> 1.172e-07","GO:0051254 (1469) <br> positive regulation of RNA metabolic process <br> 1.291e-07","GO:1902680 (1348) <br> positive regulation of RNA biosynthetic process <br> 1.454e-07","GO:0031327 (1279) <br> negative regulation of cellular biosynthetic process <br> 3.685e-07","GO:0010557 (1537) <br> positive regulation of macromolecule biosynthetic process <br> 4.473e-07","GO:0009890 (1304) <br> negative regulation of biosynthetic process <br> 1.108e-06","GO:0031328 (1614) <br> positive regulation of cellular biosynthetic process <br> 1.491e-06","GO:0045944 (952) <br> positive regulation of transcription by RNA polymerase II <br> 3.651e-06","GO:0009891 (1640) <br> positive regulation of biosynthetic process <br> 4.455e-06","GO:0045935 (1641) <br> positive regulation of nucleobase-containing compound metabolic process <br> 9.804e-06","GO:0031324 (1830) <br> negative regulation of cellular metabolic process <br> 3.638e-05"],"key":["GO:0006366","GO:0006357","GO:0006351","GO:0097659","GO:0032774","GO:0051252","GO:0006355","GO:1903506","GO:2001141","GO:0010556","GO:0019219","GO:0034654","GO:0031326","GO:0018130","GO:0019438","GO:0009889","GO:1901362","GO:0009059","GO:0044271","GO:0031323","GO:0080090","GO:0051171","GO:0044249","GO:0000122","GO:1901576","GO:0045892","GO:1903507","GO:1902679","GO:0051253","GO:0009058","GO:0010558","GO:0045934","GO:0010468","GO:0045893","GO:1903508","GO:0051254","GO:1902680","GO:0031327","GO:0010557","GO:0009890","GO:0031328","GO:0045944","GO:0009891","GO:0045935","GO:0031324"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[19.9328889998923,19.7945336813753,20.9713442387267,20.9725693673668,20.9908829468851,21.1551665518898,20.840951144652,20.8422338544322,20.8511966676227,21.3406278723253,21.4388099164726,21.4054160010167,21.4625664648654,21.4687305614409,21.4707822236613,21.5145300343105,21.5783903620437,22.0169227868673,22.0328474320382,22.5012201858246,22.5943797406809,22.5089340071967,22.5957356700136,15.8277343250134,22.6354275307425,17.2581063646558,17.2664017066207,17.2705415054242,17.634214663173,22.6771653543307,17.9843260537941,17.9909516155099,21.9193671229383,18.3146966709246,18.3146966709246,18.6727776861116,18.3325694578545,18.1206413748947,18.8487828891077,18.1990817739118,19.0366358532793,16.86603051892,19.0975483417282,19.0998670059696,19.509021462839],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedData9cf5f559","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[57.0618373107918,68.5889282104043],"y":[4.21361406646978,4.10453105744516],"text":["GO:0005667 (413) <br> transcription regulator complex <br> 6.115e-05","GO:0090575 (219) <br> RNA polymerase II transcription regulator complex <br> 7.861e-05"],"key":["GO:0005667","GO:0090575"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[12.3778381165886,3.77952755905512],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedData9cf5f559","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[3.60978804546664,49.193686440164,2.52990529177455,2.7346414272329,3.69007672603854,2.53391972580315,51.5742458191209,29.4105555472474,2.54596302788893,3.65796125380978,2.54997746191753,2.53793415983174,2.95142086477704,2.97149303492002,2.94740643074844,2.96747860089142,31.3615704851446],"y":[28.0099748427831,27.585010227732,26.6832303803185,26.6207985144869,26.6047605815763,25.7224197259945,25.4685915385632,24.6100747804592,23.8060664190773,23.1433130503246,20.9047468783541,20.7981338439732,5.51414599616135,5.26111233651397,5.15730375359616,4.56899837480342,4.12608104566222],"text":["GO:0003677 (1908) <br> DNA binding <br> 9.773e-29","GO:0140110 (1431) <br> transcription regulator activity <br> 2.600e-28","GO:0000976 (1082) <br> transcription cis-regulatory region binding <br> 2.074e-27","GO:0001067 (1084) <br> transcription regulatory region nucleic acid binding <br> 2.394e-27","GO:0003700 (975) <br> DNA-binding transcription factor activity <br> 2.485e-27","GO:0000977 (998) <br> RNA polymerase II transcription regulatory region sequence-specific DNA binding <br> 1.895e-26","GO:1990837 (1128) <br> sequence-specific double-stranded DNA binding <br> 3.399e-26","GO:0043565 (1220) <br> sequence-specific DNA binding <br> 2.454e-25","GO:0000981 (935) <br> DNA-binding transcription factor activity, RNA polymerase II-specific <br> 1.563e-24","GO:0003690 (1209) <br> double-stranded DNA binding <br> 7.189e-24","GO:0000987 (860) <br> cis-regulatory region sequence-specific DNA binding <br> 1.245e-21","GO:0000978 (843) <br> RNA polymerase II cis-regulatory region sequence-specific DNA binding <br> 1.592e-21","GO:0001217 (246) <br> DNA-binding transcription repressor activity <br> 3.061e-06","GO:0001228 (304) <br> DNA-binding transcription activator activity, RNA polymerase II-specific <br> 5.481e-06","GO:0001216 (308) <br> DNA-binding transcription activator activity <br> 6.961e-06","GO:0001227 (242) <br> DNA-binding transcription repressor activity, RNA polymerase II-specific <br> 2.698e-05","GO:0046872 (3328) <br> metal ion binding <br> 7.480e-05"],"key":["GO:0003677","GO:0140110","GO:0000976","GO:0001067","GO:0003700","GO:0000977","GO:1990837","GO:0043565","GO:0000981","GO:0003690","GO:0000987","GO:0000978","GO:0001217","GO:0001228","GO:0001216","GO:0001227","GO:0046872"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[19.6628950729895,18.5698805137589,17.4240870389712,17.4319713962061,16.9718997050129,17.0744865851853,17.6007501676041,17.9274452632219,16.7855515823337,17.8900919690294,16.4053806402216,16.3128978192306,7.4604324750387,9.9617919393928,10.0837982825388,7.19105305613139,21.58725367991],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedData9cf5f559","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,51.7629242184649],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[55.777034424036,73.7080647123221],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[77.7221749178932,200.004014110206],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":45.251350032552,"l":55.1930261519303},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP"],"tickvals":[26.8814621092325,64.7425495681791,138.863094514049],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,36],"tickmode":"array","ticktext":["0","10","20","30"],"tickvals":[0,10,20,30],"categoryorder":"array","categoryarray":["0","10","20","30"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-31.5483603154836},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1b90166d1073":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"1b9070df74dd":{"x":{},"xend":{},"y":{},"yend":{}},"1b9041393d93":{"x":{},"xend":{},"y":{},"yend":{}},"1b9067eb3535":{"x":{},"xend":{},"y":{},"yend":{}}},"cur_data":"1b90166d1073","visdat":{"1b90166d1073":["function (y) ","x"],"1b9070df74dd":["function (y) ","x"],"1b9041393d93":["function (y) ","x"],"1b9067eb3535":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData9cf5f559"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<p><img src="figure/GO_analysis.Rmd/DA24-2.png" width="960" style="display: block; margin: auto;" /></p>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-001f7902152dbd8c1251" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-001f7902152dbd8c1251">{"x":{"data":[{"x":[87.1877575065437,87.1596578126843,165.553789438535,87.1355723608048,113.878452431029,140.689574614913,184.2721997909,87.1516293287245,199.345678425499,96.5971407074754,103.678263560054,117.84452350719,110.84368549421,101.84375497523,104.489140439997,94.5980482014754,176.685282448852,92.4022578384594,128.642834433174,110.83164276827,161.33482111764,140.420620402258,128.594663529415,77.9750721626281,177.476088118897,132.239595247182,184.27621403288,181.349831629519,140.693588856893,92.3982435964794,96.6051691914352,132.400164926379,132.243609489162,184.28022827486,96.3643146726401,140.697603098873,181.353845871499,110.84769973619,96.6011549494553,94.6020624434553,110.85171397817,132.436293104198,94.6060766854352,132.404179168359,110.83565701025,146.004430996326,103.690306285993,110.83967125223,140.428648886218,140.424634644238],"y":[30.8218061586451,30.5140893650653,26.4188742504695,26.4188742504695,26.1410177076035,24.9762814855773,24.9463352583777,24.9463352583777,24.8227507628435,22.4494150529683,22.1077923736312,20.4929264565318,20.4164043327845,20.1352866847437,19.8643668967207,19.6251834125075,18.9477811206331,18.5055383057712,15.4030825402294,14.7246136314751,12.4518034932988,12.3164417821305,11.6057006529291,11.5360670442779,10.9929906431922,10.9772009076935,10.9518263243075,10.9259677295639,10.7673923757431,10.6679283146646,8.91960599675041,8.84983901009377,8.47513370397465,8.47513370397465,8.47513370397465,8.44549417717572,8.40557083196913,8.01329619669529,7.94048419006196,7.55743309474574,7.43933858295168,7.06084417795634,6.98461252933956,6.65205913602431,6.09233685639017,5.60394767172244,4.9568659593015,4.7486951957568,4.30113133772184,4.29937654348115],"text":["GO:0006366 (2055) <br> transcription by RNA polymerase II <br> 1.507e-31","GO:0006357 (1978) <br> regulation of transcription by RNA polymerase II <br> 3.061e-31","GO:0097659 (2767) <br> nucleic acid-templated transcription <br> 3.812e-27","GO:0006351 (2766) <br> DNA-templated transcription <br> 3.812e-27","GO:0032774 (2782) <br> RNA biosynthetic process <br> 7.227e-27","GO:0051252 (2921) <br> regulation of RNA metabolic process <br> 1.056e-25","GO:1903506 (2663) <br> regulation of nucleic acid-templated transcription <br> 1.132e-25","GO:0006355 (2662) <br> regulation of DNA-templated transcription <br> 1.132e-25","GO:2001141 (2670) <br> regulation of RNA biosynthetic process <br> 1.504e-25","GO:0010556 (3088) <br> regulation of macromolecule biosynthetic process <br> 3.553e-23","GO:0019219 (3181) <br> regulation of nucleobase-containing compound metabolic process <br> 7.802e-23","GO:0034654 (3149) <br> nucleobase-containing compound biosynthetic process <br> 3.214e-21","GO:0031326 (3204) <br> regulation of cellular biosynthetic process <br> 3.834e-21","GO:0018130 (3210) <br> heterocycle biosynthetic process <br> 7.323e-21","GO:0019438 (3212) <br> aromatic compound biosynthetic process <br> 1.367e-20","GO:0009889 (3255) <br> regulation of biosynthetic process <br> 2.370e-20","GO:1901362 (3319) <br> organic cyclic compound biosynthetic process <br> 1.128e-19","GO:0009059 (3801) <br> macromolecule biosynthetic process <br> 3.122e-19","GO:0044271 (3820) <br> cellular nitrogen compound biosynthetic process <br> 3.953e-16","GO:0031323 (4432) <br> regulation of cellular metabolic process <br> 1.885e-15","GO:0080090 (4567) <br> regulation of primary metabolic process <br> 3.533e-13","GO:0051171 (4443) <br> regulation of nitrogen compound metabolic process <br> 4.826e-13","GO:0044249 (4569) <br> cellular biosynthetic process <br> 2.479e-12","GO:0000122 (761) <br> negative regulation of transcription by RNA polymerase II <br> 2.910e-12","GO:1901576 (4628) <br> organic substance biosynthetic process <br> 1.016e-11","GO:0045892 (1041) <br> negative regulation of DNA-templated transcription <br> 1.054e-11","GO:1903507 (1043) <br> negative regulation of nucleic acid-templated transcription <br> 1.117e-11","GO:1902679 (1044) <br> negative regulation of RNA biosynthetic process <br> 1.186e-11","GO:0051253 (1137) <br> negative regulation of RNA metabolic process <br> 1.708e-11","GO:0009058 (4691) <br> biosynthetic process <br> 2.148e-11","GO:0010558 (1237) <br> negative regulation of macromolecule biosynthetic process <br> 1.203e-09","GO:0045934 (1239) <br> negative regulation of nucleobase-containing compound metabolic process <br> 1.413e-09","GO:0045893 (1342) <br> positive regulation of DNA-templated transcription <br> 3.349e-09","GO:1903508 (1342) <br> positive regulation of nucleic acid-templated transcription <br> 3.349e-09","GO:0010468 (3687) <br> regulation of gene expression <br> 3.349e-09","GO:0051254 (1469) <br> positive regulation of RNA metabolic process <br> 3.585e-09","GO:1902680 (1348) <br> positive regulation of RNA biosynthetic process <br> 3.930e-09","GO:0031327 (1279) <br> negative regulation of cellular biosynthetic process <br> 9.698e-09","GO:0010557 (1537) <br> positive regulation of macromolecule biosynthetic process <br> 1.147e-08","GO:0009890 (1304) <br> negative regulation of biosynthetic process <br> 2.771e-08","GO:0031328 (1614) <br> positive regulation of cellular biosynthetic process <br> 3.636e-08","GO:0045944 (952) <br> positive regulation of transcription by RNA polymerase II <br> 8.693e-08","GO:0009891 (1640) <br> positive regulation of biosynthetic process <br> 1.036e-07","GO:0045935 (1641) <br> positive regulation of nucleobase-containing compound metabolic process <br> 2.228e-07","GO:0031324 (1830) <br> negative regulation of cellular metabolic process <br> 8.085e-07","GO:0060255 (4772) <br> regulation of macromolecule metabolic process <br> 2.489e-06","GO:0019222 (5189) <br> regulation of metabolic process <br> 1.104e-05","GO:0031325 (2446) <br> positive regulation of cellular metabolic process <br> 1.784e-05","GO:0051173 (2497) <br> positive regulation of nitrogen compound metabolic process <br> 4.999e-05","GO:0051172 (1905) <br> negative regulation of nitrogen compound metabolic process <br> 5.019e-05"],"key":["GO:0006366","GO:0006357","GO:0097659","GO:0006351","GO:0032774","GO:0051252","GO:1903506","GO:0006355","GO:2001141","GO:0010556","GO:0019219","GO:0034654","GO:0031326","GO:0018130","GO:0019438","GO:0009889","GO:1901362","GO:0009059","GO:0044271","GO:0031323","GO:0080090","GO:0051171","GO:0044249","GO:0000122","GO:1901576","GO:0045892","GO:1903507","GO:1902679","GO:0051253","GO:0009058","GO:0010558","GO:0045934","GO:0045893","GO:1903508","GO:0010468","GO:0051254","GO:1902680","GO:0031327","GO:0010557","GO:0009890","GO:0031328","GO:0045944","GO:0009891","GO:0045935","GO:0031324","GO:0060255","GO:0019222","GO:0031325","GO:0051173","GO:0051172"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.8,"size":[19.6733503656404,19.5372180240896,20.6963260228525,20.6951205785497,20.7143453551683,20.8759893892929,20.5680846313889,20.5668225311113,20.5769034376305,21.0584708731174,21.1550754107043,21.1222180406134,21.1784502588456,21.1845153158984,21.1865340137348,21.2295789213338,21.2924131949974,21.7238996494186,21.7395684307759,22.2004157648357,22.2920785102679,22.2080056470097,22.2934126536678,15.6341538655732,22.3324667789407,17.0415438895527,17.0497059489355,17.0537792329314,17.4116091960596,22.3735339942614,17.7560952911351,17.7626143988943,18.0811577908759,18.0811577908759,21.6279114278991,18.4334854612886,18.098743412888,17.8902204122334,18.6066627606206,17.9674004968506,18.7914974612598,16.6557675889549,18.851431259043,18.8537126689364,19.2562931758992,22.4254019360877,22.6771653543307,20.2799969988317,20.3503987866171,19.4020133281101],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedData9cf5f559","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[68.5889282104043,57.0618373107918],"y":[4.40556105310915,4.40556105310915],"text":["GO:0090575 (219) <br> RNA polymerase II transcription regulator complex <br> 3.930e-05","GO:0005667 (413) <br> transcription regulator complex <br> 3.930e-05"],"key":["GO:0090575","GO:0005667"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(16,150,24,1)","opacity":0.8,"size":[3.77952755905512,12.2396876896852],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(16,150,24,1)"}},"hoveron":"points","set":"SharedData9cf5f559","name":"GO:CC","legendgroup":"GO:CC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[3.60978804546664,49.193686440164,2.52990529177455,2.7346414272329,3.69007672603854,2.53391972580315,51.5742458191209,29.4105555472474,2.54596302788893,3.65796125380978,2.54997746191753,2.53793415983174,2.95142086477704,2.97149303492002,2.94740643074844,2.96747860089142,31.3615704851446,29.1456029013601],"y":[28.0099748427831,27.886040223396,27.3037305859124,27.3037305859124,27.3037305859124,26.5005709763781,26.3136895785775,25.5131647674512,24.7603089285166,24.1433130503246,21.9461395635124,21.8773150900208,6.62808934846819,6.40724037219221,6.33339501265184,5.77311835745935,5.3565299670405,4.62501299206785],"text":["GO:0003677 (1908) <br> DNA binding <br> 9.773e-29","GO:0140110 (1431) <br> transcription regulator activity <br> 1.300e-28","GO:0000976 (1082) <br> transcription cis-regulatory region binding <br> 4.969e-28","GO:0001067 (1084) <br> transcription regulatory region nucleic acid binding <br> 4.969e-28","GO:0003700 (975) <br> DNA-binding transcription factor activity <br> 4.969e-28","GO:0000977 (998) <br> RNA polymerase II transcription regulatory region sequence-specific DNA binding <br> 3.158e-27","GO:1990837 (1128) <br> sequence-specific double-stranded DNA binding <br> 4.856e-27","GO:0043565 (1220) <br> sequence-specific DNA binding <br> 3.068e-26","GO:0000981 (935) <br> DNA-binding transcription factor activity, RNA polymerase II-specific <br> 1.737e-25","GO:0003690 (1209) <br> double-stranded DNA binding <br> 7.189e-25","GO:0000987 (860) <br> cis-regulatory region sequence-specific DNA binding <br> 1.132e-22","GO:0000978 (843) <br> RNA polymerase II cis-regulatory region sequence-specific DNA binding <br> 1.326e-22","GO:0001217 (246) <br> DNA-binding transcription repressor activity <br> 2.355e-07","GO:0001228 (304) <br> DNA-binding transcription activator activity, RNA polymerase II-specific <br> 3.915e-07","GO:0001216 (308) <br> DNA-binding transcription activator activity <br> 4.641e-07","GO:0001227 (242) <br> DNA-binding transcription repressor activity, RNA polymerase II-specific <br> 1.686e-06","GO:0046872 (3328) <br> metal ion binding <br> 4.400e-06","GO:0043169 (3392) <br> cation binding <br> 2.371e-05"],"key":["GO:0003677","GO:0140110","GO:0000976","GO:0001067","GO:0003700","GO:0000977","GO:1990837","GO:0043565","GO:0000981","GO:0003690","GO:0000987","GO:0000978","GO:0001217","GO:0001228","GO:0001216","GO:0001227","GO:0046872","GO:0043169"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(220,57,18,1)","opacity":0.8,"size":[19.4076944742172,18.3322415542131,17.2048577259049,17.2126154039148,16.7599357579518,16.8608743583609,17.3786823798776,17.7001284132958,16.5765817202767,17.663375280438,16.2025190453175,16.1115221605596,7.40129078875845,9.86246051170614,9.98250655948038,7.13623953193275,21.3011341045222,21.3623553786854],"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(220,57,18,1)"}},"hoveron":"points","set":"SharedData9cf5f559","name":"GO:MF","legendgroup":"GO:MF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,51.7629242184649],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(220,57,18,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[55.777034424036,73.7080647123221],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(16,150,24,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[77.7221749178932,200.004014110206],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.3385826771654,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176,"b":55.8781661388202,"l":55.1930261519303},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:MF","GO:CC","GO:BP"],"tickvals":[26.8814621092325,64.7425495681791,138.863094514049],"categoryorder":"array","categoryarray":["GO:MF","GO:CC","GO:BP"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.6268161062682},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,36],"tickmode":"array","ticktext":["0","10","20","30"],"tickvals":[0,10,20,30],"categoryorder":"array","categoryarray":["0","10","20","30"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-31.5483603154836},{"text":"query_1","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.2835201328352},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.9730178497302,"yanchor":1,"ysizemode":"pixel"}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"32a4508f29a7":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"32a444bfdfb":{"x":{},"xend":{},"y":{},"yend":{}},"32a4515430a":{"x":{},"xend":{},"y":{},"yend":{}},"32a47047827":{"x":{},"xend":{},"y":{},"yend":{}}},"cur_data":"32a4508f29a7","visdat":{"32a4508f29a7":["function (y) ","x"],"32a444bfdfb":["function (y) ","x"],"32a4515430a":["function (y) ","x"],"32a47047827":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData9cf5f559"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<table class=" lightable-paper lightable-striped table table-striped table-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+source
+</th>
+<th style="text-align:left;">
+term_id
+</th>
+<th style="text-align:left;">
+term_name
+</th>
+<th style="text-align:right;">
+intersection_size
+</th>
+<th style="text-align:right;">
+term_size
+</th>
+<th style="text-align:left;">
+p_value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000070" class="uri">GO:0000070</a>
+</td>
+<td style="text-align:left;">
+mitotic sister chromatid segregation
+</td>
+<td style="text-align:right;">
+74
+</td>
+<td style="text-align:right;">
+192
+</td>
+<td style="text-align:left;">
+8.62e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000819" class="uri">GO:0000819</a>
+</td>
+<td style="text-align:left;">
+sister chromatid segregation
+</td>
+<td style="text-align:right;">
+81
+</td>
+<td style="text-align:right;">
+215
+</td>
+<td style="text-align:left;">
+8.62e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0045930" class="uri">GO:0045930</a>
+</td>
+<td style="text-align:left;">
+negative regulation of mitotic cell cycle
+</td>
+<td style="text-align:right;">
+83
+</td>
+<td style="text-align:right;">
+212
+</td>
+<td style="text-align:left;">
+8.62e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:CC" class="uri">GO:CC</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0098687" class="uri">GO:0098687</a>
+</td>
+<td style="text-align:left;">
+chromosomal region
+</td>
+<td style="text-align:right;">
+126
+</td>
+<td style="text-align:right;">
+353
+</td>
+<td style="text-align:left;">
+2.75e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:CC" class="uri">GO:CC</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000775" class="uri">GO:0000775</a>
+</td>
+<td style="text-align:left;">
+chromosome, centromeric region
+</td>
+<td style="text-align:right;">
+89
+</td>
+<td style="text-align:right;">
+229
+</td>
+<td style="text-align:left;">
+2.23e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:CC" class="uri">GO:CC</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000940" class="uri">GO:0000940</a>
+</td>
+<td style="text-align:left;">
+outer kinetochore
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+2.39e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:CC" class="uri">GO:CC</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0000779" class="uri">GO:0000779</a>
+</td>
+<td style="text-align:left;">
+condensed chromosome, centromeric region
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+167
+</td>
+<td style="text-align:left;">
+4.66e-05
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 <div id="graphing-specific-gene-expression" class="section level1">
 <h1>Graphing specific gene expression</h1>
-<p>First get a list of genes you want to see. There are multiple was to
+<p>First get a list of genes you want to see. There are multiple ways to
 “see” these. I used the word ‘apple’ to store my list</p>
 <br>
 <p>
@@ -882,24 +2510,25 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] VennDiagram_1.7.3   futile.logger_1.4.3 gridExtra_2.3      
- [4] BiocGenerics_0.42.0 forcats_1.0.0       stringr_1.5.0      
- [7] dplyr_1.1.0         purrr_1.0.1         readr_2.1.3        
-[10] tidyr_1.3.0         tibble_3.1.8        ggplot2_3.4.0      
-[13] tidyverse_1.3.2     gprofiler2_0.2.1    workflowr_1.7.0    
+ [1] scales_1.2.1        kableExtra_1.3.4    VennDiagram_1.7.3  
+ [4] futile.logger_1.4.3 gridExtra_2.3       BiocGenerics_0.42.0
+ [7] forcats_1.0.0       stringr_1.5.0       dplyr_1.1.0        
+[10] purrr_1.0.1         readr_2.1.3         tidyr_1.3.0        
+[13] tibble_3.1.8        ggplot2_3.4.0       tidyverse_1.3.2    
+[16] gprofiler2_0.2.1    workflowr_1.7.0    
 
 loaded via a namespace (and not attached):
  [1] bitops_1.0-7         fs_1.6.0             bit64_4.0.5         
- [4] lubridate_1.9.1      httr_1.4.4           rprojroot_2.0.3     
- [7] tools_4.2.2          backports_1.4.1      bslib_0.4.2         
-[10] utf8_1.2.2           R6_2.5.1             DBI_1.1.3           
-[13] lazyeval_0.2.2       colorspace_2.1-0     withr_2.5.0         
-[16] tidyselect_1.2.0     processx_3.8.0       bit_4.0.5           
-[19] compiler_4.2.2       git2r_0.31.0         textshaping_0.3.6   
+ [4] lubridate_1.9.1      webshot_0.5.4        httr_1.4.4          
+ [7] rprojroot_2.0.3      tools_4.2.2          backports_1.4.1     
+[10] bslib_0.4.2          utf8_1.2.2           R6_2.5.1            
+[13] DBI_1.1.3            lazyeval_0.2.2       colorspace_2.1-0    
+[16] withr_2.5.0          tidyselect_1.2.0     processx_3.8.0      
+[19] bit_4.0.5            compiler_4.2.2       git2r_0.31.0        
 [22] cli_3.6.0            rvest_1.0.3          formatR_1.14        
 [25] xml2_1.3.3           plotly_4.10.1        labeling_0.4.2      
-[28] sass_0.4.5           scales_1.2.1         callr_3.7.3         
-[31] systemfonts_1.0.4    digest_0.6.31        rmarkdown_2.20      
+[28] sass_0.4.5           callr_3.7.3          systemfonts_1.0.4   
+[31] digest_0.6.31        svglite_2.1.1        rmarkdown_2.20      
 [34] pkgconfig_2.0.3      htmltools_0.5.4      highr_0.10          
 [37] dbplyr_2.3.0         fastmap_1.1.0        htmlwidgets_1.6.1   
 [40] rlang_1.0.6          readxl_1.4.1         rstudioapi_0.14     
@@ -917,9 +2546,9 @@ loaded via a namespace (and not attached):
 [76] tzdb_0.3.0           httpuv_1.6.8         cellranger_1.1.0    
 [79] gtable_0.3.1         assertthat_0.2.1     cachem_1.0.6        
 [82] xfun_0.36            mime_0.12            xtable_1.8-4        
-[85] broom_1.0.3          later_1.3.0          ragg_1.2.5          
-[88] googledrive_2.0.0    viridisLite_0.4.1    gargle_1.2.1        
-[91] timechange_0.2.0     ellipsis_0.3.2      </code></pre>
+[85] broom_1.0.3          later_1.3.0          googledrive_2.0.0   
+[88] viridisLite_0.4.1    gargle_1.2.1         timechange_0.2.0    
+[91] ellipsis_0.3.2      </code></pre>
 </div>
 </div>
 
