@@ -18,12 +18,14 @@ example: 'sigVDA3.txt' means this file contains the significant DE genes from th
 ```{r Import libraries, message=FALSE, warning=FALSE}
 library(gprofiler2)
 library(tidyverse)
+library(ggplot2)
 library(readr)
 library(BiocGenerics)
 library(gridExtra)
 library(VennDiagram)
 library(kableExtra)
 library(scales)
+library(ggVennDiagram)
 ```
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -184,9 +186,34 @@ table2 <- gostresDA24$result %>%
 
 ```
 
+```{r venndiagram,echo=FALSE}
+total24n <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+total24s <- list(sigVDA24$SYMBOL,sigVDX24$SYMBOL,sigVEP24$SYMBOL,sigVMT24$SYMBOL)
+total3 <- list(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
+venn24n <- ggVennDiagram(total24n,
+              category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 2,
+              edge_lty = "solid")+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  ggtitle("24 hour gene list using ENTREZID")+
+   theme(plot.title = element_text(hjust = 0.5))
 
-
-
+venn24n
+venn24s <- ggVennDiagram(total24s,
+              category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 2,
+              edge_lty = "solid")+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  ggtitle("24 hour gene list using SYMBOL")+
+   theme(plot.title = element_text(hjust = 0.5))
+venn24s
+```
 
 
 # Graphing specific gene expression
@@ -213,7 +240,17 @@ for (gn in indices){
     
     labs(y = "Log2(cpm)",x= "", fill = "Treatment"))
 }
+
+goana
+
 ```
+
+
+
+r{r comp,eval=TRUE}
+
+
+
 ```{r function for plotting, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 plot_function <- function(index, df) {
   for (i in index) {
