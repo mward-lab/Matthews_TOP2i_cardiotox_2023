@@ -162,6 +162,15 @@ ind5b <- ind5b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Perc
 ind6a <- ind6a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
 ind6b <- ind6b %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
 
+for (i in ID){
+  
+  write
+  
+  
+}
+
+
+write.table()
 ```
 
 File cleanup first subsets each file imported by taking out the 'Empty' samples in the Drug column and then renaming the file to individual names and DRC a and b
@@ -170,8 +179,11 @@ I then need to convert the concentrations to as.numeric and select the 5 columns
 The next part of the code is to make analysis files and groups and things for the iterations.
 
 The data-frame called individuals is complied from each of the dataframes wrangled above.
+
+###lists
 ```{r combine list, echo=FALSE, message=FALSE, warning=FALSE}
-individuals <- list(ind1a,  ###compile the separate data frames into a list of data frames
+###compile the separate data frames into a list of data frames
+individuals <- list(ind1a,  
                     ind1b,
                     ind2a,
                     ind2b,
@@ -185,7 +197,8 @@ individuals <- list(ind1a,  ###compile the separate data frames into a list of d
                     ind6b)
 
 ###First way to label data in the list with its' name
-names(individuals) <- c("ind1a",####adds the names to dataframe list
+####adds the names to dataframe list
+names(individuals) <- c("ind1a",
                           'ind1b',
                           'ind2a',
                           'ind2b',
@@ -197,7 +210,8 @@ names(individuals) <- c("ind1a",####adds the names to dataframe list
                           "ind5b",
                           "ind6a",
                           "ind6b")
-ID <- c("ind1a",  ###creates a list called ID which holds the names if needed
+###creates a list called ID which holds the names if needed
+ID <- c("ind1a",  
         'ind1b',
         'ind2a',
         'ind2b',
@@ -230,20 +244,15 @@ names(individuals)### check to make sure they are labled.
  smaller <- individuals[c(1,4,6,8,10,11)]
  smaller2 <- individuals[c(1,4,6,8,9,11)]
  
-samller <- bind_rows(smaller)
-samller2 <- bind_rows(smaller2)
+smaller <- bind_rows(smaller)
+smaller2 <- bind_rows(smaller2)
 
 ```
 
-I need to creat columns called
-
-
-
-
 Once they are all in a data from, a few functions need to be defined for ggplot:
 
-
-```{r functions, message=FALSE, warning=FALSE}
+##functions
+```{r functions, eval= FALSE,message=FALSE, warning=FALSE}
 
 #####adding functions
 
@@ -293,7 +302,7 @@ Containers for holding thingys:
 
 
 
-```{r}
+```{r empty list holder}
 
 #### making lists to put stuff in###
 daunls <- list() ###daunorubicin list
@@ -302,18 +311,18 @@ epils <- list() ###epirubicin list
 mitols <- list() ###mitoxantrone list
 trasls <- list() ###trastuzmab list
 vehls <- list() ###vehicle list
-name <- c("Veh", "Daun", "Doxo","Epi", "Mito", "Tras")### text list of drugs
+name <- c( "Daun", "Doxo","Epi", "Mito", "Tras")### text list of drugs
 
 
 
 
 ```
 
-
+##individual
 ```{r individual plots}
 
 for (i in name){
-  thing <- subset(ind5a, Drug == i)
+  thing <- subset(rbind(ind5a,ind5b), Drug == i)
     label.1 <- thing$Name[1]
     thing.m <- dr4pl(Percent ~ Conc, data = thing, method.init = "logistic")
     doxols[[i]] <- summary(thing.m)
@@ -336,23 +345,23 @@ The problem with that package is the  dots.... and the fact I cannot graph lines
 
 Here I need to assign the drugs out by drug:
 
-```{r}
+```{r making filtered data}
 
 ### sort durg out and store as drug name from smaller list
-unique(samller$SampleID)
+#unique(smaller$SampleID)
 #returns "ind1a" "ind2b" "ind3b" "ind4b" "ind5a" "ind6a"
-DA <- abc_df %>% filter(Drug == "Daun")
-DX <- abc_df %>% filter(Drug == "Doxo")
-EP <- abc_df %>% filter(Drug =="Epi")
-MT <- abc_df %>% filter(Drug =="Mito")
-TR <- abc_df %>% filter(Drug =="Tras")
-VE <- abc_df %>% filter(Drug == "Veh")
-DA2 <- samller2 %>% filter(Drug == "Daun")
-DX2 <- samller2 %>% filter(Drug == "Doxo")
-EP2 <- samller2 %>% filter(Drug =="Epi")
-MT2 <- samller2 %>% filter(Drug =="Mito")
-TR2 <- samller2 %>% filter(Drug =="Tras")
-VE2 <- samller2 %>% filter(Drug == "Veh")
+DA <- full_list %>% filter(Drug == "Daun")
+DX <- full_list %>% filter(Drug == "Doxo")
+EP <- full_list %>% filter(Drug =="Epi")
+MT <- full_list %>% filter(Drug =="Mito")
+TR <- full_list %>% filter(Drug =="Tras")
+VE <- full_list %>% filter(Drug == "Veh")
+DA2 <- smaller2 %>% filter(Drug == "Daun")
+DX2 <- smaller2 %>% filter(Drug == "Doxo")
+EP2 <- smaller2 %>% filter(Drug =="Epi")
+MT2 <- smaller2 %>% filter(Drug =="Mito")
+TR2 <- smaller2 %>% filter(Drug =="Tras")
+VE2 <- smaller2 %>% filter(Drug == "Veh")
 #####Then add names!
 ```
 
@@ -425,7 +434,7 @@ for (i in ID) {
   thing <- filter(TR, SampleID== i)
   thing.m <- dr4pl(Percent ~ Conc, 
                    data = thing, method.init = "logistic")
-  group.m <- drm(Percent ~Conc, data =thing)
+  #group.m <- drm(Percent ~Conc, data =thing)
    param_holder[[i]] <- thing.m$parameters[2]
   
    
@@ -525,7 +534,7 @@ dxplot <-
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
-    
+    dxplot
     
     ```
     
@@ -587,7 +596,7 @@ mtplot <-
   ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
       guides(color =  "none", alpha = "none")+
       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.5)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,NA,NA))), se = FALSE)+
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -612,12 +621,12 @@ mtplot <-
     
     
     ```{r  trasplot}
-# leg <- 
+leg <- 
       ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
       guides(alpha = "none")+
       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
       scale_color_discrete(labels = c("Individual 1","Individual 2", "Individual 3", "Individual 4","Individual 5","Individual 6"))+labs(color="")+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,NA,NA,NA))), se = FALSE)+
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -668,7 +677,7 @@ ggplot(VE2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
       theme(plot.title = element_text(hjust = 0.5, size =20))+
       ggtitle("Control")
 veplot <-     
-  ggplot(VE2, aes(
+  ggplot(VE, aes(
     x = Conc,
     y = Percent,
     color = SampleID,
@@ -709,7 +718,8 @@ veplot <-
 
 
       
-  # theme(plot.title = element_text(hjust = 0.5, size =20))
+
+# theme(plot.title = element_text(hjust = 0.5, size =20))
      #####plot all together!#####   
     
     
@@ -1357,7 +1367,7 @@ bpt + facet_wrap("Drug")
 
 
 
-# ylab("Relative to Control Cells") +
+ ylab("Relative to Control Cells") +
       # labs(fill = "Concentration") +
       # show.legend = FALSE +
       # facet_wrap("Drug") +
@@ -1370,11 +1380,11 @@ bpt + facet_wrap("Drug")
       #   axis.text = element_text(size = 10, color = "black"),
         
     
-# png("tropimage.png")
-# print(tropimage)
-# dev.off()
-#libarary(magrittir)
-###selecting and redoing analysis
+png("tropimage.png")
+print(tropimage)
+ dev.off()
+libarary(magrittir)
+selecting and redoing analysis
 ldhresults
 ldhnew <- select(ldhresults, c(indv,Drug,Conc,rLDH)) 
 colnames(ldhnew)
@@ -1384,10 +1394,10 @@ ave_ldh <- ldhnew %>%  group_by(Drug,Conc) %>%
   summarise_at(vars(rLDH), list(name = mean)) %>% filter(Drug=="Control")
 
 atest 
-# )save_plot('tranparentLDH.png', atest)
-# atest 
-# tag_facet(atest)
-# atest
+ )save_plot('tranparentLDH.png', atest)
+ atest 
+ tag_facet(atest)
+ atest
 library(egg)
 library(tidyverse)
 library(dplyr)
