@@ -164,13 +164,13 @@ First method, removing only those rows with zero counts across all
 samples.
 
 ```{r first filter method, echo=TRUE}
-
-old.par <- par(mar = c(0, 0, 0, 0))
-par(old.par)
-boxplot(data =RNAseqreads, total~Sample, main = "Boxplots of total reads",xaxt = "n", xlab= "")
-x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
-ggplot(RNAseqreads, x = Sample, y = total)+
-  geom_boxplot()
+# 
+# old.par <- par(mar = c(0, 0, 0, 0))
+# par(old.par)
+# boxplot(data =RNAseqreads, total~Sample, main = "Boxplots of total reads",xaxt = "n", xlab= "")
+# x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
+# ggplot(RNAseqreads, x = Sample, y = total)+
+#   geom_boxplot()
 
 table(rowSums(mymatrix$counts==0)==72)
 ```

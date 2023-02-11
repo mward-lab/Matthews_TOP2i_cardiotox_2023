@@ -44,7 +44,7 @@ gene_prob_tran <- cormotif_tran12$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
 dim(gene_prob_tran)
 nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 & gene_prob_tran[,2] <0.5 & gene_prob_tran[,3] <0.5 & gene_prob_tran[,4] <0.5& gene_prob_tran[,5] <0.5 & gene_prob_tran[,6] <0.5 & gene_prob_tran[,7] <0.5 & gene_prob_tran[,8] <0.5 & gene_prob_tran[,9] <0.5 & gene_prob_tran[,10] <0.5),])
-
+write.csv(response_cluster24h,"data/response_cluster24h.csv")
 length(nonresponse_cluster)
 #
 response_cluster24h  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 & gene_prob_tran[,2] >0.5 & gene_prob_tran[,3] >0.5 & gene_prob_tran[,4] >0.5& gene_prob_tran >0.5 & gene_prob_tran[,6] >0.5 & gene_prob_tran[,7] >0.5 & gene_prob_tran[,8] >0.5 & gene_prob_tran[,9] >0.5 & gene_prob_tran >0.5),])
