@@ -620,11 +620,11 @@ colnames(countstotal) <- label
 
 
 mcor <- cor(countstotal)
-mcor
+#mcor
 #pheatmap::pheatmap(mm2, cluster_rows = FALSE, cluster_cols = FALSE)
 corrcounts <- pheatmap::pheatmap(countstotal, cluster_rows =TRUE, cluster_cols = TRUE)
-symnum(mcor)
-range(mcor)
+#symnum(mcor)
+#range(mcor)
 corrplot(cor(countstotal), method = 'color',
          type = 'lower', 
          order = 'hclust',
