@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="ERM" />
+
+<meta name="date" content="2023-01-18" />
+
+<title>Run1_analysis</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Cardiotoxicity</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/reneeisnowhere/Cardiotoxicity">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Run1_analysis</h1>
+<h4 class="author">ERM</h4>
+<h4 class="date">20230118</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2023-02-10
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230109code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230109)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230109code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230109)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree40fb3405b34002a284af9905504291b1f6d870bdtargetblank40fb340a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/40fb3405b34002a284af9905504291b1f6d870bd" target="_blank">40fb340</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree40fb3405b34002a284af9905504291b1f6d870bdtargetblank40fb340a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/40fb3405b34002a284af9905504291b1f6d870bd" target="_blank">40fb340</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    data/.txt
+    Ignored:    data/allgenes.txt
+    Ignored:    data/backGL.txt
+    Ignored:    data/data_outline.txt
+    Ignored:    data/filenameonly.txt
+    Ignored:    data/individualDRCfile.RDS
+    Ignored:    data/mymatrix.RDS
+    Ignored:    data/norm_LDH.csv
+    Ignored:    data/norm_counts.csv
+    Ignored:    data/response_cluster24h.csv
+    Ignored:    data/sigVDA24.txt
+    Ignored:    data/sigVDA3.txt
+    Ignored:    data/sigVDX24.txt
+    Ignored:    data/sigVDX3.txt
+    Ignored:    data/sigVEP24.txt
+    Ignored:    data/sigVEP3.txt
+    Ignored:    data/sigVMT24.txt
+    Ignored:    data/sigVMT3.txt
+    Ignored:    data/sigVTR24.txt
+    Ignored:    data/sigVTR3.txt
+
+Untracked files:
+    Untracked:  .RDataTmp
+    Untracked:  firstvenn24h.png
+    Untracked:  mcor.csv
+    Untracked:  reneebasecode.R
+
+Unstaged changes:
+    Modified:   venn_code.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/RNAseqanalysis.Rmd</code>) and
+HTML (<code>docs/RNAseqanalysis.html</code>) files. If you’ve configured
+a remote Git repository (see <code>?wflow_git_remote</code>), click on
+the hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/40fb3405b34002a284af9905504291b1f6d870bd/analysis/RNAseqanalysis.Rmd" target="_blank">40fb340</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-10
+</td>
+<td>
+updates for the week
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/accc2412d4b3a5da3d043dbb62116296492e33e2/analysis/RNAseqanalysis.Rmd" target="_blank">accc241</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-10
+</td>
+<td>
+updates for the week
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1fc5c19512ece9d333dec0ef8e8ab5fe58c735e6/analysis/RNAseqanalysis.Rmd" target="_blank">1fc5c19</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-09
+</td>
+<td>
+Git update
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>Hello! I am first loading all the beautiful libraries I will
+need.</p>
+<pre class="r"><code>library(Biobase)
+library(edgeR)
+library(limma)
+library(RColorBrewer)
+library(mixOmics)
+library(VennDiagram)
+library(HTSFilter)
+library(ggplot2)
+library(gridExtra)
+library(reshape2)
+library(devtools)
+library(AnnotationHub)
+library(tidyverse)
+library(scales)
+library(biomaRt)
+library(Homo.sapiens)
+library(cowplot)
+library(ggrepel)
+library(corrplot)
+library(Hmisc)</code></pre>
+<p>The next step is to load all the data I will be using. Currently, I
+am not posting the raw data, but I will release in the future.</p>
+<p>This is how I retrieved the gene symbols.</p>
+<pre class="r"><code> ###now we add genenames to the geneid###
+ 
+geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
+genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
+  keytype=&quot;ENTREZID&quot;)
+genes &lt;- genes[!duplicated(genes$ENTREZID),]
+mymatrix$genes &lt;- genes</code></pre>
+<div id="filtering-out-low-count-genes" class="section level2">
+<h2>Filtering out low count genes</h2>
+<p>Filtering the genes that are lowly expressed using several
+methods.</p>
+<p>First method, removing only those rows with zero counts across all
+samples.</p>
+<pre class="r"><code># 
+# old.par &lt;- par(mar = c(0, 0, 0, 0))
+# par(old.par)
+# boxplot(data =RNAseqreads, total~Sample, main = &quot;Boxplots of total reads&quot;,xaxt = &quot;n&quot;, xlab= &quot;&quot;)
+# x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
+# ggplot(RNAseqreads, x = Sample, y = total)+
+#   geom_boxplot()
+
+table(rowSums(mymatrix$counts==0)==72)</code></pre>
+<pre><code>
+FALSE  TRUE 
+24931  3464 </code></pre>
+<p>This filtering would leave 24931 genes and remove 3464, That is too
+many leftover genes!</p>
+<p>So now to try something a little more stringent using the built in
+function from the edgeR package.</p>
+<pre class="r"><code>keep &lt;- filterByExpr.DGEList(mymatrix, group = group)
+filter_test &lt;- mymatrix[keep, , keep.lib.sizes=FALSE]
+dim(filter_test)</code></pre>
+<pre><code>[1] 14448    72</code></pre>
+<p>This method effectively uses a cutoff off that leaves 14448 genes.
+The cutoff is determined by keeping genes that have a count-per-million
+(CPM) above 10, (the default minimum set) in 6 samples. A set is
+determined using the design matrix.<br />
+For my design, I grouped my 72 samples into sets of 6, one set includes
+each individual + a specific treatment + a specific time.</p>
+<p>The beginning cutoff-standard in our lab is to start by using the
+rowMeans &gt;0 cutoff on the log10 of cpm.</p>
+<pre class="r"><code>cpm &lt;- cpm(mymatrix)
+lcpm &lt;- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
+dim(lcpm)</code></pre>
+<pre><code>[1] 28395    72</code></pre>
+<pre class="r"><code>L &lt;- mean(mymatrix$samples$lib.size) * 1e-6
+M &lt;- median(mymatrix$samples$lib.size) * 1e-6
+c(L, M)</code></pre>
+<pre><code>[1] 4.679061 4.494188</code></pre>
+<pre class="r"><code>filcpm_matrix &lt;- subset(lcpm, (rowMeans(lcpm)&gt;0))
+
+dim(filcpm_matrix)</code></pre>
+<pre><code>[1] 14823    72</code></pre>
+<pre class="r"><code>##method 2 with rowMeans
+row_means &lt;- rowMeans(lcpm)
+x &lt;- mymatrix[row_means &gt; 0,]
+dim(x)</code></pre>
+<pre><code>[1] 14823    72</code></pre>
+<pre class="r"><code>write.csv(x$counts, &quot;data/norm_counts.csv&quot;)</code></pre>
+<p>Both of the above methods leave 14823 genes from 28,395. I prefer the
+second method, which keeps the DGEList format of the data.</p>
+<p><img src="figure/RNAseqanalysis.Rmd/plots%20of%20before%20and%20after%20filter-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/plots%20of%20before%20and%20after%20filter-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/plots%20of%20before%20and%20after%20filter-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/RNAseqanalysis.Rmd/boxplot%20counts%20per%20sample-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/boxplot%20counts%20per%20sample-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>now I will produce the RIN x sample plots:###
+<img src="figure/RNAseqanalysis.Rmd/sample%20quality%20checks-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/sample%20quality%20checks-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/sample%20quality%20checks-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/sample%20quality%20checks-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/sample%20quality%20checks-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="principal-component-analysis" class="section level1">
+<h1>Principal Component Analysis</h1>
+<p>PCA was done using code adopted from J. Blischak.</p>
+<pre><code>
+
+###  Daunorubicin </code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Doxorubicin </code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Epirubicin </code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Mitoxantrone </code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Trastuzumab </code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="576" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Vehicle </code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pca-of-all-72-samples" class="section level1">
+<h1>PCA of all 72 samples</h1>
+<pre><code>Warning: `qplot()` was deprecated in ggplot2 3.4.0.</code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/all-samples-1.png" width="672" style="display: block; margin: auto;" />
+## Variance contribution from treatment, extraction time, or individual
+on PC1 and PC2</p>
+<p><img src="figure/RNAseqanalysis.Rmd/variance%20by%20treatment%20time%20and%20individual-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/variance%20by%20treatment%20time%20and%20individual-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/variance%20by%20treatment%20time%20and%20individual-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/variance%20by%20treatment%20time%20and%20individual-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/variance%20by%20treatment%20time%20and%20individual-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/variance%20by%20treatment%20time%20and%20individual-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="differential-expression" class="section level1">
+<h1>Differential Expression</h1>
+<p><img src="figure/RNAseqanalysis.Rmd/Differential%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>mm2 &lt;- model.matrix(~0 + group1)
+##made the matrix model using the interaction between Treatment and Time
+colnames(mm2) &lt;- c(&quot;A3&quot;, &quot;X3&quot;, &quot;E3&quot;,&quot;M3&quot;,&quot;T3&quot;, &quot;V3&quot;,&quot;A24&quot;, &quot;X24&quot;, &quot;E24&quot;,&quot;M24&quot;,&quot;T24&quot;, &quot;V24&quot;)
+y2 &lt;- voom(x, mm2)
+
+corfit2 &lt;- duplicateCorrelation(y2, mm2, block = indv)
+
+v2 &lt;- voom(x, mm2, block = indv, correlation = corfit2$consensus)
+
+fit2 &lt;- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
+
+vfit2 &lt;- lmFit(y2, mm2)
+
+vfit2&lt;- contrasts.fit(vfit2, contrasts=cm2)
+
+efit2 &lt;- eBayes(vfit2)
+
+V.DA.top= topTable(efit2, coef=1, adjust=&quot;BH&quot;, number=Inf, sort.by=&quot;p&quot;)
+### sorting all top expressed genes for the Vehicle and Daunorubicin 3 hour treatments
+sigVDA3 = V.DA.top[V.DA.top$adj.P.Val &lt; .1 , ]
+### this helped pull only those files that were at an adjusted p value of less than 0.1
+### This p-value was used as the beginning examination of the data, considering I will run multiple runs of this RNA seq library.</code></pre>
+<p>This is the example code I used to process my data. I used two model
+matrix initially, one set up was /~0 +drug +time and the second was
+/~0+group1, then blocking by individual. That is why you see the number
+2 in the code above.</p>
+<p>#DEG summary</p>
+<pre><code>Importance of components:
+                           PC1     PC2     PC3      PC4     PC5      PC6
+Standard deviation     60.2067 44.5108 32.3037 30.98489 27.1431 24.07762
+Proportion of Variance  0.2445  0.1337  0.0704  0.06477  0.0497  0.03911
+Cumulative Proportion   0.2445  0.3782  0.4486  0.51337  0.5631  0.60218
+                            PC7      PC8      PC9     PC10     PC11     PC12
+Standard deviation     23.26775 21.37712 20.13091 18.19509 17.63059 16.30004
+Proportion of Variance  0.03652  0.03083  0.02734  0.02233  0.02097  0.01792
+Cumulative Proportion   0.63870  0.66953  0.69687  0.71921  0.74018  0.75810
+                           PC13     PC14     PC15     PC16     PC17     PC18
+Standard deviation     15.87695 14.24554 13.51806 12.67177 11.84085 11.44481
+Proportion of Variance  0.01701  0.01369  0.01233  0.01083  0.00946  0.00884
+Cumulative Proportion   0.77511  0.78880  0.80113  0.81196  0.82142  0.83025
+                           PC19    PC20    PC21    PC22    PC23    PC24    PC25
+Standard deviation     11.08484 10.4711 9.86347 9.53287 9.25138 9.06027 8.70778
+Proportion of Variance  0.00829  0.0074 0.00656 0.00613 0.00577 0.00554 0.00512
+Cumulative Proportion   0.83854  0.8459 0.85250 0.85863 0.86441 0.86995 0.87506
+                          PC26    PC27    PC28    PC29    PC30    PC31    PC32
+Standard deviation     8.40220 8.26732 8.04037 7.85926 7.76676 7.67958 7.48930
+Proportion of Variance 0.00476 0.00461 0.00436 0.00417 0.00407 0.00398 0.00378
+Cumulative Proportion  0.87982 0.88444 0.88880 0.89296 0.89703 0.90101 0.90480
+                          PC33    PC34    PC35   PC36    PC37    PC38    PC39
+Standard deviation     7.34178 7.28566 7.22861 7.1043 6.99972 6.94542 6.83650
+Proportion of Variance 0.00364 0.00358 0.00353 0.0034 0.00331 0.00325 0.00315
+Cumulative Proportion  0.90843 0.91201 0.91554 0.9189 0.92225 0.92550 0.92866
+                          PC40    PC41    PC42    PC43    PC44   PC45    PC46
+Standard deviation     6.75717 6.73038 6.57835 6.54307 6.53123 6.4395 6.37432
+Proportion of Variance 0.00308 0.00306 0.00292 0.00289 0.00288 0.0028 0.00274
+Cumulative Proportion  0.93174 0.93479 0.93771 0.94060 0.94348 0.9463 0.94902
+                          PC47    PC48    PC49   PC50    PC51   PC52    PC53
+Standard deviation     6.34772 6.23190 6.17748 6.0816 6.01946 5.9644 5.89730
+Proportion of Variance 0.00272 0.00262 0.00257 0.0025 0.00244 0.0024 0.00235
+Cumulative Proportion  0.95173 0.95435 0.95693 0.9594 0.96187 0.9643 0.96661
+                         PC54    PC55    PC56    PC57    PC58    PC59    PC60
+Standard deviation     5.8378 5.80173 5.72099 5.69367 5.65008 5.60128 5.47568
+Proportion of Variance 0.0023 0.00227 0.00221 0.00219 0.00215 0.00212 0.00202
+Cumulative Proportion  0.9689 0.97118 0.97339 0.97558 0.97773 0.97985 0.98187
+                          PC61    PC62    PC63    PC64    PC65   PC66    PC67
+Standard deviation     5.46660 5.38710 5.31872 5.25710 5.11760 5.0166 4.83245
+Proportion of Variance 0.00202 0.00196 0.00191 0.00186 0.00177 0.0017 0.00158
+Cumulative Proportion  0.98389 0.98585 0.98776 0.98962 0.99139 0.9931 0.99466
+                          PC68    PC69    PC70    PC71      PC72
+Standard deviation     4.73475 4.57831 4.51242 3.92680 4.923e-14
+Proportion of Variance 0.00151 0.00141 0.00137 0.00104 0.000e+00
+Cumulative Proportion  0.99617 0.99759 0.99896 1.00000 1.000e+00</code></pre>
+<pre><code>        V.DA  V.DX  V.EP  V.MT  V.TR V.DA24 V.DX24 V.EP24 V.MT24 V.TR24
+Down      63     3    11    13     0   3342   3013   2871    320      0
+NotSig 14456 14814 14714 14780 14823   8279   8993   9034  13970  14823
+Up       304     6    98    30     0   3202   2817   2918    533      0</code></pre>
+<div id="graphing-de-genes" class="section level2">
+<h2>Graphing DE genes</h2>
+<p>I then created a counts table for each set of genes. Luckily, the
+counts are stored in the y2 object, which is an EList class object. I
+can ‘simplify’ this process because I kept the DEGList format initially.
+I first made an object called ‘countstotal’ from the EList y2. For
+ggploting later, I subsetted ‘countstotal’ by treatments.</p>
+<pre class="r"><code>countstotal &lt;- y2$E
+colnames(countstotal) &lt;- smlabel
+boxplot(countstotal, xaxt = &quot;n&quot;, xlab=&quot;&quot;)
+Da3counts &lt;- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
+x_axis_labels(labels = label, every_nth = 1, adj=1, srt =90, cex =0.4)</code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/counts%20files-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>library(cowplot)</p>
+</div>
+</div>
+<div id="volcano-plots" class="section level1">
+<h1>Volcano Plots</h1>
+<p><img src="figure/RNAseqanalysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>           Da.1.3h   Do.1.3h   Ep.1.3h   Mi.1.3h   Tr.1.3h   Ve.1.3h  Da.1.24h
+Da.1.3h  1.0000000 0.9750009 0.9819187 0.9750397 0.9670114 0.9672631 0.8798716
+Do.1.3h  0.9750009 1.0000000 0.9812729 0.9805745 0.9773620 0.9799603 0.8856000
+Ep.1.3h  0.9819187 0.9812729 1.0000000 0.9817512 0.9759275 0.9745966 0.8830084
+Mi.1.3h  0.9750397 0.9805745 0.9817512 1.0000000 0.9776286 0.9772605 0.8843686
+Tr.1.3h  0.9670114 0.9773620 0.9759275 0.9776286 1.0000000 0.9781408 0.8783519
+Ve.1.3h  0.9672631 0.9799603 0.9745966 0.9772605 0.9781408 1.0000000 0.8786708
+Da.1.24h 0.8798716 0.8856000 0.8830084 0.8843686 0.8783519 0.8786708 1.0000000
+Do.1.24h 0.8342768 0.8412818 0.8364218 0.8388230 0.8327759 0.8337297 0.9059125
+Ep.1.24h 0.8755706 0.8819487 0.8820155 0.8816722 0.8760134 0.8739264 0.9716528
+Mi.1.24h 0.9417158 0.9537869 0.9489981 0.9537620 0.9541162 0.9522151 0.9231684
+Tr.1.24h 0.9634662 0.9736999 0.9709712 0.9743358 0.9768900 0.9734314 0.8794038
+Ve.1.24h 0.9624472 0.9737102 0.9684832 0.9715686 0.9748601 0.9739423 0.8773858
+Da.2.3h  0.9102090 0.8986492 0.9039555 0.8989770 0.8907540 0.8922487 0.7974989
+Do.2.3h  0.9027292 0.9029928 0.8999590 0.9000381 0.8963980 0.9008944 0.7999029
+Ep.2.3h  0.9142383 0.9086090 0.9120992 0.9089450 0.9001160 0.9030954 0.8076164
+Mi.2.3h  0.9119691 0.9054995 0.9089298 0.9085347 0.9006935 0.9024926 0.8077486
+Tr.2.3h  0.8979414 0.8957848 0.8968039 0.8961954 0.8921060 0.8957863 0.7894072
+Ve.2.3h  0.9030785 0.9056109 0.9020535 0.9046819 0.9029202 0.9067807 0.7952351
+Da.2.24h 0.8541808 0.8519938 0.8551480 0.8537790 0.8440593 0.8448362 0.9233532
+Do.2.24h 0.8333943 0.8324354 0.8328216 0.8327149 0.8226544 0.8252168 0.9058254
+Ep.2.24h 0.8410323 0.8292228 0.8363069 0.8291917 0.8155801 0.8177729 0.8275214
+Mi.2.24h 0.9049226 0.9007429 0.9027168 0.9036491 0.8993008 0.9001345 0.8296148
+Tr.2.24h 0.9005961 0.8951984 0.8988347 0.8968318 0.8941245 0.8946371 0.7897035
+Ve.2.24h 0.8948423 0.8877475 0.8914513 0.8891347 0.8869126 0.8886604 0.7785197
+Da.3.3h  0.9319512 0.9225026 0.9241631 0.9209965 0.9132814 0.9144588 0.8300117
+Do.3.3h  0.9310647 0.9352041 0.9326231 0.9332567 0.9289201 0.9308794 0.8334422
+Ep.3.3h  0.9404014 0.9280220 0.9355110 0.9278036 0.9195856 0.9200323 0.8274232
+Mi.3.3h  0.9301179 0.9205185 0.9250091 0.9222625 0.9124563 0.9141138 0.8196522
+Tr.3.3h  0.9310105 0.9333273 0.9336036 0.9329442 0.9308929 0.9325504 0.8226232
+Ve.3.3h  0.9281711 0.9229720 0.9254536 0.9235198 0.9210853 0.9205402 0.8135663
+Da.3.24h 0.8739904 0.8701387 0.8750195 0.8722760 0.8627761 0.8636353 0.9301956
+Do.3.24h 0.8616160 0.8600436 0.8600780 0.8586000 0.8506553 0.8541401 0.9194606
+Ep.3.24h 0.8567431 0.8552229 0.8592945 0.8563004 0.8472015 0.8476827 0.9291292
+Mi.3.24h 0.9245509 0.9230034 0.9251028 0.9264555 0.9211812 0.9214072 0.8631471
+Tr.3.24h 0.9269675 0.9281541 0.9273675 0.9273672 0.9270419 0.9288847 0.8156204
+Ve.3.24h 0.9142432 0.9148495 0.9145529 0.9134950 0.9122088 0.9126111 0.7978031
+Da.4.3h  0.9652104 0.9615603 0.9646649 0.9606712 0.9533052 0.9546199 0.8631918
+Do.4.3h  0.9643503 0.9649784 0.9650904 0.9625998 0.9578774 0.9604689 0.8592083
+Ep.4.3h  0.9653609 0.9641171 0.9664620 0.9625394 0.9572996 0.9576933 0.8625445
+Mi.4.3h  0.9609100 0.9625702 0.9629950 0.9633040 0.9585662 0.9601196 0.8637672
+Tr.4.3h  0.9588647 0.9637644 0.9631052 0.9623286 0.9620751 0.9630988 0.8522685
+Ve.4.3h  0.9557574 0.9625032 0.9611523 0.9610639 0.9610084 0.9621090 0.8553049
+Da.4.24h 0.8888555 0.8886834 0.8923650 0.8885716 0.8787536 0.8805659 0.9583502
+Do.4.24h 0.8898632 0.8927680 0.8953969 0.8927534 0.8829611 0.8860426 0.9553138
+Ep.4.24h 0.8907498 0.8884543 0.8953452 0.8898975 0.8790457 0.8816249 0.9509203
+Mi.4.24h 0.9470074 0.9530740 0.9526112 0.9539310 0.9500433 0.9512113 0.8928881
+Tr.4.24h 0.9581093 0.9624521 0.9632557 0.9629274 0.9635518 0.9612795 0.8546325
+Ve.4.24h 0.9526905 0.9599575 0.9566278 0.9589479 0.9596461 0.9592674 0.8559965
+Da.5.3h  0.9251855 0.9169488 0.9212022 0.9187003 0.9090587 0.9084347 0.8455172
+Do.5.3h  0.9256423 0.9277729 0.9294429 0.9295165 0.9238239 0.9240714 0.8470377
+Ep.5.3h  0.9235453 0.9148518 0.9227641 0.9191107 0.9099688 0.9094219 0.8340229
+Mi.5.3h  0.9235694 0.9178789 0.9218295 0.9220799 0.9114808 0.9128291 0.8355114
+Tr.5.3h  0.9112021 0.9041599 0.9072484 0.9062446 0.9034204 0.9030968 0.8138187
+Ve.5.3h  0.9068814 0.9033397 0.9043493 0.9058188 0.9037313 0.9047044 0.8162827
+Da.5.24h 0.8601425 0.8555858 0.8564509 0.8572256 0.8515660 0.8524342 0.9003719
+Do.5.24h 0.8727576 0.8669491 0.8720142 0.8692469 0.8617188 0.8623623 0.9147373
+Ep.5.24h 0.8823364 0.8863643 0.8860914 0.8880706 0.8810528 0.8823772 0.9084563
+Mi.5.24h 0.9083892 0.9125159 0.9143077 0.9163623 0.9113003 0.9098228 0.8751595
+Tr.5.24h 0.9096053 0.9137166 0.9135395 0.9152429 0.9142400 0.9104863 0.8164823
+Ve.5.24h 0.9108663 0.9199656 0.9152889 0.9190236 0.9193266 0.9187054 0.8276510
+Da.6.3h  0.9528214 0.9451679 0.9509857 0.9453242 0.9380025 0.9388753 0.8453272
+Do.6.3h  0.9444414 0.9436710 0.9439061 0.9421237 0.9395025 0.9400808 0.8360335
+Ep.6.3h  0.9453039 0.9472987 0.9470185 0.9452692 0.9414110 0.9421992 0.8399094
+Mi.6.3h  0.9463978 0.9439405 0.9450420 0.9451257 0.9388050 0.9406922 0.8429570
+Tr.6.3h  0.9422835 0.9405363 0.9414746 0.9400737 0.9391404 0.9386595 0.8276872
+Ve.6.3h  0.9440705 0.9423336 0.9424742 0.9427719 0.9417382 0.9419609 0.8306427
+Da.6.24h 0.8925134 0.8903097 0.8933761 0.8916997 0.8841079 0.8844630 0.9367602
+Do.6.24h 0.9159101 0.9158751 0.9178040 0.9154038 0.9086894 0.9125617 0.8969984
+Ep.6.24h 0.9199926 0.9166706 0.9184108 0.9168236 0.9097779 0.9129955 0.9008743
+Mi.6.24h 0.9342154 0.9321716 0.9322613 0.9326039 0.9304202 0.9314719 0.8642544
+Tr.6.24h 0.9252461 0.9320758 0.9276547 0.9277794 0.9288798 0.9279800 0.8218928
+Ve.6.24h 0.9402979 0.9375057 0.9379633 0.9366205 0.9352638 0.9364364 0.8276129
+          Do.1.24h  Ep.1.24h  Mi.1.24h  Tr.1.24h  Ve.1.24h   Da.2.3h   Do.2.3h
+Da.1.3h  0.8342768 0.8755706 0.9417158 0.9634662 0.9624472 0.9102090 0.9027292
+Do.1.3h  0.8412818 0.8819487 0.9537869 0.9736999 0.9737102 0.8986492 0.9029928
+Ep.1.3h  0.8364218 0.8820155 0.9489981 0.9709712 0.9684832 0.9039555 0.8999590
+Mi.1.3h  0.8388230 0.8816722 0.9537620 0.9743358 0.9715686 0.8989770 0.9000381
+Tr.1.3h  0.8327759 0.8760134 0.9541162 0.9768900 0.9748601 0.8907540 0.8963980
+Ve.1.3h  0.8337297 0.8739264 0.9522151 0.9734314 0.9739423 0.8922487 0.9008944
+Da.1.24h 0.9059125 0.9716528 0.9231684 0.8794038 0.8773858 0.7974989 0.7999029
+Do.1.24h 1.0000000 0.9049843 0.8726433 0.8337027 0.8339953 0.7661882 0.7657836
+Ep.1.24h 0.9049843 1.0000000 0.9220055 0.8794611 0.8736893 0.7941135 0.7944286
+Mi.1.24h 0.8726433 0.9220055 1.0000000 0.9559709 0.9536391 0.8530893 0.8597301
+Tr.1.24h 0.8337027 0.8794611 0.9559709 1.0000000 0.9796735 0.8877993 0.8913143
+Ve.1.24h 0.8339953 0.8736893 0.9536391 0.9796735 1.0000000 0.8871858 0.8908963
+Da.2.3h  0.7661882 0.7941135 0.8530893 0.8877993 0.8871858 1.0000000 0.9705899
+Do.2.3h  0.7657836 0.7944286 0.8597301 0.8913143 0.8908963 0.9705899 1.0000000
+Ep.2.3h  0.7729539 0.8038963 0.8646545 0.8970599 0.8952264 0.9724149 0.9750952
+Mi.2.3h  0.7749316 0.8050560 0.8669921 0.8982853 0.8968544 0.9732781 0.9762712
+Tr.2.3h  0.7565248 0.7855643 0.8524656 0.8867408 0.8849494 0.9664444 0.9769611
+Ve.2.3h  0.7622954 0.7910182 0.8621814 0.8991441 0.8983309 0.9661951 0.9784520
+Da.2.24h 0.8618217 0.9255000 0.8727373 0.8409438 0.8376063 0.8598483 0.8640293
+Do.2.24h 0.8475816 0.9084703 0.8504986 0.8212120 0.8196576 0.8466331 0.8512392
+Ep.2.24h 0.7799137 0.8240382 0.8111449 0.8087849 0.8084308 0.8764981 0.8702428
+Mi.2.24h 0.7955292 0.8310525 0.8979756 0.8982202 0.8937949 0.9445665 0.9488171
+Tr.2.24h 0.7569038 0.7896055 0.8584457 0.8942769 0.8902877 0.9640091 0.9664680
+Ve.2.24h 0.7484706 0.7770379 0.8473999 0.8843395 0.8824575 0.9636159 0.9681654
+Da.3.3h  0.7915342 0.8246744 0.8855827 0.9134100 0.9120210 0.9489932 0.9468872
+Do.3.3h  0.7974397 0.8303429 0.8975292 0.9292880 0.9290867 0.9447509 0.9486250
+Ep.3.3h  0.7914791 0.8249328 0.8875707 0.9183543 0.9157540 0.9496848 0.9436578
+Mi.3.3h  0.7840216 0.8164126 0.8810544 0.9096131 0.9078395 0.9472050 0.9468563
+Tr.3.3h  0.7891081 0.8230688 0.8964122 0.9302259 0.9292053 0.9432514 0.9493347
+Ve.3.3h  0.7796093 0.8120775 0.8854542 0.9202094 0.9169697 0.9443037 0.9463338
+Da.3.24h 0.8776849 0.9362267 0.9001429 0.8614155 0.8582084 0.8454752 0.8445506
+Do.3.24h 0.8708386 0.9262910 0.8832987 0.8471508 0.8470185 0.8456526 0.8488116
+Ep.3.24h 0.8742969 0.9412060 0.8815531 0.8460977 0.8418408 0.8334370 0.8344009
+Mi.3.24h 0.8270067 0.8658812 0.9310940 0.9213687 0.9183113 0.9185237 0.9217908
+Tr.3.24h 0.7816226 0.8144762 0.8933662 0.9286039 0.9280436 0.9436753 0.9476406
+Ve.3.24h 0.7641135 0.7954595 0.8683180 0.9120092 0.9107172 0.9448795 0.9456026
+Da.4.3h  0.8202735 0.8554897 0.9245745 0.9507693 0.9510543 0.9169493 0.9133161
+Do.4.3h  0.8160134 0.8521486 0.9265330 0.9531080 0.9538980 0.9179944 0.9213886
+Ep.4.3h  0.8201682 0.8560043 0.9271063 0.9534200 0.9521434 0.9189952 0.9194670
+Mi.4.3h  0.8192649 0.8574806 0.9307158 0.9551968 0.9542131 0.9158224 0.9210439
+Tr.4.3h  0.8101134 0.8479038 0.9281268 0.9595347 0.9581831 0.9128340 0.9203900
+Ve.4.3h  0.8124077 0.8503181 0.9301602 0.9595112 0.9579539 0.9082988 0.9161504
+Da.4.24h 0.8943707 0.9560115 0.9166980 0.8755686 0.8727480 0.8291460 0.8318428
+Do.4.24h 0.8970888 0.9593159 0.9213897 0.8815145 0.8791922 0.8244627 0.8289532
+Ep.4.24h 0.8907220 0.9551319 0.9142972 0.8738444 0.8722747 0.8251954 0.8265801
+Mi.4.24h 0.8481638 0.8924841 0.9642623 0.9504120 0.9487939 0.8848970 0.8910710
+Tr.4.24h 0.8117346 0.8513759 0.9319313 0.9667471 0.9632483 0.9129507 0.9158161
+Ve.4.24h 0.8138382 0.8512190 0.9315674 0.9632960 0.9632266 0.9055668 0.9100031
+Da.5.3h  0.8042730 0.8423694 0.8915297 0.9108781 0.9061182 0.9346167 0.9295403
+Do.5.3h  0.8093287 0.8479751 0.9033772 0.9250837 0.9212384 0.9338593 0.9362750
+Ep.5.3h  0.7962217 0.8339930 0.8890403 0.9106477 0.9043326 0.9341510 0.9331700
+Mi.5.3h  0.7974413 0.8320092 0.8924288 0.9104044 0.9062050 0.9367428 0.9365243
+Tr.5.3h  0.7828324 0.8147371 0.8793167 0.9062162 0.9015712 0.9310612 0.9315397
+Ve.5.3h  0.7852353 0.8155383 0.8816718 0.9058273 0.9027116 0.9204924 0.9247871
+Da.5.24h 0.8584900 0.9038109 0.8831014 0.8522071 0.8496179 0.8497151 0.8520675
+Do.5.24h 0.8682346 0.9218658 0.8958821 0.8608169 0.8577698 0.8590150 0.8588649
+Ep.5.24h 0.8644601 0.9180848 0.9160977 0.8829341 0.8788683 0.8641728 0.8688877
+Mi.5.24h 0.8342728 0.8796271 0.9308282 0.9125070 0.9061909 0.8971613 0.9030860
+Tr.5.24h 0.7804022 0.8180976 0.8832136 0.9191880 0.9120229 0.9323852 0.9328277
+Ve.5.24h 0.7910340 0.8281473 0.8908573 0.9239764 0.9187413 0.9295813 0.9344744
+Da.6.3h  0.8033875 0.8398160 0.9045948 0.9332255 0.9305668 0.9425640 0.9408797
+Do.6.3h  0.7959925 0.8314021 0.9041340 0.9371179 0.9345140 0.9349955 0.9387362
+Ep.6.3h  0.8000445 0.8357717 0.9059984 0.9360575 0.9361974 0.9328630 0.9360773
+Mi.6.3h  0.8018434 0.8367056 0.9082505 0.9346481 0.9334633 0.9337609 0.9377295
+Tr.6.3h  0.7883463 0.8229473 0.9017494 0.9370284 0.9344558 0.9326991 0.9369869
+Ve.6.3h  0.7914024 0.8248255 0.9047126 0.9389949 0.9376692 0.9306937 0.9363276
+Da.6.24h 0.8797782 0.9368384 0.9153958 0.8807883 0.8767962 0.8554048 0.8591245
+Do.6.24h 0.8543680 0.9004142 0.9231196 0.9024349 0.9008391 0.8837143 0.8902252
+Ep.6.24h 0.8544273 0.9003598 0.9269639 0.9050811 0.9041244 0.8861732 0.8911879
+Mi.6.24h 0.8235460 0.8608726 0.9345829 0.9283707 0.9250366 0.9101360 0.9163904
+Tr.6.24h 0.7843357 0.8190736 0.8940943 0.9306204 0.9282138 0.9245144 0.9266815
+Ve.6.24h 0.7902507 0.8218320 0.9011529 0.9348534 0.9343277 0.9334456 0.9365340
+           Ep.2.3h   Mi.2.3h   Tr.2.3h   Ve.2.3h  Da.2.24h  Do.2.24h  Ep.2.24h
+Da.1.3h  0.9142383 0.9119691 0.8979414 0.9030785 0.8541808 0.8333943 0.8410323
+Do.1.3h  0.9086090 0.9054995 0.8957848 0.9056109 0.8519938 0.8324354 0.8292228
+Ep.1.3h  0.9120992 0.9089298 0.8968039 0.9020535 0.8551480 0.8328216 0.8363069
+Mi.1.3h  0.9089450 0.9085347 0.8961954 0.9046819 0.8537790 0.8327149 0.8291917
+Tr.1.3h  0.9001160 0.9006935 0.8921060 0.9029202 0.8440593 0.8226544 0.8155801
+Ve.1.3h  0.9030954 0.9024926 0.8957863 0.9067807 0.8448362 0.8252168 0.8177729
+Da.1.24h 0.8076164 0.8077486 0.7894072 0.7952351 0.9233532 0.9058254 0.8275214
+Do.1.24h 0.7729539 0.7749316 0.7565248 0.7622954 0.8618217 0.8475816 0.7799137
+Ep.1.24h 0.8038963 0.8050560 0.7855643 0.7910182 0.9255000 0.9084703 0.8240382
+Mi.1.24h 0.8646545 0.8669921 0.8524656 0.8621814 0.8727373 0.8504986 0.8111449
+Tr.1.24h 0.8970599 0.8982853 0.8867408 0.8991441 0.8409438 0.8212120 0.8087849
+Ve.1.24h 0.8952264 0.8968544 0.8849494 0.8983309 0.8376063 0.8196576 0.8084308
+Da.2.3h  0.9724149 0.9732781 0.9664444 0.9661951 0.8598483 0.8466331 0.8764981
+Do.2.3h  0.9750952 0.9762712 0.9769611 0.9784520 0.8640293 0.8512392 0.8702428
+Ep.2.3h  1.0000000 0.9743014 0.9719302 0.9708555 0.8671117 0.8522774 0.8755643
+Mi.2.3h  0.9743014 1.0000000 0.9739892 0.9718603 0.8692054 0.8565722 0.8766766
+Tr.2.3h  0.9719302 0.9739892 1.0000000 0.9761218 0.8592362 0.8436683 0.8631002
+Ve.2.3h  0.9708555 0.9718603 0.9761218 1.0000000 0.8585616 0.8447287 0.8617919
+Da.2.24h 0.8671117 0.8692054 0.8592362 0.8585616 1.0000000 0.9663841 0.8863551
+Do.2.24h 0.8522774 0.8565722 0.8436683 0.8447287 0.9663841 1.0000000 0.8954128
+Ep.2.24h 0.8755643 0.8766766 0.8631002 0.8617919 0.8863551 0.8954128 1.0000000
+Mi.2.24h 0.9466472 0.9494473 0.9492839 0.9541295 0.8894501 0.8698542 0.8575363
+Tr.2.24h 0.9641563 0.9669042 0.9673050 0.9713199 0.8545253 0.8376339 0.8541634
+Ve.2.24h 0.9606920 0.9680169 0.9694273 0.9696732 0.8502389 0.8306731 0.8548037
+Da.3.3h  0.9516667 0.9506865 0.9389602 0.9421481 0.8603349 0.8463004 0.8656057
+Do.3.3h  0.9494577 0.9472499 0.9402013 0.9519940 0.8587276 0.8469090 0.8522310
+Ep.3.3h  0.9500770 0.9508407 0.9394384 0.9418908 0.8571467 0.8388784 0.8588752
+Mi.3.3h  0.9511857 0.9518358 0.9425333 0.9457019 0.8559729 0.8367134 0.8575115
+Tr.3.3h  0.9492438 0.9506362 0.9461725 0.9562970 0.8519013 0.8397426 0.8451512
+Ve.3.3h  0.9481883 0.9486133 0.9446488 0.9511823 0.8482484 0.8284335 0.8436845
+Da.3.24h 0.8505629 0.8537097 0.8397213 0.8428792 0.9447768 0.9226031 0.8447778
+Do.3.24h 0.8487769 0.8526038 0.8422465 0.8463828 0.9455021 0.9299424 0.8478318
+Ep.3.24h 0.8425422 0.8429572 0.8308222 0.8315071 0.9537477 0.9392398 0.8469197
+Mi.3.24h 0.9231606 0.9263459 0.9195926 0.9256289 0.8891174 0.8677430 0.8469894
+Tr.3.24h 0.9440162 0.9467760 0.9446293 0.9563489 0.8465755 0.8327570 0.8399806
+Ve.3.24h 0.9441703 0.9441494 0.9438895 0.9541408 0.8355915 0.8219614 0.8375679
+Da.4.3h  0.9230977 0.9187399 0.9054593 0.9129207 0.8515114 0.8338594 0.8494456
+Do.4.3h  0.9268824 0.9226853 0.9145164 0.9227238 0.8510367 0.8313855 0.8404159
+Ep.4.3h  0.9260613 0.9232669 0.9128256 0.9201298 0.8543849 0.8338779 0.8459510
+Mi.4.3h  0.9262142 0.9244977 0.9161758 0.9233260 0.8573056 0.8365004 0.8420831
+Tr.4.3h  0.9249273 0.9216335 0.9171252 0.9258615 0.8447307 0.8251959 0.8297657
+Ve.4.3h  0.9208712 0.9177452 0.9123657 0.9216124 0.8452954 0.8258670 0.8276904
+Da.4.24h 0.8416656 0.8376113 0.8260662 0.8270021 0.9410446 0.9205201 0.8484133
+Do.4.24h 0.8385593 0.8359666 0.8219882 0.8248664 0.9335391 0.9168737 0.8383863
+Ep.4.24h 0.8371284 0.8335156 0.8233201 0.8234413 0.9362517 0.9121768 0.8453572
+Mi.4.24h 0.8963637 0.8954169 0.8875448 0.8947390 0.8725712 0.8512825 0.8261426
+Tr.4.24h 0.9224788 0.9203649 0.9139382 0.9231734 0.8436131 0.8238775 0.8246577
+Ve.4.24h 0.9141658 0.9133365 0.9061954 0.9169280 0.8410378 0.8219384 0.8196852
+Da.5.3h  0.9376817 0.9395908 0.9221783 0.9274810 0.8705591 0.8550083 0.8697579
+Do.5.3h  0.9406960 0.9420930 0.9296762 0.9397909 0.8682807 0.8547143 0.8551251
+Ep.5.3h  0.9432972 0.9423218 0.9312828 0.9310277 0.8650496 0.8461416 0.8544332
+Mi.5.3h  0.9432117 0.9452434 0.9336895 0.9352239 0.8634318 0.8453640 0.8582018
+Tr.5.3h  0.9299433 0.9428093 0.9277644 0.9327352 0.8452076 0.8310601 0.8343009
+Ve.5.3h  0.9236402 0.9366607 0.9218454 0.9264562 0.8410655 0.8312172 0.8303590
+Da.5.24h 0.8533626 0.8682366 0.8477624 0.8450885 0.9205625 0.9068049 0.8378232
+Do.5.24h 0.8620280 0.8698806 0.8543580 0.8562606 0.9366743 0.9153713 0.8436964
+Ep.5.24h 0.8738472 0.8761809 0.8628307 0.8681258 0.9190544 0.9004744 0.8360639
+Mi.5.24h 0.9084571 0.9090897 0.9015189 0.9065428 0.8924338 0.8721566 0.8404452
+Tr.5.24h 0.9361241 0.9368132 0.9315384 0.9435850 0.8451503 0.8295416 0.8357042
+Ve.5.24h 0.9340655 0.9352518 0.9300916 0.9437356 0.8512957 0.8377178 0.8386796
+Da.6.3h  0.9448931 0.9444501 0.9373739 0.9398553 0.8675045 0.8469662 0.8671174
+Do.6.3h  0.9374478 0.9390938 0.9337673 0.9437370 0.8535812 0.8334325 0.8442316
+Ep.6.3h  0.9360645 0.9366685 0.9297198 0.9404717 0.8548138 0.8366993 0.8465603
+Mi.6.3h  0.9395844 0.9408465 0.9343475 0.9385464 0.8601540 0.8391274 0.8519810
+Tr.6.3h  0.9366111 0.9375374 0.9344040 0.9424575 0.8467084 0.8257305 0.8371828
+Ve.6.3h  0.9361856 0.9379729 0.9342082 0.9408513 0.8470566 0.8256720 0.8345320
+Da.6.24h 0.8637816 0.8647905 0.8559304 0.8557232 0.9422365 0.9196746 0.8500187
+Do.6.24h 0.8919741 0.8909499 0.8871698 0.8906804 0.9076868 0.8827186 0.8412057
+Ep.6.24h 0.8938287 0.8927932 0.8879388 0.8888703 0.9082624 0.8825277 0.8452743
+Mi.6.24h 0.9156257 0.9172329 0.9153063 0.9188890 0.8758025 0.8509642 0.8353814
+Tr.6.24h 0.9240755 0.9242409 0.9214547 0.9349693 0.8352300 0.8190487 0.8276731
+Ve.6.24h 0.9364668 0.9390819 0.9359471 0.9391976 0.8452882 0.8259444 0.8357285
+          Mi.2.24h  Tr.2.24h  Ve.2.24h   Da.3.3h   Do.3.3h   Ep.3.3h   Mi.3.3h
+Da.1.3h  0.9049226 0.9005961 0.8948423 0.9319512 0.9310647 0.9404014 0.9301179
+Do.1.3h  0.9007429 0.8951984 0.8877475 0.9225026 0.9352041 0.9280220 0.9205185
+Ep.1.3h  0.9027168 0.8988347 0.8914513 0.9241631 0.9326231 0.9355110 0.9250091
+Mi.1.3h  0.9036491 0.8968318 0.8891347 0.9209965 0.9332567 0.9278036 0.9222625
+Tr.1.3h  0.8993008 0.8941245 0.8869126 0.9132814 0.9289201 0.9195856 0.9124563
+Ve.1.3h  0.9001345 0.8946371 0.8886604 0.9144588 0.9308794 0.9200323 0.9141138
+Da.1.24h 0.8296148 0.7897035 0.7785197 0.8300117 0.8334422 0.8274232 0.8196522
+Do.1.24h 0.7955292 0.7569038 0.7484706 0.7915342 0.7974397 0.7914791 0.7840216
+Ep.1.24h 0.8310525 0.7896055 0.7770379 0.8246744 0.8303429 0.8249328 0.8164126
+Mi.1.24h 0.8979756 0.8584457 0.8473999 0.8855827 0.8975292 0.8875707 0.8810544
+Tr.1.24h 0.8982202 0.8942769 0.8843395 0.9134100 0.9292880 0.9183543 0.9096131
+Ve.1.24h 0.8937949 0.8902877 0.8824575 0.9120210 0.9290867 0.9157540 0.9078395
+Da.2.3h  0.9445665 0.9640091 0.9636159 0.9489932 0.9447509 0.9496848 0.9472050
+Do.2.3h  0.9488171 0.9664680 0.9681654 0.9468872 0.9486250 0.9436578 0.9468563
+Ep.2.3h  0.9466472 0.9641563 0.9606920 0.9516667 0.9494577 0.9500770 0.9511857
+Mi.2.3h  0.9494473 0.9669042 0.9680169 0.9506865 0.9472499 0.9508407 0.9518358
+Tr.2.3h  0.9492839 0.9673050 0.9694273 0.9389602 0.9402013 0.9394384 0.9425333
+Ve.2.3h  0.9541295 0.9713199 0.9696732 0.9421481 0.9519940 0.9418908 0.9457019
+Da.2.24h 0.8894501 0.8545253 0.8502389 0.8603349 0.8587276 0.8571467 0.8559729
+Do.2.24h 0.8698542 0.8376339 0.8306731 0.8463004 0.8469090 0.8388784 0.8367134
+Ep.2.24h 0.8575363 0.8541634 0.8548037 0.8656057 0.8522310 0.8588752 0.8575115
+Mi.2.24h 1.0000000 0.9568316 0.9508896 0.9316304 0.9360357 0.9328557 0.9334560
+Tr.2.24h 0.9568316 1.0000000 0.9717571 0.9400161 0.9415656 0.9444877 0.9445238
+Ve.2.24h 0.9508896 0.9717571 1.0000000 0.9375508 0.9344915 0.9410164 0.9420269
+Da.3.3h  0.9316304 0.9400161 0.9375508 1.0000000 0.9635737 0.9779043 0.9758327
+Do.3.3h  0.9360357 0.9415656 0.9344915 0.9635737 1.0000000 0.9637348 0.9620550
+Ep.3.3h  0.9328557 0.9444877 0.9410164 0.9779043 0.9637348 1.0000000 0.9765144
+Mi.3.3h  0.9334560 0.9445238 0.9420269 0.9758327 0.9620550 0.9765144 1.0000000
+Tr.3.3h  0.9420835 0.9481229 0.9426355 0.9606716 0.9783721 0.9650841 0.9634194
+Ve.3.3h  0.9396605 0.9504871 0.9482731 0.9742022 0.9662597 0.9769231 0.9747965
+Da.3.24h 0.8883486 0.8428194 0.8349778 0.8745498 0.8760563 0.8773763 0.8718519
+Do.3.24h 0.8825751 0.8425593 0.8393845 0.8703317 0.8724196 0.8703292 0.8691354
+Ep.3.24h 0.8703758 0.8311032 0.8202219 0.8624665 0.8641284 0.8635483 0.8585566
+Mi.3.24h 0.9580727 0.9256677 0.9213507 0.9430727 0.9505538 0.9467345 0.9454437
+Tr.3.24h 0.9444290 0.9527667 0.9499401 0.9565629 0.9719036 0.9608144 0.9598494
+Ve.3.24h 0.9313862 0.9505941 0.9472943 0.9548230 0.9632672 0.9606691 0.9585284
+Da.4.3h  0.9025457 0.9048838 0.9012317 0.9406310 0.9428199 0.9447516 0.9372826
+Do.4.3h  0.9108193 0.9124155 0.9102824 0.9444897 0.9502406 0.9499720 0.9440547
+Ep.4.3h  0.9099186 0.9109100 0.9090935 0.9429002 0.9463699 0.9489679 0.9420399
+Mi.4.3h  0.9147610 0.9147204 0.9110490 0.9439523 0.9490868 0.9488666 0.9455019
+Tr.4.3h  0.9123954 0.9159884 0.9122849 0.9400416 0.9499515 0.9467285 0.9407909
+Ve.4.3h  0.9097498 0.9107537 0.9061023 0.9348259 0.9466553 0.9405619 0.9353934
+Da.4.24h 0.8642900 0.8233832 0.8150411 0.8593784 0.8603697 0.8618314 0.8552497
+Do.4.24h 0.8623202 0.8207942 0.8113844 0.8568135 0.8626126 0.8596145 0.8515994
+Ep.4.24h 0.8609720 0.8216637 0.8151419 0.8531568 0.8550235 0.8602036 0.8532863
+Mi.4.24h 0.9242806 0.8915539 0.8845496 0.9171808 0.9280590 0.9222878 0.9171286
+Tr.4.24h 0.9155746 0.9198187 0.9120150 0.9404097 0.9498697 0.9465714 0.9391870
+Ve.4.24h 0.9073627 0.9094493 0.9043524 0.9320432 0.9443321 0.9359995 0.9302318
+Da.5.3h  0.9228157 0.9275561 0.9198757 0.9482972 0.9358360 0.9472278 0.9424501
+Do.5.3h  0.9303152 0.9330177 0.9237426 0.9398338 0.9512530 0.9419778 0.9376814
+Ep.5.3h  0.9270951 0.9330459 0.9245882 0.9462035 0.9363548 0.9478354 0.9435996
+Mi.5.3h  0.9300098 0.9344930 0.9274742 0.9463984 0.9365860 0.9460325 0.9472219
+Tr.5.3h  0.9261508 0.9363464 0.9334849 0.9362011 0.9310996 0.9404525 0.9350667
+Ve.5.3h  0.9178207 0.9259452 0.9217456 0.9251729 0.9259087 0.9299461 0.9221300
+Da.5.24h 0.8802357 0.8450832 0.8418194 0.8653549 0.8624283 0.8647301 0.8580008
+Do.5.24h 0.8981966 0.8590910 0.8553006 0.8728755 0.8712405 0.8760745 0.8705455
+Ep.5.24h 0.9101047 0.8679059 0.8567502 0.8838980 0.8905454 0.8837907 0.8795592
+Mi.5.24h 0.9398966 0.9070190 0.8951939 0.9094269 0.9185063 0.9136078 0.9098337
+Tr.5.24h 0.9280635 0.9452214 0.9310607 0.9335422 0.9403740 0.9377271 0.9344148
+Ve.5.24h 0.9257563 0.9400059 0.9270453 0.9303001 0.9423690 0.9330383 0.9292742
+Da.6.3h  0.9284145 0.9358771 0.9361519 0.9557381 0.9519342 0.9590234 0.9557557
+Do.6.3h  0.9272572 0.9374282 0.9356307 0.9498276 0.9540471 0.9550412 0.9517904
+Ep.6.3h  0.9230838 0.9327742 0.9300138 0.9448233 0.9545895 0.9514469 0.9472243
+Mi.6.3h  0.9268302 0.9336252 0.9335234 0.9517162 0.9504321 0.9540049 0.9544246
+Tr.6.3h  0.9277930 0.9393935 0.9387152 0.9516417 0.9519361 0.9573729 0.9545789
+Ve.6.3h  0.9251535 0.9346754 0.9350717 0.9489812 0.9511736 0.9533672 0.9506932
+Da.6.24h 0.8947999 0.8545366 0.8487196 0.8804099 0.8812579 0.8812495 0.8774172
+Do.6.24h 0.9211467 0.8879782 0.8868250 0.9030382 0.9104198 0.9094570 0.9068410
+Ep.6.24h 0.9210295 0.8880871 0.8880177 0.9111267 0.9094608 0.9139480 0.9124990
+Mi.6.24h 0.9445596 0.9189094 0.9184895 0.9328823 0.9336674 0.9366198 0.9357577
+Tr.6.24h 0.9175878 0.9322201 0.9268185 0.9379919 0.9440045 0.9424418 0.9391237
+Ve.6.24h 0.9259933 0.9379377 0.9397354 0.9496691 0.9476678 0.9548709 0.9506285
+           Tr.3.3h   Ve.3.3h  Da.3.24h  Do.3.24h  Ep.3.24h  Mi.3.24h  Tr.3.24h
+Da.1.3h  0.9310105 0.9281711 0.8739904 0.8616160 0.8567431 0.9245509 0.9269675
+Do.1.3h  0.9333273 0.9229720 0.8701387 0.8600436 0.8552229 0.9230034 0.9281541
+Ep.1.3h  0.9336036 0.9254536 0.8750195 0.8600780 0.8592945 0.9251028 0.9273675
+Mi.1.3h  0.9329442 0.9235198 0.8722760 0.8586000 0.8563004 0.9264555 0.9273672
+Tr.1.3h  0.9308929 0.9210853 0.8627761 0.8506553 0.8472015 0.9211812 0.9270419
+Ve.1.3h  0.9325504 0.9205402 0.8636353 0.8541401 0.8476827 0.9214072 0.9288847
+Da.1.24h 0.8226232 0.8135663 0.9301956 0.9194606 0.9291292 0.8631471 0.8156204
+Do.1.24h 0.7891081 0.7796093 0.8776849 0.8708386 0.8742969 0.8270067 0.7816226
+Ep.1.24h 0.8230688 0.8120775 0.9362267 0.9262910 0.9412060 0.8658812 0.8144762
+Mi.1.24h 0.8964122 0.8854542 0.9001429 0.8832987 0.8815531 0.9310940 0.8933662
+Tr.1.24h 0.9302259 0.9202094 0.8614155 0.8471508 0.8460977 0.9213687 0.9286039
+Ve.1.24h 0.9292053 0.9169697 0.8582084 0.8470185 0.8418408 0.9183113 0.9280436
+Da.2.3h  0.9432514 0.9443037 0.8454752 0.8456526 0.8334370 0.9185237 0.9436753
+Do.2.3h  0.9493347 0.9463338 0.8445506 0.8488116 0.8344009 0.9217908 0.9476406
+Ep.2.3h  0.9492438 0.9481883 0.8505629 0.8487769 0.8425422 0.9231606 0.9440162
+Mi.2.3h  0.9506362 0.9486133 0.8537097 0.8526038 0.8429572 0.9263459 0.9467760
+Tr.2.3h  0.9461725 0.9446488 0.8397213 0.8422465 0.8308222 0.9195926 0.9446293
+Ve.2.3h  0.9562970 0.9511823 0.8428792 0.8463828 0.8315071 0.9256289 0.9563489
+Da.2.24h 0.8519013 0.8482484 0.9447768 0.9455021 0.9537477 0.8891174 0.8465755
+Do.2.24h 0.8397426 0.8284335 0.9226031 0.9299424 0.9392398 0.8677430 0.8327570
+Ep.2.24h 0.8451512 0.8436845 0.8447778 0.8478318 0.8469197 0.8469894 0.8399806
+Mi.2.24h 0.9420835 0.9396605 0.8883486 0.8825751 0.8703758 0.9580727 0.9444290
+Tr.2.24h 0.9481229 0.9504871 0.8428194 0.8425593 0.8311032 0.9256677 0.9527667
+Ve.2.24h 0.9426355 0.9482731 0.8349778 0.8393845 0.8202219 0.9213507 0.9499401
+Da.3.3h  0.9606716 0.9742022 0.8745498 0.8703317 0.8624665 0.9430727 0.9565629
+Do.3.3h  0.9783721 0.9662597 0.8760563 0.8724196 0.8641284 0.9505538 0.9719036
+Ep.3.3h  0.9650841 0.9769231 0.8773763 0.8703292 0.8635483 0.9467345 0.9608144
+Mi.3.3h  0.9634194 0.9747965 0.8718519 0.8691354 0.8585566 0.9454437 0.9598494
+Tr.3.3h  1.0000000 0.9726815 0.8734405 0.8697386 0.8607974 0.9553915 0.9790549
+Ve.3.3h  0.9726815 1.0000000 0.8675675 0.8645082 0.8542979 0.9504338 0.9695546
+Da.3.24h 0.8734405 0.8675675 1.0000000 0.9676162 0.9695606 0.9206502 0.8661466
+Do.3.24h 0.8697386 0.8645082 0.9676162 1.0000000 0.9701005 0.9129585 0.8675990
+Ep.3.24h 0.8607974 0.8542979 0.9695606 0.9701005 1.0000000 0.9022657 0.8515367
+Mi.3.24h 0.9553915 0.9504338 0.9206502 0.9129585 0.9022657 1.0000000 0.9542995
+Tr.3.24h 0.9790549 0.9695546 0.8661466 0.8675990 0.8515367 0.9542995 1.0000000
+Ve.3.24h 0.9690983 0.9671222 0.8508359 0.8538559 0.8404625 0.9375544 0.9712099
+Da.4.3h  0.9416363 0.9364279 0.8656141 0.8575428 0.8518785 0.9249333 0.9358367
+Do.4.3h  0.9504530 0.9462675 0.8682374 0.8628247 0.8530217 0.9322771 0.9463612
+Ep.4.3h  0.9460012 0.9421350 0.8695336 0.8612442 0.8542916 0.9305213 0.9420747
+Mi.4.3h  0.9509782 0.9471739 0.8721348 0.8643356 0.8587260 0.9360057 0.9456603
+Tr.4.3h  0.9554468 0.9494873 0.8624102 0.8547693 0.8481093 0.9337918 0.9500072
+Ve.4.3h  0.9504746 0.9440535 0.8623976 0.8518979 0.8476940 0.9309793 0.9448421
+Da.4.24h 0.8567555 0.8490869 0.9544104 0.9461110 0.9525639 0.8960787 0.8462980
+Do.4.24h 0.8604954 0.8478063 0.9539178 0.9468758 0.9544238 0.8977888 0.8486795
+Ep.4.24h 0.8535513 0.8469083 0.9498973 0.9437691 0.9495689 0.8937563 0.8447271
+Mi.4.24h 0.9317202 0.9224702 0.9046636 0.8914603 0.8848836 0.9548084 0.9278806
+Tr.4.24h 0.9546916 0.9491411 0.8630958 0.8511829 0.8490306 0.9352622 0.9515430
+Ve.4.24h 0.9475800 0.9391386 0.8597853 0.8510996 0.8449847 0.9303312 0.9451441
+Da.5.3h  0.9321448 0.9396624 0.8717300 0.8606107 0.8581065 0.9235936 0.9278274
+Do.5.3h  0.9502117 0.9401800 0.8772849 0.8677243 0.8646307 0.9342704 0.9428965
+Ep.5.3h  0.9368774 0.9434063 0.8691039 0.8548883 0.8569747 0.9269511 0.9297376
+Mi.5.3h  0.9371499 0.9426560 0.8665900 0.8564612 0.8532354 0.9290230 0.9323651
+Tr.5.3h  0.9387189 0.9431705 0.8532676 0.8459047 0.8374918 0.9242729 0.9371415
+Ve.5.3h  0.9334435 0.9330434 0.8485305 0.8395122 0.8346837 0.9166193 0.9276478
+Da.5.24h 0.8618212 0.8569441 0.9316463 0.9237431 0.9243063 0.8971671 0.8522163
+Do.5.24h 0.8719487 0.8683547 0.9553551 0.9498908 0.9462771 0.9156399 0.8665244
+Ep.5.24h 0.8893987 0.8798044 0.9470549 0.9345525 0.9358476 0.9282627 0.8812129
+Mi.5.24h 0.9219800 0.9141484 0.9088599 0.8929341 0.8943775 0.9502110 0.9165599
+Tr.5.24h 0.9430257 0.9424556 0.8498121 0.8429081 0.8399918 0.9228753 0.9445246
+Ve.5.24h 0.9437529 0.9379176 0.8540418 0.8485911 0.8455858 0.9214518 0.9440509
+Da.6.3h  0.9513114 0.9545141 0.8701109 0.8653734 0.8558929 0.9351703 0.9505835
+Do.6.3h  0.9539875 0.9559460 0.8619189 0.8585999 0.8470857 0.9339508 0.9553979
+Ep.6.3h  0.9552190 0.9500723 0.8641699 0.8629421 0.8508868 0.9327204 0.9550118
+Mi.6.3h  0.9508483 0.9545701 0.8648663 0.8611292 0.8506788 0.9345278 0.9507202
+Tr.6.3h  0.9570309 0.9632214 0.8549520 0.8525929 0.8412836 0.9344653 0.9580823
+Ve.6.3h  0.9558454 0.9579041 0.8551449 0.8507649 0.8404771 0.9345760 0.9556189
+Da.6.24h 0.8787789 0.8736104 0.9604804 0.9518485 0.9520654 0.9191496 0.8724314
+Do.6.24h 0.9145399 0.9070158 0.9374232 0.9339138 0.9222519 0.9424562 0.9108917
+Ep.6.24h 0.9113835 0.9104108 0.9334199 0.9295633 0.9169379 0.9419878 0.9091810
+Mi.6.24h 0.9383897 0.9409337 0.8978898 0.8925991 0.8769434 0.9604872 0.9410499
+Tr.6.24h 0.9473078 0.9476530 0.8467667 0.8496115 0.8366218 0.9248102 0.9526619
+Ve.6.24h 0.9535113 0.9580342 0.8546983 0.8535577 0.8412829 0.9338696 0.9550625
+          Ve.3.24h   Da.4.3h   Do.4.3h   Ep.4.3h   Mi.4.3h   Tr.4.3h   Ve.4.3h
+Da.1.3h  0.9142432 0.9652104 0.9643503 0.9653609 0.9609100 0.9588647 0.9557574
+Do.1.3h  0.9148495 0.9615603 0.9649784 0.9641171 0.9625702 0.9637644 0.9625032
+Ep.1.3h  0.9145529 0.9646649 0.9650904 0.9664620 0.9629950 0.9631052 0.9611523
+Mi.1.3h  0.9134950 0.9606712 0.9625998 0.9625394 0.9633040 0.9623286 0.9610639
+Tr.1.3h  0.9122088 0.9533052 0.9578774 0.9572996 0.9585662 0.9620751 0.9610084
+Ve.1.3h  0.9126111 0.9546199 0.9604689 0.9576933 0.9601196 0.9630988 0.9621090
+Da.1.24h 0.7978031 0.8631918 0.8592083 0.8625445 0.8637672 0.8522685 0.8553049
+Do.1.24h 0.7641135 0.8202735 0.8160134 0.8201682 0.8192649 0.8101134 0.8124077
+Ep.1.24h 0.7954595 0.8554897 0.8521486 0.8560043 0.8574806 0.8479038 0.8503181
+Mi.1.24h 0.8683180 0.9245745 0.9265330 0.9271063 0.9307158 0.9281268 0.9301602
+Tr.1.24h 0.9120092 0.9507693 0.9531080 0.9534200 0.9551968 0.9595347 0.9595112
+Ve.1.24h 0.9107172 0.9510543 0.9538980 0.9521434 0.9542131 0.9581831 0.9579539
+Da.2.3h  0.9448795 0.9169493 0.9179944 0.9189952 0.9158224 0.9128340 0.9082988
+Do.2.3h  0.9456026 0.9133161 0.9213886 0.9194670 0.9210439 0.9203900 0.9161504
+Ep.2.3h  0.9441703 0.9230977 0.9268824 0.9260613 0.9262142 0.9249273 0.9208712
+Mi.2.3h  0.9441494 0.9187399 0.9226853 0.9232669 0.9244977 0.9216335 0.9177452
+Tr.2.3h  0.9438895 0.9054593 0.9145164 0.9128256 0.9161758 0.9171252 0.9123657
+Ve.2.3h  0.9541408 0.9129207 0.9227238 0.9201298 0.9233260 0.9258615 0.9216124
+Da.2.24h 0.8355915 0.8515114 0.8510367 0.8543849 0.8573056 0.8447307 0.8452954
+Do.2.24h 0.8219614 0.8338594 0.8313855 0.8338779 0.8365004 0.8251959 0.8258670
+Ep.2.24h 0.8375679 0.8494456 0.8404159 0.8459510 0.8420831 0.8297657 0.8276904
+Mi.2.24h 0.9313862 0.9025457 0.9108193 0.9099186 0.9147610 0.9123954 0.9097498
+Tr.2.24h 0.9505941 0.9048838 0.9124155 0.9109100 0.9147204 0.9159884 0.9107537
+Ve.2.24h 0.9472943 0.9012317 0.9102824 0.9090935 0.9110490 0.9122849 0.9061023
+Da.3.3h  0.9548230 0.9406310 0.9444897 0.9429002 0.9439523 0.9400416 0.9348259
+Do.3.3h  0.9632672 0.9428199 0.9502406 0.9463699 0.9490868 0.9499515 0.9466553
+Ep.3.3h  0.9606691 0.9447516 0.9499720 0.9489679 0.9488666 0.9467285 0.9405619
+Mi.3.3h  0.9585284 0.9372826 0.9440547 0.9420399 0.9455019 0.9407909 0.9353934
+Tr.3.3h  0.9690983 0.9416363 0.9504530 0.9460012 0.9509782 0.9554468 0.9504746
+Ve.3.3h  0.9671222 0.9364279 0.9462675 0.9421350 0.9471739 0.9494873 0.9440535
+Da.3.24h 0.8508359 0.8656141 0.8682374 0.8695336 0.8721348 0.8624102 0.8623976
+Do.3.24h 0.8538559 0.8575428 0.8628247 0.8612442 0.8643356 0.8547693 0.8518979
+Ep.3.24h 0.8404625 0.8518785 0.8530217 0.8542916 0.8587260 0.8481093 0.8476940
+Mi.3.24h 0.9375544 0.9249333 0.9322771 0.9305213 0.9360057 0.9337918 0.9309793
+Tr.3.24h 0.9712099 0.9358367 0.9463612 0.9420747 0.9456603 0.9500072 0.9448421
+Ve.3.24h 1.0000000 0.9262788 0.9365652 0.9311024 0.9343179 0.9392469 0.9335673
+Da.4.3h  0.9262788 1.0000000 0.9808518 0.9814203 0.9781217 0.9766880 0.9739218
+Do.4.3h  0.9365652 0.9808518 1.0000000 0.9845110 0.9835978 0.9852957 0.9803580
+Ep.4.3h  0.9311024 0.9814203 0.9845110 1.0000000 0.9821430 0.9818876 0.9779398
+Mi.4.3h  0.9343179 0.9781217 0.9835978 0.9821430 1.0000000 0.9840320 0.9809871
+Tr.4.3h  0.9392469 0.9766880 0.9852957 0.9818876 0.9840320 1.0000000 0.9867573
+Ve.4.3h  0.9335673 0.9739218 0.9803580 0.9779398 0.9809871 0.9867573 1.0000000
+Da.4.24h 0.8313825 0.8909044 0.8918585 0.8928831 0.8953126 0.8860799 0.8850283
+Do.4.24h 0.8316092 0.8905925 0.8922314 0.8924007 0.8953355 0.8888215 0.8876681
+Ep.4.24h 0.8281481 0.8904014 0.8921083 0.8934275 0.8953730 0.8864499 0.8833698
+Mi.4.24h 0.9058957 0.9535085 0.9598960 0.9576208 0.9624663 0.9632516 0.9599611
+Tr.4.24h 0.9410597 0.9719181 0.9785055 0.9762340 0.9792298 0.9853978 0.9825936
+Ve.4.24h 0.9323641 0.9686359 0.9744448 0.9735285 0.9753743 0.9805544 0.9775643
+Da.5.3h  0.9196602 0.9298320 0.9297389 0.9322323 0.9311662 0.9251773 0.9233914
+Do.5.3h  0.9319616 0.9315938 0.9354134 0.9356382 0.9365863 0.9350333 0.9338844
+Ep.5.3h  0.9211838 0.9261831 0.9294610 0.9302751 0.9319579 0.9283939 0.9260080
+Mi.5.3h  0.9235836 0.9274573 0.9301927 0.9309759 0.9345472 0.9279726 0.9256351
+Tr.5.3h  0.9263197 0.9119609 0.9182121 0.9178097 0.9210501 0.9218268 0.9173557
+Ve.5.3h  0.9189477 0.9097962 0.9147709 0.9137511 0.9172057 0.9197768 0.9177904
+Da.5.24h 0.8376521 0.8538268 0.8551674 0.8571386 0.8591629 0.8502682 0.8520295
+Do.5.24h 0.8496427 0.8631940 0.8669829 0.8688646 0.8709386 0.8614195 0.8604740
+Ep.5.24h 0.8649322 0.8771429 0.8807072 0.8805630 0.8852534 0.8792379 0.8803820
+Mi.5.24h 0.9022243 0.9062831 0.9122567 0.9108887 0.9170427 0.9145889 0.9144789
+Tr.5.24h 0.9459633 0.9160605 0.9210579 0.9202987 0.9235001 0.9267644 0.9243517
+Ve.5.24h 0.9453635 0.9198813 0.9249312 0.9236802 0.9266499 0.9308786 0.9289531
+Da.6.3h  0.9432901 0.9623014 0.9658456 0.9663264 0.9636879 0.9616502 0.9571330
+Do.6.3h  0.9497187 0.9533293 0.9617866 0.9604958 0.9603695 0.9620895 0.9572930
+Ep.6.3h  0.9503082 0.9559766 0.9635270 0.9610347 0.9607597 0.9630300 0.9577612
+Mi.6.3h  0.9424001 0.9569386 0.9637693 0.9629552 0.9654311 0.9634194 0.9587618
+Tr.6.3h  0.9515675 0.9528389 0.9634865 0.9605551 0.9627351 0.9672528 0.9605149
+Ve.6.3h  0.9476778 0.9544795 0.9634370 0.9610375 0.9631553 0.9667625 0.9627477
+Da.6.24h 0.8570419 0.8879780 0.8906466 0.8925028 0.8951565 0.8866752 0.8861563
+Do.6.24h 0.8962989 0.9129494 0.9217208 0.9190624 0.9225841 0.9193438 0.9145806
+Ep.6.24h 0.8913668 0.9177314 0.9248859 0.9236646 0.9265042 0.9205284 0.9178257
+Mi.6.24h 0.9224016 0.9349239 0.9443170 0.9417809 0.9463184 0.9450070 0.9401703
+Tr.6.24h 0.9557961 0.9338249 0.9429781 0.9380089 0.9403578 0.9466275 0.9404918
+Ve.6.24h 0.9509475 0.9482949 0.9572719 0.9539978 0.9562418 0.9606959 0.9545815
+          Da.4.24h  Do.4.24h  Ep.4.24h  Mi.4.24h  Tr.4.24h  Ve.4.24h   Da.5.3h
+Da.1.3h  0.8888555 0.8898632 0.8907498 0.9470074 0.9581093 0.9526905 0.9251855
+Do.1.3h  0.8886834 0.8927680 0.8884543 0.9530740 0.9624521 0.9599575 0.9169488
+Ep.1.3h  0.8923650 0.8953969 0.8953452 0.9526112 0.9632557 0.9566278 0.9212022
+Mi.1.3h  0.8885716 0.8927534 0.8898975 0.9539310 0.9629274 0.9589479 0.9187003
+Tr.1.3h  0.8787536 0.8829611 0.8790457 0.9500433 0.9635518 0.9596461 0.9090587
+Ve.1.3h  0.8805659 0.8860426 0.8816249 0.9512113 0.9612795 0.9592674 0.9084347
+Da.1.24h 0.9583502 0.9553138 0.9509203 0.8928881 0.8546325 0.8559965 0.8455172
+Do.1.24h 0.8943707 0.8970888 0.8907220 0.8481638 0.8117346 0.8138382 0.8042730
+Ep.1.24h 0.9560115 0.9593159 0.9551319 0.8924841 0.8513759 0.8512190 0.8423694
+Mi.1.24h 0.9166980 0.9213897 0.9142972 0.9642623 0.9319313 0.9315674 0.8915297
+Tr.1.24h 0.8755686 0.8815145 0.8738444 0.9504120 0.9667471 0.9632960 0.9108781
+Ve.1.24h 0.8727480 0.8791922 0.8722747 0.9487939 0.9632483 0.9632266 0.9061182
+Da.2.3h  0.8291460 0.8244627 0.8251954 0.8848970 0.9129507 0.9055668 0.9346167
+Do.2.3h  0.8318428 0.8289532 0.8265801 0.8910710 0.9158161 0.9100031 0.9295403
+Ep.2.3h  0.8416656 0.8385593 0.8371284 0.8963637 0.9224788 0.9141658 0.9376817
+Mi.2.3h  0.8376113 0.8359666 0.8335156 0.8954169 0.9203649 0.9133365 0.9395908
+Tr.2.3h  0.8260662 0.8219882 0.8233201 0.8875448 0.9139382 0.9061954 0.9221783
+Ve.2.3h  0.8270021 0.8248664 0.8234413 0.8947390 0.9231734 0.9169280 0.9274810
+Da.2.24h 0.9410446 0.9335391 0.9362517 0.8725712 0.8436131 0.8410378 0.8705591
+Do.2.24h 0.9205201 0.9168737 0.9121768 0.8512825 0.8238775 0.8219384 0.8550083
+Ep.2.24h 0.8484133 0.8383863 0.8453572 0.8261426 0.8246577 0.8196852 0.8697579
+Mi.2.24h 0.8642900 0.8623202 0.8609720 0.9242806 0.9155746 0.9073627 0.9228157
+Tr.2.24h 0.8233832 0.8207942 0.8216637 0.8915539 0.9198187 0.9094493 0.9275561
+Ve.2.24h 0.8150411 0.8113844 0.8151419 0.8845496 0.9120150 0.9043524 0.9198757
+Da.3.3h  0.8593784 0.8568135 0.8531568 0.9171808 0.9404097 0.9320432 0.9482972
+Do.3.3h  0.8603697 0.8626126 0.8550235 0.9280590 0.9498697 0.9443321 0.9358360
+Ep.3.3h  0.8618314 0.8596145 0.8602036 0.9222878 0.9465714 0.9359995 0.9472278
+Mi.3.3h  0.8552497 0.8515994 0.8532863 0.9171286 0.9391870 0.9302318 0.9424501
+Tr.3.3h  0.8567555 0.8604954 0.8535513 0.9317202 0.9546916 0.9475800 0.9321448
+Ve.3.3h  0.8490869 0.8478063 0.8469083 0.9224702 0.9491411 0.9391386 0.9396624
+Da.3.24h 0.9544104 0.9539178 0.9498973 0.9046636 0.8630958 0.8597853 0.8717300
+Do.3.24h 0.9461110 0.9468758 0.9437691 0.8914603 0.8511829 0.8510996 0.8606107
+Ep.3.24h 0.9525639 0.9544238 0.9495689 0.8848836 0.8490306 0.8449847 0.8581065
+Mi.3.24h 0.8960787 0.8977888 0.8937563 0.9548084 0.9352622 0.9303312 0.9235936
+Tr.3.24h 0.8462980 0.8486795 0.8447271 0.9278806 0.9515430 0.9451441 0.9278274
+Ve.3.24h 0.8313825 0.8316092 0.8281481 0.9058957 0.9410597 0.9323641 0.9196602
+Da.4.3h  0.8909044 0.8905925 0.8904014 0.9535085 0.9719181 0.9686359 0.9298320
+Do.4.3h  0.8918585 0.8922314 0.8921083 0.9598960 0.9785055 0.9744448 0.9297389
+Ep.4.3h  0.8928831 0.8924007 0.8934275 0.9576208 0.9762340 0.9735285 0.9322323
+Mi.4.3h  0.8953126 0.8953355 0.8953730 0.9624663 0.9792298 0.9753743 0.9311662
+Tr.4.3h  0.8860799 0.8888215 0.8864499 0.9632516 0.9853978 0.9805544 0.9251773
+Ve.4.3h  0.8850283 0.8876681 0.8833698 0.9599611 0.9825936 0.9775643 0.9233914
+Da.4.24h 1.0000000 0.9825758 0.9814257 0.9233822 0.8826263 0.8801674 0.8677534
+Do.4.24h 0.9825758 1.0000000 0.9784794 0.9277125 0.8864622 0.8845484 0.8642322
+Ep.4.24h 0.9814257 0.9784794 1.0000000 0.9239208 0.8818611 0.8791049 0.8630201
+Mi.4.24h 0.9233822 0.9277125 0.9239208 1.0000000 0.9632879 0.9605816 0.9116465
+Tr.4.24h 0.8826263 0.8864622 0.8818611 0.9632879 1.0000000 0.9841696 0.9273283
+Ve.4.24h 0.8801674 0.8845484 0.8791049 0.9605816 0.9841696 1.0000000 0.9197103
+Da.5.3h  0.8677534 0.8642322 0.8630201 0.9116465 0.9273283 0.9197103 1.0000000
+Do.5.3h  0.8705007 0.8728096 0.8678853 0.9248046 0.9373094 0.9307327 0.9650565
+Ep.5.3h  0.8643306 0.8618681 0.8620130 0.9142562 0.9306386 0.9198047 0.9723356
+Mi.5.3h  0.8623466 0.8596784 0.8595948 0.9157945 0.9289520 0.9203412 0.9717528
+Tr.5.3h  0.8419393 0.8418757 0.8387362 0.9052425 0.9226275 0.9151239 0.9559939
+Ve.5.3h  0.8411053 0.8449840 0.8351311 0.9031867 0.9198345 0.9131088 0.9479551
+Da.5.24h 0.9210796 0.9222374 0.9131622 0.8842275 0.8524954 0.8510282 0.8912701
+Do.5.24h 0.9416402 0.9418656 0.9388200 0.9013035 0.8618636 0.8595660 0.9002784
+Ep.5.24h 0.9321779 0.9373198 0.9267314 0.9202275 0.8819033 0.8781345 0.9107682
+Mi.5.24h 0.9006656 0.9022655 0.8966314 0.9411567 0.9167138 0.9092061 0.9338877
+Tr.5.24h 0.8388379 0.8400540 0.8349217 0.9069010 0.9355575 0.9244891 0.9530954
+Ve.5.24h 0.8461141 0.8489318 0.8404214 0.9094360 0.9356161 0.9278172 0.9484859
+Da.6.3h  0.8772361 0.8727698 0.8764443 0.9336844 0.9563217 0.9500770 0.9409377
+Do.6.3h  0.8648026 0.8628884 0.8636261 0.9320511 0.9583589 0.9536874 0.9327901
+Ep.6.3h  0.8698920 0.8691907 0.8694241 0.9343270 0.9571687 0.9535413 0.9279505
+Mi.6.3h  0.8732082 0.8698553 0.8725630 0.9357304 0.9572998 0.9529996 0.9364268
+Tr.6.3h  0.8600761 0.8578694 0.8595924 0.9331753 0.9622841 0.9564594 0.9315271
+Ve.6.3h  0.8601592 0.8592926 0.8588233 0.9340499 0.9624066 0.9579247 0.9299057
+Da.6.24h 0.9620683 0.9598673 0.9559787 0.9199268 0.8846248 0.8828708 0.8812780
+Do.6.24h 0.9345763 0.9361657 0.9346807 0.9437077 0.9126086 0.9097703 0.8930055
+Ep.6.24h 0.9343298 0.9335314 0.9357111 0.9448748 0.9154502 0.9145750 0.9009265
+Mi.6.24h 0.8944419 0.8943044 0.8936960 0.9576235 0.9427770 0.9393327 0.9176514
+Tr.6.24h 0.8441093 0.8462306 0.8421687 0.9208149 0.9482093 0.9415586 0.9108645
+Ve.6.24h 0.8578100 0.8570850 0.8554175 0.9314514 0.9581444 0.9536817 0.9271688
+           Do.5.3h   Ep.5.3h   Mi.5.3h   Tr.5.3h   Ve.5.3h  Da.5.24h  Do.5.24h
+Da.1.3h  0.9256423 0.9235453 0.9235694 0.9112021 0.9068814 0.8601425 0.8727576
+Do.1.3h  0.9277729 0.9148518 0.9178789 0.9041599 0.9033397 0.8555858 0.8669491
+Ep.1.3h  0.9294429 0.9227641 0.9218295 0.9072484 0.9043493 0.8564509 0.8720142
+Mi.1.3h  0.9295165 0.9191107 0.9220799 0.9062446 0.9058188 0.8572256 0.8692469
+Tr.1.3h  0.9238239 0.9099688 0.9114808 0.9034204 0.9037313 0.8515660 0.8617188
+Ve.1.3h  0.9240714 0.9094219 0.9128291 0.9030968 0.9047044 0.8524342 0.8623623
+Da.1.24h 0.8470377 0.8340229 0.8355114 0.8138187 0.8162827 0.9003719 0.9147373
+Do.1.24h 0.8093287 0.7962217 0.7974413 0.7828324 0.7852353 0.8584900 0.8682346
+Ep.1.24h 0.8479751 0.8339930 0.8320092 0.8147371 0.8155383 0.9038109 0.9218658
+Mi.1.24h 0.9033772 0.8890403 0.8924288 0.8793167 0.8816718 0.8831014 0.8958821
+Tr.1.24h 0.9250837 0.9106477 0.9104044 0.9062162 0.9058273 0.8522071 0.8608169
+Ve.1.24h 0.9212384 0.9043326 0.9062050 0.9015712 0.9027116 0.8496179 0.8577698
+Da.2.3h  0.9338593 0.9341510 0.9367428 0.9310612 0.9204924 0.8497151 0.8590150
+Do.2.3h  0.9362750 0.9331700 0.9365243 0.9315397 0.9247871 0.8520675 0.8588649
+Ep.2.3h  0.9406960 0.9432972 0.9432117 0.9299433 0.9236402 0.8533626 0.8620280
+Mi.2.3h  0.9420930 0.9423218 0.9452434 0.9428093 0.9366607 0.8682366 0.8698806
+Tr.2.3h  0.9296762 0.9312828 0.9336895 0.9277644 0.9218454 0.8477624 0.8543580
+Ve.2.3h  0.9397909 0.9310277 0.9352239 0.9327352 0.9264562 0.8450885 0.8562606
+Da.2.24h 0.8682807 0.8650496 0.8634318 0.8452076 0.8410655 0.9205625 0.9366743
+Do.2.24h 0.8547143 0.8461416 0.8453640 0.8310601 0.8312172 0.9068049 0.9153713
+Ep.2.24h 0.8551251 0.8544332 0.8582018 0.8343009 0.8303590 0.8378232 0.8436964
+Mi.2.24h 0.9303152 0.9270951 0.9300098 0.9261508 0.9178207 0.8802357 0.8981966
+Tr.2.24h 0.9330177 0.9330459 0.9344930 0.9363464 0.9259452 0.8450832 0.8590910
+Ve.2.24h 0.9237426 0.9245882 0.9274742 0.9334849 0.9217456 0.8418194 0.8553006
+Da.3.3h  0.9398338 0.9462035 0.9463984 0.9362011 0.9251729 0.8653549 0.8728755
+Do.3.3h  0.9512530 0.9363548 0.9365860 0.9310996 0.9259087 0.8624283 0.8712405
+Ep.3.3h  0.9419778 0.9478354 0.9460325 0.9404525 0.9299461 0.8647301 0.8760745
+Mi.3.3h  0.9376814 0.9435996 0.9472219 0.9350667 0.9221300 0.8580008 0.8705455
+Tr.3.3h  0.9502117 0.9368774 0.9371499 0.9387189 0.9334435 0.8618212 0.8719487
+Ve.3.3h  0.9401800 0.9434063 0.9426560 0.9431705 0.9330434 0.8569441 0.8683547
+Da.3.24h 0.8772849 0.8691039 0.8665900 0.8532676 0.8485305 0.9316463 0.9553551
+Do.3.24h 0.8677243 0.8548883 0.8564612 0.8459047 0.8395122 0.9237431 0.9498908
+Ep.3.24h 0.8646307 0.8569747 0.8532354 0.8374918 0.8346837 0.9243063 0.9462771
+Mi.3.24h 0.9342704 0.9269511 0.9290230 0.9242729 0.9166193 0.8971671 0.9156399
+Tr.3.24h 0.9428965 0.9297376 0.9323651 0.9371415 0.9276478 0.8522163 0.8665244
+Ve.3.24h 0.9319616 0.9211838 0.9235836 0.9263197 0.9189477 0.8376521 0.8496427
+Da.4.3h  0.9315938 0.9261831 0.9274573 0.9119609 0.9097962 0.8538268 0.8631940
+Do.4.3h  0.9354134 0.9294610 0.9301927 0.9182121 0.9147709 0.8551674 0.8669829
+Ep.4.3h  0.9356382 0.9302751 0.9309759 0.9178097 0.9137511 0.8571386 0.8688646
+Mi.4.3h  0.9365863 0.9319579 0.9345472 0.9210501 0.9172057 0.8591629 0.8709386
+Tr.4.3h  0.9350333 0.9283939 0.9279726 0.9218268 0.9197768 0.8502682 0.8614195
+Ve.4.3h  0.9338844 0.9260080 0.9256351 0.9173557 0.9177904 0.8520295 0.8604740
+Da.4.24h 0.8705007 0.8643306 0.8623466 0.8419393 0.8411053 0.9210796 0.9416402
+Do.4.24h 0.8728096 0.8618681 0.8596784 0.8418757 0.8449840 0.9222374 0.9418656
+Ep.4.24h 0.8678853 0.8620130 0.8595948 0.8387362 0.8351311 0.9131622 0.9388200
+Mi.4.24h 0.9248046 0.9142562 0.9157945 0.9052425 0.9031867 0.8842275 0.9013035
+Tr.4.24h 0.9373094 0.9306386 0.9289520 0.9226275 0.9198345 0.8524954 0.8618636
+Ve.4.24h 0.9307327 0.9198047 0.9203412 0.9151239 0.9131088 0.8510282 0.8595660
+Da.5.3h  0.9650565 0.9723356 0.9717528 0.9559939 0.9479551 0.8912701 0.9002784
+Do.5.3h  1.0000000 0.9693790 0.9661696 0.9585591 0.9520570 0.8925651 0.9068815
+Ep.5.3h  0.9693790 1.0000000 0.9753951 0.9617784 0.9523541 0.8894645 0.9013976
+Mi.5.3h  0.9661696 0.9753951 1.0000000 0.9596510 0.9507013 0.8871085 0.8977303
+Tr.5.3h  0.9585591 0.9617784 0.9596510 1.0000000 0.9638562 0.8879325 0.8943097
+Ve.5.3h  0.9520570 0.9523541 0.9507013 0.9638562 1.0000000 0.8946409 0.8859601
+Da.5.24h 0.8925651 0.8894645 0.8871085 0.8879325 0.8946409 1.0000000 0.9580919
+Do.5.24h 0.9068815 0.9013976 0.8977303 0.8943097 0.8859601 0.9580919 1.0000000
+Ep.5.24h 0.9243419 0.9125783 0.9096514 0.8987945 0.8967355 0.9459767 0.9696449
+Mi.5.24h 0.9496626 0.9407518 0.9392576 0.9301819 0.9256960 0.9116478 0.9312937
+Tr.5.24h 0.9651886 0.9566272 0.9561181 0.9538274 0.9450849 0.8649983 0.8796835
+Ve.5.24h 0.9647144 0.9506057 0.9518141 0.9501689 0.9464738 0.8715633 0.8820625
+Da.6.3h  0.9373945 0.9390373 0.9407801 0.9293485 0.9207784 0.8604177 0.8733651
+Do.6.3h  0.9378199 0.9326288 0.9343186 0.9297346 0.9206431 0.8512567 0.8659833
+Ep.6.3h  0.9375098 0.9269979 0.9291656 0.9242408 0.9173349 0.8514789 0.8674289
+Mi.6.3h  0.9360418 0.9358858 0.9405758 0.9285997 0.9203421 0.8562558 0.8692824
+Tr.6.3h  0.9333678 0.9324236 0.9348023 0.9332263 0.9234733 0.8453685 0.8601925
+Ve.6.3h  0.9347465 0.9327287 0.9341111 0.9320686 0.9244895 0.8509493 0.8613065
+Da.6.24h 0.8855047 0.8792818 0.8778932 0.8650346 0.8604718 0.9333631 0.9525484
+Do.6.24h 0.9065466 0.8963376 0.8969004 0.8886396 0.8823756 0.9084719 0.9363738
+Ep.6.24h 0.9053143 0.9029686 0.9034979 0.8923638 0.8849985 0.9119691 0.9359261
+Mi.6.24h 0.9225002 0.9203544 0.9238385 0.9188791 0.9095238 0.8829505 0.9020097
+Tr.6.24h 0.9232730 0.9078939 0.9131331 0.9150592 0.9067405 0.8335405 0.8482378
+Ve.6.24h 0.9299162 0.9290436 0.9312004 0.9337569 0.9259216 0.8534417 0.8635234
+          Ep.5.24h  Mi.5.24h  Tr.5.24h  Ve.5.24h   Da.6.3h   Do.6.3h   Ep.6.3h
+Da.1.3h  0.8823364 0.9083892 0.9096053 0.9108663 0.9528214 0.9444414 0.9453039
+Do.1.3h  0.8863643 0.9125159 0.9137166 0.9199656 0.9451679 0.9436710 0.9472987
+Ep.1.3h  0.8860914 0.9143077 0.9135395 0.9152889 0.9509857 0.9439061 0.9470185
+Mi.1.3h  0.8880706 0.9163623 0.9152429 0.9190236 0.9453242 0.9421237 0.9452692
+Tr.1.3h  0.8810528 0.9113003 0.9142400 0.9193266 0.9380025 0.9395025 0.9414110
+Ve.1.3h  0.8823772 0.9098228 0.9104863 0.9187054 0.9388753 0.9400808 0.9421992
+Da.1.24h 0.9084563 0.8751595 0.8164823 0.8276510 0.8453272 0.8360335 0.8399094
+Do.1.24h 0.8644601 0.8342728 0.7804022 0.7910340 0.8033875 0.7959925 0.8000445
+Ep.1.24h 0.9180848 0.8796271 0.8180976 0.8281473 0.8398160 0.8314021 0.8357717
+Mi.1.24h 0.9160977 0.9308282 0.8832136 0.8908573 0.9045948 0.9041340 0.9059984
+Tr.1.24h 0.8829341 0.9125070 0.9191880 0.9239764 0.9332255 0.9371179 0.9360575
+Ve.1.24h 0.8788683 0.9061909 0.9120229 0.9187413 0.9305668 0.9345140 0.9361974
+Da.2.3h  0.8641728 0.8971613 0.9323852 0.9295813 0.9425640 0.9349955 0.9328630
+Do.2.3h  0.8688877 0.9030860 0.9328277 0.9344744 0.9408797 0.9387362 0.9360773
+Ep.2.3h  0.8738472 0.9084571 0.9361241 0.9340655 0.9448931 0.9374478 0.9360645
+Mi.2.3h  0.8761809 0.9090897 0.9368132 0.9352518 0.9444501 0.9390938 0.9366685
+Tr.2.3h  0.8628307 0.9015189 0.9315384 0.9300916 0.9373739 0.9337673 0.9297198
+Ve.2.3h  0.8681258 0.9065428 0.9435850 0.9437356 0.9398553 0.9437370 0.9404717
+Da.2.24h 0.9190544 0.8924338 0.8451503 0.8512957 0.8675045 0.8535812 0.8548138
+Do.2.24h 0.9004744 0.8721566 0.8295416 0.8377178 0.8469662 0.8334325 0.8366993
+Ep.2.24h 0.8360639 0.8404452 0.8357042 0.8386796 0.8671174 0.8442316 0.8465603
+Mi.2.24h 0.9101047 0.9398966 0.9280635 0.9257563 0.9284145 0.9272572 0.9230838
+Tr.2.24h 0.8679059 0.9070190 0.9452214 0.9400059 0.9358771 0.9374282 0.9327742
+Ve.2.24h 0.8567502 0.8951939 0.9310607 0.9270453 0.9361519 0.9356307 0.9300138
+Da.3.3h  0.8838980 0.9094269 0.9335422 0.9303001 0.9557381 0.9498276 0.9448233
+Do.3.3h  0.8905454 0.9185063 0.9403740 0.9423690 0.9519342 0.9540471 0.9545895
+Ep.3.3h  0.8837907 0.9136078 0.9377271 0.9330383 0.9590234 0.9550412 0.9514469
+Mi.3.3h  0.8795592 0.9098337 0.9344148 0.9292742 0.9557557 0.9517904 0.9472243
+Tr.3.3h  0.8893987 0.9219800 0.9430257 0.9437529 0.9513114 0.9539875 0.9552190
+Ve.3.3h  0.8798044 0.9141484 0.9424556 0.9379176 0.9545141 0.9559460 0.9500723
+Da.3.24h 0.9470549 0.9088599 0.8498121 0.8540418 0.8701109 0.8619189 0.8641699
+Do.3.24h 0.9345525 0.8929341 0.8429081 0.8485911 0.8653734 0.8585999 0.8629421
+Ep.3.24h 0.9358476 0.8943775 0.8399918 0.8455858 0.8558929 0.8470857 0.8508868
+Mi.3.24h 0.9282627 0.9502110 0.9228753 0.9214518 0.9351703 0.9339508 0.9327204
+Tr.3.24h 0.8812129 0.9165599 0.9445246 0.9440509 0.9505835 0.9553979 0.9550118
+Ve.3.24h 0.8649322 0.9022243 0.9459633 0.9453635 0.9432901 0.9497187 0.9503082
+Da.4.3h  0.8771429 0.9062831 0.9160605 0.9198813 0.9623014 0.9533293 0.9559766
+Do.4.3h  0.8807072 0.9122567 0.9210579 0.9249312 0.9658456 0.9617866 0.9635270
+Ep.4.3h  0.8805630 0.9108887 0.9202987 0.9236802 0.9663264 0.9604958 0.9610347
+Mi.4.3h  0.8852534 0.9170427 0.9235001 0.9266499 0.9636879 0.9603695 0.9607597
+Tr.4.3h  0.8792379 0.9145889 0.9267644 0.9308786 0.9616502 0.9620895 0.9630300
+Ve.4.3h  0.8803820 0.9144789 0.9243517 0.9289531 0.9571330 0.9572930 0.9577612
+Da.4.24h 0.9321779 0.9006656 0.8388379 0.8461141 0.8772361 0.8648026 0.8698920
+Do.4.24h 0.9373198 0.9022655 0.8400540 0.8489318 0.8727698 0.8628884 0.8691907
+Ep.4.24h 0.9267314 0.8966314 0.8349217 0.8404214 0.8764443 0.8636261 0.8694241
+Mi.4.24h 0.9202275 0.9411567 0.9069010 0.9094360 0.9336844 0.9320511 0.9343270
+Tr.4.24h 0.8819033 0.9167138 0.9355575 0.9356161 0.9563217 0.9583589 0.9571687
+Ve.4.24h 0.8781345 0.9092061 0.9244891 0.9278172 0.9500770 0.9536874 0.9535413
+Da.5.3h  0.9107682 0.9338877 0.9530954 0.9484859 0.9409377 0.9327901 0.9279505
+Do.5.3h  0.9243419 0.9496626 0.9651886 0.9647144 0.9373945 0.9378199 0.9375098
+Ep.5.3h  0.9125783 0.9407518 0.9566272 0.9506057 0.9390373 0.9326288 0.9269979
+Mi.5.3h  0.9096514 0.9392576 0.9561181 0.9518141 0.9407801 0.9343186 0.9291656
+Tr.5.3h  0.8987945 0.9301819 0.9538274 0.9501689 0.9293485 0.9297346 0.9242408
+Ve.5.3h  0.8967355 0.9256960 0.9450849 0.9464738 0.9207784 0.9206431 0.9173349
+Da.5.24h 0.9459767 0.9116478 0.8649983 0.8715633 0.8604177 0.8512567 0.8514789
+Do.5.24h 0.9696449 0.9312937 0.8796835 0.8820625 0.8733651 0.8659833 0.8674289
+Ep.5.24h 1.0000000 0.9517809 0.9006070 0.9061531 0.8798706 0.8764147 0.8790893
+Mi.5.24h 0.9517809 1.0000000 0.9382894 0.9379439 0.9122563 0.9103209 0.9113306
+Tr.5.24h 0.9006070 0.9382894 1.0000000 0.9761087 0.9280009 0.9355447 0.9329795
+Ve.5.24h 0.9061531 0.9379439 0.9761087 1.0000000 0.9299330 0.9373599 0.9369506
+Da.6.3h  0.8798706 0.9122563 0.9280009 0.9299330 1.0000000 0.9795964 0.9778300
+Do.6.3h  0.8764147 0.9103209 0.9355447 0.9373599 0.9795964 1.0000000 0.9790934
+Ep.6.3h  0.8790893 0.9113306 0.9329795 0.9369506 0.9778300 0.9790934 1.0000000
+Mi.6.3h  0.8788719 0.9136739 0.9290321 0.9307787 0.9818846 0.9770801 0.9751692
+Tr.6.3h  0.8703621 0.9092463 0.9343920 0.9350793 0.9811929 0.9821955 0.9786851
+Ve.6.3h  0.8722588 0.9087970 0.9317121 0.9333820 0.9779134 0.9780371 0.9748008
+Da.6.24h 0.9464180 0.9146991 0.8605729 0.8670814 0.9024818 0.8937170 0.8947411
+Do.6.24h 0.9404887 0.9273363 0.8855386 0.8919874 0.9298106 0.9253061 0.9298993
+Ep.6.24h 0.9357481 0.9240327 0.8834784 0.8874901 0.9332824 0.9261162 0.9276542
+Mi.6.24h 0.9110122 0.9336997 0.9118095 0.9139568 0.9552726 0.9537045 0.9497439
+Tr.6.24h 0.8644808 0.9010077 0.9371893 0.9398606 0.9533016 0.9635534 0.9635290
+Ve.6.24h 0.8719250 0.9073219 0.9322496 0.9333062 0.9698040 0.9714811 0.9687503
+           Mi.6.3h   Tr.6.3h   Ve.6.3h  Da.6.24h  Do.6.24h  Ep.6.24h  Mi.6.24h
+Da.1.3h  0.9463978 0.9422835 0.9440705 0.8925134 0.9159101 0.9199926 0.9342154
+Do.1.3h  0.9439405 0.9405363 0.9423336 0.8903097 0.9158751 0.9166706 0.9321716
+Ep.1.3h  0.9450420 0.9414746 0.9424742 0.8933761 0.9178040 0.9184108 0.9322613
+Mi.1.3h  0.9451257 0.9400737 0.9427719 0.8916997 0.9154038 0.9168236 0.9326039
+Tr.1.3h  0.9388050 0.9391404 0.9417382 0.8841079 0.9086894 0.9097779 0.9304202
+Ve.1.3h  0.9406922 0.9386595 0.9419609 0.8844630 0.9125617 0.9129955 0.9314719
+Da.1.24h 0.8429570 0.8276872 0.8306427 0.9367602 0.8969984 0.9008743 0.8642544
+Do.1.24h 0.8018434 0.7883463 0.7914024 0.8797782 0.8543680 0.8544273 0.8235460
+Ep.1.24h 0.8367056 0.8229473 0.8248255 0.9368384 0.9004142 0.9003598 0.8608726
+Mi.1.24h 0.9082505 0.9017494 0.9047126 0.9153958 0.9231196 0.9269639 0.9345829
+Tr.1.24h 0.9346481 0.9370284 0.9389949 0.8807883 0.9024349 0.9050811 0.9283707
+Ve.1.24h 0.9334633 0.9344558 0.9376692 0.8767962 0.9008391 0.9041244 0.9250366
+Da.2.3h  0.9337609 0.9326991 0.9306937 0.8554048 0.8837143 0.8861732 0.9101360
+Do.2.3h  0.9377295 0.9369869 0.9363276 0.8591245 0.8902252 0.8911879 0.9163904
+Ep.2.3h  0.9395844 0.9366111 0.9361856 0.8637816 0.8919741 0.8938287 0.9156257
+Mi.2.3h  0.9408465 0.9375374 0.9379729 0.8647905 0.8909499 0.8927932 0.9172329
+Tr.2.3h  0.9343475 0.9344040 0.9342082 0.8559304 0.8871698 0.8879388 0.9153063
+Ve.2.3h  0.9385464 0.9424575 0.9408513 0.8557232 0.8906804 0.8888703 0.9188890
+Da.2.24h 0.8601540 0.8467084 0.8470566 0.9422365 0.9076868 0.9082624 0.8758025
+Do.2.24h 0.8391274 0.8257305 0.8256720 0.9196746 0.8827186 0.8825277 0.8509642
+Ep.2.24h 0.8519810 0.8371828 0.8345320 0.8500187 0.8412057 0.8452743 0.8353814
+Mi.2.24h 0.9268302 0.9277930 0.9251535 0.8947999 0.9211467 0.9210295 0.9445596
+Tr.2.24h 0.9336252 0.9393935 0.9346754 0.8545366 0.8879782 0.8880871 0.9189094
+Ve.2.24h 0.9335234 0.9387152 0.9350717 0.8487196 0.8868250 0.8880177 0.9184895
+Da.3.3h  0.9517162 0.9516417 0.9489812 0.8804099 0.9030382 0.9111267 0.9328823
+Do.3.3h  0.9504321 0.9519361 0.9511736 0.8812579 0.9104198 0.9094608 0.9336674
+Ep.3.3h  0.9540049 0.9573729 0.9533672 0.8812495 0.9094570 0.9139480 0.9366198
+Mi.3.3h  0.9544246 0.9545789 0.9506932 0.8774172 0.9068410 0.9124990 0.9357577
+Tr.3.3h  0.9508483 0.9570309 0.9558454 0.8787789 0.9145399 0.9113835 0.9383897
+Ve.3.3h  0.9545701 0.9632214 0.9579041 0.8736104 0.9070158 0.9104108 0.9409337
+Da.3.24h 0.8648663 0.8549520 0.8551449 0.9604804 0.9374232 0.9334199 0.8978898
+Do.3.24h 0.8611292 0.8525929 0.8507649 0.9518485 0.9339138 0.9295633 0.8925991
+Ep.3.24h 0.8506788 0.8412836 0.8404771 0.9520654 0.9222519 0.9169379 0.8769434
+Mi.3.24h 0.9345278 0.9344653 0.9345760 0.9191496 0.9424562 0.9419878 0.9604872
+Tr.3.24h 0.9507202 0.9580823 0.9556189 0.8724314 0.9108917 0.9091810 0.9410499
+Ve.3.24h 0.9424001 0.9515675 0.9476778 0.8570419 0.8962989 0.8913668 0.9224016
+Da.4.3h  0.9569386 0.9528389 0.9544795 0.8879780 0.9129494 0.9177314 0.9349239
+Do.4.3h  0.9637693 0.9634865 0.9634370 0.8906466 0.9217208 0.9248859 0.9443170
+Ep.4.3h  0.9629552 0.9605551 0.9610375 0.8925028 0.9190624 0.9236646 0.9417809
+Mi.4.3h  0.9654311 0.9627351 0.9631553 0.8951565 0.9225841 0.9265042 0.9463184
+Tr.4.3h  0.9634194 0.9672528 0.9667625 0.8866752 0.9193438 0.9205284 0.9450070
+Ve.4.3h  0.9587618 0.9605149 0.9627477 0.8861563 0.9145806 0.9178257 0.9401703
+Da.4.24h 0.8732082 0.8600761 0.8601592 0.9620683 0.9345763 0.9343298 0.8944419
+Do.4.24h 0.8698553 0.8578694 0.8592926 0.9598673 0.9361657 0.9335314 0.8943044
+Ep.4.24h 0.8725630 0.8595924 0.8588233 0.9559787 0.9346807 0.9357111 0.8936960
+Mi.4.24h 0.9357304 0.9331753 0.9340499 0.9199268 0.9437077 0.9448748 0.9576235
+Tr.4.24h 0.9572998 0.9622841 0.9624066 0.8846248 0.9126086 0.9154502 0.9427770
+Ve.4.24h 0.9529996 0.9564594 0.9579247 0.8828708 0.9097703 0.9145750 0.9393327
+Da.5.3h  0.9364268 0.9315271 0.9299057 0.8812780 0.8930055 0.9009265 0.9176514
+Do.5.3h  0.9360418 0.9333678 0.9347465 0.8855047 0.9065466 0.9053143 0.9225002
+Ep.5.3h  0.9358858 0.9324236 0.9327287 0.8792818 0.8963376 0.9029686 0.9203544
+Mi.5.3h  0.9405758 0.9348023 0.9341111 0.8778932 0.8969004 0.9034979 0.9238385
+Tr.5.3h  0.9285997 0.9332263 0.9320686 0.8650346 0.8886396 0.8923638 0.9188791
+Ve.5.3h  0.9203421 0.9234733 0.9244895 0.8604718 0.8823756 0.8849985 0.9095238
+Da.5.24h 0.8562558 0.8453685 0.8509493 0.9333631 0.9084719 0.9119691 0.8829505
+Do.5.24h 0.8692824 0.8601925 0.8613065 0.9525484 0.9363738 0.9359261 0.9020097
+Ep.5.24h 0.8788719 0.8703621 0.8722588 0.9464180 0.9404887 0.9357481 0.9110122
+Mi.5.24h 0.9136739 0.9092463 0.9087970 0.9146991 0.9273363 0.9240327 0.9336997
+Tr.5.24h 0.9290321 0.9343920 0.9317121 0.8605729 0.8855386 0.8834784 0.9118095
+Ve.5.24h 0.9307787 0.9350793 0.9333820 0.8670814 0.8919874 0.8874901 0.9139568
+Da.6.3h  0.9818846 0.9811929 0.9779134 0.9024818 0.9298106 0.9332824 0.9552726
+Do.6.3h  0.9770801 0.9821955 0.9780371 0.8937170 0.9253061 0.9261162 0.9537045
+Ep.6.3h  0.9751692 0.9786851 0.9748008 0.8947411 0.9298993 0.9276542 0.9497439
+Mi.6.3h  1.0000000 0.9810168 0.9783297 0.8977936 0.9267236 0.9311988 0.9555738
+Tr.6.3h  0.9810168 1.0000000 0.9848858 0.8891626 0.9245968 0.9266621 0.9577107
+Ve.6.3h  0.9783297 0.9848858 1.0000000 0.8891417 0.9215080 0.9255599 0.9555680
+Da.6.24h 0.8977936 0.8891626 0.8891417 1.0000000 0.9603130 0.9580687 0.9258288
+Do.6.24h 0.9267236 0.9245968 0.9215080 0.9603130 1.0000000 0.9697828 0.9534004
+Ep.6.24h 0.9311988 0.9266621 0.9255599 0.9580687 0.9697828 1.0000000 0.9575814
+Mi.6.24h 0.9555738 0.9577107 0.9555680 0.9258288 0.9534004 0.9575814 1.0000000
+Tr.6.24h 0.9526645 0.9652425 0.9588014 0.8747632 0.9124389 0.9063974 0.9395151
+Ve.6.24h 0.9707782 0.9774814 0.9758510 0.8868778 0.9203909 0.9230490 0.9538796
+          Tr.6.24h  Ve.6.24h
+Da.1.3h  0.9252461 0.9402979
+Do.1.3h  0.9320758 0.9375057
+Ep.1.3h  0.9276547 0.9379633
+Mi.1.3h  0.9277794 0.9366205
+Tr.1.3h  0.9288798 0.9352638
+Ve.1.3h  0.9279800 0.9364364
+Da.1.24h 0.8218928 0.8276129
+Do.1.24h 0.7843357 0.7902507
+Ep.1.24h 0.8190736 0.8218320
+Mi.1.24h 0.8940943 0.9011529
+Tr.1.24h 0.9306204 0.9348534
+Ve.1.24h 0.9282138 0.9343277
+Da.2.3h  0.9245144 0.9334456
+Do.2.3h  0.9266815 0.9365340
+Ep.2.3h  0.9240755 0.9364668
+Mi.2.3h  0.9242409 0.9390819
+Tr.2.3h  0.9214547 0.9359471
+Ve.2.3h  0.9349693 0.9391976
+Da.2.24h 0.8352300 0.8452882
+Do.2.24h 0.8190487 0.8259444
+Ep.2.24h 0.8276731 0.8357285
+Mi.2.24h 0.9175878 0.9259933
+Tr.2.24h 0.9322201 0.9379377
+Ve.2.24h 0.9268185 0.9397354
+Da.3.3h  0.9379919 0.9496691
+Do.3.3h  0.9440045 0.9476678
+Ep.3.3h  0.9424418 0.9548709
+Mi.3.3h  0.9391237 0.9506285
+Tr.3.3h  0.9473078 0.9535113
+Ve.3.3h  0.9476530 0.9580342
+Da.3.24h 0.8467667 0.8546983
+Do.3.24h 0.8496115 0.8535577
+Ep.3.24h 0.8366218 0.8412829
+Mi.3.24h 0.9248102 0.9338696
+Tr.3.24h 0.9526619 0.9550625
+Ve.3.24h 0.9557961 0.9509475
+Da.4.3h  0.9338249 0.9482949
+Do.4.3h  0.9429781 0.9572719
+Ep.4.3h  0.9380089 0.9539978
+Mi.4.3h  0.9403578 0.9562418
+Tr.4.3h  0.9466275 0.9606959
+Ve.4.3h  0.9404918 0.9545815
+Da.4.24h 0.8441093 0.8578100
+Do.4.24h 0.8462306 0.8570850
+Ep.4.24h 0.8421687 0.8554175
+Mi.4.24h 0.9208149 0.9314514
+Tr.4.24h 0.9482093 0.9581444
+Ve.4.24h 0.9415586 0.9536817
+Da.5.3h  0.9108645 0.9271688
+Do.5.3h  0.9232730 0.9299162
+Ep.5.3h  0.9078939 0.9290436
+Mi.5.3h  0.9131331 0.9312004
+Tr.5.3h  0.9150592 0.9337569
+Ve.5.3h  0.9067405 0.9259216
+Da.5.24h 0.8335405 0.8534417
+Do.5.24h 0.8482378 0.8635234
+Ep.5.24h 0.8644808 0.8719250
+Mi.5.24h 0.9010077 0.9073219
+Tr.5.24h 0.9371893 0.9322496
+Ve.5.24h 0.9398606 0.9333062
+Da.6.3h  0.9533016 0.9698040
+Do.6.3h  0.9635534 0.9714811
+Ep.6.3h  0.9635290 0.9687503
+Mi.6.3h  0.9526645 0.9707782
+Tr.6.3h  0.9652425 0.9774814
+Ve.6.3h  0.9588014 0.9758510
+Da.6.24h 0.8747632 0.8868778
+Do.6.24h 0.9124389 0.9203909
+Ep.6.24h 0.9063974 0.9230490
+Mi.6.24h 0.9395151 0.9538796
+Tr.6.24h 1.0000000 0.9611305
+Ve.6.24h 0.9611305 1.0000000</code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/cormotif%20things-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>         Da.1.3h Do.1.3h E.1.3 M.1.3 T.1.3 V.1.3 Da.1.24h Do.1.24h E.1.2 M.1.2
+Da.1.3h  1                                                                    
+Do.1.3h  B       1                                                            
+Ep.1.3h  B       B       1                                                    
+Mi.1.3h  B       B       B     1                                              
+Tr.1.3h  B       B       B     B     1                                        
+Ve.1.3h  B       B       B     B     B     1                                  
+Da.1.24h +       +       +     +     +     +     1                            
+Do.1.24h +       +       +     +     +     +     *        1                   
+Ep.1.24h +       +       +     +     +     +     B        *        1          
+Mi.1.24h *       B       *     B     B     B     *        +        *     1    
+Tr.1.24h B       B       B     B     B     B     +        +        +     B    
+Ve.1.24h B       B       B     B     B     B     +        +        +     B    
+Da.2.3h  *       +       *     +     +     +     ,        ,        ,     +    
+Do.2.3h  *       *       +     *     +     *     ,        ,        ,     +    
+Ep.2.3h  *       *       *     *     *     *     +        ,        +     +    
+Mi.2.3h  *       *       *     *     *     *     +        ,        +     +    
+Tr.2.3h  +       +       +     +     +     +     ,        ,        ,     +    
+Ve.2.3h  *       *       *     *     *     *     ,        ,        ,     +    
+Da.2.24h +       +       +     +     +     +     *        +        *     +    
+Do.2.24h +       +       +     +     +     +     *        +        *     +    
+Ep.2.24h +       +       +     +     +     +     +        ,        +     +    
+Mi.2.24h *       *       *     *     +     *     +        ,        +     +    
+Tr.2.24h *       +       +     +     +     +     ,        ,        ,     +    
+Ve.2.24h +       +       +     +     +     +     ,        ,        ,     +    
+Da.3.3h  *       *       *     *     *     *     +        ,        +     +    
+Do.3.3h  *       *       *     *     *     *     +        ,        +     +    
+Ep.3.3h  *       *       *     *     *     *     +        ,        +     +    
+Mi.3.3h  *       *       *     *     *     *     +        ,        +     +    
+Tr.3.3h  *       *       *     *     *     *     +        ,        +     +    
+Ve.3.3h  *       *       *     *     *     *     +        ,        +     +    
+Da.3.24h +       +       +     +     +     +     *        +        *     *    
+Do.3.24h +       +       +     +     +     +     *        +        *     +    
+Ep.3.24h +       +       +     +     +     +     *        +        *     +    
+Mi.3.24h *       *       *     *     *     *     +        +        +     *    
+Tr.3.24h *       *       *     *     *     *     +        ,        +     +    
+Ve.3.24h *       *       *     *     *     *     ,        ,        ,     +    
+Da.4.3h  B       B       B     B     B     B     +        +        +     *    
+Do.4.3h  B       B       B     B     B     B     +        +        +     *    
+Ep.4.3h  B       B       B     B     B     B     +        +        +     *    
+Mi.4.3h  B       B       B     B     B     B     +        +        +     *    
+Tr.4.3h  B       B       B     B     B     B     +        +        +     *    
+Ve.4.3h  B       B       B     B     B     B     +        +        +     *    
+Da.4.24h +       +       +     +     +     +     B        +        B     *    
+Do.4.24h +       +       +     +     +     +     B        +        B     *    
+Ep.4.24h +       +       +     +     +     +     B        +        B     *    
+Mi.4.24h *       B       B     B     B     B     +        +        +     B    
+Tr.4.24h B       B       B     B     B     B     +        +        +     *    
+Ve.4.24h B       B       B     B     B     B     +        +        +     *    
+Da.5.3h  *       *       *     *     *     *     +        +        +     +    
+Do.5.3h  *       *       *     *     *     *     +        +        +     *    
+Ep.5.3h  *       *       *     *     *     *     +        ,        +     +    
+Mi.5.3h  *       *       *     *     *     *     +        ,        +     +    
+Tr.5.3h  *       *       *     *     *     *     +        ,        +     +    
+Ve.5.3h  *       *       *     *     *     *     +        ,        +     +    
+Da.5.24h +       +       +     +     +     +     *        +        *     +    
+Do.5.24h +       +       +     +     +     +     *        +        *     +    
+Ep.5.24h +       +       +     +     +     +     *        +        *     *    
+Mi.5.24h *       *       *     *     *     *     +        +        +     *    
+Tr.5.24h *       *       *     *     *     *     +        ,        +     +    
+Ve.5.24h *       *       *     *     *     *     +        ,        +     +    
+Da.6.3h  B       *       B     *     *     *     +        +        +     *    
+Do.6.3h  *       *       *     *     *     *     +        ,        +     *    
+Ep.6.3h  *       *       *     *     *     *     +        +        +     *    
+Mi.6.3h  *       *       *     *     *     *     +        +        +     *    
+Tr.6.3h  *       *       *     *     *     *     +        ,        +     *    
+Ve.6.3h  *       *       *     *     *     *     +        ,        +     *    
+Da.6.24h +       +       +     +     +     +     *        +        *     *    
+Do.6.24h *       *       *     *     *     *     +        +        *     *    
+Ep.6.24h *       *       *     *     *     *     *        +        *     *    
+Mi.6.24h *       *       *     *     *     *     +        +        +     *    
+Tr.6.24h *       *       *     *     *     *     +        ,        +     +    
+Ve.6.24h *       *       *     *     *     *     +        ,        +     *    
+         T.1.2 V.1.2 Da.2.3h Do.2.3h E.2.3 M.2.3 T.2.3 V.2.3 Da.2.24h Do.2.24h
+Da.1.3h                                                                       
+Do.1.3h                                                                       
+Ep.1.3h                                                                       
+Mi.1.3h                                                                       
+Tr.1.3h                                                                       
+Ve.1.3h                                                                       
+Da.1.24h                                                                      
+Do.1.24h                                                                      
+Ep.1.24h                                                                      
+Mi.1.24h                                                                      
+Tr.1.24h 1                                                                    
+Ve.1.24h B     1                                                              
+Da.2.3h  +     +     1                                                        
+Do.2.3h  +     +     B       1                                                
+Ep.2.3h  +     +     B       B       1                                        
+Mi.2.3h  +     +     B       B       B     1                                  
+Tr.2.3h  +     +     B       B       B     B     1                            
+Ve.2.3h  +     +     B       B       B     B     B     1                      
+Da.2.24h +     +     +       +       +     +     +     +     1                
+Do.2.24h +     +     +       +       +     +     +     +     B        1       
+Ep.2.24h +     +     +       +       +     +     +     +     +        +       
+Mi.2.24h +     +     *       *       *     *     *     B     +        +       
+Tr.2.24h +     +     B       B       B     B     B     B     +        +       
+Ve.2.24h +     +     B       B       B     B     B     B     +        +       
+Da.3.3h  *     *     *       *       B     B     *     *     +        +       
+Do.3.3h  *     *     *       *       *     *     *     B     +        +       
+Ep.3.3h  *     *     *       *       B     B     *     *     +        +       
+Mi.3.3h  *     *     *       *       B     B     *     *     +        +       
+Tr.3.3h  *     *     *       *       *     B     *     B     +        +       
+Ve.3.3h  *     *     *       *       *     *     *     B     +        +       
+Da.3.24h +     +     +       +       +     +     +     +     *        *       
+Do.3.24h +     +     +       +       +     +     +     +     *        *       
+Ep.3.24h +     +     +       +       +     +     +     +     B        *       
+Mi.3.24h *     *     *       *       *     *     *     *     +        +       
+Tr.3.24h *     *     *       *       *     *     *     B     +        +       
+Ve.3.24h *     *     *       *       *     *     *     B     +        +       
+Da.4.3h  B     B     *       *       *     *     *     *     +        +       
+Do.4.3h  B     B     *       *       *     *     *     *     +        +       
+Ep.4.3h  B     B     *       *       *     *     *     *     +        +       
+Mi.4.3h  B     B     *       *       *     *     *     *     +        +       
+Tr.4.3h  B     B     *       *       *     *     *     *     +        +       
+Ve.4.3h  B     B     *       *       *     *     *     *     +        +       
+Da.4.24h +     +     +       +       +     +     +     +     *        *       
+Do.4.24h +     +     +       +       +     +     +     +     *        *       
+Ep.4.24h +     +     +       +       +     +     +     +     *        *       
+Mi.4.24h B     *     +       +       +     +     +     +     +        +       
+Tr.4.24h B     B     *       *       *     *     *     *     +        +       
+Ve.4.24h B     B     *       *       *     *     *     *     +        +       
+Da.5.3h  *     *     *       *       *     *     *     *     +        +       
+Do.5.3h  *     *     *       *       *     *     *     *     +        +       
+Ep.5.3h  *     *     *       *       *     *     *     *     +        +       
+Mi.5.3h  *     *     *       *       *     *     *     *     +        +       
+Tr.5.3h  *     *     *       *       *     *     *     *     +        +       
+Ve.5.3h  *     *     *       *       *     *     *     *     +        +       
+Da.5.24h +     +     +       +       +     +     +     +     *        *       
+Do.5.24h +     +     +       +       +     +     +     +     *        *       
+Ep.5.24h +     +     +       +       +     +     +     +     *        *       
+Mi.5.24h *     *     +       *       *     *     *     *     +        +       
+Tr.5.24h *     *     *       *       *     *     *     *     +        +       
+Ve.5.24h *     *     *       *       *     *     *     *     +        +       
+Da.6.3h  *     *     *       *       *     *     *     *     +        +       
+Do.6.3h  *     *     *       *       *     *     *     *     +        +       
+Ep.6.3h  *     *     *       *       *     *     *     *     +        +       
+Mi.6.3h  *     *     *       *       *     *     *     *     +        +       
+Tr.6.3h  *     *     *       *       *     *     *     *     +        +       
+Ve.6.3h  *     *     *       *       *     *     *     *     +        +       
+Da.6.24h +     +     +       +       +     +     +     +     *        *       
+Do.6.24h *     *     +       +       +     +     +     +     *        +       
+Ep.6.24h *     *     +       +       +     +     +     +     *        +       
+Mi.6.24h *     *     *       *       *     *     *     *     +        +       
+Tr.6.24h *     *     *       *       *     *     *     *     +        +       
+Ve.6.24h *     *     *       *       *     *     *     *     +        +       
+         E.2.2 M.2.2 T.2.2 V.2.2 Da.3.3h Do.3.3h E.3.3 M.3.3 T.3.3 V.3.3
+Da.1.3h                                                                 
+Do.1.3h                                                                 
+Ep.1.3h                                                                 
+Mi.1.3h                                                                 
+Tr.1.3h                                                                 
+Ve.1.3h                                                                 
+Da.1.24h                                                                
+Do.1.24h                                                                
+Ep.1.24h                                                                
+Mi.1.24h                                                                
+Tr.1.24h                                                                
+Ve.1.24h                                                                
+Da.2.3h                                                                 
+Do.2.3h                                                                 
+Ep.2.3h                                                                 
+Mi.2.3h                                                                 
+Tr.2.3h                                                                 
+Ve.2.3h                                                                 
+Da.2.24h                                                                
+Do.2.24h                                                                
+Ep.2.24h 1                                                              
+Mi.2.24h +     1                                                        
+Tr.2.24h +     B     1                                                  
+Ve.2.24h +     B     B     1                                            
+Da.3.3h  +     *     *     *     1                                      
+Do.3.3h  +     *     *     *     B       1                              
+Ep.3.3h  +     *     *     *     B       B       1                      
+Mi.3.3h  +     *     *     *     B       B       B     1                
+Tr.3.3h  +     *     *     *     B       B       B     B     1          
+Ve.3.3h  +     *     B     *     B       B       B     B     B     1    
+Da.3.24h +     +     +     +     +       +       +     +     +     +    
+Do.3.24h +     +     +     +     +       +       +     +     +     +    
+Ep.3.24h +     +     +     +     +       +       +     +     +     +    
+Mi.3.24h +     B     *     *     *       B       *     *     B     B    
+Tr.3.24h +     *     B     *     B       B       B     B     B     B    
+Ve.3.24h +     *     B     *     B       B       B     B     B     B    
+Da.4.3h  +     *     *     *     *       *       *     *     *     *    
+Do.4.3h  +     *     *     *     *       B       *     *     B     *    
+Ep.4.3h  +     *     *     *     *       *       *     *     *     *    
+Mi.4.3h  +     *     *     *     *       *       *     *     B     *    
+Tr.4.3h  +     *     *     *     *       *       *     *     B     *    
+Ve.4.3h  +     *     *     *     *       *       *     *     B     *    
+Da.4.24h +     +     +     +     +       +       +     +     +     +    
+Do.4.24h +     +     +     +     +       +       +     +     +     +    
+Ep.4.24h +     +     +     +     +       +       +     +     +     +    
+Mi.4.24h +     *     +     +     *       *       *     *     *     *    
+Tr.4.24h +     *     *     *     *       *       *     *     B     *    
+Ve.4.24h +     *     *     *     *       *       *     *     *     *    
+Da.5.3h  +     *     *     *     *       *       *     *     *     *    
+Do.5.3h  +     *     *     *     *       B       *     *     B     *    
+Ep.5.3h  +     *     *     *     *       *       *     *     *     *    
+Mi.5.3h  +     *     *     *     *       *       *     *     *     *    
+Tr.5.3h  +     *     *     *     *       *       *     *     *     *    
+Ve.5.3h  +     *     *     *     *       *       *     *     *     *    
+Da.5.24h +     +     +     +     +       +       +     +     +     +    
+Do.5.24h +     +     +     +     +       +       +     +     +     +    
+Ep.5.24h +     *     +     +     +       +       +     +     +     +    
+Mi.5.24h +     *     *     +     *       *       *     *     *     *    
+Tr.5.24h +     *     *     *     *       *       *     *     *     *    
+Ve.5.24h +     *     *     *     *       *       *     *     *     *    
+Da.6.3h  +     *     *     *     B       B       B     B     B     B    
+Do.6.3h  +     *     *     *     *       B       B     B     B     B    
+Ep.6.3h  +     *     *     *     *       B       B     *     B     B    
+Mi.6.3h  +     *     *     *     B       B       B     B     B     B    
+Tr.6.3h  +     *     *     *     B       B       B     B     B     B    
+Ve.6.3h  +     *     *     *     *       B       B     B     B     B    
+Da.6.24h +     +     +     +     +       +       +     +     +     +    
+Do.6.24h +     *     +     +     *       *       *     *     *     *    
+Ep.6.24h +     *     +     +     *       *       *     *     *     *    
+Mi.6.24h +     *     *     *     *       *       *     *     *     *    
+Tr.6.24h +     *     *     *     *       *       *     *     *     *    
+Ve.6.24h +     *     *     *     *       *       B     B     B     B    
+         Da.3.24h Do.3.24h E.3.2 M.3.2 T.3.2 V.3.2 Da.4.3h Do.4.3h E.4.3 M.4.3
+Da.1.3h                                                                       
+Do.1.3h                                                                       
+Ep.1.3h                                                                       
+Mi.1.3h                                                                       
+Tr.1.3h                                                                       
+Ve.1.3h                                                                       
+Da.1.24h                                                                      
+Do.1.24h                                                                      
+Ep.1.24h                                                                      
+Mi.1.24h                                                                      
+Tr.1.24h                                                                      
+Ve.1.24h                                                                      
+Da.2.3h                                                                       
+Do.2.3h                                                                       
+Ep.2.3h                                                                       
+Mi.2.3h                                                                       
+Tr.2.3h                                                                       
+Ve.2.3h                                                                       
+Da.2.24h                                                                      
+Do.2.24h                                                                      
+Ep.2.24h                                                                      
+Mi.2.24h                                                                      
+Tr.2.24h                                                                      
+Ve.2.24h                                                                      
+Da.3.3h                                                                       
+Do.3.3h                                                                       
+Ep.3.3h                                                                       
+Mi.3.3h                                                                       
+Tr.3.3h                                                                       
+Ve.3.3h                                                                       
+Da.3.24h 1                                                                    
+Do.3.24h B        1                                                           
+Ep.3.24h B        B        1                                                  
+Mi.3.24h *        *        *     1                                            
+Tr.3.24h +        +        +     B     1                                      
+Ve.3.24h +        +        +     *     B     1                                
+Da.4.3h  +        +        +     *     *     *     1                          
+Do.4.3h  +        +        +     *     *     *     B       1                  
+Ep.4.3h  +        +        +     *     *     *     B       B       1          
+Mi.4.3h  +        +        +     *     *     *     B       B       B     1    
+Tr.4.3h  +        +        +     *     B     *     B       B       B     B    
+Ve.4.3h  +        +        +     *     *     *     B       B       B     B    
+Da.4.24h B        *        B     +     +     +     +       +       +     +    
+Do.4.24h B        *        B     +     +     +     +       +       +     +    
+Ep.4.24h *        *        *     +     +     +     +       +       +     +    
+Mi.4.24h *        +        +     B     *     *     B       B       B     B    
+Tr.4.24h +        +        +     *     B     *     B       B       B     B    
+Ve.4.24h +        +        +     *     *     *     B       B       B     B    
+Da.5.3h  +        +        +     *     *     *     *       *       *     *    
+Do.5.3h  +        +        +     *     *     *     *       *       *     *    
+Ep.5.3h  +        +        +     *     *     *     *       *       *     *    
+Mi.5.3h  +        +        +     *     *     *     *       *       *     *    
+Tr.5.3h  +        +        +     *     *     *     *       *       *     *    
+Ve.5.3h  +        +        +     *     *     *     *       *       *     *    
+Da.5.24h *        *        *     +     +     +     +       +       +     +    
+Do.5.24h B        *        *     *     +     +     +       +       +     +    
+Ep.5.24h *        *        *     *     +     +     +       +       +     +    
+Mi.5.24h *        +        +     B     *     *     *       *       *     *    
+Tr.5.24h +        +        +     *     *     *     *       *       *     *    
+Ve.5.24h +        +        +     *     *     *     *       *       *     *    
+Da.6.3h  +        +        +     *     B     *     B       B       B     B    
+Do.6.3h  +        +        +     *     B     *     B       B       B     B    
+Ep.6.3h  +        +        +     *     B     B     B       B       B     B    
+Mi.6.3h  +        +        +     *     B     *     B       B       B     B    
+Tr.6.3h  +        +        +     *     B     B     B       B       B     B    
+Ve.6.3h  +        +        +     *     B     *     B       B       B     B    
+Da.6.24h B        B        B     *     +     +     +       +       +     +    
+Do.6.24h *        *        *     *     *     +     *       *       *     *    
+Ep.6.24h *        *        *     *     *     +     *       *       *     *    
+Mi.6.24h +        +        +     B     *     *     *       *       *     *    
+Tr.6.24h +        +        +     *     B     B     *       *       *     *    
+Ve.6.24h +        +        +     *     B     B     *       B       B     B    
+         T.4.3 V.4.3 Da.4.24h Do.4.24h E.4.2 M.4.2 T.4.2 V.4.2 Da.5.3h Do.5.3h
+Da.1.3h                                                                       
+Do.1.3h                                                                       
+Ep.1.3h                                                                       
+Mi.1.3h                                                                       
+Tr.1.3h                                                                       
+Ve.1.3h                                                                       
+Da.1.24h                                                                      
+Do.1.24h                                                                      
+Ep.1.24h                                                                      
+Mi.1.24h                                                                      
+Tr.1.24h                                                                      
+Ve.1.24h                                                                      
+Da.2.3h                                                                       
+Do.2.3h                                                                       
+Ep.2.3h                                                                       
+Mi.2.3h                                                                       
+Tr.2.3h                                                                       
+Ve.2.3h                                                                       
+Da.2.24h                                                                      
+Do.2.24h                                                                      
+Ep.2.24h                                                                      
+Mi.2.24h                                                                      
+Tr.2.24h                                                                      
+Ve.2.24h                                                                      
+Da.3.3h                                                                       
+Do.3.3h                                                                       
+Ep.3.3h                                                                       
+Mi.3.3h                                                                       
+Tr.3.3h                                                                       
+Ve.3.3h                                                                       
+Da.3.24h                                                                      
+Do.3.24h                                                                      
+Ep.3.24h                                                                      
+Mi.3.24h                                                                      
+Tr.3.24h                                                                      
+Ve.3.24h                                                                      
+Da.4.3h                                                                       
+Do.4.3h                                                                       
+Ep.4.3h                                                                       
+Mi.4.3h                                                                       
+Tr.4.3h  1                                                                    
+Ve.4.3h  B     1                                                              
+Da.4.24h +     +     1                                                        
+Do.4.24h +     +     B        1                                               
+Ep.4.24h +     +     B        B        1                                      
+Mi.4.24h B     B     *        *        *     1                                
+Tr.4.24h B     B     +        +        +     B     1                          
+Ve.4.24h B     B     +        +        +     B     B     1                    
+Da.5.3h  *     *     +        +        +     *     *     *     1              
+Do.5.3h  *     *     +        +        +     *     *     *     B       1      
+Ep.5.3h  *     *     +        +        +     *     *     *     B       B      
+Mi.5.3h  *     *     +        +        +     *     *     *     B       B      
+Tr.5.3h  *     *     +        +        +     *     *     *     B       B      
+Ve.5.3h  *     *     +        +        +     *     *     *     *       B      
+Da.5.24h +     +     *        *        *     +     +     +     +       +      
+Do.5.24h +     +     *        *        *     *     +     +     *       *      
+Ep.5.24h +     +     *        *        *     *     +     +     *       *      
+Mi.5.24h *     *     *        *        +     *     *     *     *       *      
+Tr.5.24h *     *     +        +        +     *     *     *     B       B      
+Ve.5.24h *     *     +        +        +     *     *     *     *       B      
+Da.6.3h  B     B     +        +        +     *     B     B     *       *      
+Do.6.3h  B     B     +        +        +     *     B     B     *       *      
+Ep.6.3h  B     B     +        +        +     *     B     B     *       *      
+Mi.6.3h  B     B     +        +        +     *     B     B     *       *      
+Tr.6.3h  B     B     +        +        +     *     B     B     *       *      
+Ve.6.3h  B     B     +        +        +     *     B     B     *       *      
+Da.6.24h +     +     B        B        B     *     +     +     +       +      
+Do.6.24h *     *     *        *        *     *     *     *     +       *      
+Ep.6.24h *     *     *        *        *     *     *     *     *       *      
+Mi.6.24h *     *     +        +        +     B     *     *     *       *      
+Tr.6.24h *     *     +        +        +     *     *     *     *       *      
+Ve.6.24h B     B     +        +        +     *     B     B     *       *      
+         E.5.3 M.5.3 T.5.3 V.5.3 Da.5.24h Do.5.24h E.5.2 M.5.2 T.5.2 V.5.2
+Da.1.3h                                                                   
+Do.1.3h                                                                   
+Ep.1.3h                                                                   
+Mi.1.3h                                                                   
+Tr.1.3h                                                                   
+Ve.1.3h                                                                   
+Da.1.24h                                                                  
+Do.1.24h                                                                  
+Ep.1.24h                                                                  
+Mi.1.24h                                                                  
+Tr.1.24h                                                                  
+Ve.1.24h                                                                  
+Da.2.3h                                                                   
+Do.2.3h                                                                   
+Ep.2.3h                                                                   
+Mi.2.3h                                                                   
+Tr.2.3h                                                                   
+Ve.2.3h                                                                   
+Da.2.24h                                                                  
+Do.2.24h                                                                  
+Ep.2.24h                                                                  
+Mi.2.24h                                                                  
+Tr.2.24h                                                                  
+Ve.2.24h                                                                  
+Da.3.3h                                                                   
+Do.3.3h                                                                   
+Ep.3.3h                                                                   
+Mi.3.3h                                                                   
+Tr.3.3h                                                                   
+Ve.3.3h                                                                   
+Da.3.24h                                                                  
+Do.3.24h                                                                  
+Ep.3.24h                                                                  
+Mi.3.24h                                                                  
+Tr.3.24h                                                                  
+Ve.3.24h                                                                  
+Da.4.3h                                                                   
+Do.4.3h                                                                   
+Ep.4.3h                                                                   
+Mi.4.3h                                                                   
+Tr.4.3h                                                                   
+Ve.4.3h                                                                   
+Da.4.24h                                                                  
+Do.4.24h                                                                  
+Ep.4.24h                                                                  
+Mi.4.24h                                                                  
+Tr.4.24h                                                                  
+Ve.4.24h                                                                  
+Da.5.3h                                                                   
+Do.5.3h                                                                   
+Ep.5.3h  1                                                                
+Mi.5.3h  B     1                                                          
+Tr.5.3h  B     B     1                                                    
+Ve.5.3h  B     B     B     1                                              
+Da.5.24h +     +     +     +     1                                        
+Do.5.24h *     +     +     +     B        1                               
+Ep.5.24h *     *     +     +     *        B        1                      
+Mi.5.24h *     *     *     *     *        *        B     1                
+Tr.5.24h B     B     B     *     +        +        *     *     1          
+Ve.5.24h B     B     B     *     +        +        *     *     B     1    
+Da.6.3h  *     *     *     *     +        +        +     *     *     *    
+Do.6.3h  *     *     *     *     +        +        +     *     *     *    
+Ep.6.3h  *     *     *     *     +        +        +     *     *     *    
+Mi.6.3h  *     *     *     *     +        +        +     *     *     *    
+Tr.6.3h  *     *     *     *     +        +        +     *     *     *    
+Ve.6.3h  *     *     *     *     +        +        +     *     *     *    
+Da.6.24h +     +     +     +     *        B        *     *     +     +    
+Do.6.24h +     +     +     +     *        *        *     *     +     +    
+Ep.6.24h *     *     +     +     *        *        *     *     +     +    
+Mi.6.24h *     *     *     *     +        *        *     *     *     *    
+Tr.6.24h *     *     *     *     +        +        +     *     *     *    
+Ve.6.24h *     *     *     *     +        +        +     *     *     *    
+         Da.6.3h Do.6.3h E.6.3 M.6.3 T.6.3 V.6.3 Da.6.24h Do.6.24h E.6.2 M.6.2
+Da.1.3h                                                                       
+Do.1.3h                                                                       
+Ep.1.3h                                                                       
+Mi.1.3h                                                                       
+Tr.1.3h                                                                       
+Ve.1.3h                                                                       
+Da.1.24h                                                                      
+Do.1.24h                                                                      
+Ep.1.24h                                                                      
+Mi.1.24h                                                                      
+Tr.1.24h                                                                      
+Ve.1.24h                                                                      
+Da.2.3h                                                                       
+Do.2.3h                                                                       
+Ep.2.3h                                                                       
+Mi.2.3h                                                                       
+Tr.2.3h                                                                       
+Ve.2.3h                                                                       
+Da.2.24h                                                                      
+Do.2.24h                                                                      
+Ep.2.24h                                                                      
+Mi.2.24h                                                                      
+Tr.2.24h                                                                      
+Ve.2.24h                                                                      
+Da.3.3h                                                                       
+Do.3.3h                                                                       
+Ep.3.3h                                                                       
+Mi.3.3h                                                                       
+Tr.3.3h                                                                       
+Ve.3.3h                                                                       
+Da.3.24h                                                                      
+Do.3.24h                                                                      
+Ep.3.24h                                                                      
+Mi.3.24h                                                                      
+Tr.3.24h                                                                      
+Ve.3.24h                                                                      
+Da.4.3h                                                                       
+Do.4.3h                                                                       
+Ep.4.3h                                                                       
+Mi.4.3h                                                                       
+Tr.4.3h                                                                       
+Ve.4.3h                                                                       
+Da.4.24h                                                                      
+Do.4.24h                                                                      
+Ep.4.24h                                                                      
+Mi.4.24h                                                                      
+Tr.4.24h                                                                      
+Ve.4.24h                                                                      
+Da.5.3h                                                                       
+Do.5.3h                                                                       
+Ep.5.3h                                                                       
+Mi.5.3h                                                                       
+Tr.5.3h                                                                       
+Ve.5.3h                                                                       
+Da.5.24h                                                                      
+Do.5.24h                                                                      
+Ep.5.24h                                                                      
+Mi.5.24h                                                                      
+Tr.5.24h                                                                      
+Ve.5.24h                                                                      
+Da.6.3h  1                                                                    
+Do.6.3h  B       1                                                            
+Ep.6.3h  B       B       1                                                    
+Mi.6.3h  B       B       B     1                                              
+Tr.6.3h  B       B       B     B     1                                        
+Ve.6.3h  B       B       B     B     B     1                                  
+Da.6.24h *       +       +     +     +     +     1                            
+Do.6.24h *       *       *     *     *     *     B        1                   
+Ep.6.24h *       *       *     *     *     *     B        B        1          
+Mi.6.24h B       B       *     B     B     B     *        B        B     1    
+Tr.6.24h B       B       B     B     B     B     +        *        *     *    
+Ve.6.24h B       B       B     B     B     B     +        *        *     B    
+         T.6.2 V.6.2
+Da.1.3h             
+Do.1.3h             
+Ep.1.3h             
+Mi.1.3h             
+Tr.1.3h             
+Ve.1.3h             
+Da.1.24h            
+Do.1.24h            
+Ep.1.24h            
+Mi.1.24h            
+Tr.1.24h            
+Ve.1.24h            
+Da.2.3h             
+Do.2.3h             
+Ep.2.3h             
+Mi.2.3h             
+Tr.2.3h             
+Ve.2.3h             
+Da.2.24h            
+Do.2.24h            
+Ep.2.24h            
+Mi.2.24h            
+Tr.2.24h            
+Ve.2.24h            
+Da.3.3h             
+Do.3.3h             
+Ep.3.3h             
+Mi.3.3h             
+Tr.3.3h             
+Ve.3.3h             
+Da.3.24h            
+Do.3.24h            
+Ep.3.24h            
+Mi.3.24h            
+Tr.3.24h            
+Ve.3.24h            
+Da.4.3h             
+Do.4.3h             
+Ep.4.3h             
+Mi.4.3h             
+Tr.4.3h             
+Ve.4.3h             
+Da.4.24h            
+Do.4.24h            
+Ep.4.24h            
+Mi.4.24h            
+Tr.4.24h            
+Ve.4.24h            
+Da.5.3h             
+Do.5.3h             
+Ep.5.3h             
+Mi.5.3h             
+Tr.5.3h             
+Ve.5.3h             
+Da.5.24h            
+Do.5.24h            
+Ep.5.24h            
+Mi.5.24h            
+Tr.5.24h            
+Ve.5.24h            
+Da.6.3h             
+Do.6.3h             
+Ep.6.3h             
+Mi.6.3h             
+Tr.6.3h             
+Ve.6.3h             
+Da.6.24h            
+Do.6.24h            
+Ep.6.24h            
+Mi.6.24h            
+Tr.6.24h 1          
+Ve.6.24h B     1    
+attr(,&quot;legend&quot;)
+[1] 0 &#39; &#39; 0.3 &#39;.&#39; 0.6 &#39;,&#39; 0.8 &#39;+&#39; 0.9 &#39;*&#39; 0.95 &#39;B&#39; 1</code></pre>
+<pre><code>[1] 0.7484706 1.0000000</code></pre>
+<p><img src="figure/RNAseqanalysis.Rmd/cormotif%20things-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/RNAseqanalysis.Rmd/cormotif%20things-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="go-analysis" class="section level1">
+<h1><a
+href="https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html">GO
+analysis</a></h1>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] stats4    grid      stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] pheatmap_1.0.12                        
+ [2] Cormotif_1.42.0                        
+ [3] affy_1.74.0                            
+ [4] Hmisc_4.7-2                            
+ [5] Formula_1.2-4                          
+ [6] survival_3.5-0                         
+ [7] corrplot_0.92                          
+ [8] ggrepel_0.9.3                          
+ [9] cowplot_1.1.1                          
+[10] Homo.sapiens_1.3.1                     
+[11] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+[12] org.Hs.eg.db_3.15.0                    
+[13] GO.db_3.15.0                           
+[14] OrganismDbi_1.38.1                     
+[15] GenomicFeatures_1.48.4                 
+[16] GenomicRanges_1.48.0                   
+[17] GenomeInfoDb_1.32.4                    
+[18] AnnotationDbi_1.58.0                   
+[19] IRanges_2.30.1                         
+[20] S4Vectors_0.34.0                       
+[21] biomaRt_2.52.0                         
+[22] scales_1.2.1                           
+[23] forcats_1.0.0                          
+[24] stringr_1.5.0                          
+[25] dplyr_1.1.0                            
+[26] purrr_1.0.1                            
+[27] readr_2.1.3                            
+[28] tidyr_1.3.0                            
+[29] tibble_3.1.8                           
+[30] tidyverse_1.3.2                        
+[31] AnnotationHub_3.4.0                    
+[32] BiocFileCache_2.4.0                    
+[33] dbplyr_2.3.0                           
+[34] devtools_2.4.5                         
+[35] usethis_2.1.6                          
+[36] reshape2_1.4.4                         
+[37] gridExtra_2.3                          
+[38] HTSFilter_1.36.0                       
+[39] VennDiagram_1.7.3                      
+[40] futile.logger_1.4.3                    
+[41] mixOmics_6.20.0                        
+[42] ggplot2_3.4.0                          
+[43] lattice_0.20-45                        
+[44] MASS_7.3-58.2                          
+[45] RColorBrewer_1.1-3                     
+[46] edgeR_3.38.4                           
+[47] limma_3.52.4                           
+[48] Biobase_2.56.0                         
+[49] BiocGenerics_0.42.0                    
+[50] workflowr_1.7.0                        
+
+loaded via a namespace (and not attached):
+  [1] rappdirs_0.3.3                rtracklayer_1.56.1           
+  [3] bit64_4.0.5                   knitr_1.42                   
+  [5] DelayedArray_0.22.0           data.table_1.14.6            
+  [7] rpart_4.1.19                  KEGGREST_1.36.3              
+  [9] RCurl_1.98-1.10               generics_0.1.3               
+ [11] preprocessCore_1.58.0         callr_3.7.3                  
+ [13] lambda.r_1.2.4                RSQLite_2.2.20               
+ [15] bit_4.0.5                     tzdb_0.3.0                   
+ [17] xml2_1.3.3                    lubridate_1.9.1              
+ [19] httpuv_1.6.8                  SummarizedExperiment_1.26.1  
+ [21] assertthat_0.2.1              gargle_1.3.0                 
+ [23] xfun_0.37                     hms_1.1.2                    
+ [25] jquerylib_0.1.4               evaluate_0.20                
+ [27] promises_1.2.0.1              fansi_1.0.4                  
+ [29] restfulr_0.0.15               progress_1.2.2               
+ [31] readxl_1.4.1                  igraph_1.3.5                 
+ [33] DBI_1.1.3                     geneplotter_1.74.0           
+ [35] htmlwidgets_1.6.1             rARPACK_0.11-0               
+ [37] googledrive_2.0.0             ellipsis_0.3.2               
+ [39] RSpectra_0.16-1               backports_1.4.1              
+ [41] annotate_1.74.0               deldir_1.0-6                 
+ [43] MatrixGenerics_1.8.1          vctrs_0.5.2                  
+ [45] remotes_2.4.2                 cachem_1.0.6                 
+ [47] withr_2.5.0                   checkmate_2.1.0              
+ [49] GenomicAlignments_1.32.1      prettyunits_1.1.1            
+ [51] cluster_2.1.4                 crayon_1.5.2                 
+ [53] ellipse_0.4.3                 genefilter_1.78.0            
+ [55] pkgconfig_2.0.3               labeling_0.4.2               
+ [57] pkgload_1.3.2                 nnet_7.3-18                  
+ [59] rlang_1.0.6                   lifecycle_1.0.3              
+ [61] miniUI_0.1.1.1                filelock_1.0.2               
+ [63] affyio_1.66.0                 modelr_0.1.10                
+ [65] cellranger_1.1.0              rprojroot_2.0.3              
+ [67] matrixStats_0.63.0            graph_1.74.0                 
+ [69] Matrix_1.5-3                  reprex_2.0.2                 
+ [71] base64enc_0.1-3               whisker_0.4.1                
+ [73] processx_3.8.0                googlesheets4_1.0.1          
+ [75] png_0.1-8                     viridisLite_0.4.1            
+ [77] rjson_0.2.21                  bitops_1.0-7                 
+ [79] getPass_0.2-2                 Biostrings_2.64.1            
+ [81] blob_1.2.3                    jpeg_0.1-10                  
+ [83] memoise_2.0.1                 magrittr_2.0.3               
+ [85] plyr_1.8.8                    zlibbioc_1.42.0              
+ [87] compiler_4.2.2                BiocIO_1.6.0                 
+ [89] DESeq2_1.36.0                 Rsamtools_2.12.0             
+ [91] cli_3.6.0                     XVector_0.36.0               
+ [93] urlchecker_1.0.1              ps_1.7.2                     
+ [95] htmlTable_2.4.1               formatR_1.14                 
+ [97] tidyselect_1.2.0              stringi_1.7.12               
+ [99] highr_0.10                    yaml_2.3.7                   
+[101] locfit_1.5-9.7                latticeExtra_0.6-30          
+[103] sass_0.4.5                    tools_4.2.2                  
+[105] timechange_0.2.0              parallel_4.2.2               
+[107] rstudioapi_0.14               foreign_0.8-84               
+[109] git2r_0.31.0                  farver_2.1.1                 
+[111] digest_0.6.31                 BiocManager_1.30.19          
+[113] shiny_1.7.4                   Rcpp_1.0.10                  
+[115] broom_1.0.3                   BiocVersion_3.15.2           
+[117] later_1.3.0                   httr_1.4.4                   
+[119] colorspace_2.1-0              rvest_1.0.3                  
+[121] XML_3.99-0.13                 fs_1.6.1                     
+[123] splines_4.2.2                 RBGL_1.72.0                  
+[125] statmod_1.5.0                 sessioninfo_1.2.2            
+[127] xtable_1.8-4                  jsonlite_1.8.4               
+[129] futile.options_1.0.1          corpcor_1.6.10               
+[131] R6_2.5.1                      profvis_0.3.7                
+[133] pillar_1.8.1                  htmltools_0.5.4              
+[135] mime_0.12                     glue_1.6.2                   
+[137] fastmap_1.1.0                 BiocParallel_1.30.4          
+[139] interactiveDisplayBase_1.34.0 codetools_0.2-19             
+[141] pkgbuild_1.4.0                utf8_1.2.3                   
+[143] bslib_0.4.2                   curl_5.0.0                   
+[145] interp_1.1-3                  rmarkdown_2.20               
+[147] munsell_0.5.0                 GenomeInfoDbData_1.2.8       
+[149] haven_2.5.1                   gtable_0.3.1                 </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
