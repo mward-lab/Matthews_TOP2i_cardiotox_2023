@@ -26,6 +26,7 @@ library(VennDiagram)
 library(kableExtra)
 library(scales)
 library(ggVennDiagram)
+
 ```
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -72,7 +73,7 @@ The analysis is based on all genes that passed the rowMeans\>0 from the previous
 
 Below is the analysis of differentially expressed genes for each treatment at 3 hours and 24 hours.
 
-```{r intial analysis, eval=TRUE, echo=FALSE,  fig.width=10, message=FALSE, warning=FALSE}
+```{r intial analysis, echo=FALSE, message=FALSE, warning=FALSE}
 gostres <- gost(query = sigVDA3$SYMBOL,  organism = "hsapiens",
   ordered_query = TRUE,
   domain_scope = "custom",
@@ -104,11 +105,9 @@ table1 <- gostres$result %>%
 
 I first looked at the data with all genes from the sigDA3 dataset. I used the list of all genes based on my rowMeans\>0 filtering as background.
 
-
-
 ### Analysis of Up versus Down
 
-I then separated the VDA3 file by log2 Fold Change to see how the gene sets are enriched.  Nothing showed up in the GO-BP/CC/MG-down regulated gene-set at a significant level, p<0.05.
+I then separated the VDA3 file by log2 Fold Change to see how the gene sets are enriched. Nothing showed up in the GO-BP/CC/MG-down regulated gene-set at a significant level, p\<0.05.
 
 ```{r only the Da3 data3, echo=FALSE, message=FALSE, warning=FALSE}
 #results_sig = subset(sigVDA3,adj.P.Val < 0.05)
@@ -142,9 +141,9 @@ p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
 
 ```
 
+Note this is at three hour for Daunorubicin
+
 ```{r showing it all, eval = FALSE, echo=FALSE, message=FALSE, warning=FALSE}
-
-
 
 #p2_down <- gostplot(gp_down, capped = FALSE, interactive = TRUE)
 
@@ -153,9 +152,9 @@ p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
 
 ```
 
-#### I next wanted to see what happened at 24 hours with daunorubicin.  I used the sigVDA24 file to do this.
+#### I next wanted to see what happened at 24 hours with daunorubicin. I used the sigVDA24 file to do this.
 
-```{r DA24, eval=TRUE, echo=FALSE,  message=FALSE, warning=FALSE}
+```{r DA24, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
 gostresDA24 <- gost(query = sigVDA24$SYMBOL,  organism = "hsapiens",
   ordered_query = TRUE,
   domain_scope = "custom",
@@ -185,88 +184,203 @@ table2 <- gostresDA24$result %>%
 # )
 
 ```
+Here I was able to visualize the 24 hour GO analysis of daunorubicin.
 
-```{r venndiagram,echo=FALSE}
-total24n <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
-total24s <- list(sigVDA24$SYMBOL,sigVDX24$SYMBOL,sigVEP24$SYMBOL,sigVMT24$SYMBOL)
-total3 <- list(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
-venn24n <- ggVennDiagram(total24n,
+##Venn Diagrams
+```{r venndiagram, echo=FALSE, message=FALSE, warning=FALSE}
+total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+
+length(unique(in_common24))
+
+ggVennDiagram(total24,
               category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
               show_intersect = FALSE,
               set_color = "black",
               label = "both",
-              label_percent_digit = 2,
-              edge_lty = "solid")+
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
-  ggtitle("24 hour gene list using ENTREZID")+
-   theme(plot.title = element_text(hjust = 0.5))
+  scale_fill_gradient(low = "red2", high = "yellow")+
+  labs(title = "24 hour comparison of significant genes", caption = "n = 8887 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
-venn24n
-venn24s <- ggVennDiagram(total24s,
+
+# total 3 ----------------------------------------------------------------
+
+total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+in_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
+length(unique(in_common3))
+
+ggVennDiagram(total3,
               category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
               show_intersect = FALSE,
               set_color = "black",
               label = "both",
-              label_percent_digit = 2,
-              edge_lty = "solid")+
+              label_percent_digit = 1,
+              label_size = 3.5,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid") +
   scale_x_continuous(expand = expansion(mult = .2))+
-  ggtitle("24 hour gene list using SYMBOL")+
-   theme(plot.title = element_text(hjust = 0.5))
-venn24s
+  scale_fill_gradient(low = "red2", high = "yellow")+
+  labs(title = "3 hour comparison of significant genes", caption = "n = 554 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+# Dauno comp --------------------------------------------------------------
+
+Dauncomp <- list(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
+in_commonDa <- c(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
+length(unique(in_commonDa))
+ggVennDiagram(Dauncomp,
+              category.names = c("Daunorubicin-24","Daunorubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Dauno 3h v 24h", caption = "n = 7732 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+Davenlist <- intersect(Dauncomp[[1]],Dauncomp[[2]])
+
+
+# Doxocomp ----------------------------------------------------------------
+Doxcomp <- list(sigVDX24$ENTREZID,sigVDX3$ENTREZID)
+in_commonDx <- c(sigVDX24$ENTREZID,sigVDX3$ENTREZID)
+length(unique(in_commonDx))
+ggVennDiagram(Doxcomp,
+              category.names = c("Doxorubicin-24","Doxorubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Doxo 3h v 24h", caption = "n = 6808 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+Dxvenlist <- intersect(Doxcomp[[1]],Doxcomp[[2]])
+length(intersect(Dxvenlist,Davenlist))## 7 of DX are in DA
+# Epi Comp ----------------------------------------------------------------
+
+Epicomp <- list(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
+in_commonEp <- c(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
+length(unique(in_commonEp))
+
+
+
+ggVennDiagram(Epicomp,
+              category.names = c("Epirubicin-24","Epirubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Epi 3h v 24h", caption = "n = 6858 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+Epvenlist <- intersect(Epicomp[[1]],Epicomp[[2]])
+# qA <- (intersect(Epvenlist , Davenlist))##76 are are in da
+# qB <- (intersect(Dxvenlist, Epvenlist))#y are in Ep from Dx
+# #ACintersect <- intersect(qA,qB)##total of 6 are in all 3 comparisons
+# #ggVennDiagram(qA,qB)
+#               
+# qA
+# qB
+# Mito comp ---------------------------------------------------------------
+Mitocomp <- list(sigVMT24$ENTREZID,sigVMT3$ENTREZID)
+in_commonMt <-c(sigVMT24$ENTREZID,sigVMT3$ENTREZID)
+length(unique(in_commonMt))
+
+ggVennDiagram(Mitocomp,
+              category.names = c("Mitoxantrone-24","Mitoxantrone-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .21))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Mito 3h v 24h", caption = "n = 1251 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+Mtvenlist <- intersect(Mitocomp[[1]],Mitocomp[[2]])
+intersect(Mtvenlist,ACintersect)
+
+
+# AC comparison -----------------------------------------------------------
+
+ACcomp <- list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
+in_commonAC <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
+length(unique(in_commonAC))
+
+ggVennDiagram(ACcomp,
+              category.names = c("Daunorubicin-24","Doxorubicin-24", "Epirubicin-24","Daunorubicin-3","Doxorubicin-3", "Epirubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .21))+
+  scale_fill_gradient(low = "red", high = "yellow")+
+  labs(title = "Comparision AC 3h v 24h", caption = "n = 8925 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+
 ```
+Tell me more!  what are those genes at 24 hours??  give me some GO!
+# Graphing GO
+
+```{r graphing GO of 24 hour intersect, message=FALSE, warning=FALSE, paged.print=TRUE}
+# list24totvenn <- get.venn.partitions(total24)
+# all24hour <- listvenn$values[1]
+
+##From Cormotif
+response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5&gene_prob_tran24h[,4]>0.5),])
+length(response_cluster24h)
 
 
-# Graphing specific gene expression
- First get a list of genes you want to see.  There are multiple ways to "see" these.  I used the word 'apple' to store my list
-```{r genelist, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+gostrescorm24 <- gost(query = response_cluster24h,  organism = "hsapiens",
+  ordered_query = FALSE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.0001,
+  correction_method = c("fdr"),
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","GO:MF", "GO:CC"))
+pDA24 <- gostplot(gostrescorm24, capped = FALSE, interactive = TRUE)
+pDA24
 
-apple <- c('CDKN1A',"BBC3", "MDM2", "BCL2", "BAX", "GPX1", 'MFN2')#,"HAS3",'CYBA','TOP2B', 'TP53', 'ABCC1', 'ABCC5', 'RRAGD', 'DUSP13', 'NDUFAF1', 'TDP2', 'TXNIP','BRCA1', 'CTCF','RAD21','RYR2')
-##find the index number for each gene
-indices <- match(apple, x$genes$SYMBOL)
-###subset the matrix
-entreset <- x$genes$ENTREZID[indices]
-gnames <- cbind(entreset,apple)
-colnames(gnames) <- c("ENTREZID","SYMBOL" )
-
-
-## Now to investigate specific gene expression and analyse similar vs difference of genes up and down between drug "classes"  (anthracycline vs non-anthracycline).
-
-for (gn in indices){
-  print(Da24counts %>% filter(Tags == gn) %>% ggplot(aes(x=as.factor(Samples), y=Freq))+
-  geom_boxplot(aes(fill = as.factor(Samples)))+
-    theme_cowplot(font_size =12,)+
-    
-    ggtitle(paste0(gnames$gnames," expression in Daunorubicin at 24 hours"))+
-    
-    labs(y = "Log2(cpm)",x= "", fill = "Treatment"))
-}
-
-goana
-
+# (gostres$result$p_value)
+table3 <- gostrescorm24$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) %>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  table3
 ```
-
-
-
-r{r comp,eval=TRUE}
-
-
-
-```{r function for plotting, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-plot_function <- function(index, df) {
-  for (i in index) {
-    data <- df %>% filter(ENTREZID == i)
-    if (!nrow(data)) next
-   print(data %>% ggplot(aes(x=as.factor(Samples), y=Counts))+
-            geom_boxplot(aes(fill = as.factor(Samples)))+
-            theme_cowplot(font_size =12,)+
-            ggtitle(paste0(i," expression "))+
-            
-            labs(y = "Log2(cpm)",x= "", fill = "Treatment")) 
-    }
-}
-
-apple <- as.data.frame(sigVDA24$ENTREZID)
-
-
-plot_function(apple,Dx3counts)+theme(axis.text.x = element_text(size= 8,angle = 90))+scale_x_discrete(labels=ENTREZID)
-```
+  

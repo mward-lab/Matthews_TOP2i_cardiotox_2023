@@ -6,25 +6,17 @@ library(RColorBrewer)
 design <- read.csv("data/data_outline.txt", row.names = 1)
 x_counts <- read.csv("data/norm_counts.csv",row.names = 1)
 
-# genas(efit2, coef=c(1,6), subset="Fpval", plot=TRUE, alpha=0.4)
-#
-# genas(efit2, coef=c(2,7), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(3,8), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(4,9), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(5,10), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(1,2), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(1,3), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(1,4), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(1,5), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(6,8), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(7,9), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(8,9), subset="Fpval", plot=TRUE, alpha=0.4)
-# genas(efit2, coef=c(6,10), subset="Fpval", plot=TRUE, alpha=0.4)
+
 
 colnames(shortcompmat) <- c("Test","Control")
-groupmat <- matrix(rep(c("Daunorubicin.24h","Vehicle.24h"),12),nrow =1, ncol=24 )
 
-
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
+time <- ordered(time, levels =c("3h", "24h"))
+group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+group1 <- interaction(drug,time)
+label <- (interaction(substring(drug, 0, 2), indv, time))
+colnames(x_counts) <- label
 
 # All data ----------------------------------------------------------------
 
@@ -41,25 +33,21 @@ set.seed(12345)
 cormotif_tran12 <- cormotiffit(exprs = y_TMM_cpm,
                              groupid = groupid,
                              compid = compid_tran,
-                             K=5, max.iter = 500)
-
-
+                             K=1:6, max.iter = 500)
 
 
 plotIC(cormotif_tran12)
-colnames(cormotif_tran12$bestmotif$motif.q) <- c("3_Daun","3_Dox","3_Epi","3_Mito","3_Tras","24_Daun","24_Dox","24_Epi","24_Mito","24_Tras")
+
 plotMotif(cormotif_tran12)
 
-head(cormotif_tran12$bestmotif$p.post)
-
-gene_prob_tran <- cormotif_tran$bestmotif$p.post
+gene_prob_tran <- cormotif_tran12$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
-# dim(gene_prob_tran)
-# nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 & gene_prob_tran[,2] <0.5 & gene_prob_tran[,3] <0.5 & gene_prob_tran[,4] <0.5& gene_prob_tran[,5] <0.5 & gene_prob_tran[,6] <0.5 & gene_prob_tran[,7] <0.5 & gene_prob_tran[,8] <0.5 & gene_prob_tran[,9] <0.5 & gene_prob_tran[,10] <0.5),])
+dim(gene_prob_tran)
+nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 & gene_prob_tran[,2] <0.5 & gene_prob_tran[,3] <0.5 & gene_prob_tran[,4] <0.5& gene_prob_tran[,5] <0.5 & gene_prob_tran[,6] <0.5 & gene_prob_tran[,7] <0.5 & gene_prob_tran[,8] <0.5 & gene_prob_tran[,9] <0.5 & gene_prob_tran[,10] <0.5),])
+
+length(nonresponse_cluster)
 #
-# length(nonresponse_cluster)
-#
-# response_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] >0.5 & gene_prob_tran[,2] >0.5 & gene_prob_tran[,3] >0.5 & gene_prob_tran[,4] >0.5& gene_prob_tran[,5] >0.5 & gene_prob_tran[,6] >0.5 & gene_prob_tran[,7] >0.5 & gene_prob_tran[,8] >0.5 & gene_prob_tran[,9] >0.5 & gene_prob_tran[,10] >0.5),])
+response_cluster24h  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 & gene_prob_tran[,2] >0.5 & gene_prob_tran[,3] >0.5 & gene_prob_tran[,4] >0.5& gene_prob_tran >0.5 & gene_prob_tran[,6] >0.5 & gene_prob_tran[,7] >0.5 & gene_prob_tran[,8] >0.5 & gene_prob_tran[,9] >0.5 & gene_prob_tran >0.5),])
 #
 # length(response_cluster)
 
@@ -96,15 +84,22 @@ y_TMM_cpm <- cpm(x_counts, log = TRUE)
 colnames(y_TMM_cpm) <- label
 #threehour <- y_TMM_cpm[,c(1:6,13:18,25:30,37:42,49:54,61:66)]
 set.seed(12345)
-cormotif_24h <- cormotiffit(exprs = y_TMM_cpm,
+cormotif_24h2mot <- cormotiffit(exprs = y_TMM_cpm,
                            groupid = groupid,
                            compid = compid_24h,
-                           K=1:8, max.iter = 500)
+                           K=6, max.iter = 500)
 
 plotIC(cormotif_24h)
 #x_axis_labels(labels = c("3_Daun","3_Dox","3_Epi","3_Mito","3_Tras","24_Daun","24_Dox","24_Epi","24_Mito","24_Tras"), every_nth = 1, adj=1, srt =90, cex =0.4)
-plotMotif(cormotif_24h)
-
+plotMotif(cormotif_24h2mot)
+ gene_prob_tran24h <- cormotif_24h2mot$bestmotif$p.post
+rownames(gene_prob_tran24h) <- rownames(y_TMM_cpm)
+dim(gene_prob_tran24h)
+nonresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] <0.5 & gene_prob_tran24h[,2] <0.5 & gene_prob_tran24h[,3] <0.5 & gene_prob_tran24h[,4] <0.5& gene_prob_tran24h[,5] <0.5),])
+length(nonresponse_cluster24h)
+response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5&gene_prob_tran24h[,4]>0.5),])
+length(response_cluster24h)
+#
 
 # AC3 hour ----------------------------------------------------------------
 

@@ -103,14 +103,14 @@ x_axis_labels=function(labels,every_nth=1,...) {
 }
 ```
 
-```{r file loading, eval=FALSE, include=FALSE}
+```{r file loading, eval=TRUE, include=FALSE}
 print(getwd())
 design <- read.csv("data/data_outline.txt", row.names = 1)
 mymatrix <- readRDS('data/mymatrix.RDS')
 
 ```
 
-```{r  current data import,eval=TRUE, echo =FALSE}
+```{r  current data import,eval=FALSE, echo =FALSE}
 
 myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/", pattern ="*.txt")
 design <- read.csv("data/data_outline.txt", row.names = 1)
@@ -240,14 +240,9 @@ hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMe
 #x$samples  ###checking to make sure all is well
 ```
 
-```{r boxplot counts per sample, echo=FALSE, fig.height=5, fig.width=7, message=FALSE, warning=FALSE}
+```{r boxplot counts per sample, echo=FALSE, message=FALSE, warning=FALSE}
 
-x_axis_labels=function(labels,every_nth=1,...) {
-    axis(side=1,at=seq_along(labels),labels=F)
-    text(x=(seq_along(labels))[seq_len(every_nth)==1],
-        y=par("usr")[3]-0.075*(par("usr")[4]-par("usr")[3]),
-        labels=labels[seq_len(every_nth)==1],xpd=TRUE,...)
-}
+
 boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
 x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
 boxplot(filcpm_matrix, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
@@ -314,7 +309,7 @@ for (b in treattype) {
  
   grid.arrange(drug_time_pca, indv_pca, drug_pca, nrow =3, top =paste(b)) 
   }
-
+write.csv(x$counts, "data/norm_counts.csv")
 
 ```
 
@@ -495,7 +490,7 @@ That is why you see the number 2 in the code above.
 
 #DEG summary  
 
-```{r prcompish stuff, echo=FALSE, warning=FALSE}
+```{r prcompish stuff, echo=FALSE, warning=FALSE, paged.print=TRUE}
 prdat_cpm <- calc_pca(t(dat_cpm)) 
 summary(prdat_cpm)
  sum <- summary(decideTests(efit2))
@@ -616,18 +611,12 @@ plot_grid(v9,v10,  rel_widths =c(.8,1))
 ```{r cormotif things, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
 library(Cormotif)
 library(pheatmap)
-# barcodeplot(efit2$t[,6],sigVDA24$ENTREZID,   labels = c ("Down in Daun 24", "up in Daun 24"))
-annocor <- anno$group
+
+
 colnames(countstotal) <- label
 
-compmat <- matrix(group,nrow=6, ncol =12,byrow=TRUE)
-
-shortcompmat <- matrix(rep(c(1,0,0,1), 3),nrow = 12, ncol=2, byrow=TRUE)
 
 
-
-colnames(shortcompmat) <- c("Test","Control")
-groupmat <- matrix(rep(c("Daunorubicin.24h","Vehicle.24h"),12),nrow =1, ncol=24 )
 
 
 mcor <- cor(countstotal)
@@ -651,29 +640,6 @@ corrplot(cor(countstotal), method = 'color',
 
 
 pheatmap::pheatmap(mcor, cluster_rows = TRUE, cluster_cols = TRUE)
-
-my_hclust<- hclust(dist(mcor), method = "complete")
- 
-# install if necessary
-install.packages("dendextend")
- 
-# load package
-library(dendextend)
- 
-as.dendrogram(my_hclust) %>%
-  plot(horiz = TRUE)
-
-# use silent = TRUE to suppress the plot
-my_heatmap <- pheatmap(mcor, silent = TRUE)
- 
-# results are stored as a list
-names(my_heatmap)
-
-my_heatmap$tree_row %>%
-  as.dendrogram() %>%
-  plot(horiz = TRUE)
-
-
 
 
 

@@ -1,8 +1,13 @@
 ---
 title: "Renee_DRC_Code"
 author: "ERM"
-date: '2022-07-12'
-output: html
+date: "`r Sys.Date()`"
+output: html_document: 
+    toc: yes
+    theme: flatly
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -60,7 +65,7 @@ library(ggsignif)
 
 ```
 
-Step 2 is importing the data from the DRC_complilation.xlsx file.  
+Step 2 is importing the data from the DRC_compilation.xlsx file.  Future ref will refer to the table.
 
 ```{r data import, echo=FALSE, warning=FALSE}
 
@@ -162,15 +167,9 @@ ind5b <- ind5b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Perc
 ind6a <- ind6a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
 ind6b <- ind6b %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
 
-for (i in ID){
-  
-  write
-  
-  
-}
 
 
-write.table()
+
 ```
 
 File cleanup first subsets each file imported by taking out the 'Empty' samples in the Drug column and then renaming the file to individual names and DRC a and b
@@ -241,16 +240,16 @@ names(individuals)### check to make sure they are labled.
  ##make a smaller data frame###
  spec_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5b", "ind6a")### used to genrate ldh poster data in Dec 2022
  spec2_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5a", "ind6a")
- smaller <- individuals[c(1,4,6,8,10,11)]
- smaller2 <- individuals[c(1,4,6,8,9,11)]
+ smaller <- individuals[c(1,4,6,7,9,11)]
+ smaller2 <- individuals[c(1,3,5,7,9,11)]
  
 smaller <- bind_rows(smaller)
 smaller2 <- bind_rows(smaller2)
+#saveRDS(individuals, file = "data/individualDRCfile.RDS")
 
 ```
 
 Once they are all in a data from, a few functions need to be defined for ggplot:
-
 ##functions
 ```{r functions, eval= FALSE,message=FALSE, warning=FALSE}
 
@@ -297,11 +296,6 @@ predictdf.dr4pl <- function (model, xseq, se, level, nboot=200) {
 
 ```
 
-
-Containers for holding thingys:
-
-
-
 ```{r empty list holder}
 
 #### making lists to put stuff in###
@@ -311,21 +305,17 @@ epils <- list() ###epirubicin list
 mitols <- list() ###mitoxantrone list
 trasls <- list() ###trastuzmab list
 vehls <- list() ###vehicle list
-name <- c( "Daun", "Doxo","Epi", "Mito", "Tras")### text list of drugs
-
-
-
-
+name <- c( "Veh","Daun", "Doxo","Epi", "Mito", "Tras")### text list of drugs
 ```
 
-##individual
+## Individual Plots
 ```{r individual plots}
 
 for (i in name){
-  thing <- subset(rbind(ind5a,ind5b), Drug == i)
+  thing <- subset(rbind(ind5a), Drug == i)
     label.1 <- thing$Name[1]
-    thing.m <- dr4pl(Percent ~ Conc, data = thing, method.init = "logistic")
-    doxols[[i]] <- summary(thing.m)
+    thing.m <- dr4pl(Percent ~ Conc, data = thing, method.init = "logistic",init.parm = dr4pl_theta(NA,NA,NA,0))
+    #doxols[[i]] <- summary(thing.m)
     pl <- plot(thing.m,
               ylim = c(0,1.2),
       text.x ="Concentration",
@@ -335,17 +325,20 @@ for (i in name){
   pl$i
     
     print(summary(thing.m))
-    plot(pl)  + ylim(0, 1.2) ###how I change the limits and colors of dots?)
+    pl <- pl  + ylim(0, 1.2)+ geom_point(size = 0.01)
+    plot(pl)
+    
+    ###how I change the limits and colors of dots?)
 } 
  
-
+pl$i
 
 ```
 The problem with that package is the  dots.... and the fact I cannot graph lines on top of one another.  So I started to extract the information needed to generate the geom_ribbon and geom_line data needed.
 
 Here I need to assign the drugs out by drug:
 
-```{r making filtered data}
+```{r making filtered data, echo=FALSE}
 
 ### sort durg out and store as drug name from smaller list
 #unique(smaller$SampleID)
@@ -427,48 +420,67 @@ MT_parm <- as.data.frame(param_holder)
     ```
     
     
-```{r Trastuzumab}
-### to extract parameters for mapping
-param_holder <- c()
-for (i in ID) {
-  thing <- filter(TR, SampleID== i)
-  thing.m <- dr4pl(Percent ~ Conc, 
-                   data = thing, method.init = "logistic")
-  #group.m <- drm(Percent ~Conc, data =thing)
-   param_holder[[i]] <- thing.m$parameters[2]
-  
-   
-}
-TR_parm <- as.data.frame(param_holder)
-    ```
-    
-    
-```{r Vehicle, warning=FALSE}
-### to extract parameters for mapping
 
-param_holder <- c()
-for (i in spec_ind) {
-  thing <- filter(VE, SampleID== i)
-  thing.m <- dr4pl(Percent ~ Conc, 
-                   data = thing, method.init = "logistic")
-   param_holder[[i]] <- thing.m$parameters
-  
-   
-}
-VE_parm <- as.data.frame(param_holder)
+
+    
+    
+```{r Viablitiy plots, warning=FALSE}
+### to extract parameters for mapping
+DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
+DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
+EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
+MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
+TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
+VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
+alterlist <- full_list %>% na.omit()#%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4)) 
+
+ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = SampleID, alpha =0.8)) +
+     guides(alpha = "none")+ 
+      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
+  geom_violin(position ="dodge",outlier.colour="transparent")+
+      ylim(0,1.5)+
+        # Change the x-axis scale to log 10 scale
+  theme_classic() +
+  # scale_x_discrete("Conc", labels = c("0.01","0.05", "0.1","0.5","1"))+
+  xlab(expression(paste("Concentration [", mu, "M]")))+
+  geom_hline(yintercept = 1,lty = 3)+
+  ylab(NULL) +
+  facet_wrap(~Name)+
+  theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
+      ggtitle("Viablity at low concentrations")+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(size =2),
+        axis.text=element_text(size=9, face = "bold"),
+       panel.grid.major = element_line(colour = 'lightgrey'),
+       panel.border=element_rect(fill = NA, size = 2))
+       
+      #plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+
+
     ```
     Getting an error, but It does not affect the result
 I can use bind_rows to get a pretty output in tibble
 
     
-     
+     iqr = function(z, lower = 0.25, upper = 0.75) {
+  data.frame(
+    y = median(z),
+    ymin = quantile(z, lower),
+    ymax = quantile(z, upper)
+  )
+}
+
+# Plot standard IQR
+ggplot(data = diamonds, mapping = aes(x = cut, y = depth)) + 
+  stat_summary(fun.data = iqr)
     
     
 ```{r daunplot}
 ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
      guides(color =  "none", alpha = "none")+ 
-  stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
+  
+  geom_function(fun=mean_se)+
+    stat_smooth(method = "mean_se")+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -476,10 +488,11 @@ ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
   ylab("Normalized Cell Viability")
 
 daplot <- 
-  ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
-     guides(color =  "none", alpha = "none")+ 
-  stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.5)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
+  ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
+     guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
+  
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -492,9 +505,10 @@ daplot <-
         axis.text=element_text(size=10, face = "bold"),
        panel.grid.major = element_line(colour = 'lightgrey'),
        panel.border=element_rect(fill = NA, size = 2),
-       panel.background = element_rect(fill = "transparent"),
-      plot.background = element_rect(fill = "transparent", colour = NA))
+       
+      plot.background = element_rect(fill = "#DDBBCD", colour = NA))
       
+  daplot
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
     ```
@@ -514,9 +528,10 @@ ggplot(DX2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
 
 dxplot <-
   ggplot(DX2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
-  guides(color =  "none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.5)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
+  guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
+  
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -529,8 +544,8 @@ dxplot <-
         axis.text=element_text(size=10, face = "bold"),
        panel.grid.major = element_line(colour = 'lightgrey'),
        panel.border=element_rect(fill = NA, size = 2),
-       panel.background = element_rect(fill = "transparent"),
-      plot.background = element_rect(fill = "transparent", colour = NA))
+       
+      plot.background = element_rect(fill = "#DDBBCD", colour = NA))
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
@@ -555,9 +570,10 @@ ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
 
 epplot <- 
   ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
-  guides(color =  "none", alpha = "none")+
-  stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.5)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
+  guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
+  
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -570,11 +586,11 @@ epplot <-
         axis.text=element_text(size=10, face = "bold"),
        panel.grid.major = element_line(colour = 'lightgrey'),
        panel.border=element_rect(fill = NA, size = 2),
-       panel.background = element_rect(fill = "transparent"),
-      plot.background = element_rect(fill = "transparent", colour = NA))
+       
+      plot.background = element_rect(fill = "#DDBBCD", colour = NA))
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
-    
+  epplot  
     
     
     ```
@@ -582,7 +598,7 @@ epplot <-
     
     ```{r mitoplot}
 ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha= 0.6)) +
-     guides(color =  "none", alpha = "none")+
+     guides(color =  guide_legend(overide.aes =list(size=4)), alpha = "none")+
       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,NA,NA))), se = FALSE)+
       ylim(0,1.5)+
@@ -594,8 +610,9 @@ ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha= 0.6)) +
     
 mtplot <- 
   ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
-      guides(color =  "none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.5)+
+      guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
+  
     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
@@ -609,11 +626,12 @@ mtplot <-
         axis.text=element_text(size=10, face = "bold"),
        panel.grid.major = element_line(colour = 'lightgrey'),
        panel.border=element_rect(fill = NA, size = 2),
-       panel.background = element_rect(fill = "transparent"),
-      plot.background = element_rect(fill = "transparent", colour = NA))
+       
+      plot.background = element_rect(fill = "#FFD966", colour = NA))
+      
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
-    
+  mtplot  
     
     
     ```
@@ -621,26 +639,21 @@ mtplot <-
     
     
     ```{r  trasplot}
-leg <- 
-      ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
-      guides(alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
-      scale_color_discrete(labels = c("Individual 1","Individual 2", "Individual 3", "Individual 4","Individual 5","Individual 6"))+labs(color="")+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
-      ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab("Normalized Cell Viability")
-    
-                          
-                          
+leg <- ggplot(TR2, 
+            aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6))+
+      guides(color = guide_legend(override.aes = list(size = 2)), alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
+      theme_classic() +
+      labs(color = "Individual")+
+      scale_color_discrete(labels = c("1", "2", "3","4","5","6"))
+       
                           
 trplot <- 
   ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
-      guides(color =  "none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.5)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,NA,NA,NA))), se = FALSE)+
+      guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
+  
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() + 
@@ -652,23 +665,23 @@ trplot <-
         axis.text=element_text(size=10, face = "bold"),
        panel.grid.major = element_line(colour = 'lightgrey'),
        panel.border=element_rect(fill = NA, size = 2),
-       panel.background = element_rect(fill = "transparent"),
-      plot.background = element_rect(fill = "transparent", colour = NA))
+       
+      plot.background = element_rect(fill = "#FFD966", colour = NA))
       
-  # theme(plot.title = element_text(hjust = 0.5, size =20))
-    
+      
+  l# theme(plot.title = element_text(hjust = 0.5, size =20))
+  trplot  
 
     
     
     ```
     
     
-    ```{r  control}
+    ```{r  control plot, echo = FALSE}
 ggplot(VE2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
       guides(color =  "none", alpha = "none")+
-          stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.5)+
-    geom_smooth(method = drm, method.args = list(fct = L.4()), se = FALSE)+
-      stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,NA,NA,NA))), se = FALSE)+
+          stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = .1)+
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -677,26 +690,17 @@ ggplot(VE2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
       theme(plot.title = element_text(hjust = 0.5, size =20))+
       ggtitle("Control")
 veplot <-     
-  ggplot(VE, aes(
+  ggplot(VE2, aes(
     x = Conc,
     y = Percent,
     color = SampleID,
     alpha = 0.6
   )) +
-  guides(color =  "none", alpha = "none") +
-  stat_summary(
-    fun.data = mean_se,
-    fun.args = list(mult = 1),
-    geom = "pointrange",
-    size = 0.5
-  ) +
-  geom_smooth(method = drm,
-              method.args = list(fct = L.4()),
-              se = TRUE) +
-  stat_smooth(method = "drm",
-              method.args = list(fct = L.4(c(NA, NA, NA, NA))),
-              se = FALSE) +
-  ylim(0, 1.5) +
+  guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
+  
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+      ylim(0,1.5)+
   scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
   xlab(expression(paste("Concentration [", mu, "M]"))) +
@@ -718,10 +722,11 @@ veplot <-
 
 
       
-
+veplot
 # theme(plot.title = element_text(hjust = 0.5, size =20))
      #####plot all together!#####   
-    
+
+
     
     ```
 ###plot all together!#####
@@ -729,14 +734,14 @@ veplot <-
 ```{r plot together not good}
     library(cowplot)
 ### take a legend from a plot
-legend_b <- get_legend(
-  leg + 
-    guides(color = guide_legend(nrow = 1)) +
-    theme(legend.position = "bottom")
-)
+legend_b <- get_legend(leg)
+  
+    guides(color = guide_legend(nrow = 1))) 
+    
+
 
 legend_b
-plan1 <- plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
+plan1 <- plot_grid(daplot,dxplot,epplot,NULL,mtplot, trplot,veplot,legend_b,ncol =4)
 
 #drcfinal<- plot_grid(plan1, ncol =1, rel_heights = c(1,0.1))
 save_plot('plan1plot.png', plan1)
@@ -748,17 +753,17 @@ plan1
 
 ```{r  LD50 extraction make the list}
 
-DAi <- abc_df %>% dplyr::filter(Drug == "Daun")
-DXi <- abc_df %>% dplyr::filter(Drug == "Doxo")
-EPi <- abc_df %>% dplyr::filter(Drug =="Epi")
-MTi <- abc_df %>% filter(Drug =="Mito")
-TRi <- abc_df %>% filter(Drug =="Tras")
-VEi <- abc_df %>% filter(Drug == "Veh")
-
+DAi <- full_list %>% dplyr::filter(Drug == "Daun")
+DXi <- full_list %>% dplyr::filter(Drug == "Doxo")
+EPi <- full_list %>% dplyr::filter(Drug =="Epi")
+MTi <- full_list %>% filter(Drug =="Mito")
+TRi <- full_list %>% filter(Drug =="Tras")
+VEi <- full_list %>% filter(Drug == "Veh")
+###extracting ggplot colors:
 ```
 
 
-```{r extract the stuff}
+```{r extract the stuff via dr4pl}
 
 param_holder <- c()
 for (i in ID) {
@@ -816,29 +821,32 @@ trLD <- sapply(param_holder, "[[", 1)
 
 ```
 
-```{r MT try with drc}
+```{r extracting with drm}
 for(k in ID){
-
-  thing <-  filter(MT, SampleID==k)
-  na.omit= TRUE
-  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
-  plot(thing.m, 
-       type ="bars" ,
-       main = paste(thing$Name[1], " ", k),
-       col= 2,
-       xlab = expression(paste("Concentration [",mu,"M]")),
-       ylab = "Percent Viable",
-       ylim=c(0,1.5))
-  plot(thing.m,  type="bars", col= 2, add=TRUE )
+thingda <-  filter(DAi, SampleID==k)
+  thingda.m <- drm(Percent~Conc, data = thingda, fct=LL.4(c(NA, 0, 1, NA)))
+  onion <- ED(thingda.m, c(50), interval = "delta")
+  daunls[k] <- onion[1]
+thingdx <-  filter(DXi, SampleID==k)
+  thingdx.m <- drm(Percent~Conc, data = thingdx, fct=LL.4(c(NA, 0, 1, NA)))
+  onionx <- ED(thingdx.m, c(50), interval = "delta")
+  doxols[k] <- onionx[1]
   
-  a <- ED(thing.m, c(50), interval = "delta")
-  legend("topright", legend = paste(round(a[1],2)))
-  mitols[k] <- a[1]
-
-
+ thingep <-  filter(EPi, SampleID==k)
+  thingep.m <- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, 0, 1, NA)))
+  onione <- ED(thingep.m, c(50), interval = "delta")
+  epils[k] <- onione[1] 
+  
+  thingmt <-  filter(MTi, SampleID==k)
+  thingmt.m <- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA, 0, 1, NA)))
+  onionm <- ED(thingmt.m, c(50), interval = "delta")
+  mitols[k] <- onionm[1] 
+  
+  
  }
 
-mitols
+
+
 ```
 ```{r DA try with drc}
 for(k in ID){
@@ -873,7 +881,7 @@ for(k in ID){
   thing <-  filter(DX, SampleID==k)
   na.omit= TRUE
   thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
-  plot(thing.m, 
+  
        type ="bars" ,
        main = paste(thing$Name[1], " ", k),
        col= 2,
@@ -986,37 +994,34 @@ vehls
 
 ```{r}
 ###combining all values into a larger dataframe
-LDfull <- list(daunls,doxols,epils,mitols)
-#renaming the column names
- # for( i in seq_along(LDfull)){
- #    
- #    LD50[[i]]$SampleID <- rep(ID[i],nrow(LDfull[[i]]))
- #    
- #  }
 
-names(LDfull) <- c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
+daunls <- plyr::quickdf(daunls)
+doxols <- plyr::quickdf(doxols)
+epils <- plyr::quickdf(epils)
+mitols <- plyr::quickdf(mitols)
+LDfull <- rbind(daunls,doxols,epils,mitols)
+rownames(LDfull) <- c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
+summary(LDfull)
+LD50long <- pivot_longer(data = LDfull,cols = names_to ="Individual", values_to= "ld50")
 
+LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_longer(-Treatment, cols_vary = "slowest", names_to="indv",values_to="ld50")
 # LD50full <-
-  LDfull %>% mutate("Individual" = substr(name,4,4))
-meanLD <- LD50full %>% dplyr::select(-Sample) %>% group_by(Individual) %>%  dplyr::summarise_each(.,funs(mean))
+   
   
-
-#lmLD <- 
-  
-  logLD <- meanLD %>% pivot_longer(!Individual, names_to ="Treatment", values_to = "ld50") %>% mutate("log10" = log10(ld50))median(LDfull, col)
+  # logLD <- meanLD %>% pivot_longer(!Individual, names_to ="Treatment", values_to = "ld50") %>% mutate("log10" = log10(ld50))median(LDfull, col)
 
 
-ab <- LD50 %>% 
-  ggplot(., mapping = (aes(x = (Treatment), y = log10))) +
+ab <- LD50long %>% 
+  ggplot(., mapping = (aes(x = (Treatment), y = log10(ld50)))) +
   geom_point(aes(
-    color = Individual,
+    color = indv,
     size = 5,
-    shape = Individual,
+    shape = indv,
     alpha = 0.4)) +
   # labs(title= expression("Mean observed LD"[50]~ "per individual"))+
        xlab("Treatment")+
     ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
-  scale_shape_manual(values = c(15, 16, 17, 15, 18, 16))+
+ 
     theme_bw() + 
   theme(plot.title = element_text(hjust =0.5, size = 18))+
   guides(alpha ="none", size = "none") %>% print()  #: to change point shapes
@@ -1244,116 +1249,36 @@ save_plot("tropimage.png",tropimage)
 ```
 ###LDH DATA ###
 
-LDH
-
-
-
-```{r LDH,  echo=FALSE, warnings = FALSE}
-###LDH levels from individuals###
-library(readxl)
-X20221115_LDH_75_1 <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/20221115_LDH_75-1.xlsx", 
-    sheet = "Sheet1")
-
-#tidata <- data.frame(dn, relng, relstdv, hrs)
-
-X20221110_LDH_87_1 <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/20221110_LDH_87-1.xlsx", 
-    sheet = "Sheet1")
-
-
-X20221201_LDH_77_1 <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/20221201_LDH_77-1.xlsx", 
-    sheet = "Sheet1")
-X20221201_LDH_78_1 <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/20221201_LDH_78-1.xlsx", 
-    sheet = "Sheet1")  #note the name problem 12-01 was not the date of experiment
-
-X20230112_LDH_79_1 <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/20230112_LDH_79-1.xlsx", 
-    sheet = "Sheet1")
-X20230126_LDH_71_1 <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/20230126_LDH_71-1.xlsx", 
-    sheet = "Sheet1")
-sig_analysis <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/LDH_analysis_sig.xlsx", col_types = c("text", "numeric", "numeric", 
-        "numeric", "text", "numeric", "numeric", "numeric", 
-        "numeric", "skip", "skip", "skip", 
-        "skip", "skip", "skip", "skip", "skip","skip","skip","skip","skip","skip","skip",
-        "skip", "skip"), sheet = "Sheet1")
-     
-# devtools::install_github("riatelab/cartography")
-# CRAN version
-install.packages("cartography")
-library(cartography)
-#### Bind all together and call ldh
-
-ldhresults <- rbind(X20221110_LDH_87_1,X20221115_LDH_75_1,X20221201_LDH_77_1, X20221201_LDH_78_1, X20230112_LDH_79_1)
-names(ldhresults)
-unique(ldhresults
-       )
-
-library(readxl)
-library(ggpubr)
-library(rstatix)
-# LDH_analysis_sig <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/LDH_analysis_sig.xlsx", 
-#     
-
-### take out control
-#write_excel_csv(wideldh, "C:/Users/renee/Documents/R_Stuff/DRC_in_r/wideldhresults_full.csv",delim = ";")
-ldhresultsf <- ldhresults %>% filter(Drug != 'Control')
-##make the plot##
-t(wideldh
-  )
-
-# (t(ldhresults))
-# 
-# daunanalysis <- sig_analysis %>% filter(Drug %in% c("Control","Daunorubicin")) %>% mutate(Conc=factor(Conc, levels = c("50","10","5","1","0.5","0.1","0.05","0.01"))) %>% group_by(Drug,Conc) %>%  summarise(mean_ldh = mean(norm_val))
-# TukeyHSD(aovsig)
-summarise((daunanalysis))
-sig_analysis
-buildsig <- ggplot_build(atest)
-buildsig$data[[3]]
-comp_data <- buildsig$data[3]
-comp_data
-atest$mapping
-buildsig$data[[3]][["angle]]"]]
-
-sig_analysis$Drug <- factor(sig_analysis$Drug, levels = c("Control", "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))
-```
-
 ```{r}
 library(tidyverse)
 #my_comparisons <- 
   
   
-  
-  #rstatix::df_group_by(sig_analysis,c(Drug, Conc))
-#shortsig<- 
-rLDHshort <-  sig_analysis %>% select(Drug, Conc,  norm_val) %>%  group_by(Drug,Conc) %>%  summarize(mean =mean(norm_val))#, mean(norm_val)))
-  #%>% mutate(meanLDH= mean(rLDH))
-                                                                       #mutate()nova_test(data=shortsig, norm_val~Drug+Conc)#, within = 'Conc', between = 'Drug')
-bpt <- ggboxplot(rLDHshort,x= 'Conc', y='mean', group = "Drug")
-bpt + facet_wrap("Drug")
-#atest <-
-  ggplot(sig_analysis, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
-  geom_boxplot(aes(fill = as.factor(Conc))) +
-  #geom_point(aes(color= indv))+
-  stat_compare_means(method="t.test", ref.group=1, label="p",angle = 75,hide.ns = TRUE, label.y=c(4.5),label.x= c(1.5,2.5,3.5,4.5,5.5,6.5,7.5),aes(angle=90))+
-    scale_fill_manual(values = c("#F3BABD","#EAA2A5","#E28A8E",
-                "#DA7277","#CF5157","#C43138","#982124","#6B1210" ),
-    aesthetics = c("Conc", "fill")) + 
-      guides(fill = FALSE) +
-      #geom_hline(yintercept = 1) +
-      theme_bw() +
-      xlab(expression(paste("Drug [", mu, "M]"
-      ))) +
-      ylab("LDH release") +
-      labs(fill = "Individual") +
-      facet_wrap("Drug") +
-      theme(strip.background = element_blank()) +
-      theme(
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(size = 1.5),
-        axis.text = element_text(size = 9, color = "black", angle = 20),
-        panel.border = element_rect(fill = NA, size = 2),
-        panel.background = element_rect(fill = "transparent"),
-        plot.background = element_rect(fill = "transparent", colour = NA),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-      
+# ggplot(sig_analysis, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
+#   geom_boxplot(aes(fill = as.factor(Conc))) +
+#   #geom_point(aes(color= indv))+
+#   stat_compare_means(method="t.test", ref.group=1, label="p",angle = 75,hide.ns = TRUE, label.y=c(4.5),label.x= c(1.5,2.5,3.5,4.5,5.5,6.5,7.5),aes(angle=90))+
+#     scale_fill_manual(values = c("#F3BABD","#EAA2A5","#E28A8E",
+#                 "#DA7277","#CF5157","#C43138","#982124","#6B1210" ),
+#     aesthetics = c("Conc", "fill")) + 
+#       guides(fill = FALSE) +
+#       #geom_hline(yintercept = 1) +
+#       theme_bw() +
+#       xlab(expression(paste("Drug [", mu, "M]"
+#       ))) +
+#       ylab("LDH release") +
+#       labs(fill = "Individual") +
+#       facet_wrap("Drug") +
+#       theme(strip.background = element_blank()) +
+#       theme(
+#         axis.title = element_text(size = 15, color = "black"),
+#         axis.ticks = element_line(size = 1.5),
+#         axis.text = element_text(size = 9, color = "black", angle = 20),
+#         panel.border = element_rect(fill = NA, size = 2),
+#         panel.background = element_rect(fill = "transparent"),
+#         plot.background = element_rect(fill = "transparent", colour = NA),
+#         strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+#       
 ```
 
 
@@ -1409,7 +1334,7 @@ library(dplyr)
 
 ```{r ld50 bind echo=FALSE, warnings = FALSE}
 
-ldall <- bind_rows(daunls,doxols, epils, mitols,trasls)
+ldall <- bind_rows(daunls,doxols, epils, mitols)
 str(ldall
   )
 row.names(ldall) <- c('Daunorubicin', 'Doxorubicin', 'Epirubicin', 'Mitoxantrone', 'Trastuzumab')
