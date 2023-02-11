@@ -249,7 +249,7 @@ ggVennDiagram(Dauncomp,
   scale_fill_gradient(low = "light blue", high = "yellow")+
   labs(title = "Comparision of Dauno 3h v 24h", caption = "n = 7732 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-Davenlist <- intersect(Dauncomp[[1]],Dauncomp[[2]])
+#Davenlist <- intersect(Dauncomp[[1]],Dauncomp[[2]])
 
 
 # Doxocomp ----------------------------------------------------------------
@@ -270,15 +270,13 @@ ggVennDiagram(Doxcomp,
   scale_fill_gradient(low = "light blue", high = "yellow")+
   labs(title = "Comparision of Doxo 3h v 24h", caption = "n = 6808 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-Dxvenlist <- intersect(Doxcomp[[1]],Doxcomp[[2]])
-length(intersect(Dxvenlist,Davenlist))## 7 of DX are in DA
+#Dxvenlist <- intersect(Doxcomp[[1]],Doxcomp[[2]])
+#length(intersect(Dxvenlist,Davenlist))## 7 of DX are in DA
 # Epi Comp ----------------------------------------------------------------
 
 Epicomp <- list(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
 in_commonEp <- c(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
 length(unique(in_commonEp))
-
-
 
 ggVennDiagram(Epicomp,
               category.names = c("Epirubicin-24","Epirubicin-3"),
@@ -295,7 +293,7 @@ ggVennDiagram(Epicomp,
   labs(title = "Comparision of Epi 3h v 24h", caption = "n = 6858 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
-Epvenlist <- intersect(Epicomp[[1]],Epicomp[[2]])
+#Epvenlist <- intersect(Epicomp[[1]],Epicomp[[2]])
 # qA <- (intersect(Epvenlist , Davenlist))##76 are are in da
 # qB <- (intersect(Dxvenlist, Epvenlist))#y are in Ep from Dx
 # #ACintersect <- intersect(qA,qB)##total of 6 are in all 3 comparisons
@@ -322,9 +320,9 @@ ggVennDiagram(Mitocomp,
   scale_fill_gradient(low = "light blue", high = "yellow")+
   labs(title = "Comparision of Mito 3h v 24h", caption = "n = 1251 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-Mtvenlist <- intersect(Mitocomp[[1]],Mitocomp[[2]])
-intersect(Mtvenlist,ACintersect)
-
+#Mtvenlist <- intersect(Mitocomp[[1]],Mitocomp[[2]])
+#intersect(Mtvenlist,ACintersect)
+#
 
 # AC comparison -----------------------------------------------------------
 
@@ -358,11 +356,12 @@ Tell me more!  what are those genes at 24 hours??  give me some GO!
 # all24hour <- listvenn$values[1]
 
 ##From Cormotif
-response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5&gene_prob_tran24h[,4]>0.5),])
-length(response_cluster24h)
+response_cluster24h <-  read_csv("data/response_cluster24h.csv", 
+    col_types = cols(...1 = col_skip()))
+length(response_cluster24h$x)
 
 
-gostrescorm24 <- gost(query = response_cluster24h,  organism = "hsapiens",
+gostrescorm24 <- gost(query = response_cluster24h$x,  organism = "hsapiens",
   ordered_query = FALSE,
   domain_scope = "custom",
   measure_underrepresentation = FALSE,
