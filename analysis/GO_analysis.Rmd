@@ -212,7 +212,7 @@ ggVennDiagram(total24,
 # total 3 ----------------------------------------------------------------
 
 total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
-in_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
+totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
 length(unique(in_common3))
 
 ggVennDiagram(total3,
@@ -352,16 +352,37 @@ Tell me more!  what are those genes at 24 hours??  give me some GO!
 # Graphing GO
 
 ```{r graphing GO of 24 hour intersect, message=FALSE, warning=FALSE, paged.print=TRUE}
-# list24totvenn <- get.venn.partitions(total24)
-# all24hour <- listvenn$values[1]
+list24totvenn <- get.venn.partitions(total24)
+# > list24totvenn$..count..
+#  [1]  960   13   19   15   37   18   25  126 4440  265  538  533  661  399  838
+# > list24totvenn$..values..[?]
+# ##From Cormotif
 
-##From Cormotif
-response_cluster24h <-  read_csv("data/response_cluster24h.csv", 
+DDEresp <- list24totvenn$..values..[[9]]
+DDEMresp <- list24totvenn$..values..[[1]]
+Dxresp <- sigVDX24$ENTREZID
+DXsprespon <- list24totvenn$..values..[[14]]
+
+top2bi <-  read_csv("data/response_cluster24h.csv", 
     col_types = cols(...1 = col_skip()))
-length(response_cluster24h$x)
+length(top2bi$x)
+
+complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+complete <- as.data.frame(unique(complete))
+colnames(complete) <- "ENTREZID"
+
+NoResp <- backGL %>% anti_join(.,(complete), by = "ENTREZID")
+# ACresponse_cluster24h <-  read_csv("data/ACresponse_cluster24h.csv", 
+#     col_types = cols(...1 = col_skip()))
+# length(ACresponse_cluster24h$x)
 
 
-gostrescorm24 <- gost(query = response_cluster24h$x,  organism = "hsapiens",
+# nonresponse_cluster24h <-  read_csv("data/nonresponse_cluster24h.csv", 
+#     col_types = cols(...1 = col_skip()))
+# length(nonresponse_cluster24h$x)
+
+
+gostrescorm24 <- gost(query = top2bi$x,  organism = "hsapiens",
   ordered_query = FALSE,
   domain_scope = "custom",
   measure_underrepresentation = FALSE,
@@ -370,16 +391,99 @@ gostrescorm24 <- gost(query = response_cluster24h$x,  organism = "hsapiens",
   correction_method = c("fdr"),
   custom_bg = backGL$ENTREZID,
   sources=c("GO:BP","GO:MF", "GO:CC"))
-pDA24 <- gostplot(gostrescorm24, capped = FALSE, interactive = TRUE)
-pDA24
+cormotifcluster <- gostplot(gostrescorm24, capped = FALSE, interactive = TRUE)
+cormotifcluster
 
 # (gostres$result$p_value)
 table3 <- gostrescorm24$result %>%
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) %>% 
-  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
-  kable(.,) %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
   table3
+```
+  
+  
+  
+  # Knowles Comparison data:
+  
+  pulled from 2018 eLife, supplementary 5
+  
+  First I will get my data organized into several sets.
+  
+  Set 1: 'Dx' -Doxorubicin 24 hour significant DEGs p<0.1  
+  Set 2: 'DDE' -Union of Daunorubicin, Doxorubicin, Epirubicin 24 hour significant DEGs p<0.1
+  Set 3: 'DDEM'-Union of Daunorubicin, Doxorubicin, Epirubicin, and Mitoxantrone 24 hour significant DEGs p<0.1
+  set 4: 'NoResp' - all genes at 24 hours that are not expressed significantly in any treatment  
+  set 5: 'TOP2Bi' -cormotif intersection of 24 hour samples compared to Vehicle with p>0.5
+  set 6: Knowles list from supp 5 in 2018 eLife paper  eQTL
+```{r  knowles data comparisons}
+library(biomaRt)
+# library(org.Hs.eg.db)
+# library(Homo.sapiens)
+# library("AnnotationHub")
+# library(EnsDb.Hsapiens.v79)
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+entrez <- useMart("entrez",dataset="hsapiens_gene_entrez")
+ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
+attributes <- listAttributes((ensembl))
+
+Knowles_2018.elife.33480.supp5.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp5-v2/Knowles_2018-elife-33480-supp5-v2")
+# Knowles_2018.elife.33480.supp6.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp6-v2/Knowles_2018-elife-33480-supp6-v2")
+# # #  read in supp file
+# supp5list <- Knowles_2018.elife.33480.supp5.v2[,1]
+# supp6list <- Knowles_2018.elife.33480.supp6.v2[,1]
+
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+knowles5 <- Knowles_2018.elife.33480.supp5.v2[,1]
+
+knowles5 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
+                 values = knowles5, mart = ensembl)
+length(unique(knowles5$ensembl_gene_id))#376+
+length(unique(knowles5$entrezgene_id))#377
+# 
+# in_common24AC <- intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)
+# in_common24AC <- intersect(in_common24AC,sigVEP24$ENTREZID)
+# AC24hoursig <- (unique(in_common24AC))  ### 5400 total genes from all 24 h AC
+# AConly24hsig <- getBM(attributes=my_attributes,filters ='entrezgene_id',
+#                   values = AC24hoursig, mart = ensembl)
+# length(unique(AConly24hsig$ensembl_gene_id))#5736
+# length(unique(AConly24hsig$entrezgene_id))#5245
+
+totalgenes <- getBM(attributes=my_attributes,filters ='entrezgene_id',
+                  values = backGL$ENTREZID, mart = ensembl)
+length(unique(totalgenes$entrezgene_id))#14184
+length(unique(totalgenes$ensembl_gene_id))#15596
+DX24Respset<- intersect(totalgenes$ensembl_gene_id, sigDox24$ensembl_gene_id)
+length(unique(DX24Respset))  #7182 (#185 in common with knowls5)
+15596-7182  #=8414
+
+comp1 <- list(knowles5$entrezgene_id,top2bi$entrezgene_id)
+  ggVennDiagram(comp1,
+              category.names = c("Knowles", "Top2Bi-24hours"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .21))+
+  scale_fill_gradient(low = "red", high = "yellow")+
+  labs(title = "Comparision Knowles v 24h", caption = "n = 376")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+  
+
+  
+  
+  
+  
+  
+  
+
 ```
   

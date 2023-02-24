@@ -213,7 +213,7 @@ dim(filcpm_matrix)
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
-write.csv(x$counts, "data/norm_counts.csv")
+# write.csv(x$counts, "data/norm_counts.csv")
 
 
 ```

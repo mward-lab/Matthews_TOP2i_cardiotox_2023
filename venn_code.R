@@ -5,14 +5,6 @@ library(ggplot2)
 
 
 
-
-
-
-Trascomp <- list(sigTR24$ENTREZID ,sigVTR3$ENTREZID)
-ACcomp <- list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID)
-nonACcomp <- list()
-
-
 # total24 -----------------------------------------------------------------
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)

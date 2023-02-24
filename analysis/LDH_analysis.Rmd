@@ -12,10 +12,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ## R Markdown
 
 ```{r setup}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(readxl)
 library(ggpubr)
 library(rstatix)
 library(tidyverse)
+library(zoo)
 ```
 
 ## Including Plots
@@ -35,16 +37,16 @@ ggplot(norm_LDH, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
     scale_fill_manual(values = c("#F3BABD","#EAA2A5","#E28A8E",
                 "#DA7277","#CF5157","#C43138","#982124","#6B1210" ),
     aesthetics = c("Conc", "fill")) + 
-      guides(fill = FALSE) +
-      #geom_hline(yintercept = 1) +
+      guides(fill = "none") +
+      geom_hline(yintercept = 1,lty =3) +
       theme_bw() +
       xlab(expression(paste("Drug [", mu, "M]"
       ))) +
-      ylab("LDH release") +
+      ylab("Relative LDH release") +
       labs(fill = "Individual") +
       facet_wrap("Drug",) +
    ylim(0, 5)+
-      theme(strip.background = element_rect(fill = c("#DDBBCD", "#DDBBCD", "#DDBBCD", "#FFD966","#FFD966", "transparent"))) +
+      theme(strip.background = element_rect(fill = "transparent")) +
       theme(
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(size = 1.5),
@@ -55,15 +57,93 @@ ggplot(norm_LDH, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
 ```
 
 
-
-
-
-
-
-
-
-
+```{r ldh 24h results, echo=FALSE, message=FALSE, warning=FALSE}
+ldh24means <- data.frame('',nrow=6)
+DA_24_ldh <- matrix(c(1.188,1.222,1.195,1.030,1.074,1.064,1.298,1.282,1.262,
+                      1.901,1.975,1.970,3.131,3.246,3.080,1.339,1.438,1.367),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
+ldh24means$Daunorubicin <- rollmean(t(DA_24_ldh),3)
+DX_24_ldh <-matrix(c(0.981,0.974,0.978,1.253,1.233,1.292,2.098,2.153,
+                     2.114,2.214,2.244,2.239,3.808,3.825,3.735,1.037,1.030,1.030),
+                   ncol =3, nrow =6, byrow =TRUE,
+                   dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
+ldh24means$Doxorubicin <- rollmean(t(DX_24_ldh),3)
+EP_24_ldh <-  matrix(c(1.504,1.320,1.469,1.536,1.301,1.531,1.562,1.541,1.558,
+                       3.414,3.103,3.236,3.588,3.398,3.611,1.013,0.958,0.991),
+                     ncol =3, nrow =6, byrow =TRUE,
+                     dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
+ldh24means$Epirubicin <- rollmean(t(EP_24_ldh),3)
+MT_24_ldh <-  matrix(c(1.508,1.467,1.391,1.493,1.468,1.483,2.010,1.820,1.911,
+                       3.089,2.936,2.921,3.623,3.377,3.560,1.222,1.211,1.215),
+                     ncol =3, nrow =6, byrow =TRUE,
+                     dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
+ldh24means$Mitoxantrone <- rollmean(t(MT_24_ldh),3)
+TR_24_ldh<-  matrix(c(0.941,0.891,0.953,0.743,0.774,0.812,1.514,1.225,1.252,
+                      2.391,1.989,2.172,3.040,2.622,2.613,0.970,0.917,0.895),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
+ldh24means$Trastuzumab <- rollmean(t(TR_24_ldh),3)
+VE_24_ldh<-  matrix(c(1.000,1.000,0.977,1.000,1.100,1.096,1.000,0.938,0.951,
+                      1.000,1.027,1.038,1.000,1.058,1.062,1.000,1.011,0.975),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
+ldh24means$Vehicle <- rollmean(t(VE_24_ldh),3)
+LDH24hstat <- list('VDA'=t.test(VE_24_ldh,DA_24_ldh),
+                   'VDX'=t.test(VE_24_ldh,DX_24_ldh),
+                   'VEP'=t.test(VE_24_ldh,EP_24_ldh),
+                   'VMT'=t.test(VE_24_ldh,MT_24_ldh),
+                   'VTR'=t.test(VE_24_ldh,TR_24_ldh),
+                   'VVEH'=t.test(VE_24_ldh,VE_24_ldh))
+LDH24hstat
 ```
 
+
+```{r TNNI  using relative to vehicle information}
+
+DA_24_TNNI <- matrix(c(0.790,0.783,1.855,1.693,1.009,1.071,0.736,0.771,
+                       1.035,1.202,1.228,1.151),
+                    ncol =2, nrow =6, byrow =TRUE,
+                    dimnames=list(c('87_0.5','71_0.5','75_0.5','77_0.5','78_0.5','79_0.5')))
+
+DX_24_TNNI <-matrix(c(1.006,1.006,1.295,1.179,1.464,1.493,1.319,1.236,
+                      1.231,1.221,1.342,1.296),
+                   ncol =2, nrow =6, byrow =TRUE,
+                   dimnames=list(c('87_0.5','71_0.5','75_0.5','77_0.5','78_0.5','79_0.5')))
+
+EP_24_TNNI <-  matrix(c(0.955,0.822,1.220,1.092,1.459,1.425,1.076,1.222,
+                        1.018,1.269,1.262,1.331),
+                     ncol =2, nrow =6, byrow =TRUE,
+                     dimnames=list(c('87_0.5','71_0.5','75_0.5','77_0.5','78_0.5','79_0.5')))
+
+MT_24_TNNI <-  matrix(c(1.529,1.682,1.205,1.138,1.436,1.521,1.694,
+                        1.778,1.115,1.231,1.006,0.957),
+                     ncol =2, nrow =6, byrow =TRUE,
+                     dimnames=list(c('87_0.5','71_0.5','75_0.5','77_0.5','78_0.5','79_0.5')))
+
+TR_24_TNNI<-  matrix(c(2.089,1.911,1.245,0.968,1.180,1.168,1.118,
+                       1.014,1.496,1.433,1.388,1.235),
+                    ncol =2, nrow =6, byrow =TRUE,
+                    dimnames=list(c('87_0.5','71_0.5','75_0.5','77_0.5','78_0.5','79_0.5')))
+
+VE_24_TNNI<-  matrix(c(1.000,0.783,1.000,1.000,0.917,1.031,1.000,
+                       0.958,1.000,1.000,1.087,1.106),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c('87_0.5','71_0.5','75_0.5','77_0.5','78_0.5','79_0.5')))
+tnni24hstat <- list('VDAT'=t.test(VE_24_TNNI,DA_24_TNNI),
+                   'VDXT'=t.test(VE_24_TNNI,DX_24_TNNI),
+                   'VEPT'=t.test(VE_24_TNNI,EP_24_TNNI),
+                   'VMTT'=t.test(VE_24_TNNI,MT_24_TNNI),
+                   'VTRT'=t.test(VE_24_TNNI,TR_24_TNNI),
+                   'VVEHT'=t.test(VE_24_TNNI,VE_24_TNNI))
+tnni24hstat
+library(Biobase)
+apple.pv <- t(as.data.frame(subListExtract(tnni24hstat,'p.value')))##this pulls out a specific thing and puts into datafram as a vector for later manipulation (think pvalue or mean)
+# lapply(apple, function(x)
+#   sapply(1:length(x),
+#          function(y)do.call("[[",list(x,y))))
+colnames(apple.pv) <- 'p.value'
+
+```
 
 
