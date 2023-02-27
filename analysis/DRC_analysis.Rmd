@@ -152,20 +152,20 @@ ind6a <- as.data.frame(subset(D02_71_1, !(Drug %in% 'Empty')))
 ind6b <- as.data.frame(subset(DJAG_71_1, !(Drug %in% 'Empty')))
 
 
-ind1a <- ind1a %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind1b <- ind1b %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
+ind1a <- ind1a %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind1b <- ind1b %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
 
-ind2a <- ind2a %>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
+ind2a <- ind2a %>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
 ind2b <- ind2b%>%  mutate_at("Conc", as.numeric)%>% 
-  dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind3a <- ind3a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind3b <- ind3b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind4a <- ind4a %>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind4b <- ind4b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind5a <- ind5a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind5b <- ind5b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind6a <- ind6a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
-ind6b <- ind6b %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Padj,Name) %>% drop_na(Percent)
+  dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind3a <- ind3a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind3b <- ind3b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind4a <- ind4a %>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind4b <- ind4b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind5a <- ind5a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind5b <- ind5b%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind6a <- ind6a%>%  mutate_at("Conc", as.numeric)%>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
+ind6b <- ind6b %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Percent,Name) %>% drop_na(Percent)
 
 
 
@@ -188,11 +188,11 @@ individuals <- list(ind1a,
                     ind2b,
                     ind3a,
                     ind3b,
-                    ind4a ,
-                    ind4b ,
-                    ind5a ,
-                    ind5b ,
-                    ind6a ,
+                    ind4a,
+                    ind4b,
+                    ind5a,
+                    ind5b,
+                    ind6a,
                     ind6b)
 
 ###First way to label data in the list with its' name
@@ -210,7 +210,7 @@ names(individuals) <- c("ind1a",
                           "ind6a",
                           "ind6b")
 ###creates a list called ID which holds the names if needed
-ID <- c("ind1a",  
+ID <- c("ind1a",
         'ind1b',
         'ind2a',
         'ind2b',
@@ -223,28 +223,28 @@ ID <- c("ind1a",
         "ind6a",
         "ind6b")
 names(individuals)### check to make sure they are labled.
- #### this is to add the names of individuals to each dataframe in list
+#  #### this is to add the names of individuals to each dataframe in list
 
 ## way number 2!
 ### this is to add an new element called SampleID across each dataframe to  combine
 ### "label" the frame before we flatten it
-  for( i in seq_along(individuals)){
-    
-    individuals[[i]]$SampleID <- rep(ID[i],nrow(individuals[[i]]))
-    
-  }
+  # for( i in seq_along(individuals)){
+  # 
+  #   individuals[[i]]$SampleID <- rep(ID[i],nrow(individuals[[i]]))
+  # 
+  # }
   ### now we transform that list of data frames into a larger dataframe with a new column called "SampleID"
 ###making a dataframe to transform the individuals into a long large data frame##3
- full_list <- bind_rows(individuals, .id = "SampleID")
+full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
  
  ##make a smaller data frame###
  spec_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5b", "ind6a")### used to genrate ldh poster data in Dec 2022
  spec2_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5a", "ind6a")
  smaller <- individuals[c(1,4,6,7,9,11)]
- smaller2 <- individuals[c(1,3,5,7,9,11)]
+ smaller2 <- individuals[c(1,3,6,7,9,11)]
  
-smaller <- bind_rows(smaller)
-smaller2 <- bind_rows(smaller2)
+smaller <- bind_rows(smaller,.id="SampleID")
+smaller2 <- bind_rows(smaller2,.id="SampleID")
 #saveRDS(individuals, file = "data/individualDRCfile.RDS")
 
 ```
@@ -343,18 +343,18 @@ Here I need to assign the drugs out by drug:
 ### sort durg out and store as drug name from smaller list
 #unique(smaller$SampleID)
 #returns "ind1a" "ind2b" "ind3b" "ind4b" "ind5a" "ind6a"
-DA <- full_list %>% filter(Drug == "Daun")
-DX <- full_list %>% filter(Drug == "Doxo")
-EP <- full_list %>% filter(Drug =="Epi")
-MT <- full_list %>% filter(Drug =="Mito")
-TR <- full_list %>% filter(Drug =="Tras")
-VE <- full_list %>% filter(Drug == "Veh")
-DA2 <- smaller2 %>% filter(Drug == "Daun")
-DX2 <- smaller2 %>% filter(Drug == "Doxo")
-EP2 <- smaller2 %>% filter(Drug =="Epi")
-MT2 <- smaller2 %>% filter(Drug =="Mito")
-TR2 <- smaller2 %>% filter(Drug =="Tras")
-VE2 <- smaller2 %>% filter(Drug == "Veh")
+DA <- full_list[Drug =="Daun"]
+DX <- full_list[Drug =="Doxo"]
+EP <- full_list[Drug =="Epi"]
+MT <- full_list[Drug =="Mito"]
+TR <- full_list[Drug =="Tras"]
+VE <- full_list[Drug =="Veh"]
+DA2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Daun")
+DX2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Doxo")
+EP2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Epi")
+MT2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Mito")
+TR2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Tras")
+VE2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Veh")
 #####Then add names!
 ```
 
@@ -421,23 +421,25 @@ MT_parm <- as.data.frame(param_holder)
     
     
 
+####Viability
 
+This is me pulling the whole list and averageing the viablity at each concentration
     
     
 ```{r Viablitiy plots, warning=FALSE}
 ### to extract parameters for mapping
-DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
-DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
-EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
-MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
-TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
-VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4))
-alterlist <- full_list %>% na.omit()#%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4)) 
+DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5)# %>% mutate(SampleID=substr(SampleID,1,4))
+DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+alterlist <- full_list %>% na.omit()%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4)) 
 
 ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = SampleID, alpha =0.8)) +
      guides(alpha = "none")+ 
       # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
-  geom_violin(position ="dodge",outlier.colour="transparent")+
+  geom_boxplot(position ="dodge",outlier.colour="transparent")+
       ylim(0,1.5)+
         # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -455,40 +457,33 @@ ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = Sample
        panel.border=element_rect(fill = NA, size = 2))
        
       #plot.background = element_rect(fill = "#DDBBCD", colour = NA))
-
-
+#refmt <- MT[SampleID=='ind6a']
+ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
+     guides(alpha = "none")+ 
+      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
+  geom_boxplot(position ="dodge")+
+      ylim(0,1.5)+
+  facet_wrap(~SampleID)
     ```
     Getting an error, but It does not affect the result
 I can use bind_rows to get a pretty output in tibble
 
     
-     iqr = function(z, lower = 0.25, upper = 0.75) {
-  data.frame(
-    y = median(z),
-    ymin = quantile(z, lower),
-    ymax = quantile(z, upper)
-  )
-}
-
-# Plot standard IQR
-ggplot(data = diamonds, mapping = aes(x = cut, y = depth)) + 
-  stat_summary(fun.data = iqr)
-    
-    
 ```{r daunplot}
 ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
-     guides(color =  "none", alpha = "none")+ 
-  
-  geom_function(fun=mean_se)+
-    stat_smooth(method = "mean_se")+
+     guides(color =  "none", alpha = "none")+
+      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1.0,0,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
   xlab(expression(paste("Concentration [", mu, "M]")))+
   ylab("Normalized Cell Viability")
 
-daplot <- 
-  ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
+
+
+
+daplot <- ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
      guides(color="none", alpha = "none")+
       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
   
@@ -505,8 +500,7 @@ daplot <-
         axis.text=element_text(size=10, face = "bold"),
        panel.grid.major = element_line(colour = 'lightgrey'),
        panel.border=element_rect(fill = NA, size = 2),
-       
-      plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+       plot.background = element_rect(fill = "#DDBBCD", colour = NA))
       
   daplot
   # theme(plot.title = element_text(hjust = 0.5, size =20))
@@ -516,8 +510,8 @@ daplot <-
      stat_function(formula y~x, fun = dr4pl::MeanResponse, args = list(theta = dr4pl_obj$parameters), color= 3,size =1.2)+
     
 ```{r doxplot}
-ggplot(DX2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
-  guides(color =  "none", alpha = "none")+
+ggplot(DX2, aes(x=Conc, y= Percent, colour = SampleID,alpha =0.6)) +
+  guides( alpha = "none")+
       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1.0,0,NA))), se = FALSE)+
       ylim(0,1.5)+
@@ -531,7 +525,7 @@ dxplot <-
   guides(color="none", alpha = "none")+
       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
   
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
@@ -748,7 +742,7 @@ save_plot('plan1plot.png', plan1)
 plan1
 
 ```
-
+###LD50 extract
 
 
 ```{r  LD50 extraction make the list}
@@ -932,7 +926,7 @@ for(k in ID){
 
   thing <-  filter(TR, SampleID==k)
   na.omit= TRUE
-  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
+  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, NA, NA, NA)))
   # plot(thing.m, 
   #      type ="bars" ,
   #      main = paste(thing$Name[1], " ", k),
@@ -1002,11 +996,11 @@ mitols <- plyr::quickdf(mitols)
 LDfull <- rbind(daunls,doxols,epils,mitols)
 rownames(LDfull) <- c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
 summary(LDfull)
-LD50long <- pivot_longer(data = LDfull,cols = names_to ="Individual", values_to= "ld50")
+#LD50long <- pivot_longer(data = LDfull,cols = names_to ="Individual", values_to= "ld50")
 
-LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_longer(-Treatment, cols_vary = "slowest", names_to="indv",values_to="ld50")
-# LD50full <-
-   
+LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_longer(-Treatment, cols_vary = "slowest", names_to="indv",values_to="ld50") %>%  mutate(indv=substr(indv,1,4)) %>% group_by(Treatment,indv) %>% mutate(mean =mean(ld50))
+#now to trim the idnames!
+   #LD50long$indv <- substr(LD50long$indv,1,4)
   
   # logLD <- meanLD %>% pivot_longer(!Individual, names_to ="Treatment", values_to = "ld50") %>% mutate("log10" = log10(ld50))median(LDfull, col)
 
@@ -1017,7 +1011,7 @@ ab <- LD50long %>%
     color = indv,
     size = 5,
     shape = indv,
-    alpha = 0.4)) +
+    alpha = 0.5)) +
   # labs(title= expression("Mean observed LD"[50]~ "per individual"))+
        xlab("Treatment")+
     ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+

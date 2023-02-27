@@ -18,6 +18,8 @@ library(ggpubr)
 library(rstatix)
 library(tidyverse)
 library(zoo)
+library(ggplot2)
+library(ggsignif)
 ```
 
 ## Including Plots
@@ -58,37 +60,37 @@ ggplot(norm_LDH, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
 
 
 ```{r ldh 24h results, echo=FALSE, message=FALSE, warning=FALSE}
-ldh24means <- data.frame('',nrow=6)
+# ldh24means <- data.frame('',nrow=6)
 DA_24_ldh <- matrix(c(1.188,1.222,1.195,1.030,1.074,1.064,1.298,1.282,1.262,
                       1.901,1.975,1.970,3.131,3.246,3.080,1.339,1.438,1.367),
                     ncol =3, nrow =6, byrow =TRUE,
                     dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
-ldh24means$Daunorubicin <- rollmean(t(DA_24_ldh),3)
+#ldh24means$Daunorubicin <- rollmean(t(DA_24_ldh),3)
 DX_24_ldh <-matrix(c(0.981,0.974,0.978,1.253,1.233,1.292,2.098,2.153,
                      2.114,2.214,2.244,2.239,3.808,3.825,3.735,1.037,1.030,1.030),
                    ncol =3, nrow =6, byrow =TRUE,
                    dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
-ldh24means$Doxorubicin <- rollmean(t(DX_24_ldh),3)
+#ldh24means$Doxorubicin <- rollmean(t(DX_24_ldh),3)
 EP_24_ldh <-  matrix(c(1.504,1.320,1.469,1.536,1.301,1.531,1.562,1.541,1.558,
                        3.414,3.103,3.236,3.588,3.398,3.611,1.013,0.958,0.991),
                      ncol =3, nrow =6, byrow =TRUE,
                      dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
-ldh24means$Epirubicin <- rollmean(t(EP_24_ldh),3)
+#ldh24means$Epirubicin <- rollmean(t(EP_24_ldh),3)
 MT_24_ldh <-  matrix(c(1.508,1.467,1.391,1.493,1.468,1.483,2.010,1.820,1.911,
                        3.089,2.936,2.921,3.623,3.377,3.560,1.222,1.211,1.215),
                      ncol =3, nrow =6, byrow =TRUE,
                      dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
-ldh24means$Mitoxantrone <- rollmean(t(MT_24_ldh),3)
+#ldh24means$Mitoxantrone <- rollmean(t(MT_24_ldh),3)
 TR_24_ldh<-  matrix(c(0.941,0.891,0.953,0.743,0.774,0.812,1.514,1.225,1.252,
                       2.391,1.989,2.172,3.040,2.622,2.613,0.970,0.917,0.895),
                     ncol =3, nrow =6, byrow =TRUE,
                     dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
-ldh24means$Trastuzumab <- rollmean(t(TR_24_ldh),3)
+#ldh24means$Trastuzumab <- rollmean(t(TR_24_ldh),3)
 VE_24_ldh<-  matrix(c(1.000,1.000,0.977,1.000,1.100,1.096,1.000,0.938,0.951,
                       1.000,1.027,1.038,1.000,1.058,1.062,1.000,1.011,0.975),
                     ncol =3, nrow =6, byrow =TRUE,
                     dimnames=list(c('87_0.5','79_0.5','75_0.5','77_0.5','78_0.5','71_0.5')))
-ldh24means$Vehicle <- rollmean(t(VE_24_ldh),3)
+#ldh24means$Vehicle <- rollmean(t(VE_24_ldh),3)
 LDH24hstat <- list('VDA'=t.test(VE_24_ldh,DA_24_ldh),
                    'VDX'=t.test(VE_24_ldh,DX_24_ldh),
                    'VEP'=t.test(VE_24_ldh,EP_24_ldh),
@@ -138,12 +140,124 @@ tnni24hstat <- list('VDAT'=t.test(VE_24_TNNI,DA_24_TNNI),
                    'VVEHT'=t.test(VE_24_TNNI,VE_24_TNNI))
 tnni24hstat
 library(Biobase)
-apple.pv <- t(as.data.frame(subListExtract(tnni24hstat,'p.value')))##this pulls out a specific thing and puts into datafram as a vector for later manipulation (think pvalue or mean)
-# lapply(apple, function(x)
-#   sapply(1:length(x),
-#          function(y)do.call("[[",list(x,y))))
-colnames(apple.pv) <- 'p.value'
+apple.tnniest <- t(as.data.frame(subListExtract(tnni24hstat,'estimate')))##this pulls out a specific thing and puts into datafram as a vector for later manipulation (think pvalue or mean)
+
 
 ```
 
 
+
+```{r combining ldh and tnni data at 24 hours}
+
+
+mean24ldh <- as.data.frame(rbind(colMeans(t(DA_24_ldh)),
+                                 colMeans(t(DX_24_ldh)),
+                                 colMeans(t(EP_24_ldh)),
+                                 colMeans(t(MT_24_ldh)),
+                                 colMeans(t(TR_24_ldh)),
+                                 colMeans(t(VE_24_ldh))))
+mean24ldh$Drug <- c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Control")  ###add drug name then take out the 0.5 thing
+colnames(mean24ldh) <- gsub("_0.5","",colnames(mean24ldh))
+##now use pivot longer and join the frames
+mean24ldh <-  mean24ldh %>% pivot_longer(.,col=-Drug, names_to = 'indv', values_to = "ldh")
+
+
+
+mean24tnni <- as.data.frame(rbind(colMeans(t(DA_24_TNNI)),
+                                  colMeans(t(DX_24_TNNI)),
+                                  colMeans(t(EP_24_TNNI)),
+                                  colMeans(t(MT_24_TNNI)),
+                                  colMeans(t(TR_24_TNNI)),
+                                  colMeans(t(VE_24_TNNI))))
+mean24tnni$Drug <- c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Control")
+
+colnames(mean24tnni) <- gsub("_0.5","",colnames(mean24tnni))
+mean24tnni <-  pivot_longer(mean24tnni, 
+                            col=-Drug, 
+                            names_to = 'indv', 
+                            values_to = "tnni")
+
+ggplot(mean24ldh, aes(x=Drug,y=ldh))+
+  geom_boxplot() +
+  geom_point(aes(col=indv,shape=indv, size =3))+
+  geom_signif(comparisons =list(c("Control","Daunorubicin"),
+                                c("Control","Doxorubicin"),
+                                c("Control","Epirubicin"),
+                                c("Control","Mitoxantrone"),
+                                c("Control","Trastuzumab")),
+              map_signif_level=FALSE, 
+              textsize =6,
+              tip_length = .1, 
+              vjust = 0.2, step_increase = 0.1)+
+  theme_bw()+
+  ggtitle("Relative LDH release in media")+
+     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+              axis.title = element_text(size = rel(0.8))) 
+
+
+ggplot(mean24tnni, aes(x=Drug,y=tnni))+
+  geom_boxplot() +
+  geom_point(aes(col=indv, shape=indv, size =3))+
+  geom_signif(comparisons =list(c("Control","Daunorubicin"),
+                                c("Control","Doxorubicin"),
+                                c("Control","Epirubicin"),
+                                c("Control","Mitoxantrone"),
+                                c("Control","Trastuzumab")),
+              map_signif_level=FALSE, 
+              textsize =6,
+              tip_length = .1, 
+              vjust = 0.2, step_increase = 0.1)+
+  theme_bw()+
+  ggtitle("Relative Troponin I release in media")+
+     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+              axis.title = element_text(size = rel(0.8))) 
+  
+cor(mean24ldh$ldh, mean24tnni$tnni)
+cor(tvl24hour)
+
+tvl24hour <- inner_join(mean24ldh,mean24tnni, by=c("Drug","indv"))
+
+ggplot(tvl24hour, aes(x=ldh,y=tnni))+
+  geom_point(aes(col=indv))+ geom_smooth(method="lm")+
+  facet_wrap("indv", scales= "free")+theme_bw()+
+  stat_cor(aes(label = after_stat(rr.label)), color = "red", geom = "label")
+
+
+#_____________________________________________________________________________________
+
+model <- lm(ldh~tnni, data = tvl24hour)
+
+res <- resid(model)
+plot(fitted(model), res)
+
+
+
+qqnorm(res)
+qqline(res)
+plot(density(res))
+
+summary(model)
+
+
+model <- lm(tnni~ldh+indv+Drug, data = tvl24hour)
+
+res <- resid(model)
+plot(fitted(model), res)
+
+
+
+qqnorm(res)
+qqline(res)
+plot(density(res))
+
+hist(residuals(model), col = "steelblue")
+```
+
+```{r checking numbers}
+
+
+
+ggplot(mean24ldh, aes(x=indv, y=ldh))+geom_point()+ facet_wrap("Drug")
+ggplot(mean24tnni, aes(x=indv, y=tnni))+geom_point()+ facet_wrap("Drug")
+
+```

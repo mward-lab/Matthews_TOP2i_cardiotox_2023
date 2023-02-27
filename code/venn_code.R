@@ -148,7 +148,8 @@ intersect(Mtvenlist,ACintersect)
 ACcomp <- list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
 in_commonAC <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
 length(unique(in_commonAC))
-
+in_common24AC <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID)
+AC24hoursig <- (unique(in_common24AC))
 ggVennDiagram(ACcomp,
               category.names = c("Daunorubicin-24","Doxorubicin-24", "Epirubicin-24","Daunorubicin-3","Doxorubicin-3", "Epirubicin-3"),
               show_intersect = FALSE,
