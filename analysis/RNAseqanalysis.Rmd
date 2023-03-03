@@ -25,7 +25,6 @@ library(RColorBrewer)
 library(mixOmics)
 library(VennDiagram)
 library(HTSFilter)
-library(ggplot2)
 library(gridExtra)
 library(reshape2)
 library(devtools)
@@ -352,8 +351,6 @@ group1 <- interaction(drug,time)
 mm2 <- model.matrix(~0 + group1)
 colnames(mm2) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
 
-#y <- voom(x, mm, plot =TRUE)
-
 y2 <- voom(x, mm2,plot =TRUE)
 
 ```
@@ -363,11 +360,11 @@ y2 <- voom(x, mm2,plot =TRUE)
 ```{r  Differential expression2, eval=TRUE, include=FALSE}
 ###this is enabled when first running program, otherwise processing slows down
 
-#corfit <- duplicateCorrelation(y, mm, block = indv)
+
 corfit2 <- duplicateCorrelation(y2, mm2, block = indv)
-#v <- voom(x, mm, block = indv, correlation = corfit$consensus)
+
 v2 <- voom(x, mm2, block = indv, correlation = corfit2$consensus)
-#fit <- lmFit(v, mm, block = indv, correlation = corfit$consensus)
+
 fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
 
 ```
@@ -394,11 +391,10 @@ cm2 <- makeContrasts(
   V.TR24= V24-T24,
   levels = mm2)
 
-#vfit <- lmFit(y, mm)
 vfit2 <- lmFit(y2, mm2)
-#vfit <- contrasts.fit(vfit, contrasts=cm)
+
 vfit2<- contrasts.fit(vfit2, contrasts=cm2)
-#efit <- eBayes(vfit)
+
 efit2 <- eBayes(vfit2)
 
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
@@ -471,7 +467,7 @@ v2 <- voom(x, mm2, block = indv, correlation = corfit2$consensus)
 
 fit2 <- lmFit(v2, mm2, block = indv, correlation = corfit2$consensus)
 
-vfit2 <- lmFit(y2, mm2)
+vfit2 <- lmFit(v2, mm2)
 
 vfit2<- contrasts.fit(vfit2, contrasts=cm2)
 
