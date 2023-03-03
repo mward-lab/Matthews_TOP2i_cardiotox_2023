@@ -43,11 +43,29 @@ plotMotif(cormotif_initial)
 gene_prob_tran <- cormotif_initial$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
 dim(gene_prob_tran)
-nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 & gene_prob_tran[,2] <0.5 & gene_prob_tran[,3] <0.5 & gene_prob_tran[,4] <0.5& gene_prob_tran[,5] <0.5 & gene_prob_tran[,6] <0.5 & gene_prob_tran[,7] <0.5 & gene_prob_tran[,8] <0.5 & gene_prob_tran[,9] <0.5 & gene_prob_tran[,10] <0.5),])
+nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
+                                                   gene_prob_tran[,2] <0.5 &
+                                                   gene_prob_tran[,3] <0.5 &
+                                                   gene_prob_tran[,4] <0.5&
+                                                   gene_prob_tran[,5] <0.5 &
+                                                   gene_prob_tran[,6] <0.5 &
+                                                   gene_prob_tran[,7] <0.5 &
+                                                   gene_prob_tran[,8] <0.5 &
+                                                   gene_prob_tran[,9] <0.5 &
+                                                   gene_prob_tran[,10] <0.5),])
 
-length(nonresponse_cluster)
-#
-response_cluster24h  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 & gene_prob_tran[,2] >0.5 & gene_prob_tran[,3] >0.5 & gene_prob_tran[,4] >0.5& gene_prob_tran >0.5 & gene_prob_tran[,6] >0.5 & gene_prob_tran[,7] >0.5 & gene_prob_tran[,8] >0.5 & gene_prob_tran[,9] >0.5 & gene_prob_tran[,10] >0.5),])
+length((nonresponse_cluster))
+
+response_cluster24h  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
+                                                   gene_prob_tran[,2] >0.5 &
+                                                   gene_prob_tran[,3] >0.5 &
+                                                   gene_prob_tran[,4] >0.5&
+                                                   gene_prob_tran[,5] >0.5 &
+                                                   gene_prob_tran[,6] >0.5 &
+                                                   gene_prob_tran[,7]>0.5 &
+                                                   gene_prob_tran[,8]>0.5 &
+                                                   gene_prob_tran[,9]>0.5 &
+                                                   gene_prob_tran[,10]>0.5),])
 #
 # length(response_cluster)
 
@@ -134,7 +152,7 @@ set.seed(12345)
 cormotif_AC24 <- cormotiffit(exprs = y_TMM_cpm,
                                groupid = groupid,
                                compid = compid_AC24,
-                               K=2:8, max.iter = 500)
+                               K=1:8, max.iter = 500)
 plotIC(cormotif_AC24)
 plotMotif(cormotif_AC24)
 
