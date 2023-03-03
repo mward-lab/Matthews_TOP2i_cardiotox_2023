@@ -425,8 +425,51 @@ MT_parm <- as.data.frame(param_holder)
 
 This is me pulling the whole list and averageing the viablity at each concentration
     
-    
+The via is pulling the raw LDH at 0.    
 ```{r Viablitiy plots, warning=FALSE}
+### to extract parameters for mapping
+DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5)# %>% mutate(SampleID=substr(SampleID,1,4))
+DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+values_48_list <- full_list %>% na.omit()%>% filter(Conc == 1) %>% mutate(SampleID=substr(SampleID,1,4)) 
+
+ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = SampleID, alpha =0.8)) +
+     guides(alpha = "none")+ 
+      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
+  geom_boxplot(position ="dodge",outlier.colour="transparent")+
+      ylim(0,1.5)+
+        # Change the x-axis scale to log 10 scale
+  theme_classic() +
+  # scale_x_discrete("Conc", labels = c("0.01","0.05", "0.1","0.5","1"))+
+  xlab(expression(paste("Concentration [", mu, "M]")))+
+  geom_hline(yintercept = 1,lty = 3)+
+  ylab(NULL) +
+  facet_wrap(~Name)+
+  theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
+      ggtitle("Viablity at low concentrations")+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(size =2),
+        axis.text=element_text(size=9, face = "bold"),
+       panel.grid.major = element_line(colour = 'lightgrey'),
+       panel.border=element_rect(fill = NA, size = 2))
+       
+      #plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+#refmt <- MT[SampleID=='ind6a']
+ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
+     guides(alpha = "none")+ 
+      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
+  geom_boxplot(position ="dodge")+
+      ylim(0,1.5)+
+  facet_wrap(~SampleID)
+    ```
+    
+    
+    
+    
+    ```{r LDH data at 0.5 uM, warning=FALSE}
 ### to extract parameters for mapping
 DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5)# %>% mutate(SampleID=substr(SampleID,1,4))
 DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
@@ -464,7 +507,7 @@ ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
   geom_boxplot(position ="dodge")+
       ylim(0,1.5)+
   facet_wrap(~SampleID)
-    ```
+    
     Getting an error, but It does not affect the result
 I can use bind_rows to get a pretty output in tibble
 
@@ -842,7 +885,7 @@ thingdx <-  filter(DXi, SampleID==k)
 
 
 ```
-```{r DA try with drc}
+```{r DA try with drc, message=FALSE, warning=FALSE}
 for(k in ID){
 
   thing <-  filter(DA, SampleID==k)
@@ -855,7 +898,7 @@ for(k in ID){
        xlab = expression(paste("Concentration [",mu,"M]")),
        ylab = "Percent Viable",
        ylim=c(0,1.5))
-  plot(thing.m,  type="bars", col= 2, add=TRUE )
+ 
   
   a <- ED(thing.m, c(50), interval = "delta")
   legend("topright", legend = paste(round(a[1],2)))
@@ -869,20 +912,20 @@ daunls
 
 
 
-```{r DX try with drc}
+```{r DX try with drc, message=FALSE, warning=FALSE}
 for(k in ID){
 
-  thing <-  filter(DX, SampleID==k)
+  thing <-  filter(DX, SampleID==k)  
   na.omit= TRUE
   thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
-  
-       type ="bars" ,
+  plot(thing.m,
+       type ="bars",
        main = paste(thing$Name[1], " ", k),
        col= 2,
        xlab = expression(paste("Concentration [",mu,"M]")),
        ylab = "Percent Viable",
        ylim=c(0,1.5))
-  plot(thing.m,  type="bars", col= 2, add=TRUE )
+  
   
   a <- ED(thing.m, c(50), interval = "delta")
   legend("topright", legend = paste(round(a[1],2)))
@@ -895,23 +938,23 @@ doxols
 ```
 
 
-```{r EP try with drc}
+```{r EP try with drc, echo=FALSE, message=FALSE, warning=FALSE}
 for(k in ID){
 
-  thing <-  filter(EP, SampleID==k)
+  thing <-  filter(EP, SampleID==k)  
   na.omit= TRUE
   thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
-  # plot(thing.m, 
-  #      type ="bars" ,
-  #      main = paste(thing$Name[1], " ", k),
-  #      col= 2,
-  #      xlab = expression(paste("Concentration [",mu,"M]")),
-  #      ylab = "Percent Viable",
-  #      ylim=c(0,1.5))
-  # plot(thing.m,  type="bars", col= 2, add=TRUE )
-  # 
+  plot(thing.m,
+       type ="bars",
+       main = paste(thing$Name[1], " ", k),
+       col= 2,
+       xlab = expression(paste("Concentration [",mu,"M]")),
+       ylab = "Percent Viable",
+       ylim=c(0,1.5))
+  
+  
   a <- ED(thing.m, c(50), interval = "delta")
-  # legend("topright", legend = paste(round(a[1],2)))
+  legend("topright", legend = paste(round(a[1],2)))
   epils[[k]] <- a[[1]]
 
 
@@ -919,25 +962,51 @@ for(k in ID){
 
 epils
 ```
+```{r MT try with drc, message=FALSE, warning=FALSE}
 
-
-```{r TR try with drc}
 for(k in ID){
 
-  thing <-  filter(TR, SampleID==k)
+  thing <-  filter(MT, SampleID==k)  
+  na.omit= TRUE
+  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
+  plot(thing.m,
+       type ="bars",
+       main = paste(thing$Name[1], " ", k),
+       col= 2,
+       xlab = expression(paste("Concentration [",mu,"M]")),
+       ylab = "Percent Viable",
+       ylim=c(0,1.5))
+  
+  
+  a <- ED(thing.m, c(50), interval = "delta")
+  legend("topright", legend = paste(round(a[1],2)))
+  mitols[[k]] <- a[[1]]
+
+
+ }
+
+mitols
+```
+
+```{r TR try with drc, message=FALSE, warning=FALSE}
+ID2 <- ID[c(-4,-9,-12)]
+
+for(k in ID2){
+
+  thing <-  filter(TR, SampleID==k)  
   na.omit= TRUE
   thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, NA, NA, NA)))
-  # plot(thing.m, 
-  #      type ="bars" ,
-  #      main = paste(thing$Name[1], " ", k),
-  #      col= 2,
-  #      xlab = expression(paste("Concentration [",mu,"M]")),
-  #      ylab = "Percent Viable",
-  #      ylim=c(0,1.5))
-  # plot(thing.m,  type="bars", col= 2, add=TRUE )
-  # 
+  plot(thing.m,
+       type ="bars",
+       main = paste(thing$Name[1], " ", k),
+       col= 2,
+       xlab = expression(paste("Concentration [",mu,"M]")),
+       ylab = "Percent Viable",
+       ylim=c(0,1.5))
+  
+  
   a <- ED(thing.m, c(50), interval = "delta")
-  # legend("topright", legend = paste(round(a[1],2)))
+  legend("topright", legend = paste(round(a[1],2)))
   trasls[[k]] <- a[[1]]
 
 
@@ -1139,8 +1208,7 @@ write_csv(ld50,"ld50calc.csv")
 
 
 
-
-R###barplot for poster
+###barplot for poster
 
 ```{r barplot}
 
@@ -1194,7 +1262,7 @@ Test <- as.data.frame(Test)
 ```
 
 fsys got 
-Data for Troponin I release after 0.5 uM treatment at 3 hours and 24 hours
+##Data for Troponin I release after 0.5 uM treatment at 3 hours and 24 hours
 
 
 ```{r   Troponin i echo=FALSE, warnings = FALSE}

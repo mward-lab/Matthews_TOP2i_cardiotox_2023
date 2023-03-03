@@ -213,44 +213,45 @@ ggplot(mean24tnni, aes(x=Drug,y=tnni))+
               axis.title = element_text(size = rel(0.8))) 
   
 cor(mean24ldh$ldh, mean24tnni$tnni)
-cor(tvl24hour)
+
 
 tvl24hour <- inner_join(mean24ldh,mean24tnni, by=c("Drug","indv"))
 
 ggplot(tvl24hour, aes(x=ldh,y=tnni))+
   geom_point(aes(col=indv))+ geom_smooth(method="lm")+
-  facet_wrap("indv", scales= "free")+theme_bw()+
-  stat_cor(aes(label = after_stat(rr.label)), color = "red", geom = "label")
+  facet_wrap("Drug", scales= "free")+theme_bw()+
+  stat_cor(aes(label = after_stat(rr.label)), color = "red", geom = "label")+
+  ggtitle("ldh verses cTNNI 24 hour by Drug")
 
 
 #_____________________________________________________________________________________
-
-model <- lm(ldh~tnni, data = tvl24hour)
-
-res <- resid(model)
-plot(fitted(model), res)
-
-
-
-qqnorm(res)
-qqline(res)
-plot(density(res))
-
-summary(model)
-
-
-model <- lm(tnni~ldh+indv+Drug, data = tvl24hour)
-
-res <- resid(model)
-plot(fitted(model), res)
-
-
-
-qqnorm(res)
-qqline(res)
-plot(density(res))
-
-hist(residuals(model), col = "steelblue")
+# 
+# model <- lm(ldh~tnni, data = tvl24hour)
+# 
+# res <- resid(model)
+# plot(fitted(model), res)
+# 
+# 
+# 
+# qqnorm(res)
+# qqline(res)
+# plot(density(res))
+# 
+# summary(model)
+# 
+# 
+# model <- lm(tnni~ldh+indv+Drug, data = tvl24hour)
+# 
+# res <- resid(model)
+# plot(fitted(model), res)
+# 
+# 
+# 
+# qqnorm(res)
+# qqline(res)
+# plot(density(res))
+# 
+# hist(residuals(model), col = "steelblue")
 ```
 
 ```{r checking numbers}

@@ -18,10 +18,10 @@ TNNIelisadata <- read_excel("~/Ward Lab/Cardiotoxicity/Elisa_24hourCardiotox_202
 
 meanTNNI <- TNNIelisadata %>%
   group_by(indv,Drug) %>%
-  summarize(mean= mean(TNNIavg)) %>%
+  summarize(tnni_relative= mean(TNNIavg)) %>%
   mutate(indv, indv=as.factor(indv))
 
-ggplot(meanTNNI, aes(x=Drug, y=mean))+
+ggplot(meanTNNI, aes(x=Drug, y=tnni_relative))+
   geom_boxplot(position = "identity")+
   geom_point(aes(col=indv, size=2))+
   geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
@@ -82,7 +82,7 @@ LDH24hstat <- list('VDA'=t.test(VE_24_ldh,DA_24_ldh),
                    'VTR'=t.test(VE_24_ldh,TR_24_ldh),
                    'VVEH'=t.test(VE_24_ldh,VE_24_ldh))
 LDH24hstat
-
+t(DA_24_ldh)
 
 mean24ldh <- as.data.frame(rbind(colMeans(t(DA_24_ldh)),
                                  colMeans(t(DX_24_ldh)),
@@ -91,7 +91,7 @@ mean24ldh <- as.data.frame(rbind(colMeans(t(DA_24_ldh)),
                                  colMeans(t(TR_24_ldh)),
                                  colMeans(t(VE_24_ldh))))
 mean24ldh$Drug <- c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Control")  ###add drug name then take out the 0.5 thing
-colnames(mean24ldh) <- gsub("_0.5","-1",colnames(mean24ldh))
+colnames(mean24ldh) <- gsub("_0.5","",colnames(mean24ldh))
 
 mean24ldh <-  mean24ldh %>%
   pivot_longer(.,col=-Drug, names_to = 'indv', values_to = "ldh") %>%
@@ -127,7 +127,7 @@ ggplot(mean24ldh, aes(x=Drug,y=ldh))+
 
 norm_LDH <- read.csv("data/norm_LDH.csv")
 norm_LDH <- norm_LDH[,-1]##get rid of line numbers
-norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Control"))
+norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c("Control", "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))
 norm_LDH %>% filter(Conc==0.5) %>%
   mutate(indv=as.factor(indv)) %>%
   ggplot(., aes(x=Drug,y=norm_val))+
@@ -148,7 +148,7 @@ norm_LDH %>% filter(Conc==0.5) %>%
         axis.title = element_text(size = rel(0.8)))
 
 
-norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Control"))
+#norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c("Control", "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))
 
 
 
@@ -160,18 +160,18 @@ norm_24_v_48_ldh <- norm_LDH %>% filter(Conc==0.5) %>%
 ggplot(norm_24_v_48_ldh, aes(x=norm_val, y=ldh))+
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
-  facet_wrap("Drug")+
+  facet_wrap("indv")+
   theme_bw()+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
            geom = "label",
            label.y = 4, label.x=1)+
-  ggtitle("Correlation between ldh 48 and 24 hours")
+  ggtitle("Relationship between ldh 48 and 24 hours")
 
 
 cormodel <- cor(norm_24_v_48_ldh, x=)
 corrplot::corr(cormodel,)
-cor_test(x=ldh, y=norm_val, data= norm_24_v_48_ldh,alternative = "two.sided", method = "spearman")#norm_24_v_48_ldh)
+cor_test( data= norm_24_v_48_ldh,x=norm_24_v_48_ldh$ldh, y=norm_24_v_48_ldh$norm_val,alternative = "two.sided", method = "spearman")#norm_24_v_48_ldh)
 
 
 res2 <- cor.test(norm_24_v_48_ldh$ldh, norm_24_v_48_ldh$norm_val, method = "spearman")
@@ -190,12 +190,12 @@ via_code <- full_list %>%
   mutate(indv= factor(SampleID, levels=c('ind1','ind2', 'ind3', 'ind4', 'ind5','ind6'),
                           labels= c('75','87','77','79','78','71'))) %>%
   mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin","Doxo"~"Doxorubicin","Epi"~"Epirubicin","Mito"~"Mitoxantrone","Tras"~"Trastuzumab","Veh"~ "Control", .default= Drug))
-DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
+# DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
+# DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
+# EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
+# MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
+# TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
+# VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
 # controlvia <- VEvia %>%  select(SampleID,Name, Percent)%>%
 #  mutate(SampleID = as.factor(SampleID)) %>% group_by(SampleID) %>%
 #      dplyr::summarize(mean=mean(Percent))
@@ -203,7 +203,6 @@ VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(Sa
 viability <- via_code %>% select (Drug,Name,Conc,Percent,indv) %>%
   group_by(Drug,Conc,indv) %>%
   dplyr::summarize(live=mean(Percent),.groups="drop")
-  #ggplot(., aes(x=factor(SampleID,level = level_order), y=mean,col=as.factor(SampleID)))+ geom_point()+facet_wrap("Drug")
 
  #colnames(viability) <- c("Drug", "Conc", "indv","live")
  comparisons_all <- viability %>%full_join(.,norm_24_v_48_ldh, by= c("Drug", "indv")) %>%
@@ -214,7 +213,7 @@ colnames(comparisons_all) <- c('Drug','indv','viable48','ldh_48','ldh_24','tnni_
 # 48 hours ldh and viability ----------------------------------------------
 
 
-ggplot(comparisons_all, aes(x=viable48, y=ldh_48))+
+ggplot(comparisons_all, aes(x=viable48, y=tnni_24))+
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
   facet_wrap("Drug")+
@@ -241,7 +240,7 @@ ggplot(comparisons_all, aes(x=viable48, y=ldh_24))+
 
 # 48 viability and 24 tnni ------------------------------------------------
 
-ggplot(comparisons_all, aes(x=viable48, y=tnni_24))+
+ggplot(comparisons_all, aes(x=tnni_24, y=viable48))+
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
   facet_wrap("Drug")+
@@ -249,5 +248,5 @@ ggplot(comparisons_all, aes(x=viable48, y=tnni_24))+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
            geom = "label",
-           label.y = 3.75, label.x=.8)+
+           label.y = 2.75, label.x=.8)+
   ggtitle("Viability at 48 hours and Troponin I at 24hours")
