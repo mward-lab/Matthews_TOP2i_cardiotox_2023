@@ -67,7 +67,7 @@ response_cluster24h  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
                                                    gene_prob_tran[,9]>0.5 &
                                                    gene_prob_tran[,10]>0.5),])
 #
-# length(response_cluster)
+ length(response_cluster24h)
 
 # Three hour patterns ------------------------------------------------------
 
@@ -114,9 +114,18 @@ plotMotif(cormotif_24h2mot)
  gene_prob_tran24h <- cormotif_24h2mot$bestmotif$p.post
 rownames(gene_prob_tran24h) <- rownames(y_TMM_cpm)
 dim(gene_prob_tran24h)
-nonresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] <0.5 & gene_prob_tran24h[,2] <0.5 & gene_prob_tran24h[,3] <0.5 & gene_prob_tran24h[,4] <0.5& gene_prob_tran24h[,5] <0.5),])
+nonresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] <0.5 &
+                                                        gene_prob_tran24h[,2] <0.5 &
+                                                        gene_prob_tran24h[,3] <0.5 &
+                                                        gene_prob_tran24h[,4] <0.5&
+                                                        gene_prob_tran24h[,5] <0.5),])
 length(nonresponse_cluster24h)
-response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5)& gene_prob_tran24h[,4] >0.5,])
+response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] > 0.5 &
+                                                     gene_prob_tran24h[,2] > 0.5 &
+                                                     gene_prob_tran24h[,3] > 0.5 &
+                                                     gene_prob_tran24h[,4] > 0.5
+                                                    ),])
+
 ACresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5),])
 length(response_cluster24h)
 length(ACresponse_cluster24h)

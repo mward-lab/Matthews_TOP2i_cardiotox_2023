@@ -434,27 +434,8 @@ EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(Sam
 MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
 TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
 VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
-values_48_list <- full_list %>% na.omit()%>% filter(Conc == 1) %>% mutate(SampleID=substr(SampleID,1,4)) 
+values_48_list <- full_list %>% na.omit()%>% filter(Conc == 0.5) %>% mutate(SampleID=substr(SampleID,1,4)) 
 
-ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = SampleID, alpha =0.8)) +
-     guides(alpha = "none")+ 
-      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
-  geom_boxplot(position ="dodge",outlier.colour="transparent")+
-      ylim(0,1.5)+
-        # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  # scale_x_discrete("Conc", labels = c("0.01","0.05", "0.1","0.5","1"))+
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  geom_hline(yintercept = 1,lty = 3)+
-  ylab(NULL) +
-  facet_wrap(~Name)+
-  theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
-      ggtitle("Viablity at low concentrations")+
-  theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=9, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 2))
        
       #plot.background = element_rect(fill = "#DDBBCD", colour = NA))
 #refmt <- MT[SampleID=='ind6a']
@@ -471,12 +452,7 @@ ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
     
     ```{r LDH data at 0.5 uM, warning=FALSE}
 ### to extract parameters for mapping
-DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5)# %>% mutate(SampleID=substr(SampleID,1,4))
-DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
-EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
-MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
-TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
-VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
+
 alterlist <- full_list %>% na.omit()%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4)) 
 
 ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = SampleID, alpha =0.8)) +
@@ -499,15 +475,8 @@ ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = Sample
        panel.grid.major = element_line(colour = 'lightgrey'),
        panel.border=element_rect(fill = NA, size = 2))
        
-      #plot.background = element_rect(fill = "#DDBBCD", colour = NA))
-#refmt <- MT[SampleID=='ind6a']
-ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
-     guides(alpha = "none")+ 
-      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
-  geom_boxplot(position ="dodge")+
-      ylim(0,1.5)+
-  facet_wrap(~SampleID)
-    
+   
+```   
     Getting an error, but It does not affect the result
 I can use bind_rows to get a pretty output in tibble
 
@@ -800,7 +769,7 @@ VEi <- full_list %>% filter(Drug == "Veh")
 ```
 
 
-```{r extract the stuff via dr4pl}
+```{r extract the stuff via dr4pl, eval=FALSE}
 
 param_holder <- c()
 for (i in ID) {
@@ -1075,12 +1044,14 @@ LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_l
 
 
 ab <- LD50long %>% 
-  ggplot(., mapping = (aes(x = (Treatment), y = log10(ld50)))) +
+  ggplot(., mapping = (aes(x = (Treatment), y = log10(mean)))) +
+  geom_boxplot(aes())+
   geom_point(aes(
     color = indv,
     size = 5,
-    shape = indv,
-    alpha = 0.5)) +
+      alpha = 0.5)) +
+  ggtitle("Observed LD 50s for Cardiomyocytes by Treatment")+
+  
   # labs(title= expression("Mean observed LD"[50]~ "per individual"))+
        xlab("Treatment")+
     ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
@@ -1130,52 +1101,52 @@ LD50full
 # mito 
 #  ind1a     ind1b     ind2a     ind2b     ind3a     ind3b     ind4a     ind4b     ind5a     ind5b     ind6a     ind6b 
 # 1.1287081 0.3409535 1.6321703 1.1007397 1.0034770 0.9195866 1.0613525 0.7405098 0.9952677 0.7025685 1.0832924 0.9933416 
- shortld50 <- data.frame(ID)
-
-
- shortld50$Daunorubicin <- c(1.00926065, 0.03856139, 2.38602966, 1.90880497, 0.69230676, 1.04783175, 0.49544232, 0.53783813,
-                        1.41129883, 0.49939489,1.04888989,1.03736364 )
-
- shortld50$Doxorubicin <- c(2.2906076,  0.9773591, 14.8047803, 49.9795646,  4.8451495, 13.7993338,  1.4631495,  0.4592608,
-                       7.0893006,  0.1687517,  2.7093847,0.8002774)
-
- shortld50$Epirubicin <- c(6.11941804, 35.19817394, 12.87019412,  5.97076382,  0.02779486, 10.88430888,  1.65476958,
-                      0.29253173,  3.05314644,  0.43706259,1.60455969,  0.53305728 )
-
- shortld50$Mitoxantrone <- c(1.1287081, 0.3409535, 1.6321703, 1.1007397, 1.0034770, 0.9195866, 1.0613525, 0.7405098, 0.9952677, 0.7025685, 1.0832924, 0.9933416)
- 
- 
- summary(shortld50)
- ld50$ID
- 
- 
-ggplot(data=ld50, aes(y=ld50,x=Drug, color=Drug)) + 
-  geom_pointrange(stat = "summary",
-                  fun.min = function(z) {quantile(z,0.25)},
-                  fun.max = function(z) {quantile(z,0.75)},
-                  fun = median, size =3)+ 
-  ylim(0, 10)+
-  theme_classic()+
-  ylab(expression("Median LD"[50]~"in ",mu ~"M"))+
-  xlab("Treatment")+
-     theme(axis.title=element_text(size=15),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=10, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 3))
-
-  
-             
-plot(ld50)
-
-pull(ld50)
-names(ld50)
-ld50 <- pivot_longer(ld50, 2:5, names_to ="Drug", values_to = "ld50")
-
-longlf50 <- ld50### decided to rerun and save as a new file##
-
-write_csv(ld50,"ld50calc.csv")
-    
+#  shortld50 <- data.frame(ID)
+# 
+# 
+#  shortld50$Daunorubicin <- c(1.00926065, 0.03856139, 2.38602966, 1.90880497, 0.69230676, 1.04783175, 0.49544232, 0.53783813,
+#                         1.41129883, 0.49939489,1.04888989,1.03736364 )
+# 
+#  shortld50$Doxorubicin <- c(2.2906076,  0.9773591, 14.8047803, 49.9795646,  4.8451495, 13.7993338,  1.4631495,  0.4592608,
+#                        7.0893006,  0.1687517,  2.7093847,0.8002774)
+# 
+#  shortld50$Epirubicin <- c(6.11941804, 35.19817394, 12.87019412,  5.97076382,  0.02779486, 10.88430888,  1.65476958,
+#                       0.29253173,  3.05314644,  0.43706259,1.60455969,  0.53305728 )
+# 
+#  shortld50$Mitoxantrone <- c(1.1287081, 0.3409535, 1.6321703, 1.1007397, 1.0034770, 0.9195866, 1.0613525, 0.7405098, 0.9952677, 0.7025685, 1.0832924, 0.9933416)
+#  
+#  
+#  summary(shortld50)
+#  ld50$ID
+#  
+#  
+# ggplot(data=ld50, aes(y=ld50,x=Drug, color=Drug)) + 
+#   geom_pointrange(stat = "summary",
+#                   fun.min = function(z) {quantile(z,0.25)},
+#                   fun.max = function(z) {quantile(z,0.75)},
+#                   fun = median, size =3)+ 
+#   ylim(0, 10)+
+#   theme_classic()+
+#   ylab(expression("Median LD"[50]~"in ",mu ~"M"))+
+#   xlab("Treatment")+
+#      theme(axis.title=element_text(size=15),
+#         axis.ticks=element_line(size =2),
+#         axis.text=element_text(size=10, face = "bold"),
+#        panel.grid.major = element_line(colour = 'lightgrey'),
+#        panel.border=element_rect(fill = NA, size = 3))
+# 
+#   
+#              
+# plot(ld50)
+# 
+# pull(ld50)
+# names(ld50)
+# ld50 <- pivot_longer(ld50, 2:5, names_to ="Drug", values_to = "ld50")
+# 
+# longlf50 <- ld50### decided to rerun and save as a new file##
+# 
+# write_csv(ld50,"ld50calc.csv")
+#     
      
  
   
@@ -1370,7 +1341,7 @@ library(tidyverse)
 png("tropimage.png")
 print(tropimage)
  dev.off()
-libarary(magrittir)
+library(magrittir)
 selecting and redoing analysis
 ldhresults
 ldhnew <- select(ldhresults, c(indv,Drug,Conc,rLDH)) 
@@ -1392,23 +1363,6 @@ library(dplyr)
 
 
 
-*** calculated ld50 values
-
-```{r ld50 bind echo=FALSE, warnings = FALSE}
-
-ldall <- bind_rows(daunls,doxols, epils, mitols)
-str(ldall
-  )
-row.names(ldall) <- c('Daunorubicin', 'Doxorubicin', 'Epirubicin', 'Mitoxantrone', 'Trastuzumab')
-
-rowMeans(ldall)
-summary(ldall)
-ldall$row_median = apply(ldall[,-1], 1, median)
-
-ldall1 <- ldall[, (names(ldall) %in% ID)]
-ldall$group_1median = apply(ldall1[,2:7], 1, median)
-
-```
 
 
 

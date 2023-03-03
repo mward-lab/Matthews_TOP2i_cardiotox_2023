@@ -487,3 +487,32 @@ comp1 <- list(knowles5$entrezgene_id,top2bi$entrezgene_id)
 
 ```
   
+  
+  
+  
+  
+  
+  Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
+
+
+
+```{r gene comparison}
+library(readxl)
+
+# Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
+#     range = "A13:H469")
+
+#write.csv(Seoane_chromatinregs, "data/Seonane2019supp1.txt")
+
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+                            
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+
+
+
+
+
+
+
+```
