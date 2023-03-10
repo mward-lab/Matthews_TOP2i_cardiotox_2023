@@ -105,7 +105,7 @@ x_axis_labels=function(labels,every_nth=1,...) {
 ```{r file loading, eval=TRUE, include=FALSE}
 print(getwd())
 design <- read.csv("data/data_outline.txt", row.names = 1)
-mymatrix <- readRDS('data/mymatrix.RDS')
+mymatrix <- readRDS("data/mymatrix.RDS")
 
 ```
 
@@ -212,7 +212,7 @@ dim(filcpm_matrix)
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
-# write.csv(x$counts, "data/norm_counts.csv")
+write.csv(x$counts, "data/raw_counts.csv")
 
 
 ```
@@ -549,6 +549,14 @@ colnames(Dx3counts) <- c("ENTREZID", "Samples",  "Counts")
 colnames(Ep3counts) <- c("ENTREZID", "Samples",  "Counts")
 colnames(Mt3counts) <- c("ENTREZID", "Samples",  "Counts")
 colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
+
+write_csv(Da24counts,"data/Da24counts.txt")
+write_csv(Dx24counts,"data/Dx24counts.txt")
+write_csv(Ep24counts,"data/Ep24counts.txt")
+write_csv(Mt24counts,"data/Mt24counts.txt")
+write_csv(TR24counts,"data/TR24counts.txt")
+
+
 ```
 library(cowplot)
 

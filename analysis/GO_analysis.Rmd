@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 ```
 
 # GO Analysis
@@ -16,9 +16,8 @@ I have created several files from the RNA analysis that contain the significant 
 example: 'sigVDA3.txt' means this file contains the significant DE genes from the Daunorubicin 3 hour compared to Vehicle Control 3 hour analysis
 
 ```{r Import libraries, message=FALSE, warning=FALSE}
-library(gprofiler2)
 library(tidyverse)
-library(ggplot2)
+library(gprofiler2)
 library(readr)
 library(BiocGenerics)
 library(gridExtra)
@@ -341,7 +340,7 @@ ggVennDiagram(ACcomp,
               label_color = "black",
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .21))+
-  scale_fill_gradient(low = "red", high = "yellow")+
+  scale_fill_gradient(low = "purple", high = "yellow")+
   labs(title = "Comparision AC 3h v 24h", caption = "n = 8925 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
@@ -351,7 +350,7 @@ ggVennDiagram(ACcomp,
 Tell me more!  what are those genes at 24 hours??  give me some GO!
 # Graphing GO
 
-```{r graphing GO of 24 hour intersect, message=FALSE, warning=FALSE, paged.print=TRUE}
+```{r graphing GO of 24 hour top2bi intersect, message=FALSE, warning=FALSE, paged.print=TRUE}
 list24totvenn <- get.venn.partitions(total24)
 # > list24totvenn$..count..
 #  [1]  960   13   19   15   37   18   25  126 4440  265  538  533  661  399  838
@@ -363,9 +362,9 @@ DDEMresp <- list24totvenn$..values..[[1]]
 Dxresp <- sigVDX24$ENTREZID
 DXsprespon <- list24totvenn$..values..[[14]]
 
-top2bi <-  read_csv("data/response_cluster24h.csv", 
-    col_types = cols(...1 = col_skip()))
-length(top2bi$x)
+top2bi <-  read_csv("data/response_cluster24h.csv",col_select = x, col_types = "c")
+colnames(top2bi) <-"ENTREZID"
+length(top2bi$ENTREZID)
 
 complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 complete <- as.data.frame(unique(complete))
@@ -380,9 +379,10 @@ NoResp <- backGL %>% anti_join(.,(complete), by = "ENTREZID")
 # nonresponse_cluster24h <-  read_csv("data/nonresponse_cluster24h.csv", 
 #     col_types = cols(...1 = col_skip()))
 # length(nonresponse_cluster24h$x)
+length(intersect(top2bi$ENTREZID,DDEMresp))
+       
 
-
-gostrescorm24 <- gost(query = top2bi$x,  organism = "hsapiens",
+gostrescorm24 <- gost(query = c(top2bi$ENTREZID),  organism = "hsapiens",
   ordered_query = FALSE,
   domain_scope = "custom",
   measure_underrepresentation = FALSE,
@@ -390,7 +390,7 @@ gostrescorm24 <- gost(query = top2bi$x,  organism = "hsapiens",
   user_threshold = 0.0001,
   correction_method = c("fdr"),
   custom_bg = backGL$ENTREZID,
-  sources=c("GO:BP","GO:MF", "GO:CC"))
+  sources=c("GO:BP"))
 cormotifcluster <- gostplot(gostrescorm24, capped = FALSE, interactive = TRUE)
 cormotifcluster
 
@@ -402,6 +402,10 @@ table3 <- gostrescorm24$result %>%
   # kable_paper("striped", full_width = FALSE) %>%  
   # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
   table3
+  
+  table3[1:20,] %>% mutate(gene_ratio = intersection_size/term_size) %>%
+  ggplot(.,aes(x=gene_ratio, y=term_name))+
+  geom_point(aes(size= intersection_size, color = p_value))+ ggtitle('Top2Bi enriched GO:BP terms')
 ```
   
   
@@ -516,3 +520,189 @@ names(Seoane_2019) <- "ENTREZID"
 
 
 ```
+## GO analysisl of DEG from Cormotif
+```{r go of NR genes}
+
+NoResp <- backGL %>% 
+  anti_join(.,(complete), by ="ENTREZID")
+
+
+     length(NoResp$ENTREZID)     
+
+gostresNR <- gost(query = NoResp$ENTREZID, 
+                  organism = "hsapiens",
+                  ordered_query = FALSE,
+                  domain_scope = "custom",
+                  measure_underrepresentation = FALSE,
+                  evcodes = TRUE,
+                  user_threshold = 0.05,
+                  correction_method = c("fdr"),
+                  custom_bg = backGL$ENTREZID,
+                  sources="GO:BP", significant = FALSE)
+
+
+No_response_set <- gostplot(gostresNR, capped = FALSE, interactive = TRUE)
+ #sample(NoResp$ENTREZID,3)
+exampNR <- c(4287,56946,4478)
+# (gostres$result$p_value)
+table4 <- No_response_set$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  table4
+
+
+table4[1:20,] %>% mutate(gene_ratio = intersection_size/term_size) %>%
+  ggplot(.,aes(x=gene_ratio, y=term_name))+
+  geom_point(aes(size= intersection_size, color = p_value))
+  
+  table4[1:20,] %>% mutate(gene_ratio = intersection_size/term_size) %>%
+  ggplot(.,aes(x=gene_ratio, y=term_name))+
+  geom_point(aes(size= intersection_size, color = p_value))+ggtitle("No Response Gene set")
+
+```
+
+
+
+
+```{r gosemsim}
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(GOSemSim)
+hsGO <- godata('org.Hs.eg.db', ont="BP")
+    
+ggo <- groupGO(gene     = as.character(top2bi$ENTREZID),
+               OrgDb    = org.Hs.eg.db,
+               ont      = "BP",
+               level    = 3,
+               readable = FALSE)
+
+head(ggo)    
+# library(msigdbr)
+# msigdbr_show_species()
+# 
+# #Homo sapiens is [10]
+
+m_df <- msigdbr(species = "Homo sapiens",subcategory = "BP")
+back_m_df <- m_df[,c("gs_exact_source","human_entrez_gene")]
+
+
+
+testsapple <- enricher(as.character(top2bi$ENTREZID),
+         universe = as.character(backGL$ENTREZID),
+         pvalueCutoff = 0.05,
+         pAdjustMethod="fdr",
+         minGSSize = 10,
+         maxGSSize = 500,
+         qvalueCutoff = 0.2,
+         TERM2GENE = back_m_df)
+
+ego <- enrichGO(top2bi$ENTREZID, 
+               keyType = "ENTREZID",
+                OrgDb=org.Hs.eg.db,
+                ont="BP",
+                pAdjustMethod ="BH",
+                pvalueCutoff = 0.01,
+                qvalueCutoff=0.05,
+                readable = TRUE)
+
+goplot(ego,
+       showCategory = 6)
+goplot(ggo,showCaegory = 10)
+
+head(ego,3)
+dotplot(ego)
+applot <- dotplot(object = testsapple,  color='pvalue', decreasing = TRUE)
+barplot(testsapple)
+applot+
+  scale_y_discrete(labels=fun)
+
+table4[1:20,] %>% mutate(gene_ratio = intersection_size/term_size) %>%
+  ggplot(.,aes(x=gene_ratio, y=term_name))+
+  geom_point(aes(size= intersection_size, color = p_value))
+  
+  table4[1:20,] %>% mutate(gene_ratio = intersection_size/term_size) %>%
+  ggplot(.,aes(x=gene_ratio, y=term_name))+
+  geom_point(aes(size= intersection_size, color = p_value))+ggtitle("No Response Gene set")
+  
+```
+```{r}
+mclusterSim(table4, semData=hsGO)
+```
+
+```{r running gene lists}
+### list of genes I want to see expression from
+#sample(complete$ENTREZID, 3)
+library(readr)
+# ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+Response_24list <- c(1119,2950,6556)
+Resp24_list <- getBM(attributes=my_attributes,
+                     filters ='entrezgene_id',
+                     values = Response_24list, 
+                     mart = ensembl)
+
+NRresp_list <- getBM(attributes=my_attributes,
+                     filters ='entrezgene_id',
+                     values = exampNR, 
+                     mart = ensembl)
+
+exampNR <- c(4287,56946,4478)
+
+#find the "indecies for those genes in the matrix"
+exampNR,x
+counts24hours <- read_rds("data/counts24hours.RDS")
+counts24da<- read_csv("data/Da24counts.txt")
+counts24dx<- read_csv("data/Dx24counts.txt")
+counts24ep<- read_csv("data/Ep24counts.txt")
+counts24mt<- read_csv("data/Mt24counts.txt")
+counts24tr<- read_csv("data/TR24counts.txt")
+
+
+levels(counts24hours$Samples) <- c("Da.24h"="Daunorubicin",
+                                           "Dx.24h"="Doxorubicin",
+                                           "Ep.24h"="Epirubicin",
+                                           "Mt.24h"="Mitoxantrone",
+                                         "Tr.24h"="Trastuzumab",
+                                         "Ve.24h"="Control") 
+ counts24hours %>% dplyr::filter(ENTREZID %in% Response_24list) %>%
+  group_by(Samples) %>%
+  ggplot(.,aes(x= Samples, y=Counts))+
+  geom_boxplot()+
+ 
+  facet_grid(~ENTREZID,labeller = cols= 2, scales ="free")
+idx <- match(Emmalist$ENTREZID,counts24hours$ENTREZID)
+
+
+namelist <- c("1026"="CDKN1A","23411"= "SIRT1","27113"= "BBC3","4193"= "MDM2")
+Emmalist <- select(org.Hs.eg.db, 
+       keys = Emmalist,
+       columns = c("ENTREZID", "SYMBOL"),
+       keytype = "SYMBOL")
+
+
+
+
+
+
+counts24hours %>% dplyr::filter(ENTREZID %in% Emmalist$ENTREZID) %>%
+  group_by(Samples) %>%
+  ggplot(.,aes(x= Samples, y=Counts))+
+  geom_boxplot(aes(col=Samples))+
+  facet_grid(~ENTREZID,labeller=labeller(ENTREZID = namelist))
+  
+#                       
+
+getBM(attributes=my_attributes,
+                     filters ='entrezgene_id',
+                     values = Response_24list, 
+                     mart = ensembl)
+
+```
+
+
+
+
+

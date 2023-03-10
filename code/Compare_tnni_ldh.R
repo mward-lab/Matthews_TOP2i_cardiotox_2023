@@ -169,12 +169,6 @@ ggplot(norm_24_v_48_ldh, aes(x=norm_val, y=ldh))+
   ggtitle("Relationship between ldh 48 and 24 hours")
 
 
-cormodel <- cor(norm_24_v_48_ldh, x=)
-corrplot::corr(cormodel,)
-cor_test( data= norm_24_v_48_ldh,x=norm_24_v_48_ldh$ldh, y=norm_24_v_48_ldh$norm_val,alternative = "two.sided", method = "spearman")#norm_24_v_48_ldh)
-
-
-res2 <- cor.test(norm_24_v_48_ldh$ldh, norm_24_v_48_ldh$norm_val, method = "spearman")
 
 ggplot(mean24ldh, aes(x=indv, y=ldh))+geom_point()+ facet_wrap("Drug")
 ggplot(mean24tnni, aes(x=indv, y=tnni))+geom_point()+ facet_wrap("Drug")
@@ -250,3 +244,95 @@ ggplot(comparisons_all, aes(x=tnni_24, y=viable48))+
            geom = "label",
            label.y = 2.75, label.x=.8)+
   ggtitle("Viability at 48 hours and Troponin I at 24hours")
+
+
+# normalization using RNA -------------------------------------------------
+#using the dataframe tvl24hour made on ldh code block (r combining ldh and tnni data at 24 hours
+
+#write_csv(tvl24hour, "data/tvl24hour.txt")
+tvl24hour <- read_csv("data/tvl24hour.txt", show_col_types = FALSE)
+
+tvl24hour <- tvl24hour %>% mutate(indv= factor(indv,levels= level_order))
+#Import the RNA concentratons
+
+
+RINsamplelist <- read_csv("data/RINsamplelist.txt")
+
+RNAnormlist <- RINsamplelist %>% mutate(Drug=case_match(Drug,"daunorubicin"~"Daunorubicin",
+                                         "doxorubicin"~"Doxorubicin",
+                                         "epirubicin"~"Epirubicin",
+                                         "mitoxantrone"~"Mitoxantrone",
+                                         "trastuzumab"~"Trastuzumab",
+                                         "vehicle"~"Control", .default= Drug)) %>%
+
+  filter(time =="24h") %>% ungroup() %>%
+  dplyr::select(indv,Drug,Conc_ng.ul) %>%
+  mutate(indv= factor(indv,levels= level_order))
+#normalize <- function(x, na.rm = TRUE) {
+#  return((x- min(x)) /(max(x)-min(x)))
+#}
+
+ggplot(RNAnormlist, aes(x=indv, y=Conc_ng.ul))+
+  geom_point(aes(col=Drug))
+ggplot(RNAnormlist, aes(x=Drug, y=Conc_ng.ul))+
+  geom_point(aes(col=indv))
+
+RNAnormlist <- RNAnormlist %>% group_by(indv) %>%
+  full_join(.,tvl24hour,by= c("Drug", "indv")) %>%
+  mutate(rldh=ldh/Conc_ng.ul) %>% mutate(rtnni=tnni/Conc_ng.ul)
+
+ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  facet_wrap("Drug", scales="free")+
+  theme_bw()+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label"
+           )+
+  ggtitle("Correlation after RNA concentration normalization")
+
+
+
+ggplot(RNAnormlist, aes(x=Drug, y=tnni))+
+  geom_boxplot(position = "identity")+
+  geom_point(aes(col=indv, size=2))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Control"),
+                                 c("Doxorubicin", "Control"),
+                                 c("Epirubicin", "Control"),
+                                 c("Mitoxantrone", "Control"),
+                                 c("Trastuzumab","Control")),
+              test = "t.test",
+              map_signif_level = FALSE,step_increase = 0.1,
+              textsize = 6)+
+  ggtitle("Relative troponin I levels released in media")+
+  theme_bw()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 9, color = "black", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+ggplot(tvl24hour, aes(x=Drug, y=tnni))+
+  geom_boxplot(position = "identity")+
+  geom_point(aes(col=indv, size=2))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Control"),
+                                 c("Doxorubicin", "Control"),
+                                 c("Epirubicin", "Control"),
+                                 c("Mitoxantrone", "Control"),
+                                 c("Trastuzumab","Control")),
+              test = "t.test",
+              map_signif_level = FALSE,step_increase = 0.1,
+              textsize = 6)+
+  ggtitle("Relative ldh levels released in media")+
+  theme_bw()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 9, color = "black", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+

@@ -27,12 +27,19 @@ library(ggsignif)
 
 ```{r ldh input, echo=FALSE}
 
+# RINsamplelist <- read.csv("~/Ward Lab/Cardiotoxicity/Data/sequencing things/RINsamplelist.csv")
+# colnames(RINsamplelist) <- c("Indv","indv","time", "Drug","RIN","Conc_ng.ul")
+#  write_csv(RINsamplelist, "data/RINsamplelist.txt")
+RINsamplelist <-read_csv("data/RINsamplelist.txt",col_names = TRUE)
+factor(RINsamplelist$Drug, levels = c( "daunorubicin", "doxorubicin", "epirubicin", "mitoxantrone", "trastuzumab","control"))
+
+
 
 norm_LDH <- read.csv("data/norm_LDH.csv")
-norm_LDH <- norm_LDH[,-1]##get rid of line numbers
-norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Control"))
+norm_LDH48 <- norm_LDH[,-1]##get rid of line numbers
+norm_LDH48$Drug <- factor(norm_LDH$Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Control"))
 
-ggplot(norm_LDH, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
+ggplot(norm_LDH48, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
   geom_boxplot(aes(fill = as.factor(Conc))) +
   #geom_point(aes(color= indv))+
   # stat_compare_means(method="t.test", ref.group=6, label="p",angle = 75,hide.ns = TRUE, label.y=c(4.5),label.x= c(1.5,2.5,3.5,4.5,5.5,6.5,7.5),aes(angle=90))+
@@ -215,8 +222,8 @@ ggplot(mean24tnni, aes(x=Drug,y=tnni))+
 cor(mean24ldh$ldh, mean24tnni$tnni)
 
 
-tvl24hour <- inner_join(mean24ldh,mean24tnni, by=c("Drug","indv"))
-
+tvl24hour <- full_join(mean24ldh,mean24tnni, by=c("Drug","indv"))
+ 
 ggplot(tvl24hour, aes(x=ldh,y=tnni))+
   geom_point(aes(col=indv))+ geom_smooth(method="lm")+
   facet_wrap("Drug", scales= "free")+theme_bw()+
@@ -224,34 +231,6 @@ ggplot(tvl24hour, aes(x=ldh,y=tnni))+
   ggtitle("ldh verses cTNNI 24 hour by Drug")
 
 
-#_____________________________________________________________________________________
-# 
-# model <- lm(ldh~tnni, data = tvl24hour)
-# 
-# res <- resid(model)
-# plot(fitted(model), res)
-# 
-# 
-# 
-# qqnorm(res)
-# qqline(res)
-# plot(density(res))
-# 
-# summary(model)
-# 
-# 
-# model <- lm(tnni~ldh+indv+Drug, data = tvl24hour)
-# 
-# res <- resid(model)
-# plot(fitted(model), res)
-# 
-# 
-# 
-# qqnorm(res)
-# qqline(res)
-# plot(density(res))
-# 
-# hist(residuals(model), col = "steelblue")
 ```
 
 ```{r checking numbers}
@@ -260,5 +239,17 @@ ggplot(tvl24hour, aes(x=ldh,y=tnni))+
 
 ggplot(mean24ldh, aes(x=indv, y=ldh))+geom_point()+ facet_wrap("Drug")
 ggplot(mean24tnni, aes(x=indv, y=tnni))+geom_point()+ facet_wrap("Drug")
+
+```
+
+
+
+```{r hmmm}
+
+ggplot(tvl24hour, aes(x=indv, y=ldh))+geom_point()+ facet_wrap("Drug")
+ggplot(tvl24hour, aes(x=indv, y=tnni))+geom_point()+ facet_wrap("Drug")
+
+
+
 
 ```

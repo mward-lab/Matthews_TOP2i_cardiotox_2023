@@ -55,7 +55,7 @@ nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
                                                    gene_prob_tran[,10] <0.5),])
 
 length((nonresponse_cluster))
-
+write_csv(as.data.frame(nonresponse_cluster), "data/cormotif_NRset.txt")
 response_cluster24h  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
                                                    gene_prob_tran[,2] >0.5 &
                                                    gene_prob_tran[,3] >0.5 &
@@ -106,8 +106,8 @@ set.seed(12345)
 cormotif_24h2mot <- cormotiffit(exprs = y_TMM_cpm,
                            groupid = groupid,
                            compid = compid_24h,
-                           K=2, max.iter = 500)
-
+                           K=1:5, max.iter = 500)
+saveRDS(cormotif_24h2mot,file = "data/Cormotif_24_k1-5_raw.RDS")
 plotIC(cormotif_24h2mot)
 #x_axis_labels(labels = c("3_Daun","3_Dox","3_Epi","3_Mito","3_Tras","24_Daun","24_Dox","24_Epi","24_Mito","24_Tras"), every_nth = 1, adj=1, srt =90, cex =0.4)
 plotMotif(cormotif_24h2mot)
@@ -129,8 +129,8 @@ response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] > 0.5 &
 ACresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5),])
 length(response_cluster24h)
 length(ACresponse_cluster24h)
-write.csv(response_cluster24h,"data/response_cluster24h.csv")
-write.csv(ACresponse_cluster24h,"data/Top2biresp_cluster24h.csv")
+write.csv(response_cluster24h,"data/Top2biresp_cluster24h.csv")
+write.csv(ACresponse_cluster24h,"data/resp_cluster24h.csv")
 write.csv(nonresponse_cluster24h,"data/nonresponse_cluster24h.csv")
 # AC3 hour ----------------------------------------------------------------
 

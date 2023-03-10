@@ -1,7 +1,7 @@
 ####Venn diagrams
 library(ggVennDiagram)
 library(ggplot2)
-
+library(readr)
 
 #load the files:
 file.names <- list.files(path = "data/",
@@ -18,23 +18,18 @@ for (k in 1:length(file.names)){
 
 ##rename the columns to the previous names
 
+# 24 hour data sets -------------------------------------------------------
+
+
 colnames(sigVDA24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 colnames(sigVDX24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 colnames(sigVEP24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 colnames(sigVMT24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 colnames(sigVTR24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVDA3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVDX3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVEP3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 
 
 
 
-
-
-# total24 -----------------------------------------------------------------
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 length(unique(in_common24))
@@ -50,12 +45,29 @@ ggVennDiagram(total24,
               label_color = "black",
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
-  scale_fill_gradient(low = "red2", high = "yellow")+
+  scale_fill_gradient(low = "purple", high = "yellow")+
   labs(title = "24 hour comparison of significant genes", caption = "n = 8887 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
 
-# total 3 ----------------------------------------------------------------
+
+
+
+
+
+
+
+# 3hour data sets ---------------------------------------------------------
+
+
+colnames(sigVDA3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVDX3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVEP3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+
+
+
 
 total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
 in_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
@@ -171,7 +183,7 @@ Mtvenlist <- intersect(Mitocomp[[1]],Mitocomp[[2]])
 intersect(Mtvenlist,ACintersect)
 
 
-# AC comparison -----------------------------------------------------------
+# AC 3 and 24 comparison -----------------------------------------------------------
 
 ACcomp <- list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
 in_commonAC <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
@@ -193,5 +205,21 @@ ggVennDiagram(ACcomp,
   labs(title = "Comparision AC 3h v 24h", caption = "n = 8925 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
+4
 
+
+#Detach all  packages
+detachAllPackages <- function() {
+
+  basic.packages <- c("package:stats","package:graphics","package:grDevices","package:utils","package:datasets","package:methods","package:base","package:workflowr")
+
+  package.list <- search()[ifelse(unlist(gregexpr("package:",search()))==1,TRUE,FALSE)]
+
+  package.list <- setdiff(package.list,basic.packages)
+
+  if (length(package.list)>0)  for (package in package.list) detach(package, character.only=TRUE)
+
+}
+
+detachAllPackages()
 
