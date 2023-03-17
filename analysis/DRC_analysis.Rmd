@@ -51,7 +51,7 @@ Step one in R is loading the libraries needed for analysis:
 
 ```{r Libraries to load, echo=TRUE, message=FALSE, warning=FALSE}
 library(car)
-library(dr4pl)
+#library(dr4pl)
 library(tidyverse)
 library(tinytex)
 library(readxl)
@@ -295,7 +295,7 @@ predictdf.dr4pl <- function (model, xseq, se, level, nboot=200) {
 
 
 ```
-
+##
 ```{r empty list holder}
 
 #### making lists to put stuff in###
@@ -450,31 +450,35 @@ ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
     
     
     
-    ```{r LDH data at 0.5 uM, warning=FALSE}
+    ```{r  Viability data , warning=FALSE}
 ### to extract parameters for mapping
 
-alterlist <- full_list %>% na.omit()%>% filter(Conc <= 1) %>% mutate(SampleID=substr(SampleID,1,4)) 
+alterlist <- full_list %>% 
+      na.omit()%>% 
+      filter(Conc ==0.5|Conc==0.05|Conc ==5) %>%
+      mutate(SampleID=substr(SampleID,1,4)) 
 
-ggplot(alterlist, aes(x= as.factor(Conc), y= Percent, group =Conc,color = SampleID, alpha =0.8)) +
-     guides(alpha = "none")+ 
-      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
-  geom_boxplot(position ="dodge",outlier.colour="transparent")+
-      ylim(0,1.5)+
-        # Change the x-axis scale to log 10 scale
+ggplot(alterlist, 
+       aes(x= as.factor(Conc), y= Percent, group =Conc,
+           color = SampleID, alpha =0.5)) +
+  guides(alpha = "none")+
+  geom_point()+
+  geom_boxplot(position="dodge",outlier.colour="transparent")+
+  ylim(0,1.5)+
+   scale_color_brewer(palette = "Dark2")+
   theme_classic() +
-  # scale_x_discrete("Conc", labels = c("0.01","0.05", "0.1","0.5","1"))+
   xlab(expression(paste("Concentration [", mu, "M]")))+
-  geom_hline(yintercept = 1,lty = 3)+
+  geom_hline(yintercept = 1,lty = 4)+
   ylab(NULL) +
   facet_wrap(~Name)+
-  theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
-      ggtitle("Viablity at low concentrations")+
+  
+  ggtitle("Viablity at low concentrations")+
   theme(axis.title=element_text(size=10),
         axis.ticks=element_line(size =2),
         axis.text=element_text(size=9, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 2))
-       
+       panel.grid.major = element_line(colour = 'darkgrey'),
+       panel.border=element_rect(fill = NA, size = 2),
+       plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
    
 ```   
     Getting an error, but It does not affect the result
@@ -501,6 +505,7 @@ daplot <- ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
   
     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
+  scale_color_brewer(palette = "Dark2")+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
   xlab(expression(paste("Concentration [", mu, "M]")))+
@@ -539,6 +544,7 @@ dxplot <-
   
     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
       ylim(0,1.5)+
+  scale_color_brewer(palette = "Dark2")+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
   xlab(expression(paste("Concentration [", mu, "M]")))+
@@ -583,6 +589,7 @@ epplot <-
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
+  scale_color_brewer(palette = "Dark2")+
   xlab(expression(paste("Concentration [", mu, "M]")))+
   ylab(NULL) +
   theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
@@ -621,7 +628,8 @@ mtplot <-
   
     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      scale_x_log10() + 
+  scale_color_brewer(palette = "Dark2")+# Change the x-axis scale to log 10 scale
   theme_classic() +
    xlab(expression(paste("Concentration [", mu, "M]")))+
   ylab(NULL) +
@@ -663,6 +671,7 @@ trplot <-
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() + 
+  scale_color_brewer(palette = "Dark2")+
   xlab(expression(paste("Concentration [", mu, "M]")))+
   ylab(NULL) +
   theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
@@ -707,6 +716,7 @@ veplot <-
   
     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
+  scale_color_brewer(palette = "Dark2")+
   scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
   xlab(expression(paste("Concentration [", mu, "M]"))) +
@@ -748,11 +758,12 @@ legend_b <- get_legend(leg)
 
 legend_b
 plan1 <- plot_grid(daplot,dxplot,epplot,NULL,mtplot, trplot,veplot,legend_b,ncol =4)
-
+plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
+  
 #drcfinal<- plot_grid(plan1, ncol =1, rel_heights = c(1,0.1))
 save_plot('plan1plot.png', plan1)
 plan1
-
+plan2
 ```
 ###LD50 extract
 
@@ -826,8 +837,16 @@ trLD <- sapply(param_holder, "[[", 1)
 
 
 ```
-
+###drm extracting
 ```{r extracting with drm}
+daunls <- list() ###daunorubicin list
+doxols <- list() ### doxorubicin list
+epils <- list() ###epirubicin list
+mitols <- list() ###mitoxantrone list
+trasls <- list() ###trastuzmab list
+vehls <- list() ###vehicle list
+
+
 for(k in ID){
 thingda <-  filter(DAi, SampleID==k)
   thingda.m <- drm(Percent~Conc, data = thingda, fct=LL.4(c(NA, 0, 1, NA)))
@@ -1021,22 +1040,38 @@ vehls
 
 
 
-
+##ld50 condenesed
 
 
 ```{r}
 ###combining all values into a larger dataframe
 
-daunls <- plyr::quickdf(daunls)
-doxols <- plyr::quickdf(doxols)
-epils <- plyr::quickdf(epils)
-mitols <- plyr::quickdf(mitols)
-LDfull <- rbind(daunls,doxols,epils,mitols)
+
+daunls <- plyr::quickdf(daunls) %>% 
+  pivot_longer(everything(),names_to = 'indv', values_to = "Daun")
+                        
+doxols <- plyr::quickdf(doxols) %>% 
+  pivot_longer(everything(),names_to = 'indv', values_to = "Doxo")
+epils <- plyr::quickdf(epils)%>% 
+  pivot_longer(everything(),names_to = 'indv', values_to = "Epi")
+mitols <- plyr::quickdf(mitols)%>% 
+  pivot_longer(everything(), names_to = 'indv', values_to = "Mito")
+
+LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
+
+meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>% 
+pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50') 
+
+meanLDfull %>% pivot_wider(.,id_cols=Treatment)
+avgLD50 <- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
+
+
 rownames(LDfull) <- c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
 summary(LDfull)
 #LD50long <- pivot_longer(data = LDfull,cols = names_to ="Individual", values_to= "ld50")
 
-LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_longer(-Treatment, cols_vary = "slowest", names_to="indv",values_to="ld50") %>%  mutate(indv=substr(indv,1,4)) %>% group_by(Treatment,indv) %>% mutate(mean =mean(ld50))
+LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_longer(-Treatment, cols_vary = "slowest", names_to="indv",values_to="ld50") %>%  mutate(indv=substr(indv,1,4)) %>% group_by(Treatment,indv) %>% mutate(mean =mean(ld50)) %>% summarise()
+
 #now to trim the idnames!
    #LD50long$indv <- substr(LD50long$indv,1,4)
   
@@ -1045,17 +1080,15 @@ LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_l
 
 ab <- LD50long %>% 
   ggplot(., mapping = (aes(x = (Treatment), y = log10(mean)))) +
-  geom_boxplot(aes())+
+  geom_boxplot()+
   geom_point(aes(
     color = indv,
     size = 5,
       alpha = 0.5)) +
   ggtitle("Observed LD 50s for Cardiomyocytes by Treatment")+
-  
-  # labs(title= expression("Mean observed LD"[50]~ "per individual"))+
-       xlab("Treatment")+
-    ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
- 
+  xlab("Treatment")+
+  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
+ scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("1","2","3","4","5","6"))+
     theme_bw() + 
   theme(plot.title = element_text(hjust =0.5, size = 18))+
   guides(alpha ="none", size = "none") %>% print()  #: to change point shapes
@@ -1072,6 +1105,27 @@ ab <- LD50long %>%
 #   
   ab
   
+  avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
+                         "Doxo"~"Doxorubicin",
+                         "Epi"~"Epirubicin",
+                         "Mito"~"Mitoxantrone",
+                         "Tras"~"Trastuzumab",
+                         "Veh"~ "Control", .default= Treatment)) %>% 
+    mutate(indv= factor(indv)) %>% 
+    ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot()+
+  geom_point(aes(
+    color = indv,
+    size = 5,
+      alpha = 0.5)) +
+  ggtitle("Observed LD 50s for Cardiomyocytes by Treatment")+
+  xlab("Treatment")+
+  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
+ scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("1","2","3","4","5","6"))+
+    theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha ="none", size = "none") %>% print()  #: to change point shapes
+#   
   
 ```
 
