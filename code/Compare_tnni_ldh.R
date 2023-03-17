@@ -7,7 +7,37 @@ library(zoo)
 library(ggplot2)
 library(ggpubr)
 library(ggsignif)
-library(dplyr)
+###discrete colour scales!
+scale_color_brewer()
+#indv   scale_color_brewer(palette = "Dark2")
+drug_pal <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+#
+
+#using infofrom wilkelab.org  https://wilkelab.org/SDS375/slides/color-scales.html#47
+  # scale_color_manual(
+  #   values = c(West = "#E69F00", South = "#56B4E9", Midwest = "#009E73", Northeast = "#F0E442")
+  # )
+
+scale_color_brewer(palette = "Dark2")  # for use in indivduals
+#named colors: dark pink,Red,yellow,blue, dark grey, green
+yarrr::piratepal("all")
+level_order <- c('71','75','77','78','79','87')
+#southpark <- c(71 = "#2F86FFFF", 75 ="#EBAB16FF",77= "#DE0012FF", 78 ="#22C408FF", 79 ="#FECDAAFF", 87= "#F14809FF")
+#Detach all  packages
+# okabe ito colors
+# orange	#E69F00	230, 159, 0
+# sky blue	#56B4E9	86, 180, 233
+# bluish green	#009E73	0, 158, 115
+# yellow	#F0E442	240, 228, 66
+# blue	#0072B2	0, 114, 178
+# vermilion	#D55E00	213, 94, 0
+# reddish purple	#CC79A7	204, 121, 167
+# black	#000000	0, 0, 0
+
+list(ggplot2.discrete.fill = okabe)
+
+
+
 
 # TNNI 24 hour ------------------------------------------------------------
 
@@ -16,9 +46,14 @@ TNNIelisadata <- read_excel("~/Ward Lab/Cardiotoxicity/Elisa_24hourCardiotox_202
                             sheet = "ExportR", range = "G1:I37",
                             col_names =TRUE)
 
+
+
+
+
+
 meanTNNI <- TNNIelisadata %>%
-  group_by(indv,Drug) %>%
-  summarize(tnni_relative= mean(TNNIavg)) %>%
+  dplyr::group_by(indv,Drug) %>%
+  summarise(tnni_relative= mean(TNNIavg)) %>%
   mutate(indv, indv=as.factor(indv))
 
 ggplot(meanTNNI, aes(x=Drug, y=tnni_relative))+
@@ -33,6 +68,7 @@ ggplot(meanTNNI, aes(x=Drug, y=tnni_relative))+
               map_signif_level = FALSE,step_increase = 0.1,
               textsize = 6)+
   ggtitle("Relative troponin I levels released in media")+
+  scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("1","2","3","4","5","6"))+
   theme_bw()+
   theme(strip.background = element_rect(fill = "transparent")) +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -99,22 +135,30 @@ mean24ldh <-  mean24ldh %>%
 
 ggplot(mean24ldh, aes(x=Drug,y=ldh))+
   geom_boxplot() +
-  geom_point(aes(col=indv, shape=indv, size =3))+
+  geom_point(aes(col=indv, size =3))+
   geom_signif(comparisons =list(c("Control","Daunorubicin"),
                                 c("Control","Doxorubicin"),
                                 c("Control","Epirubicin"),
                                 c("Control","Mitoxantrone"),
                                 c("Control","Trastuzumab")),
-              map_signif_level=FALSE,
+              map_signif_level=TRUE,
               textsize =6,
               tip_length = .1,
               vjust = 0.2, step_increase = 0.1)+
   theme_bw()+
+  scale_color_brewer(palette = "Dark2")+
+  xlab("")+
+  ylab("relative levels of ldh")
   ggtitle("Relative lactate dehydrogenase release in media")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = rel(0.8)))
 
+# combine data sets tnni and ldh ------------------------------------------
+#sets:mean24ldh made above
+  #avgTNNI made on the TNNI_ELISA_analysis script
 
+tvl24hour <-  mean24ldh %>%
+    inner_join(.,avgTNNI, by=c('Drug','indv'))
 
 
 
@@ -178,12 +222,22 @@ ggplot(norm_24_v_48_ldh, aes(x=indv, y=norm_val))+geom_point()+ facet_wrap("Drug
 
 # viability checks --------------------------------------------------------
 level_order <- c('71','75','77','78','79','87')
-via_code <- full_list %>%
-  filter(Conc ==0.5) %>%
+level_order2 <- c('75','87','77','79','78','71')
+#write_csv(full_list,"data/Viabilitylistfull.csv")
+viafull_list <- read_csv("data/Viabilitylistfull.csv")
+
+
+via_code <- viafull_list %>%
+  filter(Conc ==0.5|Conc==0.05|Conc ==5) %>%
   mutate(SampleID=substr(SampleID,1,4)) %>%
   mutate(indv= factor(SampleID, levels=c('ind1','ind2', 'ind3', 'ind4', 'ind5','ind6'),
                           labels= c('75','87','77','79','78','71'))) %>%
-  mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin","Doxo"~"Doxorubicin","Epi"~"Epirubicin","Mito"~"Mitoxantrone","Tras"~"Trastuzumab","Veh"~ "Control", .default= Drug))
+  mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin",
+                         "Doxo"~"Doxorubicin",
+                         "Epi"~"Epirubicin",
+                         "Mito"~"Mitoxantrone",
+                         "Tras"~"Trastuzumab",
+                         "Veh"~ "Control", .default= Drug))
 # DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
 # DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
 # EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
@@ -194,7 +248,7 @@ via_code <- full_list %>%
 #  mutate(SampleID = as.factor(SampleID)) %>% group_by(SampleID) %>%
 #      dplyr::summarize(mean=mean(Percent))
 
-viability <- via_code %>% select (Drug,Name,Conc,Percent,indv) %>%
+viability <- via_code %>% dplyr::select(Drug,Name,Conc,Percent,indv) %>%
   group_by(Drug,Conc,indv) %>%
   dplyr::summarize(live=mean(Percent),.groups="drop")
 
@@ -252,7 +306,7 @@ ggplot(comparisons_all, aes(x=tnni_24, y=viable48))+
 #write_csv(tvl24hour, "data/tvl24hour.txt")
 tvl24hour <- read_csv("data/tvl24hour.txt", show_col_types = FALSE)
 
-tvl24hour <- tvl24hour %>% mutate(indv= factor(indv,levels= level_order))
+tvl24hour <- tvl24hour %>% mutate(indv= factor(indv,levels= level_order2))
 #Import the RNA concentratons
 
 
@@ -264,13 +318,11 @@ RNAnormlist <- RINsamplelist %>% mutate(Drug=case_match(Drug,"daunorubicin"~"Dau
                                          "mitoxantrone"~"Mitoxantrone",
                                          "trastuzumab"~"Trastuzumab",
                                          "vehicle"~"Control", .default= Drug)) %>%
-
-  filter(time =="24h") %>% ungroup() %>%
+  filter(time =="24h") %>%
+  ungroup() %>%
   dplyr::select(indv,Drug,Conc_ng.ul) %>%
-  mutate(indv= factor(indv,levels= level_order))
-#normalize <- function(x, na.rm = TRUE) {
-#  return((x- min(x)) /(max(x)-min(x)))
-#}
+  mutate(indv= factor(indv,levels= level_order2))
+
 
 ggplot(RNAnormlist, aes(x=indv, y=Conc_ng.ul))+
   geom_point(aes(col=Drug))
@@ -286,11 +338,13 @@ ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
   geom_smooth(method="lm")+
   facet_wrap("Drug", scales="free")+
   theme_bw()+
+  scale_color_brewer(palette = "Dark2")+
+  #scale_color_manual(values = indv_pal)+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
            geom = "label"
            )+
-  ggtitle("Correlation after RNA concentration normalization")
+  ggtitle("Correlation between Troponin I release and LDH activity")
 
 
 
@@ -303,20 +357,24 @@ ggplot(RNAnormlist, aes(x=Drug, y=tnni))+
                                  c("Mitoxantrone", "Control"),
                                  c("Trastuzumab","Control")),
               test = "t.test",
-              map_signif_level = FALSE,step_increase = 0.1,
-              textsize = 6)+
+              map_signif_level = TRUE,step_increase = 0.1,
+              textsize = 4)+
+  scale_color_brewer(palette = "Dark2", name = "Individual")+
   ggtitle("Relative troponin I levels released in media")+
   theme_bw()+
-  theme(strip.background = element_rect(fill = "transparent")) +
+  guides(size = "none")+
+  labs(y = "Relative Troponin I release")+
+  #theme(strip.background = element_rect(fill = "transparent")) +
   theme(
     axis.title = element_text(size = 15, color = "black"),
     axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 9, color = "black", angle = 0),
+    axis.text = element_text(size = 12, color = "black", angle = 0),
     strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
 
-ggplot(tvl24hour, aes(x=Drug, y=tnni))+
+
+ggplot(RNAnormlist, aes(x=Drug, y=ldh))+
   geom_boxplot(position = "identity")+
   geom_point(aes(col=indv, size=2))+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
@@ -325,14 +383,61 @@ ggplot(tvl24hour, aes(x=Drug, y=tnni))+
                                  c("Mitoxantrone", "Control"),
                                  c("Trastuzumab","Control")),
               test = "t.test",
-              map_signif_level = FALSE,step_increase = 0.1,
-              textsize = 6)+
-  ggtitle("Relative ldh levels released in media")+
+              map_signif_level = TRUE,step_increase = 0.1,
+              textsize = 4)+
+  scale_color_brewer(palette = "Dark2", name = "Individual")+
+
+  ggtitle("Relative LDH release")+
   theme_bw()+
-  theme(strip.background = element_rect(fill = "transparent")) +
-  theme(
+  guides(size = "none")+
+  labs(y = "Relative LDH activity", fill = "Individual")+
+  #theme(strip.background = element_rect(fill = "transparent")) +
+  theme(legend.title = element_text(size = 14),
     axis.title = element_text(size = 15, color = "black"),
     axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 9, color = "black", angle = 0),
+    axis.text = element_text(size = 12, color = "black", angle = 0),
     strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
+
+
+# Viability graphs --------------------------------------------------------
+
+# viability %>% group_by(Conc) %>%
+#   ggplot(., aes(x=as.factor(Conc), y=live, group=as.factor(Conc)))+
+#   geom_boxplot()+
+#   geom_point(aes(col=indv, size=2))+
+#   # #geom_signif(comparisons = list(c("Daunorubicin", "Control"),
+#   #                                c("Doxorubicin", "Control"),
+#   #                                c("Epirubicin", "Control"),
+#   #                                c("Mitoxantrone", "Control"),
+#   #             #                    c("Trastuzumab","Control")),
+#   #             # test = "t.test",
+#               # map_signif_level = FALSE,step_increase = 0.1,
+#               # textsize = 6)+
+#   scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("6","1","3","5","4","2"))+
+#   ggtitle("Relative LDH release")+
+#   theme_bw()+
+#   facet_wrap(~Drug)
+#   guides(size = "none")+
+#   labs(y = "Viability Summary", fill = "Individual")+
+#   #theme(strip.background = element_rect(fill = "transparent")) +
+#   theme(legend.title = element_text(size = 14),
+#         axis.title = element_text(size = 15, color = "black"),
+#         axis.ticks = element_line(size = 1.5),
+#         axis.text = element_text(size = 12, color = "black", angle = 0),
+#         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+  LD50long %>%
+    ggplot(., mapping = (aes(x = (Treatment), y = log10(mean)))) +
+    geom_boxplot()+
+    geom_point(aes(
+      color = indv,
+      size = 5,
+      alpha = 0.5)) +
+    ggtitle("Observed LD 50s for Cardiomyocytes by Treatment")+
+    xlab("Treatment")+
+    ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
+    scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("1","2","3","4","5","6"))+
+    theme_bw() +
+    theme(plot.title = element_text(hjust =0.5, size = 18))+
+    guides(alpha ="none", size = "none")
