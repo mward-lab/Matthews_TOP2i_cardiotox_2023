@@ -1129,110 +1129,6 @@ ab <- LD50long %>%
   
 ```
 
-LD50full
-
-
-```{r media ld50 not log}
-# 
-# 
-# daun
-# 
-#  ind1a      ind1b      ind2a      ind2b      ind3a      ind3b      ind4a      ind4b      ind5a      ind5b 
-# 1.00926065 0.03856139 2.38602966 1.90880497 0.69230676 1.04783175 0.49544232 0.53783813 1.41129883 0.49939489 
-#      ind6a      ind6b 
-# 1.04888989 1.03736364 
-# doxo
-#  doxols1    doxols2    doxols3    doxols4    doxols5    doxols6    doxols7    doxols8    doxols9   doxols10   doxols11 
-#  2.2906076  0.9773591 14.8047803 49.9795646  4.8451495 13.7993338  1.4631495  0.4592608  7.0893006  0.1687517  2.7093847 
-#   doxols12 
-#  0.8002774 
-#  epi
-#  ind1a       ind1b       ind2a       ind2b       ind3a       ind3b       ind4a       ind4b       ind5a       ind5b 
-#  6.11941804 35.19817394 12.87019412  5.97076382  0.02779486 10.88430888  1.65476958  0.29253173  3.05314644  0.43706259 
-#       ind6a       ind6b 
-#  1.60455969  0.53305728 
-# 
-# mito 
-#  ind1a     ind1b     ind2a     ind2b     ind3a     ind3b     ind4a     ind4b     ind5a     ind5b     ind6a     ind6b 
-# 1.1287081 0.3409535 1.6321703 1.1007397 1.0034770 0.9195866 1.0613525 0.7405098 0.9952677 0.7025685 1.0832924 0.9933416 
-#  shortld50 <- data.frame(ID)
-# 
-# 
-#  shortld50$Daunorubicin <- c(1.00926065, 0.03856139, 2.38602966, 1.90880497, 0.69230676, 1.04783175, 0.49544232, 0.53783813,
-#                         1.41129883, 0.49939489,1.04888989,1.03736364 )
-# 
-#  shortld50$Doxorubicin <- c(2.2906076,  0.9773591, 14.8047803, 49.9795646,  4.8451495, 13.7993338,  1.4631495,  0.4592608,
-#                        7.0893006,  0.1687517,  2.7093847,0.8002774)
-# 
-#  shortld50$Epirubicin <- c(6.11941804, 35.19817394, 12.87019412,  5.97076382,  0.02779486, 10.88430888,  1.65476958,
-#                       0.29253173,  3.05314644,  0.43706259,1.60455969,  0.53305728 )
-# 
-#  shortld50$Mitoxantrone <- c(1.1287081, 0.3409535, 1.6321703, 1.1007397, 1.0034770, 0.9195866, 1.0613525, 0.7405098, 0.9952677, 0.7025685, 1.0832924, 0.9933416)
-#  
-#  
-#  summary(shortld50)
-#  ld50$ID
-#  
-#  
-# ggplot(data=ld50, aes(y=ld50,x=Drug, color=Drug)) + 
-#   geom_pointrange(stat = "summary",
-#                   fun.min = function(z) {quantile(z,0.25)},
-#                   fun.max = function(z) {quantile(z,0.75)},
-#                   fun = median, size =3)+ 
-#   ylim(0, 10)+
-#   theme_classic()+
-#   ylab(expression("Median LD"[50]~"in ",mu ~"M"))+
-#   xlab("Treatment")+
-#      theme(axis.title=element_text(size=15),
-#         axis.ticks=element_line(size =2),
-#         axis.text=element_text(size=10, face = "bold"),
-#        panel.grid.major = element_line(colour = 'lightgrey'),
-#        panel.border=element_rect(fill = NA, size = 3))
-# 
-#   
-#              
-# plot(ld50)
-# 
-# pull(ld50)
-# names(ld50)
-# ld50 <- pivot_longer(ld50, 2:5, names_to ="Drug", values_to = "ld50")
-# 
-# longlf50 <- ld50### decided to rerun and save as a new file##
-# 
-# write_csv(ld50,"ld50calc.csv")
-#     
-     
- 
-  
-  theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"))+
-      ggtitle("Control")+
-   theme(axis.title=element_text(size=15),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=10, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 3))
-
-# daunf <- as.data.frame(daunls)
-# doxof <- as.data.frame(doxols)
-# epif <- as.data.frame(epils)
-# mitof <- as.data.frame(mitols)
-# 
-# 
-# daunf$Drug <- "Daunorubicin"
-# doxof$Drug <- "Doxorubicin"
-# epif$Drug <- "Epirubicin"
-# mitof$Drug <- "Mitoxatrone"
-# 
-# check <- NULL
-# ld50 <- rbind(c(daunf,doxof,epif,mitof))
-# check$Mitoxantrone <- do.call(rbind, lapply(mitols, as.data.frame))
-# ld50
-# clas
-
-```
-
-
-
 ###barplot for poster
 
 ```{r barplot}
@@ -1241,7 +1137,9 @@ LD50full
  # dplyr::group_by(SampleID, Drug, Conc)  
   
 in78 <- abc_df %>% 
-  dplyr::filter(Drug=="Veh"|Drug =="Doxo") %>%filter(SampleID=="ind5a") %>%  filter(Conc ==1|Conc==0.5)
+  dplyr::filter(Drug=="Veh"|Drug =="Doxo") %>%
+  filter(SampleID=="ind5a") %>%  
+  filter(Conc ==1|Conc==0.5)
 
 
 veh78 <- in78 %>% filter(Drug =="Veh") %>% mutate(Conc = 0*Conc)
@@ -1273,7 +1171,7 @@ ggplot(Test, aes(y=Percent, x=factor(Conc),fill =factor(Conc)))+
 in78$Percent
 in78$Conc
 
-barlot()
+barplot()
 
 summarise(in78)
 Test <- c()

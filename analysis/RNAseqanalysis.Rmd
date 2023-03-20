@@ -12,7 +12,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 Hello! I am first loading all the beautiful libraries I will need.
@@ -37,6 +37,7 @@ library(cowplot)
 library(ggrepel)
 library(corrplot)
 library(Hmisc)
+
 
 ```
 
@@ -106,7 +107,7 @@ x_axis_labels=function(labels,every_nth=1,...) {
 print(getwd())
 design <- read.csv("data/data_outline.txt", row.names = 1)
 mymatrix <- readRDS("data/mymatrix.RDS")
-
+###Color sets:   individuals: c(#7007071, #41B333,)
 ```
 
 ```{r  current data import,eval=FALSE, echo =FALSE}
@@ -255,18 +256,25 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
  now I will produce the RIN x sample plots:###
 ```{r sample quality checks, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(x$samples, aes(x = as.factor(indv), y = RIN)) +
-geom_boxplot(aes(fill=as.factor(indv)))+ theme_cowplot(font_size =12, )+
-labs(x= "", fill ="Individual",y ="RNA Integrity Number")+ ggtitle("Average RIN by Individual")
+geom_boxplot(aes(fill=as.factor(indv)))+ 
+  theme_cowplot(font_size =12, )+
+  ylim(c(0,10))+
+labs(x= "", fill ="Individual",y ="RNA Integrity Number")+ 
+  ggtitle("Average RIN by Individual")
 
 ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
-geom_boxplot(aes(fill=as.factor(time)))+ theme_cowplot(font_size =12, )+
-labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ ggtitle("Boxplot of RIN by time")
+geom_boxplot(aes(fill=as.factor(time)))+ 
+  theme_cowplot(font_size =12, )+
+labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ 
+  ggtitle("Boxplot of RIN by time")
 
 ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
-geom_boxplot(aes(fill=as.factor(time)))+ theme_cowplot(font_size =12, )+
-labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ ggtitle("Boxplot of RIN by time and drug")+
+geom_boxplot(aes(fill=as.factor(time)))+ 
+  theme_cowplot(font_size =12, )+
+  ylim(c(0,10))+
+labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ 
+  ggtitle("Boxplot of RIN by time and drug")+
 facet_wrap(~drug)
-
 ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
 geom_boxplot(aes(fill=as.factor(time)))+ theme_cowplot(font_size =12, )+
 labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ ggtitle("Boxplot of RIN by individual and time")+
@@ -274,6 +282,7 @@ facet_wrap(~indv)
 
 ggplot(x$samples, aes(x = as.factor(drug), y = c(RIN))) +
 geom_boxplot(aes(fill=as.factor(drug)))+ 
+  ylim(c(0,10))+
   theme_cowplot(font_size =12, )+ labs(x= "", fill ="Drug", y ="RNA Integrity Number")+ 
   theme(axis.text.x = element_blank()) + ggtitle("Boxplot of RIN by drug and individual")+ facet_wrap(~indv)
 ```
@@ -281,7 +290,7 @@ geom_boxplot(aes(fill=as.factor(drug)))+
 # Principal Component Analysis  
 
 PCA was done using code adopted from J. Blischak.   
-```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE, fig.height=8, fig.width= 6}
+```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE}
 
 label <- (interaction(substring(drug, 0, 2), indv, time))
 smlabel <- (interaction(substring(drug, 0, 2), time))
@@ -310,6 +319,10 @@ for (b in treattype) {
   }
 write.csv(x$counts, "data/norm_counts.csv")
 
+
+
+
+
 ```
 
 # PCA of all 72 samples  
@@ -319,6 +332,8 @@ write.csv(x$counts, "data/norm_counts.csv")
 pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
 print(pca_var_plot(pca_all))
+
+
 ```
 ## Variance contribution from treatment, extraction time, or individual on PC1 and PC2
 
@@ -339,6 +354,25 @@ for (f in facs) {
   #summary(plot_versus_pc(pca_all_anno, 1, f))
   #summary(plot_versus_pc(pca_all_anno, 2, f))
 }
+library(ggfortify)
+saveddata <- prcomp(dat_cpm)
+autoplot(saveddata, data= x=2,y=3)
+
+
+
+```
+
+
+```{r other pcas}
+
+library(ggrepel)
+ggplot(pca_all_anno, aes(x = PC2, y = PC3))+
+  geom_point( col=indv, size = time, label=group) +
+  geom_text(aes(label=group))+
+    labs(x = "PC2", y = "PC3")+
+  theme_cowplot()+
+  guides(shape=TRUE,color=TRUE)
+
 
 ```
 
@@ -443,13 +477,13 @@ names(siglist) <- c("sigVDA3",
 siglist <- lapply(siglist, function(x) {colnames(x) <- gsub(pattern = "^siglist\\.", replacement = "", x = colnames(x))
 return(x)})
 
-
+toplistgenes
 #make the list, and rename the items on the list
  ##print count files to data directory (write.table needs the full file name) 
 # for(i in seq_along(siglist)) {
 #   fnl <- paste0("data/",names(siglist)[i],".txt")
-#     write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="") 
-#              
+#     write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="")
+# 
 # }
 
 #write.csv(names(siglist),data/siglist.txt", col.names = FALSE,row.names = FALSE)
@@ -526,7 +560,7 @@ mDx3counts <- countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]
 mEp3counts <- countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]
 mMt3counts <- countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]
 mTR3counts <- countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]
-
+counts24hours <- as.data.frame(as.table(countstotal[,c(7:12,19:24,31:36,43:48,55:60, 67:72)]))
 Da24counts <- as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
 Dx24counts <- as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
 Ep24counts <- as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
@@ -549,12 +583,13 @@ colnames(Dx3counts) <- c("ENTREZID", "Samples",  "Counts")
 colnames(Ep3counts) <- c("ENTREZID", "Samples",  "Counts")
 colnames(Mt3counts) <- c("ENTREZID", "Samples",  "Counts")
 colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
-
+colnames(counts24hours) <- c("ENTREZID", "Samples",  "Counts")
 write_csv(Da24counts,"data/Da24counts.txt")
 write_csv(Dx24counts,"data/Dx24counts.txt")
 write_csv(Ep24counts,"data/Ep24counts.txt")
 write_csv(Mt24counts,"data/Mt24counts.txt")
 write_csv(TR24counts,"data/TR24counts.txt")
+write_rds(counts24hours, "data/counts24hours.RDS")
 
 
 ```
@@ -589,7 +624,7 @@ volcanosig <- function(df, psig.lvl,topg) {
               axis.title = element_text(size = rel(0.8))) 
 }
 #v1<- volcanosig(V.DA24.top, 0.01,0)
-v1 <- volcanosig(V.DA.top, 0.01,10)+ ggtitle("Daunorubicin 3 hour")
+v1 <- volcanosig(V.DA.top, 0.01,10)+ ggtitle("Daunorubicin 3 hour")+
 v2 <- volcanosig(V.DA24.top, 0.01,10)+ ggtitle("Daunorubicin 24 hour")+ylab("")
 v3 <- volcanosig(V.DX.top, 0.01,10)+ ggtitle("Doxorubicin 3 hour")
 v4 <- volcanosig(V.DX24.top, 0.01,10)+ ggtitle("Doxorubicin 24 hour")+ylab("")

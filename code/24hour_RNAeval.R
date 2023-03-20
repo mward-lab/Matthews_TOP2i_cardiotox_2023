@@ -211,8 +211,47 @@ sigVDX24 %>% inner_join(sigVMT24, by="ENTREZID") %>%
              geom = "label")+
     ggtitle("DA and DX by time- no filter on adj p value")
 
+# GO of cormotifDEG -------------------------------------------------------
 
 
+library(gprofiler2)
+
+  DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+  motif1_NR <- DEG_cormotif$motif1_NR
+  motif3_TI <- DEG_cormotif$motif3_TI
+  gostresTI <- gost(query =motif3_TI,
+                    organism = "hsapiens",
+                    ordered_query = FALSE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = TRUE,
+                    user_threshold = 0.01,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources="GO:BP", significant = FALSE)
+
+
+  TI_gostresults <- gostplot(gostresTI, capped = FALSE, interactive = TRUE)
+
+  tableTI <- gostresTI$result %>%
+        dplyr::select(
+      c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>%
+       # mutate_at(.vars = 6, .funs= scientific_format())  #use this  for table display only
+
+
+  tableTI
+
+
+  tableTI %>% dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('Top2Bi-Time Independent enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
 
 
 

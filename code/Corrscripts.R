@@ -65,22 +65,179 @@ sample(nonresponse_cluster,4)
 #"55686"     "100128682" "11190"     "58472"
 
 write_csv(as.data.frame(nonresponse_cluster), "data/cormotif_NRset.txt")
-allresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 |
+
+# TI_respset --------------------------------------------------------------
+TI_respset  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 |
                                                    gene_prob_tran[,2] >0.5 |
                                                    gene_prob_tran[,3] >0.5 |
                                                    gene_prob_tran[,4] >0.5|
-                                                   gene_prob_tran[,5] >0.5 |
+                                                   # gene_prob_tran[,5] >0.5 |
                                                    gene_prob_tran[,6] >0.5 |
                                                    gene_prob_tran[,7]>0.5 |
                                                    gene_prob_tran[,8]>0.5 |
-                                                   gene_prob_tran[,9]>0.5 |
-                                                   gene_prob_tran[,10]>0.5),])
+                                                   gene_prob_tran[,9]>0.5),])
+                                                   #gene_prob_tran[,10]>0.5)
 #
- length(unique(allresponse_cluster))
+length(unique(TI_respset))
+
+#5977
+
+write_csv(as.data.frame(TI_respset), "data/cormotif_TI_respset.txt")
+
+TI_respint  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
+                                         gene_prob_tran[,2] >0.5 &
+                                         gene_prob_tran[,3] >0.5 &
+                                         gene_prob_tran[,4] >0.5&
+                                         # gene_prob_tran[,5] >0.5 &
+                                         gene_prob_tran[,6] >0.5 &
+                                         gene_prob_tran[,7]>0.5 &
+                                         gene_prob_tran[,8]>0.5 &
+                                         gene_prob_tran[,9]>0.5),])
+
+ length(unique(TI_respint))
+
+#95
+
+ write_csv(as.data.frame(TI_respint), "data/cormotif_TI_respint.txt")
 
  ##eyeball of
 
-# groupgenelistmaker ------------------------------------------------------
+# ER_resp set ------------------------------------------------------
+
+ ER_respset  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 |
+                                           gene_prob_tran[,2] >0.5 |
+                                           gene_prob_tran[,3] >0.5 |
+                                           gene_prob_tran[,4] >0.5),])
+                                           # gene_prob_tran[,5] >0.5 |
+                                           # gene_prob_tran[,6] >0.5 |
+                                           # gene_prob_tran[,7]>0.5 |
+                                           # gene_prob_tran[,8]>0.5 |
+                                           # gene_prob_tran[,9]>0.5),])
+ #gene_prob_tran[,10]>0.5)
+ #
+ length(unique(ER_respset))
+
+ #916
+
+ write_csv(as.data.frame(ER_respset), "data/cormotif_ER_respset.txt")
+
+ ER_respint  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
+                                           gene_prob_tran[,2] >0.5 &
+                                           gene_prob_tran[,3] >0.5 &
+                                           gene_prob_tran[,4] >0.5),])
+                                           # gene_prob_tran[,5] >0.5 &
+                                           # gene_prob_tran[,6] >0.5 &
+                                           # gene_prob_tran[,7]>0.5 &
+                                           # gene_prob_tran[,8]>0.5 &
+                                           # gene_prob_tran[,9]>0.5),])
+                                           #
+ length(unique(ER_respint))
+
+ #898
+
+ write_csv(as.data.frame(ER_respint), "data/cormotif_ER_respint.txt")
+
+
+
+# LR_respset --------------------------------------------------------------
+
+ LR_respset  <- rownames(gene_prob_tran[(#gene_prob_tran[,1]>0.5 |
+                                           # gene_prob_tran[,2] >0.5 |
+                                           # gene_prob_tran[,3] >0.5 |
+                                           # gene_prob_tran[,4] >0.5|
+                                           # gene_prob_tran[,5] >0.5 |
+                                           gene_prob_tran[,6] >0.5 |
+                                           gene_prob_tran[,7]>0.5 |
+                                           gene_prob_tran[,8]>0.5 |
+                                           gene_prob_tran[,9]>0.5),])
+ #gene_prob_tran[,10]>0.5)
+ #
+ length(unique(LR_respset))
+
+ #5515
+
+ write_csv(as.data.frame(LR_respset), "data/cormotif_LR_respset.txt")
+
+ LR_respint  <- rownames(gene_prob_tran[(#gene_prob_tran[,1]>0.5 &
+                                           # gene_prob_tran[,2] >0.5 &
+                                           # gene_prob_tran[,3] >0.5 &
+                                           # gene_prob_tran[,4] >0.5&
+                                           # gene_prob_tran[,5] >0.5 &
+                                           gene_prob_tran[,6] >0.5 &
+                                           gene_prob_tran[,7]>0.5 &
+                                           gene_prob_tran[,8]>0.5 &
+                                           gene_prob_tran[,9]>0.5),])
+
+ length(unique(LR_respint))
+
+ #1505
+
+ write_csv(as.data.frame(LR_respint), "data/cormotif_LR_respint.txt")
+
+
+
+# list summary ------------------------------------------------------------
+
+nonresponse_cluster
+ #motif is 8705  set of gene with less than 50% chance of being DE
+
+ TI_respint
+ #95
+ #intersection of all TOP2Bi genes that have greater than 50% chance of being DE
+ TI_respset
+ #union of all TOP2Bi genes that have greater than 50% chance of being DE
+ #5977
+
+ ER_respint
+ #898
+ #intersection of all early TOP2Bi genes that have greater than 50% chance of being DE
+ ER_respset
+ #916
+ #union of all early TOP2Bi genes that have greater than 50% chance of being DE
+
+
+
+ LR_respint
+ #1505
+ #intersection of all TOP2Bi genes that have greater than 50% chance of being DE
+ LR_respset
+ #5515
+ #union of all TOP2Bi genes that have greater than 50% chance of being DE
+
+
+ motif3_TI <- intersect(ER_respset,LR_respset)
+ #454
+
+ setdiff(ER_respint,LR_respint)
+ #803 genes
+
+
+ ER_onlyset <- setdiff(ER_respset,LR_respset)
+ #462 genes
+ motif5_ER <- setdiff(ER_respset,LR_respset)
+
+ motif4_LR <- setdiff(LR_respset,ER_respset)
+ #5061
+ motif1_NR <- nonresponse_cluster
+
+ DEG_cormotif <- list(motif1_NR,motif3_TI,motif4_LR,motif5_ER)
+
+ names(DEG_cormotif) <- c('motif1_NR','motif3_TI','motif4_LR','motif5_ER')
+
+ saveRDS(DEG_cormotif, "data/DEG_cormotif.RDS")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #generesponse tran contains all probabilities
 

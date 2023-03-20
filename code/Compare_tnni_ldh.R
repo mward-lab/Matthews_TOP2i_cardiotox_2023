@@ -46,29 +46,27 @@ TNNIelisadata <- read_excel("~/Ward Lab/Cardiotoxicity/Elisa_24hourCardiotox_202
                             sheet = "ExportR", range = "G1:I37",
                             col_names =TRUE)
 
+avgTNNI <- TNNIelisadata %>%
+  group_by(indv,Drug) %>%
+  summarise(tnni= mean(TNNIavg)) %>%
+  mutate(indv=substring(indv,0,2)) %>% #get rid of the -1 on indv to make normalized
+  mutate(indv, indv=as.factor(indv)) %>%
+  mutate(Drug =case_match(Drug, "Vehicle"~ "Control", .default = Drug))
 
 
-
-
-
-meanTNNI <- TNNIelisadata %>%
-  dplyr::group_by(indv,Drug) %>%
-  summarise(tnni_relative= mean(TNNIavg)) %>%
-  mutate(indv, indv=as.factor(indv))
-
-ggplot(meanTNNI, aes(x=Drug, y=tnni_relative))+
+ggplot(avgTNNI, aes(x=Drug, y=tnni))+
   geom_boxplot(position = "identity")+
-  geom_point(aes(col=indv, size=2))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
-                                 c("Doxorubicin", "Vehicle"),
-                                 c("Epirubicin", "Vehicle"),
-                                 c("Mitoxantrone", "Vehicle"),
-                                 c("Trastuzumab","Vehicle")),
+  geom_point(aes(col=indv, size=3))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Control"),
+                                 c("Doxorubicin", "Control"),
+                                 c("Epirubicin", "Control"),
+                                 c("Mitoxantrone", "Control"),
+                                 c("Trastuzumab","Control")),
               test = "t.test",
               map_signif_level = FALSE,step_increase = 0.1,
               textsize = 6)+
   ggtitle("Relative troponin I levels released in media")+
-  scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("1","2","3","4","5","6"))+
+  scale_color_brewer(palette = "Dark2",name = "Individual",)+
   theme_bw()+
   theme(strip.background = element_rect(fill = "transparent")) +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -158,21 +156,14 @@ ggplot(mean24ldh, aes(x=Drug,y=ldh))+
   #avgTNNI made on the TNNI_ELISA_analysis script
 
 tvl24hour <-  mean24ldh %>%
-    inner_join(.,avgTNNI, by=c('Drug','indv'))
-
-
-
-
-
-
+    full_join(.,avgTNNI, by=c('Drug','indv'))
 # LDH 48 hour 0.5 uM ------------------------------------------------------
 
+norm_LDH <- read.csv("data/norm_LDH.csv",row.names=1)##from DRC_analysis.Rmd
 
-
-norm_LDH <- read.csv("data/norm_LDH.csv")
-norm_LDH <- norm_LDH[,-1]##get rid of line numbers
 norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c("Control", "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))
 norm_LDH %>% filter(Conc==0.5) %>%
+  mutate(indv = substring(indv, 0,2)) %>%
   mutate(indv=as.factor(indv)) %>%
   ggplot(., aes(x=Drug,y=norm_val))+
   geom_boxplot() +
@@ -186,15 +177,14 @@ norm_LDH %>% filter(Conc==0.5) %>%
               textsize =6,
               tip_length = .1,
               vjust = 0.2, step_increase = 0.1)+
+  ylab("relative LDH release")+
   theme_bw()+
   ggtitle("48hour lactate dehydrogenase release in media")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = rel(0.8)))
 
 
-#norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c("Control", "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))
-
-
+# comparing 48 hour ldh and other types -----------------------------------
 
 norm_24_v_48_ldh <- norm_LDH %>% filter(Conc==0.5) %>%
   mutate(indv=substr(indv,1,2)) %>%
@@ -204,18 +194,20 @@ norm_24_v_48_ldh <- norm_LDH %>% filter(Conc==0.5) %>%
 ggplot(norm_24_v_48_ldh, aes(x=norm_val, y=ldh))+
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
-  facet_wrap("indv")+
+  facet_wrap("Drug")+
   theme_bw()+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
            geom = "label",
            label.y = 4, label.x=1)+
+  ylab("48 hour LDH")+
+  xlab("24 hour LDH")+
   ggtitle("Relationship between ldh 48 and 24 hours")
 
 
 
 ggplot(mean24ldh, aes(x=indv, y=ldh))+geom_point()+ facet_wrap("Drug")
-ggplot(mean24tnni, aes(x=indv, y=tnni))+geom_point()+ facet_wrap("Drug")
+ggplot(avgTNNI), aes(x=indv, y=tnni))+geom_point()+ facet_wrap("Drug")
 
 ggplot(norm_24_v_48_ldh, aes(x=indv, y=norm_val))+geom_point()+ facet_wrap("Drug")
 
@@ -228,36 +220,28 @@ viafull_list <- read_csv("data/Viabilitylistfull.csv")
 
 
 via_code <- viafull_list %>%
-  filter(Conc ==0.5|Conc==0.05|Conc ==5) %>%
+  filter(Conc ==0.5) %>%
   mutate(SampleID=substr(SampleID,1,4)) %>%
   mutate(indv= factor(SampleID, levels=c('ind1','ind2', 'ind3', 'ind4', 'ind5','ind6'),
-                          labels= c('75','87','77','79','78','71'))) %>%
+                          labels= level_order2)) %>%
   mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin",
                          "Doxo"~"Doxorubicin",
                          "Epi"~"Epirubicin",
                          "Mito"~"Mitoxantrone",
                          "Tras"~"Trastuzumab",
                          "Veh"~ "Control", .default= Drug))
-# DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-# DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-# EPvia <- full_list %>% filter(Drug =="Epi")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-# MTvia <- full_list %>% filter(Drug =="Mito")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-# TRvia <- full_list %>% filter(Drug =="Tras")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-# VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,2))
-# controlvia <- VEvia %>%  select(SampleID,Name, Percent)%>%
-#  mutate(SampleID = as.factor(SampleID)) %>% group_by(SampleID) %>%
-#      dplyr::summarize(mean=mean(Percent))
+
 
 viability <- via_code %>% dplyr::select(Drug,Name,Conc,Percent,indv) %>%
   group_by(Drug,Conc,indv) %>%
   dplyr::summarize(live=mean(Percent),.groups="drop")
 
- #colnames(viability) <- c("Drug", "Conc", "indv","live")
+
  comparisons_all <- viability %>%full_join(.,norm_24_v_48_ldh, by= c("Drug", "indv")) %>%
- full_join(.,mean24tnni,by= c("Drug", "indv")) %>% select(Drug, indv,live,norm_val,ldh,tnni)
+ full_join(.,avgTNNI,by= c("Drug", "indv")) %>% select(Drug, indv,live,norm_val,ldh,tnni)
 colnames(comparisons_all) <- c('Drug','indv','viable48','ldh_48','ldh_24','tnni_24')
 
-
+comparisons_allsub <- comparisons_all %>% select('Drug','indv','ldh','tnni')
 # 48 hours ldh and viability ----------------------------------------------
 
 
@@ -309,7 +293,7 @@ tvl24hour <- read_csv("data/tvl24hour.txt", show_col_types = FALSE)
 tvl24hour <- tvl24hour %>% mutate(indv= factor(indv,levels= level_order2))
 #Import the RNA concentratons
 
-
+all.equal(tvl24hour,comparisons_allsub)
 RINsamplelist <- read_csv("data/RINsamplelist.txt")
 
 RNAnormlist <- RINsamplelist %>% mutate(Drug=case_match(Drug,"daunorubicin"~"Daunorubicin",
@@ -329,9 +313,11 @@ ggplot(RNAnormlist, aes(x=indv, y=Conc_ng.ul))+
 ggplot(RNAnormlist, aes(x=Drug, y=Conc_ng.ul))+
   geom_point(aes(col=indv))
 
-RNAnormlist <- RNAnormlist %>% group_by(indv) %>%
+RNAnormlist <- RNAnormlist %>%
   full_join(.,tvl24hour,by= c("Drug", "indv")) %>%
   mutate(rldh=ldh/Conc_ng.ul) %>% mutate(rtnni=tnni/Conc_ng.ul)
+
+
 
 ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
   geom_point(aes(col=indv))+
@@ -348,19 +334,19 @@ ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
 
 
 
-ggplot(RNAnormlist, aes(x=Drug, y=tnni))+
+ggplot(RNAnormlist, aes(x=Drug, y=rtnni))+
   geom_boxplot(position = "identity")+
-  geom_point(aes(col=indv, size=2))+
+  geom_point(aes(col=indv, size=3))+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
                                  c("Doxorubicin", "Control"),
                                  c("Epirubicin", "Control"),
                                  c("Mitoxantrone", "Control"),
                                  c("Trastuzumab","Control")),
               test = "t.test",
-              map_signif_level = TRUE,step_increase = 0.1,
+              map_signif_level = FALSE,step_increase = 0.1,
               textsize = 4)+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
-  ggtitle("Relative troponin I levels released in media")+
+  ggtitle("Relative troponin I levels released in media after dividing by RNA concentration")+
   theme_bw()+
   guides(size = "none")+
   labs(y = "Relative Troponin I release")+
@@ -376,18 +362,18 @@ ggplot(RNAnormlist, aes(x=Drug, y=tnni))+
 
 ggplot(RNAnormlist, aes(x=Drug, y=ldh))+
   geom_boxplot(position = "identity")+
-  geom_point(aes(col=indv, size=2))+
+  geom_point(aes(col=indv, size=3))+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
                                  c("Doxorubicin", "Control"),
                                  c("Epirubicin", "Control"),
                                  c("Mitoxantrone", "Control"),
                                  c("Trastuzumab","Control")),
               test = "t.test",
-              map_signif_level = TRUE,step_increase = 0.1,
+              map_signif_level = FALSE,step_increase = 0.1,
               textsize = 4)+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
 
-  ggtitle("Relative LDH release")+
+  ggtitle("Relative LDH release after dividing by RNA concentration")+
   theme_bw()+
   guides(size = "none")+
   labs(y = "Relative LDH activity", fill = "Individual")+

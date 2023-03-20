@@ -13,16 +13,16 @@ library(scales)
 library(ggVennDiagram)
 #use the ensembl mart and the human dataset
 ensembl <- useMart("ensembl",dataset="hsapiens_gene_ensembl")
-entrez <- useMart("entrezgene",dataset = "hsapiens_gene_entrez")
+#entrez <- useMart("entrezgene",dataset = "hsapiens_gene_entrez")
 #create a filter for all assembled human chromosomes
 my_chr <- c(1:22, 'M', 'X', 'Y')
 
 
 #listAttributes shows all attributes
 attributes <- listAttributes(ensembl)
-
+attributes[c(62,63),]
 #find entrez attribute name
-grep(pattern="entrez", x=attributes$description, ignore.case=T)
+grep(pattern="HGNC", x=attributes$description, ignore.case=T)
 # [1] 58 77 78 79
 attributes[c(58, 77:79),]
 # name                                 description         page
@@ -68,17 +68,6 @@ my_refseq_mrna <- getBM(attributes = c('refseq_mrna','refseq_ncrna'),
                         values = my_chr,
                         mart = ensembl)
 
-my_entrez_gene <- getBM(attributes = 'entrezgene_id',
-                        filters = 'chromosome_name',
-                        values = my_chr,
-                        mart = ensembl
-)
-
-my_ucsc <- getBM(attributes = 'ucsc',
-                 filters = 'chromosome_name',
-                 values = my_chr,
-                 mart = ensembl
-)
 
 my_ensembl_gene_id <- getBM(attributes = 'ensembl_gene_id',
                             filters = 'chromosome_name',
@@ -86,37 +75,6 @@ my_ensembl_gene_id <- getBM(attributes = 'ensembl_gene_id',
                             mart = ensembl
 )
 
-#how many identifiers from each database
-length(my_ensembl_gene_id[,1])
-# [1] 62619
-length(my_entrez_gene[,1])
-# [1] 27142
-length(my_refseq_mrna[,1])
-# [1] 84614
-length(my_ucsc[,1])
-# [1] 249502
-
-
-
-
-my_full_ensembl_entrez <- getBM(attributes = c('ensembl_gene_id', 'entrezgene_id'),
-                       filters = 'chromosome_name',
-                       values = my_chr,
-                       mart = ensembl
-)
-
-head(my_full_ensembl_entrez)
-my_full_ensembl_entrez <-sapply(my_full_ensembl_entrez,gsub,pattern="^$",replacement=NA)
-
-
-
-head(my_full_ensembl_entrez[!is.na(my_full_ensembl_entrez[,1]) &
-                              !is.na(my_full_ensembl_entrez[,2]),])
-
-
-dim(my_full_ensembl_entrez[!is.na(my_full_ensembl_entrez[,1]) &
-                              !is.na(my_full_ensembl_entrez[,2]),])
-##29944
 
 Knowles_2018.elife.33480.supp5.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp5-v2/Knowles_2018-elife-33480-supp5-v2")
 #  read in supp file
