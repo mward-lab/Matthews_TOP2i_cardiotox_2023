@@ -203,16 +203,20 @@ ggVennDiagram(total24,
               label_color = "black",
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
-  scale_fill_gradient(low = "red2", high = "yellow")+
-  labs(title = "24 hour comparison of significant genes", caption = "n = 8887 genes")+
+  #scale_color_brewer(palette = "Dark2",name = "Individual",)
+scale_fill_distiller(palette="RdYlBu")+
+  labs(title = "24 hour comparison of significant DE genes", caption = "n = 8887 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+```
 
 
+
+```{r 3 hours}
 # total 3 ----------------------------------------------------------------
 
 total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
 totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
-length(unique(in_common3))
+length(unique(totalin_common3))
 
 ggVennDiagram(total3,
               category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
@@ -225,10 +229,13 @@ ggVennDiagram(total3,
               label_color = "black",
               edge_lty = "solid") +
   scale_x_continuous(expand = expansion(mult = .2))+
-  scale_fill_gradient(low = "red2", high = "yellow")+
-  labs(title = "3 hour comparison of significant genes", caption = "n = 554 genes")+
+  scale_fill_distiller(palette="RdYlBu")+
+  #scale_fill_gradient(low = "red2", high = "yellow")+
+  labs(title = "3 hour comparison of significant DE genes", caption = "n = 554 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+```
 
+```{r 3V 24 BY DRUG}
 # Dauno comp --------------------------------------------------------------
 
 Dauncomp <- list(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
@@ -350,7 +357,7 @@ ggVennDiagram(ACcomp,
 Tell me more!  what are those genes at 24 hours??  give me some GO!
 # Graphing GO
 
-```{r graphing GO of 24 hour top2bi intersect, message=FALSE, warning=FALSE, paged.print=TRUE}
+```{r Making Go lists from SigDE genes, message=FALSE, warning=FALSE, paged.print=TRUE}
 list24totvenn <- get.venn.partitions(total24)
 # > list24totvenn$..count..
 #  [1]  960   13   19   15   37   18   25  126 4440  265  538  533  661  399  838
@@ -362,28 +369,23 @@ DDEMresp <- list24totvenn$..values..[[1]]
 Dxresp <- sigVDX24$ENTREZID
 DXsprespon <- list24totvenn$..values..[[14]]
 
-top2bi <-  read_csv("data/response_cluster24h.csv",col_select = x, col_types = "c")
-NRresp <- read_csv("data/nonresponse_cluster24h.csv",col_select =x,col_types = "c")
-colnames(top2bi) <-"ENTREZID"
-length(top2bi$ENTREZID)
+# top2bi <-  read_csv("data/Top2biresp_cluster24h.csv",col_select = x, col_types = "c")
+# NRresp <- read_csv("data/nonresponse_cluster24h.csv",col_select =x,col_types = "c")
 
-complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+
+complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
 complete <- as.data.frame(unique(complete))
-colnames(complete) <- "ENTREZID"
+colnames(complete) <- "ENTREZID"  #9047 genes
 
-NoResp <- backGL %>% anti_join(.,(complete), by = "ENTREZID")
-# ACresponse_cluster24h <-  read_csv("data/ACresponse_cluster24h.csv", 
-#     col_types = cols(...1 = col_skip()))
-# length(ACresponse_cluster24h$x)
+NoResp <- backGL %>% anti_join(.,(complete), by = "ENTREZID") #5776 genes
 
-
-# nonresponse_cluster24h <-  read_csv("data/nonresponse_cluster24h.csv", 
-#     col_types = cols(...1 = col_skip()))
-# length(nonresponse_cluster24h$x)
-length(intersect(top2bi$ENTREZID,DDEMresp))
        
+```
 
-gostrescorm24 <- gost(query = c(NRresp$x),  
+```{r GO DA24 genelist of SDEGs}
+
+
+gostsigvda24 <- gost(query =sigVDA24$ENTREZID,  
                       organism = "hsapiens",
                       ordered_query = FALSE,
                       domain_scope = "custom",
@@ -393,8 +395,276 @@ gostrescorm24 <- gost(query = c(NRresp$x),
                       correction_method = c("fdr"),
                       custom_bg = backGL$ENTREZID,
                       sources=c("GO:BP"))
-cormotifcluster <- gostplot(gostrescorm24, capped = FALSE, interactive = TRUE)
-cormotifcluster
+gosigvda24 <- gostplot(gostsigvda24, capped = FALSE, interactive = TRUE)
+gosigvda24
+# (gostres$result$p_value)
+tablesigVDA24 <- gostsigvda24$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  tablesigVDA24
+  
+  
+  tablesigVDA24 %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('sigDEG-DA24 GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+
+
+
+``` 
+
+```{r GO DX genelist of SDEGs}
+gostsigvdx24 <- gost(query =sigVDX24$ENTREZID,  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+gosigvdx24 <- gostplot(gostsigvdx24, capped = FALSE, interactive = TRUE)
+gosigvdx24
+
+tablesigVDX24 <- gostsigvdx24$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+  tablesigVDX24
+  
+  
+  tablesigVDX24 %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('sigDEG-DX24 GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+
+
+
+
+``` 
+
+```{r GO EP genelist of SDEGs}
+
+gostsigvEP24 <- gost(query =sigVEP24$ENTREZID,  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+gosigvEP24 <- gostplot(gostsigvEP24, capped = FALSE, interactive = TRUE)
+gosigvEP24
+
+tablesigVEP24 <- gostsigvEP24$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+ 
+  tablesigVEP24
+  
+  
+  tablesigVEP24 %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('sigDEG-EP24 GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+
+
+
+``` 
+
+```{r GO MT genelist of SDEGs}
+
+gostsigvMT24 <- gost(query =sigVMT24$ENTREZID,  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+gosigvMT24 <- gostplot(gostsigvMT24, capped = FALSE, interactive = TRUE)
+gosigvMT24
+
+tablesigVMT24 <- gostsigvMT24$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+ 
+  tablesigVMT24
+  
+  
+  tablesigVMT24 %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('sigDEG-MT24 GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+
+
+
+
+``` 
+
+```{r GODDEMresp genelist of SDEGs}
+DDEMresp <- list24totvenn$..values..[[1]]
+gostDDEMresp <- gost(query =DDEMresp,  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+goDDEMresp <- gostplot(gostDDEMresp, capped = FALSE, interactive = TRUE)
+goDDEMresp
+
+tableDDEMresp <- gostDDEMresp$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+ 
+  tableDDEMresp
+  
+  
+  tableDDEMresp %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('DDEMresp GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+DDEMlist <-  list(DDEMresp,TI_respset$TI_respset,
+                       ER_respset$ER_respset, 
+                       LR_respset$LR_respset)     
+ggVennDiagram(DDEMlist,
+              category.names = c("DDEM","TI","ER","LR"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  #scale_color_brewer(palette = "Dark2",name = "Individual",)
+scale_fill_distiller(palette="Greens")+
+  labs(title = "24 hour comparison of significant DE genes", caption = " genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+
+``` 
+
+
+```{r DDEresp  }
+DDEresp <- list24totvenn$..values..[[9]]
+gostDDEresp <- gost(query =DDEresp,  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.1,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+goDDEresp <- gostplot(gostDDEresp, capped = FALSE, interactive = TRUE)
+goDDEresp
+
+tableDDEresp <- gostDDEresp$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+ 
+  tableDDEresp
+  
+  
+  tableDDEresp %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('DDEresp GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+DDElist <-  list(DDEresp,TI_respset$TI_respset,
+                       ER_respset$ER_respset, 
+                       LR_respset$LR_respset)     
+ggVennDiagram(DDElist,
+              category.names = c("DDE","TI","ER","LR"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  #scale_color_brewer(palette = "Dark2",name = "Individual",)
+scale_fill_distiller(palette="Greens")+
+  labs(title = "24 hour comparison of significant DE genes", caption = " genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+```
+
+
+
+```{r no response cluster}
+
+NRresp <- read_csv("data/cormotif_NRset.txt")
+gostrescoNR <- gost(query = c(NRresp),  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifNRcluster <- gostplot(gostrescoNR, capped = FALSE, interactive = TRUE)
+cormotifNRcluster
 
 # (gostres$result$p_value)
 tableNR <- gostrescorm24$result %>%
@@ -407,24 +677,73 @@ tableNR <- gostrescorm24$result %>%
   
   
   tableNR %>% 
-    mutate(log_pval=(-log10(p_value))) %>%
-     ggplot(.,aes(x=log_pval, y=term_name))
-    theme_bw()+
-  geom_point( aes(size= intersection_size,col=p_value))+ 
-    ggtitle('Non-resoponse genesenriched GO:BP terms')
-  table3[1:40,] %>% 
-    mutate(log_pval=(-log10(p_value))) %>%
-    # filter(term_id,log_pval>15 %>% 
-    ggplot(.,aes(x=log_pval, y=term_name))
-     theme_bw()+
-  geom_point( aes(size= intersection_size,col=p_value))+ 
-    ggtitle('Top2Bi enriched GO:BP terms')
-log10(table3$p_value)
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('No response enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
   
   
 ```
   
+```{r top2bi24hresponse cluster}
   
+top2bi24h <-  read_csv("data/Top2biresp_cluster24h.csv",col_select = x, col_types = "c")
+
+length(top2bi24h$x)
+
+gostresTop2bi24h <- gost(query = c(top2bi24h$x),  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifrespTop2bi24h <- gostplot(gostresTop2bi24h, capped = FALSE, interactive = TRUE)
+cormotifrespTop2bi24h
+
+# (gostres$result$p_value)
+tabletop2Biresp <- gostresTop2bi$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+tabletop2Biresp
+  
+  
+  tabletop2Biresp %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('24 hour response cluster GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+  
+
+
+
+
+
+
+
+  
+  
+```
+
   
   # Knowles Comparison data:
   
@@ -537,8 +856,8 @@ names(Seoane_2019) <- "ENTREZID"
 
 ```
 ## GO analysisl of DEG from Cormotif
-```{r go of NR genes}
-
+```{r go of sigDEG}
+completesiglist <-  union
 NoResp <- backGL %>% 
   anti_join(.,(complete), by ="ENTREZID")
 

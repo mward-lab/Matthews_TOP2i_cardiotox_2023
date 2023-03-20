@@ -30,13 +30,14 @@ y_TMM_cpm <- cpm(x_counts, log = TRUE)
 colnames(y_TMM_cpm) <- label
 y_TMM_cpm
 set.seed(12345)
-cormotif_inital <- cormotiffit(exprs = y_TMM_cpm,
+cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
                              groupid = groupid,
                              compid = compid_tran,
                              K=5, max.iter = 500)
 
 #saveRDS(cormotif_initial,"data/cormotif_initialK5.RDS")##saved so Ido not have to run everytime
-cormotif_initial <- cormotif_inital
+cormotif_initial <- readRDS("data/cormotif_initialK5.RDS")
+
 plotIC(cormotif_initial)
 
 plotMotif(cormotif_initial)
@@ -236,6 +237,8 @@ nonresponse_cluster
 
 
 
+# old ideas-not in use as of march 20 --------------------------------------
+
 
 
 
@@ -272,12 +275,12 @@ q1 <- c(0.0003168003, 0.0002657065, 0.0002656879, 0.0002307255, 0.0016080234, 0.
  list_ofrank <- generank(cormotif_initial$bestmotif$p.post)
 
  ### none work so far do eyeballing
- set1- no response_cluster24h 11190
- set3- all top2bi 1275442
- set4-late responsetop2bi only 126820
- set5-early response top2bi only 27245
-
- geneexpressionsets <- cbind(sets=c('set1', 'set3','set4','set5'), ENTREZID = c(11190,1275442,126820,27245))
+ # set1- no response_cluster24h 11190
+ # set3- all top2bi 1275442
+ # set4-late responsetop2bi only 126820
+ # set5-early response top2bi only 27245
+ #
+ # geneexpressionsets <- cbind(sets=c('set1', 'set3','set4','set5'), ENTREZID = c(11190,1275442,126820,27245))
 
 
 # Three hour patterns ------------------------------------------------------
@@ -302,10 +305,25 @@ cormotif_3h <- cormotiffit(exprs = threehour,
 plotIC(cormotif_3h)
 #x_axis_labels(labels = c("3_Daun","3_Dox","3_Epi","3_Mito","3_Tras","24_Daun","24_Dox","24_Epi","24_Mito","24_Tras"), every_nth = 1, adj=1, srt =90, cex =0.4)
 plotMotif(cormotif_3h)
+saveRDS(cormotif_3h,"data/cormotif_3hk1-8.RDS")
+gene_prob_tran3h <- cormotif_3h$bestmotif$p.post
+rownames(gene_prob_tran3h) <- rownames(y_TMM_cpm)
+dim(gene_prob_tran3h)
+saveRDS(gene_prob_tran3h,"data/gene_prob_tran3h.RDS")
 
 
-diff.patternrank <- (cormotif_initial$bestmotif$p.post>0.5)
-dist(diff.patternrank)
+
+
+
+
+NR_cluster3h  <- rownames(gene_prob_tran3h[(gene_prob_tran3h[,1] <0.5 &
+                                              gene_prob_tran3h[,2] <0.5 &
+                                              gene_prob_tran3h[,3] <0.5 &
+                                              gene_prob_tran3h[,4] <0.5 &
+                                              gene_prob_tran3h[,5] <0.5),])
+
+length(NR_cluster3h)
+
 #24 hour patterns -------------------------------------
 
 compid_24h <- data.frame(c1= c(7,8,9,10,11), c2 = c( 12,12,12,12,12))

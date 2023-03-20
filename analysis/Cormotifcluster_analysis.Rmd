@@ -1,0 +1,440 @@
+---
+title: "Cormotifcluster_analysis"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Import libraries, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(gprofiler2)
+library(readr)
+library(BiocGenerics)
+library(gridExtra)
+library(VennDiagram)
+library(kableExtra)
+library(scales)
+library(ggVennDiagram)
+
+```
+
+
+
+```{r Import data  , message=FALSE, warning=FALSE}
+
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+motif1_NR <- DEG_cormotif$motif1_NR
+motif3_TI <- DEG_cormotif$motif3_TI
+motif4_LR <- DEG_cormotif$motif4_LR
+motif5_ER <- DEG_cormotif$motif5_ER
+  
+backGL <- read.csv("data/backGL.txt")
+NRresp <- read_csv("data/cormotif_NRset.txt")
+
+```
+
+
+
+```{r noresponse data motif1, message=FALSE, warning=FALSE }
+gostrescoNR <- gost(query = motif1_NR , 
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifNRcluster <- gostplot(gostrescoNR, capped = FALSE, interactive = TRUE)
+cormotifNRcluster
+
+# (gostres$result$p_value)
+tableNR <- gostrescoNR$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  tableNR
+  
+  
+  tableNR %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('No response enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+```
+
+
+
+```{r Top2iLR motif4 set, message=FALSE, warning=FALSE}  
+
+
+#top2bi_LR <-  read_csv("data/cormotif_LR_respset.txt")
+# colnames(top2bi_LR) <-"ENTREZID"
+# length(top2bi$ENTREZID)
+
+
+gostresTop2bi_LR <- gost(query = c(motif4_LR),  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.01,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifrespTop2bi_LR <- gostplot(gostresTop2bi_LR, capped = FALSE, interactive = TRUE)
+cormotifrespTop2bi
+
+# (gostres$result$p_value)
+tabletop2Bi_LR <- gostresTop2bi_LR$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+tabletop2Bi_LR
+  
+  
+  tabletop2Bi_LR %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('Late Response enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+
+
+
+```
+
+
+
+
+
+```{r Top2iER set motif5  message=FALSE, warning=FALSE}  
+
+
+# top2bi_ER <-  read_csv("data/cormotif_ER_respset.txt")
+# colnames(top2bi_ER) <-"ENTREZID"
+# length(top2bi_ER$ENTREZID)
+
+
+gostresTop2bi_ER <- gost(query = c(motif5_ER),  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.01,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifrespTop2bi_ER <- gostplot(gostresTop2bi_ER, capped = FALSE, interactive = TRUE)
+cormotifrespTop2bi_ER
+
+# (gostres$result$p_value)
+tabletop2Bi_ER <- gostresTop2bi_ER$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+tabletop2Bi_ER
+  
+  
+  tabletop2Bi_ER %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('Early Response enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+
+
+
+```
+
+
+
+```{r timeindependent   }
+
+gostresTop2bi_TI <- gost(query = c(motif3_TI),  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.01,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifrespTop2bi_TI <- gostplot(gostresTop2bi_TI, capped = FALSE, interactive = TRUE)
+cormotifrespTop2bi_TI
+
+# (gostres$result$p_value)
+tabletop2Bi_TI <- gostresTop2bi_TI$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+tabletop2Bi_TI
+  
+  
+  tabletop2Bi_TI %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('Time independent response enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+
+
+
+```
+
+```{r   NR genes at 24 hours}
+
+##here I want to find out 3 hour intersection and 24 hour intersection genes are comperable to  TI union
+NR_24hour <- read_csv("data/nonresponse_cluster24h.csv",col_select = x, col_types = "c")
+
+gostrescoNR_24 <- gost(query = c(NR_24hour),  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifNR24cluster <- gostplot(gostrescoNR_24, capped = FALSE, interactive = TRUE)
+cormotifNR24cluster
+
+# (gostres$result$p_value)
+tableNR <- gostrescoNR_24$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+  tableNR
+  
+  
+  tableNR %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('No Response at 24 hours enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+
+
+
+```
+
+
+
+
+
+```{r intersection of Top2Bi 24h}
+
+
+
+top2bi24h <-  read_csv("data/Top2biresp_cluster24h.csv",col_select = x, col_types = "c")
+
+length(top2bi24h$x)
+
+gostresTop2bi24h <- gost(query = c(top2bi24h$x),  
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP"))
+cormotifrespTop2bi24h <- gostplot(gostresTop2bi24h, capped = FALSE, interactive = TRUE)
+cormotifrespTop2bi24h
+
+# (gostres$result$p_value)
+tabletop2Biresp24h <- gostresTop2bi24h$result %>%
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
+  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # kable(.,) %>% 
+  # kable_paper("striped", full_width = FALSE) %>%  
+  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
+tabletop2Biresp24h
+  
+  
+  tabletop2Biresp24h %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('24h Response cluster GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+      theme_bw()
+  
+```
+```{r intersection between 24h and TI sets}
+
+
+library(ggVennDiagram)
+##Set up data sets to compare, need a list---------------------------------------------------
+comparelist <- list(top2bi24h$x,as.numeric(motif3_TI),as.numeric(motif4_LR),as.numeric(motif5_ER))
+
+ggVennDiagram(comparelist,
+              category.names = c("24hour only resp","TI motif", "LR motif", "ER motif"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "purple", high = "yellow")+
+  labs(title = "24 hour comparison cormotif sets", caption = "n = genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+```
+
+
+
+
+
+```{r intersection of all sets TI ER LR}
+
+
+TI_respint <- read.csv("data/cormotif_TI_respint.txt")
+ER_respint <- read.csv("data/cormotif_ER_respint.txt")
+LR_respint <- read.csv("data/cormotif_LR_respint.txt")
+
+intersectionlist <- list(TI_respint$TI_respint,ER_respint$ER_respint,LR_respint$LR_respint)
+ggVennDiagram(intersectionlist,
+              category.names = c("TI int", "ER int", "LR int"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "purple", high = "yellow")+
+  labs(title = "INtersection of cormotif sets", caption = "n = genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+```{r intersection of all sets TI ER LR}
+
+
+TI_respint <- read.csv("data/cormotif_TI_respint.txt")
+ER_respint <- read.csv("data/cormotif_ER_respint.txt")
+LR_respint <- read.csv("data/cormotif_LR_respint.txt")
+ER_respset <- read.csv("data/cormotif_ER_respset.txt")
+TI_respset <- read.csv("data/cormotif_TI_respset.txt")
+LR_respset <- read.csv("data/cormotif_LR_respset.txt")
+
+intersectionlistall <- list(TI_respint$TI_respint,ER_respint$ER_respint,
+                         LR_respint$LR_respint,TI_respset$TI_respset,
+                         ER_respset$ER_respset, LR_respset$LR_respset
+                         )
+ggVennDiagram(intersectionlistall,
+              category.names = c("TI int", "LR int", "ER int", "TI set", "ER set", "LR set"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "purple", high = "yellow")+
+  labs(title = "Intersection of cormotif sets", caption = "n = genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+ 
+                         
+                         
+intersectiongl <- list(TI_respset$TI_respset,
+                       ER_respset$ER_respset, 
+                       LR_respset$LR_respset)                        
+                         
+                                                 
+ggVennDiagram(intersectiongl,
+              category.names = c("TI set", "ER set", "LR set"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "purple", high = "yellow")+
+  labs(title = "Intersection of cormotif sets", caption = "n = genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+
+
+
+
+```

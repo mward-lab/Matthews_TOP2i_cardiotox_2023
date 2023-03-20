@@ -219,6 +219,16 @@ library(gprofiler2)
   DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
   motif1_NR <- DEG_cormotif$motif1_NR
   motif3_TI <- DEG_cormotif$motif3_TI
+  motif4_LR <- DEG_cormotif$motif4_LR
+  motif5_ER <- DEG_cormotif$motif5_ER
+
+
+
+
+# TI gene set -------------------------------------------------------------
+
+
+
   gostresTI <- gost(query =motif3_TI,
                     organism = "hsapiens",
                     ordered_query = FALSE,
@@ -255,6 +265,115 @@ library(gprofiler2)
 
 
 
+# ER_genes ----------------------------------------------------------------
+
+  gostresER <- gost(query =motif5_ER,
+                    organism = "hsapiens",
+                    ordered_query = FALSE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = TRUE,
+                    user_threshold = 0.01,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources="GO:BP", significant = FALSE)
+
+
+  ER_gostresults <- gostplot(gostresER, capped = FALSE, interactive = TRUE)
+
+  tableER <- gostresER$result %>%
+    dplyr::select(
+      c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>%
+  # mutate_at(.vars = 6, .funs= scientific_format())  #use this  for table display only
+
+
+  tableER
+
+
+  tableER %>% dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    # slice_max(., n=10,order_by = p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('Top2Bi-Early response set enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+    theme_bw()
+
+
+# LR genes ----------------------------------------------------------------
+
+  gostresLR <- gost(query =motif4_LR,
+                    organism = "hsapiens",
+                    ordered_query = FALSE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = TRUE,
+                    user_threshold = 0.01,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources="GO:BP", significant = FALSE)
+
+
+  LR_gostresults <- gostplot(gostresLR, capped = FALSE, interactive = TRUE)
+
+  tableLR <- gostresLR$result %>%
+    dplyr::select(
+      c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>%
+  # mutate_at(.vars = 6, .funs= scientific_format())  #use this  for table display only
+
+
+  tableLR
+
+
+  tableLR %>% dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    # slice_max(., n=10,order_by = p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size)) +
+    ggtitle('Top2Bi-Late response set enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+    theme_bw()
 
 
 
+
+# NR gene set -------------------------------------------------------------
+
+
+  gostresNR <- gost(query =motif4_NR,
+                    organism = "hsapiens",
+                    ordered_query = FALSE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = TRUE,
+                    user_threshold = 0.01,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources="GO:BP", significant = FALSE)
+
+
+  NR_gostresults <- gostplot(gostresNR, capped = FALSE, interactive = TRUE)
+
+  tableNR <- gostresNR$result %>%
+    dplyr::select(
+      c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>%
+  # mutate_at(.vars = 6, .funs= scientific_format())  #use this  for table display only
+
+
+  tableNR
+
+
+  tableNR %>% dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    # slice_max(., n=10,order_by = p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+    geom_point(aes(size = intersection_size, col=intersection_size)) +
+    ggtitle('Top2Bi-No response set enriched GO:BP terms') +
+    xlab("-log 10 (p-value)")+
+    ylab("GO: BP term")+
+    theme_bw()
