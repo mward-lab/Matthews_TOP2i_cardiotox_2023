@@ -24,7 +24,7 @@ library(ggVennDiagram)
 
 
 
-```{r Import data  , message=FALSE, warning=FALSE}
+```{r Import data, message=FALSE, warning=FALSE, include=FALSE}
 
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 motif1_NR <- DEG_cormotif$motif1_NR
@@ -39,7 +39,7 @@ NRresp <- read_csv("data/cormotif_NRset.txt")
 
 
 
-```{r noresponse data motif1, message=FALSE, warning=FALSE }
+```{r noresponse data motif1, echo=FALSE, message=FALSE, warning=FALSE}
 gostrescoNR <- gost(query = motif1_NR , 
                       organism = "hsapiens",
                       ordered_query = FALSE,
@@ -60,41 +60,65 @@ tableNR <- gostrescoNR$result %>%
   # kable(.,) %>% 
   # kable_paper("striped", full_width = FALSE) %>%  
   # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
-  tableNR
+  tableNR%>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
   
   
   tableNR %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=20 ,order_by=p_value) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
    # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size)) +
     ggtitle('No response enriched GO:BP terms') +
     xlab("-log 10 (p-value)")+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ylab("GO: BP term")+
-      theme_bw()
+    scale_y_discrete(labels = wrap_format(30))+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
   
   tableNR %>% 
     dplyr::filter(source!="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=20 ,order_by=p_value) %>%
+    slice_min(., n=15 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
    # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
+   ggplot(., aes(x = log_val, 
+                 y =reorder(term_name,p_value),
+                 col=intersection_size)) +
     geom_point(aes(size = intersection_size, col="red")) +
     ggtitle('No response enriched KEGG terms') +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     xlab("-log 10 (p-value)")+
     ylab("KEGG term")+
-      theme_bw()
-  
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
   
   
 ```
 
 
 
-```{r Top2iLR motif4 set, message=FALSE, warning=FALSE}  
+```{r Top2iLR motif4 set, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 gostresTop2bi_LR <- gost(query = c(motif4_LR),  
@@ -108,26 +132,40 @@ gostresTop2bi_LR <- gost(query = c(motif4_LR),
                       custom_bg = backGL$ENTREZID,
                       sources=c("GO:BP", "KEGG"))
 cormotifrespTop2bi_LR <- gostplot(gostresTop2bi_LR, capped = FALSE, interactive = TRUE)
-cormotifrespTop2bi
+cormotifrespTop2bi_LR
 
 
 tabletop2Bi_LR <- gostresTop2bi_LR$result %>%
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
   
-tabletop2Bi_LR
+tabletop2Bi_LR%>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
   
   
   tabletop2Bi_LR %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=20 ,order_by=p_value) %>%
+    slice_min(., n=15 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Late Response enriched GO:BP terms') +
     xlab("-log 10 (p-value)")+
     ylab("GO: BP term")+
-      theme_bw()
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
   
  tabletop2Bi_LR %>% 
     dplyr::filter(source!="GO:BP") %>% 
@@ -137,10 +175,18 @@ tabletop2Bi_LR
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size, col="red")) +
+   scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Late Response enriched KEGG terms') +
     xlab("-log 10 (p-value)")+
     ylab("KEGG term")+
-      theme_bw()
+      theme_bw()+
+ theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
   
 
 
@@ -150,7 +196,7 @@ tabletop2Bi_LR
 
 
 
-```{r Top2iER set motif5,  message=FALSE, warning=FALSE}  
+```{r Top2iER set motif5, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 gostresTop2bi_ER <- gost(query = c(motif5_ER),  
@@ -165,7 +211,12 @@ gostresTop2bi_ER <- gost(query = c(motif5_ER),
                       sources=c("GO:BP", "KEGG"))
 cormotifrespTop2bi_ER <- gostplot(gostresTop2bi_ER, capped = FALSE, interactive = TRUE)
 
-cormotifrespTop2bi_ER
+cormotifrespTop2bi_ER %>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
 
 
 tabletop2Bi_ER <- gostresTop2bi_ER$result %>%
@@ -174,34 +225,55 @@ tabletop2Bi_ER <- gostresTop2bi_ER$result %>%
   # kable(.,) %>% 
   # kable_paper("striped", full_width = FALSE) %>%  
   # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
-tabletop2Bi_ER
-  
+tabletop2Bi_ER %>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
   
   tabletop2Bi_ER %>% 
     dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=20 ,order_by=p_value) %>%
+    slice_min(., n=13 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(35))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Early Response enriched GO:BP terms') +
     xlab("-log 10 (p-value)")+
     ylab("GO: BP term")+
-      theme_bw()
+      theme_bw()+
+ theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
   
 tabletop2Bi_ER %>% 
     dplyr::filter(source!="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=20 ,order_by=p_value) %>%
+    slice_min(., n=15 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
-    geom_point(aes(size = intersection_size, col="red")) +
-    ggtitle('Early Response enriched KEGG terms') +
-    xlab("-log 10 (p-value)")+
-    ylab("KEGG term")+
-      theme_bw()
+   ggplot(., aes(x = log_val,y = reorder(term_name,p_value),
+                 col=intersection_size)) +
+  geom_point(aes(size = intersection_size, col="red")) +
+  scale_y_discrete(labels = wrap_format(35))+
+  guides(col="none", 
+         size=guide_legend(title ="# of intersected \n terms"))+
+  ggtitle('Early Response enriched KEGG terms') +
+  xlab("-log 10 (p-value)")+
+  ylab("KEGG term")+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 9, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
 ```
@@ -223,29 +295,45 @@ gostresTop2bi_TI <- gost(query = c(motif3_TI),
 cormotifrespTop2bi_TI <- gostplot(gostresTop2bi_TI, capped = FALSE, interactive = TRUE)
 cormotifrespTop2bi_TI
 
-# (gostres$result$p_value)
+
 tabletop2Bi_TI <- gostresTop2bi_TI$result %>%
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
-  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
-  # kable(.,) %>% 
-  # kable_paper("striped", full_width = FALSE) %>%  
-  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
-tabletop2Bi_TI
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+tabletop2Bi_TI %>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+
   
   
   tabletop2Bi_TI %>% 
     dplyr::filter(source =="GO:BP") %>%
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=15 ,order_by=p_value) %>%
+    slice_min(., n=13 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(35))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Time independent response enriched GO:BP terms') +
     xlab("-log 10 (p-value)")+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("GO: BP term")+
-      theme_bw()
+     theme_bw()+
+ theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  
+  
   tabletop2Bi_TI %>% 
     dplyr::filter(source =="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
@@ -253,20 +341,27 @@ tabletop2Bi_TI
     mutate(log_val = -log10(p_value)) %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
-    geom_point(aes(size = intersection_size, col = "red")) +
+    geom_point(aes(size = intersection_size, col="red")) +
+  scale_y_discrete(labels = wrap_format(35))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Time independent response enriched KEGG terms') +
     xlab("-log 10 (p-value)")+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("KEGG term")+
-      theme_bw()
-
+      theme_bw()+
+ theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 9, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
 ```
 
-```{r   NR genes at 24 hours}
+```{r NR genes at 24 hours, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
-##here I want to find out 3 hour intersection and 24 hour intersection genes are comperable to  TI union
+##here I want to find out 3 hour intersection and 24 hour intersection genes are comparable to  TI union
 NR_24hour <- read_csv("data/nonresponse_cluster24h.csv",col_select = x, col_types = "c")
 
 gostrescoNR_24 <- gost(query = c(NR_24hour),  
@@ -289,20 +384,6 @@ tableNR <- gostrescoNR_24$result %>%
   # kable(.,) %>% 
   # kable_paper("striped", full_width = FALSE) %>%  
   # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
-  tableNR
-  
-  
-  tableNR %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=20 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value))) +
-    geom_point(aes(size = intersection_size)) +
-    ggtitle('No Response at 24 hours enriched GO:BP terms') +
-    xlab("-log 10 (p-value)")+
-    ylab("GO: BP term")+
-      theme_bw()
 
 
 
@@ -312,7 +393,7 @@ tableNR <- gostrescoNR_24$result %>%
 
 
 
-```{r intersection of Top2Bi 24h}
+```{r intersection of Top2Bi 24h, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 
 
@@ -356,7 +437,7 @@ tabletop2Biresp24h
       theme_bw()
   
 ```
-```{r intersection between 24h and TI sets}
+```{r intersection between 24h and TI sets, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 
 library(ggVennDiagram)
@@ -385,7 +466,7 @@ ggVennDiagram(comparelist,
 
 
 
-```{r intersection of all sets TI ER LR}
+```{r intersection of all sets TI ER LR, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 
 TI_respint <- read.csv("data/cormotif_TI_respint.txt")
@@ -421,7 +502,7 @@ ggVennDiagram(intersectionlist,
 
 
 
-```{r intersection of all sets TI ER LR}
+```{r intersection of all sets TI ER LR, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 library(ggVennDiagram)
 
 TI_respint <- read.csv("data/cormotif_TI_respint.txt")
