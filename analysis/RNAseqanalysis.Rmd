@@ -370,7 +370,7 @@ ggplot(pca_all_anno, aes(x = PC2, y = PC3))+
   geom_point( col=indv, size = time, label=group) +
   geom_text(aes(label=group))+
     labs(x = "PC2", y = "PC3")+
-  theme_cowplot()+
+  theme_bw()+
   guides(shape=TRUE,color=TRUE)
 
 

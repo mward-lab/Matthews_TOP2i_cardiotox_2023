@@ -53,6 +53,63 @@ toplistall <-map_df(toplistall, ~as.data.frame(.x), .id="time")
 
 
 toplist24hours %>%
+  filter(id =="Daunorubicin"|id=="Doxorubicin") %>%
+  dplyr::select(id,logFC,ENTREZID) %>%
+  pivot_wider(names_from =id, values_from = logFC) %>%
+  ggplot(.,aes(x= Doxorubicin, y=Daunorubicin))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  geom_abline(slope = 1, intercept = 0)+
+  theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label",
+           label.y = 4, label.x=-4)+
+  ggtitle("Daunorubicin and Doxorubicin 24 hours")
+
+
+
+toplist24hours %>%
+  filter(id =="Epirubicin"|id=="Doxorubicin") %>%
+  dplyr::select(id,logFC,ENTREZID) %>%
+  pivot_wider(names_from =id, values_from = logFC) %>%
+  ggplot(.,aes(x= Doxorubicin, y=Epirubicin))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  geom_abline(slope = 1, intercept = 0)+
+  theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label",
+           label.y = 4, label.x=-4)+
+  ggtitle("Epirubicin and Doxorubicin 24 hours")
+
+
+toplist24hours %>%
+  filter(id =="Mitoxantrone"|id=="Doxorubicin") %>%
+  dplyr::select(id,logFC,ENTREZID) %>%
+  pivot_wider(names_from =id, values_from = logFC) %>%
+  ggplot(.,aes(x= Doxorubicin, y=Mitoxantrone))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  geom_abline(slope = 1, intercept = 0)+
+  theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label",
+           label.y = 4, label.x=-4)+
+  ggtitle("Mitoxantrone and Doxorubicin 24 hours")
+
+
+
+
+toplist24hours %>%
   filter(id =="Trastuzumab"|id=="Doxorubicin") %>%
   dplyr::select(id,logFC,ENTREZID) %>%
   pivot_wider(names_from =id, values_from = logFC) %>%
@@ -61,11 +118,17 @@ toplist24hours %>%
   geom_smooth(method="lm")+
   geom_abline(slope = 1, intercept = 0)+
   theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
            geom = "label",
-           label.y = 5, label.x=-8)+
-  ggtitle("TR and DX 24")
+           label.y = 4, label.x=-4)+
+  ggtitle("Trastuzumab and Doxorubicin 24 hours")
+
+
+
+
 
 sigVDX24 %>% inner_join(sigVDA24, by="ENTREZID") %>%
   ggplot(., aes(x=logFC.x, y=logFC.y, group=ENTREZID))+

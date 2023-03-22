@@ -43,7 +43,7 @@ toplist3hours <-list(V.DA.top[,c(1:3,4,6:7)],
                               V.EP.top[,c(1:3,4,6:7)],
                               V.MT.top[,c(1:3,4,6:7)],
                               V.TR.top[,c(1:3,4,6:7)])
-names(toplist3hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Mitoxantrone", "Trastuzumab")
+names(toplist3hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Daunorubicin", "Trastuzumab")
 
 toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
 
@@ -56,32 +56,65 @@ toplist3hours %>%
   geom_smooth(method="lm")+
   geom_abline(slope = 1, intercept = 0)+
   theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
            geom = "label",
-           label.y = 5, label.x=-8)+
-  ggtitle("TR and DX 3")
+           label.y = 4, label.x=-4)+
+  ggtitle("Trastuzumab and Doxorubicin 3 hours")
+
+toplist3hours %>%
+  filter(id =="Mitoxantrone"|id=="Doxorubicin") %>%
+  dplyr::select(id,logFC,ENTREZID) %>%
+  pivot_wider(names_from =id, values_from = logFC) %>%
+  ggplot(.,aes(x= Doxorubicin, y=Mitoxantrone))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  geom_abline(slope = 1, intercept = 0)+
+  theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label",
+           label.y = 4, label.x=-4)+
+  ggtitle("Mitoxantrone and Doxorubicin 3 hours")
+
+
+toplist3hours %>%
+  filter(id =="Epirubicin"|id=="Doxorubicin") %>%
+  dplyr::select(id,logFC,ENTREZID) %>%
+  pivot_wider(names_from =id, values_from = logFC) %>%
+  ggplot(.,aes(x= Doxorubicin, y=Epirubicin))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  geom_abline(slope = 1, intercept = 0)+
+  theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label",
+           label.y = 4, label.x=-4)+
+  ggtitle("Epirubicin and Doxorubicin 3 hours")
+
+toplist3hours %>%
+  filter(id =="Daunorubicin"|id=="Doxorubicin") %>%
+  dplyr::select(id,logFC,ENTREZID) %>%
+  pivot_wider(names_from =id, values_from = logFC) %>%
+  ggplot(.,aes(x= Doxorubicin, y=Daunorubicin))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  geom_abline(slope = 1, intercept = 0)+
+  theme_bw()+
+  ylim(-5,5)+
+  xlim(-5,5)+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label",
+           label.y = 4, label.x=-4)+
+  ggtitle("Daunorubicin and Doxorubicin 3 hours")
 
 
 
-# ggplot(RNAnormlist, aes(x=Drug, y=tnni))+
-#   geom_boxplot(position = "identity")+
-#   geom_point(aes(col=indv, size=2))+
-#   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
-#                                  c("Doxorubicin", "Control"),
-#                                  c("Epirubicin", "Control"),
-#                                  c("Mitoxantrone", "Control"),
-#                                  c("Trastuzumab","Control")),
-#               test = "t.test",
-#               map_signif_level = FALSE,step_increase = 0.1,
-#               textsize = 6)+
-#   ggtitle("Relative troponin I levels released in media")+
-#   theme_bw()+
-#   theme(strip.background = element_rect(fill = "transparent")) +
-#   theme(
-#     axis.title = element_text(size = 15, color = "black"),
-#     axis.ticks = element_line(size = 1.5),
-#     axis.text = element_text(size = 9, color = "black", angle = 0),
-#     strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-#
-#

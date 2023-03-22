@@ -193,20 +193,23 @@ in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$E
 length(unique(in_common24))
 
 ggVennDiagram(total24,
-              category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
+              category.names = c("Daunorubicin\n n = 7518",
+                                 "Doxorubicin\n n = 6793","Epirubicin\n n = 6783","Mitoxantrone\n n = 1213"),
               show_intersect = FALSE,
               set_color = "black",
+              catagory_size = c(6,6,6,6),
               label = "both",
               label_percent_digit = 1,
               label_size = 3,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid", set_size = )+
-  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_x_continuous(expand = expansion(mult = .3))+
+   scale_y_continuous(expand = expansion(mult = .2))+
   #scale_color_brewer(palette = "Dark2",name = "Individual",)
 scale_fill_distiller(palette="RdYlBu")+
   labs(title = "24 hour comparison of significant DE genes", caption = "n = 8887 genes")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 ```
 
 
@@ -219,20 +222,25 @@ totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL
 length(unique(totalin_common3))
 
 ggVennDiagram(total3,
-              category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
-              show_intersect = FALSE,
+              category.names = c("Daunorubicin\n n = 523",
+                                 "Doxorubicin\n n = 25",
+                                 "Epirubicin\n n = 179",
+                                 "Mitoxantrone\n n = 52"),
+                show_intersect = FALSE,
               set_color = "black",
+              catagory_size = c(6,6,6,6),
               label = "both",
               label_percent_digit = 1,
-              label_size = 3.5,
+              label_size = 3,
               label_alpha = 0,
               label_color = "black",
-              edge_lty = "solid") +
-  scale_x_continuous(expand = expansion(mult = .2))+
-  scale_fill_distiller(palette="RdYlBu")+
-  #scale_fill_gradient(low = "red2", high = "yellow")+
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .3))+
+   scale_y_continuous(expand = expansion(mult = .2))+
+  #scale_color_brewer(palette = "Dark2",name = "Individual",)
+scale_fill_distiller(palette="RdYlBu")+
   labs(title = "3 hour comparison of significant DE genes", caption = "n = 554 genes")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 ```
 
 ```{r 3V 24 BY DRUG}

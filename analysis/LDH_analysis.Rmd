@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## R Markdown
 
 ```{r setup}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
 library(readxl)
 library(ggpubr)
 library(rstatix)
@@ -59,7 +59,7 @@ ggplot(norm_LDH48, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
       theme(
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(size = 1.5),
-        axis.text = element_text(size = 9, color = "black", angle = 20),
+        axis.text = element_text(size = 8, color = "black", angle = 20),
          
         strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
       

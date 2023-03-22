@@ -222,19 +222,7 @@ ID <- c("ind1a",
         "ind5b",
         "ind6a",
         "ind6b")
-names(individuals)### check to make sure they are labled.
-#  #### this is to add the names of individuals to each dataframe in list
-
-## way number 2!
-### this is to add an new element called SampleID across each dataframe to  combine
-### "label" the frame before we flatten it
-  # for( i in seq_along(individuals)){
-  # 
-  #   individuals[[i]]$SampleID <- rep(ID[i],nrow(individuals[[i]]))
-  # 
-  # }
-  ### now we transform that list of data frames into a larger dataframe with a new column called "SampleID"
-###making a dataframe to transform the individuals into a long large data frame##3
+names(individuals)
 full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
  
  ##make a smaller data frame###
@@ -251,52 +239,9 @@ smaller2 <- bind_rows(smaller2,.id="SampleID")
 
 Once they are all in a data from, a few functions need to be defined for ggplot:
 ##functions
-```{r functions, eval= FALSE,message=FALSE, warning=FALSE}
+ 
 
-#####adding functions
-
-predict.dr4pl <- function (object, newdata=NULL, se.fit=FALSE, level, interval) {
-  xseq <- if (is.null(newdata)) object$data$Dose else newdata$x
-  pred <- dr4pl::MeanResponse(xseq, object$parameters)
-  if (!se.fit) {
-    return(pred)
-  }
-  qq <- qnorm((1+level)/2)
-  se <- sapply(xseq,
-               function(x) car::deltaMethod(object, 
-                                            "UpperLimit + (LowerLimit - UpperLimit)/(1 + (x/IC50)^Slope)")[["Estimate"]])
-  return(list(fit=data.frame(fit=pred,lwr=pred-qq*se,
-                             upr=pred+qq*se), se.fit=se))
-}
-
-predictdf.dr4pl <- function (model, xseq, se, level, nboot=200) {
-  pred <- dr4pl::MeanResponse(xseq, model$parameters)
-  if (!se) {
-    return(base::data.frame(x=xseq, y=pred))
-  }
-  ## bootstrap residuals
-  pred0 <- dr4pl::MeanResponse(model$data$Dose, model$parameters)
-  res <- pred0-model$data$Response
-  bootres <- matrix(nrow=length(xseq), ncol=nboot)
-  pb <- txtProgressBar(max=nboot,style=3)
-  for (i in seq(nboot)) {
-    setTxtProgressBar(pb,i)
-    mboot <- dr4pl(model$data$Dose,
-                   pred0 + sample(res, size=length(pred0),
-                                  replace=TRUE))
-    bootres[,i] <- MeanResponse(xseq, mboot$parameters)
-  }
-  fit <- data.frame(x = xseq,
-                    y=pred,
-                    ymin=apply(bootres,1,quantile,(1-level)/2),
-                    ymax=apply(bootres,1,quantile,(1+level)/2))
-  return(fit)
-}
-
-
-```
-##
-```{r empty list holder}
+```{r empty list holder, include=FALSE}
 
 #### making lists to put stuff in###
 daunls <- list() ###daunorubicin list
@@ -309,7 +254,7 @@ name <- c( "Veh","Daun", "Doxo","Epi", "Mito", "Tras")### text list of drugs
 ```
 
 ## Individual Plots
-```{r individual plots}
+```{r individual plots, eval=FALSE, include=FALSE}
 
 for (i in name){
   thing <- subset(rbind(ind5a), Drug == i)
@@ -340,7 +285,7 @@ Here I need to assign the drugs out by drug:
 
 ```{r making filtered data, echo=FALSE}
 
-### sort durg out and store as drug name from smaller list
+### sort drug out and store as drug name from smaller list
 #unique(smaller$SampleID)
 #returns "ind1a" "ind2b" "ind3b" "ind4b" "ind5a" "ind6a"
 DA <- full_list[Drug =="Daun"]
@@ -359,7 +304,7 @@ VE2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Veh")
 ```
 
 
-```{r Daunorubicin}
+```{r Daunorubicin, eval=FALSE, include=FALSE}
 ### to extract parameters for mapping
 param_holder <- c()
 for (i in ID) {
@@ -373,7 +318,7 @@ for (i in ID) {
 DA_parm <- param_holder
     ```
     
-```{r Doxorubicin}
+```{r Doxorubicin, eval=FALSE, include=FALSE}
 ### to extract parameters for mapping
 param_holder <- c()
 for (i in ID) {
@@ -387,9 +332,7 @@ for (i in ID) {
 DX_parm <- as.data.frame(param_holder)
     ```
     
-   
-   
-```{r Epirubicin}
+```{r Epirubicin,eval=FALSE, include=FALSE}
 ### to extract parameters for mapping
 param_holder <- c()
 for (i in ID) {
@@ -403,9 +346,7 @@ for (i in ID) {
 EP_parm <- as.data.frame(param_holder)
     ```
     
-    
-    
-```{r Mitoxantrone}
+```{r Mitoxantrone,eval=FALSE, include=FALSE}
 ### to extract parameters for mapping
 param_holder <- c()
 for (i in ID) {
@@ -423,10 +364,9 @@ MT_parm <- as.data.frame(param_holder)
 
 ####Viability
 
-This is me pulling the whole list and averageing the viablity at each concentration
+I wanted to graph viability across all samples.  Below are the results from a sample of concentrations.
     
-The via is pulling the raw LDH at 0.    
-```{r Viablitiy plots, warning=FALSE}
+```{r Viablitiy plots, eval=FALSE, include=FALSE,warning=FALSE}
 ### to extract parameters for mapping
 DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5)# %>% mutate(SampleID=substr(SampleID,1,4))
 DXvia <- full_list %>% filter(Drug == "Doxo")%>% filter(Conc ==0.5) %>% mutate(SampleID=substr(SampleID,1,4))
@@ -447,10 +387,7 @@ ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
   facet_wrap(~SampleID)
     ```
     
-    
-    
-    
-    ```{r  Viability data , warning=FALSE}
+```{r Viability data, echo=FALSE, warning=FALSE}
 ### to extract parameters for mapping
 
 alterlist <- full_list %>% 
@@ -471,7 +408,6 @@ ggplot(alterlist,
   geom_hline(yintercept = 1,lty = 4)+
   ylab(NULL) +
   facet_wrap(~Name)+
-  
   ggtitle("Viablity at low concentrations")+
   theme(axis.title=element_text(size=10),
         axis.ticks=element_line(size =2),
@@ -481,83 +417,84 @@ ggplot(alterlist,
        plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
    
 ```   
-    Getting an error, but It does not affect the result
-I can use bind_rows to get a pretty output in tibble
-
     
-```{r daunplot}
-ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
-     guides(color =  "none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1.0,0,NA))), se = FALSE)+
-      ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab("Normalized Cell Viability")
-
-
+```{r daunplot, echo=FALSE, message=FALSE, warning=FALSE}
+# ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
+#      guides(color =  "none", alpha = "none")+
+#       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
+#     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1.0,0,NA))), se = FALSE)+
+#       ylim(0,1.5)+
+#       scale_x_log10() +  # Change the x-axis scale to log 10 scale
+#   theme_classic() +
+#   xlab(expression(paste("Concentration [", mu, "M]")))+
+#   ylab("Normalized Cell Viability")
 
 
 daplot <- ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
      guides(color="none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
-  
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
-      ylim(0,1.5)+
-  scale_color_brewer(palette = "Dark2")+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab(NULL) +
-  theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
-      ggtitle("Daunorubicin")+
-  theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=10, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 2),
-       plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+      stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = "errorbar", 
+                   size =.5, 
+                   width = .1)+
+    stat_smooth(method = "drm", 
+                method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+    ylim(0,1.5)+
+    scale_color_brewer(palette = "Dark2")+
+    scale_x_log10() +  # Change the x-axis scale to log 10 scale
+    theme_classic() +
+    xlab(expression(paste("Concentration [", mu, "M]")))+
+    ylab(NULL) +
+    ggtitle("Daunorubicin")+
+    theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"),
+          axis.title=element_text(size=10),
+          axis.ticks=element_line(linewidth =2),
+          axis.text=element_text(size=10, face = "bold"),
+          panel.grid.major = element_line(colour = 'lightgrey'),
+          panel.border=element_rect(fill = NA, linewidth = 2),
+          plot.background = element_rect(fill = "#DDBBCD", colour = NA))
       
   daplot
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
     ```
-    This little tidbit can be added might need to specificy dr4pl data
-     stat_function(formula y~x, fun = dr4pl::MeanResponse, args = list(theta = dr4pl_obj$parameters), color= 3,size =1.2)+
     
-```{r doxplot}
-ggplot(DX2, aes(x=Conc, y= Percent, colour = SampleID,alpha =0.6)) +
-  guides( alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1.0,0,NA))), se = FALSE)+
-      ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab("Normalized Cell Viability")
+```{r doxplot, echo=FALSE, message=FALSE, warning=FALSE}
+# ggplot(DX2, aes(x=Conc, y= Percent, colour = SampleID,alpha =0.6)) +
+#   guides( alpha = "none")+
+#       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
+#     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1.0,0,NA))), se = FALSE)+
+#       ylim(0,1.5)+
+#       scale_x_log10() +  # Change the x-axis scale to log 10 scale
+#   theme_classic() +
+#   xlab(expression(paste("Concentration [", mu, "M]")))+
+#   ylab("Normalized Cell Viability")
 
 dxplot <-
   ggplot(DX2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
   guides(color="none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
-  
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,1,0,NA))), se = FALSE)+
+      stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = "errorbar", 
+                   size =.5, 
+                   width = .1)+
+      stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,1,0,NA))), 
+                  se = FALSE)+
       ylim(0,1.5)+
-  scale_color_brewer(palette = "Dark2")+
+      scale_color_brewer(palette = "Dark2")+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
- ylab(NULL) +
-  theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
+      theme_classic() +
+      xlab(expression(paste("Concentration [", mu, "M]")))+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
       ggtitle("Doxorubicin")+
-    theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=10, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 2),
-       
-      plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = "bold"),
+            panel.grid.major = element_line(colour = 'lightgrey'),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = "#DDBBCD", colour = NA))
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
@@ -569,7 +506,7 @@ dxplot <-
     
     
     
-```{r epiplot}
+```{r epiplot,echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
   guides(color =  "none", alpha = "none")+
   stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
@@ -583,24 +520,28 @@ ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
 epplot <- 
   ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
   guides(color="none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
-  
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
-      ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+  stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = "errorbar", 
+                   size =.5, 
+                   width = .1)+
+  stat_smooth(method = "drm", 
+                method.args = list(fct = L.4(c(NA,0,1,NA))), 
+                se = FALSE)+
+  ylim(0,1.5)+
+  scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
   scale_color_brewer(palette = "Dark2")+
   xlab(expression(paste("Concentration [", mu, "M]")))+
   ylab(NULL) +
   theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
-      ggtitle("Epirubicin")+
-    theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
+  ggtitle("Epirubicin")+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(linewidth = 2),
         axis.text=element_text(size=10, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 2),
-       
-      plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+        panel.grid.major = element_line(colour = 'lightgrey'),
+        panel.border=element_rect(fill = NA, linewidth = 2),
+        plot.background = element_rect(fill = "#DDBBCD", colour = NA))
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
   epplot  
@@ -609,39 +550,43 @@ epplot <-
     ```
     
     
-    ```{r mitoplot}
-ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha= 0.6)) +
-     guides(color =  guide_legend(overide.aes =list(size=4)), alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,NA,NA))), se = FALSE)+
-      ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab()
+    ```{r Mitoplot, echo=FALSE, message=FALSE, warning=FALSE}
+# ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha= 0.6)) +
+#      guides(color =  guide_legend(overide.aes =list(size=4)), alpha = "none")+
+#       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
+#     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,NA,NA))), se = FALSE)+
+#       ylim(0,1.5)+
+#       scale_x_log10() +  # Change the x-axis scale to log 10 scale
+#   theme_classic() +
+#   xlab(expression(paste("Concentration [", mu, "M]")))+
+#   ylab()
       
     
 mtplot <- 
   ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
       guides(color="none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
-  
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+      stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = "errorbar", 
+                   size =.5, 
+                   width = .1)+
+      stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,0,1,NA))), 
+                  se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() + 
-  scale_color_brewer(palette = "Dark2")+# Change the x-axis scale to log 10 scale
-  theme_classic() +
-   xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab(NULL) +
-  theme(plot.title = element_text(hjust = 0.5, size =15, face="bold"))+
+      scale_color_brewer(palette = "Dark2")+# Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(expression(paste("Concentration [", mu, "M]")))+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face="bold"))+
       ggtitle("Mitoxantrone")+
-  theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=10, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 2),
-       
-      plot.background = element_rect(fill = "#FFD966", colour = NA))
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = "bold"),
+            panel.grid.major = element_line(colour = 'lightgrey'),
+            panel.border=element_rect(fill = NA, linewidth =  2),
+            plot.background = element_rect(fill = "#FFD966", colour = NA))
       
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
@@ -653,38 +598,42 @@ mtplot <-
     
     
     ```{r  trasplot}
-leg <- ggplot(TR2, 
-            aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6))+
-      guides(color = guide_legend(override.aes = list(size = 2)), alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
-      theme_classic() +
-      labs(color = "Individual")+
-      scale_color_discrete(labels = c("1", "2", "3","4","5","6"))
-       
-                          
+ leg <- ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
+          geom_line()+
+          theme_classic() +
+      scale_color_brewer(palette = "Dark2",labels = c("1", "2", "3","4","5","6"))+
+        labs(color = "Individual", linewidth=3)
+        
+          
+library(RColorBrewer)    
+   leg
+   
 trplot <- 
   ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
       guides(color="none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
-  
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+      stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = "errorbar", 
+                   size =.5, 
+                   width = .1)+
+      stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() + 
-  scale_color_brewer(palette = "Dark2")+
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab(NULL) +
-  theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
-      ggtitle("Trastuzumab")+theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=10, face = "bold"),
-       panel.grid.major = element_line(colour = 'lightgrey'),
-       panel.border=element_rect(fill = NA, size = 2),
-       
-      plot.background = element_rect(fill = "#FFD966", colour = NA))
+      theme_classic() +
+      scale_color_brewer(palette = "Dark2")+
+      xlab(expression(paste("Concentration [", mu, "M]")))+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
+      ggtitle("Trastuzumab")+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(size =2),
+            axis.text=element_text(size=10, face = "bold"),
+            panel.grid.major = element_line(colour = 'lightgrey'),
+            panel.border=element_rect(fill = NA, size = 2),
+            plot.background = element_rect(fill = "#FFD966", colour = NA))
       
-      
-  l# theme(plot.title = element_text(hjust = 0.5, size =20))
+  # theme(plot.title = element_text(hjust = 0.5, size =20))
   trplot  
 
     
@@ -692,52 +641,44 @@ trplot <-
     ```
     
     
-    ```{r  control plot, echo = FALSE}
-ggplot(VE2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
-      guides(color =  "none", alpha = "none")+
-          stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = .1)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+```{r control plot, echo=, message=FALSE, warning=FALSE}
+# ggplot(VE2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
+#       guides(color =  "none", alpha = "none")+
+#           stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = .1)+
+#     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+#       ylim(0,1.5)+
+#       scale_x_log10() +  # Change the x-axis scale to log 10 scale
+#   theme_classic() +
+#   xlab(expression(paste("Concentration [", mu, "M]")))+
+#   ylab("Normalized Cell Viability")+
+#       theme(plot.title = element_text(hjust = 0.5, size =20))+
+#       ggtitle("Control")
+veplot <- 
+  ggplot(VE2, aes(x = Conc,y = Percent,color = SampleID,alpha = 0.6)) +
+      guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = "errorbar", 
+                   size =.5, 
+                   width = .1)+
+      stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
       ylim(0,1.5)+
+      scale_color_brewer(palette = "Dark2")+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab("Normalized Cell Viability")+
-      theme(plot.title = element_text(hjust = 0.5, size =20))+
-      ggtitle("Control")
-veplot <-     
-  ggplot(VE2, aes(
-    x = Conc,
-    y = Percent,
-    color = SampleID,
-    alpha = 0.6
-  )) +
-  guides(color="none", alpha = "none")+
-      stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =.5, width = .1)+
-  
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
-      ylim(0,1.5)+
-  scale_color_brewer(palette = "Dark2")+
-  scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]"))) +
-  ylab(NULL) +
-  ggtitle("Control") +
-  theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold")) +
-  theme(
-    axis.title = element_text(size = 10),
-    axis.ticks = element_line(size = 2),
-    axis.text = element_text(size = 10, face = "bold"),
-    panel.grid.major = element_line(colour = 'lightgrey'),
-    panel.border = element_rect(fill = NA, size = 2),
-       panel.background = element_rect(fill = "transparent"),
-      plot.background = element_rect(fill = "transparent", colour = NA))
-
-
-
-
-
-
-      
+      theme_classic() +
+      xlab(expression(paste("Concentration [", mu, "M]"))) +
+      ylab(NULL) +
+      ggtitle("Control") +
+      theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold")) +
+      theme(
+        axis.title = element_text(size = 10),
+        axis.ticks = element_line(linewidth =  2),
+        axis.text = element_text(size = 10, face = "bold"),
+        panel.grid.major = element_line(colour = 'lightgrey'),
+        panel.border = element_rect(fill = NA, linewidth = 2),
+        panel.background = element_rect(fill = "transparent"),
+        plot.background = element_rect(fill = "transparent", colour = NA))
+    
 veplot
 # theme(plot.title = element_text(hjust = 0.5, size =20))
      #####plot all together!#####   
@@ -747,22 +688,21 @@ veplot
     ```
 ###plot all together!#####
     
-```{r plot together not good}
+```{r plot together not good, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
     library(cowplot)
-### take a legend from a plot
-legend_b <- get_legend(leg)
-  
-    guides(color = guide_legend(nrow = 1))) 
-    
+## take a legend from a plot
+legend_b <- ggpubr::get_legend(leg)
 
+ggpubr::as_ggplot(legend_b)
+legend_B
 
 legend_b
-plan1 <- plot_grid(daplot,dxplot,epplot,NULL,mtplot, trplot,veplot,legend_b,ncol =4)
+# plan1 <- plot_grid(daplot,dxplot,epplot,NULL,mtplot, trplot,veplot,legend_b,ncol =4)
 plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
   
 #drcfinal<- plot_grid(plan1, ncol =1, rel_heights = c(1,0.1))
-save_plot('plan1plot.png', plan1)
-plan1
+save_plot('plan2plot.png', plan2)
+save_plot('individual-legenddark2.png',ggpubr::as_ggplot(legend_b))
 plan2
 ```
 ###LD50 extract
@@ -780,7 +720,7 @@ VEi <- full_list %>% filter(Drug == "Veh")
 ```
 
 
-```{r extract the stuff via dr4pl, eval=FALSE}
+```{r extract the stuff via dr4pl, eval=FALSE, include=FALSE}
 
 param_holder <- c()
 for (i in ID) {
@@ -838,7 +778,7 @@ trLD <- sapply(param_holder, "[[", 1)
 
 ```
 ###drm extracting
-```{r extracting with drm}
+```{r extracting with drm, echo=FALSE}
 daunls <- list() ###daunorubicin list
 doxols <- list() ### doxorubicin list
 epils <- list() ###epirubicin list
@@ -852,21 +792,22 @@ thingda <-  filter(DAi, SampleID==k)
   thingda.m <- drm(Percent~Conc, data = thingda, fct=LL.4(c(NA, 0, 1, NA)))
   onion <- ED(thingda.m, c(50), interval = "delta")
   daunls[k] <- onion[1]
+  print(paste0(k, " Daunorubicin"))
 thingdx <-  filter(DXi, SampleID==k)
   thingdx.m <- drm(Percent~Conc, data = thingdx, fct=LL.4(c(NA, 0, 1, NA)))
   onionx <- ED(thingdx.m, c(50), interval = "delta")
   doxols[k] <- onionx[1]
-  
+  print(paste0(k, " Doxoorubicin"))
  thingep <-  filter(EPi, SampleID==k)
   thingep.m <- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, 0, 1, NA)))
   onione <- ED(thingep.m, c(50), interval = "delta")
   epils[k] <- onione[1] 
-  
+  print(paste0(k, " Epirubicin"))
   thingmt <-  filter(MTi, SampleID==k)
   thingmt.m <- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA, 0, 1, NA)))
   onionm <- ED(thingmt.m, c(50), interval = "delta")
   mitols[k] <- onionm[1] 
-  
+  print(paste0(k, " Mitoxantrone"))
   
  }
 
@@ -1003,14 +944,12 @@ for(k in ID2){
 trasls
 ```
 
-
-
 ```{r VE try with drc}
 for(k in ID){
 
   thing <-  filter(VE, SampleID==k)
   na.omit= TRUE
-  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
+  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, NA, NA, NA)))
   plot(thing.m, 
        type ="bars" ,
        main = paste(thing$Name[1], " ", k),
@@ -1037,10 +976,7 @@ vehls
 
 
 
-
-
-
-##ld50 condenesed
+##ld50 condensed
 
 
 ```{r}

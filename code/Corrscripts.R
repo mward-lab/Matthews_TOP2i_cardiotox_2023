@@ -8,7 +8,6 @@ x_counts <- read.csv("data/norm_counts.csv",row.names = 1)
 
 
 
-
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
@@ -64,117 +63,87 @@ nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
 length((nonresponse_cluster))
 sample(nonresponse_cluster,4)
 #"55686"     "100128682" "11190"     "58472"
-
+#"150786" "54856"  "145165" "23095"
 write_csv(as.data.frame(nonresponse_cluster), "data/cormotif_NRset.txt")
 
 # TI_respset --------------------------------------------------------------
-TI_respset  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 |
-                                                   gene_prob_tran[,2] >0.5 |
-                                                   gene_prob_tran[,3] >0.5 |
-                                                   gene_prob_tran[,4] >0.5|
-                                                   # gene_prob_tran[,5] >0.5 |
-                                                   gene_prob_tran[,6] >0.5 |
-                                                   gene_prob_tran[,7]>0.5 |
-                                                   gene_prob_tran[,8]>0.5 |
-                                                   gene_prob_tran[,9]>0.5),])
-                                                   #gene_prob_tran[,10]>0.5)
-#
-length(unique(TI_respset))
 
-#5977
 
-write_csv(as.data.frame(TI_respset), "data/cormotif_TI_respset.txt")
-
-TI_respint  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
-                                         gene_prob_tran[,2] >0.5 &
-                                         gene_prob_tran[,3] >0.5 &
-                                         gene_prob_tran[,4] >0.5&
-                                         # gene_prob_tran[,5] >0.5 &
-                                         gene_prob_tran[,6] >0.5 &
-                                         gene_prob_tran[,7]>0.5 &
-                                         gene_prob_tran[,8]>0.5 &
-                                         gene_prob_tran[,9]>0.5),])
-
- length(unique(TI_respint))
-
-#95
-
- write_csv(as.data.frame(TI_respint), "data/cormotif_TI_respint.txt")
-
- ##eyeball of
-
-# ER_resp set ------------------------------------------------------
-
- ER_respset  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 |
-                                           gene_prob_tran[,2] >0.5 |
-                                           gene_prob_tran[,3] >0.5 |
-                                           gene_prob_tran[,4] >0.5),])
-                                           # gene_prob_tran[,5] >0.5 |
-                                           # gene_prob_tran[,6] >0.5 |
-                                           # gene_prob_tran[,7]>0.5 |
-                                           # gene_prob_tran[,8]>0.5 |
-                                           # gene_prob_tran[,9]>0.5),])
- #gene_prob_tran[,10]>0.5)
- #
- length(unique(ER_respset))
-
- #916
-
- write_csv(as.data.frame(ER_respset), "data/cormotif_ER_respset.txt")
-
- ER_respint  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
+TI_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
                                            gene_prob_tran[,2] >0.5 &
                                            gene_prob_tran[,3] >0.5 &
-                                           gene_prob_tran[,4] >0.5),])
-                                           # gene_prob_tran[,5] >0.5 &
-                                           # gene_prob_tran[,6] >0.5 &
-                                           # gene_prob_tran[,7]>0.5 &
-                                           # gene_prob_tran[,8]>0.5 &
-                                           # gene_prob_tran[,9]>0.5),])
-                                           #
- length(unique(ER_respint))
-
- #898
-
- write_csv(as.data.frame(ER_respint), "data/cormotif_ER_respint.txt")
-
-
-
-# LR_respset --------------------------------------------------------------
-
- LR_respset  <- rownames(gene_prob_tran[(#gene_prob_tran[,1]>0.5 |
-                                           # gene_prob_tran[,2] >0.5 |
-                                           # gene_prob_tran[,3] >0.5 |
-                                           # gene_prob_tran[,4] >0.5|
-                                           # gene_prob_tran[,5] >0.5 |
-                                           gene_prob_tran[,6] >0.5 |
-                                           gene_prob_tran[,7]>0.5 |
-                                           gene_prob_tran[,8]>0.5 |
-                                           gene_prob_tran[,9]>0.5),])
- #gene_prob_tran[,10]>0.5)
- #
- length(unique(LR_respset))
-
- #5515
-
- write_csv(as.data.frame(LR_respset), "data/cormotif_LR_respset.txt")
-
- LR_respint  <- rownames(gene_prob_tran[(#gene_prob_tran[,1]>0.5 &
-                                           # gene_prob_tran[,2] >0.5 &
-                                           # gene_prob_tran[,3] >0.5 &
-                                           # gene_prob_tran[,4] >0.5&
-                                           # gene_prob_tran[,5] >0.5 &
+                                           gene_prob_tran[,4] >0.5&
+                                           gene_prob_tran[,5] <0.5 &
                                            gene_prob_tran[,6] >0.5 &
                                            gene_prob_tran[,7]>0.5 &
                                            gene_prob_tran[,8]>0.5 &
-                                           gene_prob_tran[,9]>0.5),])
+                                           gene_prob_tran[,9]>0.5 &
+                                           gene_prob_tran[,10]<0.5),])
 
- length(unique(LR_respint))
+ length(TI_respint1)
 
- #1505
+#95
+ write_csv(as.data.frame(TI_respint1), "data/cormotif_TI_respint.txt")
+ sample(TI_respint1,4)
+ ##[1] "90417"     "105373311" "2959"      "27145"
+ #"51278" "51043" "26152" "79832"
+# ER_resp set ------------------------------------------------------
 
- write_csv(as.data.frame(LR_respint), "data/cormotif_LR_respint.txt")
 
+
+ ER_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
+                                           gene_prob_tran[,2] >0.5 &
+                                           gene_prob_tran[,3] >0.5 &
+                                           gene_prob_tran[,4] >0.5&
+                                           gene_prob_tran[,5] <0.5 &
+                                           gene_prob_tran[,6] <0.5 &
+                                           gene_prob_tran[,7]<0.5 &
+                                           gene_prob_tran[,8]<0.5 &
+                                          gene_prob_tran[,9]<0.5 &
+                                           gene_prob_tran[,10]<0.5),])
+                                           #
+ length(unique(ER_respint1))
+#452
+
+
+write_csv(as.data.frame(ER_respint1), "data/cormotif_ER_respint.txt")
+
+sample(ER_respint1,4)
+#"54434"  "23506"  "51058"  "283219"
+# LR_respset --------------------------------------------------------------
+
+ LR_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
+                                            gene_prob_tran[,2] <0.5 &
+                                            gene_prob_tran[,3] <0.5 &
+                                            gene_prob_tran[,4] <0.5 &
+                                            gene_prob_tran[,5] <0.5 &
+                                            gene_prob_tran[,6] >0.5 &
+                                            gene_prob_tran[,7] >0.5 &
+                                            gene_prob_tran[,8] >0.5 &
+                                            gene_prob_tran[,9] >0.5 &
+                                            gene_prob_tran[,10] <0.5),])
+
+ length(unique(LR_respint1))
+ #1409
+ write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_respint.txt")
+ sample(LR_respint1,4)
+# "8915"   "1756"   "92335"  "146754"
+# motif2 ------------------------------------------------------------------
+
+ motif2_unknown  <- rownames(gene_prob_tran[(gene_prob_tran[,1] >0.06 &
+                                            gene_prob_tran[,2] >0.06 &
+                                            gene_prob_tran[,3] >0.06 &
+                                            gene_prob_tran[,4] >0.06&
+                                            gene_prob_tran[,5] >0.06 &
+                                            gene_prob_tran[,6] >0.06 &
+                                            gene_prob_tran[,7] >0.06 &
+                                            gene_prob_tran[,8] >0.06 &
+                                            gene_prob_tran[,9] >0.06 &
+                                            gene_prob_tran[,10] >0.06),])
+
+ length(unique(LR_respint1))
+ write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_respint.txt")
+#22822,4356
 
 
 # list summary ------------------------------------------------------------
@@ -182,45 +151,25 @@ TI_respint  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
 nonresponse_cluster
  #motif is 8705  set of gene with less than 50% chance of being DE
 
- TI_respint
+ TI_respint1
  #95
- #intersection of all TOP2Bi genes that have greater than 50% chance of being DE
- TI_respset
- #union of all TOP2Bi genes that have greater than 50% chance of being DE
- #5977
-
- ER_respint
- #898
+ #intersection of all TOP2Bi genes that have greater than 50% chance of being DE and less than in Tras
+ ER_respint1
+ #452
  #intersection of all early TOP2Bi genes that have greater than 50% chance of being DE
- ER_respset
- #916
- #union of all early TOP2Bi genes that have greater than 50% chance of being DE
 
-
-
- LR_respint
- #1505
+ LR_respint1
+ #1409
  #intersection of all TOP2Bi genes that have greater than 50% chance of being DE
- LR_respset
- #5515
- #union of all TOP2Bi genes that have greater than 50% chance of being DE
 
-
- motif3_TI <- intersect(ER_respset,LR_respset)
- #454
-
- setdiff(ER_respint,LR_respint)
- #803 genes
-
-
- ER_onlyset <- setdiff(ER_respset,LR_respset)
- #462 genes
- motif5_ER <- setdiff(ER_respset,LR_respset)
-
- motif4_LR <- setdiff(LR_respset,ER_respset)
- #5061
+ motif3_TI <- TI_respint1
+#95
+ motif5_ER <- ER_respint1
+#452
+ motif4_LR <- LR_respint1
+#1409
  motif1_NR <- nonresponse_cluster
-
+#8846
  DEG_cormotif <- list(motif1_NR,motif3_TI,motif4_LR,motif5_ER)
 
  names(DEG_cormotif) <- c('motif1_NR','motif3_TI','motif4_LR','motif5_ER')
@@ -246,15 +195,15 @@ nonresponse_cluster
 
  #use cormotif_initial$bestmotif$motif.q for  probabilities to subset the columns by
 
-q5geneset <- rownames(gene_prob_tran[(gene_prob_tran[,1]> q5[1]|
-                            gene_prob_tran[,2] >q5[2]|
-                            gene_prob_tran[,3] >q5[3]|
-                            gene_prob_tran[,4] >q5[4]),])
-                            gene_prob_tran[,5] >q5[5]|
-                            gene_prob_tran[,6] >q5[6]|
-                            gene_prob_tran[,7]>q5[7]|
-                            gene_prob_tran[,8]>q5[8]|
-                            gene_prob_tran[,9]>q5[9]|
+q5geneset <- rownames(gene_prob_tran[(gene_prob_tran[,1]> q5[1]&
+                            gene_prob_tran[,2] >q5[2]&
+                            gene_prob_tran[,3] >q5[3]&
+                            gene_prob_tran[,4] >q5[4]&
+                            gene_prob_tran[,5] >q5[5]&
+                            gene_prob_tran[,6] >q5[6]&
+                            gene_prob_tran[,7] >q5[7]&
+                            gene_prob_tran[,8] >q5[8]&
+                            gene_prob_tran[,9] >q5[9]&
                             gene_prob_tran[,10]>q5[10]),])
 
 setdiff(q3geneset,q4geneset,)
@@ -310,7 +259,7 @@ gene_prob_tran3h <- cormotif_3h$bestmotif$p.post
 rownames(gene_prob_tran3h) <- rownames(y_TMM_cpm)
 dim(gene_prob_tran3h)
 saveRDS(gene_prob_tran3h,"data/gene_prob_tran3h.RDS")
-
+gene_prob_tran3h <- readRDS("data/gene_prob_tran3h.RDS")
 
 
 
@@ -342,64 +291,29 @@ saveRDS(cormotif_24h2mot,file = "data/Cormotif_24_k1-5_raw.RDS")
 cormotif_24h2mot <- readRDS("data/Cormotif_24_k1-5_raw.RDS")
 
 #x_axis_labels(labels = c("3_Daun","3_Dox","3_Epi","3_Mito","3_Tras","24_Daun","24_Dox","24_Epi","24_Mito","24_Tras"), every_nth = 1, adj=1, srt =90, cex =0.4)
-plotMotif(cormotif_24h2mot)
- gene_prob_tran24h <- cormotif_24h2mot$bestmotif$p.post
-rownames(gene_prob_tran24h) <- rownames(y_TMM_cpm)
-dim(gene_prob_tran24h)
-nonresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] <0.5 &
-                                                        gene_prob_tran24h[,2] <0.5 &
-                                                        gene_prob_tran24h[,3] <0.5 &
-                                                        gene_prob_tran24h[,4] <0.5&
-                                                        gene_prob_tran24h[,5] <0.5),])
-length(nonresponse_cluster24h)
-response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] > 0.5 &
-                                                     gene_prob_tran24h[,2] > 0.5 &
-                                                     gene_prob_tran24h[,3] > 0.5 &
-                                                     gene_prob_tran24h[,4] > 0.5
-                                                    ),])
-
-ACresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5),])
-length(response_cluster24h)
-length(ACresponse_cluster24h)
-write.csv(response_cluster24h,"data/Top2biresp_cluster24h.csv")
-response_cluster24h <- read_csv("data/Top2biresp_cluster24h.csv")
-length(intersect(allresponse_cluster,response_cluster24h[[2]]))
-
-
-write.csv(ACresponse_cluster24h,"data/resp_cluster24h.csv")
-write.csv(nonresponse_cluster24h,"data/nonresponse_cluster24h.csv")
-# AC3 hour ----------------------------------------------------------------
-
-compid_AC <- data.frame(c1= c(1,2,3), c2 = c( 6,6,6))
-
-y_TMM_cpm <- cpm(x_counts, log = TRUE)
-colnames(y_TMM_cpm) <- label
-y_TMM_cpm
-set.seed(12345)
-cormotif_AC3 <- cormotiffit(exprs = y_TMM_cpm,
-                               groupid = groupid,
-                               compid = compid_AC,
-                               K=1:5, max.iter = 500)
-plotIC(cormotif_AC3)
-plotMotif(cormotif_AC3)
-
-
-# 24h AC only -------------------------------------------------------------
-
-
-
-compid_AC24 <- data.frame(c1= c(7,8,9,10), c2 = c( 12,12,12,12))
-
-y_TMM_cpm <- cpm(x_counts, log = TRUE)
-colnames(y_TMM_cpm) <- label
-y_TMM_cpm
-set.seed(12345)
-cormotif_AC24 <- cormotiffit(exprs = y_TMM_cpm,
-                               groupid = groupid,
-                               compid = compid_AC24,
-                               K=1:8, max.iter = 500)
-plotIC(cormotif_AC24)
-plotMotif(cormotif_AC24)
-
-
-
+# plotMotif(cormotif_24h2mot)
+#  gene_prob_tran24h <- cormotif_24h2mot$bestmotif$p.post
+# rownames(gene_prob_tran24h) <- rownames(y_TMM_cpm)
+# dim(gene_prob_tran24h)
+# nonresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] <0.5 &
+#                                                         gene_prob_tran24h[,2] <0.5 &
+#                                                         gene_prob_tran24h[,3] <0.5 &
+#                                                         gene_prob_tran24h[,4] <0.5&
+#                                                         gene_prob_tran24h[,5] <0.5),])
+# length(nonresponse_cluster24h)
+# response_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] > 0.5 &
+#                                                      gene_prob_tran24h[,2] > 0.5 &
+#                                                      gene_prob_tran24h[,3] > 0.5 &
+#                                                      gene_prob_tran24h[,4] > 0.5
+#                                                     ),])
+#
+# ACresponse_cluster24h <- rownames(gene_prob_tran24h[(gene_prob_tran24h[,1] >0.5 & gene_prob_tran24h[,2] >0.5 & gene_prob_tran24h[,3] >0.5),])
+# length(response_cluster24h)
+# length(ACresponse_cluster24h)
+# write.csv(response_cluster24h,"data/Top2biresp_cluster24h.csv")
+# response_cluster24h <- read_csv("data/Top2biresp_cluster24h.csv")
+# length(intersect(allresponse_cluster,response_cluster24h[[2]]))
+#
+#
+# write.csv(ACresponse_cluster24h,"data/resp_cluster24h.csv")
+# write.csv(nonresponse_cluster24h,"data/nonresponse_cluster24h.csv")
