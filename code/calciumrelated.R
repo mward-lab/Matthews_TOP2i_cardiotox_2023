@@ -21,7 +21,8 @@ clamp_summary <- read.csv("data/Clamp_Summary.csv", row.names=1)
 level_order2 <- c('75','87','77','79','78','71')
 calcium_data <- read_csv("data/DF_Plate_Peak.csv", col_types = cols(...1 = col_skip()))
 
-
+drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+#named colors: dark pink,Red,yellow,blue, dark grey, green
 
 
 # Beat rate ---------------------------------------------------------------
@@ -46,8 +47,9 @@ calcium_data %>% rename('Treatment'='Condition') %>%
   mutate(norm_rate=Rate/contrl) %>%
   filter(Conc==0| Conc==0.5) %>%
   ggplot(., aes(x=Drug, y=Rate))+
-  geom_boxplot(position = "identity")+
+  geom_boxplot(position = "identity", fill= drug_pal)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none")+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
                                  c("Doxorubicin", "Control"),
                                  c("Epirubicin", "Control"),
@@ -59,12 +61,13 @@ calcium_data %>% rename('Treatment'='Condition') %>%
               textsize = 4)+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
   ggtitle("Contraction Rate per treatment")+
-  theme_bw()+
-  guides(size = "none")+
-  labs(y = "beat/sec")+
+  theme_classic()+
+  guides(size = "none",colour = guide_legend(override.aes = list(size=4, alpha= 0.5)))+
+  labs(y = "avg. beats/sec")+
   theme(plot.title = element_text(size=18,hjust = 0.5),
     axis.title = element_text(size = 15, color = "black"),
-    axis.ticks = element_line(size = 1.5),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
     axis.text = element_text(size = 12, color = "black", angle = 0),
     strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
@@ -96,8 +99,9 @@ clamp_summary %>%
   filter(Conc==0| Conc==0.5) %>%
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
   ggplot(.,aes(Drug,Mean_Amplitude))+
-  geom_boxplot(position = "identity")+
+  geom_boxplot(position = "identity", fill= drug_pal)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none",size="none")+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
                                  c("Doxorubicin", "Control"),
@@ -108,15 +112,15 @@ clamp_summary %>%
               map_signif_level = TRUE,
               step_increase = 0.1,
               textsize = 4)+
-  ggtitle(expression(paste("Mean Amplitude at 0.5 ",mu,"M")))+
-  theme_bw()+
-  guides(size = "none")+
   labs(y = "a.u.")+
-  theme(plot.title=element_text(size= 18,hjust = 0.5),
-    axis.title = element_text(size = 15, color = "black"),
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 12, color = "black", angle = 0),
-    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  ggtitle(expression(paste("Mean Amplitude at 0.5 ",mu,"M")))+
+  theme_classic()+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
 
@@ -203,8 +207,9 @@ clamp_summary %>%
   filter(Conc==0| Conc==0.5) %>%
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
   ggplot(.,aes(Drug,Rise_Slope))+
-  geom_boxplot(position = "identity")+
+  geom_boxplot(position = "identity", fill= drug_pal)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha="none", indv = "none", size = "none")+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
                                  c("Doxorubicin", "Control"),
@@ -216,14 +221,15 @@ clamp_summary %>%
               step_increase = 0.1,
               textsize = 4)+
   ggtitle(expression(paste("Rising Slope at 0.5 ",mu,"M")))+
-  theme_bw()+
-  guides(size = "none")+
   labs(y = "a.u.")+
-  theme(plot.title=element_text(size= 18,hjust = 0.5),
+  theme_classic()+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(size = 1.5),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
 
 
 
@@ -252,8 +258,9 @@ clamp_summary %>%
   filter(Conc==0| Conc==0.5) %>%
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
   ggplot(.,aes(Drug,Decay_Slope))+
-  geom_boxplot(position = "identity")+
+  geom_boxplot(position = "identity", fill= drug_pal)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha="none", indv = "none", size = "none")+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
                                  c("Doxorubicin", "Control"),
@@ -265,16 +272,14 @@ clamp_summary %>%
               step_increase = 0.1,
               textsize = 4)+
   ggtitle(expression(paste("Decay Slope at 0.5 ",mu,"M")))+
-  theme_bw()+
-  guides(size = "none")+
   labs(y = "a.u.")+
-  theme(plot.title=element_text(size= 18,hjust = 0.5),
+  theme_classic()+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(size = 1.5),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-
-
 # playing with rising/decay -----------------------------------------------
 
 clamp_summary %>%
