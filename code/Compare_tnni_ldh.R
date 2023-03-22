@@ -7,11 +7,12 @@ library(zoo)
 library(ggplot2)
 library(ggpubr)
 library(ggsignif)
+
 ###discrete colour scales!
 scale_color_brewer()
 #indv   scale_color_brewer(palette = "Dark2")
-drug_pal <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-#
+drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+#in order of display in boxplot
 
 #using infofrom wilkelab.org  https://wilkelab.org/SDS375/slides/color-scales.html#47
   # scale_color_manual(
@@ -21,7 +22,7 @@ drug_pal <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 scale_color_brewer(palette = "Dark2")  # for use in indivduals
 #named colors: dark pink,Red,yellow,blue, dark grey, green
 yarrr::piratepal("all")
-level_order <- c('71','75','77','78','79','87')
+
 level_order <- c('71','75','77','78','79','87')
 level_order2 <- c('75','87','77','79','78','71')
 #southpark <- c(71 = "#2F86FFFF", 75 ="#EBAB16FF",77= "#DE0012FF", 78 ="#22C408FF", 79 ="#FECDAAFF", 87= "#F14809FF")
@@ -57,26 +58,27 @@ avgTNNI <- TNNIelisadata %>%
 
 
 ggplot(avgTNNI, aes(x=Drug, y=tnni))+
-  geom_boxplot(position = "identity")+
-  geom_point(aes(col=indv, size=3))+
+  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_point(aes(col=indv, size=3, alpha=0.5))+
   geom_signif(comparisons = list(c("Daunorubicin", "Control"),
                                  c("Doxorubicin", "Control"),
                                  c("Epirubicin", "Control"),
                                  c("Mitoxantrone", "Control"),
                                  c("Trastuzumab","Control")),
               test = "t.test",
-              map_signif_level = FALSE,step_increase = 0.1,
+              map_signif_level = TRUE,step_increase = 0.1,
               textsize = 4)+
-  guides(size = "none")+
+  guides(size = "none", alpha="none")+
   ggtitle("Relative troponin I levels released in media")+
   scale_color_brewer(palette = "Dark2",name = "Individual",labels(c(1,2,3,4,5,6)))+
-  theme_bw()+
-  ylab(" Relative troponin I release")+
+  theme_classic()+
+  ylab(" Troponin I release")+
   theme(strip.background = element_rect(fill = "transparent")) +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
     axis.title = element_text(size = 15, color = "black"),
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 9, color = "black", angle = 0),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(size = 12, color = "black", angle = 0),
     strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
@@ -133,28 +135,35 @@ colnames(mean24ldh) <- gsub("_0.5","",colnames(mean24ldh))
 
 mean24ldh <-  mean24ldh %>%
   pivot_longer(.,col=-Drug, names_to = 'indv', values_to = "ldh") %>%
-  mutate(indv = factor(indv, levels= level_order2))
+  mutate(indv = factor(indv, levels= level_order2)) %>%
+  full_join(.,RNAnormlist,by=c(Drug, indv,ldh))
 
 ggplot(mean24ldh, aes(x=Drug,y=ldh))+
-  geom_boxplot() +
-  geom_point(aes(col=indv, size =3))+
+  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
   geom_signif(comparisons =list(c("Control","Daunorubicin"),
                                 c("Control","Doxorubicin"),
                                 c("Control","Epirubicin"),
                                 c("Control","Mitoxantrone"),
                                 c("Control","Trastuzumab")),
-              map_signif_level=FALSE,
+              map_signif_level=TRUE,
               textsize =4,
-              tip_length = .1,
-              vjust = 0.2, step_increase = 0.1)+
-  theme_bw()+
-  guides(size = "none")+
-  scale_color_brewer(palette = "Dark2")+
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual")+
   xlab("")+
   ylab("Relative LDH activity ")+
   ggtitle("Relative lactate dehydrogenase release in media")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = rel(0.8)))
+        legend.position = "none",
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 # combine data sets tnni and ldh ------------------------------------------
 #sets:mean24ldh made above
@@ -298,7 +307,7 @@ tvl24hour <- read_csv("data/tvl24hour.txt", show_col_types = FALSE)
 tvl24hour <- tvl24hour %>% mutate(indv= factor(indv,levels= level_order2))
 #Import the RNA concentratons
 
-all.equal(tvl24hour,comparisons_allsub)
+
 RINsamplelist <- read_csv("data/RINsamplelist.txt")
 
 RNAnormlist <- RINsamplelist %>% mutate(Drug=case_match(Drug,"daunorubicin"~"Daunorubicin",
@@ -320,74 +329,93 @@ ggplot(RNAnormlist, aes(x=Drug, y=Conc_ng.ul))+
 
 RNAnormlist <- RNAnormlist %>%
   full_join(.,tvl24hour,by= c("Drug", "indv")) %>%
-  mutate(rldh=ldh/Conc_ng.ul) %>% mutate(rtnni=tnni/Conc_ng.ul)
+  mutate(rldh= ldh/Conc_ng.ul) %>%
+  mutate(rtnni=tnni/Conc_ng.ul) %>%
+  mutate(normtnni=rtnni/rtnni[1]) %>%
+  mutate(normldh=rldh/rldh[1])
 
 
 
-ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
+ggplot(RNAnormlist, aes(x=normldh, y=normtnni))+
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
   facet_wrap("Drug", scales="free")+
   theme_bw()+
   scale_color_brewer(palette = "Dark2")+
-  #scale_color_manual(values = indv_pal)+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
            geom = "label"
            )+
   ggtitle("Correlation between Troponin I release and LDH activity")
+ggplot(RNAnormlist, aes(x=normldh, y=normtnni))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  facet_wrap("Drug", scales="free")+
+  theme_classic()+
+  scale_color_brewer(palette = "Dark2")+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label"
+  )+
+  theme(strip.background = element_rect(colour="black"))
+  ggtitle("Troponin I and LDH release correlation")
 
 
-
-ggplot(RNAnormlist, aes(x=Drug, y=rtnni))+
-  geom_boxplot(position = "identity")+
-  geom_point(aes(col=indv, size=3))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Control"),
-                                 c("Doxorubicin", "Control"),
-                                 c("Epirubicin", "Control"),
-                                 c("Mitoxantrone", "Control"),
-                                 c("Trastuzumab","Control")),
-              test = "t.test",
-              map_signif_level = FALSE,step_increase = 0.1,
-              textsize = 4)+
+ggplot(RNAnormlist, aes(x=Drug, y=normldh))+
+  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c("Control","Daunorubicin"),
+                                c("Control","Doxorubicin"),
+                                c("Control","Epirubicin"),
+                                c("Control","Mitoxantrone"),
+                                c("Control","Trastuzumab")),
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
-  ggtitle("Relative troponin I levels released in media after dividing by RNA concentration")+
-  theme_bw()+
-  guides(size = "none")+
-  labs(y = "Relative Troponin I release")+
-  #theme(strip.background = element_rect(fill = "transparent")) +
-  theme(
-    axis.title = element_text(size = 15, color = "black"),
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 12, color = "black", angle = 0),
-    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  xlab("")+
+  ylab("Relative LDH activity ")+
+  ggtitle("Lactate dehydrogenase release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
-
-
-ggplot(RNAnormlist, aes(x=Drug, y=ldh))+
-  geom_boxplot(position = "identity")+
-  geom_point(aes(col=indv, size=3))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Control"),
-                                 c("Doxorubicin", "Control"),
-                                 c("Epirubicin", "Control"),
-                                 c("Mitoxantrone", "Control"),
-                                 c("Trastuzumab","Control")),
-              test = "t.test",
-              map_signif_level = FALSE,step_increase = 0.1,
-              textsize = 4)+
+ggplot(RNAnormlist, aes(x=Drug, y=normtnni))+
+  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c("Control","Daunorubicin"),
+                                c("Control","Doxorubicin"),
+                                c("Control","Epirubicin"),
+                                c("Control","Mitoxantrone"),
+                                c("Control","Trastuzumab")),
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
   scale_color_brewer(palette = "Dark2", name = "Individual")+
+  xlab("")+
+  ylab("Relative LDH activity ")+
+  ggtitle("Troponin I release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
-  ggtitle("Relative LDH release after dividing by RNA concentration")+
-  theme_bw()+
-  guides(size = "none")+
-  labs(y = "Relative LDH activity", fill = "Individual")+
-  #theme(strip.background = element_rect(fill = "transparent")) +
-  theme(legend.title = element_text(size = 14),
-    axis.title = element_text(size = 15, color = "black"),
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 12, color = "black", angle = 0),
-    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
 
