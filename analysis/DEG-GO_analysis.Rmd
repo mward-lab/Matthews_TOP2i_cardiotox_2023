@@ -1,0 +1,1734 @@
+---
+title: "GO analysis"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+# GO Analysis
+
+I have created several files from the RNA analysis that contain the significant genes(determined by adj.P.val \< 0.1) from each Time and Condition. The names of the files are in the following format: 'sigV'+Drug(2 letters)+time.
+
+example: 'sigVDA3.txt' means this file contains the significant DE genes from the Daunorubicin 3 hour compared to Vehicle Control 3 hour analysis
+
+```{r Import libraries, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(gprofiler2)
+library(readr)
+library(BiocGenerics)
+library(gridExtra)
+library(VennDiagram)
+library(kableExtra)
+library(scales)
+library(ggVennDiagram)
+library(cowplot)
+```
+
+```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
+ 
+##note, in this chunk the .rmd file is in the cm/analysis folder.   need to back out with .. 
+##this code checks the directory and searches for the pattern, returning the full name of the file
+file.names <- list.files(path = "data/", pattern = "sig*", ignore.case = TRUE,full.names = TRUE)
+
+##Next I use the list of names and lapply to read all files into a list
+##made the csv file to reimport
+#write.csv(filenameonly,"data/filenameonly.txt", col.names = FALSE,row.names = FALSE)
+##readin the filenameonly.txt file from data to use for naming and filtering.
+filenameonly <- read_csv("data/filenameonly.txt")
+#loop through the list of files and make a separate dataframe for each file under the 'real'  name of the data set
+for (k in 1:length(file.names)){
+  
+  assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
+}
+
+##rename the columns to the previous names
+
+colnames(sigVDA24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVDX24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVEP24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVMT24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVTR24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVDA3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVDX3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVEP3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+```
+
+The analysis is based on all genes that passed the rowMeans\>0 from the previous page [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html)
+
+```{r uploading the background genes, echo=FALSE,  message=FALSE, warning=FALSE, paged.print=FALSE}
+#backGL <- efit2$genes   ***making the list
+
+#write.csv(backGL, "data/backGL.txt", row.names = FALSE)
+##read the  .csv the render into txt in the data file!
+ backGL <- read_csv("data/backGL.txt", 
+    col_types = cols(...1 = col_skip()))
+```
+
+Below is the analysis of differentially expressed genes for each treatment at 3 hours and 24 hours.
+##Daunorubicin
+```{r intial analysis DA3 and DA24, echo=FALSE, message=FALSE, warning=FALSE}
+DAspgostres3 <- gost(query = sigVDA3$ENTREZID, 
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
+DAspp3
+
+DAsptable3 <- DAspgostres3$result %>% 
+  dplyr::select(c(source, term_id,
+                  term_name,intersection_size, 
+                   term_size, p_value))# %>% 
+ 
+DAtable1 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+```
+
+###daun 3hour sig DEG
+
+```{r daun 3 hour sig DEG,}
+
+
+total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+ggVennDiagram(total3,
+              category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3.5,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid") +
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "red2", high = "yellow")+
+  labs(title = "3 hour comparison of significant genes", caption = "n = 554 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+list3totvenn3 <- get.venn.partitions(total3)
+list24totvenn24 <- get.venn.partitions(total24)
+Daun3sp <- list3totvenn3$..values..[[15]]
+Daun24sp <- list24totvenn24$..values..[[15]]
+DAspgostres3 <- gost(query = Daun3sp, 
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
+DAspp3
+
+DAsptable3 <- DAspgostres3$result %>% 
+  dplyr::select(c(source, term_id,
+                  term_name,intersection_size, 
+                   term_size, p_value))# %>% 
+ DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
+DAspp3
+
+DAsptable3 <- DAspgostres3$result %>% 
+  dplyr::select(c(source, term_id,
+                  term_name,intersection_size, 
+                   term_size, p_value))# %>% 
+
+  DAsptable3 %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Daunorubicin 3 hour GO:BP terms') +
+   xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DAtable1 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+#---------------
+```
+
+```{r daun specific Venn genes}
+# 3 hour daun specific genes (venn)
+  DAgostres <- gost(query = Daun3sp,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.0001,
+  correction_method = c("fdr"),
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","KEGG"))
+
+DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
+DAspp3
+
+DAsptable3 <- DAspgostres3$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+  DAsptable3 %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Daunorubicin specific 3 hour GO:BP \nterms n = 350') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  
+DAsptable3 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+ # ---------------------------------------------------------
+```
+###Daunorubicin 24 sigDEG
+```{r DA sig deg 24}
+  DAgostres24 <- gost(query = sigVDA24$ENTREZID,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.0001,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DAp24 <- gostplot(DAgostres24, capped = FALSE, interactive = TRUE)
+DAp24
+
+DAtable124 <- DAgostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
+  
+
+  DAtable124 %>% 
+  dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Daunorubicin 24 hour GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+ 
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  DAtable124 %>% mmutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+#------------------------------------------------------
+```
+  
+###Daunorubicin 3 v 24 intersection
+
+```{r DA 3v24 int}
+daun3v24int <- intersect(sigVDA3$ENTREZID,sigVDA24$ENTREZID)
+DAgostresint <- gost(query = daun3v24int,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.0001,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DApint <- gostplot(DAgostresint, capped = FALSE, interactive = TRUE)
+DApint
+
+DAtable_int <- DAgostresint$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
+ 
+  DAtable_int %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), 
+                  col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", 
+           size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Daunorubicin intersect 3 v 24 hour GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text = element_text(size = 10, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  DAtable_int %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+    kable(.,) %>% 
+    kable_paper("striped", full_width = FALSE) %>%
+    kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>%
+    scroll_box(width = "100%", height = "400px") 
+  
+  
+  
+  
+```
+
+##Doxorubicin 3 hour and 24 hour
+```{r intial analysis DX3 and DX24, echo=FALSE, message=FALSE, warning=FALSE}
+DXgostres <- gost(query = sigVDX3$ENTREZID,  
+                  organism = "hsapiens",
+                  ordered_query = TRUE,
+                  domain_scope = "custom",
+                  measure_underrepresentation = FALSE,
+                  evcodes = FALSE,
+                  user_threshold = 0.05,
+                  correction_method = c("fdr"),
+                  custom_bg = backGL$ENTREZID,
+                  sources=c("GO:BP","KEGG"))
+
+DXp <- gostplot(DXgostres, capped = FALSE, interactive = TRUE)
+DXp
+
+DXtable1 <- DXgostres$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+
+  DXtable1 %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Doxorubicin 3 hour GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 9, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+  DXtable1%>% mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+ # ---------------------------------------------------------
+  
+  gostres24 <- gost(query = sigVDX24$ENTREZID,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.0001,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+p24 <- gostplot(gostres24, capped = FALSE, interactive = TRUE)
+p24
+
+DXtable124 <- gostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+
+
+  table124 %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected\n terms"))+
+    ggtitle('Doxorubicin 24 hour GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DXtable124 %>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+```
+
+##Epirubicin
+
+
+```{r intial analysis EP3 and EP24, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+
+
+
+
+EPgostres <- gost(query = sigVEP3$ENTREZID,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.01,
+  correction_method = c("fdr"),
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","KEGG"))
+EPp <- gostplot(EPgostres, capped = FALSE, interactive = TRUE)
+EPp 
+
+EPtable1 <- EPgostres$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
+
+
+
+
+  EPtable1 %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Epirubicin 3 hour top ten GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  EPtable1%>%
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+ # ---------------------------------------------------------
+  
+  EPgostres24 <- gost(query = sigVEP24$ENTREZID,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.0001,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+EPp24 <- gostplot(EPgostres24, capped = FALSE, interactive = TRUE)
+EPp24
+
+EPtable124 <- EPgostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+  EPtable124 %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Epirubicin 24 hour top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+EPtable124%>% 
+  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+
+##epi 24 specifi n = 533
+epsp24 <- list24totvenn24$..values..[[12]]
+mtsp24 <- list24totvenn24$..values..[[8]]
+
+EPgostres24sp <- gost(query = epsp24,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+
+EPsptable124 <- EPgostres24sp$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+MTgostres24sp <- gost(query = mtsp24,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+MTsptable124 <- MTgostres24sp$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+
+MTsptable124%>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle("Mitoxantrone specific 24 hour top GO:BP terms") +
+     xlab(expression(" -"~log[10]~"(adj p-value)"))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+```
+
+##Mitoxantrone
+
+
+```{r intial analysis MT3 and MT24, echo=FALSE, message=FALSE, warning=FALSE}
+MTgostres <- gost(query = sigVMT3$ENTREZID,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.0001,
+  correction_method = c("fdr"),
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","KEGG"))
+MTp <- gostplot(MTgostres, capped = FALSE, interactive = TRUE)
+MTp
+
+MTtable1 <- MTgostres$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+MTtable1 %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Mitoxatrone 3 hour GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+  MTtable1 %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+ # ---------------------------------------------------------
+  
+  MTgostres24 <- gost(query = sigVMT24$ENTREZID,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.0001,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+MTp24 <- gostplot(MTgostres24, capped = FALSE, interactive = TRUE)
+MTp24
+
+MTtable124 <- MTgostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+MTtable124 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Mitoxantrone 24 hour GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+  
+  MTtable124 %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+
+  
+  
+  
+  
+
+```
+
+
+
+
+```{r up down trial data3, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+#results_sig = subset(sigVDA3,adj.P.Val < 0.05)
+# # get the significant up-regulated genes
+#   up = subset(sigVDA3, logFC > 0)
+# # get the significant down-regulated genes
+# down = subset(sigVDA3, logFC < 0)
+# gp_up = gost(query = up$ENTREZID,  organism = "hsapiens",
+#   ordered_query = TRUE,
+#   domain_scope = "custom",
+#   measure_underrepresentation = FALSE,
+#   evcodes = FALSE,
+#   user_threshold = 0.001,
+#   correction_method = c("fdr"),
+#   custom_bg = backGL$ENTREZID,
+#   sources=c("GO:BP","GO:MF", "GO:CC"))
+#   
+#   
+# #gp_down = gost(query = down$ENTREZID,  organism = "hsapiens",
+#   # ordered_query = TRUE,
+#   # domain_scope = "custom",
+#   # measure_underrepresentation = FALSE,
+#   # evcodes = FALSE,
+#   # user_threshold = 0.05,
+#   # correction_method = c("bonferroni"),
+#   # custom_bg = backGL$ENTREZID,
+#   # sources=c("GO:BP","GO:MF", "GO:CC"))
+# p2_up <- gostplot(gp_up, capped = FALSE, interactive = TRUE)
+# 
+# p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
+
+```
+
+
+
+```{r showing it all, eval = FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+
+#p2_down <- gostplot(gp_down, capped = FALSE, interactive = TRUE)
+
+#p2_down #+ ggtitle("Daunorubicin down regulated gene enrichment at 3 hours")
+
+
+```
+
+##Venn Diagrams
+```{r venndiagram, echo=FALSE, message=FALSE, warning=FALSE}
+total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+
+length(unique(in_common24))
+
+ggVennDiagram(total24,
+              category.names = c("Daunorubicin\n n = 7518",
+                                 "Doxorubicin\n n = 6793","Epirubicin\n n = 6783","Mitoxantrone\n n = 1213"),
+              show_intersect = FALSE,
+              set_color = "black",
+              catagory_size = c(6,6,6,6),
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .3))+
+   scale_y_continuous(expand = expansion(mult = .2))+
+  #scale_color_brewer(palette = "Dark2",name = "Individual",)
+scale_fill_distiller(palette="RdYlBu")+
+  labs(title = "24 hour comparison of significant DE genes", caption = "n = 8887 genes")+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+
+```
+
+
+
+```{r 3 hours, echo=FALSE, message=FALSE, warning=FALSE}
+# total 3 ----------------------------------------------------------------
+
+total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
+length(unique(totalin_common3))
+
+ggVennDiagram(total3,
+              category.names = c("Daunorubicin\nn = 523",
+                                 "Doxorubicin\nn = 25",
+                                 "Epirubicin\nn = 179",
+                                 "Mitoxantrone\nn = 52"),
+                show_intersect = FALSE,
+              set_color = "black",
+              catagory_size = c(6,6,6,6),
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .3))+
+   scale_y_continuous(expand = expansion(mult = .2))+
+  #scale_color_brewer(palette = "Dark2",name = "Individual",)
+scale_fill_distiller(palette="RdYlBu")+
+  labs(title = "3 hour comparison of significant DE genes", caption = "n = 554 genes")+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+```
+
+```{r 3V 24 BY DRUG, eval=FALSE, include=FALSE}
+# Dauno comp --------------------------------------------------------------
+
+Dauncomp <- list(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
+in_commonDa <- c(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
+length(unique(in_commonDa))
+ggVennDiagram(Dauncomp,
+              category.names = c("Daunorubicin-24","Daunorubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Dauno 3h v 24h", caption = "n = 7732 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+#Davenlist <- intersect(Dauncomp[[1]],Dauncomp[[2]])
+
+
+# Doxocomp ----------------------------------------------------------------
+Doxcomp <- list(sigVDX24$ENTREZID,sigVDX3$ENTREZID)
+in_commonDx <- c(sigVDX24$ENTREZID,sigVDX3$ENTREZID)
+length(unique(in_commonDx))
+ggVennDiagram(Doxcomp,
+              category.names = c("Doxorubicin-24","Doxorubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Doxo 3h v 24h", caption = "n = 6808 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+#Dxvenlist <- intersect(Doxcomp[[1]],Doxcomp[[2]])
+#length(intersect(Dxvenlist,Davenlist))## 7 of DX are in DA
+# Epi Comp ----------------------------------------------------------------
+
+Epicomp <- list(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
+in_commonEp <- c(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
+length(unique(in_commonEp))
+
+ggVennDiagram(Epicomp,
+              category.names = c("Epirubicin-24","Epirubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Epi 3h v 24h", caption = "n = 6858 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+#Epvenlist <- intersect(Epicomp[[1]],Epicomp[[2]])
+# qA <- (intersect(Epvenlist , Davenlist))##76 are are in da
+# qB <- (intersect(Dxvenlist, Epvenlist))#y are in Ep from Dx
+# #ACintersect <- intersect(qA,qB)##total of 6 are in all 3 comparisons
+# #ggVennDiagram(qA,qB)
+#               
+# qA
+# qB
+# Mito comp ---------------------------------------------------------------
+Mitocomp <- list(sigVMT24$ENTREZID,sigVMT3$ENTREZID)
+in_commonMt <-c(sigVMT24$ENTREZID,sigVMT3$ENTREZID)
+length(unique(in_commonMt))
+
+ggVennDiagram(Mitocomp,
+              category.names = c("Mitoxantrone-24","Mitoxantrone-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .21))+
+  scale_fill_gradient(low = "light blue", high = "yellow")+
+  labs(title = "Comparision of Mito 3h v 24h", caption = "n = 1251 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+#Mtvenlist <- intersect(Mitocomp[[1]],Mitocomp[[2]])
+#intersect(Mtvenlist,ACintersect)
+#
+
+# AC comparison -----------------------------------------------------------
+
+ACcomp <- list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
+in_commonAC <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID)
+length(unique(in_commonAC))
+
+ggVennDiagram(ACcomp,
+              category.names = c("Daunorubicin-24","Doxorubicin-24", "Epirubicin-24","Daunorubicin-3","Doxorubicin-3", "Epirubicin-3"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .21))+
+  scale_fill_gradient(low = "purple", high = "yellow")+
+  labs(title = "Comparision AC 3h v 24h", caption = "n = 8925 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+
+```
+Tell me more!  what are those genes at 24 hours??  give me some GO!
+# Graphing GO of the Venn results
+
+```{r Making Go lists from SigDE genes, message=FALSE, warning=FALSE, paged.print=TRUE}
+list24totvenn <- get.venn.partitions(total24)
+# > list24totvenn$..count..
+#  [1]  960   13   19   15   37   18   25  126 4440  265  538  533  661  399  838
+# > list24totvenn$..values..[?]
+# ##From Cormotif
+##pairwise
+DDEresp<- list24totvenn$..values..[[9]]
+DDEMresp<- list24totvenn$..values..[[1]]
+
+DXsprespon<- list24totvenn$..values..[[14]]
+
+# top2bi <-  read_csv("data/Top2biresp_cluster24h.csv",col_select = x, col_types = "c")
+# NRresp <- read_csv("data/nonresponse_cluster24h.csv",col_select =x,col_types = "c")
+
+
+complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
+complete <- as.data.frame(unique(complete))
+colnames(complete) <- "ENTREZID"  #9047 genes
+
+NoResp <- backGL %>% anti_join(.,(complete), by = "ENTREZID") #5776 genes
+#5776
+       
+```
+##DDE response of 4400
+```{r GO DDEresp genelist of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+DDEgostres24 <- gost(query = DDEresp,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DDEp24 <- gostplot(DDEgostres24, capped = FALSE, interactive = TRUE)
+DDEp24
+
+DDEtable24 <- DDEgostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+DDEtable24 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Anthracycline DEGs (n=4400) 24 hr GO:BP terms') +
+    xlab(expression(" -"~log[10]~"(adj p-value)"))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+  
+  DDEtable24 %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+``` 
+##DDEM response of 952
+```{r GO DDEM 952 genelist of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+DDEMgostres24 <- gost(query = DDEMresp,  
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DDEMp24 <- gostplot(DDEMgostres24, capped = FALSE, interactive = TRUE)
+DDEMp24
+
+DDEMtable24 <- DDEMgostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+DDEMtable24 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Top2B inhibitor DEGs (n=952) 24 hr GO:BP terms') +
+    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+DDEMtable24 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size, col = "red")) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Top2B inhibitor DEGs (n=952) 24 hr KEGG terms') +
+    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
+    ylab("KEGG term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  DDEMtable24 %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+```
+ 
+##dauno sp response 3 hour
+```{r GO Daun3sp genelist of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+DAspgostres3 <- gost(query = Daun3sp, 
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
+DAspp3
+
+DAsptable3 <- DAspgostres3$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+DAsptable3 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Daunorubicin specific DEGs (n=350) 3 hr GO:BP terms') +
+    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+DAsptable3 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size, col = "red")) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Daunorubicin specific DEGs (n=350) 3 hr KEGG terms') +
+    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
+    ylab("KEGG term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  DAsptable3 %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+
+
+
+``` 
+
+
+
+
+
+
+
+
+
+
+
+##DXspecific response
+
+###no erichment
+```{r GO DXsprespon$ENTREZID genelist of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
+
+### no enrichment
+DXspgostres24 <- gost(query = DXsprespon, 
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+DXspp24 <- gostplot(DXspgostres24, capped = FALSE, interactive = TRUE)
+DXspp24
+
+DXsptable24 <- DXspgostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+DXsptable24 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Doxorubicin specific DEGs (n=400) 24 hr GO:BP terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+DXsptable24 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size, col = "red")) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Doxorubicin specific DEGs (n=400) 24 hr KEGG terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("KEGG term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  DXsptable24 %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+
+
+
+``` 
+
+##No Response genes in DEG- 5776 genes not showing DEG (union of all DEGS taken out of background genelist)
+
+```{r no response cluster, echo=FALSE, message=FALSE, warning=FALSE}
+
+gostresNoResp <- gost(query = NoResp$ENTREZID,  
+                    organism = "hsapiens",
+                    ordered_query = FALSE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+Noresp24 <- gostplot(gostresNoResp, capped = FALSE, interactive = TRUE)
+Noresp24
+
+Noresp24table <- gostresNoResp$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+# Noresp24table %>% dplyr::filter(source=="GO:BP") %>% 
+#     dplyr::select(p_value,term_name,intersection_size) %>%
+#     slice_min(., n= 10 ,order_by=p_value) %>%
+#     mutate(log_val = -log10(p_value)) %>%
+#    # slice_max(., n=10,order_by = p_value) %>%
+#    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+#     geom_point(aes(size = intersection_size)) +
+#     scale_y_discrete(labels = wrap_format(30))+
+#     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+#     ggtitle('No response genes(n=5775) 24 hr GO:BP terms') +
+#     xlab(expression(" -"~log[10]~(adj. p-value)))+
+#     ylab("GO: BP term")+
+#       theme_bw()+
+#     theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+#         axis.title = element_text(size = 12, color = "black"),
+#         axis.ticks = element_line(linewidth = 1.5),
+#         axis.line = element_line(linewidth = 1.5),
+#         axis.text = element_text(size = 8, color = "black", angle = 0),
+#         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+Noresp24table %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size, col = "red")) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('No response genes(n=5775) 24 hr KEGG terms') +
+    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    ylab("KEGG term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  Noresp24table %>% 
+    mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+
+  
+```
+##GO:BP full figure DEG analysis
+
+
+
+
+
+
+```{r GO:BP dEGlong, fig.height=8, fig.width=8, message=FALSE, warning=FALSE}
+
+
+
+###24 hour DEG sets:
+complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
+
+
+# DDEtable24
+# DDEMtable24
+# 
+# DXsptable24-no go enrichment
+# 
+# NoRespdeg-0no enrichment
+
+DDEdeg <- DDEtable24 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=6 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.)))) %>% slice_max(., n=10, order_by=order_val)
+
+DDEMdeg <-  DDEMtable24 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+
+DAsp3deg <- DAsptable3%>% 
+  dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
+
+DAdeg <-   DAtable124 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+DXdeg <-  DXtable124 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+  EPdeg <-   EPtable124 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+  MTdeg <-   MTtable124 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+  
+  
+#filter<- dplyr::filter 
+#select <- dplyr::select
+  
+GODEGlong <-list("DAdeg"=DAdeg,"DXdeg"=DXdeg,"EPdeg"=EPdeg,"MTdeg"=MTdeg,"DDEdeg"=DDEdeg,"DDEMdeg"=DDEMdeg)
+GODEGlongtable <- data.table::rbindlist(GODEGlong, idcol = "deg")
+ p <- GODEGlongtable%>% mutate(deg = fct_inorder(deg)) %>% 
+ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
+    geom_point(aes(size = intersection_size, col=deg)) +
+  scale_y_discrete(labels = wrap_format(40))+
+   scale_color_manual(values=c("#8B006D","#DF707E","#F1B72B", "#3386DD","red", "blue"))+
+  facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
+               eval(parse(text = paste0('facet_deg', '$`', deg, '`')))
+               )))) +
+  
+    guides(col=guide_legend(title="DEG Treatment group"), size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Top 10 enriched GO:BP terms for each DEG list') +
+    xlab("-log 10 (adj. p-value)")+
+    
+    ylab("GO:BP term")+
+      theme_bw()+
+ theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
+ 
+ 
+ facet_deg=(
+   c(DAdeg = expression(atop("Daunorubicin",~italic("n = 7518"))),
+     DXdeg=expression(atop("Doxorubicin",~italic("n = 6793"))),
+     EPdeg=expression(atop("Epirubicin",~italic("n = 6783"))),
+MTdeg=expression(atop( "Mitoxantrone",~italic("n = 1213"))),
+    DDEdeg=expression(atop("DDE Intersection",~italic("n = 4400"))),
+     DDEMdeg=expression(atop( "DDEM Intersection",~italic("n = 952")))))
+   
+
+#  title_labeller_function <- function(nuisance_parameter) {
+#   return(facet_degnames() )
+# }
+ 
+ 
+#https://stackoverflow.com/questions/41631806/change-facet-label-text-and-background-colour/60046113#60046113
+ 
+# drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+ 
+ 
+g <- ggplot_gtable(ggplot_build(p))
+stripr <- which(grepl('strip-r', g$layout$name))
+fills <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","red", "blue", alpha= 0.8)
+k <- 1
+for (i in stripr) {
+  j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+  k <- k+1
+}
+#print(grid::grid.draw(g))
+grid::grid.draw(g)
+#hex <- hue_pal()(4)
+
+#hex
+#> hex (red/green/blue/purple default in ggplot)
+#[1] "#F8766D" "#7CAE00" "#00BFC4" "#C77CFF"
+#p
+
+
+
+```
+
+
+
+##Visualization of FC in cormotif sets
+```{r Correlation of FC values in all values and in DEG}
+library(limma)
+library(corrplot)
+library(pheatmap)
+
+efit2<- readRDS(file ="data/efit2results.RDS")
+
+# saveRDS(efit2, file ="data/efit2results.RDS")
+
+V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
+V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
+V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
+V.MT.top= topTable(efit2, coef=4, adjust="BH", number=Inf, sort.by="p")
+V.TR.top= topTable(efit2, coef=5, adjust="BH", number=Inf, sort.by="p")
+V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf, sort.by="p")
+V.DX24.top= topTable(efit2, coef=7, adjust="BH", number=Inf, sort.by="p")
+V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
+V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
+V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
+
+toplist3hours <-list(V.DA.top[,c(1,3)],
+                              V.DX.top[,c(1,3)],
+                              V.EP.top[,c(1,3)],
+                              V.MT.top[,c(1,3)],
+                              V.TR.top[,c(1,3)])
+names(toplist3hours) <- c("Daunorubicin-3h","Doxorubicin-3h", "Epirubicin-3h","Mitoxantrone-3h", "Trastuzumab-3h")
+
+#toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
+
+FCmatrix <- subset(efit2$coefficients)
+is.matrix(subset(FCmatrix))
+colnames(FCmatrix) <- c("Daunorubicin-3h","Doxorubicin-3h", "Epirubicin-3h","Mitoxantrone-3h", "Trastuzumab-3h","Daunorubicin-24h","Doxorubicin-24h", "Epirubicin-24h","Mitoxantrone-24h", "Trastuzumab-24h")
+
+
+
+ 
+
+ 
+corrplot(FCmatrix, order= "hclust", iscorr=FALSE, col= "RdBu")
+
+corrFC <- cor(FCmatrix)
+corrplot(corrFC, method = 'square', order = 'AOE', addCoef.col = 'black')
+corrplot(corrFC,type = 'full', order = 'hclust', tl.col = 'black',
+         cl.ratio = 0.2, tl.srt = 45, col = COL2('PuOr', 20), col.lim=c(-0.1,1), addrect=3)
+
+
+pheatmap::pheatmap(corrFC, display_numbers = TRUE, number_format = "%.2f")
+
+
+
+
+#making of the side columns for class
+```
+##CVRI poster figures
+
+```{r Poster DEG GOBP}
+DDEdeg <- DDEtable24 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=6 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.)))) %>% slice_max(., n=10, order_by=order_val)
+
+DDEMdeg <-  DDEMtable24 %>% dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+DAsp3deg <- DAsptable3%>% 
+  dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+MTsp24 <- MTsptable124 %>% 
+  dplyr::filter(source=="GO:BP") %>% 
+  dplyr::select(p_value,term_name,intersection_size) %>%
+  slice_min(., n=10 ,order_by=p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
+
+
+
+
+# GODEGposter <-list("DAsp3deg"=DAsp3deg,"DDEdeg"=DDEdeg,"DDEMdeg"=DDEMdeg)
+GODEGposter <-list("MTsp24"=MTsp24,"DDEdeg"=DDEdeg,"DDEMdeg"=DDEMdeg)
+GODEGpostertable <- data.table::rbindlist(GODEGposter, idcol = "deg")
+facet_degp=(
+   c(MTsp24 = expression(atop("Mitoxantrone-specific 24 hours",~italic("n = 126"))),
+    DDEdeg=expression(atop("Shared Anthracycline genes 24 hours",~italic("n = 4400"))),
+     DDEMdeg=expression(atop("Shared Top2"*beta*"i genes 24 hours",~italic("n = 952")))))
+
+DEG_posterp <- GODEGpostertable%>% mutate(deg = fct_inorder(deg)) %>% 
+  ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
+    geom_point(aes(size = intersection_size, col=deg)) +
+  scale_y_discrete(labels = wrap_format(40))+
+   scale_color_manual(values=c("#3386DD","red3", "orange"))+
+   facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
+               eval(parse(text = paste0('facet_degp', '$`', deg, '`')))
+               )))) +
+  guides(color= "none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Top 10 enriched GO:BP terms\n in specific overlaping sets') +
+     xlab(expression(" -"~log[10]~"(adj. p-value)"))+
+      ylab("GO:BP term")+
+      theme_bw()+
+ theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "black"))
+
+ 
+ g <- ggplot_gtable(ggplot_build(DEG_posterp))
+stripr <- which(grepl('strip-r', g$layout$name))
+fills <- c("#3386DD","red3", "orange", alpha= 0.8)
+k <- 1
+for (i in stripr) {
+  j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+  k <- k+1
+}
+ 
+
+plot_grid(g)
+
+```
+
+
+```{r gene reads overall, eval=FALSE, include=FALSE}
+
+
+
+### list of genes I want to see expression from
+#sample(complete$ENTREZID, 3)
+library(readr)
+# ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+Response_24list <- c(1119,2950,6556)
+Resp24_list <- getBM(attributes=my_attributes,
+                     filters ='entrezgene_id',
+                     values = Response_24list, 
+                     mart = ensembl)
+lookupforlevel <- getBM(attributes=my_attributes,
+                     filters ='entrezgene_id',
+                     values =renamelvl, 
+                     mart = ensembl)
+lookupforlevel <- lookupforlevelunique()
+NRresp_list <- getBM(attributes=my_attributes,
+                     filters ='entrezgene_id',
+                     values = exampNR, 
+                     mart = ensembl)
+
+exampNR <- c(4287,56946,4478)
+
+#find the "indecies for those genes in the matrix"
+exampNR,x
+counts24hours <- read.csv("data/filtered_cpm_counts.csv", row.names=1)
+counts24da<- read_csv("data/Da24counts.txt")
+counts24dx<- read_csv("data/Dx24counts.txt")
+counts24ep<- read_csv("data/Ep24counts.txt")
+counts24mt<- read_csv("data/Mt24counts.txt")
+counts24tr<- read_csv("data/TR24counts.txt")
+
+
+levels(counts24hours$Samples) <- c("Da.24h"="Daunorubicin",
+                                           "Dx.24h"="Doxorubicin",
+                                           "Ep.24h"="Epirubicin",
+                                           "Mt.24h"="Mitoxantrone",
+                                         "Tr.24h"="Trastuzumab",
+                                         "Ve.24h"="Vehicle") 
+ counts24hours %>% dplyr::filter(ENTREZID %in% Response_24list) %>%
+  group_by(Samples) %>%
+  ggplot(.,aes(x= Samples, y=Counts))+
+  geom_boxplot()+
+ 
+  facet_grid(~ENTREZID,labeller = cols= 2, scales ="free")
+idx <- match(Emmalist$ENTREZID,counts24hours$ENTREZID)
+
+
+namelist <- c("1026"="CDKN1A","23411"= "SIRT1","27113"= "BBC3","4193"= "MDM2")
+Emmalist <- select(org.Hs.eg.db, 
+       keys = Emmalist,
+       columns = c("ENTREZID", "SYMBOL"),
+       keytype = "SYMBOL")
+
+
+
+
+
+
+counts24hours %>% dplyr::filter(ENTREZID %in% Emmalist$ENTREZID) %>%
+  group_by(Samples) %>%
+  ggplot(.,aes(x= Samples, y=Counts))+
+  geom_boxplot(aes(col=Samples))+
+  facet_grid(~ENTREZID,labeller=labeller(ENTREZID = namelist))
+  
+#                       
+
+getBM(attributes=my_attributes,
+                     filters ='entrezgene_id',
+                     values = Response_24list, 
+                     mart = ensembl)
+```
+
+
+
+
+
+
+
+
+# Knowles Comparison data:
+  
+  pulled from 2018 eLife, supplementary 5
+  
+  First I will get my data organized into several sets.
+  
+  Set 1: 'Dx' -Doxorubicin 24 hour significant DEGs p<0.1  
+  Set 2: 'DDE' -Union of Daunorubicin, Doxorubicin, Epirubicin 24 hour significant DEGs p<0.1
+  Set 3: 'DDEM'-Union of Daunorubicin, Doxorubicin, Epirubicin, and Mitoxantrone 24 hour significant DEGs p<0.1
+  set 4: 'NoResp' - all genes at 24 hours that are not expressed significantly in any treatment  
+  set 5: 'TOP2Bi' -cormotif intersection of 24 hour samples compared to Vehicle with p>0.5
+  set 6: Knowles list from supp 5 in 2018 eLife paper  eQTL
+```{r  knowles data comparisons}
+library(biomaRt)
+# library(org.Hs.eg.db)
+# library(Homo.sapiens)
+# library("AnnotationHub")
+# library(EnsDb.Hsapiens.v79)
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+#entrez <- useMart("entrez",dataset="hsapiens_gene_entrez")
+ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
+attributes <- listAttributes((ensembl))
+
+Knowles_2018.elife.33480.supp5.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp5-v2/Knowles_2018-elife-33480-supp5-v2")
+# Knowles_2018.elife.33480.supp6.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp6-v2/Knowles_2018-elife-33480-supp6-v2")
+# # #  read in supp file
+# supp5list <- Knowles_2018.elife.33480.supp5.v2[,1]
+# supp6list <- Knowles_2018.elife.33480.supp6.v2[,1]
+
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+knowles5 <- Knowles_2018.elife.33480.supp5.v2[,1]
+
+knowles5 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
+                 values = knowles5, mart = ensembl)
+length(unique(knowles5$ensembl_gene_id))#376+
+length(unique(knowles5$entrezgene_id))#377
+# 
+# in_common24AC <- intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)
+# in_common24AC <- intersect(in_common24AC,sigVEP24$ENTREZID)
+# AC24hoursig <- (unique(in_common24AC))  ### 5400 total genes from all 24 h AC
+# AConly24hsig <- getBM(attributes=my_attributes,filters ='entrezgene_id',
+#                   values = AC24hoursig, mart = ensembl)
+# length(unique(AConly24hsig$ensembl_gene_id))#5736
+# length(unique(AConly24hsig$entrezgene_id))#5245
+
+totalgenes <- getBM(attributes=my_attributes,filters ='entrezgene_id',
+                  values = backGL$ENTREZID, mart = ensembl)
+length(unique(totalgenes$entrezgene_id))#14184
+length(unique(totalgenes$ensembl_gene_id))#15596
+DX24Respset<- intersect(totalgenes$ensembl_gene_id, sigDox24$ensembl_gene_id)
+length(unique(DX24Respset))  #7182 (#185 in common with knowls5)
+15596-7182  #=8414
+
+comp1 <- list(knowles5$entrezgene_id,top2bi$entrezgene_id)
+  ggVennDiagram(comp1,
+              category.names = c("Knowles", "Top2Bi-24hours"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = )+
+  scale_x_continuous(expand = expansion(mult = .21))+
+  scale_fill_gradient(low = "red", high = "yellow")+
+  labs(title = "Comparision Knowles v 24h", caption = "n = 376")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+  
+
+  
+  
+  
+  
+  
+  
+
+```
+  
+  
+  
+  
+  
+  
+  Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
+
+
+
+```{r gene comparison, eval=FALSE, include=FALSE}
+library(readxl)
+
+# Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
+#     range = "A13:H469")
+
+#write.csv(Seoane_chromatinregs, "data/Seonane2019supp1.txt")
+
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+                            
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+#genesof interest: 
+GWASsnps <- c('RARG', 'HIVEP1', 'ITGB7',  'PRDM2', 'KAZN', 'GDF5', 'FRS2', 'HDDC2', 'EEF1B2', 'SLC28A3')
+totalgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                  values = GWASsnps, mart = ensembl)
+
+
+
+```
+
+

@@ -38,8 +38,12 @@ cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
 cormotif_initial <- readRDS("data/cormotif_initialK5.RDS")
 
 plotIC(cormotif_initial)
+library(pheatmap)
+pheatmap(cormotif_initial$bestmotif$1t, color="gray")
 
 plotMotif(cormotif_initial)
+plot.new()
+legend("topright", legend = reverse(c("0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9", "1"), fill = my_barcolor)) #gray(seq(from = 1, to = 0, by = -0.1))[1:2])
 
 gene_prob_tran <- cormotif_initial$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)

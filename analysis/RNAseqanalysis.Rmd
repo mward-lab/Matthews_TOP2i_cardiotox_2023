@@ -9,6 +9,7 @@ output:
 editor_options: 
   markdown: 
     wrap: 72
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -18,23 +19,23 @@ knitr::opts_chunk$set(echo = FALSE)
 Hello! I am first loading all the beautiful libraries I will need.
 
 ```{r library loading, warning=FALSE, echo=TRUE, message=FALSE}
-library(Biobase)
-library(edgeR)
-library(limma)
+#library(Biobase)
+library(edgeR)#
+library(limma)#
 library(RColorBrewer)
 library(mixOmics)
-library(VennDiagram)
-library(HTSFilter)
-library(gridExtra)
-library(reshape2)
+#library(VennDiagram)
+#library(HTSFilter)
+library(gridExtra)#
+library(reshape2)#
 library(devtools)
 library(AnnotationHub)
 library(tidyverse)
 library(scales)
-library(biomaRt)
+library(biomaRt)#
 library(Homo.sapiens)
-library(cowplot)
-library(ggrepel)
+library(cowplot)#
+library(ggrepel)#
 library(corrplot)
 library(Hmisc)
 
@@ -51,7 +52,8 @@ not posting the raw data, but I will release in the future.
 pca_plot <- function(df, col_var = NULL, shape_var = NULL, title = "") {
   ggplot(df) + geom_point(aes_string(x = "PC1", y = "PC2", color = col_var,
                                      shape = shape_var), size = 5) +
-    labs(title = title, x = "PC1", y = "PC2")
+    labs(title = title, x = "PC 1", y = "PC2")+
+  scale_color_manual(values = c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333"))
 }
 
 pca_var_plot <- function(pca) {
@@ -208,13 +210,15 @@ c(L, M)
 
 filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
 
+
+write.csv(filcpm_matrix, "data/filtered_cpm_counts.csv")
 dim(filcpm_matrix)
 ##method 2 with rowMeans
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
 write.csv(x$counts, "data/raw_counts.csv")
-
+saveRDS(x,"data/filtermatrix_x.RDS")
 
 ```
 
@@ -290,8 +294,10 @@ geom_boxplot(aes(fill=as.factor(drug)))+
 # Principal Component Analysis  
 
 PCA was done using code adopted from J. Blischak.   
-```{r individual PCA by drug and time steps, echo=FALSE, warning=FALSE}
-
+```{r individual PCA by drug and time steps, echo=FALSE, message=FALSE, warning=FALSE}
+#readRDS("data/filtermatrix_x.RDS)
+#saveRDS(dat_cpm,"data/dat_cpm.RDS")
+#dat_cpm <- readRDS("data/dat_cpm.RDS")
 label <- (interaction(substring(drug, 0, 2), indv, time))
 smlabel <- (interaction(substring(drug, 0, 2), time))
 x <- calcNormFactors(x, method = "TMM")
@@ -301,7 +307,7 @@ colnames(dat_cpm) <- label
 anno$time <- ordered(time, levels =c("3h", "24h"))
 anno$group <- group
 cpm_per_sample <- cbind(anno, t(dat_cpm)) 
-treattype <-c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab","Vehicle")
+treattype <-c("Vehicle","Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab")
 
 for (b in treattype) { 
   dat <- dat_cpm[,anno$drug %in% c("none", b)] 
@@ -317,7 +323,7 @@ for (b in treattype) {
  
   grid.arrange(drug_time_pca, indv_pca, drug_pca, nrow =3, top =paste(b)) 
   }
-write.csv(x$counts, "data/norm_counts.csv")
+write.csv(x$counts, "data/cpmnorm_counts.csv")
 
 
 
@@ -332,7 +338,15 @@ write.csv(x$counts, "data/norm_counts.csv")
 pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
 print(pca_var_plot(pca_all))
+print(pca_all_anno)
+pca_var_plot
+store <- calc_pca(t(dat_cpm))### using the calc_pca function
+store.var <- store$sdev^2
+prop.store <- store.var/sum(store.var)
 
+prop.store %>%as.data.frame() %>%  
+  ggplot(., aes(x=1, y=2))+
+  
 
 ```
 ## Variance contribution from treatment, extraction time, or individual on PC1 and PC2
@@ -355,8 +369,8 @@ for (f in facs) {
   #summary(plot_versus_pc(pca_all_anno, 2, f))
 }
 library(ggfortify)
-saveddata <- prcomp(dat_cpm)
-autoplot(saveddata, data= x=2,y=3)
+# saveddata <- prcomp(dat_cpm)
+# autoplot(saveddata,  x=1,y=2)
 
 
 
@@ -365,15 +379,18 @@ autoplot(saveddata, data= x=2,y=3)
 
 ```{r other pcas}
 
-library(ggrepel)
-ggplot(pca_all_anno, aes(x = PC2, y = PC3))+
-  geom_point( col=indv, size = time, label=group) +
-  geom_text(aes(label=group))+
-    labs(x = "PC2", y = "PC3")+
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+pca_all_anno %>%
+  ggplot(.,aes(x = PC1, y = PC2, col=drug, shape=time))+
+  geom_point(size= 5)+
+  scale_color_manual(values=drug_palc)+
+  #scale_shape_manual(name = "Time",values= c("3h"=0,"24h"=1))+
+  ggtitle("PCA of log2(cpm)")+
   theme_bw()+
-  guides(shape=TRUE,color=TRUE)
-
-
+  guides(col="none")+
+  labs(y = "PC 2 (0.1336)", x ="PC 1 (0.2445)")+
+  theme(plot.title=element_text(size= 14,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
 ```
 
 # Differential Expression
@@ -598,7 +615,7 @@ library(cowplot)
 # Volcano Plots  
 
 ```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
-theme_set(theme_cowplot())
+#theme_set(theme_cowplot())
 plot_filenames <- c("V.DA.top","V.DX.top","V.EP.top","V.MT.top","V.TR.top","V.DA24.top",
 "V.DX24.top","V.EP24.top","V.MT24.top","V.TR24.top")
 
@@ -624,16 +641,16 @@ volcanosig <- function(df, psig.lvl,topg) {
               axis.title = element_text(size = rel(0.8))) 
 }
 #v1<- volcanosig(V.DA24.top, 0.01,0)
-v1 <- volcanosig(V.DA.top, 0.01,10)+ ggtitle("Daunorubicin 3 hour")+
-v2 <- volcanosig(V.DA24.top, 0.01,10)+ ggtitle("Daunorubicin 24 hour")+ylab("")
-v3 <- volcanosig(V.DX.top, 0.01,10)+ ggtitle("Doxorubicin 3 hour")
-v4 <- volcanosig(V.DX24.top, 0.01,10)+ ggtitle("Doxorubicin 24 hour")+ylab("")
-v5 <- volcanosig(V.EP.top, 0.01,10)+ ggtitle("Epirubicin 3 hour")
-v6 <- volcanosig(V.EP24.top, 0.01,10)+ ggtitle("Epirubicin 24 hour")+ylab("")
-v7 <- volcanosig(V.MT.top, 0.01,10)+ ggtitle("Mitoxatrone 3 hour")
-v8 <- volcanosig(V.MT24.top, 0.01,10)+ ggtitle("Mitoxatrone 24 hour")+ylab("")
-v9 <- volcanosig(V.TR.top, 0.01,10)+ ggtitle("Trastuzumab 3 hour")
-v10 <- volcanosig(V.TR24.top, 0.01,10)+ ggtitle("Trastuzumab 24 hour")+ylab("")
+v1 <- volcanosig(V.DA.top, 0.01,0)+ ggtitle("Daunorubicin 3 hour")+
+v2 <- volcanosig(V.DA24.top, 0.01,0)+ ggtitle("Daunorubicin 24 hour")+ylab("")
+v3 <- volcanosig(V.DX.top, 0.01,0)+ ggtitle("Doxorubicin 3 hour")
+v4 <- volcanosig(V.DX24.top, 0.01,0)+ ggtitle("Doxorubicin 24 hour")+ylab("")
+v5 <- volcanosig(V.EP.top, 0.01,0)+ ggtitle("Epirubicin 3 hour")
+v6 <- volcanosig(V.EP24.top, 0.01,0)+ ggtitle("Epirubicin 24 hour")+ylab("")
+v7 <- volcanosig(V.MT.top, 0.01,0)+ ggtitle("Mitoxatrone 3 hour")
+v8 <- volcanosig(V.MT24.top, 0.01,0)+ ggtitle("Mitoxatrone 24 hour")+ylab("")
+v9 <- volcanosig(V.TR.top, 0.01,0)+ ggtitle("Trastuzumab 3 hour")
+v10 <- volcanosig(V.TR24.top, 0.01,0)+ ggtitle("Trastuzumab 24 hour")+ylab("")
 # volcanoplot(efit2,coef = 10,style = "p-value",
 #                           highlight = 8,
 #                           names = efit2$genes$SYMBOL,

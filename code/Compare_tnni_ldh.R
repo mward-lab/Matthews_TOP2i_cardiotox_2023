@@ -53,7 +53,7 @@ avgTNNI <- TNNIelisadata %>%
   group_by(indv,Drug) %>%
   summarise(tnni= mean(TNNIavg)) %>%
   mutate(indv=substring(indv,0,2)) %>% #get rid of the -1 on indv to make normalized
-  mutate(indv=factor(indv,levels= level_order2)) %>%
+  mutate(indv=factor(indv,levels= level_order)) %>%
   mutate(Drug =case_match(Drug, "Vehicle"~ "Control", .default = Drug))
 
 
@@ -135,7 +135,7 @@ colnames(mean24ldh) <- gsub("_0.5","",colnames(mean24ldh))
 
 mean24ldh <-  mean24ldh %>%
   pivot_longer(.,col=-Drug, names_to = 'indv', values_to = "ldh") %>%
-  mutate(indv = factor(indv, levels= level_order2)) %>%
+  mutate(indv = factor(indv, levels= level_order2))# %>%
   full_join(.,RNAnormlist,by=c(Drug, indv,ldh))
 
 ggplot(mean24ldh, aes(x=Drug,y=ldh))+
@@ -146,6 +146,7 @@ ggplot(mean24ldh, aes(x=Drug,y=ldh))+
                                 c("Control","Epirubicin"),
                                 c("Control","Mitoxantrone"),
                                 c("Control","Trastuzumab")),
+              test= "t.test",
               map_signif_level=TRUE,
               textsize =4,
               step_increase = 0.1)+
@@ -369,6 +370,7 @@ ggplot(RNAnormlist, aes(x=Drug, y=normldh))+
                                 c("Control","Epirubicin"),
                                 c("Control","Mitoxantrone"),
                                 c("Control","Trastuzumab")),
+              test = "t.test",
               map_signif_level=TRUE,
               textsize =4,
               step_increase = 0.1)+
@@ -397,6 +399,7 @@ ggplot(RNAnormlist, aes(x=Drug, y=normtnni))+
                                 c("Control","Epirubicin"),
                                 c("Control","Mitoxantrone"),
                                 c("Control","Trastuzumab")),
+              test="t.test",
               map_signif_level=TRUE,
               textsize =4,
               step_increase = 0.1)+

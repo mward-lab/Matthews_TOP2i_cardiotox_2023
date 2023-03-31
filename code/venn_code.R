@@ -2,6 +2,7 @@
 library(ggVennDiagram)
 library(ggplot2)
 library(readr)
+library(VennDiagram)
 
 #load the files:
 file.names <- list.files(path = "data/",
@@ -87,14 +88,20 @@ ggVennDiagram(total3,
   scale_fill_gradient(low = "red2", high = "yellow")+
   labs(title = "3 hour comparison of significant genes", caption = "n = 554 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+list3totvenn <- get.venn.partitions(total3)
+list3totvenn
 
+#[1]  12   0  15   0   0   1  12  12  11   0 122  19   1   0 350
+
+Daun3sp <- list3totvenn$..values..[[15]]
+intersect(Daun3sp, sigVDA24$ENTREZID)  ##211
 # Dauno comp --------------------------------------------------------------
 
-Dauncomp <- list(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
+Dauncomp <- list(sigVDA3$ENTREZID,sigVDA24$ENTREZID)
 in_commonDa <- c(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
 length(unique(in_commonDa))
 ggVennDiagram(Dauncomp,
-              category.names = c("Daunorubicin-24","Daunorubicin-3"),
+              category.names = c("Daunorubicin-3","Daunorubicin-24"),
               show_intersect = FALSE,
               set_color = "black",
               label = "both",

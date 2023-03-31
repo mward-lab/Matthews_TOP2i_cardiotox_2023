@@ -11,10 +11,10 @@ library(purrr)
 library(edgeR)
 ###discrete colour scales!
 scale_color_discrete()
-drug_pal <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 #named colors: dark pink,Red,yellow,blue, dark grey, green
-yarrr::piratepal("all")
-indv_pal <- c(appletv color pallett from yarrr package or southpark)
+# yarrr::piratepal("all")
+# indv_pal <- c(appletv color pallett from yarrr package or southpark)
 #Detach all  packages
 detachAllPackages <- function() {
   basic.packages <- c("package:stats","package:graphics","package:grDevices","package:utils","package:datasets","package:methods","package:base","package:workflowr")
@@ -43,7 +43,7 @@ toplist3hours <-list(V.DA.top[,c(1:3,4,6:7)],
                               V.EP.top[,c(1:3,4,6:7)],
                               V.MT.top[,c(1:3,4,6:7)],
                               V.TR.top[,c(1:3,4,6:7)])
-names(toplist3hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Daunorubicin", "Trastuzumab")
+names(toplist3hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Mitoxantrone", "Trastuzumab")
 
 toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
 
@@ -116,5 +116,11 @@ toplist3hours %>%
            label.y = 4, label.x=-4)+
   ggtitle("Daunorubicin and Doxorubicin 3 hours")
 
+df <- data.frame(x = 1:10, y = 1)
 
 
+my_barcolor<- c("#FFFFFF" ,"#E6E6E6", "#CCCCCC" ,"#B3B3B3" ,"#999999" ,"#808080", "#666666",
+"#4C4C4C" ,"#333333" ,"#191919" ,"#000000")
+ ggplot(df, aes(x, y)) +
+  geom_tile(aes(fill = x)) +
+  scale_fill_gradientn(colors = my_barcolor, guide = "colorbar")

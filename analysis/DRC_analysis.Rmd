@@ -224,7 +224,7 @@ ID <- c("ind1a",
         "ind6b")
 names(individuals)
 full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
- 
+ write.csv(full_list,"LDH48hoursdata.csv")
  ##make a smaller data frame###
  spec_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5b", "ind6a")### used to genrate ldh poster data in Dec 2022
  spec2_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5a", "ind6a")
@@ -236,7 +236,7 @@ smaller2 <- bind_rows(smaller2,.id="SampleID")
 #saveRDS(individuals, file = "data/individualDRCfile.RDS")
 
 ```
-
+##find the individuals rds
 Once they are all in a data from, a few functions need to be defined for ggplot:
 ##functions
  
@@ -389,26 +389,32 @@ ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
     
 ```{r Viability data, echo=FALSE, warning=FALSE}
 ### to extract parameters for mapping
-
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 alterlist <- full_list %>% 
       na.omit()%>% 
       filter(Conc ==0.5|Conc==0.05|Conc ==5) %>%
-      mutate(SampleID=substr(SampleID,1,4)) 
+      mutate(indv=substr(SampleID,4,4)) %>% 
+      mutate(indv=factor(as.numeric(indv))) %>% 
+  mutate(Drug = factor(Drug, levels = c("Daunorubicin",  
+                                        "Doxorubicin",
+                                        "Epirubicin",
+                                        "Mitoxantrone",
+                                        "Trastuzumab",
+                                        "Vehicle")))  
 
-ggplot(alterlist, 
-       aes(x= as.factor(Conc), y= Percent, group =Conc,
-           color = SampleID, alpha =0.5)) +
+ggplot(alterlist,  aes(x= as.factor(Conc), y= Percent, group = Conc)) +
+  geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Name))+
+  geom_point(aes(color=indv))+
   guides(alpha = "none")+
-  geom_point()+
-  geom_boxplot(position="dodge",outlier.colour="transparent")+
   ylim(0,1.5)+
-   scale_color_brewer(palette = "Dark2")+
+   scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  scale_fill_manual(values=drug_pal_fact)+
   theme_classic() +
   xlab(expression(paste("Concentration [", mu, "M]")))+
   geom_hline(yintercept = 1,lty = 4)+
-  ylab(NULL) +
+  ylab("Viability") +
   facet_wrap(~Name)+
-  ggtitle("Viablity at low concentrations")+
+  ggtitle("Viablity across concentrations at 48 hours")+
   theme(axis.title=element_text(size=10),
         axis.ticks=element_line(size =2),
         axis.text=element_text(size=9, face = "bold"),
@@ -550,7 +556,7 @@ epplot <-
     ```
     
     
-    ```{r Mitoplot, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Mitoplot, echo=FALSE, message=FALSE, warning=FALSE}
 # ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha= 0.6)) +
 #      guides(color =  guide_legend(overide.aes =list(size=4)), alpha = "none")+
 #       stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
@@ -597,7 +603,7 @@ mtplot <-
     
     
     
-    ```{r  trasplot}
+```{r  trasplot}
  leg <- ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
           geom_line()+
           theme_classic() +
@@ -668,7 +674,7 @@ veplot <-
       theme_classic() +
       xlab(expression(paste("Concentration [", mu, "M]"))) +
       ylab(NULL) +
-      ggtitle("Control") +
+      ggtitle("Vehicle") +
       theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold")) +
       theme(
         axis.title = element_text(size = 10),
@@ -694,16 +700,16 @@ veplot
 legend_b <- ggpubr::get_legend(leg)
 
 ggpubr::as_ggplot(legend_b)
-legend_B
-
 legend_b
+
 # plan1 <- plot_grid(daplot,dxplot,epplot,NULL,mtplot, trplot,veplot,legend_b,ncol =4)
 plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
   
 #drcfinal<- plot_grid(plan1, ncol =1, rel_heights = c(1,0.1))
-save_plot('plan2plot.png', plan2)
+save_plot('output/plan2plot.png', plan2)
 save_plot('individual-legenddark2.png',ggpubr::as_ggplot(legend_b))
 plan2
+plan48ldh
 ```
 ###LD50 extract
 
@@ -979,7 +985,7 @@ vehls
 ##ld50 condensed
 
 
-```{r}
+```{r combine LD50 values}
 ###combining all values into a larger dataframe
 
 
@@ -998,70 +1004,45 @@ LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'ind
 meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>% 
 pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50') 
 
-meanLDfull %>% pivot_wider(.,id_cols=Treatment)
+
 avgLD50 <- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
+saveRDS(avgLD50,"data/avgLD50.RDS")
 
-
-rownames(LDfull) <- c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
+LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
+colnames(LDfull) <- c("indv","Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
 summary(LDfull)
-#LD50long <- pivot_longer(data = LDfull,cols = names_to ="Individual", values_to= "ld50")
 
-LD50long <- LDfull %>% tibble::rownames_to_column(var = "Treatment") %>% pivot_longer(-Treatment, cols_vary = "slowest", names_to="indv",values_to="ld50") %>%  mutate(indv=substr(indv,1,4)) %>% group_by(Treatment,indv) %>% mutate(mean =mean(ld50)) %>% summarise()
 
-#now to trim the idnames!
-   #LD50long$indv <- substr(LD50long$indv,1,4)
   
-  # logLD <- meanLD %>% pivot_longer(!Individual, names_to ="Treatment", values_to = "ld50") %>% mutate("log10" = log10(ld50))median(LDfull, col)
-
-
-ab <- LD50long %>% 
-  ggplot(., mapping = (aes(x = (Treatment), y = log10(mean)))) +
-  geom_boxplot()+
-  geom_point(aes(
-    color = indv,
-    size = 5,
-      alpha = 0.5)) +
-  ggtitle("Observed LD 50s for Cardiomyocytes by Treatment")+
-  xlab("Treatment")+
-  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
- scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("1","2","3","4","5","6"))+
-    theme_bw() + 
-  theme(plot.title = element_text(hjust =0.5, size = 18))+
-  guides(alpha ="none", size = "none") %>% print()  #: to change point shapes
-# 
-#   geom_line() +
-#   facet_wrap( ~ Name) +
-#   theme_bw() +
-#   labs(title = "Average Viability of Individual Cardiomyocytes After Treatment")+
-#        xlab(expression(paste("Concentration [", mu, "M]")))+
-#        ylab("Percent Viability")+
-#   theme(plot.title = element_text(hjust =0.5, size = 18))+
-#   guides(alpha ="none", size = "none")
-# 
-#   
-  ab
-  
-  avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
+avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
                          "Doxo"~"Doxorubicin",
                          "Epi"~"Epirubicin",
                          "Mito"~"Mitoxantrone",
                          "Tras"~"Trastuzumab",
                          "Veh"~ "Control", .default= Treatment)) %>% 
     mutate(indv= factor(indv)) %>% 
-    ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
-  geom_boxplot()+
-  geom_point(aes(
-    color = indv,
-    size = 5,
-      alpha = 0.5)) +
-  ggtitle("Observed LD 50s for Cardiomyocytes by Treatment")+
+  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot(position = "identity",aes(fill=Treatment))+
+  geom_point(aes(color = indv,
+                 size = 5,alpha = 0.5)) +
+  ggtitle("Observed LD 50s")+
   xlab("Treatment")+
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
- scale_color_brewer(palette = "Dark2",name = "Individual", labels = c("1","2","3","4","5","6"))+
-    theme_bw() + 
+  scale_color_brewer(palette = "Dark2",
+                     name = "Individual", 
+                     labels = c("1","2","3","4","5","6"))+
+  scale_fill_manual(values=drug_palc)+
+  theme_bw() + 
   theme(plot.title = element_text(hjust =0.5, size = 18))+
-  guides(alpha ="none", size = "none") %>% print()  #: to change point shapes
-#   
+  guides(alpha ="none", size = "none", fill= "none")+
+  #theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) %>% print()  
   
 ```
 
