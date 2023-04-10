@@ -118,10 +118,21 @@ ggVennDiagram(total3,
   scale_fill_gradient(low = "red2", high = "yellow")+
   labs(title = "3 hour comparison of significant genes", caption = "n = 554 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+
+
 list3totvenn3 <- get.venn.partitions(total3)
 list24totvenn24 <- get.venn.partitions(total24)
+
+
+
 Daun3sp <- list3totvenn3$..values..[[15]]
 Daun24sp <- list24totvenn24$..values..[[15]]
+
+
+
+
+
 DAspgostres3 <- gost(query = Daun3sp, 
                     organism = "hsapiens",
                     ordered_query = TRUE,
@@ -175,6 +186,9 @@ DAtable1 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>%
 #---------------
 ```
 
+
+
+
 ```{r daun specific Venn genes}
 # 3 hour daun specific genes (venn)
   DAgostres <- gost(query = Daun3sp,  organism = "hsapiens",
@@ -203,7 +217,7 @@ DAsptable3 <- DAspgostres3$result %>%
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Daunorubicin specific 3 hour GO:BP \nterms n = 350') +
-    xlab(expression(" -"~log[10]~(adj. p-value)))+
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -219,6 +233,64 @@ DAsptable3 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>%
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
+
+
+
+
+ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
+              category.names = c("3 hours","24 hours"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "both",
+              label_percent_digit = 1,
+              label_size = 3.5,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid") +
+  scale_x_continuous(expand = expansion(mult = .2))+
+  scale_fill_gradient(low = "red4", high = "tan1")+
+  labs(title = "3 hour venn with 24 hour Daun", caption = "n = 554 genes")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+
+Dau3sp_Dau24sig <- get.venn.partitions(list(Daun3sp, sigVDA24$ENTREZID,DDEresp ))
+dau3hoursp_ddesp <- Dau3sp_Dau24sig$..values..[[1]]
+##gives 150 genes expressed in Daun only at 3 hours and in the DDE set of 4400 at 24 hours.
+ DAgostressp3 <- gost(query = dau3hoursp_ddesp,  organism = "hsapiens",
+  ordered_query = TRUE,
+  domain_scope = "custom",
+  measure_underrepresentation = FALSE,
+  evcodes = FALSE,
+  user_threshold = 0.05,
+  correction_method = c("fdr"),
+  custom_bg = backGL$ENTREZID,
+  sources=c("GO:BP","KEGG"))
+
+DAspp3 <- gostplot(DAgostressp3, capped = FALSE, interactive = TRUE)
+DAspp3
+
+DAsptable3 <- DAgostressp3$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+  DAsptable3 %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=20,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Daunorubicin 3 hour sp in DDE GO:BP \nterms n = 150') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15,  color = "black", face = "bold"))
+  
   
  # ---------------------------------------------------------
 ```
@@ -912,6 +984,7 @@ list24totvenn <- get.venn.partitions(total24)
 # ##From Cormotif
 ##pairwise
 DDEresp<- list24totvenn$..values..[[9]]
+write.csv(DDEresp,"data/DDEresp_list.csv")
 DDEMresp<- list24totvenn$..values..[[1]]
 
 DXsprespon<- list24totvenn$..values..[[14]]
@@ -1724,7 +1797,7 @@ names(Seoane_2019) <- "ENTREZID"
 my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 #genesof interest: 
 GWASsnps <- c('RARG', 'HIVEP1', 'ITGB7',  'PRDM2', 'KAZN', 'GDF5', 'FRS2', 'HDDC2', 'EEF1B2', 'SLC28A3')
-totalgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+totalsnpgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
                   values = GWASsnps, mart = ensembl)
 
 

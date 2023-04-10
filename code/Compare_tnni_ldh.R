@@ -176,18 +176,23 @@ tvl24hour <-  mean24ldh %>%
 
 norm_LDH <- read.csv("data/norm_LDH.csv",row.names=1)##from DRC_analysis.Rmd
 
-norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c("Control", "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))
-norm_LDH %>% filter(Conc==0.5) %>%
+# norm_LDH$Drug <- factor(norm_LDH$Drug, levels = c("Vehicle", "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))
+norm_LDH %>%
+  mutate(Drug=case_match(Drug,"Control"~"Vehicle",.default= Drug)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", "Daunorubicin",
+                                      "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))) %>%
   mutate(indv = substring(indv, 0,2)) %>%
-  mutate(indv=as.factor(indv)) %>%
+  mutate(indv=factor(indv,levels= level_order2)) %>%
   ggplot(., aes(x=Drug,y=norm_val))+
   geom_boxplot() +
   geom_point(aes(col=indv, size =3))+
-  geom_signif(comparisons =list(c("Control","Daunorubicin"),
-                                c("Control","Doxorubicin"),
-                                c("Control","Epirubicin"),
-                                c("Control","Mitoxantrone"),
-                                c("Control","Trastuzumab")),
+  facet_wrap(~Conc)+
+  geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
+                                c("Vehicle","Doxorubicin"),
+                                c("Vehicle","Epirubicin"),
+                                c("Vehicle","Mitoxantrone")),
+                                #c("Vehicle","Trastuzumab")),
+              test="t.test",
               map_signif_level=FALSE,
               textsize =6,
               tip_length = .1,
@@ -197,7 +202,51 @@ norm_LDH %>% filter(Conc==0.5) %>%
   ggtitle("48hour lactate dehydrogenase release in media")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = rel(0.8)))
+viability %>%
+  mutate(Drug=case_match(Drug,"Control"~"Vehicle",.default= Drug)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", "Daunorubicin",
+                                      "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab"))) %>%
+  mutate(indv = substring(indv, 0,2)) %>%
+  mutate(indv=factor(indv,levels= level_order2)) %>%
+  filter(Conc<1) %>%
+  ggplot(., aes(x=Drug,y=live))+
+  geom_boxplot() +
+  geom_point(aes(col=indv, size =3))+
+  facet_wrap(~Conc, nrow=1, ncol=4)+
+  geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
+                                c("Vehicle","Doxorubicin"),
+                                c("Vehicle","Epirubicin"),
+                                c("Vehicle","Mitoxantrone"),
+              c("Vehicle","Trastuzumab")),
+              test="t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2, step_increase = 0.1)+
+  ylab("Percent alive/100")+
+  theme_bw()+
+  ggtitle("48 hour Viability across concentrations")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = rel(0.8)))
 
+norm_LDH %>%
+  mutate(Drug=case_match(Drug,"Control"~"Vehicle",.default= Drug)) %>%
+  mutate(indv = substring(indv, 0,2)) %>%
+  inner_join(.,viability, by=c("indv","Conc","Drug")) %>%
+  ggplot(., aes(x=live,y=norm_val))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  facet_wrap("Drug", scales= "free")+
+  labs(x = "(average viable cardiomyocytes)/100", y ="average LDH release")+
+  theme_bw()+
+  stat_cor(aes(label = after_stat(rr.label)), color = "red", geom = "label")+
+  ggtitle("48 hour viability and 48 hour LDH")
+
+
+indv48_LDH_via<- norm_LDH %>%
+  mutate(Drug=case_match(Drug,"Control"~"Vehicle",.default= Drug)) %>%
+  mutate(indv = substring(indv, 0,2)) %>%
+  inner_join(.,viability, by=c("indv","Conc","Drug"))
 
 # comparing 48 hour ldh and other types -----------------------------------
 
@@ -244,7 +293,7 @@ via_code <- viafull_list %>%
                          "Epi"~"Epirubicin",
                          "Mito"~"Mitoxantrone",
                          "Tras"~"Trastuzumab",
-                         "Veh"~ "Control", .default= Drug))
+                         "Veh"~ "Vehicle", .default= Drug))
 
 
 viability <- via_code %>% dplyr::select(Drug,Name,Conc,Percent,indv) %>%
