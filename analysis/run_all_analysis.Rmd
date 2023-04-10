@@ -1,8 +1,9 @@
 ---
 title: "Run_all_analysis"
 author: "ERM"
-date: "`r Sys.Date()`"
-output: html_document:
+date: "20230410"
+output: 
+  html_document: 
     toc: yes
     theme: flatly
 editor_options: 
@@ -28,7 +29,7 @@ library(RColorBrewer)
 library(mixOmics)
 library(gridExtra)#
 library(reshape2)#
-library(devtools)
+#library(devtools)
 library(AnnotationHub)
 library(tidyverse)
 library(scales)
@@ -43,8 +44,55 @@ library(Hmisc)
 ```
 
 
-```{r functions for graphs, warning=FALSE, echo=FALSE, message=FALSE}}
+```{r functions for graphs, warning=FALSE, echo=FALSE, message=FALSE}
 
+pca_plot <- function(df, col_var = NULL, shape_var = NULL, title = "") {
+  ggplot(df) + geom_point(aes_string(x = "PC1", y = "PC2", color = col_var,
+                                     shape = shape_var), size = 5) +
+    labs(title = title, x = "PC 1", y = "PC2")+
+  scale_color_manual(values = c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333"))
+}
+
+pca_var_plot <- function(pca) {
+  # x: class == prcomp
+  pca.var <- pca$sdev^2
+  pca.prop <- pca.var / sum(pca.var)
+  var.plot <- qplot(PC, prop, data = data.frame(PC = 1:length(pca.prop),
+                                                prop = pca.prop)) +
+    labs(title = 'Variance contributed by each PC',
+         x = 'PC', y = 'Proportion of variance')
+}
+
+calc_pca <- function(x) {
+  # Performs principal components analysis with prcomp
+  # x: a sample-by-gene numeric matrix
+  prcomp(x, scale. = TRUE, retx = TRUE)
+}
+
+get_regr_pval <- function(mod) {
+  # Returns the p-value for the Fstatistic of a linear model
+  # mod: class lm
+  stopifnot(class(mod) == "lm")
+  fstat <- summary(mod)$fstatistic
+  pval <- 1 - pf(fstat[1], fstat[2], fstat[3])
+  return(pval)
+}
+
+plot_versus_pc <- function(df, pc_num, fac) {
+  # df: data.frame
+  # pc_num: numeric, specific PC for plotting
+  # fac: column name of df for plotting against PC
+  pc_char <- paste0("PC", pc_num)
+  # Calculate F-statistic p-value for linear model
+  pval <- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
+  if (is.numeric(df[, f])) {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
+      geom_smooth(method = "lm") + labs(title = sprintf("p-val: %.2f", pval))
+  } else {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
+      labs(title = sprintf("p-val: %.2f", pval))
+  }
+}
 x_axis_labels=function(labels,every_nth=1,...) {
     axis(side=1,at=seq_along(labels),labels=F)
     text(x=(seq_along(labels))[seq_len(every_nth)==1],
@@ -110,8 +158,8 @@ dim(lcpm)
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
-write.csv(x$counts, "data/raw_counts.csv")
-saveRDS(x,"data/filtermatrix_x.RDS")
+#write.csv(x$counts, "data/raw_counts.csv")
+#saveRDS(x,"data/filtermatrix_x.RDS")
 
 
 filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
@@ -123,10 +171,11 @@ hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMe
      xlab =expression("Log"[10]*" counts-per-million"), col =2 ) 
 
 
+x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
-x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
+x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 boxplot(filcpm_matrix, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
-x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
+x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 ```
 
@@ -141,11 +190,15 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=1, srt =90, cex =0.4)
 #readRDS("data/filtermatrix_x.RDS)
 #saveRDS(dat_cpm,"data/dat_cpm.RDS")
 #dat_cpm <- readRDS("data/dat_cpm.RDS")
+
+
+
+
 label <- (interaction(substring(drug, 0, 2), indv, time))
 smlabel <- (interaction(substring(drug, 0, 2), time))
 x <- calcNormFactors(x, method = "TMM")
 normalized_lib_size <- x$samples$lib.size * x$samples$norm.factors
-dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size)
+dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size, log=TRUE)
 colnames(dat_cpm) <- label
 anno$time <- ordered(time, levels =c("3h", "24h"))
 anno$group <- group
@@ -155,7 +208,7 @@ treattype <-c("Vehicle","Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"
 for (b in treattype) { 
   dat <- dat_cpm[,anno$drug %in% c("none", b)] 
   cat("\n\n### ", b, "\n\n") 
-  # PCA 
+  # PCA s
   pca <- calc_pca(t(dat))$x
   pca <- data.frame(anno[anno$drug %in% c("none", b), c("drug", "time","indv")], pca)
   pca <- droplevels(pca) 
@@ -164,9 +217,64 @@ for (b in treattype) {
   } 
   drug_time_pca <- pca_plot(pca, "drug", "time")
  
-  grid.arrange(drug_time_pca, indv_pca, drug_pca, nrow =3, top =paste(b)) 
+  grid.arrange(drug_time_pca, indv_pca,  nrow =2, top =paste(b)) 
   }
-write.csv(x$counts, "data/cpmnorm_counts.csv")
+#write.csv(x$counts, "data/cpmnorm_counts.csv")
+
+pca_all <- calc_pca(t(dat_cpm))
+pca_all_anno <- data.frame(anno, pca_all$x)
+varpals <- (pca_var_plot(pca_all))
+print(varpals)
+head(pca_all_anno)
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+pca_all_anno %>%
+  ggplot(.,aes(x = PC1, y = PC2, col=drug, shape=time))+
+  geom_point(size= 5)+
+  scale_color_manual(values=drug_palc)+
+   ggrepel::geom_text_repel(label=indv)+
+  #scale_shape_manual(name = "Time",values= c("3h"=0,"24h"=1))+
+  ggtitle(expression("PCA of log"[2]*"(cpm)"))+
+  theme_bw()+
+  guides(col="none", size =4)+
+  labs(y = "PC 2 (15.76%)", x ="PC 1 (29.06%)")+
+  theme(plot.title=element_text(size= 14,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"))
+
+
+pca_all_anno %>%
+  ggplot(.,aes(x = PC2, y = PC3, col=drug, shape=time))+
+  geom_point(size= 5)+
+  scale_color_manual(values=drug_palc)+
+  ggrepel::geom_text_repel(label=indv)+
+  #scale_shape_manual(name = "Time",values= c("3h"=0,"24h"=1))+
+  ggtitle(expression("PCA of log"[2]*"(cpm)"))+
+  theme_bw()+
+  guides( size =4)+
+  labs(x = "PC 2 (15.76%)", y ="PC 3 (8.3%)")+
+  theme(plot.title=element_text(size= 14,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"))
+
+```
+
+
+
+
+
+
+
+```{r typical gene expression}
+
+genecardiccheck <- c("MYH7", "TNNT2","MYH6","ACTN2","BMP3","TNNI3","RYR2","CACNA1C","KCNQ1", "HCN1", "ADRB1", "ADRB2")
+
+
+
+
+
+
+
+
+```
 
 
 
