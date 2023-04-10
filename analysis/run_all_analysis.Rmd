@@ -225,7 +225,7 @@ pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
 varpals <- (pca_var_plot(pca_all))
 print(varpals)
-head(pca_all_anno)
+head(pca_all_anno)[,1:12]
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 pca_all_anno %>%
@@ -263,14 +263,58 @@ pca_all_anno %>%
 
 
 
-```{r typical gene expression}
+```{r typical gene expression, echo=FALSE, message=FALSE, warning=FALSE}
 
 genecardiccheck <- c("MYH7", "TNNT2","MYH6","ACTN2","BMP3","TNNI3","RYR2","CACNA1C","KCNQ1", "HCN1", "ADRB1", "ADRB2")
+ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
+
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+
+heartgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                 values = genecardiccheck, mart = ensembl)
+#heartgenes <- #
+  heartgenes %>% filter(entrezgene_id==unique(entrezgene_id))
+fungraph <- as.data.frame(filcpm_matrix[rownames(filcpm_matrix) %in% heartgenes$entrezgene_id,])
 
 
 
 
 
+
+
+fungraph %>% 
+  rownames_to_column("entrezgene_id") %>% 
+  pivot_longer(-entrezgene_id, names_to = "samples",values_to = "counts") %>% 
+  mutate(gene = case_match(entrezgene_id,"88"~"ACTN2","153"~"ADRB1",
+  "154"~"ADRB2","651"~"BMP3","775"~"CACNA1C", "100874369"~"CACNA1C","348980"~"HCN1",
+                           "3784"~"KCNQ1", "4624"~"MYH6","4625"~"MYH7","6262"~"RYR2",
+                           "7137"~"TNNI3","7139"~"TNNT2",.default = entrezgene_id)) %>% 
+  ggplot(., aes(x=reorder(gene,counts,decreasing=TRUE), y=counts))+
+  geom_boxplot()+
+  ggtitle(expression("Expression of typical cardiac tissue genes"))+
+  xlab("")+
+  ylab(expression("log"[2]~"cpm"))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size =10, color = "black", angle = 0),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
+
+
+```
+
+
+##correlation heatmap of counts matrix
+```{pheatmap clustering of gene counts}
+
+colnames(filcpm_matrix) <- label
+mcor <- cor(filcpm_matrix)
+pheatmap::pheatmap(mcor , cluster_rows = TRUE, cluster_cols = TRUE)
 
 
 

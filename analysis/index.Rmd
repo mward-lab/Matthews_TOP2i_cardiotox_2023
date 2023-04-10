@@ -10,13 +10,13 @@ editor_options:
 
 Welcome to my research website. I am using workflowr to create reproducible code and data analysis.  
 
-# Everyday is a new adventure.  
+# Because everyday is a new adventure, I am trying to update my wflow site! 
 
-  
+Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html) to see my results from the full run!!!   
 
-Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html) to see my results from the first analysis so far! 
+Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html) to see my results from the first analysis 
 
-You can also look at my __NEW__ page of analysis.  This page will eventually contain all my Gene Enrichment analysis.  As long as I can remember to post it! 
+You can also look at my page of GO analysis.  This page will eventually contain all my Gene Enrichment analysis. 
 [GSEA analysis]https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html
 [LDH analysis]https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html
 
