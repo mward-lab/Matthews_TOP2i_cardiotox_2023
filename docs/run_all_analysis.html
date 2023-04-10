@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="ERM" />
+
+<meta name="date" content="2023-04-10" />
+
+<title>Run_all_analysis</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Cardiotoxicity</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/reneeisnowhere/Cardiotoxicity">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Run_all_analysis</h1>
+<h4 class="author">ERM</h4>
+<h4 class="date">20230410</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2023-04-10
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230109code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230109)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230109code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230109)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree8ca4c7e6edd12340f8cc00426c21007648daa48atargetblank8ca4c7ea">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/8ca4c7e6edd12340f8cc00426c21007648daa48a" target="_blank">8ca4c7e</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree8ca4c7e6edd12340f8cc00426c21007648daa48atargetblank8ca4c7ea"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/8ca4c7e6edd12340f8cc00426c21007648daa48a" target="_blank">8ca4c7e</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    data/ACresponse_cluster24h.csv
+    Ignored:    data/Clamp_Summary.csv
+    Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/DAtable1.csv
+    Ignored:    data/DDE_reQTL.txt
+    Ignored:    data/DDEresp_list.csv
+    Ignored:    data/DEG_cormotif.RDS
+    Ignored:    data/DF_Plate_Peak.csv
+    Ignored:    data/Da24counts.txt
+    Ignored:    data/Dx24counts.txt
+    Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/Ep24counts.txt
+    Ignored:    data/GOplots.R
+    Ignored:    data/K_cluster
+    Ignored:    data/K_cluster_kisthree.csv
+    Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/Mt24counts.txt
+    Ignored:    data/RINsamplelist.txt
+    Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
+    Ignored:    data/TR24counts.txt
+    Ignored:    data/Top2biresp_cluster24h.csv
+    Ignored:    data/Viabilitylistfull.csv
+    Ignored:    data/allexpressedgenes.txt
+    Ignored:    data/allgenes.txt
+    Ignored:    data/allmatrix.RDS
+    Ignored:    data/avgLD50.RDS
+    Ignored:    data/backGL.txt
+    Ignored:    data/cormotif_3hk1-8.RDS
+    Ignored:    data/cormotif_ER_respint.txt
+    Ignored:    data/cormotif_ER_respset.txt
+    Ignored:    data/cormotif_LR_respint.txt
+    Ignored:    data/cormotif_LR_respset.txt
+    Ignored:    data/cormotif_NRset.txt
+    Ignored:    data/cormotif_TI_respint.txt
+    Ignored:    data/cormotif_TI_respset.txt
+    Ignored:    data/cormotif_initalK5.RDS
+    Ignored:    data/cormotif_initialK5.RDS
+    Ignored:    data/counts24hours.RDS
+    Ignored:    data/cpmnorm_counts.csv
+    Ignored:    data/dat_cpm.RDS
+    Ignored:    data/data_outline.txt
+    Ignored:    data/efit2results.RDS
+    Ignored:    data/ensgtotal.txt
+    Ignored:    data/filenameonly.txt
+    Ignored:    data/filtered_cpm_counts.csv
+    Ignored:    data/filtermatrix_x.RDS
+    Ignored:    data/folder_05top/
+    Ignored:    data/gene_prob_tran3h.RDS
+    Ignored:    data/gene_probabilityk5.RDS
+    Ignored:    data/individualDRCfile.RDS
+    Ignored:    data/knowles56.GMT
+    Ignored:    data/knowlesGMT.GMT
+    Ignored:    data/mymatrix.RDS
+    Ignored:    data/nonresponse_cluster24h.csv
+    Ignored:    data/norm_LDH.csv
+    Ignored:    data/norm_counts.csv
+    Ignored:    data/plan2plot.png
+    Ignored:    data/raw_counts.csv
+    Ignored:    data/response_cluster24h.csv
+    Ignored:    data/sigVDA24.txt
+    Ignored:    data/sigVDA3.txt
+    Ignored:    data/sigVDX24.txt
+    Ignored:    data/sigVDX3.txt
+    Ignored:    data/sigVEP24.txt
+    Ignored:    data/sigVEP3.txt
+    Ignored:    data/sigVMT24.txt
+    Ignored:    data/sigVMT3.txt
+    Ignored:    data/sigVTR24.txt
+    Ignored:    data/sigVTR3.txt
+    Ignored:    data/table3a.omar
+    Ignored:    data/tvl24hour.txt
+    Ignored:    data/tvl24hourw.txt
+    Ignored:    data/venn_code.R
+
+Untracked files:
+    Untracked:  .RDataTmp
+    Untracked:  .RDataTmp1
+    Untracked:  code/extra_code.R
+    Untracked:  output/output-old/
+    Untracked:  reneebasecode.R
+
+Unstaged changes:
+    Modified:   analysis/DRC_analysis.Rmd
+    Modified:   code/eQTLcodes.R
+    Deleted:    output/Cormotif.svg
+    Deleted:    output/Ctrxn24-3-23.svg
+    Deleted:    output/Ctxnrate3-23.png
+    Deleted:    output/Decay_Slope3-23.svg
+    Deleted:    output/ERmotif5_LFC.svg
+    Deleted:    output/GOBP_motif345.svg
+    Deleted:    output/KEGGmotif_345.svg
+    Deleted:    output/LD503-21-23.png
+    Deleted:    output/LDH_24-3-23.svg
+    Deleted:    output/LDH_243-23.svg
+    Deleted:    output/LFCbytreatment3-25.svg
+    Deleted:    output/LFCmotif4_LR.svg
+    Deleted:    output/LR_RespMoti4.svg
+    Deleted:    output/MeanAmp243-23.svg
+    Deleted:    output/NRmotif1_LFC.svg
+    Deleted:    output/Rise_Slope3-23.svg
+    Deleted:    output/TI_LFC.svg
+    Deleted:    output/TVLcorr3-23.svg
+    Deleted:    output/TropI3-23.svg
+    Deleted:    output/Venn24DEG-3-24.png
+    Deleted:    output/motif1NR_LFC.svg
+    Deleted:    output/motif3TIlfc3-25.svg
+    Deleted:    output/motif4LR3-25LFC.svg
+    Deleted:    output/motif5ER-LFC-3-25.svg
+    Deleted:    output/nolegendLDH.svg
+    Deleted:    output/resultsigVDA24.csv
+    Deleted:    output/tropI_24-3-23.svg
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/run_all_analysis.Rmd</code>) and
+HTML (<code>docs/run_all_analysis.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8ca4c7e6edd12340f8cc00426c21007648daa48a/analysis/run_all_analysis.Rmd" target="_blank">8ca4c7e</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+<td>
+first rmd commit
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2e6996907c969ccc32e0039f388a9054262f2d1d/analysis/run_all_analysis.Rmd" target="_blank">2e69969</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+<td>
+adding data
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/0f1f1da326a9786ad2180b7d8e6400b8d7c1a892/analysis/run_all_analysis.Rmd" target="_blank">0f1f1da</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+<td>
+final run analysis
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>This starts the documentation of the RNA-seq cardiotoxicity analysis
+for my manuscript</p>
+<pre class="r"><code>library(edgeR)#
+library(limma)#
+library(RColorBrewer)
+library(mixOmics)
+library(gridExtra)#
+library(reshape2)#
+#library(devtools)
+library(AnnotationHub)
+library(tidyverse)
+library(scales)
+library(biomaRt)#
+library(Homo.sapiens)
+library(cowplot)#
+library(ggrepel)#
+library(corrplot)
+library(Hmisc)</code></pre>
+<pre class="r"><code> ###now we add genenames to the geneid###
+ 
+geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
+genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
+  keytype=&quot;ENTREZID&quot;)
+genes &lt;- genes[!duplicated(genes$ENTREZID),]
+mymatrix$genes &lt;- genes</code></pre>
+<pre><code>[1] 28395    72</code></pre>
+<pre><code>[1] 14086    72</code></pre>
+<p><img src="figure/run_all_analysis.Rmd/readinfo-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Vehicle </code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Daunorubicin </code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Doxorubicin </code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Epirubicin </code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Mitoxantrone </code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+###  Trastuzumab </code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>        samplenames indv         drug time RIN group       PC1      PC2
+Da.1.3h MCW_RM_R_11    1 Daunorubicin   3h 9.3     1 -18.53902 62.11914
+Do.1.3h MCW_RM_R_12    1  Doxorubicin   3h 9.8     2 -12.37874 73.96424
+Ep.1.3h MCW_RM_R_13    1   Epirubicin   3h 9.8     3 -11.19226 66.47554
+Mi.1.3h MCW_RM_R_14    1 Mitoxantrone   3h  10     4 -10.24538 73.46900
+Tr.1.3h MCW_RM_R_15    1  Trastuzumab   3h 9.6     5 -12.21578 79.97646
+Ve.1.3h MCW_RM_R_16    1      Vehicle   3h 9.9     6 -15.01396 76.61739
+              PC3        PC4       PC5       PC6       PC7        PC8       PC9
+Da.1.3h 44.793907  -4.229684  25.33474 -35.96203  5.114646 -24.124808 31.452389
+Do.1.3h 24.565270  -8.522490 -19.86738 -19.00810  7.401478 -10.801889 14.365242
+Ep.1.3h 33.103318  -9.146883  18.17321 -43.12911  4.369781 -33.782214 14.797673
+Mi.1.3h 19.048074 -14.540036  -9.00047 -24.33769  1.439095 -13.595652 11.576765
+Tr.1.3h  2.646249 -17.004856 -34.18428 -11.83222 -3.927467  -7.786517  9.362868
+Ve.1.3h 12.636907  -4.140009 -39.84065 -17.16481 -1.117439   1.089213  2.212854
+              PC10       PC11      PC12      PC13       PC14        PC15
+Da.1.3h  -4.133988  10.266518 -11.62439 12.884620  14.529370  -2.9650236
+Do.1.3h  -9.677611 -10.846911 -18.72890  8.077905  -8.055543   0.6439353
+Ep.1.3h  13.493488  10.505317 -22.23871 20.348212  -1.317876 -10.3964742
+Mi.1.3h  -5.333702   3.850642 -14.44780 16.059986 -10.963660  -4.5555149
+Tr.1.3h  -2.272615   1.757867 -12.04874 28.065514  -8.830059  -0.3950799
+Ve.1.3h -11.697015 -14.875556 -10.42955 21.460187 -17.059644   3.0823271
+             PC16      PC17      PC18      PC19      PC20      PC21       PC22
+Da.1.3h 14.526291 -4.071934 14.935593 -8.019220  5.083468 -2.891750  7.4922608
+Do.1.3h 13.799184  8.746834  4.416582  2.323326 -0.237433  4.027698  1.0664447
+Ep.1.3h  6.963875 -2.522538  6.259495  1.329862  7.445919  4.390526 -4.1356648
+Mi.1.3h  7.016836  8.396316 -6.573762  6.180844 10.158825 -4.026253  8.5762521
+Tr.1.3h -1.569298  5.561989 -2.813333  3.011656 -8.311216  3.854712 -0.2389895
+Ve.1.3h 11.559969 12.418994  3.277303  3.045864 -1.331373  1.180896  8.1040510
+              PC23      PC24       PC25        PC26      PC27       PC28
+Da.1.3h -12.222479  6.748697 -5.5187510  8.74956626 -5.361678  3.3209763
+Do.1.3h   3.816818  5.130011  1.4608624 -2.05098419 -4.470525 -4.3785841
+Ep.1.3h   1.342287 -1.025011  1.1961204 -1.83068384 -5.262485 -3.6490931
+Mi.1.3h   6.296190 -8.170311 -4.2786507  1.44302957 -6.815788 -0.1255762
+Tr.1.3h   0.480255  1.895733 -1.8505180 -3.42444400  3.818558  1.1025238
+Ve.1.3h   2.329309 11.619652  0.1657874 -0.01026589  0.969233  1.5911490
+               PC29        PC30      PC31        PC32      PC33       PC34
+Da.1.3h   3.1706172  10.0506445 -4.458641 -10.0657089 -4.568317 13.6896144
+Do.1.3h   6.3590470  -0.4283709 -2.555236   4.1919429  1.905148 -0.1752443
+Ep.1.3h  -0.5356397   1.4180942 -2.663608  -0.2148416  6.325774 -1.7110775
+Mi.1.3h   1.3055415  -1.6910496 -3.946695  -0.8189906  3.051660 -2.1705031
+Tr.1.3h -10.1920623 -10.7690648  3.601393  -1.6219667 -2.148793 -6.5626415
+Ve.1.3h   6.1910931  -8.9587536  2.605718  -0.8448476 -2.629549 -8.5472192
+              PC35       PC36        PC37        PC38      PC39      PC40
+Da.1.3h  7.2770521  3.2792454 -10.4894361 -4.30733107 -5.849739 -2.687516
+Do.1.3h -0.9260830  1.7794615   2.8937075  0.89458004  5.157193 -1.280842
+Ep.1.3h -0.1554011  1.8404528  -0.5143910  0.09648441  7.440072  1.408057
+Mi.1.3h -5.3032004  4.8268423  -0.8944211 -0.20732412  1.388244  2.270157
+Tr.1.3h -3.9454575 -6.2932182   6.6367557 -4.50448821 -3.378639 -1.416561
+Ve.1.3h -3.7739170 -0.1062269   6.0369386  0.06051097  2.279350 -4.526761
+             PC41      PC42       PC43       PC44        PC45       PC46
+Da.1.3h -1.262007 -1.035504  8.2056950  3.8989026  6.24638692  3.4089655
+Do.1.3h -0.186425  3.146487  2.9289474 -2.7419697  0.16004844 -7.3339956
+Ep.1.3h  4.785448  2.860477 -3.1017019  1.3166174 -0.84506266 -0.4454939
+Mi.1.3h 10.942509  2.936674 -0.1040299 -0.5854175 -6.08082071 -2.3049328
+Tr.1.3h -6.486757  3.121272 -1.3534505  6.1969829  4.03540141  5.6064581
+Ve.1.3h -4.489930 -3.442894  0.8969077 -6.3163924 -0.01184596  4.6677253
+               PC47       PC48       PC49      PC50         PC51       PC52
+Da.1.3h   1.7245768 -1.8463393 -3.2997189 -2.553965 -4.419379561 -0.9948072
+Do.1.3h  -0.7494901 -1.4034252 -1.3011594  2.148875  1.813487415  4.3374340
+Ep.1.3h   0.3053048  3.4956568  3.7115134 -1.482656  1.956967253  0.7068073
+Mi.1.3h   1.2445851 -0.3253066  0.1115562  1.112562 -0.005470513  1.2400374
+Tr.1.3h   6.9667641 -5.7857939  6.0033788 -1.871588 -6.585480377 -9.1835137
+Ve.1.3h -10.0164441  4.2872411 -3.7138782  2.309897  6.500352335  1.5133235
+              PC53       PC54       PC55       PC56        PC57       PC58
+Da.1.3h  -5.461271 -4.2780958  2.7732012  1.1512850  0.05958554  0.5085057
+Do.1.3h  11.532018  3.0961716  0.2045428  2.7726775 -7.78100383  9.8903571
+Ep.1.3h   3.930239  2.9214130 -2.5147902  1.5920310 -6.83905904  0.4921512
+Mi.1.3h  -1.225530  6.0946473 -3.2895157 -2.3905055 11.01150136 -8.2144469
+Tr.1.3h   6.871187 -9.5578828 -1.7000342  6.7087662  3.83241538 -1.7379386
+Ve.1.3h -12.999179 -0.9773753  6.9444669 -0.5177584  1.08538726 -3.6088769
+              PC59       PC60        PC61       PC62       PC63       PC64
+Da.1.3h  0.6947479  0.2495424   0.9451556  0.8788365  1.3554167  0.6912746
+Do.1.3h  7.8141494  3.6710031   0.9438323  0.9012747 -4.4136351 -7.0408006
+Ep.1.3h -5.7893006  1.6745696  -1.1681311 -2.5273166  2.8633028 -1.5009335
+Mi.1.3h -1.6489538 -6.7904105 -10.5875997  3.6093798 -1.3148648  3.9122749
+Tr.1.3h  1.4601813  0.7305937  -0.1613648 -0.1971653 -1.4000034  1.4957112
+Ve.1.3h  0.9947420  0.6377554   7.8729369 -0.1632842  0.9153045  0.9037070
+               PC65       PC66       PC67        PC68      PC69       PC70
+Da.1.3h  0.09636128 -2.1975401 -1.3284695 -0.04825934 -1.080057  0.7908676
+Do.1.3h  1.28715194 -7.0105439 -2.4649046  0.86945034 -6.246263  1.5887178
+Ep.1.3h -3.99683169 10.2834224  5.1907167  0.96314910 11.571833 -1.6664249
+Mi.1.3h  3.45191027 -3.1257619 -2.1146401 -1.55735609 -4.500124  0.1069785
+Tr.1.3h -0.77700790  1.4183639 -0.1288110 -2.85040677 -1.181816  1.4809394
+Ve.1.3h  2.61255032  0.1308984  0.7723808  0.77368136  3.262802 -0.9221706
+              PC71          PC72
+Da.1.3h -0.3614398 -6.675299e-14
+Do.1.3h -0.9465562 -1.265367e-13
+Ep.1.3h  2.4218610 -5.043584e-14
+Mi.1.3h -0.1963754 -1.127307e-13
+Tr.1.3h -1.2175642 -8.186241e-14
+Ve.1.3h -0.8285151 -5.746066e-14</code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-9.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] Hmisc_4.8-0                            
+ [2] Formula_1.2-5                          
+ [3] survival_3.5-3                         
+ [4] corrplot_0.92                          
+ [5] ggrepel_0.9.3                          
+ [6] cowplot_1.1.1                          
+ [7] Homo.sapiens_1.3.1                     
+ [8] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+ [9] org.Hs.eg.db_3.15.0                    
+[10] GO.db_3.15.0                           
+[11] OrganismDbi_1.38.1                     
+[12] GenomicFeatures_1.48.4                 
+[13] GenomicRanges_1.48.0                   
+[14] GenomeInfoDb_1.32.4                    
+[15] AnnotationDbi_1.58.0                   
+[16] IRanges_2.30.1                         
+[17] S4Vectors_0.34.0                       
+[18] Biobase_2.56.0                         
+[19] biomaRt_2.52.0                         
+[20] scales_1.2.1                           
+[21] lubridate_1.9.2                        
+[22] forcats_1.0.0                          
+[23] stringr_1.5.0                          
+[24] dplyr_1.1.0                            
+[25] purrr_1.0.1                            
+[26] readr_2.1.4                            
+[27] tidyr_1.3.0                            
+[28] tibble_3.1.8                           
+[29] tidyverse_2.0.0                        
+[30] AnnotationHub_3.4.0                    
+[31] BiocFileCache_2.4.0                    
+[32] dbplyr_2.3.1                           
+[33] BiocGenerics_0.42.0                    
+[34] reshape2_1.4.4                         
+[35] gridExtra_2.3                          
+[36] mixOmics_6.20.0                        
+[37] ggplot2_3.4.1                          
+[38] lattice_0.20-45                        
+[39] MASS_7.3-58.2                          
+[40] RColorBrewer_1.1-3                     
+[41] edgeR_3.38.4                           
+[42] limma_3.52.4                           
+[43] workflowr_1.7.0                        
+
+loaded via a namespace (and not attached):
+  [1] backports_1.4.1               plyr_1.8.8                   
+  [3] igraph_1.4.1                  splines_4.2.2                
+  [5] BiocParallel_1.30.4           digest_0.6.31                
+  [7] htmltools_0.5.4               fansi_1.0.4                  
+  [9] checkmate_2.1.0               magrittr_2.0.3               
+ [11] memoise_2.0.1                 cluster_2.1.4                
+ [13] tzdb_0.3.0                    Biostrings_2.64.1            
+ [15] matrixStats_0.63.0            rARPACK_0.11-0               
+ [17] timechange_0.2.0              prettyunits_1.1.1            
+ [19] jpeg_0.1-10                   colorspace_2.1-0             
+ [21] blob_1.2.3                    rappdirs_0.3.3               
+ [23] xfun_0.37                     callr_3.7.3                  
+ [25] crayon_1.5.2                  RCurl_1.98-1.10              
+ [27] jsonlite_1.8.4                graph_1.74.0                 
+ [29] glue_1.6.2                    gtable_0.3.1                 
+ [31] zlibbioc_1.42.0               XVector_0.36.0               
+ [33] DelayedArray_0.22.0           DBI_1.1.3                    
+ [35] Rcpp_1.0.10                   htmlTable_2.4.1              
+ [37] xtable_1.8-4                  progress_1.2.2               
+ [39] foreign_0.8-84                bit_4.0.5                    
+ [41] htmlwidgets_1.6.1             httr_1.4.5                   
+ [43] ellipsis_0.3.2                farver_2.1.1                 
+ [45] pkgconfig_2.0.3               XML_3.99-0.13                
+ [47] nnet_7.3-18                   deldir_1.0-6                 
+ [49] sass_0.4.5                    locfit_1.5-9.7               
+ [51] utf8_1.2.3                    labeling_0.4.2               
+ [53] tidyselect_1.2.0              rlang_1.0.6                  
+ [55] later_1.3.0                   munsell_0.5.0                
+ [57] BiocVersion_3.15.2            tools_4.2.2                  
+ [59] cachem_1.0.7                  cli_3.6.0                    
+ [61] generics_0.1.3                RSQLite_2.3.0                
+ [63] evaluate_0.20                 fastmap_1.1.1                
+ [65] yaml_2.3.7                    processx_3.8.0               
+ [67] knitr_1.42                    bit64_4.0.5                  
+ [69] fs_1.6.1                      KEGGREST_1.36.3              
+ [71] RBGL_1.72.0                   whisker_0.4.1                
+ [73] mime_0.12                     xml2_1.3.3                   
+ [75] compiler_4.2.2                rstudioapi_0.14              
+ [77] filelock_1.0.2                curl_5.0.0                   
+ [79] png_0.1-8                     interactiveDisplayBase_1.34.0
+ [81] bslib_0.4.2                   stringi_1.7.12               
+ [83] highr_0.10                    ps_1.7.2                     
+ [85] RSpectra_0.16-1               Matrix_1.5-3                 
+ [87] vctrs_0.5.2                   pillar_1.8.1                 
+ [89] lifecycle_1.0.3               BiocManager_1.30.20          
+ [91] jquerylib_0.1.4               data.table_1.14.8            
+ [93] bitops_1.0-7                  corpcor_1.6.10               
+ [95] httpuv_1.6.9                  rtracklayer_1.56.1           
+ [97] latticeExtra_0.6-30           R6_2.5.1                     
+ [99] BiocIO_1.6.0                  promises_1.2.0.1             
+[101] codetools_0.2-19              SummarizedExperiment_1.26.1  
+[103] rprojroot_2.0.3               rjson_0.2.21                 
+[105] withr_2.5.0                   GenomicAlignments_1.32.1     
+[107] Rsamtools_2.12.0              GenomeInfoDbData_1.2.8       
+[109] parallel_4.2.2                hms_1.1.2                    
+[111] rpart_4.1.19                  grid_4.2.2                   
+[113] rmarkdown_2.20                MatrixGenerics_1.8.1         
+[115] git2r_0.31.0                  getPass_0.2-2                
+[117] base64enc_0.1-3               shiny_1.7.4                  
+[119] ellipse_0.4.3                 interp_1.1-3                 
+[121] restfulr_0.0.15              </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
