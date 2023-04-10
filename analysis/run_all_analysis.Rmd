@@ -266,15 +266,17 @@ pca_all_anno %>%
 ```{r typical gene expression, echo=FALSE, message=FALSE, warning=FALSE}
 
 genecardiccheck <- c("MYH7", "TNNT2","MYH6","ACTN2","BMP3","TNNI3","RYR2","CACNA1C","KCNQ1", "HCN1", "ADRB1", "ADRB2")
-ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
-my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
+#ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+#saveRDS(ensembl, "data/ensembl_backup.RDS")
+#ensemble <- readRDS("data/ensembl_backup.RDS")
+#my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
 
-my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+#my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 
-heartgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-                 values = genecardiccheck, mart = ensembl)
-#heartgenes <- #
-  heartgenes %>% filter(entrezgene_id==unique(entrezgene_id))
+#heartgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                # values = genecardiccheck, mart = ensembl)
+#write.csv(heartgenes, "data/heartgenes.csv")
+heartgenes <-read.csv("data/heartgenes.csv")
 fungraph <- as.data.frame(filcpm_matrix[rownames(filcpm_matrix) %in% heartgenes$entrezgene_id,])
 
 
@@ -310,7 +312,7 @@ fungraph %>%
 
 
 ##correlation heatmap of counts matrix
-```{pheatmap clustering of gene counts}
+```{R pheatmap clustering of gene counts}
 
 colnames(filcpm_matrix) <- label
 mcor <- cor(filcpm_matrix)
