@@ -615,7 +615,7 @@ Overlapk4 <- toplist24hours %>%
   dplyr::filter(ENTREZID%in%knowles4) %>%
   group_by(id) %>%
   filter(adj.P.Val<0.1) %>%
- summary()
+ count()
 Overlapk4 <- merge(Overlapk4,NR4, all =TRUE)[,1:2]
 NR4<- tibble_row( id = "No Response", n = 248)
 
@@ -625,7 +625,7 @@ intersect(NoResp$ENTREZID,knowles4)
 Overlapk5 <- toplist24hours %>%
   dplyr::filter(ENTREZID%in%knowles5) %>%
   group_by(id) %>%
-  filter(adj.P.Val<0.1) %>%
+  # filter(adj.P.Val<0.1) %>%
   count()
 intersect(NoResp$ENTREZID,knowles5)
 NRk5 <- tibble_row( id = "No Response", n = 141)
@@ -637,7 +637,7 @@ length(intersect(intersect(knowles4, knowles5), NoResp$ENTREZID))
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 ggplot(Overlapk4, aes(x=id, y=n))+
-  geom_col(postition= "fill",aes(fill=id))+
+  geom_col(aes(fill=id))+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_palc[c(1:4,6)])+
   theme_bw()+
@@ -669,8 +669,9 @@ ggplot(Overlapk5, aes(x=id, y=n))+
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
-#make a set
+##make a set###---------------------------------------------------------
 
+# this is the fill model of just the distribution of counts
 
 
 knover45 <- list(Overlapk5, Overlapk4)
@@ -689,7 +690,7 @@ knover45 %>%
 
   ylab("Count")+
   xlab("")+
-  ggtitle("Overlaps with Knowles data sets")+
+  ggtitle("distribution of all QTLs and response eQTLS")+
   theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
@@ -699,7 +700,27 @@ knover45 %>%
 
 
 
-                   )
+###proportion ------------------------------------------------------------
+knover45 %>%
+  mutate(percent =n/counts) %>%
+  # ggplot(., aes(counts, y=n))+
+  ggplot(., aes(x=Overlap, y=percent))+
+  geom_col(position = "fill", aes(fill=id))+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_palc[c(1:4,6)])+
+  theme_bw()+
+    ylab("Percent of expressed genes")+
+  xlab("")+
+  ggtitle("Percent of reQTL distribution")+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
 # plot the nonDE stuff ----------------------------------------------------
 
 
@@ -738,6 +759,8 @@ cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 
 
 toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(ENTREZID %in% knowles4) %>%
   ggplot(., aes(x=id, y=abs(logFC)))+
   geom_boxplot(aes(fill=id))+
@@ -774,3 +797,178 @@ toplistall %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+
+  filter(ENTREZID %in% motif1_NR) %>%
+  ggplot(., aes(x=id, y=abs(logFC)))+
+  geom_boxplot(aes(fill=id))+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_palc[c(1:4,6)])+
+  theme_bw()+
+  ylab("|log FC|")+
+  xlab("")+
+  facet_wrap(~time)+
+  ggtitle("abs log FC no-response genes motif1")+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
+                                 c("Epirubicin", "Doxorubicin"),
+                                 c("Mitoxantrone", "Doxorubicin"),
+                                 c("Trastuzumab","Doxorubicin")),
+              test = "t.test",
+              map_signif_level = FALSE,step_increase = 0.1,
+              textsize = 4)
+
+  toplistall %>%
+    mutate(id = as.factor(id)) %>%
+    mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+
+    filter(ENTREZID %in% motif3_TI) %>%
+    ggplot(., aes(x=id, y=abs(logFC)))+
+    geom_boxplot(aes(fill=id))+
+    scale_color_brewer(palette = "Dark2",guide = "none")+
+    scale_fill_manual(values=drug_palc[c(1:4,6)])+
+    theme_bw()+
+    ylab("|log FC|")+
+    xlab("")+
+    facet_wrap(~time)+
+    ggtitle("abs log FC time-independent")+
+    theme(plot.title = element_text(size=18,hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text.x = element_text(size = 12, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+  toplistall %>%
+    mutate(id = as.factor(id)) %>%
+    mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+
+    filter(ENTREZID %in% motif4_LR) %>%
+    ggplot(., aes(x=id, y=abs(logFC)))+
+    geom_boxplot(aes(fill=id))+
+    scale_color_brewer(palette = "Dark2",guide = "none")+
+    scale_fill_manual(values=drug_palc[c(1:4,6)])+
+    theme_bw()+
+    ylab("|log FC|")+
+    xlab("")+
+    facet_wrap(~time)+
+    ggtitle("abs log FC Late response")+
+    theme(plot.title = element_text(size=18,hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text.x = element_text(size = 12, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+  toplistall %>%
+    mutate(id = as.factor(id)) %>%
+    mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+
+    filter(ENTREZID %in% motif5_ER) %>%
+    ggplot(., aes(x=id, y=abs(logFC)))+
+    geom_boxplot(aes(fill=id))+
+    scale_color_brewer(palette = "Dark2",guide = "none")+
+    scale_fill_manual(values=drug_palc[c(1:4,6)])+
+    theme_bw()+
+    ylab("|log FC|")+
+    xlab("")+
+    facet_wrap(~time)+
+    ggtitle("abs log FC Early response")+
+    theme(plot.title = element_text(size=18,hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text.x = element_text(size = 12, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+
+# cormotif distrubution ---------------------------------------------------
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+motif1_NR <- DEG_cormotif$motif1_NR
+motif3_TI <- DEG_cormotif$motif3_TI
+motif4_LR <- DEG_cormotif$motif4_LR
+motif5_ER <- DEG_cormotif$motif5_ER
+
+length(intersect(knowles4, motif1_NR))
+length(intersect(knowles4, motif3_TI))
+length(intersect(knowles4, motif4_LR))
+length(intersect(knowles4, motif5_ER))
+Overlapk4 <- merge(Overlapk1,NR4, all =TRUE)[,1:2]
+cormotfi<- tibble( id =c("No response","Time-Independent response", "Late response","Early response"), n = c(352, 0,32,5), totalgene= c(8846,95,1409,length(motif5_ER)))
+
+cormotfi %>%
+  mutate(percent = n/totalgene) %>%
+  mutate(id=factor(id, levels = c("Time-Independent response",
+                                  "Early response","Late response","No response"))) %>%
+ggplot(., aes(x=id, y=n))+
+  geom_col()+
+  scale_color_brewer(palette = "BLUES",guide = "none")+
+
+  theme_bw()+
+  ylab("Count")+
+  xlab("")+
+  ggtitle("reQTL distribution in cormotif set")+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+cormotfi %>%
+  mutate(percent = n/totalgene) %>%
+  mutate(id=factor(id, levels = c("Time-Independent response",
+                                  "Early response","Late response","No response"))) %>%
+  ggplot(., aes(x=id, y=percent))+
+  geom_col(position_fill())+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_palc[c(1:4,6)])+
+  theme_bw()+
+  ylab("Percent of gene set")+
+  xlab("")+
+  ggtitle("reQTL proportion in cormotif set")+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+
+
+
+
+
+#
+# Overlap3 <- toplist24hours %>%
+#   dplyr::filter(ENTREZID %in% knowles4) %>%
+#   dplyr::filter(ENTREZID %in% motif3_TI) %>%
+#   group_by(id) %>%
+#     count()
+# Overlap4 <- toplist24hours %>%
+#   dplyr::filter(ENTREZID %in% knowles4) %>%
+#   dplyr::filter(ENTREZID %in% motif4_LR) %>%
+#   group_by(id) %>%
+#    count()
+# Overlap5 <- toplist24hours %>%
+#   dplyr::filter(ENTREZID%in% motif5_ER) %>%
+#   group_by(id) %>%
+#   filter(adj.P.Val<0.1) %>%
+#   count()
+# cor_qtl <-bind_rows(list(Overlap1, Overlap3, Overlap4, Overlap5), .id = "motif")#, all = TRUE)[,1:2]
+#
+# backGL <- read.csv("data/backGL.txt")
+# NRresp <- read_csv("data/cormotif_NRset.txt")
+##first filter and

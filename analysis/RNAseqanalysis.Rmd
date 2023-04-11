@@ -390,7 +390,7 @@ pca_all_anno %>%
   guides(col="none")+
   labs(y = "PC 2 (0.1336)", x ="PC 1 (0.2445)")+
   theme(plot.title=element_text(size= 14,hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
+        axis.title = element_text(size = 12, color = "black"))
 ```
 
 # Differential Expression
@@ -493,6 +493,8 @@ names(siglist) <- c("sigVDA3",
              "sigVTR24")
 siglist <- lapply(siglist, function(x) {colnames(x) <- gsub(pattern = "^siglist\\.", replacement = "", x = colnames(x))
 return(x)})
+summary(efit2
+        )
 
 toplistgenes
 #make the list, and rename the items on the list

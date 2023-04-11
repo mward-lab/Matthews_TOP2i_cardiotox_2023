@@ -11,7 +11,11 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
 This is my Dose Response Curve Code and data with summaries.  
@@ -241,7 +245,7 @@ Once they are all in a data from, a few functions need to be defined for ggplot:
 ##functions
  
 
-```{r empty list holder, include=FALSE}
+```{r empty list holder, message=FALSE, warning=FALSE, include=FALSE}
 
 #### making lists to put stuff in###
 daunls <- list() ###daunorubicin list

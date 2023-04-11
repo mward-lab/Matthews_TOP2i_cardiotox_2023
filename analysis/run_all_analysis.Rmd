@@ -41,6 +41,7 @@ library(corrplot)
 library(Hmisc)
 
 
+
 ```
 
 
@@ -149,7 +150,7 @@ mymatrix$genes <- genes
 
 ```
 
-
+# Initial histograms
 
 ```{r readinfo,echo=FALSE, message=FALSE, warning=FALSE}
 cpm <- cpm(mymatrix)
@@ -169,11 +170,11 @@ hist(lcpm,  main = "Histogram of total counts (unfiltered)",
 
 hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMeans > 0 method", 
      xlab =expression("Log"[10]*" counts-per-million"), col =2 ) 
-
-
 x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
+
 boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
 x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
+
 boxplot(filcpm_matrix, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
 x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
@@ -181,7 +182,7 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 
 
-
+## PCA by treatment and as a whole
 
 
 
@@ -263,7 +264,7 @@ summary(prdat_cpm)
 
 
 
-
+## Typical genes expressed in iPSC-CMS
 
 
 ```{r typical gene expression, echo=FALSE, message=FALSE, warning=FALSE}
@@ -314,7 +315,7 @@ fungraph %>%
 ```
 
 
-##correlation heatmap of counts matrix
+## correlation heatmap of counts matrix
 ```{R pheatmap clustering of gene counts}
 
 colnames(filcpm_matrix) <- label
@@ -327,7 +328,7 @@ pheatmap::pheatmap(mcor , cluster_rows = TRUE, cluster_cols = TRUE)
 
 
 
-###now to get the counts set for DEG!!
+### now to get the counts set for DEG!!
 
 
 
@@ -416,7 +417,8 @@ names(siglist) <- c("sigVDA3",
 ```
 
 
-
+# DEG analysis
+## summary
 ```{r summary of DEG}
 
 sum <- summary(decideTests(efit2))
@@ -424,6 +426,53 @@ sum <- summary(decideTests(efit2))
 sum
 
 ```
+
+
+##cormotif analysis
+```{r cormotif analysis info}
+library(Cormotif)
+library(IRanges)
+
+
+cormotif_inital <- readRDS("data/cormotif_initialall.RDS")
+
+plotIC(cormotif_initial)
+plotMotif(cormotif_initial)
+
+gene_prob_tran <- cormotif_initial$bestmotif$p.post
+rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
+dim(gene_prob_tran)
+
+nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &                                       gene_prob_tran[,2] <0.5 &                                         gene_prob_tran[,3] <0.5 &                                         gene_prob_tran[,4] <0.5&                                          gene_prob_tran[,5] <0.5 &                                         gene_prob_tran[,6] <0.5 &                                         gene_prob_tran[,7] <0.5 &                                         gene_prob_tran[,8] <0.5 &                                         gene_prob_tran[,9] <0.5 &                                         gene_prob_tran[,10] <0.5),])
+
+length((nonresponse_cluster))
+#write_csv(as.data.frame(nonresponse_cluster), "data/cormotif_NRset.txt")
+#write_csv(as.data.frame(TI_respint1), "data/cormotif_TI_cluster.txt")
+#write_csv(as.data.frame(ER_respint1), "data/cormotif_ER_cluster.txt")
+ #write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_cluster.txt")
+
+```
+
+Response sets look similar to previous results.  This data is based on the filtered count matrix (using rowmeans>0 of cpm(log=true)).
+Classification of patterns appear to be:
+
+motif 1-  No Response set: 7490 (gene list made by filtering each column by posterior probability of <0.5) 
+motif 2-  Time-independent Top2Bi response cluster: 116
+
+motif 3- Early Top2Bi response cluster: 424
+
+motif 4- All BC drug response set (only 1!)
+
+motif 5-  Late Top2Bi response cluster:1615
+**these are based on the most recent plots (motif numbers have changed a little)
+```{r cormotif genes}
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+
+
+```
+
+
+
 
 
 

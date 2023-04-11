@@ -4,9 +4,9 @@ library(Cormotif)
 library(RColorBrewer)
 ## read in count file##
 design <- read.csv("data/data_outline.txt", row.names = 1)
-x_counts <- read.csv("data/norm_counts.csv",row.names = 1)
-
-
+ <- read.csv("data/cpmnorm_counts.csv",row.names = 1)
+mymatrix <- readRDS("data/allmatrix.RDS")
+x_counts <- mymatrix$counts
 
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
@@ -26,24 +26,25 @@ groupid <- as.numeric(group_fac)
 compid_tran <- data.frame(c1= c(1,2,3,4,5,7,8,9,10,11), c2 = c( 6,6,6,6,6,12,12,12,12,12))
 
 y_TMM_cpm <- cpm(x_counts, log = TRUE)
+y_TMM_cpm <- filcpm_matrix
 colnames(y_TMM_cpm) <- label
 y_TMM_cpm
 set.seed(12345)
 cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
                              groupid = groupid,
                              compid = compid_tran,
-                             K=5, max.iter = 500)
+                             K=1:8, max.iter = 500)
 
-#saveRDS(cormotif_initial,"data/cormotif_initialK5.RDS")##saved so Ido not have to run everytime
-cormotif_initial <- readRDS("data/cormotif_initialK5.RDS")
+saveRDS(cormotif_initial,"data/cormotif_initialall.RDS")##saved so Ido not have to run everytime
+#cormotif_initial <- readRDS("data/cormotif_initialK5.RDS")
 
 plotIC(cormotif_initial)
-library(pheatmap)
-pheatmap(cormotif_initial$bestmotif$1t, color="gray")
+
+
 
 plotMotif(cormotif_initial)
-plot.new()
-legend("topright", legend = reverse(c("0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9", "1"), fill = my_barcolor)) #gray(seq(from = 1, to = 0, by = -0.1))[1:2])
+# plot.new()
+# legend("topright", legend = reverse(c("0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9", "1"), fill = my_barcolor)) #gray(seq(from = 1, to = 0, by = -0.1))[1:2])
 
 gene_prob_tran <- cormotif_initial$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
@@ -86,8 +87,8 @@ TI_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
 
  length(TI_respint1)
 
-#95
- write_csv(as.data.frame(TI_respint1), "data/cormotif_TI_respint.txt")
+#116
+ write_csv(as.data.frame(TI_respint1), "data/cormotif_TI_cluster.txt")
  sample(TI_respint1,4)
  ##[1] "90417"     "105373311" "2959"      "27145"
  #"51278" "51043" "26152" "79832"
@@ -110,7 +111,7 @@ TI_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.5 &
 #452
 
 
-write_csv(as.data.frame(ER_respint1), "data/cormotif_ER_respint.txt")
+write_csv(as.data.frame(ER_respint1), "data/cormotif_ER_cluster.txt")
 
 sample(ER_respint1,4)
 #"54434"  "23506"  "51058"  "283219"
@@ -128,8 +129,8 @@ sample(ER_respint1,4)
                                             gene_prob_tran[,10] <0.5),])
 
  length(unique(LR_respint1))
- #1409
- write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_respint.txt")
+ #1615
+ write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_cluster.txt")
  sample(LR_respint1,4)
 # "8915"   "1756"   "92335"  "146754"
 # motif2 ------------------------------------------------------------------
@@ -166,17 +167,17 @@ nonresponse_cluster
  #1409
  #intersection of all TOP2Bi genes that have greater than 50% chance of being DE
 
- motif3_TI <- TI_respint1
-#95
- motif5_ER <- ER_respint1
+ motif_TI <- TI_respint1
+#116
+ motif_ER <- ER_respint1
 #452
- motif4_LR <- LR_respint1
-#1409
- motif1_NR <- nonresponse_cluster
+ motif_LR <- LR_respint1
+#1515
+ motif_NR <- nonresponse_cluster
 #8846
- DEG_cormotif <- list(motif1_NR,motif3_TI,motif4_LR,motif5_ER)
+ DEG_cormotif <- list(motif_NR,motif_TI,motif_LR,motif_ER)
 
- names(DEG_cormotif) <- c('motif1_NR','motif3_TI','motif4_LR','motif5_ER')
+ names(DEG_cormotif) <- c('motif_NR','motif_TI','motif_LR','motif_ER')
 
  saveRDS(DEG_cormotif, "data/DEG_cormotif.RDS")
 
