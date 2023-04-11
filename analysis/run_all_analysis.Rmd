@@ -428,13 +428,20 @@ sum
 ```
 
 
-##cormotif analysis
+## cormotif analysis
 ```{r cormotif analysis info}
 library(Cormotif)
 library(IRanges)
+group_fac <- group1
+groupid <- as.numeric(group_fac)
+
+compid_tran <- data.frame(c1= c(1,2,3,4,5,7,8,9,10,11), c2 = c( 6,6,6,6,6,12,12,12,12,12))
 
 
-cormotif_inital <- readRDS("data/cormotif_initialall.RDS")
+y_TMM_cpm <- filcpm_matrix
+colnames(y_TMM_cpm) <- label
+
+cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
 
 plotIC(cormotif_initial)
 plotMotif(cormotif_initial)
@@ -443,9 +450,17 @@ gene_prob_tran <- cormotif_initial$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
 dim(gene_prob_tran)
 
-nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &                                       gene_prob_tran[,2] <0.5 &                                         gene_prob_tran[,3] <0.5 &                                         gene_prob_tran[,4] <0.5&                                          gene_prob_tran[,5] <0.5 &                                         gene_prob_tran[,6] <0.5 &                                         gene_prob_tran[,7] <0.5 &                                         gene_prob_tran[,8] <0.5 &                                         gene_prob_tran[,9] <0.5 &                                         gene_prob_tran[,10] <0.5),])
+nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
+                                                   gene_prob_tran[,2] <0.5 &               
+                                                   gene_prob_tran[,3] <0.5 &
+                                                   gene_prob_tran[,4] <0.5&  
+                                                   gene_prob_tran[,5] <0.5 &  
+                                                   gene_prob_tran[,6] <0.5 &  
+                                                   gene_prob_tran[,7] <0.5 &
+                                                   gene_prob_tran[,8] <0.5 &  
+                                                   gene_prob_tran[,9] <0.5 & 
+                                                   gene_prob_tran[,10] <0.5),])
 
-length((nonresponse_cluster))
 #write_csv(as.data.frame(nonresponse_cluster), "data/cormotif_NRset.txt")
 #write_csv(as.data.frame(TI_respint1), "data/cormotif_TI_cluster.txt")
 #write_csv(as.data.frame(ER_respint1), "data/cormotif_ER_cluster.txt")
@@ -465,7 +480,7 @@ motif 4- All BC drug response set (only 1!)
 
 motif 5-  Late Top2Bi response cluster:1615
 **these are based on the most recent plots (motif numbers have changed a little)
-```{r cormotif genes}
+```{r cormotif genes, message=FALSE, warning=FALSE}
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 
 
