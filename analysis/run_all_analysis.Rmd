@@ -254,6 +254,9 @@ pca_all_anno %>%
   labs(x = "PC 2 (15.76%)", y ="PC 3 (8.3%)")+
   theme(plot.title=element_text(size= 14,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"))
+prdat_cpm <- calc_pca(t(dat_cpm)) 
+storepca <- summary(prdat_cpm)
+summary(prdat_cpm)
 
 ```
 
@@ -319,6 +322,106 @@ mcor <- cor(filcpm_matrix)
 pheatmap::pheatmap(mcor , cluster_rows = TRUE, cluster_cols = TRUE)
 
 
+
+```
+
+
+
+###now to get the counts set for DEG!!
+
+
+
+
+```{r counts to DEG set up, echo= FALSE}
+group1 <- interaction(drug,time)
+mm <- model.matrix(~0 + group1)
+colnames(mm) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
+y <- voom(x, mm,plot =TRUE)
+
+corfit <- duplicateCorrelation(y, mm, block = indv)
+
+v <- voom(x, mm, block = indv, correlation = corfit$consensus)
+
+fit <- lmFit(v, mm, block = indv, correlation = corfit$consensus)
+
+cm <- makeContrasts(
+  V.DA = V3 - A3,
+  V.DX = V3 - X3,
+  V.EP = V3 - E3,
+  V.MT = V3 - M3,
+  V.TR = V3 - T3,
+  V.DA24 = V24-A24,
+  V.DX24= V24-X24,
+  V.EP24= V24-E24,
+  V.MT24= V24-M24,
+  V.TR24= V24-T24,
+  levels = mm)
+
+vfit <- lmFit(y, mm)
+
+vfit<- contrasts.fit(vfit, contrasts=cm)
+
+efit2 <- eBayes(vfit)
+
+```
+
+```{r Differential expression, echo=FALSE}
+
+V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
+V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
+V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
+V.MT.top= topTable(efit2, coef=4, adjust="BH", number=Inf, sort.by="p")
+V.TR.top= topTable(efit2, coef=5, adjust="BH", number=Inf, sort.by="p")
+V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf, sort.by="p")
+V.DX24.top= topTable(efit2, coef=7, adjust="BH", number=Inf, sort.by="p")
+V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
+V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
+V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
+
+sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < .1 , ]
+sigVDX3 = V.DX.top[V.DX.top$adj.P.Val < .1 , ]
+sigVEP3 = V.EP.top[V.EP.top$adj.P.Val < .1 , ]
+sigVMT3 = V.MT.top[V.MT.top$adj.P.Val < .1 , ]
+sigVTR3 = V.TR.top[V.TR.top$adj.P.Val < .1 , ]
+sigVDA24 = V.DA24.top[V.DA24.top$adj.P.Val < .1 , ]
+sigVDX24 = V.DX24.top[V.DX24.top$adj.P.Val < .1 , ]
+sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val < .1 , ]
+sigVMT24 = V.MT24.top[V.MT24.top$adj.P.Val < .1 , ]
+sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val < .1 , ]
+
+siglist <- list(sigVDA3,
+             sigVDX3,
+             sigVEP3,
+             sigVMT3,
+             sigVTR3,
+             sigVDA24,
+             sigVDX24,
+             sigVEP24,
+             sigVMT24,
+             sigVTR24)
+names(siglist) <- c("sigVDA3",
+             "sigVDX3",
+             "sigVEP3",
+             "sigVMT3",
+             "sigVTR3",
+             "sigVDA24",
+             "sigVDX24",
+             "sigVEP24",
+             "sigVMT24",
+             "sigVTR24")
+# siglist <- lapply(siglist, function(x) {colnames(x) <- gsub(pattern = "^siglist\\.", replacement = "", x = colnames(x))
+# return(x)})
+
+
+```
+
+
+
+```{r summary of DEG}
+
+sum <- summary(decideTests(efit2))
+
+sum
 
 ```
 
