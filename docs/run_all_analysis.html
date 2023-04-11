@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree08936e73a08d8db556009edcce82d976cc4a3e2btargetblank08936e7a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0aaa63da25dab300af8f0facfeb2fa6a1c6c92a1targetblank0aaa63da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/08936e73a08d8db556009edcce82d976cc4a3e2b" target="_blank">08936e7</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0aaa63da25dab300af8f0facfeb2fa6a1c6c92a1" target="_blank">0aaa63d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree08936e73a08d8db556009edcce82d976cc4a3e2btargetblank08936e7a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0aaa63da25dab300af8f0facfeb2fa6a1c6c92a1targetblank0aaa63da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/08936e73a08d8db556009edcce82d976cc4a3e2b" target="_blank">08936e7</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0aaa63da25dab300af8f0facfeb2fa6a1c6c92a1" target="_blank">0aaa63d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -586,15 +586,19 @@ Ignored files:
     Ignored:    data/avgLD50.RDS
     Ignored:    data/backGL.txt
     Ignored:    data/cormotif_3hk1-8.RDS
+    Ignored:    data/cormotif_ER_cluster.txt
     Ignored:    data/cormotif_ER_respint.txt
     Ignored:    data/cormotif_ER_respset.txt
+    Ignored:    data/cormotif_LR_cluster.txt
     Ignored:    data/cormotif_LR_respint.txt
     Ignored:    data/cormotif_LR_respset.txt
     Ignored:    data/cormotif_NRset.txt
+    Ignored:    data/cormotif_TI_cluster.txt
     Ignored:    data/cormotif_TI_respint.txt
     Ignored:    data/cormotif_TI_respset.txt
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
+    Ignored:    data/cormotif_initialall.RDS
     Ignored:    data/counts24hours.RDS
     Ignored:    data/cpmnorm_counts.csv
     Ignored:    data/dat_cpm.RDS
@@ -642,8 +646,7 @@ Untracked files:
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/RNAseqanalysis.Rmd
+    Modified:   code/Corrscripts.R
     Modified:   code/eQTLcodes.R
     Deleted:    output/Cormotif.svg
     Deleted:    output/Ctrxn24-3-23.svg
@@ -717,6 +720,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/0aaa63da25dab300af8f0facfeb2fa6a1c6c92a1/analysis/run_all_analysis.Rmd" target="_blank">0aaa63d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+<td>
+cormotif analysis update
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/575fd81f58cd36d6408f0734092b219162b1f4be/analysis/run_all_analysis.Rmd" target="_blank">575fd81</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+<td>
+updating cormotif
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/4cd8ac4a07466bdf159970d0502a5edf602cacc8/docs/run_all_analysis.html" target="_blank">4cd8ac4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -919,9 +973,13 @@ genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
   keytype=&quot;ENTREZID&quot;)
 genes &lt;- genes[!duplicated(genes$ENTREZID),]
 mymatrix$genes &lt;- genes</code></pre>
+<div id="initial-histograms" class="section level1">
+<h1>Initial histograms</h1>
 <pre><code>[1] 28395    72</code></pre>
 <pre><code>[1] 14086    72</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/readinfo-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-4.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="pca-by-treatment-and-as-a-whole" class="section level2">
+<h2>PCA by treatment and as a whole</h2>
 <pre><code>
 
 ###  Vehicle </code></pre>
@@ -1006,15 +1064,43 @@ Cumulative Proportion  0.99305 0.99388 0.99467 0.99543 0.99617 0.9969 0.99756
 Standard deviation     3.09899 3.05675 2.88458 2.6632 8.662e-14
 Proportion of Variance 0.00068 0.00066 0.00059 0.0005 0.000e+00
 Cumulative Proportion  0.99824 0.99891 0.99950 1.0000 1.000e+00</code></pre>
+</div>
+<div id="typical-genes-expressed-in-ipsc-cms" class="section level2">
+<h2>Typical genes expressed in iPSC-CMS</h2>
 <p><img src="figure/run_all_analysis.Rmd/typical%20gene%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>##correlation heatmap of counts matrix
-<img src="figure/run_all_analysis.Rmd/pheatmap%20clustering%20of%20gene%20counts-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>###now to get the counts set for DEG!!</p>
+</div>
+<div id="correlation-heatmap-of-counts-matrix" class="section level2">
+<h2>correlation heatmap of counts matrix</h2>
+<p><img src="figure/run_all_analysis.Rmd/pheatmap%20clustering%20of%20gene%20counts-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="now-to-get-the-counts-set-for-deg" class="section level3">
+<h3>now to get the counts set for DEG!!</h3>
 <p><img src="figure/run_all_analysis.Rmd/counts%20to%20DEG%20set%20up-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="deg-analysis" class="section level1">
+<h1>DEG analysis</h1>
+<div id="summary" class="section level2">
+<h2>summary</h2>
 <pre><code>        V.DA  V.DX  V.EP  V.MT  V.TR V.DA24 V.DX24 V.EP24 V.MT24 V.TR24
 Down     108     3    29    22     0   3542   3341   3111    430      0
 NotSig 13569 14067 13876 14014 14086   7062   7431   7751  12964  14086
 Up       409    16   181    50     0   3482   3314   3224    692      0</code></pre>
+</div>
+<div id="cormotif-analysis" class="section level2">
+<h2>cormotif analysis</h2>
+<p><img src="figure/run_all_analysis.Rmd/cormotif%20analysis%20info-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/cormotif%20analysis%20info-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>[1] 14086    10</code></pre>
+<p>Response sets look similar to previous results. This data is based on
+the filtered count matrix (using rowmeans&gt;0 of cpm(log=true)).
+Classification of patterns appear to be:</p>
+<p>motif 1- No Response set: 7490 (gene list made by filtering each
+column by posterior probability of &lt;0.5) motif 2- Time-independent
+Top2Bi response cluster: 116</p>
+<p>motif 3- Early Top2Bi response cluster: 424</p>
+<p>motif 4- All BC drug response set (only 1!)</p>
+<p>motif 5- Late Top2Bi response cluster:1615 **these are based on the
+most recent plots (motif numbers have changed a little)</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1041,113 +1127,118 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] Hmisc_4.8-0                            
- [2] Formula_1.2-5                          
- [3] survival_3.5-3                         
- [4] corrplot_0.92                          
- [5] ggrepel_0.9.3                          
- [6] cowplot_1.1.1                          
- [7] Homo.sapiens_1.3.1                     
- [8] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
- [9] org.Hs.eg.db_3.15.0                    
-[10] GO.db_3.15.0                           
-[11] OrganismDbi_1.38.1                     
-[12] GenomicFeatures_1.48.4                 
-[13] GenomicRanges_1.48.0                   
-[14] GenomeInfoDb_1.32.4                    
-[15] AnnotationDbi_1.58.0                   
-[16] IRanges_2.30.1                         
-[17] S4Vectors_0.34.0                       
-[18] Biobase_2.56.0                         
-[19] biomaRt_2.52.0                         
-[20] scales_1.2.1                           
-[21] lubridate_1.9.2                        
-[22] forcats_1.0.0                          
-[23] stringr_1.5.0                          
-[24] dplyr_1.1.0                            
-[25] purrr_1.0.1                            
-[26] readr_2.1.4                            
-[27] tidyr_1.3.0                            
-[28] tibble_3.1.8                           
-[29] tidyverse_2.0.0                        
-[30] AnnotationHub_3.4.0                    
-[31] BiocFileCache_2.4.0                    
-[32] dbplyr_2.3.1                           
-[33] BiocGenerics_0.42.0                    
-[34] reshape2_1.4.4                         
-[35] gridExtra_2.3                          
-[36] mixOmics_6.20.0                        
-[37] ggplot2_3.4.1                          
-[38] lattice_0.20-45                        
-[39] MASS_7.3-58.2                          
-[40] RColorBrewer_1.1-3                     
-[41] edgeR_3.38.4                           
-[42] limma_3.52.4                           
-[43] workflowr_1.7.0                        
+ [1] Cormotif_1.42.0                        
+ [2] affy_1.74.0                            
+ [3] Hmisc_4.8-0                            
+ [4] Formula_1.2-5                          
+ [5] survival_3.5-3                         
+ [6] corrplot_0.92                          
+ [7] ggrepel_0.9.3                          
+ [8] cowplot_1.1.1                          
+ [9] Homo.sapiens_1.3.1                     
+[10] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+[11] org.Hs.eg.db_3.15.0                    
+[12] GO.db_3.15.0                           
+[13] OrganismDbi_1.38.1                     
+[14] GenomicFeatures_1.48.4                 
+[15] GenomicRanges_1.48.0                   
+[16] GenomeInfoDb_1.32.4                    
+[17] AnnotationDbi_1.58.0                   
+[18] IRanges_2.30.1                         
+[19] S4Vectors_0.34.0                       
+[20] Biobase_2.56.0                         
+[21] biomaRt_2.52.0                         
+[22] scales_1.2.1                           
+[23] lubridate_1.9.2                        
+[24] forcats_1.0.0                          
+[25] stringr_1.5.0                          
+[26] dplyr_1.1.0                            
+[27] purrr_1.0.1                            
+[28] readr_2.1.4                            
+[29] tidyr_1.3.0                            
+[30] tibble_3.1.8                           
+[31] tidyverse_2.0.0                        
+[32] AnnotationHub_3.4.0                    
+[33] BiocFileCache_2.4.0                    
+[34] dbplyr_2.3.1                           
+[35] BiocGenerics_0.42.0                    
+[36] reshape2_1.4.4                         
+[37] gridExtra_2.3                          
+[38] mixOmics_6.20.0                        
+[39] ggplot2_3.4.1                          
+[40] lattice_0.20-45                        
+[41] MASS_7.3-58.2                          
+[42] RColorBrewer_1.1-3                     
+[43] edgeR_3.38.4                           
+[44] limma_3.52.4                           
+[45] workflowr_1.7.0                        
 
 loaded via a namespace (and not attached):
-  [1] backports_1.4.1               plyr_1.8.8                   
-  [3] igraph_1.4.1                  splines_4.2.2                
-  [5] BiocParallel_1.30.4           digest_0.6.31                
-  [7] htmltools_0.5.4               fansi_1.0.4                  
-  [9] checkmate_2.1.0               magrittr_2.0.3               
- [11] memoise_2.0.1                 cluster_2.1.4                
- [13] tzdb_0.3.0                    Biostrings_2.64.1            
- [15] matrixStats_0.63.0            rARPACK_0.11-0               
- [17] timechange_0.2.0              prettyunits_1.1.1            
- [19] jpeg_0.1-10                   colorspace_2.1-0             
- [21] blob_1.2.3                    rappdirs_0.3.3               
- [23] xfun_0.37                     callr_3.7.3                  
- [25] crayon_1.5.2                  RCurl_1.98-1.10              
- [27] jsonlite_1.8.4                graph_1.74.0                 
- [29] glue_1.6.2                    gtable_0.3.1                 
- [31] zlibbioc_1.42.0               XVector_0.36.0               
- [33] DelayedArray_0.22.0           pheatmap_1.0.12              
- [35] DBI_1.1.3                     Rcpp_1.0.10                  
- [37] htmlTable_2.4.1               xtable_1.8-4                 
- [39] progress_1.2.2                foreign_0.8-84               
- [41] bit_4.0.5                     htmlwidgets_1.6.1            
- [43] httr_1.4.5                    ellipsis_0.3.2               
- [45] farver_2.1.1                  pkgconfig_2.0.3              
- [47] XML_3.99-0.13                 nnet_7.3-18                  
- [49] deldir_1.0-6                  sass_0.4.5                   
- [51] locfit_1.5-9.7                utf8_1.2.3                   
- [53] labeling_0.4.2                tidyselect_1.2.0             
- [55] rlang_1.0.6                   later_1.3.0                  
- [57] munsell_0.5.0                 BiocVersion_3.15.2           
- [59] tools_4.2.2                   cachem_1.0.7                 
- [61] cli_3.6.0                     generics_0.1.3               
- [63] RSQLite_2.3.0                 evaluate_0.20                
- [65] fastmap_1.1.1                 yaml_2.3.7                   
- [67] processx_3.8.0                knitr_1.42                   
- [69] bit64_4.0.5                   fs_1.6.1                     
- [71] KEGGREST_1.36.3               RBGL_1.72.0                  
- [73] whisker_0.4.1                 mime_0.12                    
- [75] xml2_1.3.3                    compiler_4.2.2               
- [77] rstudioapi_0.14               filelock_1.0.2               
- [79] curl_5.0.0                    png_0.1-8                    
- [81] interactiveDisplayBase_1.34.0 statmod_1.5.0                
- [83] bslib_0.4.2                   stringi_1.7.12               
- [85] highr_0.10                    ps_1.7.2                     
- [87] RSpectra_0.16-1               Matrix_1.5-3                 
- [89] vctrs_0.5.2                   pillar_1.8.1                 
- [91] lifecycle_1.0.3               BiocManager_1.30.20          
- [93] jquerylib_0.1.4               data.table_1.14.8            
- [95] bitops_1.0-7                  corpcor_1.6.10               
- [97] httpuv_1.6.9                  rtracklayer_1.56.1           
- [99] latticeExtra_0.6-30           R6_2.5.1                     
-[101] BiocIO_1.6.0                  promises_1.2.0.1             
-[103] codetools_0.2-19              SummarizedExperiment_1.26.1  
-[105] rprojroot_2.0.3               rjson_0.2.21                 
-[107] withr_2.5.0                   GenomicAlignments_1.32.1     
-[109] Rsamtools_2.12.0              GenomeInfoDbData_1.2.8       
-[111] parallel_4.2.2                hms_1.1.2                    
-[113] rpart_4.1.19                  grid_4.2.2                   
-[115] rmarkdown_2.20                MatrixGenerics_1.8.1         
-[117] git2r_0.31.0                  getPass_0.2-2                
-[119] base64enc_0.1-3               shiny_1.7.4                  
-[121] ellipse_0.4.3                 interp_1.1-3                 
-[123] restfulr_0.0.15              </code></pre>
+  [1] utf8_1.2.3                    tidyselect_1.2.0             
+  [3] RSQLite_2.3.0                 htmlwidgets_1.6.1            
+  [5] grid_4.2.2                    BiocParallel_1.30.4          
+  [7] munsell_0.5.0                 codetools_0.2-19             
+  [9] preprocessCore_1.58.0         interp_1.1-3                 
+ [11] statmod_1.5.0                 withr_2.5.0                  
+ [13] colorspace_2.1-0              filelock_1.0.2               
+ [15] highr_0.10                    knitr_1.42                   
+ [17] rstudioapi_0.14               MatrixGenerics_1.8.1         
+ [19] labeling_0.4.2                git2r_0.31.0                 
+ [21] GenomeInfoDbData_1.2.8        bit64_4.0.5                  
+ [23] farver_2.1.1                  pheatmap_1.0.12              
+ [25] rprojroot_2.0.3               vctrs_0.5.2                  
+ [27] generics_0.1.3                xfun_0.37                    
+ [29] timechange_0.2.0              R6_2.5.1                     
+ [31] locfit_1.5-9.7                bitops_1.0-7                 
+ [33] cachem_1.0.7                  DelayedArray_0.22.0          
+ [35] promises_1.2.0.1              BiocIO_1.6.0                 
+ [37] nnet_7.3-18                   gtable_0.3.1                 
+ [39] processx_3.8.0                rlang_1.0.6                  
+ [41] splines_4.2.2                 rtracklayer_1.56.1           
+ [43] checkmate_2.1.0               BiocManager_1.30.20          
+ [45] yaml_2.3.7                    backports_1.4.1              
+ [47] httpuv_1.6.9                  RBGL_1.72.0                  
+ [49] tools_4.2.2                   affyio_1.66.0                
+ [51] ellipsis_0.3.2                jquerylib_0.1.4              
+ [53] Rcpp_1.0.10                   plyr_1.8.8                   
+ [55] base64enc_0.1-3               progress_1.2.2               
+ [57] zlibbioc_1.42.0               RCurl_1.98-1.10              
+ [59] ps_1.7.2                      prettyunits_1.1.1            
+ [61] rpart_4.1.19                  deldir_1.0-6                 
+ [63] SummarizedExperiment_1.26.1   cluster_2.1.4                
+ [65] fs_1.6.1                      magrittr_2.0.3               
+ [67] data.table_1.14.8             RSpectra_0.16-1              
+ [69] whisker_0.4.1                 matrixStats_0.63.0           
+ [71] hms_1.1.2                     mime_0.12                    
+ [73] evaluate_0.20                 xtable_1.8-4                 
+ [75] XML_3.99-0.13                 jpeg_0.1-10                  
+ [77] compiler_4.2.2                ellipse_0.4.3                
+ [79] crayon_1.5.2                  htmltools_0.5.4              
+ [81] corpcor_1.6.10                later_1.3.0                  
+ [83] tzdb_0.3.0                    DBI_1.1.3                    
+ [85] rappdirs_0.3.3                Matrix_1.5-3                 
+ [87] cli_3.6.0                     parallel_4.2.2               
+ [89] igraph_1.4.1                  pkgconfig_2.0.3              
+ [91] getPass_0.2-2                 GenomicAlignments_1.32.1     
+ [93] foreign_0.8-84                xml2_1.3.3                   
+ [95] rARPACK_0.11-0                bslib_0.4.2                  
+ [97] XVector_0.36.0                callr_3.7.3                  
+ [99] digest_0.6.31                 graph_1.74.0                 
+[101] Biostrings_2.64.1             rmarkdown_2.20               
+[103] htmlTable_2.4.1               restfulr_0.0.15              
+[105] curl_5.0.0                    shiny_1.7.4                  
+[107] Rsamtools_2.12.0              rjson_0.2.21                 
+[109] lifecycle_1.0.3               jsonlite_1.8.4               
+[111] fansi_1.0.4                   pillar_1.8.1                 
+[113] KEGGREST_1.36.3               fastmap_1.1.1                
+[115] httr_1.4.5                    interactiveDisplayBase_1.34.0
+[117] glue_1.6.2                    png_0.1-8                    
+[119] BiocVersion_3.15.2            bit_4.0.5                    
+[121] stringi_1.7.12                sass_0.4.5                   
+[123] blob_1.2.3                    latticeExtra_0.6-30          
+[125] memoise_2.0.1                </code></pre>
+</div>
+</div>
 </div>
 
 
