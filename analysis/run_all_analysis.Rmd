@@ -114,7 +114,9 @@ seq_info <-read.csv("output/sequencing_info.txt")
 #myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts", pattern ="*.txt")
 #mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
 # 
+drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
 time <- ordered(time, levels =c("3h", "24h"))
@@ -156,7 +158,7 @@ mymatrix$genes <- genes
 
 ```{r seq quals}
 
-
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 seq_info %>% 
   filter(type=="Total_reads") %>% 
   ggplot(., aes (x =samplenames, y=Total.Sequences, fill = drug, group_by=indv))+
