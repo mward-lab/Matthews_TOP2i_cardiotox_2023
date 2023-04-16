@@ -10,9 +10,11 @@ editor_options:
 
 Welcome to my research website. I am using workflowr to create reproducible code and data analysis.  
 
-# Because everyday is a new adventure, I am trying to update my wflow site! 
+# On my way.
 
 Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html) to see my results from the full run!!!   
+
+The cormotif analysis is here: [link](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
 
 Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html) to see my results from the first analysis 
 
