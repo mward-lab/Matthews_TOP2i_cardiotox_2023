@@ -1,7 +1,7 @@
 ---
 title: "Run_all_analysis"
 author: "ERM"
-date: "20230410"
+date: "20230414"
 output: 
   html_document: 
     toc: yes
@@ -29,7 +29,7 @@ library(RColorBrewer)
 library(mixOmics)
 library(gridExtra)#
 library(reshape2)#
-#library(devtools)
+
 library(AnnotationHub)
 library(tidyverse)
 library(scales)
@@ -39,6 +39,7 @@ library(cowplot)#
 library(ggrepel)#
 library(corrplot)
 library(Hmisc)
+library(ggpubr)
 
 
 
@@ -108,12 +109,12 @@ x_axis_labels=function(labels,every_nth=1,...) {
 
 design <- read.csv("data/data_outline.txt", row.names = 1)
 mymatrix <- readRDS("data/allmatrix.RDS")
-
+seq_info <-read.csv("output/sequencing_info.txt")
 ##below only done once
 #myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts", pattern ="*.txt")
-# mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
+#mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
 # 
-# saveRDS(mymatrix, "data/allmatrix.RDS")
+
 
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
 time <- ordered(time, levels =c("3h", "24h"))
@@ -134,7 +135,8 @@ samplenames <- c("MCW_RM_R_11", "MCW_RM_R_12", "MCW_RM_R_13", "MCW_RM_R_14", "MC
  
 anno <- (cbind(samplenames, indv, drug, time, RIN, group))
 anno <- as.data.frame(anno)
-
+#saveRDS(mymatrix, "data/allmatrix.RDS")
+##note-not filtered!
 
 ```
 
@@ -148,9 +150,108 @@ genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
 genes <- genes[!duplicated(genes$ENTREZID),]
 mymatrix$genes <- genes
 
+
+```
+# Initial RNA-seq quality checks
+
+```{r seq quals}
+
+
+seq_info %>% 
+  filter(type=="Total_reads") %>% 
+  ggplot(., aes (x =samplenames, y=Total.Sequences, fill = drug, group_by=indv))+
+  geom_col()+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression("Total number of sequences by sample"))+
+  xlab("")+
+  ylab(expression("RNA -sequencing reads"))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
+seq_info %>% 
+  filter(type=="Total_reads") %>% 
+  ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
+  geom_boxplot()+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression("Total number of sequences by treatment"))+
+  xlab("")+
+  ylab(expression("RNA -sequencing reads"))+
+  theme_bw()+
+  
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+seq_info %>% 
+  filter(type=="Total_reads") %>% 
+  ggplot(., aes (x =as.factor(indv), y=Total.Sequences))+
+  geom_boxplot(aes(fill=as.factor(indv)))+
+ scale_fill_brewer(palette = "Dark2", name = "Individual")+
+  ggtitle(expression("Total number of sequences by individual"))+
+  xlab("")+
+  ylab(expression("RNA -sequencing reads"))+
+  theme_bw()+
+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 1),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
+seq_info %>% 
+  filter(type=="Mapped_reads") %>% 
+  ggplot(., aes (x =as.factor(indv), y=read_num))+
+  geom_boxplot(aes(fill=as.factor(indv)))+
+ scale_fill_brewer(palette = "Dark2", name = "Individual")+
+  ggtitle(expression("Total mapped reads by individual"))+
+  xlab("")+
+  ylab(expression("Number of reads"))+
+  theme_bw()+
+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 0.5),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+seq_info %>% 
+  filter(type=="Mapped_reads") %>% 
+  ggplot(., aes (x =drug, y=read_num))+
+  geom_boxplot(aes(fill=drug))+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression("Total mapped reads by treatment"))+
+  xlab("")+
+  ylab(expression("Number of reads"))+
+  theme_bw()+
+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 0.5),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
 ```
 
-# Initial histograms
+# Initial histograms from count matrix
 
 ```{r readinfo,echo=FALSE, message=FALSE, warning=FALSE}
 cpm <- cpm(mymatrix)
@@ -159,10 +260,10 @@ dim(lcpm)
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
-#write.csv(x$counts, "data/raw_counts.csv")
-#saveRDS(x,"data/filtermatrix_x.RDS")
+#write.csv(x$counts, "data/filtered_raw_counts.csv")
+saveRDS(x,"data/filtermatrix_x.RDS")
 
-
+# lib_size <- (as.data.frame(mymatrix$sample$lib.size))
 filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
 
 hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
@@ -170,13 +271,15 @@ hist(lcpm,  main = "Histogram of total counts (unfiltered)",
 
 hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMeans > 0 method", 
      xlab =expression("Log"[10]*" counts-per-million"), col =2 ) 
-x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
+
 
 boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
 x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 boxplot(filcpm_matrix, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
 x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
+
+
 
 ```
 
@@ -188,12 +291,10 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 
 ```{r individual PCA by drug and time steps, echo=FALSE, message=FALSE, warning=FALSE}
-#readRDS("data/filtermatrix_x.RDS)
+#readRDS("data/filtermatrix_x.RDS")
 #saveRDS(dat_cpm,"data/dat_cpm.RDS")
+
 #dat_cpm <- readRDS("data/dat_cpm.RDS")
-
-
-
 
 label <- (interaction(substring(drug, 0, 2), indv, time))
 smlabel <- (interaction(substring(drug, 0, 2), time))
@@ -364,6 +465,7 @@ vfit<- contrasts.fit(vfit, contrasts=cm)
 
 efit2 <- eBayes(vfit)
 
+
 ```
 
 ```{r Differential expression, echo=FALSE}
@@ -476,7 +578,7 @@ motif 2-  Time-independent Top2Bi response cluster: 116
 
 motif 3- Early Top2Bi response cluster: 424
 
-motif 4- All BC drug response set (only 1!)
+motif 4- All BC drug response set (only 1!) (I could not really isolate this gene from the p.post data)
 
 motif 5-  Late Top2Bi response cluster:1615
 **these are based on the most recent plots (motif numbers have changed a little)

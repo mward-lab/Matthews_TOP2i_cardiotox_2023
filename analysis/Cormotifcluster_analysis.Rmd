@@ -25,29 +25,32 @@ library(ggVennDiagram)
 ```{r Import data, message=FALSE, warning=FALSE, include=FALSE}
 
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
-motif1_NR <- DEG_cormotif$motif1_NR
-motif3_TI <- DEG_cormotif$motif3_TI
-motif4_LR <- DEG_cormotif$motif4_LR
-motif5_ER <- DEG_cormotif$motif5_ER
+motif_NR <- DEG_cormotif$motif_NR
+motif_TI <- DEG_cormotif$motif_TI
+motif_LR <- DEG_cormotif$motif_LR
+motif_ER <- DEG_cormotif$motif_ER
   
 backGL <- read.csv("data/backGL.txt")
-NRresp <- read_csv("data/cormotif_NRset.txt")
+#NRresp <- read_csv("data/cormotif_NRset.txt")
 
 ```
 
-##motif1 No response genes
+##motif No response genes
 
 ```{r noresponse data motif1, echo=FALSE, message=FALSE, warning=FALSE}
-gostrescoNR <- gost(query = motif1_NR , 
-                      organism = "hsapiens",
-                      ordered_query = FALSE,
-                      domain_scope = "custom",
-                      measure_underrepresentation = FALSE,
-                      evcodes = FALSE,
-                      user_threshold = 0.05,
-                      correction_method = c("fdr"),
-                      custom_bg = backGL$ENTREZID,
-                      sources=c("GO:BP", "KEGG"))
+# gostrescoNR <- gost(query = motif_NR , 
+#                       organism = "hsapiens",
+#                       ordered_query = FALSE,
+#                       domain_scope = "custom",
+#                       measure_underrepresentation = FALSE,
+#                       evcodes = FALSE,
+#                       user_threshold = 0.05,
+#                       correction_method = c("fdr"),
+#                       custom_bg = backGL$ENTREZID,
+#                       sources=c("GO:BP", "KEGG"))
+
+#saveRDS(gostrescoNR, "data/gostrescoNR.")
+gostrescoNR <- readRDS("data/gostrescoNR")
 cormotifNRcluster <- gostplot(gostrescoNR, capped = FALSE, interactive = TRUE)
 cormotifNRcluster
 
@@ -74,7 +77,7 @@ tableNR <- gostrescoNR$result %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size)) +
     ggtitle('No response enriched GO:BP terms') +
-    xlab("-log 10 (p-value)")+
+   xlab(expression("-log"[10]~"(p-value)"))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ylab("GO: BP term")+
     scale_y_discrete(labels = wrap_format(30))+
@@ -100,7 +103,7 @@ tableNR <- gostrescoNR$result %>%
     ggtitle('No response enriched KEGG terms') +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    xlab("-log 10 (p-value)")+
+    xlab(expression("-log"[10]~"(p-value)"))+
     ylab("KEGG term")+
       theme_bw()+
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -114,21 +117,23 @@ tableNR <- gostrescoNR$result %>%
   
 ```
 
-##motif 4 Late response Top2inhibitors
+## motif  Late response Top2inhibitors
 
-```{r Top2iLR motif4 set, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Top2iLR motif set, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-gostresTop2bi_LR <- gost(query = c(motif4_LR),  
-                      organism = "hsapiens",
-                      ordered_query = FALSE,
-                      domain_scope = "custom",
-                      measure_underrepresentation = FALSE,
-                      evcodes = FALSE,
-                      user_threshold = 0.01,
-                      correction_method = c("fdr"),
-                      custom_bg = backGL$ENTREZID,
-                      sources=c("GO:BP", "KEGG"))
+# gostresTop2bi_LR <- gost(query = c(motif_LR),  
+#                       organism = "hsapiens",
+#                       ordered_query = FALSE,
+#                       domain_scope = "custom",
+#                       measure_underrepresentation = FALSE,
+#                       evcodes = FALSE,
+#                       user_threshold = 0.01,
+#                       correction_method = c("fdr"),
+#                       custom_bg = backGL$ENTREZID,
+#                       sources=c("GO:BP", "KEGG"))
+#saveRDS(gostresTop2bi_LR,"data/gostresTop2bi_LR.RDS")
+gostresTop2bi_LR <- readRDS("data/gostresTop2bi_LR.RDS")
 cormotifrespTop2bi_LR <- gostplot(gostresTop2bi_LR, capped = FALSE, interactive = TRUE)
 cormotifrespTop2bi_LR
 
@@ -154,7 +159,7 @@ tabletop2Bi_LR%>%
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Late Response enriched GO:BP terms') +
-    xlab("-log 10 (p-value)")+
+    xlab(expression("-log"[10]~"(p-value)"))+
     ylab("GO: BP term")+
       theme_bw()+
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -176,7 +181,7 @@ tabletop2Bi_LR%>%
    scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Late Response enriched KEGG terms') +
-    xlab("-log 10 (p-value)")+
+   xlab(expression("-log"[10]~"(p-value)"))+
     ylab("KEGG term")+
       theme_bw()+
  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -190,24 +195,27 @@ tabletop2Bi_LR%>%
 
 ```
 
-##motif 5 Early Response Top2 inhibitors
+## motif  Early Response Top2 inhibitors
 
-```{r Top2iER set motif5, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Top2iER set motif, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-gostresTop2bi_ER <- gost(query = c(motif5_ER),  
-                      organism = "hsapiens",
-                      ordered_query = FALSE,
-                      domain_scope = "custom",
-                      measure_underrepresentation = FALSE,
-                      evcodes = FALSE,
-                      user_threshold = 0.05,
-                      correction_method = c("fdr"),
-                      custom_bg = backGL$ENTREZID,
-                      sources=c("GO:BP", "KEGG"))
+# gostresTop2bi_ER <- gost(query = c(motif_ER),  
+#                       organism = "hsapiens",
+#                       ordered_query = FALSE,
+#                       domain_scope = "custom",
+#                       measure_underrepresentation = FALSE,
+#                       evcodes = FALSE,
+#                       user_threshold = 0.05,
+#                       correction_method = c("fdr"),
+#                       custom_bg = backGL$ENTREZID,
+#                       sources=c("GO:BP", "KEGG"))
+# saveRDS(gostresTop2bi_ER, "data/gostresTop2bi_ER.RDS")
+
+gostresTop2bi_ER <- readRDS("data/gostresTop2bi_ER.RDS")
 cormotifrespTop2bi_ER <- gostplot(gostresTop2bi_ER, capped = FALSE, interactive = TRUE)
 
-cormotifrespTop2bi_ER %>% 
+gostresTop2bi_ER$result %>% 
   mutate_at(.cols = 6, .funs= scientific_format()) %>% 
   kable(.,) %>% 
   kable_paper("striped", full_width = FALSE) %>%  
@@ -240,7 +248,7 @@ tabletop2Bi_ER %>%
     scale_y_discrete(labels = wrap_format(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Early Response enriched GO:BP terms') +
-    xlab("-log 10 (p-value)")+
+    xlab(expression("-log"[10]~"(p-value)"))+
     ylab("GO: BP term")+
       theme_bw()+
  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -262,7 +270,7 @@ tabletop2Bi_ER %>%
   guides(col="none", 
          size=guide_legend(title ="# of intersected \n terms"))+
   ggtitle('Early Response enriched KEGG terms') +
-  xlab("-log 10 (p-value)")+
+ xlab(expression("-log"[10]~"(p-value)"))+
   ylab("KEGG term")+
   theme_bw()+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -275,20 +283,24 @@ tabletop2Bi_ER %>%
 
 ```
 
-##motif 3 time independent response genes
+##motif  time independent response genes
 
 ```{r time independent, echo=FALSE, message=FALSE, warning=FALSE  }
 
-gostresTop2bi_TI <- gost(query = c(motif3_TI),  
-                      organism = "hsapiens",
-                      ordered_query = FALSE,
-                      domain_scope = "custom",
-                      measure_underrepresentation = FALSE,
-                      evcodes = FALSE,
-                      user_threshold = 0.01,
-                      correction_method = c("fdr"),
-                      custom_bg = backGL$ENTREZID,
-                      sources=c("GO:BP", "KEGG"))
+# gostresTop2bi_TI <- gost(query = c(motif_TI),  
+#                       organism = "hsapiens",
+#                       ordered_query = FALSE,
+#                       domain_scope = "custom",
+#                       measure_underrepresentation = FALSE,
+#                       evcodes = FALSE,
+#                       user_threshold = 0.01,
+#                       correction_method = c("fdr"),
+#                       custom_bg = backGL$ENTREZID,
+#                       sources=c("GO:BP", "KEGG"))
+# 
+# saveRDS(gostresTop2bi_TI, "data/gostresTop2bi_TI.RDS")
+
+gostresTop2bi_TI <- readRDS("data/gostresTop2bi_TI.RDS")
 cormotifrespTop2bi_TI <- gostplot(gostresTop2bi_TI, capped = FALSE, interactive = TRUE)
 cormotifrespTop2bi_TI
 
@@ -319,7 +331,7 @@ tabletop2Bi_TI %>%
     scale_y_discrete(labels = wrap_format(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Time independent response enriched GO:BP terms') +
-    xlab("-log 10 (p-value)")+
+    xlab(expression("-log"[10]~"(p-value)"))+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("GO: BP term")+
      theme_bw()+
@@ -343,7 +355,7 @@ tabletop2Bi_TI %>%
   scale_y_discrete(labels = wrap_format(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Time independent response enriched KEGG terms') +
-    xlab("-log 10 (p-value)")+
+   xlab(expression("-log"[10]~"(p-value)"))+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("KEGG term")+
       theme_bw()+
@@ -395,7 +407,7 @@ ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=FALSE),col=motif
   
     guides(col=guide_legend(title="Motif group"), size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Top 10 enriched GO:BP terms for each motif') +
-    xlab("-log 10 (adj. p-value)")+
+     xlab(expression("-log"[10]~"(p-value)"))+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("GO:BP term")+
       theme_bw()+
@@ -460,7 +472,7 @@ ggplot(., aes(x = log_val, y =reorder(term_name,p_value,desc=FALSE),col=motif)) 
   scale_y_discrete(limits=rev,labels = wrap_format(30))+
     guides(col=guide_legend(title="Motif group"), size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Top enriched KEGG terms for each motif') +
-    xlab("-log 10 (p-value)")+
+    xlab(expression("-log"[10]~"(p-value)"))+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("KEGG term")+
       theme_bw()+

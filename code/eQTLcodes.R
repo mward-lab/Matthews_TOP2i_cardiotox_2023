@@ -900,43 +900,43 @@ motif3_TI <- DEG_cormotif$motif3_TI
 motif4_LR <- DEG_cormotif$motif4_LR
 motif5_ER <- DEG_cormotif$motif5_ER
 
-length(intersect(knowles4, motif1_NR))
-length(intersect(knowles4, motif3_TI))
-length(intersect(knowles4, motif4_LR))
-length(intersect(knowles4, motif5_ER))
+length(intersect(knowles5, motif1_NR))
+length(intersect(knowles5, motif3_TI))
+length(intersect(knowles5, motif4_LR))
+length(intersect(knowles5, motif5_ER))
 Overlapk4 <- merge(Overlapk1,NR4, all =TRUE)[,1:2]
 cormotfi<- tibble( id =c("No response","Time-Independent response", "Late response","Early response"), n = c(352, 0,32,5), totalgene= c(8846,95,1409,length(motif5_ER)))
-
-cormotfi %>%
+cormotfi5 <- tibble( id =c("No response","Time-Independent response", "Late response","Early response"), n = c(210,4,42,11), totalgene= c(8846,95,1409,length(motif5_ER)))
+cormotfi5 %>%
   mutate(percent = n/totalgene) %>%
   mutate(id=factor(id, levels = c("Time-Independent response",
                                   "Early response","Late response","No response"))) %>%
 ggplot(., aes(x=id, y=n))+
   geom_col()+
-  scale_color_brewer(palette = "BLUES",guide = "none")+
+  scale_color_brewer(guide = "none")+
 
   theme_bw()+
   ylab("Count")+
   xlab("")+
-  ggtitle("reQTL distribution in cormotif set")+
+  ggtitle("reQTL5 distribution in cormotif set")+
   theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-cormotfi %>%
+cormotfi5 %>%
   mutate(percent = n/totalgene) %>%
   mutate(id=factor(id, levels = c("Time-Independent response",
                                   "Early response","Late response","No response"))) %>%
   ggplot(., aes(x=id, y=percent))+
-  geom_col(position_fill())+
+  geom_col()+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_palc[c(1:4,6)])+
   theme_bw()+
   ylab("Percent of gene set")+
   xlab("")+
-  ggtitle("reQTL proportion in cormotif set")+
+  ggtitle("reQTL5 proportion in cormotif set")+
   theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),

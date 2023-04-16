@@ -394,9 +394,12 @@ ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
 ```{r Viability data, echo=FALSE, warning=FALSE}
 ### to extract parameters for mapping
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+full_list <- read.csv("output/output-old/LDH48hoursdata.csv")
+
 alterlist <- full_list %>% 
       na.omit()%>% 
-      filter(Conc ==0.5|Conc==0.05|Conc ==5) %>%
+      filter(Conc <1) %>%
       mutate(indv=substr(SampleID,4,4)) %>% 
       mutate(indv=factor(as.numeric(indv))) %>% 
   mutate(Drug = factor(Drug, levels = c("Daunorubicin",  
@@ -417,7 +420,14 @@ ggplot(alterlist,  aes(x= as.factor(Conc), y= Percent, group = Conc)) +
   xlab(expression(paste("Concentration [", mu, "M]")))+
   geom_hline(yintercept = 1,lty = 4)+
   ylab("Viability") +
-  facet_wrap(~Name)+
+  facet_wrap(~Name)+ 
+  geom_signif(comparisons = list(c("0.01","0.05"),
+                                 c("0.01","0.1"),
+                                 c("0.01","0.5")),
+                test = "t.test",
+                map_signif_level = TRUE,step_increase = 0.1,
+                textsize = 4)+
+
   ggtitle("Viablity across concentrations at 48 hours")+
   theme(axis.title=element_text(size=10),
         axis.ticks=element_line(size =2),
@@ -992,7 +1002,7 @@ vehls
 ```{r combine LD50 values}
 ###combining all values into a larger dataframe
 
-
+library(RColorBrewer)
 daunls <- plyr::quickdf(daunls) %>% 
   pivot_longer(everything(),names_to = 'indv', values_to = "Daun")
                         
@@ -1015,8 +1025,10 @@ saveRDS(avgLD50,"data/avgLD50.RDS")
 LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
 colnames(LDfull) <- c("indv","Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
 summary(LDfull)
+BC_cell_lines <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx", 
++     sheet = "BC_sample_set")
 
-
+avgLD50 <- readRDS("data/avgLD50.RDS")
   
 avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
                          "Doxo"~"Doxorubicin",
@@ -1029,12 +1041,13 @@ avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
   geom_boxplot(position = "identity",aes(fill=Treatment))+
   geom_point(aes(color = indv,
                  size = 5,alpha = 0.5)) +
-  ggtitle("Observed LD 50s")+
+  ggtitle(expression("Observed LD"[50]*"s"))+
   xlab("Treatment")+
-  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu~mol))+
+  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Dark2",
                      name = "Individual", 
                      labels = c("1","2","3","4","5","6"))+
+   ylim(-2,2)+
   scale_fill_manual(values=drug_palc)+
   theme_bw() + 
   theme(plot.title = element_text(hjust =0.5, size = 18))+
@@ -1047,6 +1060,36 @@ avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold")) %>% print()  
+
+
+
+
+BC_cell_lines %>%
+    mutate(Cell_line= factor(Cell_line)) %>% 
+  pivot_longer(.,col=!Cell_line,names_to = 'Treatment',values_to = 'LD50') %>% 
+  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot(position = "identity",aes(fill=Treatment))+
+  geom_point(aes(color = Cell_line,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression("Cell line reported  LD"[50]*"s"))+
+  xlab("Treatment")+
+  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
+  scale_color_brewer(palette = "Spectral",
+                     name = "Cell lines")+
+          scale_fill_manual(values=drug_palc)+
+  ylim(-2,2)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha ="none", size = "none", fill= "none")+
+  #theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) %>% print()  
+  
   
 ```
 
@@ -1187,52 +1230,6 @@ library(tidyverse)
 #       
 ```
 
-
-
-
-
-
-
-
-
-
-
-
- ylab("Relative to Control Cells") +
-      # labs(fill = "Concentration") +
-      # show.legend = FALSE +
-      # facet_wrap("Drug") +
-      # theme(
-      #   legend.posistion = "none" ,
-      #   strip.background = element_blank(),
-      #   strip.placement = "outside",
-      #   axis.title = element_text(size = 15, color = "black"),
-      #   axis.ticks = element_line(size = 1.5),
-      #   axis.text = element_text(size = 10, color = "black"),
-        
-    
-png("tropimage.png")
-print(tropimage)
- dev.off()
-library(magrittir)
-selecting and redoing analysis
-ldhresults
-ldhnew <- select(ldhresults, c(indv,Drug,Conc,rLDH)) 
-colnames(ldhnew)
-wideldh <- pivot_wider(ldhnew, -id_cols=c(Drug,indv),id_expand= TRUE,names_from =Conc, values_from = c(rLDH))
-
-ave_ldh <- ldhnew %>%  group_by(Drug,Conc) %>%
-  summarise_at(vars(rLDH), list(name = mean)) %>% filter(Drug=="Control")
-
-atest 
- )save_plot('tranparentLDH.png', atest)
- atest 
- tag_facet(atest)
- atest
-library(egg)
-library(tidyverse)
-library(dplyr)
-```
 
 
 
