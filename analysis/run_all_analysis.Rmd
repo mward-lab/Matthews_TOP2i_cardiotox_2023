@@ -29,7 +29,7 @@ library(RColorBrewer)
 library(mixOmics)
 library(gridExtra)#
 library(reshape2)#
-
+library(data.table)
 library(AnnotationHub)
 library(tidyverse)
 library(scales)
@@ -137,8 +137,6 @@ samplenames <- c("MCW_RM_R_11", "MCW_RM_R_12", "MCW_RM_R_13", "MCW_RM_R_14", "MC
  
 anno <- (cbind(samplenames, indv, drug, time, RIN, group))
 anno <- as.data.frame(anno)
-#saveRDS(mymatrix, "data/allmatrix.RDS")
-##note-not filtered!
 
 ```
 
@@ -151,6 +149,8 @@ genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
   keytype="ENTREZID")
 genes <- genes[!duplicated(genes$ENTREZID),]
 mymatrix$genes <- genes
+#saveRDS(mymatrix, "data/allmatrix.RDS")
+##note-not filtered!
 
 
 ```
@@ -466,12 +466,15 @@ vfit <- lmFit(y, mm)
 vfit<- contrasts.fit(vfit, contrasts=cm)
 
 efit2 <- eBayes(vfit)
+#saveRDS(efit2,"data/efit2.RDS")
 
 
 ```
 
 ```{r Differential expression, echo=FALSE}
-
+#efit2 <- readRDS("data/efit2.RDS")
+countstotal <- y$E
+colnames(countstotal) <- smlabel
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
 V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
 V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
@@ -518,6 +521,56 @@ names(siglist) <- c("sigVDA3",
 # return(x)})
 
 
+ for(i in seq_along(siglist)) {
+ fnl <- paste0("data/",names(siglist)[i],".txt")
+    write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="")
+ }
+
+saveRDS(siglist,"data/siglist.RDS")
+# 
+# Da3counts <- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
+# Dx3counts <- as.data.frame(as.table(countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]))
+# Ep3counts <- as.data.frame(as.table(countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]))
+# Mt3counts <- as.data.frame(as.table(countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]))
+# TR3counts <- as.data.frame(as.table(countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]))
+# 
+# mDa3counts <- countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]
+# mDx3counts <- countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]
+# mEp3counts <- countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]
+# mMt3counts <- countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]
+# mTR3counts <- countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]
+# counts24hours <- as.data.frame(as.table(countstotal[,c(7:12,19:24,31:36,43:48,55:60, 67:72)]))
+# Da24counts <- as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
+# Dx24counts <- as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
+# Ep24counts <- as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
+# Mt24counts <- as.data.frame(as.table(countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]))
+# TR24counts <- as.data.frame(as.table(countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]))
+# 
+# mDa24counts <- countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]
+# mDx24counts <- countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]
+# mEp24counts <- countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]
+# mMt24counts <- countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]
+# mTR24counts <- countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]
+# 
+# colnames(Da24counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(Dx24counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(Ep24counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(Mt24counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(TR24counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(Da3counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(Dx3counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(Ep3counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(Mt3counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
+# colnames(counts24hours) <- c("ENTREZID", "Samples",  "Counts")
+# write_csv(Da24counts,"data/Da24counts.txt")
+# write_csv(Dx24counts,"data/Dx24counts.txt")
+# write_csv(Ep24counts,"data/Ep24counts.txt")
+# write_csv(Mt24counts,"data/Mt24counts.txt")
+# write_csv(TR24counts,"data/TR24counts.txt")
+# write_rds(counts24hours, "data/counts24hours.RDS")
+
+
 ```
 
 
@@ -533,13 +586,13 @@ sum
 
 
 ## cormotif analysis
-```{r cormotif analysis info}
+```{r cormotif analysis info, eval=FALSE, include=FALSE}
 library(Cormotif)
 library(IRanges)
 group_fac <- group1
 groupid <- as.numeric(group_fac)
 
-compid_tran <- data.frame(c1= c(1,2,3,4,5,7,8,9,10,11), c2 = c( 6,6,6,6,6,12,12,12,12,12))
+compid<- data.frame(c1= c(1,2,3,4,5,7,8,9,10,11), c2 = c( 6,6,6,6,6,12,12,12,12,12))
 
 
 y_TMM_cpm <- filcpm_matrix
@@ -553,6 +606,8 @@ plotMotif(cormotif_initial)
 gene_prob_tran <- cormotif_initial$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
 dim(gene_prob_tran)
+#this info is done on the following scripts: Cormotifcluster_analysis_RMD
+#Corrscripts.R and corMotifcustom.R
 
 nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
                                                    gene_prob_tran[,2] <0.5 &               
@@ -575,23 +630,75 @@ nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
 Response sets look similar to previous results.  This data is based on the filtered count matrix (using rowmeans>0 of cpm(log=true)).
 Classification of patterns appear to be:
 
-motif 1-  No Response set: 7490 (gene list made by filtering each column by posterior probability of <0.5) 
-motif 2-  Time-independent Top2Bi response cluster: 116
+motif 1-  No Response set: 7362 (gene list made by filtering each column by posterior probability of <0.55) 
 
-motif 3- Early Top2Bi response cluster: 424
+motif 2-  Time-independent Top2Bi response cluster: 432
+
+motif 3- Early Top2Bi response cluster: 481
 
 motif 4- All BC drug response set (only 1!) (I could not really isolate this gene from the p.post data)
 
-motif 5-  Late Top2Bi response cluster:1615
-**these are based on the most recent plots (motif numbers have changed a little)
-```{r cormotif genes, message=FALSE, warning=FALSE}
-DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+motif 5-  Late Top2Bi response cluster: 4850
+
+  NOTE: these are based on the most recent counts (motif numbers have changed a little)
+
+More analysis on corMotif (Baysian can be found on this page:  [CorMotif](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
 
 
+
+Pairwise gene analysis 
+
+
+
+```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
+library(cowplot)
+plot_filenames <- c("V.DA.top","V.DX.top","V.EP.top","V.MT.top","V.TR.top","V.DA24.top",
+"V.DX24.top","V.EP24.top","V.MT24.top","V.TR24.top")
+
+volcanosig <- function(df, psig.lvl,topg) {
+    df <- df %>% 
+    mutate(threshold = ifelse(adj.P.Val > psig.lvl, "A", ifelse(adj.P.Val <= psig.lvl & logFC<=0,"B","C")))
+      # ifelse(adj.P.Val <= psig.lvl & logFC >= 0,"B", "C")))
+    
+    df <- df %>% mutate(genelabels = "")
+    df$genelabels[1:topg] <- df$SYMBOL[1:topg]
+    
+  ggplot(df, aes(x=logFC, y=-log10(P.Value))) + 
+    geom_point(aes(color=threshold))+
+    geom_text_repel(aes(label = genelabels), segment.curvature = -1e-20,force = 1,size=2.5,
+    arrow = arrow(length = unit(0.015, "npc")), max.overlaps = Inf) +
+    #geom_hline(yintercept = -log10(psig.lvl))+
+    xlab(expression("Log"[2]*" FC"))+
+    ylab(expression("-log"[10]*"P Value"))+
+    scale_color_manual(values = c("black", "red","blue"))+
+    theme_cowplot()+
+    theme(legend.position = "none",
+              plot.title = element_text(size = rel(1.5), hjust = 0.5),
+              axis.title = element_text(size = rel(0.8))) 
+}
+#v1<- volcanosig(V.DA24.top, 0.01,0)
+v1 <- volcanosig(V.DA.top, 0.01,0)+ ggtitle("Daunorubicin 3 hour")
+v2 <- volcanosig(V.DA24.top, 0.01,0)+ ggtitle("Daunorubicin 24 hour")+ylab("")
+v3 <- volcanosig(V.DX.top, 0.01,0)+ ggtitle("Doxorubicin 3 hour")
+v4 <- volcanosig(V.DX24.top, 0.01,0)+ ggtitle("Doxorubicin 24 hour")+ylab("")
+v5 <- volcanosig(V.EP.top, 0.01,0)+ ggtitle("Epirubicin 3 hour")
+v6 <- volcanosig(V.EP24.top, 0.01,0)+ ggtitle("Epirubicin 24 hour")+ylab("")
+v7 <- volcanosig(V.MT.top, 0.01,0)+ ggtitle("Mitoxatrone 3 hour")
+v8 <- volcanosig(V.MT24.top, 0.01,0)+ ggtitle("Mitoxatrone 24 hour")+ylab("")
+v9 <- volcanosig(V.TR.top, 0.01,0)+ ggtitle("Trastuzumab 3 hour")
+v10 <- volcanosig(V.TR24.top, 0.01,0)+ ggtitle("Trastuzumab 24 hour")+ylab("")
+# volcanoplot(efit2,coef = 10,style = "p-value",
+#                           highlight = 8,
+#                           names = efit2$genes$SYMBOL,
+#                           hl.col = "red",xlab = "Log2 Fold Change",
+#                           ylab = NULL,pch = 16,cex = 0.35,
+#                           main = "Using Trastuzuman 24 hour data and volcanoplot function")
+plot_grid(v1,v2,  rel_widths =c(.8,1))
+plot_grid(v3,v4,  rel_widths =c(.8,1))
+plot_grid(v5,v6,  rel_widths =c(.8,1))
+plot_grid(v7,v8,  rel_widths =c(.8,1))
+plot_grid(v9,v10,  rel_widths =c(.8,1))
 ```
-
-
-
 
 
 
