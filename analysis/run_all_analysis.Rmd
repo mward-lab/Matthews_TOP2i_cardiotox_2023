@@ -642,7 +642,7 @@ motif 5-  Late Top2Bi response cluster: 4850
 
   NOTE: these are based on the most recent counts (motif numbers have changed a little)
 
-More analysis on corMotif (Baysian can be found on this page:  [CorMotif](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
+More analysis on corMotif (Baysian can be found on this page: ) [CorMotif](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
 
 
 

@@ -18,7 +18,9 @@ The cormotif analysis is here: [link](https://reneeisnowhere.github.io/Cardiotox
 
 Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html) to see my results from the first analysis 
 
-You can also look at my page of GO analysis.  This page will eventually contain all my Gene Enrichment analysis. 
-[GSEA analysis]https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html
+You can also look at my page of GO analysis on both the Baysiean gene analysis and Pairwise gene analysis.  
+[GO enrichment analysis]https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html
 [LDH analysis]https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html
+
+Knowles data comparison is here [reQTLS]https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html
 
