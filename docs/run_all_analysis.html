@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-04-16
+<strong>Last updated:</strong> 2023-04-17
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree9e88c228099cffe9113cbf68024bc65ac5c3f926targetblank9e88c22a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee1c63d978170fe9544c74c1ef195627e0a1ececbtargetblanke1c63d9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/9e88c228099cffe9113cbf68024bc65ac5c3f926" target="_blank">9e88c22</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e1c63d978170fe9544c74c1ef195627e0a1ececb" target="_blank">e1c63d9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree9e88c228099cffe9113cbf68024bc65ac5c3f926targetblank9e88c22a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee1c63d978170fe9544c74c1ef195627e0a1ececbtargetblanke1c63d9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/9e88c228099cffe9113cbf68024bc65ac5c3f926" target="_blank">9e88c22</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e1c63d978170fe9544c74c1ef195627e0a1ececb" target="_blank">e1c63d9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -603,6 +603,7 @@ Ignored files:
     Ignored:    data/cpmnorm_counts.csv
     Ignored:    data/dat_cpm.RDS
     Ignored:    data/data_outline.txt
+    Ignored:    data/efit2.RDS
     Ignored:    data/efit2results.RDS
     Ignored:    data/ensembl_backup.RDS
     Ignored:    data/ensgtotal.txt
@@ -639,6 +640,7 @@ Ignored files:
     Ignored:    data/sigVMT3.txt
     Ignored:    data/sigVTR24.txt
     Ignored:    data/sigVTR3.txt
+    Ignored:    data/siglist.RDS
     Ignored:    data/table3a.omar
     Ignored:    data/tvl24hour.txt
     Ignored:    data/tvl24hourw.txt
@@ -733,6 +735,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/e1c63d978170fe9544c74c1ef195627e0a1ececb/analysis/run_all_analysis.Rmd" target="_blank">e1c63d9</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+<td>
+wflow_publish("analysis/run_all_analysis.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/run_all_analysis.html" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1020,7 +1056,7 @@ library(RColorBrewer)
 library(mixOmics)
 library(gridExtra)#
 library(reshape2)#
-
+library(data.table)
 library(AnnotationHub)
 library(tidyverse)
 library(scales)
@@ -1037,7 +1073,9 @@ geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
 genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
   keytype=&quot;ENTREZID&quot;)
 genes &lt;- genes[!duplicated(genes$ENTREZID),]
-mymatrix$genes &lt;- genes</code></pre>
+mymatrix$genes &lt;- genes
+#saveRDS(mymatrix, &quot;data/allmatrix.RDS&quot;)
+##note-not filtered!</code></pre>
 <div id="initial-rna-seq-quality-checks" class="section level1">
 <h1>Initial RNA-seq quality checks</h1>
 <p><img src="figure/run_all_analysis.Rmd/seq%20quals-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-5.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1158,19 +1196,22 @@ Up       423    16   180    51     0   3477   3309   3223    687      0</code></
 </div>
 <div id="cormotif-analysis" class="section level2">
 <h2>cormotif analysis</h2>
-<p><img src="figure/run_all_analysis.Rmd/cormotif%20analysis%20info-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/cormotif%20analysis%20info-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>[1] 14084    10</code></pre>
 <p>Response sets look similar to previous results. This data is based on
 the filtered count matrix (using rowmeans&gt;0 of cpm(log=true)).
 Classification of patterns appear to be:</p>
-<p>motif 1- No Response set: 7490 (gene list made by filtering each
-column by posterior probability of &lt;0.5) motif 2- Time-independent
-Top2Bi response cluster: 116</p>
-<p>motif 3- Early Top2Bi response cluster: 424</p>
+<p>motif 1- No Response set: 7362 (gene list made by filtering each
+column by posterior probability of &lt;0.55)</p>
+<p>motif 2- Time-independent Top2Bi response cluster: 432</p>
+<p>motif 3- Early Top2Bi response cluster: 481</p>
 <p>motif 4- All BC drug response set (only 1!) (I could not really
 isolate this gene from the p.post data)</p>
-<p>motif 5- Late Top2Bi response cluster:1615 **these are based on the
-most recent plots (motif numbers have changed a little)</p>
+<p>motif 5- Late Top2Bi response cluster: 4850</p>
+<p>NOTE: these are based on the most recent counts (motif numbers have
+changed a little)</p>
+<p>More analysis on corMotif (Baysian can be found on this page: <a
+href="https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html">CorMotif</a></p>
+<p>Pairwise gene analysis</p>
+<p><img src="figure/run_all_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1197,120 +1238,117 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] Cormotif_1.42.0                        
- [2] affy_1.74.0                            
- [3] ggpubr_0.6.0                           
- [4] Hmisc_4.8-0                            
- [5] Formula_1.2-5                          
- [6] survival_3.5-3                         
- [7] corrplot_0.92                          
- [8] ggrepel_0.9.3                          
- [9] cowplot_1.1.1                          
-[10] Homo.sapiens_1.3.1                     
-[11] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
-[12] org.Hs.eg.db_3.15.0                    
-[13] GO.db_3.15.0                           
-[14] OrganismDbi_1.38.1                     
-[15] GenomicFeatures_1.48.4                 
-[16] GenomicRanges_1.48.0                   
-[17] GenomeInfoDb_1.32.4                    
-[18] AnnotationDbi_1.58.0                   
-[19] IRanges_2.30.1                         
-[20] S4Vectors_0.34.0                       
-[21] Biobase_2.56.0                         
-[22] biomaRt_2.52.0                         
-[23] scales_1.2.1                           
-[24] lubridate_1.9.2                        
-[25] forcats_1.0.0                          
-[26] stringr_1.5.0                          
-[27] dplyr_1.1.0                            
-[28] purrr_1.0.1                            
-[29] readr_2.1.4                            
-[30] tidyr_1.3.0                            
-[31] tibble_3.1.8                           
-[32] tidyverse_2.0.0                        
-[33] AnnotationHub_3.4.0                    
-[34] BiocFileCache_2.4.0                    
-[35] dbplyr_2.3.1                           
-[36] BiocGenerics_0.42.0                    
-[37] reshape2_1.4.4                         
-[38] gridExtra_2.3                          
-[39] mixOmics_6.20.0                        
-[40] ggplot2_3.4.1                          
-[41] lattice_0.20-45                        
-[42] MASS_7.3-58.2                          
-[43] RColorBrewer_1.1-3                     
-[44] edgeR_3.38.4                           
-[45] limma_3.52.4                           
-[46] workflowr_1.7.0                        
+ [1] ggpubr_0.6.0                           
+ [2] Hmisc_4.8-0                            
+ [3] Formula_1.2-5                          
+ [4] survival_3.5-3                         
+ [5] corrplot_0.92                          
+ [6] ggrepel_0.9.3                          
+ [7] cowplot_1.1.1                          
+ [8] Homo.sapiens_1.3.1                     
+ [9] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+[10] org.Hs.eg.db_3.15.0                    
+[11] GO.db_3.15.0                           
+[12] OrganismDbi_1.38.1                     
+[13] GenomicFeatures_1.48.4                 
+[14] GenomicRanges_1.48.0                   
+[15] GenomeInfoDb_1.32.4                    
+[16] AnnotationDbi_1.58.0                   
+[17] IRanges_2.30.1                         
+[18] S4Vectors_0.34.0                       
+[19] Biobase_2.56.0                         
+[20] biomaRt_2.52.0                         
+[21] scales_1.2.1                           
+[22] lubridate_1.9.2                        
+[23] forcats_1.0.0                          
+[24] stringr_1.5.0                          
+[25] dplyr_1.1.0                            
+[26] purrr_1.0.1                            
+[27] readr_2.1.4                            
+[28] tidyr_1.3.0                            
+[29] tibble_3.1.8                           
+[30] tidyverse_2.0.0                        
+[31] AnnotationHub_3.4.0                    
+[32] BiocFileCache_2.4.0                    
+[33] dbplyr_2.3.1                           
+[34] BiocGenerics_0.42.0                    
+[35] data.table_1.14.8                      
+[36] reshape2_1.4.4                         
+[37] gridExtra_2.3                          
+[38] mixOmics_6.20.0                        
+[39] ggplot2_3.4.1                          
+[40] lattice_0.20-45                        
+[41] MASS_7.3-58.2                          
+[42] RColorBrewer_1.1-3                     
+[43] edgeR_3.38.4                           
+[44] limma_3.52.4                           
+[45] workflowr_1.7.0                        
 
 loaded via a namespace (and not attached):
   [1] utf8_1.2.3                    tidyselect_1.2.0             
   [3] RSQLite_2.3.0                 htmlwidgets_1.6.1            
   [5] grid_4.2.2                    BiocParallel_1.30.4          
-  [7] munsell_0.5.0                 preprocessCore_1.58.0        
-  [9] codetools_0.2-19              statmod_1.5.0                
- [11] interp_1.1-3                  withr_2.5.0                  
- [13] colorspace_2.1-0              filelock_1.0.2               
- [15] highr_0.10                    knitr_1.42                   
- [17] rstudioapi_0.14               ggsignif_0.6.4               
- [19] MatrixGenerics_1.8.1          labeling_0.4.2               
- [21] git2r_0.31.0                  GenomeInfoDbData_1.2.8       
- [23] pheatmap_1.0.12               farver_2.1.1                 
- [25] bit64_4.0.5                   rprojroot_2.0.3              
- [27] vctrs_0.5.2                   generics_0.1.3               
- [29] xfun_0.37                     timechange_0.2.0             
- [31] R6_2.5.1                      locfit_1.5-9.7               
- [33] bitops_1.0-7                  cachem_1.0.7                 
- [35] DelayedArray_0.22.0           promises_1.2.0.1             
- [37] BiocIO_1.6.0                  nnet_7.3-18                  
- [39] gtable_0.3.1                  processx_3.8.0               
- [41] rlang_1.0.6                   splines_4.2.2                
- [43] rtracklayer_1.56.1            rstatix_0.7.2                
- [45] broom_1.0.3                   checkmate_2.1.0              
- [47] BiocManager_1.30.20           yaml_2.3.7                   
- [49] abind_1.4-5                   backports_1.4.1              
- [51] httpuv_1.6.9                  RBGL_1.72.0                  
- [53] tools_4.2.2                   affyio_1.66.0                
- [55] ellipsis_0.3.2                jquerylib_0.1.4              
- [57] Rcpp_1.0.10                   plyr_1.8.8                   
- [59] base64enc_0.1-3               progress_1.2.2               
- [61] zlibbioc_1.42.0               RCurl_1.98-1.10              
- [63] ps_1.7.2                      prettyunits_1.1.1            
- [65] rpart_4.1.19                  deldir_1.0-6                 
- [67] SummarizedExperiment_1.26.1   cluster_2.1.4                
- [69] fs_1.6.1                      magrittr_2.0.3               
- [71] data.table_1.14.8             RSpectra_0.16-1              
- [73] whisker_0.4.1                 matrixStats_0.63.0           
- [75] hms_1.1.2                     mime_0.12                    
- [77] evaluate_0.20                 xtable_1.8-4                 
- [79] XML_3.99-0.13                 jpeg_0.1-10                  
- [81] compiler_4.2.2                ellipse_0.4.3                
- [83] crayon_1.5.2                  htmltools_0.5.4              
- [85] corpcor_1.6.10                later_1.3.0                  
- [87] tzdb_0.3.0                    DBI_1.1.3                    
- [89] rappdirs_0.3.3                Matrix_1.5-3                 
- [91] car_3.1-1                     cli_3.6.0                    
- [93] parallel_4.2.2                igraph_1.4.1                 
- [95] pkgconfig_2.0.3               getPass_0.2-2                
- [97] GenomicAlignments_1.32.1      foreign_0.8-84               
- [99] xml2_1.3.3                    rARPACK_0.11-0               
-[101] bslib_0.4.2                   XVector_0.36.0               
-[103] callr_3.7.3                   digest_0.6.31                
-[105] graph_1.74.0                  Biostrings_2.64.1            
-[107] rmarkdown_2.20                htmlTable_2.4.1              
-[109] restfulr_0.0.15               curl_5.0.0                   
-[111] shiny_1.7.4                   Rsamtools_2.12.0             
-[113] rjson_0.2.21                  lifecycle_1.0.3              
-[115] jsonlite_1.8.4                carData_3.0-5                
-[117] fansi_1.0.4                   pillar_1.8.1                 
-[119] KEGGREST_1.36.3               fastmap_1.1.1                
-[121] httr_1.4.5                    interactiveDisplayBase_1.34.0
-[123] glue_1.6.2                    png_0.1-8                    
-[125] BiocVersion_3.15.2            bit_4.0.5                    
-[127] stringi_1.7.12                sass_0.4.5                   
-[129] blob_1.2.3                    latticeExtra_0.6-30          
-[131] memoise_2.0.1                </code></pre>
+  [7] munsell_0.5.0                 codetools_0.2-19             
+  [9] statmod_1.5.0                 interp_1.1-3                 
+ [11] withr_2.5.0                   colorspace_2.1-0             
+ [13] filelock_1.0.2                highr_0.10                   
+ [15] knitr_1.42                    rstudioapi_0.14              
+ [17] ggsignif_0.6.4                MatrixGenerics_1.8.1         
+ [19] labeling_0.4.2                git2r_0.31.0                 
+ [21] GenomeInfoDbData_1.2.8        pheatmap_1.0.12              
+ [23] farver_2.1.1                  bit64_4.0.5                  
+ [25] rprojroot_2.0.3               vctrs_0.5.2                  
+ [27] generics_0.1.3                xfun_0.37                    
+ [29] timechange_0.2.0              R6_2.5.1                     
+ [31] locfit_1.5-9.7                bitops_1.0-7                 
+ [33] cachem_1.0.7                  DelayedArray_0.22.0          
+ [35] promises_1.2.0.1              BiocIO_1.6.0                 
+ [37] nnet_7.3-18                   gtable_0.3.1                 
+ [39] processx_3.8.0                rlang_1.0.6                  
+ [41] splines_4.2.2                 rtracklayer_1.56.1           
+ [43] rstatix_0.7.2                 broom_1.0.3                  
+ [45] checkmate_2.1.0               BiocManager_1.30.20          
+ [47] yaml_2.3.7                    abind_1.4-5                  
+ [49] backports_1.4.1               httpuv_1.6.9                 
+ [51] RBGL_1.72.0                   tools_4.2.2                  
+ [53] ellipsis_0.3.2                jquerylib_0.1.4              
+ [55] Rcpp_1.0.10                   plyr_1.8.8                   
+ [57] base64enc_0.1-3               progress_1.2.2               
+ [59] zlibbioc_1.42.0               RCurl_1.98-1.10              
+ [61] ps_1.7.2                      prettyunits_1.1.1            
+ [63] rpart_4.1.19                  deldir_1.0-6                 
+ [65] SummarizedExperiment_1.26.1   cluster_2.1.4                
+ [67] fs_1.6.1                      magrittr_2.0.3               
+ [69] RSpectra_0.16-1               whisker_0.4.1                
+ [71] matrixStats_0.63.0            hms_1.1.2                    
+ [73] mime_0.12                     evaluate_0.20                
+ [75] xtable_1.8-4                  XML_3.99-0.13                
+ [77] jpeg_0.1-10                   compiler_4.2.2               
+ [79] ellipse_0.4.3                 crayon_1.5.2                 
+ [81] htmltools_0.5.4               corpcor_1.6.10               
+ [83] later_1.3.0                   tzdb_0.3.0                   
+ [85] DBI_1.1.3                     rappdirs_0.3.3               
+ [87] Matrix_1.5-3                  car_3.1-1                    
+ [89] cli_3.6.0                     parallel_4.2.2               
+ [91] igraph_1.4.1                  pkgconfig_2.0.3              
+ [93] getPass_0.2-2                 GenomicAlignments_1.32.1     
+ [95] foreign_0.8-84                xml2_1.3.3                   
+ [97] rARPACK_0.11-0                bslib_0.4.2                  
+ [99] XVector_0.36.0                callr_3.7.3                  
+[101] digest_0.6.31                 graph_1.74.0                 
+[103] Biostrings_2.64.1             rmarkdown_2.20               
+[105] htmlTable_2.4.1               restfulr_0.0.15              
+[107] curl_5.0.0                    shiny_1.7.4                  
+[109] Rsamtools_2.12.0              rjson_0.2.21                 
+[111] lifecycle_1.0.3               jsonlite_1.8.4               
+[113] carData_3.0-5                 fansi_1.0.4                  
+[115] pillar_1.8.1                  KEGGREST_1.36.3              
+[117] fastmap_1.1.1                 httr_1.4.5                   
+[119] interactiveDisplayBase_1.34.0 glue_1.6.2                   
+[121] png_0.1-8                     BiocVersion_3.15.2           
+[123] bit_4.0.5                     stringi_1.7.12               
+[125] sass_0.4.5                    blob_1.2.3                   
+[127] latticeExtra_0.6-30           memoise_2.0.1                </code></pre>
 </div>
 </div>
 </div>
