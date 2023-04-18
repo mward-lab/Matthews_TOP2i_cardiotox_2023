@@ -22,7 +22,76 @@ library(ggVennDiagram)
 
 ```
 
-```{r Import data, message=FALSE, warning=FALSE, include=FALSE}
+# Creation of the data set:
+
+```{r data import, echo=TRUE,eval=FALSE, message=FALSE, warning=FALSE}
+library(edgeR)
+library(Cormotif)
+library(RColorBrewer)
+library(tidyverse)
+library(BiocParallel)
+## read in count file##
+design <- read.csv("data/data_outline.txt", row.names = 1)
+mymatrix <- readRDS("data/filtermatrix_x.RDS")#should be 14084
+x_counts <- mymatrix$counts
+
+indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
+time <- ordered(time, levels =c("3h", "24h"))
+group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+group1 <- interaction(drug,time)
+label <- (interaction(substring(drug, 0, 2), indv, time))
+colnames(x_counts) <- label
+group_fac <- group1
+groupid <- as.numeric(group_fac)
+
+compid <- data.frame(c1= c(1,2,3,4,5,7,8,9,10,11), c2 = c( 6,6,6,6,6,12,12,12,12,12))
+
+y_TMM_cpm <- cpm(x_counts, log = TRUE)
+
+colnames(y_TMM_cpm) <- label
+y_TMM_cpm
+set.seed(12345)
+cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
+                             groupid = groupid,
+                             compid = compid,
+                             K=1:8, max.iter = 500,runtype="logCPM")
+
+```
+
+cormotif_initial was created after calling corMotif, then running the corMotifcustom.R script. The extra R script enabled me to generate a table containing the likelihood of each gene that belongs to the specific cluster.
+
+After generating the Motifs from 1 to 8, the number of motifs that best fit the data was 4 using the BIC and AIC results below.
+
+```{r plot motifs, echo=TRUE, message=FALSE, warning=FALSE}
+cormotif_initial <- readRDS("data/cormotif_initialall.RDS")#
+plotIC(cormotif_initial)
+plotMotif(cormotif_initial)
+
+```
+
+Viewing the motifs, the following groups were named:
+
+-   Motif 1: No Response (n=7409)
+
+-   Motif 2: Top2$\beta$ inhibitor response, Time-independent     
+
+    + (Time-independent response, n= 589)
+
+-   Motif 3: Top2$\beta$ inhibitor response, Early 
+
+    + (Early response, n= 487)
+    
+-   Motif 4: Top2$\beta$ inhibitor response, Late 
+
+    + (Late response, n= 5596)
+
+```{r  cormotif_inital analysis}
+
+
+
+
 
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 motif_NR <- DEG_cormotif$motif_NR
@@ -117,7 +186,7 @@ tableNR <- gostrescoNR$result %>%
   
 ```
 
-## motif  Late response Top2inhibitors
+## motif Late response Top2inhibitors
 
 ```{r Top2iLR motif set, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -195,7 +264,7 @@ tabletop2Bi_LR%>%
 
 ```
 
-## motif  Early Response Top2 inhibitors
+## motif Early Response Top2 inhibitors
 
 ```{r Top2iER set motif, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -283,7 +352,7 @@ tabletop2Bi_ER %>%
 
 ```
 
-##motif  time independent response genes
+##motif time independent response genes
 
 ```{r time independent, echo=FALSE, message=FALSE, warning=FALSE  }
 
