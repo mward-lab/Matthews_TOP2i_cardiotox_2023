@@ -253,7 +253,7 @@ seq_info %>%
 
 ```
 
-# Initial histograms from count matrix
+## Initial histograms from count matrix
 
 ```{r readinfo,echo=FALSE, message=FALSE, warning=FALSE}
 cpm <- cpm(mymatrix)
@@ -267,6 +267,7 @@ saveRDS(x,"data/filtermatrix_x.RDS")
 
 # lib_size <- (as.data.frame(mymatrix$sample$lib.size))
 filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
+#write.csv(filcpm_matrix, "data/filtered_cpm_counts.csv")
 
 hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
      xlab =expression("Log"[10]*" counts-per-million"), col =4 )
@@ -285,11 +286,7 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 ```
 
-
-
 ## PCA by treatment and as a whole
-
-
 
 
 ```{r individual PCA by drug and time steps, echo=FALSE, message=FALSE, warning=FALSE}
@@ -329,6 +326,9 @@ pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
 varpals <- (pca_var_plot(pca_all))
 print(varpals)
+
+
+
 head(pca_all_anno)[,1:12]
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
@@ -360,7 +360,7 @@ pca_all_anno %>%
         axis.title = element_text(size = 12, color = "black"))
 prdat_cpm <- calc_pca(t(dat_cpm)) 
 storepca <- summary(prdat_cpm)
-summary(prdat_cpm)
+head(storepca$importance[,1:7])
 
 ```
 
@@ -385,11 +385,6 @@ genecardiccheck <- c("MYH7", "TNNT2","MYH6","ACTN2","BMP3","TNNI3","RYR2","CACNA
 #write.csv(heartgenes, "data/heartgenes.csv")
 heartgenes <-read.csv("data/heartgenes.csv")
 fungraph <- as.data.frame(filcpm_matrix[rownames(filcpm_matrix) %in% heartgenes$entrezgene_id,])
-
-
-
-
-
 
 
 fungraph %>% 
@@ -424,17 +419,11 @@ fungraph %>%
 colnames(filcpm_matrix) <- label
 mcor <- cor(filcpm_matrix)
 pheatmap::pheatmap(mcor , cluster_rows = TRUE, cluster_cols = TRUE)
-
-
-
 ```
 
 
 
 ### now to get the counts set for DEG!!
-
-
-
 
 ```{r counts to DEG set up, echo= FALSE}
 group1 <- interaction(drug,time)
@@ -570,7 +559,6 @@ saveRDS(siglist,"data/siglist.RDS")
 # write_csv(TR24counts,"data/TR24counts.txt")
 # write_rds(counts24hours, "data/counts24hours.RDS")
 
-
 ```
 
 
@@ -585,7 +573,7 @@ sum
 ```
 
 
-## cormotif analysis
+### cormotif analysis [More In-depth](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
 ```{r cormotif analysis info, eval=FALSE, include=FALSE}
 library(Cormotif)
 library(IRanges)
@@ -605,7 +593,7 @@ plotMotif(cormotif_initial)
 
 gene_prob_tran <- cormotif_initial$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
-dim(gene_prob_tran)
+# dim(gene_prob_tran)
 #this info is done on the following scripts: Cormotifcluster_analysis_RMD
 #Corrscripts.R and corMotifcustom.R
 
@@ -626,7 +614,7 @@ nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
  #write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_cluster.txt")
 
 ```
-
+written summary so far:  pending T values sorting.
 Response sets look similar to previous results.  This data is based on the filtered count matrix (using rowmeans>0 of cpm(log=true)).
 Classification of patterns appear to be:
 
@@ -642,12 +630,11 @@ motif 5-  Late Top2Bi response cluster: 4850
 
   NOTE: these are based on the most recent counts (motif numbers have changed a little)
 
-More analysis on corMotif (Baysian can be found on this page: ) [CorMotif](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
+More analysis on corMotif (aka Baysian gene anaylsis can be found on this page:) [CorMotif](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
 
 
 
-Pairwise gene analysis 
-
+## Volcano plots from pairwise gene analysis 
 
 
 ```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
