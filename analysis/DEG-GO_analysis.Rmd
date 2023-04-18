@@ -59,19 +59,63 @@ colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P
 colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 ```
 
-The analysis is based on all genes that passed the rowMeans\>0 from the previous page [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqrun_1_analysis.html)
+The analysis is based on all genes that passed the rowMeans\>0 from the previous page whicha are about 14084 genes expressed in my RNA-seq data [link](https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html)
 
 ```{r uploading the background genes, echo=FALSE,  message=FALSE, warning=FALSE, paged.print=FALSE}
 #backGL <- efit2$genes  # ***making the list
 
 #write.csv(backGL, "data/backGL.txt", row.names = FALSE)
-##read the  .csv the render into txt in the data file!
+##read the  .csv then render into txt in the data file!
  backGL <- read_csv("data/backGL.txt", 
     col_types = cols(...1 = col_skip()))
 ```
 
 Below is the analysis of differentially expressed genes for each treatment at 3 hours and 24 hours.
-##Daunorubicin
+
+```{r tras had no DEGs}
+library(ggpubr)
+drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
+total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+
+toplistall <- read.csv("output/toplistall.csv",row.names = 1)
+
+
+toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  group_by(time, id) %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.1,'sig','notsig'))%>%
+  count(sigcount) %>% 
+  pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %>% 
+  mutate(prop = sig/(sig+notsig)*100) %>% 
+  mutate(prop=if_else(is.na(prop),0,prop)) %>% 
+  ggplot(., aes(x=id, y= prop))+
+  geom_col(aes(fill=id))+
+  geom_text(aes(label = sprintf("%.2f",prop)), position=position_dodge(0.9),vjust=-.2 )+
+  scale_fill_manual(values =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
+  theme_bw()+
+  xlab("")+
+  ylab("Percentage of expressed genes")+
+  theme_bw()+
+  facet_wrap(~time)+
+  ggtitle("Number of DEG (adj. P value <0.1)")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text.x = element_text(size = 8, color = "white", angle = 0),
+        axis.text.y = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+```
+## Daunorubicin
+
+This is analysis on the significantly differentially expressed genes for Daunorubicin by 3 and 24 hours.
 ```{r intial analysis DA3 and DA24, echo=FALSE, message=FALSE, warning=FALSE}
 DAspgostres3 <- gost(query = sigVDA3$ENTREZID, 
                     organism = "hsapiens",
@@ -98,39 +142,19 @@ DAtable3 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>%
   scroll_box(width = "100%", height = "400px")
 ```
 
-###daun 3hour sig DEG
+### A look at the Daunorubicin specific genes at 3 hours and how they may relate to 24 hour genes using GO analysis
+ 3 hours specifically:
 
 ```{r daun 3 hour sig DEG,}
 
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
-# ggVennDiagram(total3,
-#               category.names = c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone"),
-#               show_intersect = FALSE,
-#               set_color = "black",
-#               label = "both",
-#               label_percent_digit = 1,
-#               label_size = 3.5,
-#               label_alpha = 0,
-#               label_color = "black",
-#               edge_lty = "solid") +
-#   scale_x_continuous(expand = expansion(mult = .2))+
-#   scale_fill_gradient(low = "red2", high = "yellow")+
-#   labs(title = "3 hour comparison of significant genes", caption = "n = 554 genes")+
-#   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-# 
-
 
 list3totvenn3 <- get.venn.partitions(total3)
 list24totvenn24 <- get.venn.partitions(total24)
 
-
-
 Daun3sp <- list3totvenn3$..values..[[15]]
 Daun24sp <- list24totvenn24$..values..[[15]]
-
-
-
 
 
 DAspgostres3 <- gost(query = Daun3sp, 
@@ -150,8 +174,6 @@ DAsptable3 <- DAspgostres3$result %>%
   dplyr::select(c(source, term_id,
                   term_name,intersection_size, 
                    term_size, p_value))# %>% 
-
- 
   DAsptable3 %>% 
     dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
@@ -185,18 +207,8 @@ DAsptable3 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>%
 
 ```{r daun specific Venn genes}
 # 3 hour daun specific genes (venn)
-  DAgostres <- gost(query = Daun3sp,  organism = "hsapiens",
-                    ordered_query = TRUE,
-                    domain_scope = "custom",
-                    measure_underrepresentation = FALSE,
-                    evcodes = FALSE,
-                    user_threshold = 0.0001,
-                    correction_method = c("fdr"),
-                    custom_bg = backGL$ENTREZID,
-                    sources=c("GO:BP","KEGG"))
+ 
 
-DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
-DAspp3
 
 DAsptable3 <- DAspgostres3$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
@@ -230,9 +242,9 @@ DAsptable3 %>% mutate_at(.cols = 6, .funs= scientific_format()) %>%
 
 
 
-
+length(union(Daun3sp,sigVDX3$ENTREZID))
 ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
-              category.names = c("3 hours","24 hours"),
+              category.names = c("3 hour\n Daun- specific","24 hours\n DEG p < 0.1"),
               show_intersect = FALSE,
               set_color = "black",
               label = "both",
@@ -243,7 +255,7 @@ ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
               edge_lty = "solid") +
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "red4", high = "tan1")+
-  labs(title = "3 hour venn with 24 hour Daun", caption = "n = 554 genes")+
+  labs(title = "3 hour venn with 24 hour Daun", caption = "n = 455 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
 # Dau3sp_Dau24sig <- get.venn.partitions(list(Daun3sp, sigVDA24$ENTREZID,DDEresp ))
@@ -290,16 +302,18 @@ ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
 ```
 ###Daunorubicin 24 sigDEG
 ```{r DA sig deg 24}
-  DAgostres24 <- gost(query = sigVDA24$ENTREZID,  
-                    organism = "hsapiens",
-                    ordered_query = TRUE,
-                    domain_scope = "custom",
-                    measure_underrepresentation = FALSE,
-                    evcodes = FALSE,
-                    user_threshold = 0.0001,
-                    correction_method = c("fdr"),
-                    custom_bg = backGL$ENTREZID,
-                    sources=c("GO:BP","KEGG"))
+  # DAgostres24 <- gost(query = sigVDA24$ENTREZID,  
+  #                   organism = "hsapiens",
+  #                   ordered_query = TRUE,
+  #                   domain_scope = "custom",
+  #                   measure_underrepresentation = FALSE,
+  #                   evcodes = FALSE,
+  #                   user_threshold = 0.0001,
+  #                   correction_method = c("fdr"),
+  #                   custom_bg = backGL$ENTREZID,
+  #                   sources=c("GO:BP","KEGG"))
+#saveRDS(DAgostres24, "data/DAgostres24.RDS")
+DAgostres24 <- readRDS("data/DAgostres24.RDS")
 DAp24 <- gostplot(DAgostres24, capped = FALSE, interactive = TRUE)
 DAp24
 
