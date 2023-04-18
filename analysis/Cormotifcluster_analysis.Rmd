@@ -19,16 +19,20 @@ library(VennDiagram)
 library(kableExtra)
 library(scales)
 library(ggVennDiagram)
-
+library(Cormotif)
+library(RColorBrewer)
 ```
 
 # Creation of the data set:
+```{r,file='corMotifcustom.R'}
+
+```
 
 ```{r data import, echo=TRUE,eval=FALSE, message=FALSE, warning=FALSE}
 library(edgeR)
 library(Cormotif)
 library(RColorBrewer)
-library(tidyverse)
+
 library(BiocParallel)
 ## read in count file##
 design <- read.csv("data/data_outline.txt", row.names = 1)
@@ -57,6 +61,11 @@ cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
                              groupid = groupid,
                              compid = compid,
                              K=1:8, max.iter = 500,runtype="logCPM")
+gene_prob_tran <- cormotif_initial$bestmotif$p.post
+rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
+motif_prob <- cormotif_initial$bestmotif$clustlike
+rownames(motif_prob) <- rownames(y_TMM_cpm)
+write.csv(motif_prob,"cormotif_probability_genelist.csv")
 
 ```
 
@@ -86,13 +95,85 @@ Viewing the motifs, the following groups were named:
 -   Motif 4: Top2$\beta$ inhibitor response, Late 
 
     + (Late response, n= 5596)
-
-```{r  cormotif_inital analysis}
-
+    
 
 
+```{r cormotif_inital analysis, eval= FALSE,echo=TRUE, message=FALSE, warning=FALSE}
+clust1 <- motif_prob %>%
+  as.data.frame() %>%
+  filter(V1>0.5) %>% 
+  rownames
+clust2 <- motif_prob %>%
+  as.data.frame() %>%
+  filter(V2>0.5) %>% 
+  rownames
+clust3 <- motif_prob %>%
+  as.data.frame() %>%
+  filter(V3>0.5) %>% 
+  rownames
+clust4 <- motif_prob %>%
+  as.data.frame() %>%
+  filter(V4>0.5) %>% 
+  rownames
+old_clust1  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.45 &
+                                          gene_prob_tran[,2] <0.45 &
+                                          gene_prob_tran[,3] <0.45 &
+                                          gene_prob_tran[,4] <0.45 &
+                                          gene_prob_tran[,5] <0.45 &
+                                          gene_prob_tran[,6] <0.45 &
+                                          gene_prob_tran[,7] <0.45 &
+                                          gene_prob_tran[,8] <0.45 &
+                                          gene_prob_tran[,9] <0.45 &
+                                         gene_prob_tran[,10] <0.45),])
+length(intersect(old_clust1,clust1))##7358 out of 7362 oldclust1
+
+old_clust2  <- rownames(gene_prob_tran[(gene_prob_tran[,1]> 0.10 &
+                                         gene_prob_tran[,2] > 0.10 &
+                                         gene_prob_tran[,3] > 0.10 &
+                                         gene_prob_tran[,4] > 0.10 &
+                                         # gene_prob_tran[,5] < 0.10 &
+                                           gene_prob_tran[,6] > 0.10&
+                                           gene_prob_tran[,7]> 0.10 &
+                                           gene_prob_tran[,8]> 0.10 &
+                                           gene_prob_tran[,9]> 0.10),])
+# &                                      # gene_prob_tran[,10]< 0.10),])
+                                                   
+length(intersect(old_clust2,clust2))##251 out of 432 oldclust2
+
+old_clust3 <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.55 &
+                                           gene_prob_tran[,2] >0.55 &
+                                           gene_prob_tran[,3] >0.55 &
+                                           gene_prob_tran[,4] >0.25&
+                                           gene_prob_tran[,5] <0.90 &
+                                           gene_prob_tran[,6] <0.9 &
+                                           gene_prob_tran[,7]<0.9&
+                                           gene_prob_tran[,8]<0.9 &
+                                          gene_prob_tran[,9]<0.9 &
+                                           gene_prob_tran[,10]<0.90),])
+length(intersect(old_clust3,clust3)) ##414 out of 481 oldclust3
+
+old_clust4 <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.970 &
+                                            gene_prob_tran[,2] <0.97 &
+                                            gene_prob_tran[,3] <0.97 &
+                                            gene_prob_tran[,4] <0.97 &
+                                            gene_prob_tran[,5] <0.9&
+                                            gene_prob_tran[,6] >0.55 &
+                                            gene_prob_tran[,7] >0.55 &
+                                            gene_prob_tran[,8] >0.55 &
+                                            gene_prob_tran[,9] >0.05 &
+                                            gene_prob_tran[,10] <0.9),])
+length(intersect(old_clust4,clust4))##4675 out of 4850 oldclust4
+backGL <- read.csv("data/backGL.txt")  ##14084
+length(setdiff(backGL$ENTREZID,(union(clust1,union(clust2,union(clust3,clust4))))))
+##63 genes not used overall  same as (14084-7504-528-444-5545)
 
 
+```
+
+
+There was overlap between the previous sets and the new sets, so I moved on expecting similar responses in the GO analysis.  I did subset out the genes not used overall from the background gene list (rowmeans>0 from log(cpm(count matrix)))
+
+```{r cormotif genelist analysis}
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 motif_NR <- DEG_cormotif$motif_NR
 motif_TI <- DEG_cormotif$motif_TI
@@ -104,19 +185,19 @@ backGL <- read.csv("data/backGL.txt")
 
 ```
 
-##motif No response genes
+##  No response motif genes
 
 ```{r noresponse data motif1, echo=FALSE, message=FALSE, warning=FALSE}
-# gostrescoNR <- gost(query = motif_NR , 
-#                       organism = "hsapiens",
-#                       ordered_query = FALSE,
-#                       domain_scope = "custom",
-#                       measure_underrepresentation = FALSE,
-#                       evcodes = FALSE,
-#                       user_threshold = 0.05,
-#                       correction_method = c("fdr"),
-#                       custom_bg = backGL$ENTREZID,
-#                       sources=c("GO:BP", "KEGG"))
+# gostrescoNR <- gost(query = motif_NR ,
+#                      organism = "hsapiens",
+#                        ordered_query = FALSE,
+#                        domain_scope = "custom",
+#                        measure_underrepresentation = FALSE,
+#                        evcodes = FALSE,
+#                        user_threshold = 0.05,
+#                        correction_method = c("fdr"),
+#                        custom_bg = backGL$ENTREZID,
+#                        sources=c("GO:BP", "KEGG"))
 
 #saveRDS(gostrescoNR, "data/gostrescoNR.")
 gostrescoNR <- readRDS("data/gostrescoNR")
@@ -125,12 +206,8 @@ cormotifNRcluster
 
 # (gostres$result$p_value)
 tableNR <- gostrescoNR$result %>%
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) #%>% 
-  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
-  # kable(.,) %>% 
-  # kable_paper("striped", full_width = FALSE) %>%  
-  # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
-  tableNR%>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+tableNR%>% 
   mutate_at(.cols = 6, .funs= scientific_format()) %>% 
   kable(.,) %>% 
   kable_paper("striped", full_width = FALSE) %>%  
@@ -186,22 +263,22 @@ tableNR <- gostrescoNR$result %>%
   
 ```
 
-## motif Late response Top2inhibitors
+## Late response Top2$\beta$ inhibitors motif
 
 ```{r Top2iLR motif set, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-# gostresTop2bi_LR <- gost(query = c(motif_LR),  
+# gostresTop2bi_LR <- gost(query = c(motif_LR),
 #                       organism = "hsapiens",
 #                       ordered_query = FALSE,
 #                       domain_scope = "custom",
 #                       measure_underrepresentation = FALSE,
 #                       evcodes = FALSE,
-#                       user_threshold = 0.01,
+#                       user_threshold = 0.05,
 #                       correction_method = c("fdr"),
 #                       custom_bg = backGL$ENTREZID,
 #                       sources=c("GO:BP", "KEGG"))
-#saveRDS(gostresTop2bi_LR,"data/gostresTop2bi_LR.RDS")
+# saveRDS(gostresTop2bi_LR,"data/gostresTop2bi_LR.RDS")
 gostresTop2bi_LR <- readRDS("data/gostresTop2bi_LR.RDS")
 cormotifrespTop2bi_LR <- gostplot(gostresTop2bi_LR, capped = FALSE, interactive = TRUE)
 cormotifrespTop2bi_LR
@@ -269,7 +346,7 @@ tabletop2Bi_LR%>%
 ```{r Top2iER set motif, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-# gostresTop2bi_ER <- gost(query = c(motif_ER),  
+# gostresTop2bi_ER <- gost(query = c(motif_ER),
 #                       organism = "hsapiens",
 #                       ordered_query = FALSE,
 #                       domain_scope = "custom",
@@ -279,7 +356,7 @@ tabletop2Bi_LR%>%
 #                       correction_method = c("fdr"),
 #                       custom_bg = backGL$ENTREZID,
 #                       sources=c("GO:BP", "KEGG"))
-# saveRDS(gostresTop2bi_ER, "data/gostresTop2bi_ER.RDS")
+ #saveRDS(gostresTop2bi_ER, "data/gostresTop2bi_ER.RDS")
 
 gostresTop2bi_ER <- readRDS("data/gostresTop2bi_ER.RDS")
 cormotifrespTop2bi_ER <- gostplot(gostresTop2bi_ER, capped = FALSE, interactive = TRUE)
@@ -352,22 +429,22 @@ tabletop2Bi_ER %>%
 
 ```
 
-##motif time independent response genes
+## Time-independent response motif genes
 
 ```{r time independent, echo=FALSE, message=FALSE, warning=FALSE  }
 
-# gostresTop2bi_TI <- gost(query = c(motif_TI),  
+# gostresTop2bi_TI <- gost(query = c(motif_TI),
 #                       organism = "hsapiens",
 #                       ordered_query = FALSE,
 #                       domain_scope = "custom",
 #                       measure_underrepresentation = FALSE,
 #                       evcodes = FALSE,
-#                       user_threshold = 0.01,
+#                       user_threshold = 0.05,
 #                       correction_method = c("fdr"),
 #                       custom_bg = backGL$ENTREZID,
 #                       sources=c("GO:BP", "KEGG"))
 # 
-# saveRDS(gostresTop2bi_TI, "data/gostresTop2bi_TI.RDS")
+#  saveRDS(gostresTop2bi_TI, "data/gostresTop2bi_TI.RDS")
 
 gostresTop2bi_TI <- readRDS("data/gostresTop2bi_TI.RDS")
 cormotifrespTop2bi_TI <- gostplot(gostresTop2bi_TI, capped = FALSE, interactive = TRUE)
@@ -438,7 +515,7 @@ tabletop2Bi_TI %>%
 
 ```
 
-###long go frame
+### long go frame
 
 ```{r all go in one loooooong frame,fig.height=15,fig.width=8}
 
