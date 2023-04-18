@@ -263,7 +263,7 @@ tableNR%>%
   
 ```
 
-## Late response Top2$\beta$ inhibitors motif
+## Late response Top2$\beta$ inhibitor motif genes
 
 ```{r Top2iLR motif set, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -341,7 +341,7 @@ tabletop2Bi_LR%>%
 
 ```
 
-## motif Early Response Top2 inhibitors
+##  Early Response Top2$\beta$ inhibitor motif genes
 
 ```{r Top2iER set motif, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -429,7 +429,7 @@ tabletop2Bi_ER %>%
 
 ```
 
-## Time-independent response motif genes
+## Time-independent Top2$\beta$ inhibitor motif genes
 
 ```{r time independent, echo=FALSE, message=FALSE, warning=FALSE  }
 
@@ -517,7 +517,7 @@ tabletop2Bi_TI %>%
 
 ### long go frame
 
-```{r all go in one loooooong frame,fig.height=15,fig.width=8}
+```{r all go in one loooooong frame, echo=FALSE, fig.height=15, fig.width=8, message=FALSE, warning=FALSE}
 
 NR1f <- tableNR %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
@@ -588,7 +588,7 @@ grid.draw(g)
 
 ###long go kegg break
 
-```{r kegg break, message=FALSE, warning=FALSE}
+```{r kegg break, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 
