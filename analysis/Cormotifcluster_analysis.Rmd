@@ -38,7 +38,7 @@ library(BiocParallel)
 design <- read.csv("data/data_outline.txt", row.names = 1)
 mymatrix <- readRDS("data/filtermatrix_x.RDS")#should be 14084
 x_counts <- mymatrix$counts
-sum_counts
+
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
@@ -643,7 +643,7 @@ ggplot(., aes(x = log_val, y =reorder(term_name,p_value,desc=FALSE),col=motif)) 
 ## Example of genes from each cluster
 
 ### Motif_NR
-```{r clust1NR gene}
+```{r clust1NR gene,echo=FALSE, message=FALSE, warning=FALSE}
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
 drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)
@@ -714,7 +714,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
 ```
 
 ### Motif_TI
-```{r clustTI}
+```{r clustTI,echo=FALSE, message=FALSE, warning=FALSE}
 
 cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
@@ -742,7 +742,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
 ```
 
 ### Motif_LR
-```{r motif_LR}
+```{r motif_LR, echo=FALSE, message=FALSE, warning=FALSE}
 
 cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
@@ -771,7 +771,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
 ```
 
 ### Motif_ER
-```{r motif ER}
+```{r motif ER, echo=FALSE, message=FALSE, warning=FALSE}
 cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
   mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
@@ -797,59 +797,3 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
-
-
-# cpm counts are above ----------------------------------------------------
-
-
-
-norm_counts %>% dplyr::filter(rownames(.)==22822) %>%
-  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
-  mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
-  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
-  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
-  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
-  ggplot(., aes(x=drug, y=counts))+
-  geom_boxplot()+
-  geom_point(aes(col=indv,size=3))+
-  scale_color_brewer(palette = "Dark2",name = "Individual")+
-  facet_wrap("time",  nrow=1, ncol=2)+
-  theme_bw()+
-  ylab("Motif2  PHLDA1")
-
-norm_counts %>% dplyr::filter(rownames(.)==4356) %>%
-  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
-  mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
-  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
-  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
-  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
-  ggplot(., aes(x=drug, y=counts))+
-  geom_boxplot()+
-  geom_point(aes(col=indv,size=3))+
-  scale_color_brewer(palette = "Dark2",name = "Individual")+
-  facet_wrap("time",  nrow=1, ncol=2)+
-  theme_bw()+
-  ylab("Motif MPP3")
-```
-
-```{r clust2TI gene}
-
-
-
-```
-
-
-
-```{r clust3ER gene}
-
-
-
-```
-
-
-```{r clust4LR gene}
-
-
-
-```
-
