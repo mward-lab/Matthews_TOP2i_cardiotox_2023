@@ -24,7 +24,7 @@ library(RColorBrewer)
 ```
 
 # Creation of the data set:
-```{r,file='corMotifcustom.R'}
+```{r echo=FALSE, r,file='corMotifcustom.R'}
 
 ```
 
@@ -38,7 +38,7 @@ library(BiocParallel)
 design <- read.csv("data/data_outline.txt", row.names = 1)
 mymatrix <- readRDS("data/filtermatrix_x.RDS")#should be 14084
 x_counts <- mymatrix$counts
-
+sum_counts
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
@@ -95,6 +95,7 @@ Viewing the motifs, the following groups were named:
 -   Motif 4: Top2$\beta$ inhibitor response, Late 
 
     + (Late response, n= 5596)
+    
     
 
 
@@ -169,6 +170,15 @@ length(setdiff(backGL$ENTREZID,(union(clust1,union(clust2,union(clust3,clust4)))
 
 
 ```
+The genes belonging to each set were made
+
+motif 1-  No Response set: 7504 (gene list made by filtering likelihood of gene belonging to cluster 1 <0.5) 
+
+motif 2-  Time-independent Top2$\beta$i response cluster: 528 (gene list made by filtering likelihood of gene belonging to cluster 2 <0.5) 
+
+motif 3- Early Top2$\beta$i response cluster: 444 (gene list made by filtering likelihood of gene belonging to cluster 3 <0.5) 
+
+motif 4-  Late Top2$\beta$i response cluster: 5545 (gene list made by filtering likelihood of gene belonging to cluster 4 <0.5) 
 
 
 There was overlap between the previous sets and the new sets, so I moved on expecting similar responses in the GO analysis.  I did subset out the genes not used overall from the background gene list (rowmeans>0 from log(cpm(count matrix)))
@@ -186,7 +196,7 @@ backGL <- read.csv("data/backGL.txt")
 ```
 
 ##  No response motif genes
-
+GO:BP
 ```{r noresponse data motif1, echo=FALSE, message=FALSE, warning=FALSE}
 # gostrescoNR <- gost(query = motif_NR ,
 #                      organism = "hsapiens",
@@ -264,7 +274,7 @@ tableNR%>%
 ```
 
 ## Late response Top2$\beta$ inhibitor motif genes
-
+GO:BP/KEGG
 ```{r Top2iLR motif set, echo=FALSE, message=FALSE, warning=FALSE}
 
 
@@ -342,7 +352,7 @@ tabletop2Bi_LR%>%
 ```
 
 ##  Early Response Top2$\beta$ inhibitor motif genes
-
+GO:BP/KEGG
 ```{r Top2iER set motif, echo=FALSE, message=FALSE, warning=FALSE}
 
 
@@ -430,7 +440,7 @@ tabletop2Bi_ER %>%
 ```
 
 ## Time-independent Top2$\beta$ inhibitor motif genes
-
+GO:BP/KEGG
 ```{r time independent, echo=FALSE, message=FALSE, warning=FALSE  }
 
 # gostresTop2bi_TI <- gost(query = c(motif_TI),
@@ -515,7 +525,7 @@ tabletop2Bi_TI %>%
 
 ```
 
-### long go frame
+### long GO:BP frame
 
 ```{r all go in one loooooong frame, echo=FALSE, fig.height=15, fig.width=8, message=FALSE, warning=FALSE}
 
@@ -586,7 +596,7 @@ grid.draw(g)
 
 ```
 
-###long go kegg break
+###long go KEGG frame
 
 ```{r kegg break, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -630,3 +640,216 @@ ggplot(., aes(x = log_val, y =reorder(term_name,p_value,desc=FALSE),col=motif)) 
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 ```
+## Example of genes from each cluster
+
+### Motif_NR
+```{r clust1NR gene}
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
+time <- ordered(time, levels =c("3h", "24h"))
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)
+indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
+labeltop <- (interaction(substring(drug, 0, 2), indv, time))
+FCtoplistall <- read.csv("output/toplistall.csv", row.names = 1)
+library(limma)
+library(tidyverse)
+library(biomaRt)
+library(RColorBrewer)
+library(ggpubr)
+drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+#fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
+
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+motif_NR <- DEG_cormotif$motif_NR
+motif_TI <- DEG_cormotif$motif_TI
+motif_LR <- DEG_cormotif$motif_LR
+motif_ER <- DEG_cormotif$motif_ER
+set.seed(12345)
+#geneexpressionsets <- c(sample(motif_NR,1),sample(motif_TI,1),sample(motif_LR,1),sample(motif_ER,1))
+#[1] "27102"  "92312"  "10360"  "388558"  "newest sample set as of 04192023
+#geneexpressionsets <- c( "27102" , "92312" , "10360",  "388558")
+geneexpressionsets=c("2650","92312","27245","55588")# first number set (also in the previous example)
+
+ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
+#attributes <- listAttributes((ensembl))
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+
+
+Motif_expr<- getBM(attributes=my_attributes,filters ='entrezgene_id',
+         values = geneexpressionsets, mart = ensembl)
+# toplistall %>% dplyr::filter(ENTREZID==Motif_expr[1,1])
+
+#namelist <- c("1026"="CDKN1A","23411"= "SIRT1","27113"= "BBC3","4193"= "MDM2")
+cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
+length(cpmcounts)
+colnames(cpmcounts) <- labeltop
+
+cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+  mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
+  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
+  ggplot(., aes(x=drug, y=counts))+
+    geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none",  indv="none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal)+
+    facet_wrap("time",  nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop("No Response set",italic("GCNT1")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(strip.background = element_rect(fill = "#C77CFF"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+```
+
+### Motif_TI
+```{r clustTI}
+
+cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+  mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
+  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>% mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none",  indv="none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal)+
+  facet_wrap("time", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop("Time-Independent set",italic("MEX3A")~log[2]~"cpm ")))+
+  xlab("")+
+  theme(strip.background = element_rect(fill = "#00BFC4"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+```
+
+### Motif_LR
+```{r motif_LR}
+
+cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+  mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
+  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none",  indv="none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal)+
+  facet_wrap("time",  nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop("Late Response set",italic("MED29")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(strip.background = element_rect(fill = "#7CAE00"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
+### Motif_ER
+```{r motif ER}
+cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+  mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
+  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none",  indv="none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal)+
+  facet_wrap("time",nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop("Early Response set",italic("AHDC1")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(strip.background = element_rect(fill = "#F8766D"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
+
+# cpm counts are above ----------------------------------------------------
+
+
+
+norm_counts %>% dplyr::filter(rownames(.)==22822) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+  mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
+  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot()+
+  geom_point(aes(col=indv,size=3))+
+  scale_color_brewer(palette = "Dark2",name = "Individual")+
+  facet_wrap("time",  nrow=1, ncol=2)+
+  theme_bw()+
+  ylab("Motif2  PHLDA1")
+
+norm_counts %>% dplyr::filter(rownames(.)==4356) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+  mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)) %>%
+  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot()+
+  geom_point(aes(col=indv,size=3))+
+  scale_color_brewer(palette = "Dark2",name = "Individual")+
+  facet_wrap("time",  nrow=1, ncol=2)+
+  theme_bw()+
+  ylab("Motif MPP3")
+```
+
+```{r clust2TI gene}
+
+
+
+```
+
+
+
+```{r clust3ER gene}
+
+
+
+```
+
+
+```{r clust4LR gene}
+
+
+
+```
+
