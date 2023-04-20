@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="ERM" />
+
+<meta name="date" content="2023-04-20" />
+
+<title>Renee_DRC_Code</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Cardiotoxicity</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/reneeisnowhere/Cardiotoxicity">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Renee_DRC_Code</h1>
+<h4 class="author">ERM</h4>
+<h4 class="date">2023-04-20</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2023-04-20
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230109code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230109)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230109code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230109)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2faf972713770acda0cbe78831026a9443d19395targetblank2faf972a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2faf972713770acda0cbe78831026a9443d19395" target="_blank">2faf972</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2faf972713770acda0cbe78831026a9443d19395targetblank2faf972a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2faf972713770acda0cbe78831026a9443d19395" target="_blank">2faf972</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
+    Ignored:    data/BC_cell_lines.csv
+    Ignored:    data/Clamp_Summary.csv
+    Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/DAgostres24.RDS
+    Ignored:    data/DAtable1.csv
+    Ignored:    data/DDEMresp_list.csv
+    Ignored:    data/DDE_reQTL.txt
+    Ignored:    data/DDEresp_list.csv
+    Ignored:    data/DEG-GO/
+    Ignored:    data/DEG_cormotif.RDS
+    Ignored:    data/DF_Plate_Peak.csv
+    Ignored:    data/Da24counts.txt
+    Ignored:    data/Dx24counts.txt
+    Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/Ep24counts.txt
+    Ignored:    data/GOplots.R
+    Ignored:    data/K_cluster
+    Ignored:    data/K_cluster_kisthree.csv
+    Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/LDH48hoursdata.csv
+    Ignored:    data/Mt24counts.txt
+    Ignored:    data/RINsamplelist.txt
+    Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
+    Ignored:    data/TR24counts.txt
+    Ignored:    data/Top2biresp_cluster24h.csv
+    Ignored:    data/Viabilitylistfull.csv
+    Ignored:    data/allexpressedgenes.txt
+    Ignored:    data/allgenes.txt
+    Ignored:    data/allmatrix.RDS
+    Ignored:    data/avgLD50.RDS
+    Ignored:    data/backGL.txt
+    Ignored:    data/cormotif_3hk1-8.RDS
+    Ignored:    data/cormotif_initalK5.RDS
+    Ignored:    data/cormotif_initialK5.RDS
+    Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/counts24hours.RDS
+    Ignored:    data/cpmnorm_counts.csv
+    Ignored:    data/dat_cpm.RDS
+    Ignored:    data/data_outline.txt
+    Ignored:    data/efit2.RDS
+    Ignored:    data/efit2results.RDS
+    Ignored:    data/ensembl_backup.RDS
+    Ignored:    data/ensgtotal.txt
+    Ignored:    data/filenameonly.txt
+    Ignored:    data/filtered_cpm_counts.csv
+    Ignored:    data/filtered_raw_counts.csv
+    Ignored:    data/filtermatrix_x.RDS
+    Ignored:    data/folder_05top/
+    Ignored:    data/gene_prob_tran3h.RDS
+    Ignored:    data/gene_probabilityk5.RDS
+    Ignored:    data/gostresTop2bi_ER.RDS
+    Ignored:    data/gostresTop2bi_LR
+    Ignored:    data/gostresTop2bi_LR.RDS
+    Ignored:    data/gostresTop2bi_TI.RDS
+    Ignored:    data/gostrescoNR
+    Ignored:    data/heartgenes.csv
+    Ignored:    data/individualDRCfile.RDS
+    Ignored:    data/individual_LDH48.RDS
+    Ignored:    data/knowles56.GMT
+    Ignored:    data/knowlesGMT.GMT
+    Ignored:    data/mymatrix.RDS
+    Ignored:    data/nonresponse_cluster24h.csv
+    Ignored:    data/norm_LDH.csv
+    Ignored:    data/norm_counts.csv
+    Ignored:    data/old_sets/
+    Ignored:    data/plan2plot.png
+    Ignored:    data/raw_counts.csv
+    Ignored:    data/response_cluster24h.csv
+    Ignored:    data/sigVDA24.txt
+    Ignored:    data/sigVDA3.txt
+    Ignored:    data/sigVDX24.txt
+    Ignored:    data/sigVDX3.txt
+    Ignored:    data/sigVEP24.txt
+    Ignored:    data/sigVEP3.txt
+    Ignored:    data/sigVMT24.txt
+    Ignored:    data/sigVMT3.txt
+    Ignored:    data/sigVTR24.txt
+    Ignored:    data/sigVTR3.txt
+    Ignored:    data/siglist.RDS
+    Ignored:    data/table3a.omar
+    Ignored:    data/tvl24hour.txt
+    Ignored:    data/tvl24hourw.txt
+    Ignored:    data/venn_code.R
+
+Untracked files:
+    Untracked:  .RDataTmp
+    Untracked:  .RDataTmp1
+    Untracked:  .RDataTmp2
+    Untracked:  analysis/other_analysis.Rmd
+    Untracked:  code/extra_code.R
+    Untracked:  cormotif_probability_genelist.csv
+    Untracked:  individual-legenddark2.png
+    Untracked:  output/figure_1.Rmd
+    Untracked:  output/output-old/
+    Untracked:  output/plan2plot.png
+    Untracked:  output/plan48ldh.png
+    Untracked:  output/sequencing_info.txt
+    Untracked:  output/tableNR.csv
+    Untracked:  output/tabletop2Bi_ER.csv
+    Untracked:  output/tabletop2Bi_LR.csv
+    Untracked:  output/tabletop2Bi_TI.csv
+    Untracked:  output/toplistall.csv
+    Untracked:  reneebasecode.R
+
+Unstaged changes:
+    Modified:   code/venn_code.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/DRC_analysis.Rmd</code>) and HTML
+(<code>docs/DRC_analysis.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2faf972713770acda0cbe78831026a9443d19395/analysis/DRC_analysis.Rmd" target="_blank">2faf972</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+<td>
+adding DRC analysis to github
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/6d925a2a619d80bf5196a37a22b293714e3d546d/analysis/DRC_analysis.Rmd" target="_blank">6d925a2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+<td>
+updating cormotif with updated RNAseq counts
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/575fd81f58cd36d6408f0734092b219162b1f4be/analysis/DRC_analysis.Rmd" target="_blank">575fd81</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+<td>
+updating cormotif
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/4e522166042ca0bd67655a0e8bfb18a7b67d21ae/analysis/DRC_analysis.Rmd" target="_blank">4e52216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-03-31
+</td>
+<td>
+End of week updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3a26d522c6f7556fe24462438e2d05d61862789a/analysis/DRC_analysis.Rmd" target="_blank">3a26d52</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-03-22
+</td>
+<td>
+Wed poster analysis changes
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/945460e6cdd6f204e8f11634bfb37825880922d7/analysis/DRC_analysis.Rmd" target="_blank">945460e</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-03-19
+</td>
+<td>
+Updating go plot with reorder
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/69b5d5360209d436145c91b3bf4313ac0f0e1263/analysis/DRC_analysis.Rmd" target="_blank">69b5d53</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-03-17
+</td>
+<td>
+updated DRC 6 plot with color for indivd
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/11a2ab4d7a1d8d11c3909d4f8691427d0577b223/analysis/DRC_analysis.Rmd" target="_blank">11a2ab4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-03-03
+</td>
+<td>
+updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/49191f899fc734487eec938b448a8e1568e8db61/analysis/DRC_analysis.Rmd" target="_blank">49191f8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-03-03
+</td>
+<td>
+more tracking and updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90a0227c6bbd0fc469ffd0c994e1f279cce13fac/analysis/DRC_analysis.Rmd" target="_blank">90a0227</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-27
+</td>
+<td>
+monday2-27
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/accc2412d4b3a5da3d043dbb62116296492e33e2/analysis/DRC_analysis.Rmd" target="_blank">accc241</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-10
+</td>
+<td>
+updates for the week
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1fc5c19512ece9d333dec0ef8e8ab5fe58c735e6/analysis/DRC_analysis.Rmd" target="_blank">1fc5c19</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-09
+</td>
+<td>
+Git update
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8c417360817653030124cb60f362e0ceb81c99e8/analysis/DRC_analysis.Rmd" target="_blank">8c41736</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-07
+</td>
+<td>
+update with corrMotif
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>This is my Dose Response Curve Code and data with summaries.<br />
+I hope to explain what and how I did things for future analysis, so that
+the code and data are reproducible. All data was created by treating
+cardiomyocytes at ~day 26 of diff with 0.01-50 <span
+class="math inline">\(\mu\)</span>M concentrations of the drugs:
+Daunorubicin (daun) Doxorubicin (doxo) Epirubicin (epi) Mitoxantrone
+(mito) Trastuzumab (tras) [ note: Trastuzumab could only be used at
+concentrations of 10 <span class="math inline">\(\mu\)</span>M and
+lower] Vehicle (veh)</p>
+<p>Vehicle is the control and is effectively treated by water in volumes
+equivalent to the volume used to dilute the drugs in a 10 mM stock
+concentration. This is why it has values at different concentrations and
+why I analyze the data this way.</p>
+<p>Cell viability was assessed using Presto Blue reagent according to
+manufacturer’s protocols.<br />
+90 uL of Galactose media + 10 uL of Presto Blue reagent were added to
+each well of the 96 well DRC plate for one hour. The cell media was then
+extracted to a black, clear bottom plate and wrapped in foil and stored
+at 4 degrees overnight (to allow bubbles to go away). A plate reader was
+used to measure florescence and the RFLU values were exported to an
+excel file.</p>
+<p>Analysis was done as follows: The background wells were averaged and
+the average value was subtracted from every well on the plate. Because
+the wells on the plate were randomized, Matching the treatment with the
+wells is critical and was done inefficiently in an excel file for each
+experiment.<br />
+Percent Viability was calculated by averaging the RFLU from the vehicle
+at each concentration, and dividing each drug’s RFLU at that
+concentration by the Vehicle control average RFLU to give a ratio. All
+values less than 0 were turned into zero in the excel document, and a
+final compilation for each differentiation and dose curve treatment was
+stored in an document called DRC_compilation.xlsx. ( note: I spelled
+incorrectly in my computer) For calculation to control for plate to
+plate variance, the “Empty_Blank” well RFLU2 values from each plate
+within an experiment were averaged.<br />
+eg:<br />
+plate 1= empty average RFLU2 = 29000, plate 2 empty average RFLU2 =31000
+normalized ratio plate 1/plate 2 or 29000/31000 =0.9355 this
+normalization ratio then was divided into every RFLU2 value on plate 1.
+Plate 2 would be divided by 1 to keep the formulas consistent
+(31000/31000 or plate2/plate2) to create a column that contained the
+adjusted RFLU2 values, called “adj”</p>
+<p>Calculations then proceed as described originally. The first
+viability value is called “Percent”. The adjusted value for intra-plate
+differences is called “Padj” although this use was deprecated.</p>
+<p>Part 2 of the analysis of data begins by entering data from the excel
+compilation to R. The data is stored as an excel file, which was then
+stored as an .RDS object for analysis retrieval.</p>
+<p>Step one in R is loading the libraries needed for analysis:</p>
+<pre class="r"><code>library(car)
+#library(dr4pl) no longer used
+library(tidyverse)
+library(tinytex)
+library(readxl)
+library(BiocGenerics)
+library(data.table)
+library(drc)
+library(Hmisc)
+library(cowplot)
+library(grid)
+library(ggsignif)
+library(RColorBrewer)</code></pre>
+<p>Step 2 is importing the data from the DRC_compilation.xlsx file.
+Future ref will refer to the table.</p>
+<p>Step 3:</p>
+<p>The files “should” have a list of similar names:<br />
+‘Drug’ which is the short name of drug used ‘Conc’ which is the
+concentration of drug added (in microMolar) ‘Sname’ the abbreviated name
+of Drug and Conc ‘Well’ letter with two number format ‘Row’ # 1-8 for
+A-G ‘Column’ numbers 1-12 ‘Plate’ will vary between two and three ‘RFLU’
+the RFLU from the 0 hour reading with background subtracted (not all
+experiments have them) ‘RFLU2’ the RFLU from the 48 hour reading with
+background subtracted</p>
+<p>I will first streamline the data into more simple formats: Individual
+1 is cell line 75-1 (D04_75_1,D05_75_1 )</p>
+<p>Individual 2 is cell line 87-1 (D04_87_1, D05_87_1)</p>
+<p>Individual 3 is cell line 77-1 (D02_77_1, D03_77_1)</p>
+<p>Individual 4 is 79-1 (D04_79_1, D05_79_1)</p>
+<p>Individual 5 is 78-1 (D01_78_1, D03_78_1)</p>
+<p>Individual 6 is 71-1 (D02_71_1, DJAG_71_1)</p>
+<p>As of 6-2-22 I am implementing a new naming for R handles:<br />
+ind1a, ind1b etc, to make sure I process out the “empty_blanks”</p>
+<p>I am also converting Conc column to numeric Part 4: ###file
+cleanup###</p>
+<p>File cleanup first subsets each file imported by taking out the
+‘Empty’ samples in the Drug column and then renaming the file to
+individual names and DRC a and b</p>
+<p>I then need to convert the concentrations to as.numeric and select
+the 5 columns that I really need for analysis, followed by dropping any
+wells that were NA in the Percent column.<br />
+The next part of the code is to make analysis files and groups and
+things for the iterations.</p>
+<p>The data-frame called individuals is complied from each of the
+dataframes wrangled above and will be the “final” R object stored in the
+project folder.</p>
+<p>##find the individuals rds Once they are all in a data from, a few
+functions need to be defined for ggplot: ##functions</p>
+<div id="viability" class="section level2">
+<h2>Viability</h2>
+<p>I wanted to graph viability across all samples. Below are the results
+from a sample of concentrations.</p>
+<p><img src="figure/DRC_analysis.Rmd/Viability%20data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>averageFL %&gt;% ungroup() %&gt;% 
+   mutate(indv=substr(SampleID,4,4)) %&gt;% 
+   mutate(indv=factor(as.numeric(indv))) %&gt;% 
+  filter(Conc&lt;5) %&gt;% 
+  group_by(indv,Drug,Conc) %&gt;% 
+  dplyr::summarize(Viability=mean(Mean)) %&gt;% ungroup() %&gt;% 
+   ggplot(.,  aes(x=as.factor(Conc), y= Viability*100 )) +
+   geom_boxplot(position=&quot;dodge&quot;,outlier.colour=&quot;transparent&quot;, aes(fill=Drug))+
+  geom_point(aes(color=indv))+
+  guides(alpha = &quot;none&quot;)+
+  ylim(0,150.5)+
+   scale_color_brewer(palette = &quot;Dark2&quot;,guide=&quot;legend&quot;,name = &quot;Individual&quot;,labels(c(1,2,3,4,5,6)))+
+  scale_fill_manual(values=drug_pal_fact)+
+  theme_classic() +
+  #xlab(expression(paste(&quot;Concentration [&quot;, mu, &quot;M]&quot;)))+
+  geom_hline(yintercept = 1,lty = 4)+
+  ylab(&quot;Viability&quot;) +
+  facet_wrap(~Drug)+ 
+  geom_signif(comparisons =list(c(&quot;Daunorubicin&quot;,&quot;Vehicle&quot;),
+                                c(&quot;Doxorubicin&quot;,&quot;Vehicle&quot;),
+                                c(&quot;Epirubicin&quot;,&quot;Vehicle&quot;),
+                                c(&quot;Mitoxantrone&quot;,&quot;Vehicle&quot;),
+                                c(&quot;Trastuzumab&quot;,&quot;Vehicle&quot;)),
+              test= &quot;t.test&quot;,
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  # geom_signif(comparisons = list(c(&quot;0.01&quot;,&quot;0.05&quot;),
+  #                                c(&quot;0.01&quot;,&quot;0.1&quot;),
+  #                                c(&quot;0.01&quot;,&quot;0.5&quot;)),
+  #               test = &quot;t.test&quot;,
+  #               map_signif_level = TRUE,step_increase = 0.1,
+  #               textsize = 4)+
+
+  ggtitle(&quot;Viablity across drugs at 48 hours&quot;)+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(size =2),
+        axis.text=element_text(size=9, face = &quot;bold&quot;),
+       panel.grid.major = element_line(colour = &#39;darkgrey&#39;),
+       panel.border=element_rect(fill = NA, size = 2),
+       plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/DRC_analysis.Rmd/viablity%20by%20drug-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/DRC_analysis.Rmd/Mitoplot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code> leg &lt;- ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
+          geom_line()+
+          theme_classic() +
+      scale_color_brewer(palette = &quot;Dark2&quot;,labels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+        labs(color = &quot;Individual&quot;, linewidth=3)
+        
+          
+trplot &lt;- 
+  ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
+      guides(color=&quot;none&quot;, alpha = &quot;none&quot;)+
+      stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = &quot;errorbar&quot;, 
+                   size =.5, 
+                   width = .1)+
+      stat_smooth(method = &quot;drm&quot;, 
+                  method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+      ylim(0,1.5)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      scale_color_brewer(palette = &quot;Dark2&quot;)+
+      xlab(expression(paste(&quot;Concentration &quot;, mu, &quot;M&quot;)))+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))+
+      ggtitle(&quot;Trastuzumab&quot;)+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(size =2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, size = 2),
+            plot.background = element_rect(fill = &quot;#00c5cb&quot;, colour = NA))
+      
+  # theme(plot.title = element_text(hjust = 0.5, size =20))
+  #trplot  </code></pre>
+<p>###plot all together!#####</p>
+<p>###LD50 extract</p>
+<p>###drm extracting</p>
+<p>##ld50 condensed</p>
+<pre class="r"><code>###combining all values into a larger dataframe
+
+library(RColorBrewer)
+drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+# daunls &lt;- plyr::quickdf(daunls) %&gt;% 
+#   pivot_longer(everything(),names_to = &#39;indv&#39;, values_to = &quot;Daun&quot;)
+#                         
+# doxols &lt;- plyr::quickdf(doxols) %&gt;% 
+#   pivot_longer(everything(),names_to = &#39;indv&#39;, values_to = &quot;Doxo&quot;)
+# epils &lt;- plyr::quickdf(epils)%&gt;% 
+#   pivot_longer(everything(),names_to = &#39;indv&#39;, values_to = &quot;Epi&quot;)
+# mitols &lt;- plyr::quickdf(mitols)%&gt;% 
+#   pivot_longer(everything(), names_to = &#39;indv&#39;, values_to = &quot;Mito&quot;)
+# 
+# LDfull &lt;- right_join(daunls,doxols,by = &#39;indv&#39;) %&gt;% right_join(.,epils,by = &#39;indv&#39;) %&gt;% right_join(., mitols, by= &#39;indv&#39;)
+# 
+# meanLDfull &lt;- LDfull %&gt;% mutate(indv = c(&#39;1&#39;,&#39;1&#39;,&#39;2&#39;,&#39;2&#39;,&#39;3&#39;,&#39;3&#39;,&#39;4&#39;,&#39;4&#39;,&#39;5&#39;,&#39;5&#39;,&#39;6&#39;,&#39;6&#39;)) %&gt;% 
+# pivot_longer(.,col=!indv,names_to = &#39;Treatment&#39;,values_to = &#39;LD50&#39;) 
+# 
+# 
+# avgLD50 &lt;- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
+#saveRDS(avgLD50,&quot;data/avgLD50.RDS&quot;)
+
+# LDfull &lt;- right_join(daunls,doxols,by = &#39;indv&#39;) %&gt;% right_join(.,epils,by = &#39;indv&#39;) %&gt;% right_join(., mitols, by= &#39;indv&#39;)
+# colnames(LDfull) &lt;- c(&quot;indv&quot;,&quot;Daunorubicin&quot;, &quot;Doxorubicin&quot;, &quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;)
+# summary(LDfull)
+# BC_cell_lines &lt;- read_excel(&quot;~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx&quot;, sheet = &quot;BC_sample_set&quot;)
+#write.csv(BC_cell_lines ,&quot;data/BC_cell_lines.csv&quot;)
+BC_cell_lines &lt;- read.csv(&quot;data/BC_cell_lines.csv&quot;,row.names = 1)
+avgLD50 &lt;- readRDS(&quot;data/avgLD50.RDS&quot;)
+  
+graphLD50 &lt;- avgLD50 %&gt;% mutate(Treatment=case_match(Treatment,&quot;Daun&quot;~&quot;Daunorubicin&quot;,
+                                        &quot;Doxo&quot;~&quot;Doxorubicin&quot;,
+                                        &quot;Epi&quot;~&quot;Epirubicin&quot;,
+                                        &quot;Mito&quot;~&quot;Mitoxantrone&quot;,
+                                        &quot;Tras&quot;~&quot;Trastuzumab&quot;,
+                                        &quot;Veh&quot;~ &quot;Control&quot;, .default= Treatment)) %&gt;% 
+  mutate(indv= factor(indv)) %&gt;% 
+  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot(position = &quot;identity&quot;,aes(fill=Treatment))+
+  geom_point(aes(color = indv,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression(&quot;Experimentlly-derived LD&quot;[50]*&quot;s from treated cardiomyocytes&quot;))+
+  xlab(&quot;Treatment&quot;)+
+  ylab(bquote(&#39;Log&#39;[10]~ &#39;LD&#39;[50]~&#39;in &#39;*mu*M))+
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;, 
+                     labels = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+  ylim(-2,2)+
+  scale_fill_manual(values=drug_palc)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha =&quot;none&quot;, size = &quot;none&quot;, fill= &quot;none&quot;)+
+  #theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = &quot;none&quot;,
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))   
+
+graphLD50</code></pre>
+<p><img src="figure/DRC_analysis.Rmd/combine%20LD50%20values-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>graphBC &lt;- BC_cell_lines %&gt;%
+    mutate(Cell_line= factor(Cell_line)) %&gt;% 
+  pivot_longer(.,col=!Cell_line,names_to = &#39;Treatment&#39;,values_to = &#39;LD50&#39;) %&gt;% 
+  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot(position = &quot;identity&quot;,aes(fill=Treatment))+
+  geom_point(aes(color = Cell_line,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression(&quot;Breast cancer cell line reported  LD&quot;[50]*&quot;s&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(bquote(&#39;Log&#39;[10]~ &#39;LD&#39;[50]~&#39;in &#39;*mu*M))+
+  scale_color_brewer(palette = &quot;Spectral&quot;,
+                     name = &quot;Cell lines&quot;)+
+          scale_fill_manual(values=drug_palc)+
+  ylim(-2,2)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha =&quot;none&quot;, size = &quot;none&quot;, fill= &quot;none&quot;)+
+  #theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = &quot;none&quot;,
+         axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))   
+  graphBC</code></pre>
+<p><img src="figure/DRC_analysis.Rmd/combine%20LD50%20values-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] RColorBrewer_1.1-3  ggsignif_0.6.4      cowplot_1.1.1      
+ [4] Hmisc_4.8-0         Formula_1.2-5       survival_3.5-3     
+ [7] lattice_0.20-45     drc_3.0-1           MASS_7.3-58.2      
+[10] data.table_1.14.8   BiocGenerics_0.42.0 readxl_1.4.2       
+[13] tinytex_0.44        lubridate_1.9.2     forcats_1.0.0      
+[16] stringr_1.5.0       dplyr_1.1.0         purrr_1.0.1        
+[19] readr_2.1.4         tidyr_1.3.0         tibble_3.1.8       
+[22] ggplot2_3.4.1       tidyverse_2.0.0     car_3.1-1          
+[25] carData_3.0-5       workflowr_1.7.0    
+
+loaded via a namespace (and not attached):
+ [1] nlme_3.1-162        fs_1.6.1            httr_1.4.5         
+ [4] rprojroot_2.0.3     backports_1.4.1     tools_4.2.2        
+ [7] bslib_0.4.2         utf8_1.2.3          R6_2.5.1           
+[10] rpart_4.1.19        mgcv_1.8-42         colorspace_2.1-0   
+[13] nnet_7.3-18         withr_2.5.0         gridExtra_2.3      
+[16] tidyselect_1.2.0    processx_3.8.0      compiler_4.2.2     
+[19] git2r_0.31.0        cli_3.6.0           htmlTable_2.4.1    
+[22] sandwich_3.0-2      labeling_0.4.2      sass_0.4.5         
+[25] checkmate_2.1.0     scales_1.2.1        mvtnorm_1.1-3      
+[28] callr_3.7.3         digest_0.6.31       foreign_0.8-84     
+[31] rmarkdown_2.20      base64enc_0.1-3     jpeg_0.1-10        
+[34] pkgconfig_2.0.3     htmltools_0.5.4     plotrix_3.8-2      
+[37] highr_0.10          fastmap_1.1.1       htmlwidgets_1.6.1  
+[40] rlang_1.0.6         rstudioapi_0.14     farver_2.1.1       
+[43] jquerylib_0.1.4     generics_0.1.3      zoo_1.8-11         
+[46] jsonlite_1.8.4      gtools_3.9.4        magrittr_2.0.3     
+[49] interp_1.1-3        Matrix_1.5-3        Rcpp_1.0.10        
+[52] munsell_0.5.0       fansi_1.0.4         abind_1.4-5        
+[55] lifecycle_1.0.3     stringi_1.7.12      multcomp_1.4-22    
+[58] whisker_0.4.1       yaml_2.3.7          promises_1.2.0.1   
+[61] deldir_1.0-6        splines_4.2.2       hms_1.1.2          
+[64] knitr_1.42          ps_1.7.2            pillar_1.8.1       
+[67] codetools_0.2-19    glue_1.6.2          evaluate_0.20      
+[70] getPass_0.2-2       latticeExtra_0.6-30 vctrs_0.5.2        
+[73] png_0.1-8           tzdb_0.3.0          httpuv_1.6.9       
+[76] cellranger_1.1.0    gtable_0.3.1        cachem_1.0.7       
+[79] xfun_0.37           later_1.3.0         cluster_2.1.4      
+[82] timechange_0.2.0    TH.data_1.1-1       ellipsis_0.3.2     </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
