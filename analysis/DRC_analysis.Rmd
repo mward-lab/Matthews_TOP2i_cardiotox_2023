@@ -2,12 +2,7 @@
 title: "Renee_DRC_Code"
 author: "ERM"
 date: "`r Sys.Date()`"
-output: html_document: 
-    toc: yes
-    theme: flatly
-editor_options: 
-  markdown: 
-    wrap: 72
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -18,44 +13,30 @@ knitr::opts_chunk$set(
 )
 ```
 
-This is my Dose Response Curve Code and data with summaries.  
-I hope to explain what and how I did things for future analysis, so that the code and data are reproducible.
-All data was created by treating cardiomyocytes at \~day 26 of diff with 0.01-50 \muM concentrations of the drugs:
-Daunorubicin (daun)
-Doxorubicin (doxo)
-Epirubicin (epi)
-Mitoxantrone (mito)
-Trastuzumab (tras)  [ note:  Trastuzumab could only be used at concentrations of 10 uM and lower]
-Vehicle (veh)
+This is my Dose Response Curve Code and data with summaries.\
+I hope to explain what and how I did things for future analysis, so that the code and data are reproducible. All data was created by treating cardiomyocytes at \~day 26 of diff with 0.01-50 $\mu$M concentrations of the drugs: Daunorubicin (daun) Doxorubicin (doxo) Epirubicin (epi) Mitoxantrone (mito) Trastuzumab (tras) [ note: Trastuzumab could only be used at concentrations of 10 $\mu$M and lower] Vehicle (veh)
 
+Vehicle is the control and is effectively treated by water in volumes equivalent to the volume used to dilute the drugs in a 10 mM stock concentration. This is why it has values at different concentrations and why I analyze the data this way.
 
-Vehicle is the control and is effectively treated by water in volumes equivalent to the volume used to dilute the drugs in a 10 mM stock concentration.   This is why it has values at different concentrations and why I analyze the data this way.
+Cell viability was assessed using Presto Blue reagent according to manufacturer's protocols.\
+90 uL of Galactose media + 10 uL of Presto Blue reagent were added to each well of the 96 well DRC plate for one hour. The cell media was then extracted to a black, clear bottom plate and wrapped in foil and stored at 4 degrees overnight (to allow bubbles to go away). A plate reader was used to measure florescence and the RFLU values were exported to an excel file.
 
-
-Cell viability was assessed using Presto Blue reagent according to manufacturer's protocols.  
-90 uL of Galactose media + 10 uL of Presto Blue reagent were added to each well of the 96 well DRC plate for one hour.  The cell media was then extracted to a black, clear bottom plate and wrapped in foil and stored at 4 degrees overnight (to allow bubbles to go away).  A plate reader was used to measure florescence and the RFLU values were exported to an excel file.
-
-
-Analysis was done as follows:  The background wells were averaged and the average value was subtracted from every well on the plate.  Because the wells on the plate were randomized, Matching the treatment with the wells is critical and was done inefficiently in an excel file for each experiment.  
-Percent Viability was calculated by averaging the RFLU from the vehicle at each concentration, and dividing each drug's RFLU at that concentration by the Vehicle control average RFLU to give a ratio.  All values less than 0 were turned into zero in the excel document, and a final compilation for each differentiation and dose curve treatment was stored in an document called DRC_compilation.xlsx. ( note: I spelled incorrectly in my computer)
-For calculation to control for plate to plate variance, the "Empty_Blank" well RFLU2 values from each plate within an experiment were averaged.  
-eg:  
-plate 1= empty average RFLU2 = 29000,  plate 2 empty average RFLU2 =31000
-normalized ratio  plate 1/plate 2
-or 29000/31000 =0.9355
-this normalization ratio then was divided into every RFLU2 value on plate 1.  Plate 2 would be divided by 1 to keep the formulas consistent (31000/31000 or plate2/plate2) to create a column that contained the adjusted RFLU2 values, called "adj"
+Analysis was done as follows: The background wells were averaged and the average value was subtracted from every well on the plate. Because the wells on the plate were randomized, Matching the treatment with the wells is critical and was done inefficiently in an excel file for each experiment.\
+Percent Viability was calculated by averaging the RFLU from the vehicle at each concentration, and dividing each drug's RFLU at that concentration by the Vehicle control average RFLU to give a ratio. All values less than 0 were turned into zero in the excel document, and a final compilation for each differentiation and dose curve treatment was stored in an document called DRC_compilation.xlsx. ( note: I spelled incorrectly in my computer) For calculation to control for plate to plate variance, the "Empty_Blank" well RFLU2 values from each plate within an experiment were averaged.\
+eg:\
+plate 1= empty average RFLU2 = 29000, plate 2 empty average RFLU2 =31000 normalized ratio plate 1/plate 2 or 29000/31000 =0.9355 this normalization ratio then was divided into every RFLU2 value on plate 1. Plate 2 would be divided by 1 to keep the formulas consistent (31000/31000 or plate2/plate2) to create a column that contained the adjusted RFLU2 values, called "adj"
 
 Calculations then proceed as described originally.
-
-the first viability value is called "Percent".  The adjusted value for intra-plate differences is called "Padj"  
+The first viability value is called "Percent". The adjusted value for intra-plate differences is called "Padj" although this use was deprecated.
 
 Part 2 of the analysis of data begins by entering data from the excel compilation to R.
+The data is stored as an excel file, which was then stored as an .RDS object for analysis retrieval.
 
 Step one in R is loading the libraries needed for analysis:
 
 ```{r Libraries to load, echo=TRUE, message=FALSE, warning=FALSE}
 library(car)
-#library(dr4pl)
+#library(dr4pl) no longer used
 library(tidyverse)
 library(tinytex)
 library(readxl)
@@ -66,13 +47,13 @@ library(Hmisc)
 library(cowplot)
 library(grid)
 library(ggsignif)
+library(RColorBrewer)
 
 ```
 
-Step 2 is importing the data from the DRC_compilation.xlsx file.  Future ref will refer to the table.
+Step 2 is importing the data from the DRC_compilation.xlsx file. Future ref will refer to the table.
 
-```{r data import, echo=FALSE, warning=FALSE}
-
+```{r data import, eval=FALSE, warning=FALSE, include=FALSE}
 
 D04_75_1 <- read_excel("~/Ward Lab/Cardiotoxicity/Data/Cell viability/DRC_compilation.xlsx", 
     sheet = "PB CMD04_75-1n")
@@ -110,18 +91,9 @@ DJAG_71_1 <-read_excel("~/Ward Lab/Cardiotoxicity/Data/Cell viability/DRC_compil
 Step 3:
 
 The files "should" have a list of similar names:\
-'Drug' which is the short name of drug used
-'Conc' which is the concentration of drug added (in microMolar)
-'Sname' the abbreviated name of Drug and Conc
-'Well' letter with two number format
-'Row' \# 1-8 for A-G 
-'Column' numbers 1-12 
-'Plate' will vary between two and three
-'RFLU' the RFLU from the 0 hour reading with background subtracted (not all experiments have them)
-'RFLU2'  the  RFLU from the 48 hour reading with background subtracted 
+'Drug' which is the short name of drug used 'Conc' which is the concentration of drug added (in microMolar) 'Sname' the abbreviated name of Drug and Conc 'Well' letter with two number format 'Row' \# 1-8 for A-G 'Column' numbers 1-12 'Plate' will vary between two and three 'RFLU' the RFLU from the 0 hour reading with background subtracted (not all experiments have them) 'RFLU2' the RFLU from the 48 hour reading with background subtracted
 
-I will first streamline the data into more simple formats: 
-Individual 1 is cell line 75-1 (D04_75_1,D05_75_1 )
+I will first streamline the data into more simple formats: Individual 1 is cell line 75-1 (D04_75_1,D05_75_1 )
 
 Individual 2 is cell line 87-1 (D04_87_1, D05_87_1)
 
@@ -136,11 +108,9 @@ Individual 6 is 71-1 (D02_71_1, DJAG_71_1)
 As of 6-2-22 I am implementing a new naming for R handles:\
 ind1a, ind1b etc, to make sure I process out the "empty_blanks"
 
-I am also converting Conc column to numeric
-Part 4: 
-###file cleanup###
+I am also converting Conc column to numeric Part 4: ###file cleanup###
 
-```{r File Cleanup, message=FALSE, warning=FALSE, include=FALSE}
+```{r File Cleanup, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 ind1a <- as.data.frame(subset(D04_75_1, !(Drug %in% 'Empty')))
 ind1b <- as.data.frame(subset(D05_75_1, !(Drug %in% 'Empty')))
@@ -178,13 +148,12 @@ ind6b <- ind6b %>%  mutate_at("Conc", as.numeric) %>% dplyr::select(Drug,Conc,Pe
 
 File cleanup first subsets each file imported by taking out the 'Empty' samples in the Drug column and then renaming the file to individual names and DRC a and b
 
-I then need to convert the concentrations to as.numeric and select the 5 columns that I really need for analysis, followed by dropping any wells that were NA in the Percent column.  
+I then need to convert the concentrations to as.numeric and select the 5 columns that I really need for analysis, followed by dropping any wells that were NA in the Percent column.\
 The next part of the code is to make analysis files and groups and things for the iterations.
 
-The data-frame called individuals is complied from each of the dataframes wrangled above.
+The data-frame called individuals is complied from each of the dataframes wrangled above and will be the "final" R object stored in the project folder.
 
-###lists
-```{r combine list, echo=FALSE, message=FALSE, warning=FALSE}
+```{r combine list, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 ###compile the separate data frames into a list of data frames
 individuals <- list(ind1a,  
                     ind1b,
@@ -227,8 +196,14 @@ ID <- c("ind1a",
         "ind6a",
         "ind6b")
 names(individuals)
+saveRDS(individuals,"data/individual_LDH48.RDS")
 full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
- write.csv(full_list,"LDH48hoursdata.csv")
+ write.csv(full_list,"data/LDH48hoursdata.csv")
+```
+ 
+ 
+```{r loading RDS data, message=FALSE, warning=FALSE, include=FALSE}
+individuals <- readRDS("data/individual_LDH48.RDS")
  ##make a smaller data frame###
  spec_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5b", "ind6a")### used to genrate ldh poster data in Dec 2022
  spec2_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5a", "ind6a")
@@ -237,13 +212,10 @@ full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
  
 smaller <- bind_rows(smaller,.id="SampleID")
 smaller2 <- bind_rows(smaller2,.id="SampleID")
-#saveRDS(individuals, file = "data/individualDRCfile.RDS")
 
 ```
-##find the individuals rds
-Once they are all in a data from, a few functions need to be defined for ggplot:
-##functions
- 
+
+##find the individuals rds Once they are all in a data from, a few functions need to be defined for ggplot: ##functions
 
 ```{r empty list holder, message=FALSE, warning=FALSE, include=FALSE}
 
@@ -257,7 +229,7 @@ vehls <- list() ###vehicle list
 name <- c( "Veh","Daun", "Doxo","Epi", "Mito", "Tras")### text list of drugs
 ```
 
-## Individual Plots
+
 ```{r individual plots, eval=FALSE, include=FALSE}
 
 for (i in name){
@@ -283,93 +255,11 @@ for (i in name){
 pl$i
 
 ```
-The problem with that package is the  dots.... and the fact I cannot graph lines on top of one another.  So I started to extract the information needed to generate the geom_ribbon and geom_line data needed.
 
-Here I need to assign the drugs out by drug:
+## Viability
 
-```{r making filtered data, echo=FALSE}
+I wanted to graph viability across all samples. Below are the results from a sample of concentrations.
 
-### sort drug out and store as drug name from smaller list
-#unique(smaller$SampleID)
-#returns "ind1a" "ind2b" "ind3b" "ind4b" "ind5a" "ind6a"
-DA <- full_list[Drug =="Daun"]
-DX <- full_list[Drug =="Doxo"]
-EP <- full_list[Drug =="Epi"]
-MT <- full_list[Drug =="Mito"]
-TR <- full_list[Drug =="Tras"]
-VE <- full_list[Drug =="Veh"]
-DA2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Daun")
-DX2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Doxo")
-EP2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Epi")
-MT2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Mito")
-TR2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Tras")
-VE2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Veh")
-#####Then add names!
-```
-
-
-```{r Daunorubicin, eval=FALSE, include=FALSE}
-### to extract parameters for mapping
-param_holder <- c()
-for (i in ID) {
-  thing <- filter(DA, SampleID== i)
-  thing.m <- dr4pl(Percent ~ Conc, 
-                   data = thing, method.init = "logistic")
-   param_holder[[i]] <- thing.m$parameters[2]
-  
-   
-}
-DA_parm <- param_holder
-    ```
-    
-```{r Doxorubicin, eval=FALSE, include=FALSE}
-### to extract parameters for mapping
-param_holder <- c()
-for (i in ID) {
-  thing <- filter(DX, SampleID== i)
-  thing.m <- dr4pl(Percent ~ Conc, 
-                   data = thing, method.init = "logistic")
-   param_holder[[i]] <- thing.m$parameters[2]
-  
-   
-}
-DX_parm <- as.data.frame(param_holder)
-    ```
-    
-```{r Epirubicin,eval=FALSE, include=FALSE}
-### to extract parameters for mapping
-param_holder <- c()
-for (i in ID) {
-  thing <- filter(EP, SampleID== i)
-  thing.m <- dr4pl(Percent ~ Conc, 
-                   data = thing, method.init = "logistic")
-   param_holder[[i]] <- thing.m$parameters[2]
-  
-   
-}
-EP_parm <- as.data.frame(param_holder)
-    ```
-    
-```{r Mitoxantrone,eval=FALSE, include=FALSE}
-### to extract parameters for mapping
-param_holder <- c()
-for (i in ID) {
-  thing <- filter(MT, SampleID== i)
-  thing.m <- dr4pl(Percent ~ Conc, 
-                   data = thing, method.init = "logistic")
-   param_holder[[i]] <- thing.m$parameters[2]
-  
-   
-}
-MT_parm <- as.data.frame(param_holder)
-    ```
-    
-    
-
-####Viability
-
-I wanted to graph viability across all samples.  Below are the results from a sample of concentrations.
-    
 ```{r Viablitiy plots, eval=FALSE, include=FALSE,warning=FALSE}
 ### to extract parameters for mapping
 DAvia <- full_list %>% filter(Drug == "Daun") %>% filter(Conc ==0.5)# %>% mutate(SampleID=substr(SampleID,1,4))
@@ -381,52 +271,71 @@ VEvia <- full_list %>% filter(Drug == "Veh")%>% filter(Conc ==0.5) %>% mutate(Sa
 values_48_list <- full_list %>% na.omit()%>% filter(Conc == 0.5) %>% mutate(SampleID=substr(SampleID,1,4)) 
 
        
-      #plot.background = element_rect(fill = "#DDBBCD", colour = NA))
-#refmt <- MT[SampleID=='ind6a']
-ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
-     guides(alpha = "none")+ 
-      # stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = 1)+
-  geom_boxplot(position ="dodge")+
-      ylim(0,1.5)+
-  facet_wrap(~SampleID)
-    ```
-    
+# ggplot(VE, aes(x= as.factor(Conc), y= Percent)) +
+#      guides(alpha = "none")+ 
+#       geom_boxplot(position ="dodge")+
+#       ylim(0,1.5)+
+#   facet_wrap(~SampleID)
+```
+
 ```{r Viability data, echo=FALSE, warning=FALSE}
 ### to extract parameters for mapping
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
-full_list <- read.csv("output/output-old/LDH48hoursdata.csv")
+full_list <- read.csv("data/LDH48hoursdata.csv", row.names = 1)
+#alterlist <-
+averageFL <-  full_list %>% 
+   na.omit()%>% 
+   #filter(Conc <1) %>%
+   group_by(SampleID, Drug,Conc) %>%
+   mutate(indv=substr(SampleID,4,4)) %>% 
+   mutate(indv=factor(as.numeric(indv))) %>% 
+      mutate(Drug = factor(Drug, levels = c("Veh","Daun", 
+                                         "Doxo",
+                                         "Epi",
+                                         "Mito",
+                                         "Tras"))) %>% 
+  mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin",
+                          "Doxo"~"Doxorubicin",
+                          "Epi"~"Epirubicin",
+                          "Mito"~"Mitoxantrone",
+                          "Tras"~"Trastuzumab",
+                          "Veh"~ "Vehicle", .default= Drug)) %>%
+   dplyr::summarize(Mean = mean(Percent))
 
-alterlist <- full_list %>% 
-      na.omit()%>% 
-      filter(Conc <1) %>%
-      mutate(indv=substr(SampleID,4,4)) %>% 
-      mutate(indv=factor(as.numeric(indv))) %>% 
-  mutate(Drug = factor(Drug, levels = c("Daunorubicin",  
-                                        "Doxorubicin",
-                                        "Epirubicin",
-                                        "Mitoxantrone",
-                                        "Trastuzumab",
-                                        "Vehicle")))  
-
-ggplot(alterlist,  aes(x= as.factor(Conc), y= Percent, group = Conc)) +
-  geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Name))+
+averageFL %>% ungroup() %>% 
+   mutate(indv=substr(SampleID,4,4)) %>% 
+   mutate(indv=factor(as.numeric(indv))) %>% 
+  filter(Conc<5) %>% 
+  group_by(indv,Drug,Conc) %>% 
+  dplyr::summarize(Viability=mean(Mean)) %>% ungroup() %>% 
+   ggplot(.,  aes(x=Drug, y= Viability*100 )) +
+   geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Drug))+
   geom_point(aes(color=indv))+
   guides(alpha = "none")+
-  ylim(0,1.5)+
+  ylim(0,150.5)+
    scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
   scale_fill_manual(values=drug_pal_fact)+
   theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
+  #xlab(expression(paste("Concentration [", mu, "M]")))+
   geom_hline(yintercept = 1,lty = 4)+
   ylab("Viability") +
-  facet_wrap(~Name)+ 
-  geom_signif(comparisons = list(c("0.01","0.05"),
-                                 c("0.01","0.1"),
-                                 c("0.01","0.5")),
-                test = "t.test",
-                map_signif_level = TRUE,step_increase = 0.1,
-                textsize = 4)+
+  facet_wrap(~Conc)+ 
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  # geom_signif(comparisons = list(c("0.01","0.05"),
+  #                                c("0.01","0.1"),
+  #                                c("0.01","0.5")),
+  #               test = "t.test",
+  #               map_signif_level = TRUE,step_increase = 0.1,
+  #               textsize = 4)+
 
   ggtitle("Viablity across concentrations at 48 hours")+
   theme(axis.title=element_text(size=10),
@@ -436,8 +345,79 @@ ggplot(alterlist,  aes(x= as.factor(Conc), y= Percent, group = Conc)) +
        panel.border=element_rect(fill = NA, size = 2),
        plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
    
-```   
-    
+```
+
+```{r viablity by drug}
+averageFL %>% ungroup() %>% 
+   mutate(indv=substr(SampleID,4,4)) %>% 
+   mutate(indv=factor(as.numeric(indv))) %>% 
+  filter(Conc<5) %>% 
+  group_by(indv,Drug,Conc) %>% 
+  dplyr::summarize(Viability=mean(Mean)) %>% ungroup() %>% 
+   ggplot(.,  aes(x=as.factor(Conc), y= Viability*100 )) +
+   geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Drug))+
+  geom_point(aes(color=indv))+
+  guides(alpha = "none")+
+  ylim(0,150.5)+
+   scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  scale_fill_manual(values=drug_pal_fact)+
+  theme_classic() +
+  #xlab(expression(paste("Concentration [", mu, "M]")))+
+  geom_hline(yintercept = 1,lty = 4)+
+  ylab("Viability") +
+  facet_wrap(~Drug)+ 
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  # geom_signif(comparisons = list(c("0.01","0.05"),
+  #                                c("0.01","0.1"),
+  #                                c("0.01","0.5")),
+  #               test = "t.test",
+  #               map_signif_level = TRUE,step_increase = 0.1,
+  #               textsize = 4)+
+
+  ggtitle("Viablity across drugs at 48 hours")+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(size =2),
+        axis.text=element_text(size=9, face = "bold"),
+       panel.grid.major = element_line(colour = 'darkgrey'),
+       panel.border=element_rect(fill = NA, size = 2),
+       plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
+```
+
+
+
+
+
+
+
+
+```{r making filtered data, echo=FALSE}
+
+### sort drug out and store as drug name from smaller list
+#unique(smaller$SampleID)
+#returns "ind1a" "ind2b" "ind3b" "ind4b" "ind5a" "ind6a"
+DA <- full_list %>% filter(Drug == "Daun")
+DX <- full_list %>% filter(Drug =="Doxo")
+EP <- full_list %>% filter(Drug =="Epi")
+MT <- full_list %>% filter(Drug =="Mito")
+TR <- full_list %>% filter(Drug =="Tras")
+VE <- full_list %>% filter(Drug =="Veh")
+DA2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Daun")
+DX2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Doxo")
+EP2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Epi")
+MT2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Mito")
+TR2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Tras")
+VE2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Veh")
+#####Then add names!
+```
+
 ```{r daunplot, echo=FALSE, message=FALSE, warning=FALSE}
 # ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
 #      guides(color =  "none", alpha = "none")+
@@ -463,7 +443,7 @@ daplot <- ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
     scale_color_brewer(palette = "Dark2")+
     scale_x_log10() +  # Change the x-axis scale to log 10 scale
     theme_classic() +
-    xlab(expression(paste("Concentration [", mu, "M]")))+
+    xlab(NULL)+#expression(paste("Concentration [", mu, "M]")))+
     ylab(NULL) +
     ggtitle("Daunorubicin")+
     theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"),
@@ -472,13 +452,13 @@ daplot <- ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
           axis.text=element_text(size=10, face = "bold"),
           panel.grid.major = element_line(colour = 'lightgrey'),
           panel.border=element_rect(fill = NA, linewidth = 2),
-          plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+          plot.background = element_rect(fill = "#d7657e", colour = NA))
       
-  daplot
+  #daplot
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
-    ```
-    
+```
+
 ```{r doxplot, echo=FALSE, message=FALSE, warning=FALSE}
 # ggplot(DX2, aes(x=Conc, y= Percent, colour = SampleID,alpha =0.6)) +
 #   guides( alpha = "none")+
@@ -505,7 +485,7 @@ dxplot <-
       scale_color_brewer(palette = "Dark2")+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
       theme_classic() +
-      xlab(expression(paste("Concentration [", mu, "M]")))+
+      xlab(NULL)+
       ylab(NULL) +
       theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
       ggtitle("Doxorubicin")+
@@ -514,28 +494,24 @@ dxplot <-
             axis.text=element_text(size=10, face = "bold"),
             panel.grid.major = element_line(colour = 'lightgrey'),
             panel.border=element_rect(fill = NA, linewidth = 2),
-            plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+            plot.background = element_rect(fill = "#d7657e", colour = NA))
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
-    dxplot
+   # dxplot
     
-    ```
-    
-    
-    
-    
-    
+```
+
 ```{r epiplot,echo=FALSE, message=FALSE, warning=FALSE}
-ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
-  guides(color =  "none", alpha = "none")+
-  stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
-    stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,NA,NA,NA))), se = FALSE)+
-      ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
-  theme_classic() +
-  xlab(expression(paste("Concentration [", mu, "M]")))+
-  ylab("Normalized Cell Viability")
+# ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
+#   guides(color =  "none", alpha = "none")+
+#   stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "pointrange", size =0.8)+
+#     stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,NA,NA,NA))), se = FALSE)+
+#       ylim(0,1.5)+
+#       scale_x_log10() +  # Change the x-axis scale to log 10 scale
+#   theme_classic() +
+#   xlab(expression(paste("Concentration [", mu, "M]")))+
+#   ylab("Normalized Cell Viability")
 
 epplot <- 
   ggplot(EP2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
@@ -552,7 +528,7 @@ epplot <-
   scale_x_log10() +  # Change the x-axis scale to log 10 scale
   theme_classic() +
   scale_color_brewer(palette = "Dark2")+
-  xlab(expression(paste("Concentration [", mu, "M]")))+
+  xlab(NULL)+
   ylab(NULL) +
   theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
   ggtitle("Epirubicin")+
@@ -561,15 +537,14 @@ epplot <-
         axis.text=element_text(size=10, face = "bold"),
         panel.grid.major = element_line(colour = 'lightgrey'),
         panel.border=element_rect(fill = NA, linewidth = 2),
-        plot.background = element_rect(fill = "#DDBBCD", colour = NA))
+        plot.background = element_rect(fill = "#d7657e", colour = NA))
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
-  epplot  
+ # epplot  
     
     
-    ```
-    
-    
+```
+
 ```{r Mitoplot, echo=FALSE, message=FALSE, warning=FALSE}
 # ggplot(MT2, aes(x=Conc, y= Percent, color = SampleID, alpha= 0.6)) +
 #      guides(color =  guide_legend(overide.aes =list(size=4)), alpha = "none")+
@@ -597,7 +572,7 @@ mtplot <-
       scale_x_log10() + 
       scale_color_brewer(palette = "Dark2")+# Change the x-axis scale to log 10 scale
       theme_classic() +
-      xlab(expression(paste("Concentration [", mu, "M]")))+
+      xlab(expression(paste("Concentration ", mu, "M")))+
       ylab(NULL) +
       theme(plot.title = element_text(hjust = 0.5, size =15, face="bold"))+
       ggtitle("Mitoxantrone")+
@@ -606,17 +581,15 @@ mtplot <-
             axis.text=element_text(size=10, face = "bold"),
             panel.grid.major = element_line(colour = 'lightgrey'),
             panel.border=element_rect(fill = NA, linewidth =  2),
-            plot.background = element_rect(fill = "#FFD966", colour = NA))
+            plot.background = element_rect(fill = "#00c5cb", colour = NA))
       
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
   mtplot  
     
     
-    ```
-    
-    
-    
+```
+
 ```{r  trasplot}
  leg <- ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
           geom_line()+
@@ -625,9 +598,6 @@ mtplot <-
         labs(color = "Individual", linewidth=3)
         
           
-library(RColorBrewer)    
-   leg
-   
 trplot <- 
   ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
       guides(color="none", alpha = "none")+
@@ -642,7 +612,7 @@ trplot <-
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
       theme_classic() +
       scale_color_brewer(palette = "Dark2")+
-      xlab(expression(paste("Concentration [", mu, "M]")))+
+      xlab(expression(paste("Concentration ", mu, "M")))+
       ylab(NULL) +
       theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"))+
       ggtitle("Trastuzumab")+
@@ -651,17 +621,16 @@ trplot <-
             axis.text=element_text(size=10, face = "bold"),
             panel.grid.major = element_line(colour = 'lightgrey'),
             panel.border=element_rect(fill = NA, size = 2),
-            plot.background = element_rect(fill = "#FFD966", colour = NA))
+            plot.background = element_rect(fill = "#00c5cb", colour = NA))
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
-  trplot  
+  #trplot  
 
     
     
-    ```
-    
-    
-```{r control plot, echo=, message=FALSE, warning=FALSE}
+```
+
+```{r control plot, echo=FALSE, message=FALSE, warning=FALSE}
 # ggplot(VE2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
 #       guides(color =  "none", alpha = "none")+
 #           stat_summary(fun.data=mean_se, fun.args = list(mult=1), geom = "errorbar", size =1, width = .1)+
@@ -686,7 +655,7 @@ veplot <-
       scale_color_brewer(palette = "Dark2")+
       scale_x_log10() +  # Change the x-axis scale to log 10 scale
       theme_classic() +
-      xlab(expression(paste("Concentration [", mu, "M]"))) +
+      xlab(expression(paste("Concentration ", mu, "M"))) +
       ylab(NULL) +
       ggtitle("Vehicle") +
       theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold")) +
@@ -699,15 +668,16 @@ veplot <-
         panel.background = element_rect(fill = "transparent"),
         plot.background = element_rect(fill = "transparent", colour = NA))
     
-veplot
+#veplot
 # theme(plot.title = element_text(hjust = 0.5, size =20))
      #####plot all together!#####   
 
 
     
-    ```
+```
+
 ###plot all together!#####
-    
+
 ```{r plot together not good, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
     library(cowplot)
 ## take a legend from a plot
@@ -723,12 +693,12 @@ plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
 save_plot('output/plan2plot.png', plan2)
 save_plot('individual-legenddark2.png',ggpubr::as_ggplot(legend_b))
 plan2
-plan48ldh
+
 ```
+
 ###LD50 extract
 
-
-```{r  LD50 extraction make the list}
+```{r LD50 extraction make the list, include=FALSE}
 
 DAi <- full_list %>% dplyr::filter(Drug == "Daun")
 DXi <- full_list %>% dplyr::filter(Drug == "Doxo")
@@ -738,7 +708,6 @@ TRi <- full_list %>% filter(Drug =="Tras")
 VEi <- full_list %>% filter(Drug == "Veh")
 ###extracting ggplot colors:
 ```
-
 
 ```{r extract the stuff via dr4pl, eval=FALSE, include=FALSE}
 
@@ -797,15 +766,28 @@ trLD <- sapply(param_holder, "[[", 1)
 
 
 ```
+
 ###drm extracting
-```{r extracting with drm, echo=FALSE}
+
+```{r extracting with drm, include=FALSE}
 daunls <- list() ###daunorubicin list
 doxols <- list() ### doxorubicin list
 epils <- list() ###epirubicin list
 mitols <- list() ###mitoxantrone list
 trasls <- list() ###trastuzmab list
 vehls <- list() ###vehicle list
-
+ID <- c("ind1a",
+        'ind1b',
+        'ind2a',
+        'ind2b',
+        "ind3a",
+        "ind3b",
+        "ind4a",
+        "ind4b",
+        "ind5a",
+        "ind5b",
+        "ind6a",
+        "ind6b")
 
 for(k in ID){
 thingda <-  filter(DAi, SampleID==k)
@@ -817,7 +799,7 @@ thingdx <-  filter(DXi, SampleID==k)
   thingdx.m <- drm(Percent~Conc, data = thingdx, fct=LL.4(c(NA, 0, 1, NA)))
   onionx <- ED(thingdx.m, c(50), interval = "delta")
   doxols[k] <- onionx[1]
-  print(paste0(k, " Doxoorubicin"))
+  print(paste0(k, " Doxorubicin"))
  thingep <-  filter(EPi, SampleID==k)
   thingep.m <- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, 0, 1, NA)))
   onione <- ED(thingep.m, c(50), interval = "delta")
@@ -834,7 +816,8 @@ thingdx <-  filter(DXi, SampleID==k)
 
 
 ```
-```{r DA try with drc, message=FALSE, warning=FALSE}
+
+```{r DA try with drc, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 for(k in ID){
 
   thing <-  filter(DA, SampleID==k)
@@ -856,12 +839,10 @@ for(k in ID){
 
  }
 
-daunls
+#daunls
 ```
 
-
-
-```{r DX try with drc, message=FALSE, warning=FALSE}
+```{r DX try with drc, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 for(k in ID){
 
   thing <-  filter(DX, SampleID==k)  
@@ -883,11 +864,10 @@ for(k in ID){
 
  }
 
-doxols
+#doxols
 ```
 
-
-```{r EP try with drc, echo=FALSE, message=FALSE, warning=FALSE}
+```{r EP try with drc, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 for(k in ID){
 
   thing <-  filter(EP, SampleID==k)  
@@ -909,9 +889,10 @@ for(k in ID){
 
  }
 
-epils
+#epils
 ```
-```{r MT try with drc, message=FALSE, warning=FALSE}
+
+```{r MT try with drc, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 for(k in ID){
 
@@ -934,10 +915,10 @@ for(k in ID){
 
  }
 
-mitols
+#mitols
 ```
 
-```{r TR try with drc, message=FALSE, warning=FALSE}
+```{r TR try with drc, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 ID2 <- ID[c(-4,-9,-12)]
 
 for(k in ID2){
@@ -961,10 +942,10 @@ for(k in ID2){
 
  }
 
-trasls
+#trasls
 ```
 
-```{r VE try with drc}
+```{r VE try with drc, eval=FALSE, include=FALSE}
 for(k in ID){
 
   thing <-  filter(VE, SampleID==k)
@@ -986,68 +967,61 @@ for(k in ID){
 
  }
 
-vehls
+#vehls
 ```
 
-
-
-
-
-
-
-
 ##ld50 condensed
-
 
 ```{r combine LD50 values}
 ###combining all values into a larger dataframe
 
 library(RColorBrewer)
-daunls <- plyr::quickdf(daunls) %>% 
-  pivot_longer(everything(),names_to = 'indv', values_to = "Daun")
-                        
-doxols <- plyr::quickdf(doxols) %>% 
-  pivot_longer(everything(),names_to = 'indv', values_to = "Doxo")
-epils <- plyr::quickdf(epils)%>% 
-  pivot_longer(everything(),names_to = 'indv', values_to = "Epi")
-mitols <- plyr::quickdf(mitols)%>% 
-  pivot_longer(everything(), names_to = 'indv', values_to = "Mito")
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+# daunls <- plyr::quickdf(daunls) %>% 
+#   pivot_longer(everything(),names_to = 'indv', values_to = "Daun")
+#                         
+# doxols <- plyr::quickdf(doxols) %>% 
+#   pivot_longer(everything(),names_to = 'indv', values_to = "Doxo")
+# epils <- plyr::quickdf(epils)%>% 
+#   pivot_longer(everything(),names_to = 'indv', values_to = "Epi")
+# mitols <- plyr::quickdf(mitols)%>% 
+#   pivot_longer(everything(), names_to = 'indv', values_to = "Mito")
+# 
+# LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
+# 
+# meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>% 
+# pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50') 
+# 
+# 
+# avgLD50 <- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
+#saveRDS(avgLD50,"data/avgLD50.RDS")
 
-LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
-
-meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>% 
-pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50') 
-
-
-avgLD50 <- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
-saveRDS(avgLD50,"data/avgLD50.RDS")
-
-LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
-colnames(LDfull) <- c("indv","Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
-summary(LDfull)
-BC_cell_lines <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx", 
-+     sheet = "BC_sample_set")
-
+# LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
+# colnames(LDfull) <- c("indv","Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
+# summary(LDfull)
+# BC_cell_lines <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx", sheet = "BC_sample_set")
+#write.csv(BC_cell_lines ,"data/BC_cell_lines.csv")
+BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
 avgLD50 <- readRDS("data/avgLD50.RDS")
   
-avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
-                         "Doxo"~"Doxorubicin",
-                         "Epi"~"Epirubicin",
-                         "Mito"~"Mitoxantrone",
-                         "Tras"~"Trastuzumab",
-                         "Veh"~ "Control", .default= Treatment)) %>% 
-    mutate(indv= factor(indv)) %>% 
+graphLD50 <- avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
+                                        "Doxo"~"Doxorubicin",
+                                        "Epi"~"Epirubicin",
+                                        "Mito"~"Mitoxantrone",
+                                        "Tras"~"Trastuzumab",
+                                        "Veh"~ "Control", .default= Treatment)) %>% 
+  mutate(indv= factor(indv)) %>% 
   ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
   geom_boxplot(position = "identity",aes(fill=Treatment))+
   geom_point(aes(color = indv,
                  size = 5,alpha = 0.5)) +
-  ggtitle(expression("Observed LD"[50]*"s"))+
+  ggtitle(expression("Experimentlly-derived LD"[50]*"s from treated cardiomyocytes"))+
   xlab("Treatment")+
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Dark2",
                      name = "Individual", 
                      labels = c("1","2","3","4","5","6"))+
-   ylim(-2,2)+
+  ylim(-2,2)+
   scale_fill_manual(values=drug_palc)+
   theme_bw() + 
   theme(plot.title = element_text(hjust =0.5, size = 18))+
@@ -1055,24 +1029,24 @@ avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
   #theme(strip.background = element_rect(fill = "transparent")) +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         legend.position = "none",
-         axis.title = element_text(size = 15, color = "black"),
+        axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) %>% print()  
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
+
+graphLD50
 
 
-
-
-BC_cell_lines %>%
+graphBC <- BC_cell_lines %>%
     mutate(Cell_line= factor(Cell_line)) %>% 
   pivot_longer(.,col=!Cell_line,names_to = 'Treatment',values_to = 'LD50') %>% 
   ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
   geom_boxplot(position = "identity",aes(fill=Treatment))+
   geom_point(aes(color = Cell_line,
                  size = 5,alpha = 0.5)) +
-  ggtitle(expression("Cell line reported  LD"[50]*"s"))+
-  xlab("Treatment")+
+  ggtitle(expression("Breast cancer cell line reported  LD"[50]*"s"))+
+  xlab("")+
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Spectral",
                      name = "Cell lines")+
@@ -1088,14 +1062,14 @@ BC_cell_lines %>%
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) %>% print()  
-  
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
+  graphBC
   
 ```
 
-###barplot for poster
 
-```{r barplot}
+
+```{r barplot, eval=FALSE, include=FALSE}
 
 #mean_values <-  abc_df %>% mutate("Indiv" = substr(SampleID,4,4)) %>% 
  # dplyr::group_by(SampleID, Drug, Conc)  
@@ -1148,11 +1122,9 @@ Test <- as.data.frame(Test)
 
 ```
 
-fsys got 
-##Data for Troponin I release after 0.5 uM treatment at 3 hours and 24 hours
 
 
-```{r   Troponin i echo=FALSE, warnings = FALSE}
+```{r eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 # ###make data frame
 dn <- c('Vehicle', 'Daunorubicin', 'Doxorubicin', 'Epirubicin', 'Mitoxantrone', 'Trastuzumab','Vehicle', 'Daunorubicin', 'Doxorubicin', 'Epirubicin', 'Mitoxantrone', 'Trastuzumab')
 # 
@@ -1196,47 +1168,3 @@ save_plot("tropimage.png",tropimage)
 
 
 ```
-###LDH DATA ###
-
-```{r}
-library(tidyverse)
-#my_comparisons <- 
-  
-  
-# ggplot(sig_analysis, aes(x = as.factor(Conc), y = norm_val, group = Conc)) +
-#   geom_boxplot(aes(fill = as.factor(Conc))) +
-#   #geom_point(aes(color= indv))+
-#   stat_compare_means(method="t.test", ref.group=1, label="p",angle = 75,hide.ns = TRUE, label.y=c(4.5),label.x= c(1.5,2.5,3.5,4.5,5.5,6.5,7.5),aes(angle=90))+
-#     scale_fill_manual(values = c("#F3BABD","#EAA2A5","#E28A8E",
-#                 "#DA7277","#CF5157","#C43138","#982124","#6B1210" ),
-#     aesthetics = c("Conc", "fill")) + 
-#       guides(fill = FALSE) +
-#       #geom_hline(yintercept = 1) +
-#       theme_bw() +
-#       xlab(expression(paste("Drug [", mu, "M]"
-#       ))) +
-#       ylab("LDH release") +
-#       labs(fill = "Individual") +
-#       facet_wrap("Drug") +
-#       theme(strip.background = element_blank()) +
-#       theme(
-#         axis.title = element_text(size = 15, color = "black"),
-#         axis.ticks = element_line(size = 1.5),
-#         axis.text = element_text(size = 9, color = "black", angle = 20),
-#         panel.border = element_rect(fill = NA, size = 2),
-#         panel.background = element_rect(fill = "transparent"),
-#         plot.background = element_rect(fill = "transparent", colour = NA),
-#         strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-#       
-```
-
-
-
-
-
-
-
-
-
-
-
