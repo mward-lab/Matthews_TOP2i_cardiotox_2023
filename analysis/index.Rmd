@@ -10,19 +10,26 @@ editor_options:
 
 Welcome to my research website. I am using workflowr to create reproducible code and data analysis.  
 
-# On my way.
+# Full data set infromation
 
-Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html) to see my results from the full run!!!   
+## Full RNA-seq QC
+[RNA-seq QC and PCA, some volcano plots](https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html)
+## Bayesian gene analysis
+ [Bayesian gene analysis](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
+## Pairwise gene analysis
+ [pairwise GO](https://reneeisnowhere.github.io/Cardiotoxicity/DEG-GO_analysis.html)
 
-The cormotif analysis is here: [link](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
 
-The pairwise GO analysis updated is here [pairwise GO](https://reneeisnowhere.github.io/Cardiotoxicity/DEG-GO_analysis.html)
 
+[LDH analysis](https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html)
+[DRC analysis](https://reneeisnowhere.github.io/Cardiotoxicity/DRC_analysis.html)
+
+
+
+# Older Analysis
 Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html) to see my results from the first analysis 
-
 You can also look at my page of GO analysis on both the Bayesian gene analysis and Pairwise gene analysis.  
 [GO enrichment analysis](https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html)
-[LDH analysis](https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html)
 
-Knowles data comparison is here [reQTLS]https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html
-
+Knowles data comparison is here [reQTLS](https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html)
+Under construction

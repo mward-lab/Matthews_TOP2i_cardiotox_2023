@@ -3,12 +3,10 @@ title: "LDH_analysis"
 author: "ERM"
 date: "`r Sys.Date()`"
 output: html_document
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo= FALSE, warning = FALSE, message = FALSE)
 ```
 
 ##package loading
@@ -22,59 +20,103 @@ library(tidyverse)
 library(zoo)
 library(ggplot2)
 library(ggsignif)
+library(RColorBrewer)
+library(stats)
 ```
 
 ## 48 hour Lactate Dehydrogenase results
 
 
-```{r ldh input, echo=FALSE}
+```{r ldh input at 48 hours, echo=FALSE, message=FALSE, warning=FALSE}
 
-# RINsamplelist <- read.csv("~/Ward Lab/Cardiotoxicity/Data/sequencing things/RINsamplelist.csv")
-# colnames(RINsamplelist) <- c("Indv","indv","time", "Drug","RIN","Conc_ng.ul")
-#  write_csv(RINsamplelist, "data/RINsamplelist.txt")
+drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+
 level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 RINsamplelist <-read_csv("data/RINsamplelist.txt",col_names = TRUE)
 
-
-mutate(indv= factor(indv,levels= level_order2))
-norm_LDH48 <- read.csv("data/norm_LDH.csv", row.names = 1)
-#norm_LDH48 <- norm_LDH[,-1]##get rid of line numbers
-norm_LDH48 <- norm_LDH48 %>% mutate(Drug=case_match(Drug, "Control" ~"Vehicle",.default= Drug)) %>% 
+via48_full <- read.csv("data/LDH48hoursdata.csv", row.names = 1)
+ viability <- via48_full %>% 
+  mutate(SampleID=substr(SampleID,4,4)) %>%
+  mutate(indv= factor(SampleID, labels= level_order2)) %>%
+  mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin",
+                         "Doxo"~"Doxorubicin",
+                         "Epi"~"Epirubicin",
+                         "Mito"~"Mitoxantrone",
+                         "Tras"~"Trastuzumab",
+                         "Veh"~ "Vehicle", .default= Drug)) %>% 
+   mutate(Drug=factor(Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Vehicle"))) %>%
+   dplyr::select(indv,Drug,Conc,Percent) %>%
+  group_by(indv,Drug,Conc) %>% summarise(per.live= mean(Percent))
+  
+norm_LDH <- read.csv("data/norm_LDH.csv",row.names = 1)
+norm_LDH48 <- norm_LDH %>% 
+  mutate(Drug=case_match(Drug, "Control" ~"Vehicle",.default= Drug)) %>%
   mutate(Drug=factor(Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Vehicle"))) %>%
-  mutate(indv=substring(indv,0,2)) %>% mutate(indv= factor(indv,levels= level_order2))
-stat.test <- norm_LDH48 %>% 
-  group_by(Conc) %>% t_test(., norm_val~Drug, ref.group="Vehicle")
+  mutate(indv=substring(indv,0,2)) %>%
+  mutate(indv= factor(indv,levels= level_order2)) %>% 
+  group_by(indv,Drug,Conc) %>% 
+  summarise(ldh= mean(norm_val))
 
-stat.test
 
 
-ggplot(norm_LDH48, aes(x = as.factor(Conc), y = norm_val, group=as.factor(Conc))) +
+
+
+
+ggplot(norm_LDH48, aes(x = as.factor(Conc), y = ldh, group=as.factor(Conc))) +
   geom_boxplot() + 
   geom_point(aes(color= indv, alpha= 0.8))+
-  # ggpubr::stat_compare_means(method="t.test",paired= TRUE, ref.group=6, label="p",angle = 75,hide.ns = TRUE, label.y=c(4.5),label.x= c(1.5,2.5,3.5,4.5,5.5,6.5,7.5),aes(angle=90))+
-  #   # scale_fill_manual(values = c("#F3BABD","#EAA2A5","#E28A8E",
-    #             "#DA7277","#CF5157","#C43138","#982124","#6B1210" ),
-    # aesthetics = c("Conc", "fill")) + 
-  scale_color_brewer(palette = "Dark2",name = "Individual")+
-      guides(fill = "none") +
-      geom_hline(yintercept = 1,lty =3) +
-      theme_bw() +
-      xlab(expression(paste("Drug [", mu, "M]"
-      ))) +
-      ylab("Relative LDH release") +
-      
-      facet_wrap("Drug") +
-   ylim(0, 5)+
-      theme(strip.background = element_rect(fill = "transparent")) +
-      theme(
+  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  guides(fill = "none", alpha = "none") +
+  geom_hline(yintercept = 1,lty =3) +
+  theme_bw() +
+  ggtitle("Relative lactate release at 48 hours")+
+  xlab(expression(paste("Drug [", mu, "M]"))) +
+  ylab("Relative lactate release at 48 hours") +
+  facet_wrap("Drug") +
+  ylim(0, 5)+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(size = 1.5),
         axis.text = element_text(size = 8, color = "black", angle = 20),
-         
         strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
       
 ```
+
+### 48 hour viability to LDH activity correlation
+
+
+```{r 48hour via and ldh}
+# ldh_via_48h <-
+  viability %>% 
+  full_join(., norm_LDH48,by = c("indv","Drug","Conc")) %>% 
+  ggplot(., aes(x=per.live, y=ldh))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  facet_wrap("Drug", scales="free")+
+  theme_classic()+
+  xlab("viablity at 48 hours") +
+  ylab("ldh at 48 hours") +
+  ggtitle("Relative viability and relative LDH release at 48 hours")+
+  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label"
+  )+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 20),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+
+
+
+
+
+
+```
+
 
 ####24h LDH data frame
 ```{r ldh 24h results, echo=FALSE, message=FALSE, warning=FALSE}
@@ -115,7 +157,8 @@ LDH24hstat <- list('VDA'=t.test(VE_24_ldh,DA_24_ldh),
                    'VMT'=t.test(VE_24_ldh,MT_24_ldh),
                    'VTR'=t.test(VE_24_ldh,TR_24_ldh),
                    'VVEH'=t.test(VE_24_ldh,VE_24_ldh))
-LDH24hstat[[1:6]][[3]]
+
+LDH24hstat
 
 ```
 ####24h Tnni data frame
@@ -158,14 +201,9 @@ tnni24hstat <- list('VDAT'=t.test(VE_24_TNNI,DA_24_TNNI),
                    'VTRT'=t.test(VE_24_TNNI,TR_24_TNNI),
                    'VVEHT'=t.test(VE_24_TNNI,VE_24_TNNI))
 tnni24hstat
-library(Biobase)
-apple.tnniest <- t(as.data.frame(subListExtract(tnni24hstat,'estimate')))##this pulls out a specific thing and puts into datafram as a vector for later manipulation (think pvalue or mean)
-
 
 ```
-##making the joint dataframe
-
-
+##joint dataframe data
 
 ```{r combining ldh and tnni data at 24 hours}
 
@@ -201,67 +239,58 @@ mean24tnni <-  pivot_longer(mean24tnni,
                             names_to = 'indv', 
                             values_to = "tnni")
 
-ggplot(mean24ldh, aes(x=Drug,y=ldh))+
-  geom_boxplot() +
-  geom_point(aes(col=indv,shape=indv, size =3))+
-  geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
-                                c("Vehicle","Doxorubicin"),
-                                c("Vehicle","Epirubicin"),
-                                c("Vehicle","Mitoxantrone"),
-                                c("Vehicle","Trastuzumab")),
-              map_signif_level=FALSE, 
-              textsize =6,
-              tip_length = .1, 
-              vjust = 0.2, step_increase = 0.1)+
-  theme_bw()+
-  ggtitle("Relative LDH release in media")+
-     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-              axis.title = element_text(size = rel(0.8))) 
-
-
-ggplot(mean24tnni, aes(x=Drug,y=tnni))+
-  geom_boxplot() +
-  geom_point(aes(col=indv,  size =3))+
-  geom_signif(comparisons =list(c("Control","Daunorubicin"),
-                                c("Control","Doxorubicin"),
-                                c("Control","Epirubicin"),
-                                c("Control","Mitoxantrone"),
-                                c("Control","Trastuzumab")),
-              map_signif_level=FALSE, 
-              textsize =6,
-              tip_length = .1, 
-              vjust = 0.2, step_increase = 0.1)+
-  theme_bw()+
-  ggtitle("Relative Troponin I release in media")+
-     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-              axis.title = element_text(size = rel(0.8))) 
-  
-
- cor(mean24ldh$ldh, mean24tnni$tnni)
-
-
+# ggplot(mean24ldh, aes(x=Drug,y=ldh))+
+#   geom_boxplot() +
+#   geom_point(aes(col=indv,shape=indv, size =3))+
+#   geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
+#                                 c("Vehicle","Doxorubicin"),
+#                                 c("Vehicle","Epirubicin"),
+#                                 c("Vehicle","Mitoxantrone"),
+#                                 c("Vehicle","Trastuzumab")),
+#               map_signif_level=FALSE, 
+#               textsize =6,
+#               tip_length = .1, 
+#               vjust = 0.2, step_increase = 0.1)+
+#   theme_bw()+
+#   ggtitle("Relative LDH release in media")+
+#      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+#               axis.title = element_text(size = rel(0.8))) 
+# 
+# 
+# ggplot(mean24tnni, aes(x=Drug,y=tnni))+
+#   geom_boxplot() +
+#   geom_point(aes(col=indv,  size =3))+
+#   geom_signif(comparisons =list(c("Control","Daunorubicin"),
+#                                 c("Control","Doxorubicin"),
+#                                 c("Control","Epirubicin"),
+#                                 c("Control","Mitoxantrone"),
+#                                 c("Control","Trastuzumab")),
+#               map_signif_level=FALSE, 
+#               textsize =6,
+#               tip_length = .1, 
+#               vjust = 0.2, step_increase = 0.1)+
+#   theme_bw()+
+#   ggtitle("Relative Troponin I release in media")+
+#      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+#               axis.title = element_text(size = rel(0.8))) 
+#   
+# 
+#  cor(mean24ldh$ldh, mean24tnni$tnni)
+# 
+# 
 tvl24hour <- full_join(mean24ldh,mean24tnni, by=c("Drug","indv"))
- 
-ggplot(tvl24hour, aes(x=ldh,y=tnni))+
-  geom_point(aes(col=indv))+ geom_smooth(method="lm")+
-  facet_wrap("Drug", scales= "free")+theme_bw()+
-  stat_cor(aes(label = after_stat(rr.label)), color = "red", geom = "label")+
-  ggtitle("ldh verses cTNNI 24 hour by Drug")
+
+# ggplot(tvl24hour, aes(x=ldh,y=tnni))+
+#   geom_point(aes(col=indv))+ geom_smooth(method="lm")+
+#   facet_wrap("Drug", scales= "free")+theme_bw()+
+#   stat_cor(aes(label = after_stat(rr.label)), color = "red", geom = "label")+
+#   ggtitle("ldh verses cTNNI 24 hour by Drug")
 
 
 ```
 
-```{r checking numbers}
 
-
-
-ggplot(mean24ldh, aes(x=indv, y=ldh))+geom_point()+ facet_wrap("Drug")
-ggplot(mean24tnni, aes(x=indv, y=tnni))+geom_point()+ facet_wrap("Drug")
-
-```
-
-
-##correlation plot add RNA
+##  RNA normalized 24 hour cTNNI / LDH
 
 ```{r correlation}
 
@@ -271,12 +300,13 @@ drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 RINsamplelist <- read_csv("data/RINsamplelist.txt")
 
-RNAnormlist <- RINsamplelist %>% mutate(Drug=case_match(Drug,"daunorubicin"~"Daunorubicin",
-                                         "doxorubicin"~"Doxorubicin",
-                                         "epirubicin"~"Epirubicin",
-                                         "mitoxantrone"~"Mitoxantrone",
-                                         "trastuzumab"~"Trastuzumab",
-                                         "vehicle"~"Vehicle", .default= Drug)) %>%
+RNAnormlist <- RINsamplelist %>% 
+  mutate(Drug=case_match(Drug,"daunorubicin"~"Daunorubicin",
+                         "doxorubicin"~"Doxorubicin",
+                         "epirubicin"~"Epirubicin",
+                         "mitoxantrone"~"Mitoxantrone",
+                         "trastuzumab"~"Trastuzumab",
+                         "vehicle"~"Vehicle", .default= Drug)) %>%
   filter(time =="24h") %>%
   ungroup() %>%
   dplyr::select(indv,Drug,Conc_ng.ul) %>%
@@ -286,8 +316,8 @@ RNAnormlist <- RINsamplelist %>% mutate(Drug=case_match(Drug,"daunorubicin"~"Dau
 RNAnormlist <- RNAnormlist %>%
   full_join(.,tvl24hour,by= c("Drug", "indv")) %>%
   mutate(rldh= ldh/Conc_ng.ul) %>%
-  mutate(rtnni=tnni/Conc_ng.ul) 
-  
+  mutate(rtnni=tnni/Conc_ng.ul)
+
 write.csv(RNAnormlist,"output/TNNI_LDH_RNAnormlist.txt")
 
 
@@ -385,3 +415,393 @@ RNAnormlist %>%
 
 
 ```
+
+
+## Calcium data at 24 hours
+
+
+```{r calcium addition}
+library(tidyverse)
+library(ggsignif)
+library(readr)
+library(ggalt)
+
+clamp_summary <- read.csv("data/Clamp_Summary.csv", row.names=1)
+
+level_order2 <- c('75','87','77','79','78','71')
+calcium_data <- read_csv("data/DF_Plate_Peak.csv", col_types = cols(...1 = col_skip()))
+
+drug_palexpand <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","purple3","darkgreen", "darkblue")
+#named colors: dark pink,Red,yellow,blue, dark grey, green(green is always control, may need to move pal around)
+
+
+
+```
+
+### Beat Rate
+```{r beat  rate plot}
+
+
+calcium_data %>% rename('Treatment'='Condition') %>%
+  rename('indv'='Experiment') %>%
+  mutate(Drug =case_match(Treatment, "Dau_0.5"~"Daunorubicin",  "Dau_1" ~"Daunorubicin",
+                          "Dox_0.5"~"Doxorubicin",  "Dox_1" ~"Doxorubicin",
+                          "Epi_0.5"~"Epirubicin",  "Epi_1" ~"Epirubicin",
+                          "Mito_0.5"~"Mitoxantrone","Mito_1"~"Mitoxantrone",
+                          "Tras_0.5"~"Trastuzumab", "Tras_1"~"Trastuzumab","Control" ~"Vehicle", .default = Treatment)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", "Daunorubicin", "Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab"))) %>%
+  mutate(Conc =case_match(Treatment, "Dau_0.5"~"0.5",  "Dau_1" ~"1.0",
+                          "Dox_0.5"~"0.5",  "Dox_1" ~"1.0",
+                          "Epi_0.5"~"0.5",  "Epi_1" ~"1.0",
+                          "Mito_0.5"~"0.5","Mito_1"~"1.0",
+                          "Tras_0.5"~"0.5", "Tras_1"~"1.0",'Control'~'0', .default = Treatment)) %>%
+  dplyr::select(Drug,Conc,indv,Rate) %>%#Peak_variance,Ave_FF0,
+  mutate(indv=substr(indv,1,2)) %>%
+  mutate(indv=factor(indv, levels = level_order2)) %>%
+
+  mutate(contrl= 0.383) %>%
+  mutate(norm_rate=Rate/contrl) %>%
+  filter(Conc==0| Conc==0.5) %>%
+  ggplot(., aes(x=Drug, y=Rate))+
+  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none")+
+  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
+                                 c("Doxorubicin", "Vehicle"),
+                                 c("Epirubicin", "Vehicle"),
+                                 c("Mitoxantrone", "Vehicle"),
+                                 c("Trastuzumab","Vehicle")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)+
+  guides(alpha= "none",size="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  ggtitle("Contraction rate")+
+  theme_classic()+
+  guides(size = "none",colour = guide_legend(override.aes = list(size=4, alpha= 0.5)))+
+  labs(y = "avg. beats/sec")+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(size = 12, color = "black", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+```
+
+
+### Mean amplitude
+
+```{r Mean Amplitude}
+
+
+clamp_summary %>%
+  rename('Treatment'='Cond') %>%
+  rename('indv'='Exp') %>%
+  mutate(Drug =case_match(Treatment, "Dau_0.5"~"Daunorubicin",  "Dau_1" ~"Daunorubicin",
+                          "Dox_0.5"~"Doxorubicin",  "Dox_1" ~"Doxorubicin",
+                          "Epi_0.5"~"Epirubicin",  "Epi_1" ~"Epirubicin",
+                          "Mito_0.5"~"Mitoxantrone","Mito_1"~"Mitoxantrone",
+                          "Tras_0.5"~"Trastuzumab", "Tras_1"~"Trastuzumab",
+                          "Control" ~"Vehicle" ,.default = Treatment)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", 
+                                      "Daunorubicin",
+                                      "Doxorubicin",
+                                      "Epirubicin",
+                                      "Mitoxantrone",
+                                      "Trastuzumab"))) %>%
+  mutate(Conc =case_match(Treatment, "Dau_0.5"~"0.5",  "Dau_1" ~"1.0",
+                          "Dox_0.5"~"0.5",  "Dox_1" ~"1.0",
+                          "Epi_0.5"~"0.5",  "Epi_1" ~"1.0",
+                          "Mito_0.5"~"0.5","Mito_1"~"1.0",
+                          "Tras_0.5"~"0.5", "Tras_1"~"1.0",'Control'~'0', .default = Treatment)) %>%
+  rename(c('Mean_Amplitude'='R1S1_Mean..a.u..',
+           'Rise_Slope'='R1S1_Rise_Slope..a.u..ms.',
+           'FWHM'='R1S1_Half_Width..ms.',
+           'Decay_Slope'='R1S1_Decay_Slope..a.u..ms.',
+           'Decay_Time'='Decay_Time..ms.',
+           'Rise_Time'='R1S1_Rise_Time')) %>%
+  mutate(indv=substr(indv,1,2)) %>%
+  mutate(indv=factor(indv, levels = level_order2)) %>%
+  filter(Conc==0| Conc==0.5) %>%
+  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  ggplot(.,aes(Drug,Mean_Amplitude))+
+  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none",size="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
+                                 c("Doxorubicin", "Vehicle"),
+                                 c("Epirubicin", "Vehicle"),
+                                 c("Mitoxantrone", "Vehicle"),
+                                 c("Trastuzumab","Vehicle")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)+
+  labs(y = "a.u.")+
+  ggtitle("Mean amplitude")+
+  theme_classic()+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+```
+
+
+
+### Full-Width-half max
+
+```{r FWHM}
+
+
+
+clamp_summary %>%
+  rename('Treatment'='Cond') %>%
+  rename('indv'='Exp') %>%
+  mutate(Drug =case_match(Treatment, "Dau_0.5"~"Daunorubicin",  "Dau_1" ~"Daunorubicin",
+                          "Dox_0.5"~"Doxorubicin",  "Dox_1" ~"Doxorubicin",
+                          "Epi_0.5"~"Epirubicin",  "Epi_1" ~"Epirubicin",
+                          "Mito_0.5"~"Mitoxantrone","Mito_1"~"Mitoxantrone",
+                          "Tras_0.5"~"Trastuzumab", "Tras_1"~"Trastuzumab","Control" ~"Vehicle" ,.default = Treatment)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", "Daunorubicin", "Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab"))) %>%
+  mutate(Conc =case_match(Treatment, "Dau_0.5"~"0.5",  "Dau_1" ~"1.0",
+                          "Dox_0.5"~"0.5",  "Dox_1" ~"1.0",
+                          "Epi_0.5"~"0.5",  "Epi_1" ~"1.0",
+                          "Mito_0.5"~"0.5","Mito_1"~"1.0",
+                          "Tras_0.5"~"0.5", "Tras_1"~"1.0",'Control'~'0', .default = Treatment)) %>%
+  rename(c('Mean_Amplitude'='R1S1_Mean..a.u..',
+           'Rise_Slope'='R1S1_Rise_Slope..a.u..ms.',
+           'FWHM'='R1S1_Half_Width..ms.',
+           'Decay_Slope'='R1S1_Decay_Slope..a.u..ms.',
+           'Decay_Time'='Decay_Time..ms.',
+           'Rise_Time'='R1S1_Rise_Time')) %>%
+  mutate(indv=substr(indv,1,2)) %>%
+  mutate(indv=factor(indv, levels = level_order2)) %>%
+  filter(Conc==0| Conc==0.5) %>%
+  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  ggplot(.,aes(Drug,Mean_Amplitude))+
+  geom_boxplot(position = "identity")+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none",size="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
+                                 c("Doxorubicin", "Vehicle"),
+                                 c("Epirubicin", "Vehicle"),
+                                 c("Mitoxantrone", "Vehicle"),
+                                 c("Trastuzumab","Vehicle")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)+
+  ggtitle(expression(paste("Full-width at half-max")))+
+  theme_bw()+
+  guides(size = "none")+
+  labs(y = "a.u.")+
+  theme_classic()+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+
+```
+
+
+
+### Rising Slope
+
+```{r rising slope}
+
+clamp_summary %>%
+  rename('Treatment'='Cond') %>%
+  rename('indv'='Exp') %>%
+  mutate(Drug =case_match(Treatment, "Dau_0.5"~"Daunorubicin",  
+                          "Dau_1" ~"Daunorubicin",
+                          "Dox_0.5"~"Doxorubicin",  
+                          "Dox_1" ~"Doxorubicin",
+                          "Epi_0.5"~"Epirubicin",  
+                          "Epi_1" ~"Epirubicin",
+                          "Mito_0.5"~"Mitoxantrone","Mito_1"~"Mitoxantrone",
+                          "Tras_0.5"~"Trastuzumab", "Tras_1"~"Trastuzumab",
+                          "Control" ~"Vehicle" ,.default = Treatment)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", "Daunorubicin",
+                                      "Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab"))) %>%
+  mutate(Conc =case_match(Treatment, "Dau_0.5"~"0.5",  "Dau_1" ~"1.0",
+                          "Dox_0.5"~"0.5",  "Dox_1" ~"1.0",
+                          "Epi_0.5"~"0.5",  "Epi_1" ~"1.0",
+                          "Mito_0.5"~"0.5","Mito_1"~"1.0",
+                          "Tras_0.5"~"0.5", "Tras_1"~"1.0",'Control'~'0', .default = Treatment)) %>%
+  rename(c('Mean_Amplitude'='R1S1_Mean..a.u..',
+           'Rise_Slope'='R1S1_Rise_Slope..a.u..ms.',
+           'FWHM'='R1S1_Half_Width..ms.',
+           'Decay_Slope'='R1S1_Decay_Slope..a.u..ms.',
+           'Decay_Time'='Decay_Time..ms.',
+           'Rise_Time'='R1S1_Rise_Time')) %>%
+  mutate(indv=substr(indv,1,2)) %>%
+  mutate(indv=factor(indv, levels = level_order2)) %>%
+  filter(Conc==0| Conc==0.5) %>%
+  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  ggplot(.,aes(Drug,Rise_Slope))+
+  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha="none", indv = "none", size = "none")+
+   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
+                                 c("Doxorubicin", "Vehicle"),
+                                 c("Epirubicin", "Vehicle"),
+                                 c("Mitoxantrone", "Vehicle"),
+                                 c("Trastuzumab","Vehicle")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)+
+  ggtitle(expression(paste("Rising slope")))+
+  labs(y = "a.u./sec")+
+  theme_classic()+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+
+```
+
+
+
+### Decay slope
+
+```{r Decay slope}
+clamp_summary %>%
+  rename('Treatment'='Cond') %>%
+  rename('indv'='Exp') %>%
+  mutate(Drug =case_match(Treatment, "Dau_0.5"~"Daunorubicin",  "Dau_1" ~"Daunorubicin",
+                          "Dox_0.5"~"Doxorubicin",  "Dox_1" ~"Doxorubicin",
+                          "Epi_0.5"~"Epirubicin",  "Epi_1" ~"Epirubicin",
+                          "Mito_0.5"~"Mitoxantrone","Mito_1"~"Mitoxantrone",
+                          "Tras_0.5"~"Trastuzumab", "Tras_1"~"Trastuzumab","Control" ~"Vehicle" ,.default = Treatment)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", "Daunorubicin", "Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab"))) %>%
+  mutate(Conc =case_match(Treatment, "Dau_0.5"~"0.5",  "Dau_1" ~"1.0",
+                          "Dox_0.5"~"0.5",  "Dox_1" ~"1.0",
+                          "Epi_0.5"~"0.5",  "Epi_1" ~"1.0",
+                          "Mito_0.5"~"0.5","Mito_1"~"1.0",
+                          "Tras_0.5"~"0.5", "Tras_1"~"1.0",'Control'~'0', .default = Treatment)) %>%
+  rename(c('Mean_Amplitude'='R1S1_Mean..a.u..',
+           'Rise_Slope'='R1S1_Rise_Slope..a.u..ms.',
+           'FWHM'='R1S1_Half_Width..ms.',
+           'Decay_Slope'='R1S1_Decay_Slope..a.u..ms.',
+           'Decay_Time'='Decay_Time..ms.',
+           'Rise_Time'='R1S1_Rise_Time')) %>%
+  mutate(indv=substr(indv,1,2)) %>%
+  mutate(indv=factor(indv, levels = level_order2)) %>%
+  filter(Conc==0| Conc==0.5) %>%
+  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  ggplot(.,aes(Drug,Decay_Slope))+
+  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha="none", indv = "none", size = "none")+
+   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
+                                 c("Doxorubicin", "Vehicle"),
+                                 c("Epirubicin", "Vehicle"),
+                                 c("Mitoxantrone", "Vehicle"),
+                                 c("Trastuzumab","Vehicle")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)+
+  ggtitle(expression(paste("Decay slope ")))+
+  labs(y = "a.u.")+
+  theme_classic()+
+  theme(plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+```
+
+### k means plot
+```{r kmeans code}
+
+
+
+k_means <- read.csv("data/K_cluster_kisthree.csv")
+
+# k_means %>% mutate(Drug =case_match(Drug_Name, "Dau_0.5"~"Daunorubicin",  
+#                                     "Dau_0.5.1" ~"Daunorubicin",
+#                                     "Dau_0.5.2" ~"Daunorubicin",
+#                                     "Dox_0.5"~"Doxorubicin",  
+#                                     "Dox_0.5.1" ~"Doxorubicin",
+#                                     "Dox_0.5.2" ~"Doxorubicin",
+#                                     "Epi_0.5"~"Epirubicin", 
+#                                     "Epi_0.5.1"~"Epirubicin",
+#                                     "Epi_0.5.2" ~ "Epirubicin",
+#                                     "Mito_0.5" ~ "Mitoxantrone", 
+#                                     "Mito_0.5.1" ~"Mitoxantrone", 
+#                                     "Mito_0.5.2" ~ "Mitoxantrone",
+#                                     "Tras_0.5" ~ "Trastuzumab", 
+#                                     "Tras_0.5.1" ~"Trastuzumab", 
+#                                     "Tras_0.5.2" ~ "Trastuzumab",
+#                                     "Control.1" ~ "Vehicle", 
+#                                     "Control.2" ~  "Vehicle", 
+#                                     "Control" ~ "Vehicle", .default = Drug_Name)) %>%
+#   ggplot(., aes(x = PC1,y = PC2,col = factor(Cluster),shape = Cluster)) +
+#   geom_point(size = 5) +
+#   scale_color_manual(values = c("purple3", "darkgreen", "darkblue"))
+
+
+k_means %>% mutate(Drug =case_match(Drug_Name, "Dau_0.5"~"Daunorubicin",
+                                    "Dau_0.5.1" ~"Daunorubicin",
+                                    "Dau_0.5.2" ~"Daunorubicin",
+                                    "Dox_0.5"~"Doxorubicin",  
+                                    "Dox_0.5.1" ~"Doxorubicin",
+                                    "Dox_0.5.2" ~"Doxorubicin",
+                                    "Epi_0.5"~"Epirubicin",
+                                    "Epi_0.5.1"~"Epirubicin",
+                                    "Epi_0.5.2"~"Epirubicin",
+                                    "Mito_0.5"~"Mitoxantrone",
+                                    "Mito_0.5.1"~"Mitoxantrone",
+                                    "Mito_0.5.2"~"Mitoxantrone",
+                                    "Tras_0.5"~"Trastuzumab", 
+                                    "Tras_0.5.1"~"Trastuzumab", 
+                                    "Tras_0.5.2"~"Trastuzumab",
+                                    "Control.1"~"Vehicle",
+                                    "Control.2"~"Vehicle",
+                                    "Control"~"Vehicle",.default = Drug_Name)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", 
+                                      "Daunorubicin",
+                                      "Doxorubicin",
+                                      "Epirubicin",
+                                      "Mitoxantrone",
+                                      "Trastuzumab"))) %>%
+  mutate(Cluster=factor(Cluster)) %>%
+  ggplot(., aes(x=PC1, y=PC2, col= Drug))+
+  geom_point(shape = 17,size=7)+
+  scale_color_manual(values=drug_pal)+
+  geom_encircle(aes(group=Cluster))+
+  annotate("text", label = c("Cluster 1","Cluster 2", "Cluster 3"), x = c(-2,0,1.5),y=c(-0.5,0,0.5))+
+  ggtitle(expression("PCA of Ca"^"2+"~"data with K-means clustering"))+
+  theme_bw()+
+  labs(x = "PC 1 (54 %)",y = "PC 2 (34%)")+
+  theme(plot.title=element_text(size= 14,hjust = 0.5),
+        axis.title = element_text(size = 10, color = "black"),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
