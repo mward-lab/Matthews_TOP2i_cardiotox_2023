@@ -1386,7 +1386,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
 ##GO:BP full figure 24 DEG analysis
 
 
-```{r GO:BP dEGlong, message=FALSE, warning=FALSE}
+```{r GO:BP dEGlong, echo=FALSE, message=FALSE, warning=FALSE}
 
 #DDEtable24
 
@@ -1510,7 +1510,7 @@ for (i in stripr) {
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
-#print(grid::grid.draw(g))
+print(grid::grid.draw(g))
 grid::grid.draw(g)
 #hex <- hue_pal()(4)
 
