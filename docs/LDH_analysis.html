@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="ERM" />
 
+<meta name="date" content="2023-04-20" />
 
-<title>Home</title>
+<title>LDH_analysis</title>
 
 <script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,6 +31,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -231,6 +236,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -238,6 +306,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -281,7 +359,9 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Home</h1>
+<h1 class="title toc-ignore">LDH_analysis</h1>
+<h4 class="author">ERM</h4>
+<h4 class="date">2023-04-20</h4>
 
 </div>
 
@@ -314,7 +394,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span> 0
 </p>
@@ -351,6 +431,90 @@ class="panel-collapse collapse">
 <p>Great! Since the R Markdown file has been committed to the Git
 repository, you know the exact version of the code that produced these
 results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230109code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230109)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230109code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230109)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -518,10 +682,11 @@ have uncommitted changes.
 
 <p>
 These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+made to the R Markdown (<code>analysis/LDH_analysis.Rmd</code>) and HTML
+(<code>docs/LDH_analysis.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -550,7 +715,7 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/5e614285a4f5c0ea25fa784aed2a14e0b5a18895/analysis/index.Rmd" target="_blank">5e61428</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/5e614285a4f5c0ea25fa784aed2a14e0b5a18895/analysis/LDH_analysis.Rmd" target="_blank">5e61428</a>
 </td>
 <td>
 reneeisnowhere
@@ -564,19 +729,19 @@ updating calcium graphs and index
 </tr>
 <tr>
 <td>
-html
+Rmd
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/1639244372e85c2d71b313c39a55f1f599f8c399/docs/index.html" target="_blank">1639244</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/4e522166042ca0bd67655a0e8bfb18a7b67d21ae/analysis/LDH_analysis.Rmd" target="_blank">4e52216</a>
 </td>
 <td>
 reneeisnowhere
 </td>
 <td>
-2023-04-17
+2023-03-31
 </td>
 <td>
-Build site.
+End of week updates
 </td>
 </tr>
 <tr>
@@ -584,33 +749,16 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d007af4d24eec696f8ac983c6a2e6b2ba4d1668b/analysis/index.Rmd" target="_blank">d007af4</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3a26d522c6f7556fe24462438e2d05d61862789a/analysis/LDH_analysis.Rmd" target="_blank">3a26d52</a>
 </td>
 <td>
 reneeisnowhere
 </td>
 <td>
-2023-04-17
+2023-03-22
 </td>
 <td>
-new links
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7f62d67d51d8e4e10c7c11fc6a5afac47bef4a5c/docs/index.html" target="_blank">7f62d67</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-17
-</td>
-<td>
-Build site.
+Wed poster analysis changes
 </td>
 </tr>
 <tr>
@@ -618,33 +766,16 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/363ddad64d7bef69a4c7d200639e600781b4415c/analysis/index.Rmd" target="_blank">363ddad</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/9cbe85808931c24c7dbc45569e8eccd0ce09bb52/analysis/LDH_analysis.Rmd" target="_blank">9cbe858</a>
 </td>
 <td>
 reneeisnowhere
 </td>
 <td>
-2023-04-17
+2023-03-10
 </td>
 <td>
-update with GO links
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/9e374911828f9ab6bb36379d2b4715c61480d801/docs/index.html" target="_blank">9e37491</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-16
-</td>
-<td>
-Build site.
+Codescramble update
 </td>
 </tr>
 <tr>
@@ -652,33 +783,16 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/41bc19ab81884a90c05f6419a30012496d2c6d4f/analysis/index.Rmd" target="_blank">41bc19a</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/49191f899fc734487eec938b448a8e1568e8db61/analysis/LDH_analysis.Rmd" target="_blank">49191f8</a>
 </td>
 <td>
 reneeisnowhere
 </td>
 <td>
-2023-04-16
+2023-03-03
 </td>
 <td>
-updated Cormotif data
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/b266b76acd8dac6d46d06572cf74173c443a67d8/docs/index.html" target="_blank">b266b76</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-10
-</td>
-<td>
-Build site.
+more tracking and updates
 </td>
 </tr>
 <tr>
@@ -686,33 +800,16 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d3f8cf7ecab5d70e7d00b13a0fdd8341a3f0002b/analysis/index.Rmd" target="_blank">d3f8cf7</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90a0227c6bbd0fc469ffd0c994e1f279cce13fac/analysis/LDH_analysis.Rmd" target="_blank">90a0227</a>
 </td>
 <td>
 reneeisnowhere
 </td>
 <td>
-2023-04-10
+2023-02-27
 </td>
 <td>
-update push of new data
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/84e723b4cbe770adb1593046c56d8f76e84d745b/docs/index.html" target="_blank">84e723b</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-02-10
-</td>
-<td>
-Build site.
+monday2-27
 </td>
 </tr>
 <tr>
@@ -720,7 +817,24 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/accc2412d4b3a5da3d043dbb62116296492e33e2/analysis/index.Rmd" target="_blank">accc241</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/28fb31fa2a4298d7be660f8ba3be10bb2c917bb9/analysis/LDH_analysis.Rmd" target="_blank">28fb31f</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-02-24
+</td>
+<td>
+Friday-updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/accc2412d4b3a5da3d043dbb62116296492e33e2/analysis/LDH_analysis.Rmd" target="_blank">accc241</a>
 </td>
 <td>
 reneeisnowhere
@@ -732,380 +846,6 @@ reneeisnowhere
 updates for the week
 </td>
 </tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/f147cf96a50ffaf5fa1ac430e1f89c6f687a4321/docs/index.html" target="_blank">f147cf9</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-02-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90da9c11365648192c735134866f2ab8e3669726/analysis/index.Rmd" target="_blank">90da9c1</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-31
-</td>
-<td>
-update index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/146a31ad49994710da20673e86f803ac32aefa22/docs/index.html" target="_blank">146a31a</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b7eac762b2cfe321cf328b6f1f339bc3d9ba5caa/analysis/index.Rmd" target="_blank">b7eac76</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-updating GO
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/6c21cf8cca434fdf262799bdc3b685ce23a91ad2/docs/index.html" target="_blank">6c21cf8</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/443a9f393601e6c682c88350ddbe45f4e46f9617/analysis/index.Rmd" target="_blank">443a9f3</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-adding in GO analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/81078864d54d780be8836669affe250e356ae507/docs/index.html" target="_blank">8107886</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/0950d4f83f9a84344ba8e1f46570f6c960365b29/docs/index.html" target="_blank">0950d4f</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-13
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f03a01329ca6da9b62d99ad32e646564ac69fb79/analysis/index.Rmd" target="_blank">f03a013</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-13
-</td>
-<td>
-update the link
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/cfc3e811a9a1ad6bf5e15e45e7c71366c7ae1a8a/analysis/index.Rmd" target="_blank">cfc3e81</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-13
-</td>
-<td>
-updating readme and index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7eccdb84d817f81cadf1a04d155d3831b5dbe007/docs/index.html" target="_blank">7eccdb8</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-12
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/93c440954bacc490b38f71f2247daa5f3b1f298e/analysis/index.Rmd" target="_blank">93c4409</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-12
-</td>
-<td>
-try again
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/ae8266e811dcf8952b7e8770b17e97d68c4e0f80/analysis/index.Rmd" target="_blank">ae8266e</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-12
-</td>
-<td>
-updating the rmarkdown
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/df8a8454f7328b5ed81c45547ce5e079514e9024/docs/index.html" target="_blank">df8a845</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-11
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/98fe131fcc1e93a32fd9383a1cb6941a00cf7735/analysis/index.Rmd" target="_blank">98fe131</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-11
-</td>
-<td>
-wflow_publish(c("analysis/license.Rmd", "analysis/index.Rmd"))
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/be977ac06ad7e9eca72d1ac799267ab39c8f7238/analysis/index.Rmd" target="_blank">be977ac</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-10
-</td>
-<td>
-testing interface
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/48a3f6244883d20174ac2138af728f8f19d2e65d/analysis/index.Rmd" target="_blank">48a3f62</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-10
-</td>
-<td>
-attempting again
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7c3d4401858521ce7153e5ae8f9ab9412fe9f61f/docs/index.html" target="_blank">7c3d440</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-10
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/0d9d25859ec586dc5b696b245dd18183a828846e/docs/index.html" target="_blank">0d9d258</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3aa463144b7390ccda3d157ab77e8a2af539f906/analysis/index.Rmd" target="_blank">3aa4631</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Trial updates
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/9e0f8eedf5121dda158638ef88f99045e749a148/docs/index.html" target="_blank">9e0f8ee</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3b61ad1a684f2cc4b7aadaccb3c73edfb98bbf9b/analysis/index.Rmd" target="_blank">3b61ad1</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1113,39 +853,266 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<p>Welcome to my research website. I am using workflowr to create
-reproducible code and data analysis.</p>
-<div id="full-data-set-infromation" class="section level1">
-<h1>Full data set infromation</h1>
-<div id="full-rna-seq-qc" class="section level2">
-<h2>Full RNA-seq QC</h2>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html">RNA-seq
-QC and PCA, some volcano plots</a> ## Bayesian gene analysis <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html">Bayesian
-gene analysis</a> ## Pairwise gene analysis <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/DEG-GO_analysis.html">pairwise
-GO</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html">LDH
-analysis</a> <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/DRC_analysis.html">DRC
-analysis</a></p>
+<p>##package loading</p>
+<div id="hour-lactate-dehydrogenase-results" class="section level2">
+<h2>48 hour Lactate Dehydrogenase results</h2>
+<p><img src="figure/LDH_analysis.Rmd/ldh%20input%20at%2048%20hours-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="hour-viability-to-ldh-activity-correlation"
+class="section level3">
+<h3>48 hour viability to LDH activity correlation</h3>
+<p><img src="figure/LDH_analysis.Rmd/48hour%20via%20and%20ldh-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>####24h LDH data frame</p>
+<pre><code>$VDA
+
+    Welch Two Sample t-test
+
+data:  VE_24_ldh and DA_24_ldh
+t = -3.7541, df = 17.12, p-value = 0.001564
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.0263033 -0.2880301
+sample estimates:
+mean of x mean of y 
+ 1.012944  1.670111 
+
+
+$VDX
+
+    Welch Two Sample t-test
+
+data:  VE_24_ldh and DX_24_ldh
+t = -3.7427, df = 17.065, p-value = 0.001611
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.3902576 -0.3880757
+sample estimates:
+mean of x mean of y 
+ 1.012944  1.902111 
+
+
+$VEP
+
+    Welch Two Sample t-test
+
+data:  VE_24_ldh and EP_24_ldh
+t = -4.285, df = 17.065, p-value = 0.0004969
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.5254695 -0.5190861
+sample estimates:
+mean of x mean of y 
+ 1.012944  2.035222 
+
+
+$VMT
+
+    Welch Two Sample t-test
+
+data:  VE_24_ldh and MT_24_ldh
+t = -5.1821, df = 17.085, p-value = 7.383e-05
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.5220379 -0.6415176
+sample estimates:
+mean of x mean of y 
+ 1.012944  2.094722 
+
+
+$VTR
+
+    Welch Two Sample t-test
+
+data:  VE_24_ldh and TR_24_ldh
+t = -2.5982, df = 17.112, p-value = 0.01868
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.85356981 -0.08876353
+sample estimates:
+mean of x mean of y 
+ 1.012944  1.484111 
+
+
+$VVEH
+
+    Welch Two Sample t-test
+
+data:  VE_24_ldh and VE_24_ldh
+t = 0, df = 34, p-value = 1
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.02989169  0.02989169
+sample estimates:
+mean of x mean of y 
+ 1.012944  1.012944 </code></pre>
+<p>####24h Tnni data frame</p>
+<pre><code>$VDAT
+
+    Welch Two Sample t-test
+
+data:  VE_24_TNNI and DA_24_TNNI
+t = -1.2565, df = 11.832, p-value = 0.2332
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.36079840  0.09713173
+sample estimates:
+mean of x mean of y 
+ 0.978500  1.110333 
+
+
+$VDXT
+
+    Welch Two Sample t-test
+
+data:  VE_24_TNNI and DX_24_TNNI
+t = -5.8512, df = 15.728, p-value = 2.633e-05
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.3799972 -0.1776694
+sample estimates:
+mean of x mean of y 
+ 0.978500  1.257333 
+
+
+$VEPT
+
+    Welch Two Sample t-test
+
+data:  VE_24_TNNI and EP_24_TNNI
+t = -3.4195, df = 13.915, p-value = 0.004181
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.32673646 -0.07476354
+sample estimates:
+mean of x mean of y 
+  0.97850   1.17925 
+
+
+$VMTT
+
+    Welch Two Sample t-test
+
+data:  VE_24_TNNI and MT_24_TNNI
+t = -4.4919, df = 12.316, p-value = 0.0006915
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.5625613 -0.1957720
+sample estimates:
+mean of x mean of y 
+ 0.978500  1.357667 
+
+
+$VTRT
+
+    Welch Two Sample t-test
+
+data:  VE_24_TNNI and TR_24_TNNI
+t = -3.7217, df = 11.904, p-value = 0.002956
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.5951287 -0.1553713
+sample estimates:
+mean of x mean of y 
+  0.97850   1.35375 
+
+
+$VVEHT
+
+    Welch Two Sample t-test
+
+data:  VE_24_TNNI and VE_24_TNNI
+t = 0, df = 34, p-value = 1
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.0574163  0.0574163
+sample estimates:
+mean of x mean of y 
+   0.9785    0.9785 </code></pre>
+<p>##joint dataframe data</p>
 </div>
 </div>
-<div id="older-analysis" class="section level1">
-<h1>Older Analysis</h1>
-<p>Click on this <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html">link</a>
-to see my results from the first analysis You can also look at my page
-of GO analysis on both the Bayesian gene analysis and Pairwise gene
-analysis.<br />
-<a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html">GO
-enrichment analysis</a></p>
-<p>Knowles data comparison is here <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html">reQTLS</a>
-Under construction</p>
+<div id="rna-normalized-24-hour-ctnni-ldh" class="section level2">
+<h2>RNA normalized 24 hour cTNNI / LDH</h2>
+<p><img src="figure/LDH_analysis.Rmd/correlation-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/LDH_analysis.Rmd/correlation-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/LDH_analysis.Rmd/correlation-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="calcium-data-at-24-hours" class="section level2">
+<h2>Calcium data at 24 hours</h2>
+<div id="beat-rate" class="section level3">
+<h3>Beat Rate</h3>
+<p><img src="figure/LDH_analysis.Rmd/beat%20%20rate%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mean-amplitude" class="section level3">
+<h3>Mean amplitude</h3>
+<p><img src="figure/LDH_analysis.Rmd/Mean%20Amplitude-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="full-width-half-max" class="section level3">
+<h3>Full-Width-half max</h3>
+<p><img src="figure/LDH_analysis.Rmd/FWHM-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rising-slope" class="section level3">
+<h3>Rising Slope</h3>
+<p><img src="figure/LDH_analysis.Rmd/rising%20slope-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="decay-slope" class="section level3">
+<h3>Decay slope</h3>
+<p><img src="figure/LDH_analysis.Rmd/Decay%20slope-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="k-means-plot" class="section level3">
+<h3>k means plot</h3>
+<p><img src="figure/LDH_analysis.Rmd/kmeans%20code-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] ggalt_0.4.0        RColorBrewer_1.1-3 ggsignif_0.6.4     zoo_1.8-11        
+ [5] lubridate_1.9.2    forcats_1.0.0      stringr_1.5.0      dplyr_1.1.0       
+ [9] purrr_1.0.1        readr_2.1.4        tidyr_1.3.0        tibble_3.1.8      
+[13] tidyverse_2.0.0    rstatix_0.7.2      ggpubr_0.6.0       ggplot2_3.4.1     
+[17] readxl_1.4.2       workflowr_1.7.0   
+
+loaded via a namespace (and not attached):
+ [1] nlme_3.1-162       fs_1.6.1           bit64_4.0.5        ash_1.0-15        
+ [5] httr_1.4.5         rprojroot_2.0.3    tools_4.2.2        backports_1.4.1   
+ [9] bslib_0.4.2        utf8_1.2.3         R6_2.5.1           KernSmooth_2.23-20
+[13] mgcv_1.8-42        colorspace_2.1-0   withr_2.5.0        tidyselect_1.2.0  
+[17] processx_3.8.0     extrafontdb_1.0    bit_4.0.5          compiler_4.2.2    
+[21] git2r_0.31.0       cli_3.6.0          labeling_0.4.2     sass_0.4.5        
+[25] scales_1.2.1       proj4_1.0-12       callr_3.7.3        digest_0.6.31     
+[29] rmarkdown_2.20     pkgconfig_2.0.3    htmltools_0.5.4    extrafont_0.19    
+[33] fastmap_1.1.1      highr_0.10         maps_3.4.1         rlang_1.0.6       
+[37] rstudioapi_0.14    jquerylib_0.1.4    farver_2.1.1       generics_0.1.3    
+[41] jsonlite_1.8.4     vroom_1.6.1        car_3.1-1          magrittr_2.0.3    
+[45] Matrix_1.5-3       Rcpp_1.0.10        munsell_0.5.0      fansi_1.0.4       
+[49] abind_1.4-5        lifecycle_1.0.3    stringi_1.7.12     whisker_0.4.1     
+[53] yaml_2.3.7         carData_3.0-5      MASS_7.3-58.2      grid_4.2.2        
+[57] parallel_4.2.2     promises_1.2.0.1   crayon_1.5.2       lattice_0.20-45   
+[61] splines_4.2.2      hms_1.1.2          knitr_1.42         ps_1.7.2          
+[65] pillar_1.8.1       glue_1.6.2         evaluate_0.20      getPass_0.2-2     
+[69] vctrs_0.5.2        tzdb_0.3.0         httpuv_1.6.9       Rttf2pt1_1.3.12   
+[73] cellranger_1.1.0   gtable_0.3.1       cachem_1.0.7       xfun_0.37         
+[77] broom_1.0.3        later_1.3.0        timechange_0.2.0   ellipsis_0.3.2    </code></pre>
+</div>
+</div>
 </div>
 
 
@@ -1164,6 +1131,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -1196,6 +1165,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
