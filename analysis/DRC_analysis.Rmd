@@ -678,7 +678,7 @@ veplot <-
 
 ###plot all together!#####
 
-```{r plot together not good, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r plot together not good, eval=TRUE, message=FALSE, warning=FALSE, include=FALSE}
     library(cowplot)
 ## take a legend from a plot
 legend_b <- ggpubr::get_legend(leg)
