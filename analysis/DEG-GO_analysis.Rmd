@@ -1362,7 +1362,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
     geom_point(aes(size = intersection_size, col = "red")) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('No response genes(n=5727) 24 hr KEGG terms') +
+    ggtitle('No response genes(n=4593) 24 hr KEGG terms') +
      xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("KEGG term")+
       theme_bw()+
@@ -1386,7 +1386,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
 ##GO:BP full figure 24 DEG analysis
 
 
-```{r GO:BP dEGlong, fig.height=8, fig.width=8, message=FALSE, warning=FALSE}
+```{r GO:BP dEGlong, message=FALSE, warning=FALSE}
 
 #DDEtable24
 
@@ -1552,7 +1552,7 @@ toplist3hours <-list(V.DA.top[,c(1,3)],
                               V.MT.top[,c(1,3)],
                               V.TR.top[,c(1,3)])
 names(toplist3hours) <- c("Daunorubicin-3h","Doxorubicin-3h", "Epirubicin-3h","Mitoxantrone-3h", "Trastuzumab-3h")
-
+library(RColorBrewer)
 #toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
 
 FCmatrix <- subset(efit2$coefficients)
@@ -1560,19 +1560,19 @@ is.matrix(subset(FCmatrix))
 colnames(FCmatrix) <- c("Daunorubicin-3h","Doxorubicin-3h", "Epirubicin-3h","Mitoxantrone-3h", "Trastuzumab-3h","Daunorubicin-24h","Doxorubicin-24h", "Epirubicin-24h","Mitoxantrone-24h", "Trastuzumab-24h")
 
 
-
- 
-
-
-
+mat_col <- data.frame(time= c(rep("3 hours",5), rep("24 hours",5)))
+rownames(mat_col) <- colnames(FCmatrix)
+# list(group=c("#C25757", "#A77E69")
+# names(mat_colors$group) <-c("3 hours", "24 hours")
+mat_colors <- list(time=c("#C25757", "#A77E69"))
+names(mat_colors$time) <- unique(mat_col$time)
 corrFC <- cor(FCmatrix)
-corrplot(corrFC, method = 'square', order = 'AOE', addCoef.col = 'black')
-corrplot(corrFC,type = 'full', order = 'hclust', tl.col = 'black',
-         cl.ratio = 0.2, tl.srt = 45, col = COL2('PuOr', 20), col.lim=c(-0.1,1), addrect=3)
+# corrplot(corrFC, method = 'square', order = 'AOE', addCoef.col = 'black')
+# corrplot(corrFC,type = 'full', order = 'hclust', tl.col = 'black',
+#          cl.ratio = 0.2, tl.srt = 45, col = COL2('PuOr', 20), col.lim=c(-0.1,1), addrect=3)
 
 
-pheatmap::pheatmap(corrFC, display_numbers = TRUE, number_format = "%.2f")
-
+pheatmap::pheatmap(corrFC, display_numbers = TRUE, number_format = "%.2f",main=("Correlation of FC values across all expressed genes, n=14084"),annotation_col = mat_col, annotation_colors = mat_colors)
 
 
 
