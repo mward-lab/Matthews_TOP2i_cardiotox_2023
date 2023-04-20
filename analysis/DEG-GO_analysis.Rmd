@@ -1386,7 +1386,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
 ##GO:BP full figure 24 DEG analysis
 
 
-```{r GO:BP dEGlong, echo=FALSE, message=FALSE, warning=FALSE}
+```{r GOBP dEGlong, echo=FALSE, fig.height=12, fig.width=8,message=FALSE, warning=FALSE}
 
 #DDEtable24
 
