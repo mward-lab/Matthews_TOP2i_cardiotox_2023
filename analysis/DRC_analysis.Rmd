@@ -972,7 +972,7 @@ for(k in ID){
 
 ##ld50 condensed
 
-```{r combine LD50 values}
+```{r combine LD50 values, echo=FALSE}
 ###combining all values into a larger dataframe
 
 library(RColorBrewer)
