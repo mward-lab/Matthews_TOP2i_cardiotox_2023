@@ -692,7 +692,7 @@ plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
 #drcfinal<- plot_grid(plan1, ncol =1, rel_heights = c(1,0.1))
 save_plot('output/plan2plot.png', plan2)
 save_plot('individual-legenddark2.png',ggpubr::as_ggplot(legend_b))
-plan2
+print(plan2)
 
 ```
 
