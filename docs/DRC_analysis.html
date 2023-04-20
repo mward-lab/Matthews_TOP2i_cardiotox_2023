@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2faf972713770acda0cbe78831026a9443d19395targetblank2faf972a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7c0c02a6bc30fbe9f38022931da8fe29926e9ccftargetblank7c0c02aa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2faf972713770acda0cbe78831026a9443d19395" target="_blank">2faf972</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7c0c02a6bc30fbe9f38022931da8fe29926e9ccf" target="_blank">7c0c02a</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2faf972713770acda0cbe78831026a9443d19395targetblank2faf972a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7c0c02a6bc30fbe9f38022931da8fe29926e9ccftargetblank7c0c02aa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2faf972713770acda0cbe78831026a9443d19395" target="_blank">2faf972</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7c0c02a6bc30fbe9f38022931da8fe29926e9ccf" target="_blank">7c0c02a</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,7 +557,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/BC_cell_lines.csv
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
@@ -710,6 +709,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/7c0c02a6bc30fbe9f38022931da8fe29926e9ccf/analysis/DRC_analysis.Rmd" target="_blank">7c0c02a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+<td>
+adding DRC analysis to github
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/bea5c804d2bf93deca830472892bea21e1f91714/docs/DRC_analysis.html" target="_blank">bea5c80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1040,178 +1073,13 @@ functions need to be defined for ggplot: ##functions</p>
 <p>I wanted to graph viability across all samples. Below are the results
 from a sample of concentrations.</p>
 <p><img src="figure/DRC_analysis.Rmd/Viability%20data-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>averageFL %&gt;% ungroup() %&gt;% 
-   mutate(indv=substr(SampleID,4,4)) %&gt;% 
-   mutate(indv=factor(as.numeric(indv))) %&gt;% 
-  filter(Conc&lt;5) %&gt;% 
-  group_by(indv,Drug,Conc) %&gt;% 
-  dplyr::summarize(Viability=mean(Mean)) %&gt;% ungroup() %&gt;% 
-   ggplot(.,  aes(x=as.factor(Conc), y= Viability*100 )) +
-   geom_boxplot(position=&quot;dodge&quot;,outlier.colour=&quot;transparent&quot;, aes(fill=Drug))+
-  geom_point(aes(color=indv))+
-  guides(alpha = &quot;none&quot;)+
-  ylim(0,150.5)+
-   scale_color_brewer(palette = &quot;Dark2&quot;,guide=&quot;legend&quot;,name = &quot;Individual&quot;,labels(c(1,2,3,4,5,6)))+
-  scale_fill_manual(values=drug_pal_fact)+
-  theme_classic() +
-  #xlab(expression(paste(&quot;Concentration [&quot;, mu, &quot;M]&quot;)))+
-  geom_hline(yintercept = 1,lty = 4)+
-  ylab(&quot;Viability&quot;) +
-  facet_wrap(~Drug)+ 
-  geom_signif(comparisons =list(c(&quot;Daunorubicin&quot;,&quot;Vehicle&quot;),
-                                c(&quot;Doxorubicin&quot;,&quot;Vehicle&quot;),
-                                c(&quot;Epirubicin&quot;,&quot;Vehicle&quot;),
-                                c(&quot;Mitoxantrone&quot;,&quot;Vehicle&quot;),
-                                c(&quot;Trastuzumab&quot;,&quot;Vehicle&quot;)),
-              test= &quot;t.test&quot;,
-              map_signif_level=TRUE,
-              textsize =4,
-              step_increase = 0.1)+
-  # geom_signif(comparisons = list(c(&quot;0.01&quot;,&quot;0.05&quot;),
-  #                                c(&quot;0.01&quot;,&quot;0.1&quot;),
-  #                                c(&quot;0.01&quot;,&quot;0.5&quot;)),
-  #               test = &quot;t.test&quot;,
-  #               map_signif_level = TRUE,step_increase = 0.1,
-  #               textsize = 4)+
-
-  ggtitle(&quot;Viablity across drugs at 48 hours&quot;)+
-  theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=9, face = &quot;bold&quot;),
-       panel.grid.major = element_line(colour = &#39;darkgrey&#39;),
-       panel.border=element_rect(fill = NA, size = 2),
-       plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
 <p><img src="figure/DRC_analysis.Rmd/viablity%20by%20drug-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><img src="figure/DRC_analysis.Rmd/Mitoplot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code> leg &lt;- ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
-          geom_line()+
-          theme_classic() +
-      scale_color_brewer(palette = &quot;Dark2&quot;,labels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
-        labs(color = &quot;Individual&quot;, linewidth=3)
-        
-          
-trplot &lt;- 
-  ggplot(TR2, aes(x=Conc, y= Percent, color = SampleID, alpha = 0.6)) +
-      guides(color=&quot;none&quot;, alpha = &quot;none&quot;)+
-      stat_summary(fun.data=mean_se, 
-                   fun.args = list(mult=1), 
-                   geom = &quot;errorbar&quot;, 
-                   size =.5, 
-                   width = .1)+
-      stat_smooth(method = &quot;drm&quot;, 
-                  method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
-      ylim(0,1.5)+
-      scale_x_log10() +  # Change the x-axis scale to log 10 scale
-      theme_classic() +
-      scale_color_brewer(palette = &quot;Dark2&quot;)+
-      xlab(expression(paste(&quot;Concentration &quot;, mu, &quot;M&quot;)))+
-      ylab(NULL) +
-      theme(plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))+
-      ggtitle(&quot;Trastuzumab&quot;)+
-      theme(axis.title=element_text(size=10),
-            axis.ticks=element_line(size =2),
-            axis.text=element_text(size=10, face = &quot;bold&quot;),
-            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
-            panel.border=element_rect(fill = NA, size = 2),
-            plot.background = element_rect(fill = &quot;#00c5cb&quot;, colour = NA))
-      
-  # theme(plot.title = element_text(hjust = 0.5, size =20))
-  #trplot  </code></pre>
 <p>###plot all together!#####</p>
 <p>###LD50 extract</p>
 <p>###drm extracting</p>
 <p>##ld50 condensed</p>
-<pre class="r"><code>###combining all values into a larger dataframe
-
-library(RColorBrewer)
-drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
-# daunls &lt;- plyr::quickdf(daunls) %&gt;% 
-#   pivot_longer(everything(),names_to = &#39;indv&#39;, values_to = &quot;Daun&quot;)
-#                         
-# doxols &lt;- plyr::quickdf(doxols) %&gt;% 
-#   pivot_longer(everything(),names_to = &#39;indv&#39;, values_to = &quot;Doxo&quot;)
-# epils &lt;- plyr::quickdf(epils)%&gt;% 
-#   pivot_longer(everything(),names_to = &#39;indv&#39;, values_to = &quot;Epi&quot;)
-# mitols &lt;- plyr::quickdf(mitols)%&gt;% 
-#   pivot_longer(everything(), names_to = &#39;indv&#39;, values_to = &quot;Mito&quot;)
-# 
-# LDfull &lt;- right_join(daunls,doxols,by = &#39;indv&#39;) %&gt;% right_join(.,epils,by = &#39;indv&#39;) %&gt;% right_join(., mitols, by= &#39;indv&#39;)
-# 
-# meanLDfull &lt;- LDfull %&gt;% mutate(indv = c(&#39;1&#39;,&#39;1&#39;,&#39;2&#39;,&#39;2&#39;,&#39;3&#39;,&#39;3&#39;,&#39;4&#39;,&#39;4&#39;,&#39;5&#39;,&#39;5&#39;,&#39;6&#39;,&#39;6&#39;)) %&gt;% 
-# pivot_longer(.,col=!indv,names_to = &#39;Treatment&#39;,values_to = &#39;LD50&#39;) 
-# 
-# 
-# avgLD50 &lt;- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
-#saveRDS(avgLD50,&quot;data/avgLD50.RDS&quot;)
-
-# LDfull &lt;- right_join(daunls,doxols,by = &#39;indv&#39;) %&gt;% right_join(.,epils,by = &#39;indv&#39;) %&gt;% right_join(., mitols, by= &#39;indv&#39;)
-# colnames(LDfull) &lt;- c(&quot;indv&quot;,&quot;Daunorubicin&quot;, &quot;Doxorubicin&quot;, &quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;)
-# summary(LDfull)
-# BC_cell_lines &lt;- read_excel(&quot;~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx&quot;, sheet = &quot;BC_sample_set&quot;)
-#write.csv(BC_cell_lines ,&quot;data/BC_cell_lines.csv&quot;)
-BC_cell_lines &lt;- read.csv(&quot;data/BC_cell_lines.csv&quot;,row.names = 1)
-avgLD50 &lt;- readRDS(&quot;data/avgLD50.RDS&quot;)
-  
-graphLD50 &lt;- avgLD50 %&gt;% mutate(Treatment=case_match(Treatment,&quot;Daun&quot;~&quot;Daunorubicin&quot;,
-                                        &quot;Doxo&quot;~&quot;Doxorubicin&quot;,
-                                        &quot;Epi&quot;~&quot;Epirubicin&quot;,
-                                        &quot;Mito&quot;~&quot;Mitoxantrone&quot;,
-                                        &quot;Tras&quot;~&quot;Trastuzumab&quot;,
-                                        &quot;Veh&quot;~ &quot;Control&quot;, .default= Treatment)) %&gt;% 
-  mutate(indv= factor(indv)) %&gt;% 
-  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
-  geom_boxplot(position = &quot;identity&quot;,aes(fill=Treatment))+
-  geom_point(aes(color = indv,
-                 size = 5,alpha = 0.5)) +
-  ggtitle(expression(&quot;Experimentlly-derived LD&quot;[50]*&quot;s from treated cardiomyocytes&quot;))+
-  xlab(&quot;Treatment&quot;)+
-  ylab(bquote(&#39;Log&#39;[10]~ &#39;LD&#39;[50]~&#39;in &#39;*mu*M))+
-  scale_color_brewer(palette = &quot;Dark2&quot;,
-                     name = &quot;Individual&quot;, 
-                     labels = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
-  ylim(-2,2)+
-  scale_fill_manual(values=drug_palc)+
-  theme_bw() + 
-  theme(plot.title = element_text(hjust =0.5, size = 18))+
-  guides(alpha =&quot;none&quot;, size = &quot;none&quot;, fill= &quot;none&quot;)+
-  #theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = &quot;none&quot;,
-        axis.title = element_text(size = 15, color = &quot;black&quot;),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
-        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))   
-
-graphLD50</code></pre>
-<p><img src="figure/DRC_analysis.Rmd/combine%20LD50%20values-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>graphBC &lt;- BC_cell_lines %&gt;%
-    mutate(Cell_line= factor(Cell_line)) %&gt;% 
-  pivot_longer(.,col=!Cell_line,names_to = &#39;Treatment&#39;,values_to = &#39;LD50&#39;) %&gt;% 
-  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
-  geom_boxplot(position = &quot;identity&quot;,aes(fill=Treatment))+
-  geom_point(aes(color = Cell_line,
-                 size = 5,alpha = 0.5)) +
-  ggtitle(expression(&quot;Breast cancer cell line reported  LD&quot;[50]*&quot;s&quot;))+
-  xlab(&quot;&quot;)+
-  ylab(bquote(&#39;Log&#39;[10]~ &#39;LD&#39;[50]~&#39;in &#39;*mu*M))+
-  scale_color_brewer(palette = &quot;Spectral&quot;,
-                     name = &quot;Cell lines&quot;)+
-          scale_fill_manual(values=drug_palc)+
-  ylim(-2,2)+
-  theme_bw() + 
-  theme(plot.title = element_text(hjust =0.5, size = 18))+
-  guides(alpha =&quot;none&quot;, size = &quot;none&quot;, fill= &quot;none&quot;)+
-  #theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = &quot;none&quot;,
-         axis.title = element_text(size = 15, color = &quot;black&quot;),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
-        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))   
-  graphBC</code></pre>
-<p><img src="figure/DRC_analysis.Rmd/combine%20LD50%20values-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/DRC_analysis.Rmd/combine%20LD50%20values-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/combine%20LD50%20values-2.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1220,7 +1088,6 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.2.2 (2022-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19044)
