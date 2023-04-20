@@ -14,30 +14,20 @@ library(cowplot)
 library(ggpubr)
 library(scales)
 library(sjmisc)
-
-
-
-
-
-
-
-
-
-
 # loading files/counts,etc ------------------------------------------------
 
-
+drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
-drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Control"),12)
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 labeltop <- (interaction(substring(drug, 0, 2), indv, time))
 
 level_order2 <- c('75','87','77','79','78','71')
 
 
-efit2<- readRDS(file ="data/efit2results.RDS")
+efit2<- readRDS(file ="data/efit2.RDS")
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
 V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
 V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
@@ -74,20 +64,22 @@ toplist24hours <- map_df(toplist24hours, ~as.data.frame(.x), .id="id")
 toplistall <- list(toplist24hours,toplist3hours)
 names(toplistall) <- c("24_hours", "3_hours")
 toplistall <-map_df(toplistall, ~as.data.frame(.x), .id="time")
+#write.csv(toplistall, "output/toplistall.csv")
 
 
 #-Knowles data:
 #fig4  contains all sig marginal effect eqtl
 #fig5 contains e1gl using total expression only genes
-#fig6 contains eqtl mapped using total and allele specific expression
+#fig6 contains eqtl mapped using total and allele specific expression not using anymore
 
 knowfig5<- Knowles_2018.elife.33480.supp5.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp5-v2/Knowles_2018-elife-33480-supp5-v2")
 
-knowfig6 <- Knowles_2018.elife.33480.supp6.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp6-v2/Knowles_2018-elife-33480-supp6-v2")
+#knowfig6 <- Knowles_2018.elife.33480.supp6.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp6-v2/Knowles_2018-elife-33480-supp6-v2")
 
 knowfig4 <- Knowles_2018.elife.33480.supp4.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp4-v2/Knowles_2018-elife-33480-supp4-v2")
 
 file.names <- list.files(path = "data/", pattern = "sig*", ignore.case = TRUE,full.names = TRUE)
+file.names <- file.names[c(2:10)]
 
 
 filenameonly <- read_csv("data/filenameonly.txt")
@@ -108,17 +100,9 @@ colnames(sigVDX3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P
 colnames(sigVEP3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
 colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+backGL <- read.csv("data/backGL.txt")
 
 
-all_sigDEG <- union(sigVDA24$ENTREZID,
-      union(sigVDA3$ENTREZID,
-            union(sigVDX24$ENTREZID,
-                   union(sigVDX3$ENTREZID,
-                         union(sigVEP24$ENTREZID,
-                               union(sigVEP3$ENTREZID,
-                                     union (sigVMT24$ENTREZID, sigVMT3$ENTREZID)))))))
-
-##not what Michelle wanted  she want to compare counts of DEGS in each set
 # add in ensemble database ------------------------------------------------
 
 ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
@@ -132,51 +116,71 @@ my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 knowles5 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
                   values =knowfig5, mart = ensembl)
 #377
-knowles6 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
-                  values =knowfig6, mart = ensembl)
-#450
+# knowles6 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
+#                   values =knowfig6, mart = ensembl)
+# #450
 knowles4 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
                   values =knowfig4, mart = ensembl)
 #524
 
 knowles4 <-unique(knowles4$entrezgene_id)
 knowles5 <-unique(knowles5$entrezgene_id)
-knowles6 <-unique(knowles6$entrezgene_id)
+# knowles6 <-unique(knowles6$entrezgene_id)
 
-all_QTLSknow<- (union(union(knowles5,knowles6),knowles4))
+all_QTLSknow<- union(knowles5$entrezgene_id,knowles4$entrezgene_id)
 
 
+#total 794
 
-all_sigDEGname <- unique(all_sigDEG$entrezgene_id)
-#8753
-sig_DEGname.noqtl <- setdiff(all_sigDEGname,all_QTLSknow)#8260
-intersect(all_sigDEG, all_QTLSknow)
-intersect(all_sigDEG,knowles4)#259
-listK4 <- intersect(all_sigDEG,knowles4)
+
+# sig_DEGname.noqtl <- setdiff(all_sigDEGname,all_QTLSknow)#8260
+# intersect(all_sigDEG, all_QTLSknow)
+# intersect(all_sigDEG,knowles4)#259
+# listK4 <- intersect(all_sigDEG,knowles4)
 # knowles4 ----------------------------------------------------------------
-intersect(knowles4,sigVDA24$ENTREZID )
-intersect(knowles4,sigVDA3$ENTREZID )
+length(intersect(knowles4,sigVDA24$ENTREZID ))
+#239
+length(intersect(knowles4,sigVDA3$ENTREZID ))
+#8
+length(intersect(knowles4,sigVDA24$ENTREZID ))
 
-intersect(knowles4,sigVDA24$ENTREZID )
+length(intersect(knowles4,sigVDA24$ENTREZID ))
 
-intersect(knowles4,sigVDA24$ENTREZID )
+ length(intersect(knowles4,sigVDA24$ENTREZID ))
 
-intersect(knowles4,sigVDA24$ENTREZID )
 
-intersect(knowles4,sigVDA24$ENTREZID )
-
-length(intersect(knowles4,test) )
-
+length(intersect(knowles4,test))
+#503/521
 test <- backGL$ENTREZID
 
 allset <- (toplistall[toplistall$ENTREZID%in% knowles4,3])
 unique(allset)
 
 toplistall %>%
-  # filter(adj.P.Val<0.1) %>%
-  filter(ENTREZID %in% knowles4) %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time== "24_hours") %>%
+
+  group_by(time, id) %>%
+
+  mutate(K4 = if_else(ENTREZID %in% knowles4,1,0))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5,1,0))%>%
+  filter(adj.P.Val<0.1) %>%
+ summarize(n=n())
+
+
+
+  # count(sigcount) %>%
+  # pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %>%
+  # mutate(prop = sig/(sig+notsig)*100) %>%
+  # mutate(prop=if_else(is.na(prop),0,prop)) %>%
+  ggplot(., aes(x=id ,y=K4, group=id))+
+  geom_col()#+
+#geom_stat(sum(K4=1))
+  geom_text(aes(label = sprintf("%.2f",prop)), position=position_dodge(0.9),vjust=-.2 )+
+  scale_fill_manual(values =drug_palNoVeh)
+  # filter(adj.P.Val<0.1) %>%
+
   ggplot(., aes(x=id, y =abs(logFC)))+
   geom_boxplot(aes(fill=id))+
   fill_palette(palette =drug_palNoVeh)+
@@ -198,13 +202,14 @@ toplistall %>%
   geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
                                  c("Epirubicin", "Doxorubicin"),
                                  c("Mitoxantrone", "Doxorubicin"),
-                                   c("Trastuzumab","Doxorubicin")),
+                                   c("Trastuzumab","Doxorubicin"),
+                                 c("Mitoxantrone","Trastuzumab")),
                               test = "t.test",
               map_signif_level = FALSE,step_increase = 0.1,
               textsize = 4)
 
 # knowles5 ----------------------------------------------------------------
-intersect(all_sigDEG,knowles5)#234
+intersect(test,knowles5)#374/377
 listK5 <- intersect(all_sigDEG,knowles5)
 toplistall %>%
   # filter(adj.P.Val<0.1) %>%
@@ -314,8 +319,15 @@ toplistall %>%
 
 # union knowles all -----------------------------------
 
-all_QTLSknow<- (union(knowles5,knowles4))
-non_eQTL <- setdiff(toplistall$ENTREZID, all_QTLSknow)
+all_QTLSknow<- (union(knowles5,knowles4)) #794
+sig3all<- union(sigVMT3$ENTREZID,union(sigVEP3$ENTREZID,union(sigVDA3$ENTREZID,sigVDX3$ENTREZID)))
+sig24all<- union(sigVMT24$ENTREZID,union(sigVEP24$ENTREZID,union(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
+length(unique(sig24all))
+sig_3_24_all <- union(sig3all,sig24all)  #9491
+NR_respdeg <- setdiff(backGL$ENTREZID, sig_3_24_all)  #4593
+
+
+non_eQTL <- setdiff(NR_respdeg, all_QTLSknow) #4293
 unique(non_eQTL)
 
 toplistall %>%
@@ -346,56 +358,48 @@ toplistall %>%
   geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
 
                                  c("Epirubicin", "Doxorubicin"),
-                                 c("Mitoxantrone", "Doxorubicin")),
-
-              test = "t.test",
-              map_signif_level = FALSE,step_increase = 0.1,
-              textsize = 4)
-
-length(intersect(backGL$ENTREZID,non_eQTL))
-toplistall %>%
-  filter(ENTREZID %in%non_eQTL) %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  ggplot(., aes(x=id, y =abs(logFC)))+
-  geom_boxplot(aes(fill=id))+
-  fill_palette(palette =drug_palNoVeh)+
-  guides(fill=guide_legend(title = "Treatment"))+
-  #facet_wrap(~time,labeller = (time = facettimelabel) )+
-  theme_bw()+
-  xlab("")+
-  ylab(" |Log Fold Change|")+
-  theme_bw()+
-  facet_wrap(~time)+
-  ggtitle("non-eQTL n= 14044")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
-
-
-  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
-
-                                 c("Epirubicin", "Doxorubicin"),
                                  c("Mitoxantrone", "Doxorubicin"),
-                                 c("Trastuzumab","Doxorubicin")),
+                                c("Doxorubicin", "Trastuzumab")),
 
               test = "t.test",
               map_signif_level = FALSE,step_increase = 0.1,
               textsize = 4)
 
-sigtoplistall = toplistall[toplistall$adj.P.Val < .1 , ]
-  sigtoplistall %>%
-    filter(ENTREZID %in% non_eQTL)
-  #%>% group_by(time,symbol) %>%
-
-   count(ENTREZID, sort=TRUE)
-
- length(unique(sigtoplistall$ENTREZID))
-#9047
+#length(intersect(backGL$ENTREZID,non_eQTL))
+# toplistall %>%
+#   filter(ENTREZID %in%knowles4) %>%
+#   mutate(id = as.factor(id)) %>%
+#   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+#   ggplot(., aes(x=id, y =abs(logFC)))+
+#   geom_boxplot(aes(fill=id))+
+#   fill_palette(palette =drug_palNoVeh)+
+#   guides(fill=guide_legend(title = "Treatment"))+
+#   #facet_wrap(~time,labeller = (time = facettimelabel) )+
+#   theme_bw()+
+#   xlab("")+
+#   ylab(" |Log Fold Change|")+
+#   theme_bw()+
+#   facet_wrap(~time)+
+#   ggtitle("non-eQTL n= 14044")+
+#   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+#         axis.title = element_text(size = 15, color = "black"),
+#         # axis.ticks = element_line(linewidth = 1.5),
+#         axis.line = element_line(linewidth = 1.5),
+#         strip.background = element_rect(fill = "transparent"),
+#         axis.text = element_text(size = 8, color = "black", angle = 0),
+#         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
+#
+#
+#   geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
+#
+#                                  c("Epirubicin", "Doxorubicin"),
+#                                  c("Mitoxantrone", "Doxorubicin"),
+#                                  c("Trastuzumab","Doxorubicin")),
+#
+#               test = "t.test",
+#               map_signif_level = FALSE,step_increase = 0.1,
+#               textsize = 4)
+#
 
 
 # doing just the overlapped genes -----------------------------------------
@@ -439,7 +443,7 @@ sigtoplistall = toplistall[toplistall$adj.P.Val < .1 , ]
                textsize = 4)
 
 #other gene sets:  GWAS from counts cpm ----------------------------------------------------------
- cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
+ #cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 
  time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
  time <- ordered(time, levels =c("3h", "24h"))
@@ -494,8 +498,14 @@ replacename <- unique(totalsnpgenes[,c(1,3)])
          axis.line = element_line(linewidth = 1.5),
          axis.text.x = element_text(size = 12, color = "black", angle = 0),
          strip.text.x = element_text(size = 10, color = "black", face = "bold.italic"))
-
-
+GwassigVDA24 <- sigVDA24%>%
+  filter(ENTREZID %in% totalsnpgenes$entrezgene_id)
+GwassigVDX24 <- sigVDX24%>%
+  filter(ENTREZID %in% totalsnpgenes$entrezgene_id)
+GwassigVEP24 <- sigVEP24%>%
+  filter(ENTREZID %in% totalsnpgenes$entrezgene_id)
+GwassigVMT24 <- sigVMT24%>%
+  filter(ENTREZID %in% totalsnpgenes$entrezgene_id)
 
 # Seoane 2019 gene list ---------------------------------------------------
 
@@ -607,18 +617,39 @@ library(ggforce)
 # number of eQTLS by sigDA,etc at 24 hours --------------------------------
 
 ##24hours no response
+ #first combine all 3 and 24 hour deg sets
+ sig3all<- union(sigVMT3$ENTREZID,union(sigVEP3$ENTREZID,union(sigVDA3$ENTREZID,sigVDX3$ENTREZID)))
+ sig24all<- union(sigVMT24$ENTREZID,union(sigVEP24$ENTREZID,union(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
+ length(unique(sig24all))#9294
+ sig_3_24_all <- union(sig3all,sig24all)  #9491
+ ##now remove all expressed sig degs from backGL no make the NRresp list
+ NR_respdeg <- setdiff(backGL$ENTREZID, sig_3_24_all)  #4593
+length(intersect(NR_respdeg, knowles4)) #221
+length(intersect(sigVDA24$ENTREZID,knowles4))#239
+length(intersect(sigVDX24$ENTREZID,knowles4))#220
+length(intersect(sigVEP24$ENTREZID,knowles4))#206
+length(intersect(sigVMT24$ENTREZID,knowles4))#47
 
-NoResp$ENTREZID
+length(intersect(sigVDA24$ENTREZID,knowles4))#239
+length(intersect(sigVDX24$ENTREZID,knowles4))#220
+length(intersect(sigVEP24$ENTREZID,knowles4))#206
+length(intersect(sigVMT24$ENTREZID,knowles4))#47
 
 
-Overlapk4 <- toplist24hours %>%
+
+ non_eQTL45 <- setdiff(all_sigDEGname, all_QTLSknow45)
+
+Overlapk4 <- toplistall %>%
   dplyr::filter(ENTREZID%in%knowles4) %>%
-  group_by(id) %>%
+  group_by(id,time) %>%
   filter(adj.P.Val<0.1) %>%
  count()
-Overlapk4 <- merge(Overlapk4,NR4, all =TRUE)[,1:2]
+Overlapk4 <- merge(Overlapk4,NR_respdeg, all =TRUE)[,1:2]
 NR4<- tibble_row( id = "No Response", n = 248)
 
+know4time <- tibble(id=c("No Response", "Daun","Doxo","Epi", "Mito", "Tras"),
+                    time = c("3hour","24hour"),
+                    n=c(6,0,6,2,0,331,217,200,)))
 
 intersect(NoResp$ENTREZID,knowles4)
 
@@ -895,37 +926,45 @@ toplistall %>%
 
 # cormotif distrubution ---------------------------------------------------
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
-motif1_NR <- DEG_cormotif$motif1_NR
-motif3_TI <- DEG_cormotif$motif3_TI
-motif4_LR <- DEG_cormotif$motif4_LR
-motif5_ER <- DEG_cormotif$motif5_ER
+motif_NR <- DEG_cormotif$motif_NR
+motif_TI <- DEG_cormotif$motif_TI
+motif_LR <- DEG_cormotif$motif_LR
+motif_ER <- DEG_cormotif$motif_ER
 
-length(intersect(knowles5, motif1_NR))
-length(intersect(knowles5, motif3_TI))
-length(intersect(knowles5, motif4_LR))
-length(intersect(knowles5, motif5_ER))
+length(intersect(knowles5, motif_NR))
+length(intersect(knowles5, motif_TI))
+length(intersect(knowles5, motif_LR))
+length(intersect(knowles5, motif_ER))
+
 Overlapk4 <- merge(Overlapk1,NR4, all =TRUE)[,1:2]
-cormotfi<- tibble( id =c("No response","Time-Independent response", "Late response","Early response"), n = c(352, 0,32,5), totalgene= c(8846,95,1409,length(motif5_ER)))
-cormotfi5 <- tibble( id =c("No response","Time-Independent response", "Late response","Early response"), n = c(210,4,42,11), totalgene= c(8846,95,1409,length(motif5_ER)))
+
+cormotfi4<- tibble( id =c("No response","Time-Independent response", "Late response","Early response"), n = c(329, 3,138,4), totalgene= c(7362,432,4850,length(motif_ER)))
+cormotfi5 <- tibble( id =c("No response","Time-Independent response", "Late response","Early response"), n = c(199,12,139,9), totalgene= c(length(motif_NR),length(motif_TI),length(motif_LR), length(motif_ER)))
+
+
+
 cormotfi5 %>%
   mutate(percent = n/totalgene) %>%
   mutate(id=factor(id, levels = c("Time-Independent response",
                                   "Early response","Late response","No response"))) %>%
 ggplot(., aes(x=id, y=n))+
-  geom_col()+
-  scale_color_brewer(guide = "none")+
+  geom_col(aes(fill=id))+
+  scale_fill_brewer(guide = "none")+
 
   theme_bw()+
   ylab("Count")+
   xlab("")+
-  ggtitle("reQTL5 distribution in cormotif set")+
+  ggtitle("reQTL distribution in cormotif set")+
   theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-cormotfi5 %>%
+
+
+
+cormotfi4 %>%
   mutate(percent = n/totalgene) %>%
   mutate(id=factor(id, levels = c("Time-Independent response",
                                   "Early response","Late response","No response"))) %>%
@@ -936,7 +975,7 @@ cormotfi5 %>%
   theme_bw()+
   ylab("Percent of gene set")+
   xlab("")+
-  ggtitle("reQTL5 proportion in cormotif set")+
+  ggtitle("marginal eQTLs between sets")+
   theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),

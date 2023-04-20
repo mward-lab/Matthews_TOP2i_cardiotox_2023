@@ -19,12 +19,12 @@ labeltop <- (interaction(substring(drug, 0, 2), indv, time))
 #fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
 
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
-motif1_NR <- DEG_cormotif$motif1_NR
-motif3_TI <- DEG_cormotif$motif3_TI
-motif4_LR <- DEG_cormotif$motif4_LR
-motif5_ER <- DEG_cormotif$motif5_ER
-set.seed(12345)# (picked 2650,7803,55588,163081)
-# geneexpressionsets <- c(sample(motif1_NR,1),sample(motif3_TI,1),sample(motif4_LR,1),sample(motif5_ER,1))
+motif_NR <- DEG_cormotif$motif_NR
+motif_TI <- DEG_cormotif$motif_TI
+motif_LR <- DEG_cormotif$motif_LR
+motif_ER <- DEG_cormotif$motif_ER
+set.seed(12345)# (picked 2650,7803,55588,163081, but I swapped out27245 for 163081 because it looked better)
+# geneexpressionsets <- c(sample(motif_NR,1),sample(motif_TI,1),sample(motif_LR,1),sample(motif_ER,1))
 
 geneexpressionsets=c("2650","7803","55588","27245")
 

@@ -27,6 +27,28 @@ detachAllPackages <- function() {
 detachAllPackages()
 
 # uploading and making 3 hour lists ---------------------------------------
+file.names <- list.files(path = "data/", pattern = "sig*", ignore.case = TRUE,full.names = TRUE)
+
+file.names <- file.names[2:11]
+
+#write.csv(filenameonly,"data/filenameonly.txt", col.names = FALSE,row.names = FALSE)
+
+
+##readin the filenameonly.txt file from data to use for naming and filtering.
+
+
+filenameonly <- read.csv("data/filenameonly.txt")
+
+
+#loop through the list of files and make a separate dataframe for each file under the 'real'  name of the data set
+for (k in 1:length(file.names)){
+
+  assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
+
+}
+
+##rename the columns to the previous names
+
 
 efit2<- readRDS(file ="data/efit2results.RDS")
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")

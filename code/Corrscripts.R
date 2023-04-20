@@ -34,17 +34,19 @@ y_TMM_cpm <- cpm(x_counts, log = TRUE)
 colnames(y_TMM_cpm) <- label
 y_TMM_cpm
 set.seed(12345)
-cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
-                             groupid = groupid,
-                             compid = compid,
-                             K=1:8, max.iter = 500,runtype="logCPM")
+
+##after execution, was saved to the RDS
+# cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
+#                              groupid = groupid,
+#                              compid = compid,
+#                              K=1:8, max.iter = 500,runtype="logCPM")
 # cormotif_initialX <- cormotiffit(exprs = y_TMM_cpm,
 #                                 groupid = groupid,
 #                                 compid = compid,
 #                                 K=5, max.iter = 400, runtype="logCPM")
 
-saveRDS(cormotif_initial,"data/cormotif_initialall.RDS")##saved so Ido not have to run every time
-#cormotif_initial <- readRDS("data/cormotif_initialall.RDS")##getting the final data back in
+#saveRDS(cormotif_initial,"data/cormotif_initialall.RDS")##saved so Ido not have to run every time
+cormotif_initial <- readRDS("data/cormotif_initialall.RDS")##getting the final data back in
 
 plotIC(cormotif_initial)
 
@@ -78,16 +80,12 @@ clust4 <- motif_prob %>% ##LR
   rownames
 intersect(clust3,clust4)
 
-clust2 <- motif_prob %>%
-  as.data.frame() %>%
-  mutate(rownames=rownames(.)) %>%
-  filter(V4>.50) %>%
-  summary
+
 
 cormotif_initial$bestmotif$motif.prior
 #[1] 0.52612387 0.04184878 0.03463675 0.39739060
 #saveRDS(gene_prob_tran,"data/gene_probabilityk5.RDS")
-
+##old name- non response
 old_clust1  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.45 &
                                                    gene_prob_tran[,2] <0.45 &
                                                    gene_prob_tran[,3] <0.45 &
@@ -98,31 +96,20 @@ old_clust1  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.45 &
                                                    gene_prob_tran[,8] <0.45 &
                                                    gene_prob_tran[,9] <0.45 &
                                                    gene_prob_tran[,10] <0.45),])
-length(intersect(old_clust,rownames(clust1)))
-old_clust2  <- rownames(gene_prob_tran[(gene_prob_tran[,1] >0.45 &
-                                          gene_prob_tran[,2] >0.45 &
-                                          gene_prob_tran[,3] >0.45 &
-                                          gene_prob_tran[,4] >0.45 &
-                                          gene_prob_tran[,5] >0.45 &
-                                          gene_prob_tran[,6] >0.45 &
-                                          gene_prob_tran[,7] >0.45 &
-                                          gene_prob_tran[,8] >0.45 &
-                                          gene_prob_tran[,9] >0.45 &
-                                          gene_prob_tran[,10] >0.45),])
-length(intersect(old_clust2,rownames(clust2)))##7358
+length(intersect(old_clust1,rownames(clust1)))
 
 
 
 
-length((nonresponse_cluster)) ##7362
-sample(nonresponse_cluster,4)
+length((old_clust1)) ##7362
+#sample(old_clust1,4)
 #"55686"     "100128682" "11190"     "58472"
 #"150786" "54856"  "145165" "23095"
 #write_csv(as.data.frame(nonresponse_cluster), "data/cormotif_NRset.txt")
 
 # TI_respset --------------------------------------------------------------
-all_response <-rownames(gene_prob_tran)
-response_set <- setdiff(all_response,nonresponse_cluster)
+# all_response <-rownames(gene_prob_tran)
+# response_set <- setdiff(all_response,nonresponse_cluster)
 TI_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1]> 0.10 &
                                          gene_prob_tran[,2] > 0.10 &
                                          gene_prob_tran[,3] > 0.10 &
@@ -133,13 +120,13 @@ TI_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1]> 0.10 &
                                            gene_prob_tran[,8]> 0.10 &
                                            gene_prob_tran[,9]> 0.10),])# &
                                            # gene_prob_tran[,10]< 0.10),])
-length(intersect(TI_respint1,clust2))
+length(intersect(TI_respint1,clust2))#251
  length(TI_respint1) #432
  length(all_response)
 
  length(intersect(TI_respint1,ER_respint1))
 
-storetem <-  gene_prob_tran[rownames(gene_prob_tran) %in% response_set,]
+# storetem <-  gene_prob_tran[rownames(gene_prob_tran) %in% response_set,]
  #116
  #write_csv(as.data.frame(TI_respint1), "data/cormotif_TI_cluster.txt")
  sample(TI_respint1,4)
@@ -147,8 +134,8 @@ storetem <-  gene_prob_tran[rownames(gene_prob_tran) %in% response_set,]
  #"51278" "51043" "26152" "79832"
 # ER_resp set ------------------------------------------------------
 
-cormotif_initial$bestmotif$motif.prior
-cormotif_initial$bestmotif$motif.q
+# cormotif_initial$bestmotif$motif.prior
+# cormotif_initial$bestmotif$motif.q
  ER_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1]>0.55 &
                                            gene_prob_tran[,2] >0.55 &
                                            gene_prob_tran[,3] >0.55 &
@@ -168,7 +155,7 @@ cormotif_initial$bestmotif$motif.q
 
 sample(ER_respint1,4)
 #"54434"  "23506"  "51058"  "283219"
-length(intersect(nonresponse_cluster,ER_respint1))
+length(intersect(clust3,ER_respint1))#414
 # LR_respset --------------------------------------------------------------
 
  LR_respint1  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.970 &
@@ -184,30 +171,13 @@ length(intersect(nonresponse_cluster,ER_respint1))
 
  length(LR_respint1)
 #4850
- length(intersect(ER_respint1,LR_respint1))
+ length(intersect(clust4,LR_respint1))#4675
 # write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_cluster.txt")
  sample(LR_respint1,4)
 # "8915"   "1756"   "92335"  "146754"
-# motif2 ------------------------------------------------------------------
-
- motif2_unknown  <- rownames(gene_prob_tran[(gene_prob_tran[,1] >0.06 &
-                                            gene_prob_tran[,2] >0.06 &
-                                            gene_prob_tran[,3] >0.06 &
-                                            gene_prob_tran[,4] >0.04 &
-                                            gene_prob_tran[,5] >0.02 &
-                                            gene_prob_tran[,6] >0.06 &
-                                            gene_prob_tran[,7] >0.06 &
-                                            gene_prob_tran[,8] >0.06 &
-                                            gene_prob_tran[,9] >0.04 &
-                                            gene_prob_tran[,10] >0.02),])
-
- length(unique(LR_respint1))
- write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_respint.txt")
-#22822,4356
-
 
 # list summary ------------------------------------------------------------
-
+filter(clust1 %in% )
 length(nonresponse_cluster)
  #motif is 7362  set of gene with less than 50% chance of being DE
 
