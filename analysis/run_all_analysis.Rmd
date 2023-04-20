@@ -156,15 +156,16 @@ mymatrix$genes <- genes
 ```
 # Initial RNA-seq quality checks
 
-```{r seq quals}
+```{r seq quals, echo=FALSE, message=FALSE, warning=FALSE}
 
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 seq_info %>% 
   filter(type=="Total_reads") %>% 
   ggplot(., aes (x =samplenames, y=Total.Sequences, fill = drug, group_by=indv))+
   geom_col()+
+ geom_hline(aes(yintercept=20000000))+
  scale_fill_manual(values=drug_palc)+
-  ggtitle(expression("Total number of sequences by sample"))+
+  ggtitle(expression("Total number of reads by sample"))+
   xlab("")+
   ylab(expression("RNA -sequencing reads"))+
   theme_bw()+
@@ -182,7 +183,7 @@ seq_info %>%
   ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
   geom_boxplot()+
  scale_fill_manual(values=drug_palc)+
-  ggtitle(expression("Total number of sequences by treatment"))+
+  ggtitle(expression("Total number of reads by treatment"))+
   xlab("")+
   ylab(expression("RNA -sequencing reads"))+
   theme_bw()+
@@ -200,7 +201,7 @@ seq_info %>%
   ggplot(., aes (x =as.factor(indv), y=Total.Sequences))+
   geom_boxplot(aes(fill=as.factor(indv)))+
  scale_fill_brewer(palette = "Dark2", name = "Individual")+
-  ggtitle(expression("Total number of sequences by individual"))+
+  ggtitle(expression("Total number of reads by individual"))+
   xlab("")+
   ylab(expression("RNA -sequencing reads"))+
   theme_bw()+
@@ -211,6 +212,46 @@ seq_info %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
         axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 1),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
+seq_info %>% 
+  filter(type=="Mapped_reads") %>% 
+  ggplot(., aes (x =samplenames, y=Total.Sequences, fill = drug, group_by=indv))+
+  geom_col()+
+  geom_hline(aes(yintercept=20000000))+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression("Total number of mapped reads by sample"))+
+  xlab("")+
+  ylab(expression("RNA -sequencing reads"))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
+
+
+seq_info %>% 
+  filter(type=="Mapped_reads") %>% 
+  ggplot(., aes (x =as.factor(indv), y=read_num))+
+  geom_boxplot(aes(fill=as.factor(indv)))+
+ scale_fill_brewer(palette = "Dark2", name = "Individual")+
+  ggtitle(expression("Total mapped reads by individual"))+
+  xlab("")+
+  ylab(expression("Number of reads"))+
+  theme_bw()+
+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 0.5),
         #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
         strip.text.y = element_text(color = "white"))
 
@@ -232,6 +273,8 @@ seq_info %>%
         axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 0.5),
         #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
         strip.text.y = element_text(color = "white"))
+
+
 seq_info %>% 
   filter(type=="Mapped_reads") %>% 
   ggplot(., aes (x =drug, y=read_num))+
@@ -256,9 +299,9 @@ seq_info %>%
 ## Initial histograms from count matrix
 
 ```{r readinfo,echo=FALSE, message=FALSE, warning=FALSE}
-cpm <- cpm(mymatrix)
+c.pm <- cpm(mymatrix)
 lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
-dim(lcpm)
+dim(cpm)
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
@@ -267,7 +310,7 @@ saveRDS(x,"data/filtermatrix_x.RDS")
 
 # lib_size <- (as.data.frame(mymatrix$sample$lib.size))
 filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
-#write.csv(filcpm_matrix, "data/filtered_cpm_counts.csv")
+write.csv(filcpm_matrix, "data/filtered_cpm_counts.csv")
 
 hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
      xlab =expression("Log"[10]*" counts-per-million"), col =4 )
@@ -291,7 +334,7 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 ```{r individual PCA by drug and time steps, echo=FALSE, message=FALSE, warning=FALSE}
 #readRDS("data/filtermatrix_x.RDS")
-#saveRDS(dat_cpm,"data/dat_cpm.RDS")
+
 
 #dat_cpm <- readRDS("data/dat_cpm.RDS")
 
@@ -300,7 +343,9 @@ smlabel <- (interaction(substring(drug, 0, 2), time))
 x <- calcNormFactors(x, method = "TMM")
 normalized_lib_size <- x$samples$lib.size * x$samples$norm.factors
 dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size, log=TRUE)
+
 colnames(dat_cpm) <- label
+saveRDS(dat_cpm,"data/dat_cpm.RDS")
 anno$time <- ordered(time, levels =c("3h", "24h"))
 anno$group <- group
 cpm_per_sample <- cbind(anno, t(dat_cpm)) 
@@ -320,7 +365,7 @@ for (b in treattype) {
  
   grid.arrange(drug_time_pca, indv_pca,  nrow =2, top =paste(b)) 
   }
-#write.csv(x$counts, "data/cpmnorm_counts.csv")
+write.csv(x$counts, "data/cpmnorm_counts.csv")
 
 pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
@@ -462,8 +507,8 @@ efit2 <- eBayes(vfit)
 
 ```{r Differential expression, echo=FALSE}
 #efit2 <- readRDS("data/efit2.RDS")
-countstotal <- y$E
-colnames(countstotal) <- smlabel
+# countstotal <- efit2$
+# colnames(countstotal) <- smlabel
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
 V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
 V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
@@ -475,16 +520,16 @@ V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
 V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
 V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
 
-sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < .1 , ]
-sigVDX3 = V.DX.top[V.DX.top$adj.P.Val < .1 , ]
-sigVEP3 = V.EP.top[V.EP.top$adj.P.Val < .1 , ]
-sigVMT3 = V.MT.top[V.MT.top$adj.P.Val < .1 , ]
-sigVTR3 = V.TR.top[V.TR.top$adj.P.Val < .1 , ]
-sigVDA24 = V.DA24.top[V.DA24.top$adj.P.Val < .1 , ]
-sigVDX24 = V.DX24.top[V.DX24.top$adj.P.Val < .1 , ]
-sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val < .1 , ]
-sigVMT24 = V.MT24.top[V.MT24.top$adj.P.Val < .1 , ]
-sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val < .1 , ]
+sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < 0.05 , ]
+sigVDX3 = V.DX.top[V.DX.top$adj.P.Val < 0.05 , ]
+sigVEP3 = V.EP.top[V.EP.top$adj.P.Val < 0.05 , ]
+sigVMT3 = V.MT.top[V.MT.top$adj.P.Val < 0.05 , ]
+sigVTR3 = V.TR.top[V.TR.top$adj.P.Val < 0.05 , ]
+sigVDA24 = V.DA24.top[V.DA24.top$adj.P.Val < 0.05 , ]
+sigVDX24 = V.DX24.top[V.DX24.top$adj.P.Val < 0.05 , ]
+sigVEP24 = V.EP24.top[V.EP24.top$adj.P.Val < 0.05 , ]
+sigVMT24 = V.MT24.top[V.MT24.top$adj.P.Val < 0.05 , ]
+sigVTR24 = V.TR24.top[V.TR24.top$adj.P.Val < 0.05 , ]
 
 siglist <- list(sigVDA3,
              sigVDX3,
@@ -516,48 +561,7 @@ names(siglist) <- c("sigVDA3",
  }
 
 saveRDS(siglist,"data/siglist.RDS")
-# 
-# Da3counts <- as.data.frame(as.table(countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]))
-# Dx3counts <- as.data.frame(as.table(countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]))
-# Ep3counts <- as.data.frame(as.table(countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]))
-# Mt3counts <- as.data.frame(as.table(countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]))
-# TR3counts <- as.data.frame(as.table(countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]))
-# 
-# mDa3counts <- countstotal[,c(1,6,13,18,25,30,37,42,49,54,61,66)]
-# mDx3counts <- countstotal[,c(2,6,14,18,26,30,38,42,50,54,62,66)]
-# mEp3counts <- countstotal[,c(3,6,15,18,27,30,39,42,51,54,63,66)]
-# mMt3counts <- countstotal[,c(4,6,16,18,28,30,40,42,52,54,64,66)]
-# mTR3counts <- countstotal[,c(5,6,17,18,29,30,41,42,53,54,65,66)]
-# counts24hours <- as.data.frame(as.table(countstotal[,c(7:12,19:24,31:36,43:48,55:60, 67:72)]))
-# Da24counts <- as.data.frame(as.table(countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]))
-# Dx24counts <- as.data.frame(as.table(countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]))
-# Ep24counts <- as.data.frame(as.table(countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]))
-# Mt24counts <- as.data.frame(as.table(countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]))
-# TR24counts <- as.data.frame(as.table(countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]))
-# 
-# mDa24counts <- countstotal[,c(7,12,19,24,31,36,43,48,55,60,67,72)]
-# mDx24counts <- countstotal[,c(8,12,20,24,32,36,44,48,56,60,68,72)]
-# mEp24counts <- countstotal[,c(9,12,21,24,33,36,45,48,57,60,69,72)]
-# mMt24counts <- countstotal[,c(10,12,22,24,34,36,46,48,58,60,70,72)]
-# mTR24counts <- countstotal[,c(11,12,23,24,35,36,47,48,59,60,71,72)]
-# 
-# colnames(Da24counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(Dx24counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(Ep24counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(Mt24counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(TR24counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(Da3counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(Dx3counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(Ep3counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(Mt3counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(TR3counts) <- c("ENTREZID", "Samples",  "Counts")
-# colnames(counts24hours) <- c("ENTREZID", "Samples",  "Counts")
-# write_csv(Da24counts,"data/Da24counts.txt")
-# write_csv(Dx24counts,"data/Dx24counts.txt")
-# write_csv(Ep24counts,"data/Ep24counts.txt")
-# write_csv(Mt24counts,"data/Mt24counts.txt")
-# write_csv(TR24counts,"data/TR24counts.txt")
-# write_rds(counts24hours, "data/counts24hours.RDS")
+
 
 ```
 
@@ -614,19 +618,17 @@ nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
  #write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_cluster.txt")
 
 ```
-written summary so far:  pending T values sorting.
+written summary so far: 
 Response sets look similar to previous results.  This data is based on the filtered count matrix (using rowmeans>0 of cpm(log=true)).
 Classification of patterns appear to be:
 
-motif 1-  No Response set: 7362 (gene list made by filtering each column by posterior probability of <0.55) 
+motif 1-  No Response set: 7504 (gene list made by filtering likelihood of gene belonging to cluster 1 <0.5) 
 
-motif 2-  Time-independent Top2Bi response cluster: 432
+motif 2-  Time-independent Top2$\beta$i response cluster: 528 (gene list made by filtering likelihood of gene belonging to cluster 2 <0.5) 
 
-motif 3- Early Top2Bi response cluster: 481
+motif 3- Early Top2$\beta$i response cluster: 444 (gene list made by filtering likelihood of gene belonging to cluster 3 <0.5) 
 
-motif 4- All BC drug response set (only 1!) (I could not really isolate this gene from the p.post data)
-
-motif 5-  Late Top2Bi response cluster: 4850
+motif 4-  Late Top2$\beta$i response cluster: 5545 (gene list made by filtering likelihood of gene belonging to cluster 4 <0.5) 
 
   NOTE: these are based on the most recent counts (motif numbers have changed a little)
 
