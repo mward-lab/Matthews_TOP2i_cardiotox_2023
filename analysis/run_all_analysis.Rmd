@@ -299,7 +299,7 @@ seq_info %>%
 ## Initial histograms from count matrix
 
 ```{r readinfo,echo=FALSE, message=FALSE, warning=FALSE}
-c.pm <- cpm(mymatrix)
+cpm <- cpm(mymatrix)
 lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
 dim(cpm)
 row_means <- rowMeans(lcpm)
@@ -313,10 +313,10 @@ filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
 write.csv(filcpm_matrix, "data/filtered_cpm_counts.csv")
 
 hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
-     xlab =expression("Log"[10]*" counts-per-million"), col =4 )
+     xlab =expression("Log"[2]*" counts-per-million"), col =4 )
 
 hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMeans > 0 method", 
-     xlab =expression("Log"[10]*" counts-per-million"), col =2 ) 
+     xlab =expression("Log"[2]*" counts-per-million"), col =2 ) 
 
 
 boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
