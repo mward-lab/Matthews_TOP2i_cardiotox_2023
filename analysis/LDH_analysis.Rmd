@@ -100,11 +100,10 @@ ggplot(norm_LDH48, aes(x = as.factor(Conc), y = ldh, group=as.factor(Conc))) +
   ylab("ldh at 48 hours") +
   ggtitle("Relative viability and relative LDH release at 48 hours")+
   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-  stat_cor(aes(label = after_stat(rr.label)),
+  stat_cor(method="pearson",aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
            color = "red",
-           geom = "label"
-  )+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+           geom = "label")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(size = 1.5),
         axis.text = element_text(size = 8, color = "black", angle = 20),
@@ -324,12 +323,15 @@ write.csv(RNAnormlist,"output/TNNI_LDH_RNAnormlist.txt")
 ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
+  stat_cor(method="pearson",  
+           label.x.npc = 0, 
+           label.y.npc = 1,  
+           aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           color = "red")+
   facet_wrap("Drug", scales="free")+
   scale_color_brewer(palette = "Dark2")+
-  stat_cor(aes(label = after_stat(rr.label)),
-           color = "red",
-           geom = "label"
-           )+
+  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  
   ylab("Troponin I release at 24 hours")+
   xlab("Lactate DH release at 24 hours")+
   theme_classic()+
