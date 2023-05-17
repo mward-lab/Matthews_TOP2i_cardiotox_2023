@@ -21,6 +21,7 @@ library(scales)
 library(ggVennDiagram)
 library(Cormotif)
 library(RColorBrewer)
+library(ggpubr)
 ```
 
 # Creation of the data set:
@@ -170,7 +171,45 @@ length(setdiff(backGL$ENTREZID,(union(clust1,union(clust2,union(clust3,clust4)))
 
 
 ```
-The genes belonging to each set were made
+
+### Pie Chart of overall numbers
+
+```{r piechart and lollipop  }
+#make data frame
+Set <- c("Early Response set","Late Response set", "Time-Independent Response set", "No Response set")
+gene_num <- c(444,5545,528,7504)
+fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
+
+pie_chartdata <- data.frame(Set, gene_num, fills)
+ 
+    pie(gene_num,labels =Set )       
+
+
+
+```
+```{r barchart lolli chart}
+library(stringr)
+pie_chartdata %>% 
+  ggplot(.,aes(x=as.factor(Set),y=gene_num))+
+  geom_bar(stat="identity", fill=fills)+
+  geom_text(aes(label = gene_num, vjust=-.2))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))+
+  ggtitle("Number of genes in each set")+
+  ylab("Count")+
+  xlab("Set")+
+  
+  theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+
+
+```
+The genes belonging to each set were identified by the following:
 
 motif 1-  No Response set: 7504 (gene list made by filtering likelihood of gene belonging to cluster 1 <0.5) 
 
@@ -665,6 +704,10 @@ motif_NR <- DEG_cormotif$motif_NR
 motif_TI <- DEG_cormotif$motif_TI
 motif_LR <- DEG_cormotif$motif_LR
 motif_ER <- DEG_cormotif$motif_ER
+write.csv(motif_ER,"motif_ER.txt")
+write.csv(motif_TI,"motif_TI.txt")
+write.csv(motif_LR,"motif_LR.txt")
+write.csv(motif_NR,"motif_ER.txt")
 set.seed(12345)
 #geneexpressionsets <- c(sample(motif_NR,1),sample(motif_TI,1),sample(motif_LR,1),sample(motif_ER,1))
 #[1] "27102"  "92312"  "10360"  "388558"  "newest sample set as of 04192023
@@ -797,3 +840,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
+
+
+
+
