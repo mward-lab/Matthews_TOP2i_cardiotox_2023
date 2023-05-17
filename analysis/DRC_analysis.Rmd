@@ -1162,9 +1162,4 @@ tropimage <- ggplot(tidata, aes(factor (dn, level = c('Vehicle', 'Daunorubicin',
 tropimage 
 save_plot("tropimage.png",tropimage)
 
-
-
-
-
-
 ```

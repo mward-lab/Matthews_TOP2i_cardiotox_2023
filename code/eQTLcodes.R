@@ -833,7 +833,7 @@ toplistall %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
 
-  filter(ENTREZID %in% motif1_NR) %>%
+  filter(ENTREZID %in% motif_NR) %>%
   ggplot(., aes(x=id, y=abs(logFC)))+
   geom_boxplot(aes(fill=id))+
   scale_color_brewer(palette = "Dark2",guide = "none")+

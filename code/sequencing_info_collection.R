@@ -40,3 +40,6 @@ write.csv(sequencing_info, "output/sequencing_info.txt")
   geom_col()
 
 
+seqinfo <- read.csv("output/sequencing_info.txt")
+summary(seqinfo
+        )

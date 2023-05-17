@@ -718,7 +718,7 @@ MTsptable124%>%
 
 
 ```
-Mitoxantrone ~specific~ 24 hour genes show an enrichment for DNA DSB repair. (n=188)
+Mitoxantrone-specific 24 hour genes show an enrichment for DNA DSB repair. (n=188)
 
 ## Mitoxantrone DEGs (adj. p value < 0.05)
   3 hour  = 58
@@ -876,6 +876,7 @@ AT 3 hours, the Mitoxantrone DEGs, adj. p value < 0.01, look similar to daunorub
 ## Venn Diagrams 
 ### All DEGs adj p value < 0.05, 24 hour
 ```{r venndiagram, echo=FALSE, message=FALSE, warning=FALSE}
+library(paletteer)
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 
@@ -892,15 +893,20 @@ ggVennDiagram(total24,
               label_size = 3,
               label_alpha = 0,
               label_color = "black",
-              edge_lty = "solid", set_size = )+
+              edge_lty = "solid", set_size = 4.5)+
   scale_x_continuous(expand = expansion(mult = .3))+
    scale_y_continuous(expand = expansion(mult = .2))+
-  #scale_color_brewer(palette = "Dark2",name = "Individual",)
-scale_fill_distiller(palette="RdYlBu")+
+  
+  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+scale_fill_distiller(palette="Spectral", direction = -1)+
+  #scale_hue_discrete(values=drug_palNoVeh)+
   labs(title = "24 hour comparison of DE genes p.adj <0.05", caption = "n = 8161 genes")+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 
 
+
+
+#paletteer_d("fishualize::Bodianus_pulchellus")
 ```
 
 ### All DEGs adj p value < 0.05, 3 hour
@@ -928,8 +934,8 @@ ggVennDiagram(total3,
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .3))+
    scale_y_continuous(expand = expansion(mult = .2))+
-  #scale_color_brewer(palette = "Dark2",name = "Individual",)
-scale_fill_distiller(palette="RdYlBu")+
+  scale_color_discrete(palette = drug_pal)+
+scale_fill_distiller(palette="Spectral")+
   labs(title = "3 hour comparison of significant DE genes", caption = "n = 579 genes")+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 ```
@@ -1391,7 +1397,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
 #DDEtable24
 
 ###24 hour DEG sets:
-complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
+# complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
 
 
 
@@ -1456,10 +1462,11 @@ GODEGlong <-list("DAdeg"=DAdeg,
                  "DDEdeg"=DDEdeg,
                  "DDEMdeg"=DDEMdeg)
 GODEGlongtable <- data.table::rbindlist(GODEGlong, idcol = "deg")
- p <- GODEGlongtable%>% mutate(deg = fct_inorder(deg)) %>% 
+ p <- GODEGlongtable%>% 
+   mutate(deg = fct_inorder(deg)) %>% 
 ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
-    geom_point(aes(size = intersection_size, col=deg)) +
-  scale_y_discrete(labels = wrap_format(40))+
+   geom_point(aes(size = intersection_size, col=deg)) +
+   scale_y_discrete(labels = wrap_format(40))+
    scale_color_manual(values=c("#8B006D","#DF707E","#e38893","#F1B72B","#3386DD","#33a1dd","red", "blue", alpha= 0.8))+
   facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
                eval(parse(text = paste0('facet_deg', '$`', deg, '`')))

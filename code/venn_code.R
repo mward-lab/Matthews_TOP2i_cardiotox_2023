@@ -4,32 +4,20 @@ library(ggplot2)
 library(readr)
 library(VennDiagram)
 
-#load the files:
-file.names <- list.files(path = "data/",
-                         pattern = "sig*", ignore.case = TRUE,
-                         full.names = TRUE)
-
-filenameonly <- read_csv("data/filenameonly.txt")
-
-
-for (k in 1:length(file.names)){
-
-  assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
-}
-
-##rename the columns to the previous names
-
-# 24 hour data sets -------------------------------------------------------
-
-
-colnames(sigVDA24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVDX24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVEP24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVMT24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-colnames(sigVTR24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-
-
-
+# #load the files:
+# file.names <- list.files(path = "data/",
+#                          pattern = "sig*", ignore.case = TRUE,
+#                          full.names = TRUE)
+#
+# filenameonly <- read_csv("data/filenameonly.txt")
+#
+#
+# for (k in 1:length(file.names)){
+#
+#   assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
+# }
+siglist <- readRDS("data/siglist.RDS")
+list2env(siglist,envir=.GlobalEnv)
 
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
@@ -47,7 +35,7 @@ ggVennDiagram(total24,
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "purple", high = "yellow")+
-  labs(title = "24 hour comparison of significant genes", caption = "n = 8887 genes")+
+  labs(title = "24 hour comparison of significant genes", caption = "n = 8161 genes")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
 

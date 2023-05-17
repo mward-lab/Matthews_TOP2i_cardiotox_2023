@@ -569,7 +569,7 @@ saveRDS(siglist,"data/siglist.RDS")
 # DEG analysis
 ## summary
 ```{r summary of DEG}
-
+efit2 <- readRDS("data/efit2.RDS")
 sum <- summary(decideTests(efit2))
 
 sum
