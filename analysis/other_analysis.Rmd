@@ -1,0 +1,268 @@
+---
+title: "Comparisons with other data sets"
+author: "ERM"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+```
+'
+
+```{r loading packages, message=FALSE, warning=FALSE}
+
+library(limma)
+library(tidyverse)
+library(ggsignif)
+library(biomaRt)
+library(RColorBrewer)
+library(cowplot)
+library(ggpubr)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+
+```
+# Knowles Comparison data:
+
+```{r loading knowles data}
+toplistall <- read.csv("output/toplistall.csv", row.names = 1)
+backGL <- read.csv("data/backGL.txt",     row.names =1)
+ drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
+time <- ordered(time, levels =c("3h", "24h"))
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
+labeltop <- (interaction(substring(drug, 0, 2), indv, time))
+ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
+attributes <- listAttributes((ensembl))
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+level_order2 <- c('75','87','77','79','78','71')
+# knowfig5<- Knowles_2018.elife.33480.supp5.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp5-v2/Knowles_2018-elife-33480-supp5-v2")
+# knowfig4 <- Knowles_2018.elife.33480.supp4.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp4-v2/Knowles_2018-elife-33480-supp4-v2")
+# write.csv(knowfig5,"data/knowfig5.csv")
+# write.csv(knowfig4,"data/knowfig4.csv")
+
+knowfig4 <- read.csv("data/knowfig4.csv",row.names = 1)
+knowfig5 <- read.csv("data/knowfig5.csv",row.names = 1)
+
+# covert ensg to entrezid -------------------------------------------------
+
+knowles5 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
+                  values =knowfig5, mart = ensembl)
+#377
+
+knowles4 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
+                  values =knowfig4, mart = ensembl)
+#524
+
+knowles4 <-unique(knowles4$entrezgene_id)
+knowles5 <-unique(knowles5$entrezgene_id)
+
+all_QTLSknow<- union(knowles5,knowles4)
+
+#total 794
+
+```
+  
+Determining the genetic basis of anthracycline-cardiotoxicity by molecular
+response QTL mapping in induced cardiomyocytes
+David A Knowles, Courtney K Burrows†, John D Blischak,
+Kristen M Patterson, Daniel J Serie, Nadine Norton, Carole Ober,
+Jonathan K Pritchard, Yoav Gilad
+
+Knowles $~~et~ al.~$ eLife 2018;7:e33480. DOI: https://doi.org/10.7554/eLife.33480
+My first question was about transcription response at the 24 hour mark with my treatments.   3 hour RNA-seq had low levels of DEGs,so my focus is at 24 hours.  This also happens to be when the Knowles paper collected their RNA-seq data
+
+
+Supplementary 4 contains a list of 518 SNPs within 1 Mb of TSS, which had a detectable marginal effect on expression (5% FDR). When converted from ensembl gene id to entrez gene id,  my list of unique Entrezgeneids = 521.  I will call these meSNPs for marginal effect snps.
+In the meSNPs, 503 are within my DEG of 14084.  Using an adj. P value of 0.05, There are 199/6864 in 24 hour daunorubicin, 184/6516 in 24 hour doxorubicin, 182/6202 in 24 hour epirubicin, 30/1327 in 24 hour mitoxantrone and 0 in Trastuzumb
+
+Supplementary 5 contains a list of 376 response eQTLs (reQTLs).  These are variants that were associated with modulation of transcriptomic response to doxorubicin treatment. After database name conversion, I have 377 unique Entregene ids.
+Of the reQTLs list, 374 are within my DEG of 14084.  Using an adj. P value of 0.05, There are 187/6864 in 24 hour daunorubicin, 180/6516 in 24 hour doxorubicin, 176/6202 in 24 hour epirubicin, 40/1327 in 24 hour mitoxantrone and 0 in Trastuzumb.
+
+  
+```{r  knowles data comparisons}
+dataframK_45 <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time== "24_hours") %>%
+  group_by(time, id) %>%
+  mutate(K4 = if_else(ENTREZID %in% knowles4,1,0))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5,1,0))%>%
+  # filter(adj.P.Val<0.05) %>%
+ summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
+  as.data.frame()
+
+sig05_dataframK_45 <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time== "24_hours") %>%
+  group_by(time, id) %>%
+  mutate(K4 = if_else(ENTREZID %in% knowles4,1,0))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5,1,0))%>%
+   filter(adj.P.Val<0.05) %>%
+ summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
+  as.data.frame()
+sig05_dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(., caption= "Count of genes in each treatment by using adj. P value of <0.05") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "50%", height = "400px")
+dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(., caption= "Count of genes in each treatment by total expressed genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "50%", height = "400px")
+
+```
+
+
+```{r graphs of k4 k5 enrichment and FC}
+
+ 
+  toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time=="24_hours") %>% 
+  group_by(time, id) %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  ggplot(., aes(x=id, y=abs(logFC)))+
+  geom_boxplot(aes(fill=id))+
+  fill_palette(palette =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(~time)+#,labeller = (time = facettimelabel) )+
+  theme_bw()+
+  xlab("")+
+  ylab("abs |Log Fold Change|")+
+  theme_bw()+
+  facet_wrap(~time)+
+  #ggtitle("All QTLs from all expressed genes (n=507)")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
+                                 c("Epirubicin", "Doxorubicin"),
+                                 c("Mitoxantrone", "Doxorubicin"),
+                                   c("Trastuzumab","Doxorubicin"),
+                                 c("Mitoxantrone","Trastuzumab")),
+                              test = "t.test",
+              map_signif_level = FALSE,step_increase = 0.1,
+              textsize = 4)
+
+tabletoplist %>% ungroup() #%>% 
+  
+  select(time,id, sigcount, meSNP,n)
+  pivot_wider(id_cols = c(time,id), names_from=c(sigcount,meSNP), values_from=c(n)) #%>% 
+  mutate(propsig = sig/(sig+notsig)*100) %>% 
+  mutate(propsig=if_else(is.na(prop),0,prop))# %>% 
+mutate(propME = sig/(sig+notsig)*100) %>% 
+  mutate(propME=if_else(is.na(prop),0,prop))
+mutate(propRE = sig/(sig+notsig)*100) %>% 
+  mutate(propRE=if_else(is.na(prop),0,prop))
+  ggplot(., aes(x=id, y= prop))+
+  geom_col(aes(fill=id))+
+  geom_text(aes(label = sprintf("%.2f",prop)), position=position_dodge(0.9),vjust=-.2 )+
+  scale_fill_manual(values =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
+  theme_bw()+
+  xlab("")+
+  ylab("Percentage of expressed genes")+
+  theme_bw()+
+  facet_wrap(~time)+
+  ggtitle("Percent DEGs (adj. P value <0.05)")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text.x = element_text(size = 8, color = "white", angle = 0),
+        axis.text.y = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+   toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  filter(time =="24_hours") %>% 
+  group_by(id,sigcount,meSNP) %>% 
+  summarize(K4count=n()) %>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(meSNP), values_from=K4count) %>% 
+    mutate(K4prop=(y/(no+y))*100) %>% 
+     ggplot(., aes(x=id, y=K4prop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",K4prop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)
+  
+  # KnowlesK5prop <- 
+     toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  filter(time =="24_hours") %>% 
+  group_by(id,sigcount,reQTL) %>% 
+  summarize(K5count=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(reQTL), values_from=K5count) %>% 
+   mutate(K5prop=(a/(a+b)*100)) %>% 
+       ggplot(., aes(x=id, y=K5prop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",K5prop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)
+  
+  
+
+```
+
+
+
+
+  
+  
+  
+  
+  
+  
+  Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
+
+
+
+```{r gene comparison, eval=FALSE, include=FALSE}
+library(readxl)
+
+# Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
+#     range = "A13:H469")
+
+#write.csv(Seoane_chromatinregs, "data/Seonane2019supp1.txt")
+
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+                            
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+#genesof interest: 
+GWASsnps <- c('RARG', 'HIVEP1', 'ITGB7',  'PRDM2', 'KAZN', 'GDF5', 'FRS2', 'HDDC2', 'EEF1B2', 'SLC28A3')
+totalsnpgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                  values = GWASsnps, mart = ensembl)
+
+
+
+```
+
+
+
