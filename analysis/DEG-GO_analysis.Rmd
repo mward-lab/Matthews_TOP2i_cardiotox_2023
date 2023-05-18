@@ -27,6 +27,13 @@ library(scales)
 library(ggVennDiagram)
 library(cowplot)
 library(ggpubr)
+library(readr)
+library(rstatix)
+
+library(zoo)
+
+
+library(ggsignif)
 ```
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -200,6 +207,37 @@ DAsptable3 <- DAspgostres3$result %>%
   
 #---------------
 ```
+
+###  Daunorubicin specific genes at 24 hours 
+
+```{r DA24sp }
+###no enrichment
+# Daun24spgost <- gost(query = Daun24sp, 
+#                    organism = "hsapiens",
+#                     ordered_query = TRUE,
+#                      domain_scope = "custom",
+#                      measure_underrepresentation = FALSE,
+#                      evcodes = FALSE,
+#                      user_threshold = 0.05,
+#                      correction_method = c("fdr"),
+#                      custom_bg = backGL$ENTREZID,
+#                      sources=c("GO:BP","KEGG"))
+# saveRDS(DAspgostres3,"data/DEG-GO/DAspgostres3.RDS")
+# DAspgostres3 <- readRDS("data/DEG-GO/DAspgostres3.RDS")
+# 
+# DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
+# DAspp3
+# 
+# DAsptable3 <- DAspgostres3$result %>% 
+#   dplyr::select(c(source, term_id,
+#                   term_name,intersection_size, 
+#                    term_size, p_value))# %>% 
+#   
+# 
+
+```
+
+
 
 
 ### All Daun DEGs adj p value < 0.05
@@ -632,7 +670,7 @@ epsp24 <- list24totvenn24$..values..[[12]]
 
 
 
-# EPgostres24sp <- gost(query = epsp24,  
+# EPgostres24sp <- gost(query = epsp24,
 #                     organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
@@ -1394,23 +1432,17 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
 
 ```{r GOBP dEGlong, echo=FALSE, fig.height=12, fig.width=8,message=FALSE, warning=FALSE}
 
-#DDEtable24
-
-###24 hour DEG sets:
-# complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
-
-
-
-
 DDEdeg <- DDEtable24 %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.)))) %>% slice_max(., n=10, order_by=order_val)
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.)))) 
 
 DDEMdeg <-  DDEMtable24 %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
 
 DAsp3deg <- DAsptable3%>% 
   dplyr::filter(source=="GO:BP") %>% 
@@ -1426,29 +1458,44 @@ DXsp24deg <- DXsptable24 %>%
     mutate(log_val = -log10(p_value)) %>%
   mutate(order_val=rev(as.numeric(rownames(.))))
 
+EPsp24deg <- EPsptable124 %>% 
+  dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
 MTsp24deg <-   MTsptable124 %>% 
     dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
   
 
 DAdeg <-   DAtable124 %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
 DXdeg <-  DXtable124 %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
   EPdeg <-   EPtable124 %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+    mutate(log_val = -log10(p_value)) %>%
+    mutate(order_val=rev(as.numeric(rownames(.))))
+  
   MTdeg <-   MTtable124 %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
+    mutate(log_val = -log10(p_value)) %>%
+    mutate(order_val=rev(as.numeric(rownames(.))))
 
 #filter<- dplyr::filter 
 #select <- dplyr::select
@@ -1457,17 +1504,19 @@ GODEGlong <-list("DAdeg"=DAdeg,
                  "DXdeg"=DXdeg,
                  "DXsp24deg"=DXsp24deg,
                  "EPdeg"=EPdeg,
+                 "EPsp24deg"=EPsp24deg,
                  "MTdeg"=MTdeg,
                  "MTsp24deg"= MTsp24deg,
                  "DDEdeg"=DDEdeg,
                  "DDEMdeg"=DDEMdeg)
+
 GODEGlongtable <- data.table::rbindlist(GODEGlong, idcol = "deg")
  p <- GODEGlongtable%>% 
    mutate(deg = fct_inorder(deg)) %>% 
 ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
    geom_point(aes(size = intersection_size, col=deg)) +
    scale_y_discrete(labels = wrap_format(40))+
-   scale_color_manual(values=c("#8B006D","#DF707E","#e38893","#F1B72B","#3386DD","#33a1dd","red", "blue", alpha= 0.8))+
+   scale_color_manual(values=c("#8B006D","#DF707E","#e38893","#F1B72B","#f2c350","#3386DD","#33a1dd","red", "blue", alpha= 0.8))+
   facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
                eval(parse(text = paste0('facet_deg', '$`', deg, '`')))
                )))) +
@@ -1493,6 +1542,7 @@ ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) 
      DXdeg = expression(atop("Doxorubicin 24 hr",~italic("n = 6516"))),
      DXsp24deg =expression(atop("Dox-specific 24 hr",~italic("n = 342"))),
      EPdeg = expression(atop("Epirubicin 24 hr",~italic("n = 6202"))),
+     EPsp24deg=expression(atop("Epi-specific 24 hr",~italic("n = 489"))),
      MTdeg = expression(atop( "Mitoxantrone 24 hr",~italic("n = 1327"))),
      MTsp24deg =expression(atop( "Mito-specific 24 hr",~italic("n = 188"))),
      DDEdeg = expression(atop("Anthracycline 24 hr",~italic("n = 4915,"))),
@@ -1510,7 +1560,7 @@ ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) 
  
 g <- ggplot_gtable(ggplot_build(p))
 stripr <- which(grepl('strip-r', g$layout$name))
-fills <- c("#8B006D","#DF707E","#e38893","#F1B72B","#3386DD","#33a1dd","red", "blue", alpha= 0.8)
+fills <- c("#8B006D","#DF707E","#e38893","#F1B72B","#f2c350","#3386DD","#33a1dd","red", "blue", alpha= 0.8)
 k <- 1
 for (i in stripr) {
   j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
@@ -1660,5 +1710,496 @@ plot_grid(g)
 ```
 
 
+### Genes of Interest log2 cpm
+Genes of Interest:
+
+Top2B
+Top2A
+CDKN1a
+ATM
+ATR
+mTOR
+Rictor
+Raptor
+RARG
+
+```{r GOI-top2b, echo=FALSE}
+
+cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
+drug_pal_vehend <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
+time <- ordered(time, levels =c("3h", "24h"))
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
+labeltop <- (interaction(substring(drug, 0, 2), indv, time))
+
+
+### TOP2B
+cpmcounts %>% dplyr::filter(rownames(.)==7155) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(#strip.background = element_rect(fill = "#C77CFF"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
+```{r GOI CDKN1a, echo=FALSE}
+### CDKN1a
+cpmcounts %>% dplyr::filter(rownames(.)==1026) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("CDKN1"*alpha)~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(strip.background = element_rect(fill = "#7CAE00"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+```
+
+```{r GOI-top2a, echo=FALSE}
+### Top2a
+
+cpmcounts %>% dplyr::filter(rownames(.)==7153) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(strip.background = element_rect(fill = "white"),
+    plot.title = element_text(size=18,hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 12, color = "white", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+```{r GOI-atm, echo=FALSE}
+### ATM
+
+cpmcounts %>% dplyr::filter(rownames(.)==472) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("ATM")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(#strip.background = element_rect(fill = "#C77CFF"),
+    plot.title = element_text(size=18,hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 12, color = "white", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
+```{r GOI-atr, echo=FALSE}
+###  ATR
+
+cpmcounts %>% dplyr::filter(rownames(.)==545) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("ATR")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(#strip.background = element_rect(fill = "#C77CFF"),
+    plot.title = element_text(size=18,hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 12, color = "white", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
+```{r GOI-rictor, echo=FALSE}
+##Rictor
+
+
+cpmcounts %>% dplyr::filter(rownames(.)==545) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("RICTOR")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(#strip.background = element_rect(fill = "#C77CFF"),
+    plot.title = element_text(size=18,hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 12, color = "white", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
+```{r GOImtor, echo=FALSE}
+### mTOR
+
+
+cpmcounts %>% dplyr::filter(rownames(.)==2475) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("mTOR")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(#strip.background = element_rect(fill = "#C77CFF"),
+    plot.title = element_text(size=18,hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 12, color = "white", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+
+```{r GOI RARG, echo=FALSE}
+##RARG
+
+cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("RARG")~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(#strip.background = element_rect(fill = "#C77CFF"),
+    plot.title = element_text(size=18,hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 12, color = "white", angle = 0),
+    strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+```
+
+
+## expression correlation:
+
+
+```{r expression correlation, eval=FALSE, include=FALSE}
+level_order2 <- c('75','87','77','79','78','71')
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2" ))
+ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
+
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+GOI_genelist<- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+         values = GOIcorr, mart = ensembl)
+
+RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt", row.names = 1)
+RNAnormlist %>% 
+ mutate(Drug = factor(Drug, levels = c("Daunorubicin", 
+                                       "Doxorubicin",
+                                       "Epirubicin",
+                                       "Mitoxantrone",
+                                       "Trastuzumab",
+                                       "Vehicle"))) 
+
+
+cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
+
+dplyr::filter(rownames(.)%in% GOI_genelist$entrezgene_id) #%>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+
+  filter(time=="24h") %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                c("Doxorubicin","Vehicle"),
+                                c("Epirubicin","Vehicle"),
+                                c("Mitoxantrone","Vehicle"),
+                                c("Trastuzumab","Vehicle")),
+              test= "t.test",
+              map_signif_level=FALSE,
+              textsize =6,
+              tip_length = .1,
+              vjust = 0.2,
+              step_increase = 0.1)+
+  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(#strip.background = element_rect(fill = "#C77CFF"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+```
 
 
