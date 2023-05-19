@@ -2128,7 +2128,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
 ## expression correlation:
 
 
-```{r expression correlation, eval=TRUE, include=FALSE}
+```{r expression correlation, echo=FALSE}
 level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
