@@ -587,7 +587,7 @@ clamp_summary %>%
   mutate(indv=factor(indv, levels = level_order2)) %>%
   filter(Conc==0| Conc==0.5) %>%
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
-  ggplot(.,aes(Drug,Mean_Amplitude))+
+  ggplot(.,aes(Drug,FWHM))+
   geom_boxplot(position = "identity", fill= drug_pal)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none",size="none")+
