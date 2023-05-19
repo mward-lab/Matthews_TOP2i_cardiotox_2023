@@ -29,10 +29,7 @@ library(cowplot)
 library(ggpubr)
 library(readr)
 library(rstatix)
-
 library(zoo)
-
-
 library(ggsignif)
 ```
 
@@ -951,9 +948,10 @@ scale_fill_distiller(palette="Spectral", direction = -1)+
 
 ```{r 3 hours, echo=FALSE, message=FALSE, warning=FALSE}
 # total 3 ----------------------------------------------------------------
-
-total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
-totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL,sigVEP3$SYMBOL,sigVMT3$SYMBOL)
+drug_palNoVeh <- c("#8B006D","#DF707E",
+                   "#F1B72B","#3386DD","#707031","#41B333")
+total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID, sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL, sigVEP3$SYMBOL,sigVMT3$SYMBOL)
 length(unique(totalin_common3))
 
 ggVennDiagram(total3,
@@ -961,7 +959,7 @@ ggVennDiagram(total3,
                                  "Doxorubicin\nn = 16",
                                  "Epirubicin\nn = 220",
                                  "Mitoxantrone\nn = 58"),
-                show_intersect = FALSE,
+              show_intersect = FALSE,
               set_color = "black",
               catagory_size = c(6,6,6,6),
               label = "both",
@@ -972,7 +970,6 @@ ggVennDiagram(total3,
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .3))+
    scale_y_continuous(expand = expansion(mult = .2))+
-  scale_color_discrete(palette = drug_pal)+
 scale_fill_distiller(palette="Spectral")+
   labs(title = "3 hour comparison of significant DE genes", caption = "n = 579 genes")+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
@@ -2131,74 +2128,156 @@ cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
 ## expression correlation:
 
 
-```{r expression correlation, eval=FALSE, include=FALSE}
+```{r expression correlation, eval=TRUE, include=FALSE}
 level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
-GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2" ))
-ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
-my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-
-my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
-GOI_genelist<- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-         values = GOIcorr, mart = ensembl)
-
+# GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2" ))
+# ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+# my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
+# 
+# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+# GOI_genelist<- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+#          values = GOIcorr, mart = ensembl)
+#write.csv(GOI_genelist,"output/GOI_genelist.txt")
+GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt", row.names = 1)
-RNAnormlist %>% 
- mutate(Drug = factor(Drug, levels = c("Daunorubicin", 
+
+GOI_join <- RNAnormlist %>% 
+  mutate(indv=factor(indv,levels = level_order2)) %>% 
+  mutate(indv=as.numeric(indv)) %>%
+  mutate(indv=factor(indv)) %>% 
+  mutate(Drug = factor(Drug, levels = c("Daunorubicin", 
                                        "Doxorubicin",
                                        "Epirubicin",
                                        "Mitoxantrone",
                                        "Trastuzumab",
                                        "Vehicle"))) 
-
-
 cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
+#make a list of GOIs then individual info:
 
-dplyr::filter(rownames(.)%in% GOI_genelist$entrezgene_id) #%>%
-  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
-
-  separate(treatment,c("drug","indv","time")) %>%
-
-  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+gene_corr_df <- cpmcounts %>% 
+  rownames_to_column(var ="entrezgene_id") %>% 
+  # filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>% ##this works to only fileter
+  # inner_join(., GOI_genelist,by ="entrezgene_id") %>%  view()## this works to filter and append. just depends on the"when" I want to filter and join dataframes
+  mutate(entrezgene_id=as.numeric(entrezgene_id)) %>% 
+  pivot_longer(!entrezgene_id, names_to="treatment", values_to = "counts") %>%
+  separate(treatment,c("Drug","indv","time")) %>%
+  filter(time =="24h") %>%
   mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+  mutate(Drug =case_match(Drug, "Da"~"Daunorubicin",
                           "Do"~"Doxorubicin",
                           "Ep"~"Epirubicin",
                           "Mi"~"Mitoxantrone",
                           "Tr"~"Trastuzumab",
-                          "Ve"~"Vehicle", .default = drug))  %>%
+                          "Ve"~"Vehicle", .default = Drug)) 
+  
+# now I have the long dataframe, time to combine with other data 
+  gene_corr_frame <- gene_corr_df %>% 
+    filter(entrezgene_id==GOI_genelist$entrezgene_id) %>% 
+left_join(., GOI_join, by=c("Drug","indv")) %>% 
+  select(indv, Drug,entrezgene_id,counts, rldh,rtnni) %>% 
+    mutate(Drug=factor(Drug))
+  
+ # gene_corr_frame %>% 
+ #   group_by(entrezgene_id, rldh) %>% 
 
-  filter(time=="24h") %>%
-  ggplot(., aes(x=drug, y=counts))+
-  geom_boxplot(position="identity",aes(fill=drug))+
-  geom_point(aes(col=indv, size=2, alpha=0.5))+
-  guides(alpha= "none", size= "none")+
-  scale_color_brewer(palette = "Dark2",guide = "none")+
-  scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+   
+   library(Hmisc)
+  rcorr(as.matrix(gene_corr_frame[,c(1,3,4,5,6)]), type = "pearson")
+   
+gene_corr_frame %>% 
+  ggplot(., aes(x=rtnni, y=counts))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  facet_wrap(~indv, scales = "free")+
   theme_bw()+
-  ylab(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))+
-  xlab("")+
-  xlab("")+
-  theme(#strip.background = element_rect(fill = "#C77CFF"),
-        plot.title = element_text(size=18,hjust = 0.5),
+  stat_cor(aes(label = after_stat(rr.label)),
+           color = "red",
+           geom = "label")
+## ggplot by drug for tnni
+gene_corr_frame %>% 
+  ggplot(., aes(x=rtnni, y=counts))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  facet_wrap("Drug", scales="free")+
+  theme_classic()+
+  xlab("troponin I expression") +
+  ylab("Gene counts in log2 cpm") +
+  ggtitle("Correlation between counts and troponin I")+
+  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  stat_cor(method="pearson",aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           color = "red",
+           label.x.npc = 0.01, label.y.npc=0.01, size = 3)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
         axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text.x = element_text(size = 12, color = "white", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 20),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold")) 
+## ggplot by indiv for tnni
+gene_corr_frame %>% 
+  ggplot(., aes(x=rtnni, y=counts))+
+  geom_point(aes(col=Drug))+
+  geom_smooth(method="lm")+
+  facet_wrap("indv", scales="free")+
+  theme_classic()+
+  xlab("troponin I expression") +
+  ylab("Gene counts in log2 cpm") +
+  ggtitle("Correlation by individual using counts and troponin I")+
+  # scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  scale_color_manual(values=drug_pal_fact)+
+  stat_cor(method="pearson",aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           color = "red",
+           label.x.npc = 0.01, label.y.npc=0.01, size = 3)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 20),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold")) 
+
+
+
+## ggplot by drug for ldh
+
+gene_corr_frame %>% 
+  ggplot(., aes(x=rldh, y=counts))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  facet_wrap("Drug", scales="free")+
+  theme_classic()+
+  xlab("troponin I expression") +
+  ylab("Gene counts in log2 cpm") +
+  ggtitle("Correlation between counts and 24 hour lactate dehydrogenase")+
+  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  stat_cor(method="pearson",aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           color = "red",
+           label.x.npc = 0.01, label.y.npc=0.01, size = 3)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 20),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold")) 
+## ggplot by indv for ldh
+gene_corr_frame %>% 
+  ggplot(., aes(x=rldh, y=counts))+
+  geom_point(aes(col=Drug))+
+  geom_smooth(method="lm")+
+  facet_wrap("indv", scales="free")+
+  theme_classic()+
+  xlab("troponin I expression") +
+  ylab("Gene counts in log2 cpm") +
+  ggtitle("Correlation between counts and 24 hour lactate dh")+
+   # scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  scale_color_manual(values=drug_pal_fact)+
+  stat_cor(method="pearson",aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           color = "red",
+           label.x.npc = 0.01, label.y.npc=0.01, size = 3)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 20),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold")) 
+
 
 ```
 
