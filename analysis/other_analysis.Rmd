@@ -247,7 +247,7 @@ toplist24hr %>%
 
 Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
 
-```{r gene comparison, eval=TRUE, message=FALSE, warning=FALSE, include=FALSE}
+```{r gene comparison, eval=TRUE, message=FALSE, warning=FALSE}
 library(readxl)
 
 # Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
