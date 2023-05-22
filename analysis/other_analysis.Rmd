@@ -244,7 +244,7 @@ toplist24hr %>%
 
 # Seaone 2019
 
-```{r gene comparison, eval=FALSE, include=FALSE}
+```{r gene comparison, eval=TRUE, include=FALSE}
 library(readxl)
 
 # Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
