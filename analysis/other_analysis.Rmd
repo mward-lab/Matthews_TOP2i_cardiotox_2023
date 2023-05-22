@@ -240,11 +240,14 @@ toplist24hr %>%
   
   
   
-  Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
+  
 
 # Seaone 2019
 
-```{r gene comparison, eval=TRUE, include=FALSE}
+
+Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
+
+```{r gene comparison, eval=TRUE, message=FALSE, warning=FALSE, include=FALSE}
 library(readxl)
 
 # Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
@@ -292,10 +295,10 @@ dataframchrom %>%
 
 
 #genesof interest: 
-GWASsnps <- c('RARG', 'HIVEP1', 'ITGB7',  'PRDM2', 'KAZN', 'GDF5', 'FRS2', 'HDDC2', 'EEF1B2', 'SLC28A3')
-totalsnpgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-                  values = GWASsnps, mart = ensembl)
-toplist24hr
+# GWASsnps <- c('RARG', 'HIVEP1', 'ITGB7',  'PRDM2', 'KAZN', 'GDF5', 'FRS2', 'HDDC2', 'EEF1B2', 'SLC28A3')
+# totalsnpgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+#                   values = GWASsnps, mart = ensembl)
+
 
 
 ```
