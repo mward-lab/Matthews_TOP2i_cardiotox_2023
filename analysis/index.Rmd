@@ -30,8 +30,8 @@ Welcome to my research website. I am using workflowr to create reproducible code
 
 [DRC analysis](https://reneeisnowhere.github.io/Cardiotoxicity/DRC_analysis.html)
 
-## GWAS data under construction!
-Knowles data comparison is here [reQTLS](https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html)
+Data set comparisons
+[reQTLS](https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html)
 
 
 
