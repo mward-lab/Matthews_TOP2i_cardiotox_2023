@@ -802,7 +802,7 @@ toplistall %>%
   ylab("|log FC|")+
   xlab("")+
   facet_wrap(~time)+
-  ggtitle("abs log FC of all eQTLs in datat set")+
+  ggtitle("abs log FC of all eQTLs in data set")+
   theme(plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),

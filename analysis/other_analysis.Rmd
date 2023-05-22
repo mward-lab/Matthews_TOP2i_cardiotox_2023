@@ -38,7 +38,7 @@ indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 labeltop <- (interaction(substring(drug, 0, 2), indv, time))
 ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-attributes <- listAttributes((ensembl))
+#attributes <- listAttributes((ensembl))
 my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 level_order2 <- c('75','87','77','79','78','71')
 # knowfig5<- Knowles_2018.elife.33480.supp5.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp5-v2/Knowles_2018-elife-33480-supp5-v2")
@@ -123,11 +123,11 @@ dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 ```{r graphs of k4 k5 enrichment and FC}
 
- 
-  toplistall %>%
+ toplist24hr <-   toplistall %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  filter(time=="24_hours") %>% 
+  filter(time=="24_hours")
+toplist24hr %>% 
   group_by(time, id) %>% 
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
@@ -158,37 +158,37 @@ dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
                               test = "t.test",
               map_signif_level = FALSE,step_increase = 0.1,
               textsize = 4)
-
-tabletoplist %>% ungroup() #%>% 
-  
-  select(time,id, sigcount, meSNP,n)
-  pivot_wider(id_cols = c(time,id), names_from=c(sigcount,meSNP), values_from=c(n)) #%>% 
-  mutate(propsig = sig/(sig+notsig)*100) %>% 
-  mutate(propsig=if_else(is.na(prop),0,prop))# %>% 
-mutate(propME = sig/(sig+notsig)*100) %>% 
-  mutate(propME=if_else(is.na(prop),0,prop))
-mutate(propRE = sig/(sig+notsig)*100) %>% 
-  mutate(propRE=if_else(is.na(prop),0,prop))
-  ggplot(., aes(x=id, y= prop))+
-  geom_col(aes(fill=id))+
-  geom_text(aes(label = sprintf("%.2f",prop)), position=position_dodge(0.9),vjust=-.2 )+
-  scale_fill_manual(values =drug_palNoVeh)+
-  guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
-  theme_bw()+
-  xlab("")+
-  ylab("Percentage of expressed genes")+
-  theme_bw()+
-  facet_wrap(~time)+
-  ggtitle("Percent DEGs (adj. P value <0.05)")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text.x = element_text(size = 8, color = "white", angle = 0),
-        axis.text.y = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+# This is a work in progress before vacation
+# tabletoplist %>% ungroup() #%>% 
+#   
+#   select(time,id, sigcount, meSNP,n)
+#   pivot_wider(id_cols = c(time,id), names_from=c(sigcount,meSNP), values_from=c(n)) #%>% 
+#   mutate(propsig = sig/(sig+notsig)*100) %>% 
+#   mutate(propsig=if_else(is.na(prop),0,prop))# %>% 
+# mutate(propME = sig/(sig+notsig)*100) %>% 
+#   mutate(propME=if_else(is.na(prop),0,prop))
+# mutate(propRE = sig/(sig+notsig)*100) %>% 
+#   mutate(propRE=if_else(is.na(prop),0,prop))
+#   ggplot(., aes(x=id, y= prop))+
+#   geom_col(aes(fill=id))+
+#   geom_text(aes(label = sprintf("%.2f",prop)), position=position_dodge(0.9),vjust=-.2 )+
+#   scale_fill_manual(values =drug_palNoVeh)+
+#   guides(fill=guide_legend(title = "Treatment"))+
+#   facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
+#   theme_bw()+
+#   xlab("")+
+#   ylab("Percentage of expressed genes")+
+#   theme_bw()+
+#   facet_wrap(~time)+
+#   ggtitle("Percent DEGs (adj. P value <0.05)")+
+#   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+#         axis.title = element_text(size = 15, color = "black"),
+#         # axis.ticks = element_line(linewidth = 1.5),
+#         axis.line = element_line(linewidth = 1.5),
+#         strip.background = element_rect(fill = "transparent"),
+#         axis.text.x = element_text(size = 8, color = "white", angle = 0),
+#         axis.text.y = element_text(size = 8, color = "black", angle = 0),
+#         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
    toplistall %>%
   mutate(id = as.factor(id)) %>%
@@ -205,7 +205,8 @@ mutate(propRE = sig/(sig+notsig)*100) %>%
        geom_col()+
        geom_text(aes(x=id, label = sprintf("%.2f",K4prop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
-       facet_wrap(~sigcount)
+       facet_wrap(~sigcount)+
+     ggtitle("non-significant and significant enrichment proporitions of Knowles min. eQTLS ")
   
   # KnowlesK5prop <- 
      toplistall %>%
@@ -223,7 +224,8 @@ mutate(propRE = sig/(sig+notsig)*100) %>%
        geom_col()+
        geom_text(aes(x=id, label = sprintf("%.2f",K5prop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
-       facet_wrap(~sigcount)
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of Knowles reQTLs ")
   
   
 
@@ -240,7 +242,7 @@ mutate(propRE = sig/(sig+notsig)*100) %>%
   
   Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
 
-
+# Seaone 2019
 
 ```{r gene comparison, eval=FALSE, include=FALSE}
 library(readxl)
@@ -254,15 +256,213 @@ chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols
                             
 Seoane_2019 <- chrom_reg_Seoane[,2]
 names(Seoane_2019) <- "ENTREZID"
-my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+chrom_genes <- (unique(Seoane_2019$ENTREZID))
+
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
+   mutate(chromprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of chromatin gene set ")
+
+dataframchrom <- toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+  as.data.frame()
+
+dataframchrom %>%
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Seoane geneset") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+
+##make table of numbers:
+
+
 #genesof interest: 
 GWASsnps <- c('RARG', 'HIVEP1', 'ITGB7',  'PRDM2', 'KAZN', 'GDF5', 'FRS2', 'HDDC2', 'EEF1B2', 'SLC28A3')
 totalsnpgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
                   values = GWASsnps, mart = ensembl)
+toplist24hr
+
+
+```
+
+# ArrGWAS to 24 hour DEG genes p < 0.05
+```{r ArrGWAS}
+# How I did the string split
+# Arr_GWAS <- ArrGWAS[,13]
+# names(Arr_GWAS) <- "genesplit"
+# Arr_GWAS <- Arr_GWAS %>% 
+#   separate_longer_delim(genesplit, delim = ",")
+#write.csv(Arr_GWAS,"data/Arr_GWAS.txt")
+toplist24hr <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time== "24_hours")
+arr_GWAS <- read.csv("data/Arr_GWAS.txt", row.names = 1)
+Arr_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                  values = arr_GWAS, mart = ensembl)
+#remove duplicates
+Arr_geneset <- Arr_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+#Apply sorting
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,ARR) %>% 
+  summarize(ARRcount=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(ARR), values_from=ARRcount) %>% 
+   mutate(ARRprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=ARRprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",ARRprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of Arrhythmia GWAS ")
+
+##make table of numbers:
+
+
+dataframARR <- toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,ARR) %>% 
+  summarize(ARRcount=n()) %>% 
+  as.data.frame()
+
+dataframARR %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia GWAS") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+
+
+```
+# HFGWAS
+```{r HFGWAS}
+##just like ARrGWAS- imported the total csv, the took the "nearest" column and separated out the gene info
+# test <- HFGWAS %>% 
+#   select(nearest) %>% 
+#   separate_wider_delim(nearest, delim = "[", names_sep = "", too_few = "align_start")
+# test2 <- str_sub(test$nearest2,0,nchar(test$nearest2)-1)
+# Hf_GWAS <- test2
+#write.csv(Hf_GWAS, "data/Hf_GWAS.txt")
+HF_GWAS <- read.csv("data/Hf_GWAS.txt", row.names =1)
+
+HF_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                  values = HF_GWAS, mart = ensembl)
+#remove duplicates
+HF_geneset <- HF_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+#Apply sorting
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,HF) %>% 
+  summarize(HFcount=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(HF), values_from=HFcount) %>% 
+   mutate(HFprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=HFprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",HFprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of Heart Failure GWAS ")
+
+##make table of numbers:
+
+
+dataframHF <- toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,HF) %>% 
+  summarize(HFcount=n()) %>% 
+  as.data.frame()
+
+dataframHF %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in HFhythmia GWAS") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+
+
+
+
 
 
 
 ```
 
+# CAD GWAS
+```{r CADGWAS}
+# test <- CADGWAS %>% 
+#    select(nearest) %>% 
+#    separate_wider_delim(nearest, delim = "[", names_sep = "", too_few = "align_start")
+#  test2 <- str_sub(test$nearest2,0,nchar(test$nearest2)-1)
+# 
+# test2[c(32,38,44,74,112,126,191,212)] <- c("TPCN1","C2orf43","FAM222A", "TDRD15"  ,"AGPAT4","SVOP","SVOP","PLG")
+#    
+#  test2 [c(218,226,228,233,239,245,256,270,281,322,324,332,335,338,347,351,352,358)] <-  c("HPCAL1", "KLHL29"  , "COL4A3BP"  , "ARAP1" ,
+#  "VEGFA", "TBPL1","SLC22A3" ,"C19orf38","LPA","VPS29","ATP2A2" ,"ATP2A2","KLHL29","GUCY1A3","KCNE2",  "HOXB9","P2RY2" ,"CTC-236F12.4")
+#  
+#  CAD_GWAS <- test2
+#write.csv(CAD_GWAS, "data/cvd_GWAS.txt")
+CAD_GWAS <- read.csv("data/cvd_GWAS.txt", row.names =1)
+
+CAD_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                  values = CAD_GWAS, mart = ensembl)
+#remove duplicates
+CAD_geneset <- CAD_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+#Apply sorting
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,CAD) %>% 
+  summarize(CADcount=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(CAD), values_from=CADcount) %>% 
+   mutate(CADprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=CADprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",CADprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of CAD GWAS ")
+
+##make table of numbers:
+
+
+dataframCAD <- toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,CAD) %>% 
+  summarize(CADcount=n()) %>% 
+  as.data.frame()
+
+dataframCAD %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in CAD GWAS") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+```
 
 
