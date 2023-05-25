@@ -176,9 +176,9 @@ length(setdiff(backGL$ENTREZID,(union(clust1,union(clust2,union(clust3,clust4)))
 
 ```{r piechart and lollipop  }
 #make data frame
-Set <- c("Early Response set","Late Response set", "Time-Independent Response set", "No Response set")
-gene_num <- c(444,5545,528,7504)
-fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
+Set <- c("Early Response", "Time-Independent Response","Late Response", "No Response")
+gene_num <- c(487,589,5596,7409)
+fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
 
 pie_chartdata <- data.frame(Set, gene_num, fills)
  
@@ -187,27 +187,28 @@ pie_chartdata <- data.frame(Set, gene_num, fills)
 
 
 ```
-```{r barchart lolli chart}
-library(stringr)
+
+```{r pieby ggplot}
+#library(stringr)
+
+##label computation
+pie_chartdata <- pie_chartdata %>% 
+   mutate(prop = gene_num / sum(pie_chartdata$gene_num) *100) %>%
+  mutate(ypos = (prop)+ 0.5*prop )
+#data=pie_chartdata[,c(1,2)]
+
 pie_chartdata %>% 
-  ggplot(.,aes(x=as.factor(Set),y=gene_num))+
-  geom_bar(stat="identity", fill=fills)+
-  geom_text(aes(label = gene_num, vjust=-.2))+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))+
-  ggtitle("Number of genes in each set")+
-  ylab("Count")+
-  xlab("Set")+
+  ggplot(.,aes(x="",y=gene_num, fill=Set))+
+  geom_col(width =1) +
+  coord_polar("y", pi/2)+
+  theme_void()+
+  ggtitle("Distribution of genes for each set")+
+  geom_text(aes(label = paste0(Set," (",gene_num,")")),
+                position = position_stack(vjust =.55)) +
+  theme(legend.position="none") +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
   
-  theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-  
-
-
+ 
 ```
 The genes belonging to each set were identified by the following:
 
