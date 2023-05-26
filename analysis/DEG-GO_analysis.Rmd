@@ -2154,8 +2154,6 @@ GOI_join <- RNAnormlist %>%
                                        "Vehicle"))) %>% 
   dplyr::select(indv, Drug,rldh,rtnni)
 
-
-cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 #make a list of GOIs then individual info:
 
 gene_corr_df <- cpmcounts %>% 
