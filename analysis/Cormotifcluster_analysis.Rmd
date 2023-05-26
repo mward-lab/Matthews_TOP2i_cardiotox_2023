@@ -784,6 +784,13 @@ cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 ```
+#### with Foldchange (abs)
+```{r TI Foldchange}
+
+
+```
+
+
 
 ### Motif_LR
 ```{r motif_LR, echo=FALSE, message=FALSE, warning=FALSE}
@@ -845,3 +852,14 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
 
 
 
+##Visualization of FC in cormotif sets
+```{r Correlation of FC values in all values and in DEG}
+
+toplistall<- readRDS("data/toplistall.RDS")
+
+
+
+
+
+
+```

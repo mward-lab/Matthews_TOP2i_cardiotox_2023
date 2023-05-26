@@ -1579,7 +1579,9 @@ grid::grid.draw(g)
 
 
 
-##Visualization of FC in cormotif sets
+## CVRI poster figures not run
+
+## Visualization of FC in cormotif sets
 ```{r Correlation of FC values in all values and in DEG}
 library(limma)
 library(corrplot)
@@ -1632,7 +1634,7 @@ pheatmap::pheatmap(corrFC, display_numbers = TRUE, number_format = "%.2f",main=(
 
 #making of the side columns for class
 ```
-##CVRI poster figures not run
+
 
 ```{r Poster DEG GOBP, eval=FALSE, include=FALSE}
 DDEdeg <- DDEtable24 %>% dplyr::filter(source=="GO:BP") %>% 
