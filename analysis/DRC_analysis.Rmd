@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 This is my Dose Response Curve Code and data with summaries.\
-I hope to explain what and how I did things for future analysis, so that the code and data are reproducible. All data was created by treating cardiomyocytes at \~day 26 of diff with 0.01-50 $\mu$M concentrations of the drugs: Daunorubicin (daun) Doxorubicin (doxo) Epirubicin (epi) Mitoxantrone (mito) Trastuzumab (tras) [ note: Trastuzumab could only be used at concentrations of 10 $\mu$M and lower] Vehicle (veh)
+I hope to explain what and how I did things for future analysis, so that the code and data are reproducible. All data was created by treating cardiomyocytes at \~day 26 of diff with 0.01-50 $\mu$M concentrations of the drugs: Daunorubicin (DNR) Doxorubicin (DOX) Epirubicin (EPI) Mitoxantrone (MTX) Trastuzumab (TRZ) [ note: Trastuzumab could only be used at concentrations of 10 $\mu$M and lower] Vehicle (VEH)
 
 Vehicle is the control and is effectively treated by water in volumes equivalent to the volume used to dilute the drugs in a 10 mM stock concentration. This is why it has values at different concentrations and why I analyze the data this way.
 
@@ -48,10 +48,12 @@ library(cowplot)
 library(grid)
 library(ggsignif)
 library(RColorBrewer)
+library(broom)
 
 ```
 
-Step 2 is importing the data from the DRC_compilation.xlsx file. Future ref will refer to the table.
+Step 2 is importing the data from the DRC_compilation.xlsx file. 
+The data was imported and then stored as a data table in R.
 
 ```{r data import, eval=FALSE, warning=FALSE, include=FALSE}
 
@@ -90,10 +92,12 @@ DJAG_71_1 <-read_excel("~/Ward Lab/Cardiotoxicity/Data/Cell viability/DRC_compil
 
 Step 3:
 
-The files "should" have a list of similar names:\
-'Drug' which is the short name of drug used 'Conc' which is the concentration of drug added (in microMolar) 'Sname' the abbreviated name of Drug and Conc 'Well' letter with two number format 'Row' \# 1-8 for A-G 'Column' numbers 1-12 'Plate' will vary between two and three 'RFLU' the RFLU from the 0 hour reading with background subtracted (not all experiments have them) 'RFLU2' the RFLU from the 48 hour reading with background subtracted
+The files have a list of similar names:\  
 
-I will first streamline the data into more simple formats: Individual 1 is cell line 75-1 (D04_75_1,D05_75_1 )
+'Drug' which is the short name of drug used 'Conc' which is the concentration of drug added (in microMolar); 'Sname' the abbreviated name of Drug and Conc; 'Well' letter with two number format 'Row' \# 1-8 for A-G 'Column' numbers 1-12; 'Plate' will vary between one and three; 'RFLU' the RFLU from the 0 hour reading with background subtracted (not all experiments have them); 'RFLU2' the RFLU from the 48 hour reading with background subtracted.
+
+I will first streamline the data into more simple formats: 
+Individual 1 is cell line 75-1 (D04_75_1,D05_75_1 )
 
 Individual 2 is cell line 87-1 (D04_87_1, D05_87_1)
 
@@ -152,6 +156,8 @@ I then need to convert the concentrations to as.numeric and select the 5 columns
 The next part of the code is to make analysis files and groups and things for the iterations.
 
 The data-frame called individuals is complied from each of the dataframes wrangled above and will be the "final" R object stored in the project folder.
+
+## Loading the data into R
 
 ```{r combine list, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 ###compile the separate data frames into a list of data frames
@@ -215,7 +221,10 @@ smaller2 <- bind_rows(smaller2,.id="SampleID")
 
 ```
 
-##find the individuals rds Once they are all in a data from, a few functions need to be defined for ggplot: ##functions
+
+Once they are all in a data frame, a few functions need to be defined for ggplot.
+
+
 
 ```{r empty list holder, message=FALSE, warning=FALSE, include=FALSE}
 
@@ -278,88 +287,85 @@ values_48_list <- full_list %>% na.omit()%>% filter(Conc == 0.5) %>% mutate(Samp
 #   facet_wrap(~SampleID)
 ```
 
-```{r Viability data, echo=FALSE, warning=FALSE}
+```{r Viability data, echo=TRUE, warning=FALSE}
 ### to extract parameters for mapping
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-
 full_list <- read.csv("data/LDH48hoursdata.csv", row.names = 1)
-#alterlist <-
+
 averageFL <-  full_list %>% 
-   na.omit()%>% 
-   #filter(Conc <1) %>%
-   group_by(SampleID, Drug,Conc) %>%
-   mutate(indv=substr(SampleID,4,4)) %>% 
-   mutate(indv=factor(as.numeric(indv))) %>% 
-      mutate(Drug = factor(Drug, levels = c("Veh","Daun", 
-                                         "Doxo",
-                                         "Epi",
-                                         "Mito",
-                                         "Tras"))) %>% 
+  na.omit()%>% 
+  #filter(Conc <1) %>%
+  group_by(SampleID, Drug,Conc) %>%
+  mutate(indv=substr(SampleID,4,4)) %>%
+  mutate(indv=factor(as.numeric(indv))) %>% 
+  mutate(Drug = factor(Drug, levels = c("Veh","Daun",
+                                        "Doxo",
+                                        "Epi",
+                                        "Mito",
+                                        "Tras"))) %>%
   mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin",
-                          "Doxo"~"Doxorubicin",
-                          "Epi"~"Epirubicin",
-                          "Mito"~"Mitoxantrone",
-                          "Tras"~"Trastuzumab",
-                          "Veh"~ "Vehicle", .default= Drug)) %>%
-   dplyr::summarize(Mean = mean(Percent))
+                         "Doxo"~"Doxorubicin",
+                         "Epi"~"Epirubicin",
+                         "Mito"~"Mitoxantrone",
+                         "Tras"~"Trastuzumab",
+                         "Veh"~ "Vehicle", .default= Drug)) %>%
+  dplyr::summarize(Mean = mean(Percent))
 
-averageFL %>% ungroup() %>% 
-   mutate(indv=substr(SampleID,4,4)) %>% 
-   mutate(indv=factor(as.numeric(indv))) %>% 
-  filter(Conc<5) %>% 
-  group_by(indv,Drug,Conc) %>% 
-  dplyr::summarize(Viability=mean(Mean)) %>% ungroup() %>% 
-   ggplot(.,  aes(x=Drug, y= Viability*100 )) +
-   geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Drug))+
-  geom_point(aes(color=indv))+
-  guides(alpha = "none")+
-  ylim(0,150.5)+
-   scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
-  scale_fill_manual(values=drug_pal_fact)+
-  theme_classic() +
-  #xlab(expression(paste("Concentration [", mu, "M]")))+
-  geom_hline(yintercept = 1,lty = 4)+
-  ylab("Viability") +
-  facet_wrap(~Conc)+ 
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=TRUE,
-              textsize =4,
-              step_increase = 0.1)+
-  # geom_signif(comparisons = list(c("0.01","0.05"),
-  #                                c("0.01","0.1"),
-  #                                c("0.01","0.5")),
-  #               test = "t.test",
-  #               map_signif_level = TRUE,step_increase = 0.1,
-  #               textsize = 4)+
-
-  ggtitle("Viablity across concentrations at 48 hours")+
-  theme(axis.title=element_text(size=10),
-        axis.ticks=element_line(size =2),
-        axis.text=element_text(size=9, face = "bold"),
-       panel.grid.major = element_line(colour = 'darkgrey'),
-       panel.border=element_rect(fill = NA, size = 2),
-       plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
+  averageFL %>% 
+    ungroup() %>% 
+    mutate(indv=substr(SampleID,4,4)) %>% 
+    mutate(indv=factor(as.numeric(indv))) %>% 
+    filter(Conc<5) %>% 
+    group_by(indv,Drug,Conc) %>% 
+    dplyr::summarize(Viability=mean(Mean)) %>%
+    ungroup() %>% 
+    ggplot(.,  aes(x=Drug, y= Viability*100 )) +
+    geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Drug))+
+    geom_point(aes(color=indv))+
+    guides(alpha = "none")+
+    ylim(0,150.5)+
+    scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+    scale_fill_manual(values=drug_pal_fact)+
+    theme_classic() +
+    #xlab(expression(paste("Concentration [", mu, "M]")))+
+    geom_hline(yintercept = 1,lty = 4)+
+    ylab("Viability") +
+    facet_wrap(~Conc)+ 
+    geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+                                  c("Doxorubicin","Vehicle"),
+                                  c("Epirubicin","Vehicle"),
+                                  c("Mitoxantrone","Vehicle"),
+                                  c("Trastuzumab","Vehicle")),
+                test= "t.test",
+                map_signif_level=TRUE,
+                textsize =4,
+                step_increase = 0.1)+
+    ggtitle("Viablity across concentrations at 48 hours")+
+    theme(axis.title=element_text(size=10),
+          axis.ticks=element_line(size =2),
+          axis.text=element_text(size=9, face = "bold"),
+          panel.grid.major = element_line(colour = 'darkgrey'),
+          panel.border=element_rect(fill = NA, size = 2),
+          plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
    
 ```
 
-```{r viablity by drug}
-averageFL %>% ungroup() %>% 
-   mutate(indv=substr(SampleID,4,4)) %>% 
-   mutate(indv=factor(as.numeric(indv))) %>% 
+```{r viablity by drug, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+averageFL %>% 
+  ungroup() %>% 
+  mutate(indv=substr(SampleID,4,4)) %>%
+  mutate(indv=factor(as.numeric(indv))) %>% 
   filter(Conc<5) %>% 
   group_by(indv,Drug,Conc) %>% 
   dplyr::summarize(Viability=mean(Mean)) %>% ungroup() %>% 
-   ggplot(.,  aes(x=as.factor(Conc), y= Viability*100 )) +
-   geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Drug))+
+  ggplot(.,  aes(x=as.factor(Conc), y= Viability*100 )) +
+  geom_boxplot(position="dodge",outlier.colour="transparent", aes(fill=Drug))+
   geom_point(aes(color=indv))+
   guides(alpha = "none")+
   ylim(0,150.5)+
-   scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
   scale_fill_manual(values=drug_pal_fact)+
   theme_classic() +
   #xlab(expression(paste("Concentration [", mu, "M]")))+
@@ -375,28 +381,19 @@ averageFL %>% ungroup() %>%
               map_signif_level=TRUE,
               textsize =4,
               step_increase = 0.1)+
-  # geom_signif(comparisons = list(c("0.01","0.05"),
-  #                                c("0.01","0.1"),
-  #                                c("0.01","0.5")),
-  #               test = "t.test",
-  #               map_signif_level = TRUE,step_increase = 0.1,
-  #               textsize = 4)+
-
   ggtitle("Viablity across drugs at 48 hours")+
   theme(axis.title=element_text(size=10),
         axis.ticks=element_line(size =2),
         axis.text=element_text(size=9, face = "bold"),
-       panel.grid.major = element_line(colour = 'darkgrey'),
-       panel.border=element_rect(fill = NA, size = 2),
-       plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
+        panel.grid.major = element_line(colour = 'darkgrey'),
+        panel.border=element_rect(fill = NA, size = 2),
+        plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
 ```
 
 
+The above codes can be altered to include ALL concentrations.
 
-
-
-
-
+## Ploting the DRC
 
 ```{r making filtered data, echo=FALSE}
 
@@ -417,6 +414,36 @@ TR2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug =="Tras")
 VE2 <- smaller2 %>% na.omit %>%dplyr::filter(Drug == "Veh")
 #####Then add names!
 ```
+
+
+```{r sample plot code, echo = TRUE, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+ggplot(DNR_viability, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
+  guides(color="none", alpha = "none")+  #guides turned off for group plotting
+  stat_summary(fun.data=mean_se, ##this shows the error bar for me
+               fun.args = list(mult=1),
+               geom = "errorbar",
+               size =.5, 
+               width = .1)+
+  stat_smooth(method = "drm", ## This code is how one can call DRM inside ggplot2
+              method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+  #note: the fct mean function, and the L.4 stands for 4 parameter log-logistic curve
+  ylim(0,1.5)+ #setting the limits so everything with graph
+  scale_color_brewer(palette = "Dark2")+ #adding color of choice
+  scale_x_log10() +  # Change the x-axis scale to log 10 scale
+  theme_classic() +  #looks pretting
+  xlab(expression(paste("Concentration [", mu, "M]")))+
+  ylab("Percent viability/100") +
+  ggtitle("Daunorubicin")+
+  theme(plot.title = element_text(hjust = 0.5, size =15, face = "bold"),
+        axis.title=element_text(size=10),
+        axis.ticks=element_line(linewidth =2),
+        axis.text=element_text(size=10, face = "bold"),
+        panel.grid.major = element_line(colour = 'lightgrey'),
+        panel.border=element_rect(fill = NA, linewidth = 2),
+        plot.background = element_rect(fill = "#d7657e", colour = NA))
+      
+
+```
+The code above is used multiple times and stored into an R object, so I can later combine the group into one full plot.  This keeps the graphs in the same proportion to each other.  I do alter each individual graph to either add axis titles or remove repitition.
 
 ```{r daunplot, echo=FALSE, message=FALSE, warning=FALSE}
 # ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID, alpha =0.6)) +
@@ -693,11 +720,11 @@ plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
 save_plot('output/plan2plot.png', plan2)
 save_plot('individual-legenddark2.png',ggpubr::as_ggplot(legend_b))
 print(plan2)
-
+plan2
 ```
 
-###LD50 extract
-
+### LD50 extract
+Now to extract all the data from drm.
 ```{r LD50 extraction make the list, include=FALSE}
 
 DAi <- full_list %>% dplyr::filter(Drug == "Daun")
@@ -767,7 +794,6 @@ trLD <- sapply(param_holder, "[[", 1)
 
 ```
 
-###drm extracting
 
 ```{r extracting with drm, include=FALSE}
 daunls <- list() ###daunorubicin list
@@ -795,16 +821,19 @@ thingda <-  filter(DAi, SampleID==k)
   onion <- ED(thingda.m, c(50), interval = "delta")
   daunls[k] <- onion[1]
   print(paste0(k, " Daunorubicin"))
+  
 thingdx <-  filter(DXi, SampleID==k)
   thingdx.m <- drm(Percent~Conc, data = thingdx, fct=LL.4(c(NA, 0, 1, NA)))
   onionx <- ED(thingdx.m, c(50), interval = "delta")
   doxols[k] <- onionx[1]
   print(paste0(k, " Doxorubicin"))
+  
  thingep <-  filter(EPi, SampleID==k)
   thingep.m <- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, 0, 1, NA)))
   onione <- ED(thingep.m, c(50), interval = "delta")
   epils[k] <- onione[1] 
   print(paste0(k, " Epirubicin"))
+  
   thingmt <-  filter(MTi, SampleID==k)
   thingmt.m <- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA, 0, 1, NA)))
   onionm <- ED(thingmt.m, c(50), interval = "delta")
@@ -812,10 +841,111 @@ thingdx <-  filter(DXi, SampleID==k)
   print(paste0(k, " Mitoxantrone"))
   
  }
+```
+### extracting slope
+```{r slope extraction, message=FALSE, warning=FALSE, include=FALSE}
 
+
+mtiplot <- ggplot(MTi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
+            stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))),se = FALSE)+
+        scale_x_log10() 
+
+daiplot <- ggplot(DAi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
+            stat_smooth(method = "drm",method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
+        scale_x_log10() 
+
+dxiplot <- ggplot(DXi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
+            stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,0,1,NA))), 
+                  se = FALSE)+
+        scale_x_log10() 
+epiplot <- ggplot(EPi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
+            stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,0,1,NA))), 
+                  se = FALSE)+
+        scale_x_log10() 
+triplot <- ggplot(TRi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
+            stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,0,1,NA))), 
+                  se = FALSE)+
+        scale_x_log10() 
+veiplot <- ggplot(VEi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
+            stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,0,1,NA))), 
+                  se = FALSE)+
+        scale_x_log10() 
+
+
+
+
+extracted_daun <- ggplot_build(daiplot)$data[[1]]
+extracted_doxo <- ggplot_build(dxiplot)$data[[1]]
+extracted_epi <- ggplot_build(epiplot)$data[[1]]
+extracted_mito <- ggplot_build(mtiplot)$data[[1]]
+extracted_tras <- ggplot_build(triplot)$data[[1]]
+extracted_veh <- ggplot_build(veiplot)$data[[1]]
+
+
+daun_slope <- extracted_daun %>% nest(data = -group) %>% 
+  mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
+  unnest(tidied) %>% 
+  dplyr::select(group,term,estimate) %>% 
+  pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
+  rename(y='(Intercept)') %>% 
+  mutate(da_slope = y/x) %>% 
+  dplyr::select(group,da_slope)
+
+
+
+doxo_slope <- extracted_doxo %>% nest(data = -group) %>% 
+  mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
+  unnest(tidied)%>% 
+  dplyr::select(group,term,estimate) %>% 
+  pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
+  rename(y='(Intercept)') %>% 
+  mutate(dx_slope = y/x) %>% 
+  dplyr::select(group,dx_slope)
+
+epi_slope <- extracted_epi %>% nest(data = -group) %>% 
+  mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
+  unnest(tidied)%>% 
+  dplyr::select(group,term,estimate) %>% 
+  pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
+  rename(y='(Intercept)') %>% 
+  mutate(ep_slope = y/x) %>% 
+  dplyr::select(group,ep_slope)
+
+mito_slope <- extracted_mito %>% nest(data = -group) %>% 
+  mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
+  unnest(tidied)%>% 
+  dplyr::select(group,term,estimate) %>% 
+  pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
+  rename(y='(Intercept)') %>% 
+  mutate(mt_slope = y/x) %>% 
+  dplyr::select(group,mt_slope)
+tras_slope <- extracted_tras %>% nest(data = -group) %>% 
+  mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
+  unnest(tidied)%>% 
+  dplyr::select(group,term,estimate) %>% 
+  pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
+  rename(y='(Intercept)') %>% 
+  mutate(tr_slope = y/x) %>% 
+  dplyr::select(group,tr_slope)
+
+veh_slope <- extracted_veh %>% nest(data = -group) %>% 
+  mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
+  unnest(tidied)%>% 
+  dplyr::select(group,term,estimate) %>% 
+  pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
+  rename(y='(Intercept)') %>% 
+  mutate(ve_slope = y/x) %>% 
+  dplyr::select(group,ve_slope)
 
 
 ```
+
+
+
 
 ```{r DA try with drc, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 for(k in ID){
@@ -823,18 +953,19 @@ for(k in ID){
   thing <-  filter(DA, SampleID==k)
   na.omit= TRUE
   thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 0, NA, NA)))
-  plot(thing.m, 
-       type ="bars" ,
-       main = paste(thing$Name[1], " ", k),
-       col= 2,
-       xlab = expression(paste("Concentration [",mu,"M]")),
-       ylab = "Percent Viable",
-       ylim=c(0,1.5))
- 
+  # plot(thing.m, 
+  #      type ="bars" ,
+  #      main = paste(thing$Name[1], " ", k),
+  #      col= 2,
+  #      xlab = expression(paste("Concentration [",mu,"M]")),
+  #      ylab = "Percent Viable",
+  #      ylim=c(0,1.5))
+  # 
   
-  a <- ED(thing.m, c(50), interval = "delta")
-  legend("topright", legend = paste(round(a[1],2)))
-  daunls[k] <- a[1]
+  a[1] <- ED(thing.m, c(50), interval = "delta")
+  a[2] <- summary(thing.m)
+  #legend("topright", legend = paste(round(a[1],2)))
+  daunls[k] <- a[c(1,2)]
 
 
  }
@@ -950,20 +1081,20 @@ for(k in ID){
 
   thing <-  filter(VE, SampleID==k)
   na.omit= TRUE
-  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, NA, NA, NA)))
-  plot(thing.m, 
-       type ="bars" ,
-       main = paste(thing$Name[1], " ", k),
-       col= 2,
-       xlab = expression(paste("Concentration [",mu,"M]")),
-       ylab = "Percent Viable",
-       ylim=c(0,1.5))
-  plot(thing.m,  type="bars", col= 2, add=TRUE )
-  
-  a <- ED(thing.m, c(50), interval = "delta")
-  legend("topright", legend = paste(round(a[1],2)))
-  vehls[k] <- a[[1]]
-
+  thing.m <- drm(Percent~Conc, data = thing, fct=LL.4(c(NA, 1, NA, NA)))
+  # plot(thing.m, 
+  #      type ="bars" ,
+  #      main = paste(thing$Name[1], " ", k),
+  #      col= 2,
+  #      xlab = expression(paste("Concentration [",mu,"M]")),
+  #      ylab = "Percent Viable",
+  #      ylim=c(0,1.5))
+  # plot(thing.m,  type="bars", col= 2, add=TRUE )
+  # 
+  # a <- ED(thing.m, c(50), interval = "delta")
+  # legend("topright", legend = paste(round(a[1],2)))
+  # vehls[k] <- a[[1]]
+tidy(thing.m)
 
  }
 
@@ -1009,7 +1140,7 @@ graphLD50 <- avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubi
                                         "Epi"~"Epirubicin",
                                         "Mito"~"Mitoxantrone",
                                         "Tras"~"Trastuzumab",
-                                        "Veh"~ "Control", .default= Treatment)) %>% 
+                                        "Veh"~ "Vehicle", .default= Treatment)) %>% 
   mutate(indv= factor(indv)) %>% 
   ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
   geom_boxplot(position = "identity",aes(fill=Treatment))+
@@ -1161,5 +1292,13 @@ tropimage <- ggplot(tidata, aes(factor (dn, level = c('Vehicle', 'Daunorubicin',
 
 tropimage 
 save_plot("tropimage.png",tropimage)
+
+```
+
+## DRC replicates
+```{r drc overlaps by individual treatment}
+
+
+
 
 ```

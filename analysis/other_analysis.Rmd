@@ -22,6 +22,7 @@ library(ggpubr)
 library(scales)
 library(sjmisc)
 library(kableExtra)
+library(broom)
 
 ```
 # Knowles Comparison data:
@@ -34,17 +35,14 @@ drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
 drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+mat_drug <- c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone")
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 labeltop <- (interaction(substring(drug, 0, 2), indv, time))
 ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-#attributes <- listAttributes((ensembl))
+
 my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 level_order2 <- c('75','87','77','79','78','71')
-# knowfig5<- Knowles_2018.elife.33480.supp5.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp5-v2/Knowles_2018-elife-33480-supp5-v2")
-# knowfig4 <- Knowles_2018.elife.33480.supp4.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/Manuscript/Knowles_2018-elife-33480-supp4-v2/Knowles_2018-elife-33480-supp4-v2")
-# write.csv(knowfig5,"data/knowfig5.csv")
-# write.csv(knowfig4,"data/knowfig4.csv")
 
 knowfig4 <- read.csv("data/knowfig4.csv",row.names = 1)
 knowfig5 <- read.csv("data/knowfig5.csv",row.names = 1)
@@ -94,7 +92,7 @@ dataframK_45 <- toplistall %>%
   mutate(K4 = if_else(ENTREZID %in% knowles4,1,0))%>%
   mutate(K5 = if_else(ENTREZID %in% knowles5,1,0))%>%
   # filter(adj.P.Val<0.05) %>%
- summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
+ dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
   as.data.frame()
 
 sig05_dataframK_45 <- toplistall %>%
@@ -127,6 +125,13 @@ dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time=="24_hours")
+
+toplist3hr <-   toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time=="3_hours")
+
+
 toplist24hr %>% 
   group_by(time, id) %>% 
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
@@ -136,7 +141,7 @@ toplist24hr %>%
   geom_boxplot(aes(fill=id))+
   fill_palette(palette =drug_palNoVeh)+
   guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(~time)+#,labeller = (time = facettimelabel) )+
+  facet_wrap(~time)+
   theme_bw()+
   xlab("")+
   ylab("abs |Log Fold Change|")+
@@ -158,37 +163,7 @@ toplist24hr %>%
                               test = "t.test",
               map_signif_level = FALSE,step_increase = 0.1,
               textsize = 4)
-# This is a work in progress before vacation
-# tabletoplist %>% ungroup() #%>% 
-#   
-#   select(time,id, sigcount, meSNP,n)
-#   pivot_wider(id_cols = c(time,id), names_from=c(sigcount,meSNP), values_from=c(n)) #%>% 
-#   mutate(propsig = sig/(sig+notsig)*100) %>% 
-#   mutate(propsig=if_else(is.na(prop),0,prop))# %>% 
-# mutate(propME = sig/(sig+notsig)*100) %>% 
-#   mutate(propME=if_else(is.na(prop),0,prop))
-# mutate(propRE = sig/(sig+notsig)*100) %>% 
-#   mutate(propRE=if_else(is.na(prop),0,prop))
-#   ggplot(., aes(x=id, y= prop))+
-#   geom_col(aes(fill=id))+
-#   geom_text(aes(label = sprintf("%.2f",prop)), position=position_dodge(0.9),vjust=-.2 )+
-#   scale_fill_manual(values =drug_palNoVeh)+
-#   guides(fill=guide_legend(title = "Treatment"))+
-#   facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
-#   theme_bw()+
-#   xlab("")+
-#   ylab("Percentage of expressed genes")+
-#   theme_bw()+
-#   facet_wrap(~time)+
-#   ggtitle("Percent DEGs (adj. P value <0.05)")+
-#   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-#         axis.title = element_text(size = 15, color = "black"),
-#         # axis.ticks = element_line(linewidth = 1.5),
-#         axis.line = element_line(linewidth = 1.5),
-#         strip.background = element_rect(fill = "transparent"),
-#         axis.text.x = element_text(size = 8, color = "white", angle = 0),
-#         axis.text.y = element_text(size = 8, color = "black", angle = 0),
-#         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
 
    toplistall %>%
   mutate(id = as.factor(id)) %>%
@@ -266,7 +241,7 @@ toplist24hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
   group_by(id,sigcount,chrom) %>% 
-  summarize(chromcount=n())%>% 
+  summarize(chromcount=n()) %>% 
     pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
    mutate(chromprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=chromprop)) +
@@ -285,24 +260,72 @@ dataframchrom <- toplist24hr %>%
   as.data.frame()
 
 dataframchrom %>%
+  pivot_wider(., names_from=c('sigcount','chrom'), values_from = 'chromcount') %>% 
   kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Seoane geneset") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
 
-
-##make table of numbers:
-
-
-#genesof interest: 
-# GWASsnps <- c('RARG', 'HIVEP1', 'ITGB7',  'PRDM2', 'KAZN', 'GDF5', 'FRS2', 'HDDC2', 'EEF1B2', 'SLC28A3')
-# totalsnpgenes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-#                   values = GWASsnps, mart = ensembl)
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id) %>% 
+ summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
 
 
 
 ```
 
+## 3 hour data Seaone
+
+```{r three hour seaone}
+toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
+   mutate(chromprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of chromatin gene set ")
+
+dataframchrom3 <- toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+  as.data.frame()
+
+dataframchrom3 %>%
+  pivot_wider(., names_from=c('sigcount','chrom'), values_from = 'chromcount') %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in 3 hours Seoane geneset") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+```
+#### chi square test Seaone
+```{r chi value, echo= TRUE}
+##remove Trastuzumab in order to perform chi square tests by time and drug between  DE and non DE enrichment
+chi_fun <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
+print("after performing chi square test between DEgenes, and non DE genes")
+chi_fun
+
+
+```
 # ArrGWAS to 24 hour DEG genes p < 0.05
 ```{r ArrGWAS}
 # How I did the string split
@@ -334,7 +357,7 @@ toplist24hr %>%
        geom_text(aes(x=id, label = sprintf("%.2f",ARRprop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
        facet_wrap(~sigcount)+
-       ggtitle("non-significant and significant enrichment proporitions of Arrhythmia GWAS ")
+       ggtitle("24 hour non-significant and significant enrichment proporitions of Arrhythmia GWAS ")
 
 ##make table of numbers:
 
@@ -348,7 +371,7 @@ dataframARR <- toplist24hr %>%
   as.data.frame()
 
 dataframARR %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia GWAS") %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 24 hour GWAS") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
@@ -356,8 +379,66 @@ dataframARR %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 
 ```
+## 3 hour data set
+
+```{r three hour ArrGWAS}
+
+#Apply sorting
+toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,ARR) %>% 
+  summarize(ARRcount=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(ARR), values_from=ARRcount) %>% 
+   mutate(ARRprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=ARRprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",ARRprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("3 hour non-significant and significant enrichment proporitions of Arrhythmia GWAS ")
+
+##make table of numbers:
+
+
+dataframARR3 <- toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,ARR) %>% 
+  summarize(ARRcount=n()) %>% 
+  as.data.frame()
+
+dataframARR3 %>% kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 24 hour GWAS") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+
+```
+
+### chi square test ARR
+
+```{r chi ARR,echo=TRUE}
+
+
+chi_funarr <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(ARR, sigcount)$p.value) 
+print("after performing chi square test between DEgenes, and non DE genes")
+chi_funarr
+
+```
+
+
+
 # HFGWAS
-```{r HFGWAS}
+```{r 24 hours HFGWAS}
 ##just like ARrGWAS- imported the total csv, the took the "nearest" column and separated out the gene info
 # test <- HFGWAS %>% 
 #   select(nearest) %>% 
@@ -412,9 +493,68 @@ dataframHF %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 
 ```
+## 3 hours HF
+```{r 3 hours HFGWAS}
+
+#Apply sorting
+toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,HF) %>% 
+  summarize(HFcount=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(HF), values_from=HFcount) %>% 
+   mutate(HFprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=HFprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",HFprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of Heart Failure GWAS ")
+
+##make table of numbers:
+
+
+dataframHF3 <- toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,HF) %>% 
+  summarize(HFcount=n()) %>% 
+  as.data.frame()
+
+dataframHF3 %>%
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Three hour HFhythmia GWAS") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+
+
+
+
+
+
+
+```
+### chi square test HF
+```{r chiHF,echo=TRUE}
+
+
+chi_funhf <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(HF, sigcount)$p.value) 
+print("after performing chi square test between DEgenes, and non DE genes")
+chi_funhf
+
+```
 
 # CAD GWAS
-```{r CADGWAS}
+```{r CAD 24 GWAS}
 # test <- CADGWAS %>% 
 #    select(nearest) %>% 
 #    separate_wider_delim(nearest, delim = "[", names_sep = "", too_few = "align_start")
@@ -467,5 +607,76 @@ dataframCAD %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
   scroll_box(width = "60%", height = "400px")
 
 ```
+## 3 hour data set
+```{r CAD 3 GWAS}
+
+#Apply sorting
+toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,CAD) %>% 
+  summarize(CADcount=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(CAD), values_from=CADcount) %>% 
+   mutate(CADprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=CADprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",CADprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("3 hour non-significant and significant enrichment proporitions of CAD GWAS ")
+
+##make table of numbers:
+
+
+dataframCAD3 <- toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,sigcount,CAD) %>% 
+  summarize(CADcount=n()) %>% 
+  as.data.frame()
+
+dataframCAD3 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in 3 hour CAD GWAS") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+```
+
+### chi square test CAD
+```{r chiCAD,echo=TRUE}
+
+
+chi_funCAD <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(CAD, sigcount)$p.value) 
+print("after performing chi square test between DEgenes, and non DE genes")
+chi_funCAD
+
+```
+
+# GTEx V8 heart-left ventrical egenes
+
+```{r GTEx enrichment check}
+heart_gtex <- 
+  readr::read_delim("data/Heart_Left_Ventricle.v8.egenes.txt",  
+                                delim = "\t", 
+                                escape_double = FALSE, 
+                                trim_ws = TRUE)
+heartset <- heart_gtex$gene_name
+GTEX_set <- getBM(attributes=my_attributes,filters = 'hgnc_symbol',
+                  values = heartset, mart = ensembl)
+#remove duplicates
+GTEX_set <- GTEX_set %>% dplyr::distinct(entrezgene_id, .keep_all =TRUE)
+
+
+```
+
 
 
