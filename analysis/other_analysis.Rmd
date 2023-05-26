@@ -664,19 +664,83 @@ chi_funCAD
 # GTEx V8 heart-left ventrical egenes
 
 ```{r GTEx enrichment check}
-heart_gtex <- 
-  readr::read_delim("data/Heart_Left_Ventricle.v8.egenes.txt",  
-                                delim = "\t", 
-                                escape_double = FALSE, 
-                                trim_ws = TRUE)
-heartset <- heart_gtex$gene_name
-GTEX_set <- getBM(attributes=my_attributes,filters = 'hgnc_symbol',
-                  values = heartset, mart = ensembl)
-#remove duplicates
-GTEX_set <- GTEX_set %>% dplyr::distinct(entrezgene_id, .keep_all =TRUE)
-
+# heart_gtex <- 
+#   readr::read_delim("data/Heart_Left_Ventricle.v8.egenes.txt",  
+#                                 delim = "\t", 
+#                                 escape_double = FALSE, 
+#                                 trim_ws = TRUE)
+# heartset <- heart_gtex$gene_name
+# GTEX_set <- getBM(attributes=my_attributes,filters = 'hgnc_symbol',
+#                   values = heartset, mart = ensembl)
+# #remove duplicates
+# GTEX_set <- GTEX_set %>% dplyr::distinct(entrezgene_id, .keep_all =TRUE)
+# write.csv(GTEX_set,"data/GTEX_setsimple.csv")
+GTEX_set <- read.csv("data/GTEX_setsimple.csv", row.names = 1)
+ 
+  toplist24hr %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+ 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(gtex=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>% 
+  group_by(id,time,sigcount,gtex) %>% 
+  summarize(gtexcount=n())%>% 
+    pivot_wider(id_cols = c(id,time,sigcount), names_from=c(gtex), values_from=gtexcount) %>% 
+   mutate(gtexprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=gtexprop), group=time) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",gtexprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(time~sigcount)+
+       ggtitle("24 hour non-significant and significant enrichment proporitions of GTex eGenes ")
+ toplist3hr %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(gtex=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>% 
+  group_by(id,time,sigcount,gtex) %>% 
+  summarize(gtexcount=n())%>% 
+    pivot_wider(id_cols = c(id,time,sigcount), names_from=c(gtex), values_from=gtexcount) %>% 
+   mutate(gtexprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=gtexprop), group=time) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",gtexprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(time~sigcount)+
+       ggtitle("3 hour non-significant and significant enrichment proporitions of GTex eGenes ")
 
 ```
 
+``` {r gtex counts and chi}
 
+
+dataframgtex <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(gtex=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>% 
+  group_by(id,time,sigcount,gtex) %>% 
+  summarize(gtexcount=n())%>% 
+    pivot_wider(id_cols = c(id,time,sigcount), names_from=c(gtex), values_from=gtexcount)# %>% 
+  summarize(ARRcount=n()) %>% 
+  as.data.frame()
+
+dataframgtex %>% kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 24 hour GWAS") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+
+
+chi_fungtex <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+   mutate(gtex=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(gtex, sigcount)$p.value) 
+print("after performing chi square test between DEgenes, and non DE genes")
+chi_fungtex
+
+```
 

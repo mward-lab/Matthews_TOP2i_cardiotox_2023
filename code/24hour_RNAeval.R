@@ -66,7 +66,7 @@ toplist24hours %>%
   xlim(-5,5)+
   stat_cor(aes(label = after_stat(rr.label)),
            color = "red",
-           geom = "label",
+           geom = "text",
            label.y = 4, label.x=-4)+
   ggtitle("Daunorubicin and Doxorubicin 24 hours")
 
@@ -203,19 +203,18 @@ sigVDX24 %>% inner_join(sigVMT24, by="ENTREZID") %>%
 
 toplist24hours %>% dplyr::filter(P.Value<0.1) %>%
     ggplot(.,aes(x=id, y = logFC))+
-           geom_boxplot(position = "identity")+
-
+    geom_boxplot(position = "identity")+
     geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
-
                                    c("Epirubicin", "Doxorubicin"),
                                    c("Mitoxantrone", "Doxorubicin"),
                                    c("Trastuzumab","Doxorubicin")),
                 test = "t.test",
-                map_signif_level = TRUE,step_increase = 0.1,
+                map_signif_level = TRUE,
+                step_increase = 0.1,
                 textsize = 4)
 
   toplistall %>%
-     filter(ENTREZID %in% DDEMresp) %>%
+    filter(ENTREZID %in% DDEMresp) %>%
     mutate(id = as.factor(id)) %>%
     mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
     ggplot(., aes(x=id, y =logFC))+

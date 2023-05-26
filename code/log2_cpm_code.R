@@ -400,3 +400,11 @@ cpmcounts %>% dplyr::filter(rownames(.)==2475) %>%
     strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
+
+# correlation attempts ----------------------------------------------------
+
+
+corr_GOI <- c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2", "HDDC2")
+
+
+

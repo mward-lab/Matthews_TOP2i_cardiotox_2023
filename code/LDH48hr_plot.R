@@ -18,7 +18,6 @@ RINsamplelist <-read_csv("data/RINsamplelist.txt",col_names = TRUE)
 factor(RINsamplelist$Drug, levels = c( "daunorubicin", "doxorubicin", "epirubicin", "mitoxantrone", "trastuzumab","control"))
 level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-RINsamplelist <-read_csv("data/RINsamplelist.txt",col_names = TRUE)
 
 
 norm_LDH <- read.csv("data/norm_LDH.csv")
