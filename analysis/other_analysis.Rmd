@@ -116,6 +116,28 @@ dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
   kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "50%", height = "400px")
 
+
+chi_squarek4 <- toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+   mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(meSNP, sigcount)$p.value) 
+
+chi_squarek5 <- 
+  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  
+  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(reQTL, sigcount)$p.value) 
+print("this is the meSNPs (mininmally expressed QTLS)")
+                          chi_squarek4
+                          print("below is the reQTLS in knowles data (mininmally expressed QTLS)")
+chi_squarek5
 ```
 
 
@@ -202,7 +224,7 @@ toplist24hr %>%
        facet_wrap(~sigcount)+
        ggtitle("non-significant and significant enrichment proporitions of Knowles reQTLs ")
   
-  
+
 
 ```
 
@@ -268,8 +290,8 @@ dataframchrom %>%
 
 toplist24hr %>% 
   mutate(id = as.factor(id)) %>%
+   dplyr::filter(id!="Trastuzumab") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  
   mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
   group_by(id) %>% 
  summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
@@ -312,7 +334,7 @@ dataframchrom3 %>%
   scroll_box(width = "60%", height = "400px")
 ```
 #### chi square test Seaone
-```{r chi value, echo= TRUE}
+```{r chi value seoane, echo= TRUE}
 ##remove Trastuzumab in order to perform chi square tests by time and drug between  DE and non DE enrichment
 chi_fun <-  toplistall %>% 
   mutate(id = as.factor(id)) %>%
@@ -722,8 +744,7 @@ dataframgtex <-  toplistall %>%
   group_by(id,time,sigcount,gtex) %>% 
   summarize(gtexcount=n())%>% 
     pivot_wider(id_cols = c(id,time,sigcount), names_from=c(gtex), values_from=gtexcount)# %>% 
-  summarize(ARRcount=n()) %>% 
-  as.data.frame()
+  
 
 dataframgtex %>% kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 24 hour GWAS") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
