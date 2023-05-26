@@ -136,7 +136,7 @@ chi_squarek5 <-
   summarise(pvalue= chisq.test(reQTL, sigcount)$p.value) 
 print("this is the meSNPs (mininmally expressed QTLS)")
                           chi_squarek4
-                          print("below is the reQTLS in knowles data (mininmally expressed QTLS)")
+                          print("below is the reQTLS in knowles data ( reQTLS)")
 chi_squarek5
 ```
 
