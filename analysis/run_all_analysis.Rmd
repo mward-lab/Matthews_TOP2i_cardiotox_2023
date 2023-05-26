@@ -658,6 +658,7 @@ volcanosig <- function(df, psig.lvl,topg) {
     arrow = arrow(length = unit(0.015, "npc")), max.overlaps = Inf) +
     #geom_hline(yintercept = -log10(psig.lvl))+
     xlab(expression("Log"[2]*" FC"))+
+    ylim(0,30)+
     ylab(expression("-log"[10]*"P Value"))+
     scale_color_manual(values = c("black", "red","blue"))+
     theme_cowplot()+
