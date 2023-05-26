@@ -922,7 +922,7 @@ ggVennDiagram(total24,
                                  "Doxorubicin\n n = 6516","Epirubicin\n n = 6202","Mitoxantrone\n n = 1327"),
               show_intersect = FALSE,
               set_color = "black",
-              catagory_size = c(6,6,6,6),
+              catagory_size = c(4,4,4,4),
               label = "both",
               label_percent_digit = 1,
               label_size = 3,
@@ -977,7 +977,7 @@ scale_fill_distiller(palette="Spectral")+
 Because the 3 hour DEGs are low (expecially in Doxorubicin),  we have chosen to focus on analyzing the 24 hour DEGs for GO: BP analysis
 ### Venn 3 and 24 hour sigDEGs by treatment (adj. p value <0.01) similarities
 
-```{r 3V 24 BY DRUG, eval=FALSE, include=FALSE}
+```{r 3V 24 BY DRUG, echo=FALSE}
 # Dauno comp --------------------------------------------------------------
 
 Dauncomp <- list(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
@@ -1075,10 +1075,12 @@ list24totvenn24 <- get.venn.partitions(total24)
 # > list24totvenn$..values..[?]
 
 ##pairwise
-DDEresp<- list24totvenn24$..values..[[9]]
-write.csv(DDEresp,"data/DDEresp_list.csv")
-DDEMresp<- list24totvenn24$..values..[[1]]
-write.csv(DDEMresp,"data/DDEMresp_list.csv")
+#DDEresp<- list24totvenn24$..values..[[9]]
+DDEresp<- read.csv("data/DDEresp_list.csv")
+#write.csv(DDEresp,"data/DDEresp_list.csv")
+#DDEMresp<- list24totvenn24$..values..[[1]]
+DDEMresp<-read.csv("data/DDEMresp_list.csv")
+#write.csv(DDEMresp,"data/DDEMresp_list.csv")
 DDEall <-(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
 print("Number of AC drug DEG genes in common") 
 length(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
@@ -1102,7 +1104,7 @@ length(NoRespDEG)
 ```
 ## DDE response set
 
-adj. P value  < 0.05, intersection of Dauno-Doxo-Epi, excluding those in common with Mitoxantrone
+adj. P value  < 0.05, intersection of DNE-DOX-EPI, excluding those in common with MTX
 n= 4915
 
 no significant enrichment found
@@ -1112,16 +1114,16 @@ Below is that analysis.
 ```{r GO DDEresp genelist of SDEGs,  message=FALSE, warning=FALSE, include=FALSE}
 
 
-# DDEgostres24only <- gost(query = DDEresp,  
-#                     organism = "hsapiens",
-#                     ordered_query = TRUE,
-#                     domain_scope = "custom",
-#                     measure_underrepresentation = FALSE,
-#                     evcodes = FALSE,
-#                     user_threshold = 0.05,
-#                     correction_method = c("fdr"),
-#                     custom_bg = backGL$ENTREZID,
-#                     sources=c("GO:BP","KEGG"))
+DDEgostres24only <- gost(query = DDEresp,
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.05,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
 #saveRDS(DDEgostres24,"data/DEG-GO/DDEgostres24-5155.RDS")
 DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24-5155.RDS")
 #saveRDS(DDEgostres24only,"data/DEG-GO/DDEgostres24only.RDS")
@@ -1153,7 +1155,7 @@ DDEtable24 %>% dplyr::filter(source=="GO:BP") %>%
         axis.text = element_text(size = 8, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
-# DDEtable24 %>% dplyr::filter(source=="KEGG") %>% 
+# DDEtable24 %>% dplyr::filter(source=="KEGG") %>%
 #     dplyr::select(p_value,term_name,intersection_size) %>%
 #     slice_min(., n= 10 ,order_by=p_value) %>%
 #     mutate(log_val = -log10(p_value)) %>%
@@ -2324,5 +2326,69 @@ print(GOI_genelist)
 
 print(GOI_genelist)
 ```
+### Kegg 24 hour heatmap
+
+```{r kegg 24 hour DEG heat}
+
+
+DDEdegk <- DDEtable24 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=3 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.)))) 
+
+DDEMdegk <-  DDEMtable24 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=3 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
+DAdegk <-   DAtable124 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=3 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
+DXdegk <-  DXtable124 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=3 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val=rev(as.numeric(rownames(.))))
+
+  EPdegk <-   EPtable124 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=3 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    mutate(order_val=rev(as.numeric(rownames(.))))
+  
+  MTdegk <-   MTtable124 %>% dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=3 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    mutate(order_val=rev(as.numeric(rownames(.))))
+library(ComplexHeatmap)
+  
+keggDEGlong <-list("DNR"=DAdegk,
+                 "DOX"=DXdegk,
+                 "EPI"=EPdegk,
+                 "MTX"=MTdegk,
+                 "Athracyclines"=DDEdegk,
+                 "TOP2Bi"=DDEMdegk)
+
+keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
+
+
+kegg_mat<- keggtable%>% 
+  dplyr::select(deg,log_val,term_name) %>% 
+  pivot_wider(everything(),names_from="term_name",values_from="log_val") %>% 
+ column_to_rownames('deg') %>% 
+  as.matrix()# 
+
+Heatmap(kegg_mat, name = "KEGG Pathway -log p values", cluster_rows = FALSE)
+
+  
+```
+
+
 
 
