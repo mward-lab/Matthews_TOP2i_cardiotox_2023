@@ -455,7 +455,7 @@ DAtable_int <- DAgostresint$result %>%
   
 ```
 
-##Doxorubicin 3 hour and 24 hour
+## Doxorubicin 3 hour and 24 hour
 ```{r intial analysis DX3 and DX24, echo=FALSE, message=FALSE, warning=FALSE}
 # DXgostres <- gost(query = sigVDX3$ENTREZID,  
 #                   organism = "hsapiens",
@@ -1114,16 +1114,16 @@ Below is that analysis.
 ```{r GO DDEresp genelist of SDEGs,  message=FALSE, warning=FALSE, include=FALSE}
 
 
-DDEgostres24only <- gost(query = DDEresp,
-                    organism = "hsapiens",
-                    ordered_query = TRUE,
-                    domain_scope = "custom",
-                    measure_underrepresentation = FALSE,
-                    evcodes = FALSE,
-                    user_threshold = 0.05,
-                    correction_method = c("fdr"),
-                    custom_bg = backGL$ENTREZID,
-                    sources=c("GO:BP","KEGG"))
+# DDEgostres24only <- gost(query = DDEresp,
+#                     organism = "hsapiens",
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg = backGL$ENTREZID,
+#                     sources=c("GO:BP","KEGG"))
 #saveRDS(DDEgostres24,"data/DEG-GO/DDEgostres24-5155.RDS")
 DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24-5155.RDS")
 #saveRDS(DDEgostres24only,"data/DEG-GO/DDEgostres24only.RDS")
@@ -1733,7 +1733,7 @@ time <- ordered(time, levels =c("3h", "24h"))
 drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 labeltop <- (interaction(substring(drug, 0, 2), indv, time))
-
+names(cpmcounts) <- labeltop
 
 ### TOP2B
 cpmcounts %>% dplyr::filter(rownames(.)==7155) %>%
@@ -1749,8 +1749,6 @@ cpmcounts %>% dplyr::filter(rownames(.)==7155) %>%
                           "Mi"~"Mitoxantrone",
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
-
-  filter(time=="24h") %>%
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -1773,7 +1771,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==7155) %>%
   ylab(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))+
   xlab("")+
   xlab("")+
-  theme(#strip.background = element_rect(fill = "#C77CFF"),
+  theme(strip.background = element_rect(fill = "#C77CFF"),
         plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
@@ -1798,8 +1796,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==1026) %>%
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
 
-  filter(time=="24h") %>%
-  ggplot(., aes(x=drug, y=counts))+
+   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none", size= "none")+
@@ -1845,7 +1842,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==7153) %>%
                           "Mi"~"Mitoxantrone",
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
-  filter(time=="24h") %>%
+ 
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -1894,7 +1891,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==472) %>%
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
 
-  filter(time=="24h") %>%
+  
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -1943,7 +1940,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==545) %>%
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
 
-  filter(time=="24h") %>%
+ 
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -1993,7 +1990,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==545) %>%
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
 
-  filter(time=="24h") %>%
+ 
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -2043,7 +2040,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==2475) %>%
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
 
-  filter(time=="24h") %>%
+ 
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -2092,7 +2089,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = drug))  %>%
 
-  filter(time=="24h") %>%
+ 
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
