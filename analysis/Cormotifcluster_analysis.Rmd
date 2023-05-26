@@ -705,10 +705,11 @@ motif_NR <- DEG_cormotif$motif_NR
 motif_TI <- DEG_cormotif$motif_TI
 motif_LR <- DEG_cormotif$motif_LR
 motif_ER <- DEG_cormotif$motif_ER
-write.csv(motif_ER,"motif_ER.txt")
-write.csv(motif_TI,"motif_TI.txt")
-write.csv(motif_LR,"motif_LR.txt")
-write.csv(motif_NR,"motif_ER.txt")
+# write.csv(motif_ER,"motif_ER.txt")
+# write.csv(motif_TI,"motif_TI.txt")
+# write.csv(motif_LR,"motif_LR.txt")
+# write.csv(motif_NR,"motif_ER.txt")
+# text files for export for export:
 set.seed(12345)
 #geneexpressionsets <- c(sample(motif_NR,1),sample(motif_TI,1),sample(motif_LR,1),sample(motif_ER,1))
 #[1] "27102"  "92312"  "10360"  "388558"  "newest sample set as of 04192023
@@ -756,6 +757,44 @@ cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 ```
+#### Log-Fold Change of Motif_NR
+
+```{r LFC motif NR}
+lfc_nums <- readRDS("data/toplistall.RDS")
+lfc_nums %>% 
+  dplyr::filter(ENTREZID %in% motif_NR) %>% 
+  mutate(absFC=abs(logFC)) %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  ggplot(., aes(x=id,y=absFC))+
+  geom_boxplot(aes(fill=id))+
+  fill_palette(palette =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(~time)+
+  theme_bw()+
+  xlab("")+
+  ylab("|Log Fold Change|")+
+  theme_bw()+
+  ggtitle("|Log Fold| for all genes in NR set")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "#C77CFF"),
+        axis.text = element_text(size = 8, color = "black", angle = 15),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
+                                 c("Epirubicin", "Doxorubicin"),
+                                 c("Mitoxantrone", "Doxorubicin"),
+                                 c("Trastuzumab","Doxorubicin")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)
+
+
+```
+
+
+
 
 ### Motif_TI
 ```{r clustTI,echo=FALSE, message=FALSE, warning=FALSE}
@@ -784,10 +823,36 @@ cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 ```
-#### with Foldchange (abs)
+#### Log-Fold Change of TI response
 ```{r TI Foldchange}
-
-
+lfc_nums %>% 
+  dplyr::filter(ENTREZID %in% motif_TI) %>% 
+  mutate(absFC=abs(logFC)) %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  ggplot(., aes(x=id,y=absFC))+
+  geom_boxplot(aes(fill=id))+
+  fill_palette(palette =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(~time)+
+  theme_bw()+
+  xlab("")+
+  ylab("|Log Fold Change|")+
+  theme_bw()+
+  ggtitle("|Log Fold| for genes in TI response set")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "#00BFC4"),
+        axis.text = element_text(size = 8, color = "black", angle = 10),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
+                                 c("Epirubicin", "Doxorubicin"),
+                                 c("Mitoxantrone", "Doxorubicin"),
+                                 c("Trastuzumab","Doxorubicin")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)
 ```
 
 
@@ -820,6 +885,40 @@ cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
+#### Log-Fold Change of Late Response
+```{r motifLR LFC}
+lfc_nums %>% 
+  dplyr::filter(ENTREZID %in% motif_LR) %>% 
+  mutate(absFC=abs(logFC)) %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  ggplot(., aes(x=id,y=absFC))+
+  geom_boxplot(aes(fill=id))+
+  fill_palette(palette =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(~time)+
+  theme_bw()+
+  xlab("")+
+  ylab("|Log Fold Change|")+
+  theme_bw()+
+  ggtitle("|Log Fold| for genes in LR set")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "#7CAE00"),
+        axis.text = element_text(size = 8, color = "black", angle = 10),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
+                                 c("Epirubicin", "Doxorubicin"),
+                                 c("Mitoxantrone", "Doxorubicin"),
+                                 c("Trastuzumab","Doxorubicin")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)
+
+
+
+```
 
 ### Motif_ER
 ```{r motif ER, echo=FALSE, message=FALSE, warning=FALSE}
@@ -848,18 +947,42 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
+#### Log-Fold Change of Early Response
+
+```{r lfc_ER  }
 
 
 
-
-##Visualization of FC in cormotif sets
-```{r Correlation of FC values in all values and in DEG}
-
-toplistall<- readRDS("data/toplistall.RDS")
-
-
-
-
+lfc_nums %>% 
+  dplyr::filter(ENTREZID %in% motif_ER) %>% 
+  mutate(absFC=abs(logFC)) %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  ggplot(., aes(x=id,y=absFC))+
+  geom_boxplot(aes(fill=id))+
+  fill_palette(palette =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(~time)+
+  theme_bw()+
+  xlab("")+
+  ylab("|Log Fold Change|")+
+  theme_bw()+
+  ggtitle("|Log Fold| for genes in ER set")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "#F8766D"),
+        axis.text = element_text(size = 8, color = "black", angle = 10),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
+  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
+                                 c("Epirubicin", "Doxorubicin"),
+                                 c("Mitoxantrone", "Doxorubicin"),
+                                 c("Trastuzumab","Doxorubicin")),
+              test = "t.test",
+              map_signif_level = TRUE,
+              step_increase = 0.1,
+              textsize = 4)
 
 
 ```
+
+
