@@ -21,13 +21,11 @@ library(gprofiler2)
 library(readr)
 library(BiocGenerics)
 library(gridExtra)
-library(VennDiagram)
 library(kableExtra)
 library(scales)
 library(ggVennDiagram)
 library(cowplot)
 library(ggpubr)
-library(readr)
 library(rstatix)
 library(zoo)
 library(ggsignif)
@@ -93,7 +91,8 @@ toplistall %>%
   mutate(prop=if_else(is.na(prop),0,prop)) %>% 
   ggplot(., aes(x=id, y= prop))+
   geom_col(aes(fill=id))+
-  geom_text(aes(label = sprintf("%.2f",prop)), position=position_dodge(0.9),vjust=-.2 )+
+  geom_text(aes(label = sprintf("%.2f",prop)),
+            position=position_dodge(0.9),vjust=-.2 )+
   scale_fill_manual(values =drug_palNoVeh)+
   guides(fill=guide_legend(title = "Treatment"))+
   facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
@@ -119,17 +118,17 @@ Knowels, et al. mentioned a relationship between transcriptional change level in
 
 This is analysis on the significantly differentially expressed genes for Daunorubicin by 3 and 24 hours.
 ```{r intial analysis DA3 and DA24, echo=FALSE, message=FALSE, warning=FALSE}
-# DAgostres3 <- gost(query = siglist$sigVDA3$ENTREZID, 
+# DAgostres3 <- gost(query = siglist$sigVDA3$ENTREZID,
 #                     organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
 #                     measure_underrepresentation = FALSE,
 #                     evcodes = FALSE,
-#                     user_threshold = 0.05,
+#                     user_threshold = 0.2,
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
-# saveRDS(DAspgostres3,"data/DEG-GO/DAgostres3.RDS")
+# saveRDS(DAgostres3,"data/DEG-GO/DAgostres3.RDS")
 DAgostres3 <- readRDS("data/DEG-GO/DAgostres3.RDS")
 DAp3 <- gostplot(DAgostres3, capped = FALSE, interactive = TRUE)
 DAp3
@@ -174,8 +173,8 @@ DAtable3 %>% mutate_at(.vars = 6, .funs= scientific_format()) %>%
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
 
-list3totvenn3 <- get.venn.partitions(total3)
-list24totvenn24 <- get.venn.partitions(total24)
+list3totvenn3 <- VennDiagram::get.venn.partitions(total3)
+list24totvenn24 <- VennDiagram::get.venn.partitions(total24)
 
 Daun3sp <- list3totvenn3$..values..[[15]]
 Daun24sp <- list24totvenn24$..values..[[15]]
@@ -237,7 +236,7 @@ DAsptable3 <- DAspgostres3$result %>%
 
 
 
-### All Daun DEGs adj p value < 0.05
+### All Daun DEGs adj. p value < 0.05
 
 ```{r daun specific Venn genes}
 # 3 hour daun specific genes (venn)
@@ -334,6 +333,7 @@ Looking at the Daunorubicin 24 hour geneset using adj. P value of 0.05, I have e
 #                   ordered_query = TRUE,
 #                   domain_scope = "custom",
 #                   measure_underrepresentation = FALSE,
+#                   significant = FALSE,
 #                   evcodes = FALSE,
 #                   user_threshold = 0.05,
 #                   correction_method = c("fdr"),
@@ -555,7 +555,7 @@ DXtable124 %>%
 ```
  
 ## Epirubicin  
-All Epi DEGs adj p value < 0.05
+All Epi DEGs adj. p value < 0.05
 
 
 ```{r intial analysis EP3 and EP24, echo=FALSE, message=FALSE, warning=FALSE}
@@ -909,7 +909,7 @@ AT 3 hours, the Mitoxantrone DEGs, adj. p value < 0.01, look similar to daunorub
 ```
 
 ## Venn Diagrams 
-### All DEGs adj p value < 0.05, 24 hour
+### All DEGs adj. p value < 0.05, 24 hour
 ```{r venndiagram, echo=FALSE, message=FALSE, warning=FALSE}
 library(paletteer)
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
@@ -918,12 +918,12 @@ in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$E
 length(unique(in_common24))
 
 ggVennDiagram(total24,
-              category.names = c("Daunorubicin\n n = 6864",
-                                 "Doxorubicin\n n = 6516","Epirubicin\n n = 6202","Mitoxantrone\n n = 1327"),
+              category.names = c("Daunorubicin\n n = 7017",
+                                 "Doxorubicin\n n = 6645","Epirubicin\n n = 6328","Mitoxantrone\n n = 1115"),
               show_intersect = FALSE,
               set_color = "black",
               catagory_size = c(4,4,4,4),
-              label = "both",
+              label = "count",
               label_percent_digit = 1,
               label_size = 3,
               label_alpha = 0,
@@ -935,7 +935,7 @@ ggVennDiagram(total24,
   scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
 scale_fill_distiller(palette="Spectral", direction = -1)+
   #scale_hue_discrete(values=drug_palNoVeh)+
-  labs(title = "24 hour comparison of DE genes p.adj <0.05", caption = "n = 8161 genes")+
+  labs(title = "24 hour comparison of DE genes p.adj. <0.05", caption = "n = 8188 genes")+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 
 
@@ -944,7 +944,7 @@ scale_fill_distiller(palette="Spectral", direction = -1)+
 #paletteer_d("fishualize::Bodianus_pulchellus")
 ```
 
-### All DEGs adj p value < 0.05, 3 hour
+### All DEGs adj. p value < 0.05, 3 hour
 
 ```{r 3 hours, echo=FALSE, message=FALSE, warning=FALSE}
 # total 3 ----------------------------------------------------------------
@@ -1069,75 +1069,83 @@ ggVennDiagram(Mitocomp,
 ## GO analysis on 24 hour Venn, adj. p value < 0.05
 
 ```{r Making Go lists from SigDE genes, message=FALSE, warning=FALSE, paged.print=TRUE}
-list24totvenn24 <- get.venn.partitions(total24)
+
 # > list24totvenn$..count..
 #  [1]  977   15   17   14   58   24   34  188 4178  225  287  489  697  342  616
 # > list24totvenn$..values..[?]
 
 ##pairwise
-#DDEresp<- list24totvenn24$..values..[[9]]
-DDEresp<- read.csv("data/DDEresp_list.csv")
-#write.csv(DDEresp,"data/DDEresp_list.csv")
-#DDEMresp<- list24totvenn24$..values..[[1]]
+DDEresp<- list24totvenn24$..values..[[9]]
+#DDEresp1<- read.csv("data/DDEresp_list.csv",row.names = 1)
+# write.csv(DDEresp,"data/DDEresp_list.csv")
+# DDEMresp<- list24totvenn24$..values..[[1]]
 DDEMresp<-read.csv("data/DDEMresp_list.csv")
-#write.csv(DDEMresp,"data/DDEMresp_list.csv")
-DDEall <-(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
-print("Number of AC drug DEG genes in common") 
-length(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
-#5155
+# write.csv(DDEMresp,"data/DDEMresp_list.csv")
+# DDEall <-(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
+# length(intersect(DDEresp,sigVMT24))
+# 
+# print("Number of AC drug DEG genes in common") 
+# length(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
+# #5317
 DXsprespon<- list24totvenn24$..values..[[14]]
 ## (342)
-print("Number of Doxorubicin specifi DEGs, adj. P value < 0.05") 
+print("Number of Doxorubicin specific DEGs, adj. P value < 0.05") 
 length(DXsprespon)
 complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
 complete <- as.data.frame(unique(complete))
 colnames(complete) <- "ENTREZID"  #9047 genes
 print("Number of All genes that respond to some condition in DEG set, adj. P value  < 0.05")
 length(complete$ENTREZID)
-#8357
+#8368
       
 NoRespDEG <- setdiff(backGL$ENTREZID ,complete$ENTREZID) #
 print("Number of No response genes in DEG set, adj. P value  < 0.05")
 length(NoRespDEG) 
 
- #5727
+ #5716
 ```
 ## DDE response set
 
 adj. P value  < 0.05, intersection of DNE-DOX-EPI, excluding those in common with MTX
-n= 4915
+n= 4435
 
-no significant enrichment found
+no significant enrichment found!   I tried going for only the 
 I did the intersection of all AC drugs and found a list that was 6129 genes long. 
 Below is that analysis.
 
 ```{r GO DDEresp genelist of SDEGs,  message=FALSE, warning=FALSE, include=FALSE}
 
-
-# DDEgostres24only <- gost(query = DDEresp,
-#                     organism = "hsapiens",
-#                     ordered_query = TRUE,
-#                     domain_scope = "custom",
-#                     measure_underrepresentation = FALSE,
-#                     evcodes = FALSE,
-#                     user_threshold = 0.05,
-#                     correction_method = c("fdr"),
-#                     custom_bg = backGL$ENTREZID,
-#                     sources=c("GO:BP","KEGG"))
-#saveRDS(DDEgostres24,"data/DEG-GO/DDEgostres24-5155.RDS")
-DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24-5155.RDS")
-#saveRDS(DDEgostres24only,"data/DEG-GO/DDEgostres24only.RDS")
-DDEgostres24only <- readRDS("data/DEG-GO/DDEgostres24only.RDS")
-
-DDEp24 <- gostplot(DDEgostres24, capped = FALSE, interactive = TRUE)
+DDEresp <- list(DDEresp$x)#(ac +mtx)
+DDEgostres24 <- gost(query = DDEresp,
+                    organism = "hsapiens",
+                    ordered_query = TRUE,
+                    domain_scope = "custom",
+                    measure_underrepresentation = FALSE,
+                    evcodes = FALSE,
+                    user_threshold = 0.1,
+                    correction_method = c("fdr"),
+                    custom_bg = backGL$ENTREZID,
+                    sources=c("GO:BP","KEGG"))
+# saveRDS(DDEgostres24,"data/DEG-GO/DDEgostres24-5155.RDS")
+# DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24-5155.RDS")
+# saveRDS(DDEgostres24only,"data/DEG-GO/DDEgostres24only.RDS")
+DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24.RDS")
+# saveRDS(DDEgostres24kegg,"data/DEG-GO/DDEgostres24kegg.RDS")
+DDE24kegg <- readRDS("data/DEG-GO/DDEgostres24kegg.RDS")
+DDEp24 <- gostplot(DDEgostres24only, capped = FALSE, interactive = TRUE)
 DDEp24
 
-DDEtable24 <- DDEgostres24$result %>% 
+kegg_term <- c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair")         
+
+DDEtable24kegg <- DDE24kegg$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+DDEtable24<- DDEgostres24only$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
 
 DDEtable24 %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n= 10 ,order_by=p_value) %>%
+    dplyr::slice_min(., n= 15 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
@@ -1145,7 +1153,7 @@ DDEtable24 %>% dplyr::filter(source=="GO:BP") %>%
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Anthracycline DEGs 24 hr GO:BP terms') +
-    xlab(expression(" -"~log[10]~"(adj p-value)"))+
+    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
     ylab("GO: BP term")+
       theme_bw()+
     theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
@@ -1155,25 +1163,26 @@ DDEtable24 %>% dplyr::filter(source=="GO:BP") %>%
         axis.text = element_text(size = 8, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
-# DDEtable24 %>% dplyr::filter(source=="KEGG") %>%
-#     dplyr::select(p_value,term_name,intersection_size) %>%
-#     slice_min(., n= 10 ,order_by=p_value) %>%
-#     mutate(log_val = -log10(p_value)) %>%
-#    # slice_max(., n=10,order_by = p_value) %>%
-#    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-#      geom_point(aes(size = intersection_size, col = "red")) +
-#     scale_y_discrete(labels = wrap_format(30))+
-#     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-#     ggtitle('Anthracycline DEGs 24 hr KEGG pathway terms') +
-#     xlab(expression(" -"~log[10]~"(adj p-value)"))+
-#     ylab("GO: BP term")+
-#       theme_bw()+
-#     theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-#         axis.title = element_text(size = 12, color = "black"),
-#         axis.ticks = element_line(linewidth = 1.5),
-#         axis.line = element_line(linewidth = 1.5),
-#         axis.text = element_text(size = 8, color = "black", angle = 0),
-#         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DDEtable24kegg %>% dplyr::filter(source=="KEGG") %>%
+    dplyr::select(p_value,term_name,intersection_size) %>%
+  filter(term_name %in% kegg_term) %>% 
+    slice_min(., n= 10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+     geom_point(aes(size = intersection_size, col = "red")) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Anthracycline DEGs 24 hr KEGG pathway terms') +
+    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
+    ylab("KEGG term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
   
@@ -1755,18 +1764,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==7155) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))+
   xlab("")+
@@ -1802,18 +1811,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==1026) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time", nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("CDKN1"*alpha)~log[2]~"cpm ")))+
   xlab("")+
@@ -1849,18 +1858,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==7153) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time", nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm ")))+
   xlab("")+
@@ -1898,18 +1907,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==472) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("ATM")~log[2]~"cpm ")))+
   xlab("")+
@@ -1947,18 +1956,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==545) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time", nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("ATR")~log[2]~"cpm ")))+
   xlab("")+
@@ -1997,18 +2006,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==545) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time", nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("RICTOR")~log[2]~"cpm ")))+
   xlab("")+
@@ -2047,18 +2056,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==2475) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("mTOR")~log[2]~"cpm ")))+
   xlab("")+
@@ -2096,18 +2105,18 @@ cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
   guides(alpha= "none", size= "none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
   scale_fill_manual(values=drug_pal_vehend)+
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =6,
-              tip_length = .1,
-              vjust = 0.2,
-              step_increase = 0.1)+
-  facet_wrap("time", scales="free_y", nrow=1, ncol=2)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=FALSE,
+  #             textsize =6,
+  #             tip_length = .1,
+  #             vjust = 0.2,
+  #             step_increase = 0.1)+
+  facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("RARG")~log[2]~"cpm ")))+
   xlab("")+
@@ -2328,36 +2337,42 @@ print(GOI_genelist)
 
 DDEdegk <- DDEtable24 %>% dplyr::filter(source=="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=3 ,order_by=p_value) %>%
+  filter(term_name %in% kegg_term) %>% 
+    slice_min(., n=4 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
   mutate(order_val=rev(as.numeric(rownames(.)))) 
 
 DDEMdegk <-  DDEMtable24 %>% dplyr::filter(source=="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
+  filter(term_name %in% kegg_term) %>% 
     slice_min(., n=3 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
   mutate(order_val=rev(as.numeric(rownames(.))))
 
 DAdegk <-   DAtable124 %>% dplyr::filter(source=="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
+  filter(term_name %in% kegg_term) %>% 
     slice_min(., n=3 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
   mutate(order_val=rev(as.numeric(rownames(.))))
 
 DXdegk <-  DXtable124 %>% dplyr::filter(source=="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
+  filter(term_name %in% kegg_term) %>% 
     slice_min(., n=3 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
   mutate(order_val=rev(as.numeric(rownames(.))))
 
   EPdegk <-   EPtable124 %>% dplyr::filter(source=="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
+    filter(term_name %in% kegg_term) %>% 
     slice_min(., n=3 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
     mutate(order_val=rev(as.numeric(rownames(.))))
   
   MTdegk <-   MTtable124 %>% dplyr::filter(source=="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
+    filter(term_name %in% kegg_term) %>% 
     slice_min(., n=3 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
     mutate(order_val=rev(as.numeric(rownames(.))))
@@ -2375,11 +2390,11 @@ keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
 
 kegg_mat<- keggtable%>% 
   dplyr::select(deg,log_val,term_name) %>% 
-  pivot_wider(everything(),names_from="term_name",values_from="log_val") %>% 
+  pivot_wider(id_cols = everything(),names_from="term_name",values_from="log_val") %>% 
  column_to_rownames('deg') %>% 
   as.matrix()# 
 
-Heatmap(kegg_mat, name = "KEGG Pathway -log p values", cluster_rows = FALSE)
+Heatmap(kegg_mat, name = "KEGG Pathway -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
 
   
 ```
