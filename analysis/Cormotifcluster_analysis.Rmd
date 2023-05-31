@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE)
 ```
 
 ```{r Import libraries, message=FALSE, warning=FALSE}
@@ -33,7 +33,6 @@ library(ggpubr)
 library(edgeR)
 library(Cormotif)
 library(RColorBrewer)
-
 library(BiocParallel)
 ## read in count file##
 design <- read.csv("data/data_outline.txt", row.names = 1)
@@ -223,12 +222,13 @@ motif 4-  Late Top2$\beta$i response cluster: 5545 (gene list made by filtering 
 
 There was overlap between the previous sets and the new sets, so I moved on expecting similar responses in the GO analysis.  I did subset out the genes not used overall from the background gene list (rowmeans>0 from log(cpm(count matrix)))
 
-```{r cormotif genelist analysis}
+```{r cormotif genelist analysis, message=FALSE, warning=FALSE}
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
-motif_NR <- DEG_cormotif$motif_NR
-motif_TI <- DEG_cormotif$motif_TI
-motif_LR <- DEG_cormotif$motif_LR
-motif_ER <- DEG_cormotif$motif_ER
+list2env(DEG_cormotif,envir=.GlobalEnv)
+# motif_NR <- DEG_cormotif$motif_NR
+# motif_TI <- DEG_cormotif$motif_TI
+# motif_LR <- DEG_cormotif$motif_LR
+# motif_ER <- DEG_cormotif$motif_ER
   
 backGL <- read.csv("data/backGL.txt")
 #NRresp <- read_csv("data/cormotif_NRset.txt")
@@ -701,15 +701,7 @@ drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 #fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
 
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
-motif_NR <- DEG_cormotif$motif_NR
-motif_TI <- DEG_cormotif$motif_TI
-motif_LR <- DEG_cormotif$motif_LR
-motif_ER <- DEG_cormotif$motif_ER
-# write.csv(motif_ER,"motif_ER.txt")
-# write.csv(motif_TI,"motif_TI.txt")
-# write.csv(motif_LR,"motif_LR.txt")
-# write.csv(motif_NR,"motif_ER.txt")
-# text files for export for export:
+#list2env(DEG_cormotif,envir=.GlobalEnv)
 set.seed(12345)
 #geneexpressionsets <- c(sample(motif_NR,1),sample(motif_TI,1),sample(motif_LR,1),sample(motif_ER,1))
 #[1] "27102"  "92312"  "10360"  "388558"  "newest sample set as of 04192023
@@ -780,15 +772,7 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#C77CFF"),
-        axis.text = element_text(size = 8, color = "black", angle = 15),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
-                                 c("Epirubicin", "Doxorubicin"),
-                                 c("Mitoxantrone", "Doxorubicin"),
-                                 c("Trastuzumab","Doxorubicin")),
-              test = "t.test",
-              map_signif_level = TRUE,
-              step_increase = 0.1,
-              textsize = 4)
+        axis.text = element_text(size = 8, color = "black", angle = 15),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 
 ```
@@ -844,15 +828,8 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#00BFC4"),
-        axis.text = element_text(size = 8, color = "black", angle = 10),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
-                                 c("Epirubicin", "Doxorubicin"),
-                                 c("Mitoxantrone", "Doxorubicin"),
-                                 c("Trastuzumab","Doxorubicin")),
-              test = "t.test",
-              map_signif_level = TRUE,
-              step_increase = 0.1,
-              textsize = 4)
+        axis.text = element_text(size = 8, color = "black", angle = 10),    
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 ```
 
 
@@ -886,7 +863,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
 #### Log-Fold Change of Late Response
-```{r motifLR LFC}
+```{r motifLR LFC, message=FALSE, warning=FALSE}
 lfc_nums %>% 
   dplyr::filter(ENTREZID %in% motif_LR) %>% 
   mutate(absFC=abs(logFC)) %>% 
@@ -906,15 +883,9 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#7CAE00"),
-        axis.text = element_text(size = 8, color = "black", angle = 10),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
-                                 c("Epirubicin", "Doxorubicin"),
-                                 c("Mitoxantrone", "Doxorubicin"),
-                                 c("Trastuzumab","Doxorubicin")),
-              test = "t.test",
-              map_signif_level = TRUE,
-              step_increase = 0.1,
-              textsize = 4)
+        axis.text = element_text(size = 8, color = "black", angle = 10),     
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+ 
 
 
 
@@ -936,7 +907,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
   scale_fill_manual(values=drug_pal)+
   facet_wrap("time",nrow=1, ncol=2)+
   theme_bw()+
-  ylab(expression(atop("Early Response set",italic("AHDC1")~log[2]~"cpm ")))+
+  ylab(expression(atop("Early Response set",italic("AHDC1")~log[2]~"cpm ")))
   xlab("")+
   xlab("")+
   theme(strip.background = element_rect(fill = "#F8766D"),
@@ -949,7 +920,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
 ```
 #### Log-Fold Change of Early Response
 
-```{r lfc_ER  }
+```{r lfc_ER, message=FALSE, warning=FALSE}
 
 
 
@@ -972,16 +943,9 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#F8766D"),
-        axis.text = element_text(size = 8, color = "black", angle = 10),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Doxorubicin"),
-                                 c("Epirubicin", "Doxorubicin"),
-                                 c("Mitoxantrone", "Doxorubicin"),
-                                 c("Trastuzumab","Doxorubicin")),
-              test = "t.test",
-              map_signif_level = TRUE,
-              step_increase = 0.1,
-              textsize = 4)
-
+        axis.text = element_text(size = 8, color = "black", angle = 10),   
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+ 
 
 ```
 
