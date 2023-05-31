@@ -24,8 +24,17 @@ library(sjmisc)
 library(kableExtra)
 library(broom)
 
+
 ```
-# Knowles Comparison data:
+
+Data set comparison order:
+
+Knowles data:
+  meQTLS(aka K4 supp)
+  meQTLS(aka K4 supp)
+
+#Pairwise Data enrichment
+## Knowles Comparison data:
 
 ```{r loading knowles data}
 toplistall <- read.csv("output/toplistall.csv", row.names = 1)
@@ -143,7 +152,7 @@ chi_squarek5
 
 ```{r graphs of k4 k5 enrichment and FC}
 
- toplist24hr <-   toplistall %>%
+toplist24hr <-   toplistall %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time=="24_hours")
@@ -239,116 +248,8 @@ toplist24hr %>%
   
   
 
-# Seaone 2019
-
-
-Seone, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
-
-```{r gene comparison, eval=TRUE, message=FALSE, warning=FALSE}
-library(readxl)
-
-# Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
-#     range = "A13:H469")
-
-#write.csv(Seoane_chromatinregs, "data/Seonane2019supp1.txt")
-
-chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
-                            
-Seoane_2019 <- chrom_reg_Seoane[,2]
-names(Seoane_2019) <- "ENTREZID"
-chrom_genes <- (unique(Seoane_2019$ENTREZID))
-
-toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
-  group_by(id,sigcount,chrom) %>% 
-  summarize(chromcount=n()) %>% 
-    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
-   mutate(chromprop=(y/(y+no)*100)) %>% 
-       ggplot(., aes(x=id, y=chromprop)) +
-       geom_col()+
-       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
-       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
-       facet_wrap(~sigcount)+
-       ggtitle("non-significant and significant enrichment proporitions of chromatin gene set ")
-
-dataframchrom <- toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
-  group_by(id,sigcount,chrom) %>% 
-  summarize(chromcount=n()) %>% 
-  as.data.frame()
-
-dataframchrom %>%
-  pivot_wider(., names_from=c('sigcount','chrom'), values_from = 'chromcount') %>% 
-  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Seoane geneset") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "60%", height = "400px")
-
-toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
-   dplyr::filter(id!="Trastuzumab") %>% 
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
-  group_by(id) %>% 
- summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
-
-
-
-```
-
-## 3 hour data Seaone
-
-```{r three hour seaone}
-toplist3hr %>% 
-  mutate(id = as.factor(id)) %>%
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
-  group_by(id,sigcount,chrom) %>% 
-  summarize(chromcount=n()) %>% 
-    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
-   mutate(chromprop=(y/(y+no)*100)) %>% 
-       ggplot(., aes(x=id, y=chromprop)) +
-       geom_col()+
-       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
-       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
-       facet_wrap(~sigcount)+
-       ggtitle("non-significant and significant enrichment proporitions of chromatin gene set ")
-
-dataframchrom3 <- toplist3hr %>% 
-  mutate(id = as.factor(id)) %>%
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
-  group_by(id,sigcount,chrom) %>% 
-  summarize(chromcount=n()) %>% 
-  as.data.frame()
-
-dataframchrom3 %>%
-  pivot_wider(., names_from=c('sigcount','chrom'), values_from = 'chromcount') %>% 
-  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in 3 hours Seoane geneset") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "60%", height = "400px")
-```
-#### chi square test Seaone
-```{r chi value seoane, echo= TRUE}
-##remove Trastuzumab in order to perform chi square tests by time and drug between  DE and non DE enrichment
-chi_fun <-  toplistall %>% 
-  mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="Trastuzumab") %>% 
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
-  group_by(id,time) %>% 
-  summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
-print("after performing chi square test between DEgenes, and non DE genes")
-chi_fun
-
-
-```
-# ArrGWAS to 24 hour DEG genes p < 0.05
+## ArrGWAS to 24 hour DEG genes p < 0.05
+### 24 hour data set
 ```{r ArrGWAS}
 # How I did the string split
 # Arr_GWAS <- ArrGWAS[,13]
@@ -401,7 +302,7 @@ dataframARR %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 
 ```
-## 3 hour data set
+### 3 hour data set
 
 ```{r three hour ArrGWAS}
 
@@ -440,7 +341,7 @@ dataframARR3 %>% kable(., caption= "Significant (adj. P value of <0.05) and non-
 
 ```
 
-### chi square test ARR
+#### chi square test ARR
 
 ```{r chi ARR,echo=TRUE}
 
@@ -459,7 +360,8 @@ chi_funarr
 
 
 
-# HFGWAS
+## HFGWAS
+### 24 hours HF
 ```{r 24 hours HFGWAS}
 ##just like ARrGWAS- imported the total csv, the took the "nearest" column and separated out the gene info
 # test <- HFGWAS %>% 
@@ -515,7 +417,7 @@ dataframHF %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 
 ```
-## 3 hours HF
+### 3 hours HF
 ```{r 3 hours HFGWAS}
 
 #Apply sorting
@@ -559,7 +461,7 @@ dataframHF3 %>%
 
 
 ```
-### chi square test HF
+#### chi square test HF
 ```{r chiHF,echo=TRUE}
 
 
@@ -575,7 +477,9 @@ chi_funhf
 
 ```
 
-# CAD GWAS
+## CAD GWAS
+
+### 24 hour data set
 ```{r CAD 24 GWAS}
 # test <- CADGWAS %>% 
 #    select(nearest) %>% 
@@ -629,7 +533,7 @@ dataframCAD %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
   scroll_box(width = "60%", height = "400px")
 
 ```
-## 3 hour data set
+### 3 hour data set
 ```{r CAD 3 GWAS}
 
 #Apply sorting
@@ -667,9 +571,8 @@ dataframCAD3 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 ```
 
-### chi square test CAD
+#### chi square test CAD
 ```{r chiCAD,echo=TRUE}
-
 
 chi_funCAD <-  toplistall %>% 
   mutate(id = as.factor(id)) %>%
@@ -683,7 +586,7 @@ chi_funCAD
 
 ```
 
-# GTEx V8 heart-left ventrical egenes
+## GTEx V8 heart-left ventrical egenes
 
 ```{r GTEx enrichment check}
 # heart_gtex <- 
@@ -733,7 +636,7 @@ GTEX_set <- read.csv("data/GTEX_setsimple.csv", row.names = 1)
        ggtitle("3 hour non-significant and significant enrichment proporitions of GTex eGenes ")
 
 ```
-
+####chi square
 ``` {r gtex counts and chi}
 
 
@@ -764,4 +667,232 @@ print("after performing chi square test between DEgenes, and non DE genes")
 chi_fungtex
 
 ```
+
+## Seaone 2019
+
+Seoane, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
+### 24 hours in Pairwise with supplemental data 1
+
+
+```{r gene comparison, eval=TRUE, message=FALSE, warning=FALSE}
+library(readxl)
+
+# Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
+#     range = "A13:H469")
+
+#write.csv(Seoane_chromatinregs, "data/Seonane2019supp1.txt")
+
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+                            
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+chrom_genes <- (unique(Seoane_2019$ENTREZID))
+
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
+   mutate(chromprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proportions of chromatin gene set ")
+
+dataframchrom <- toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+  as.data.frame()
+
+dataframchrom %>%
+  pivot_wider(., names_from=c('sigcount','chrom'), values_from = 'chromcount') %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Seoane geneset") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+   dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id) %>% 
+ summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
+
+
+
+```
+
+### 3 hours data Pairwise
+
+```{r three hour seaone,message=FALSE, warning=FALSE}
+toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
+   mutate(chromprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of chromatin gene set ")
+
+dataframchrom3 <- toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+  as.data.frame()
+
+dataframchrom3 %>%
+  pivot_wider(., names_from=c('sigcount','chrom'), values_from = 'chromcount') %>% 
+  kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in 3 hours Seoane geneset") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+```
+#### chi square test Seaone
+```{r chi value seoane, echo= TRUE,message=FALSE, warning=FALSE}
+##remove Trastuzumab in order to perform chi square tests by time and drug between  DE and non DE enrichment
+chi_fun <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
+print("after performing chi square test between DEgenes, and non DE genes")
+chi_fun
+
+
+```
+
+
+
+### Supplemental 4 Seoane 3 hours followed by 24 hours 
+
+```{r supp4 seoane, message=FALSE, warning=FALSE}
+# library(readxl)
+# Sup4seoane <- read_excel("~/Ward Lab/Cardiotoxicity/Manuscript/seoane201941591_2019_638_MOESM3_ESM.xlsx", 
+#     sheet = "SupTable4", range = "A16:J567")
+
+#     sheet = "SupTable4", range = "A16:J567")
+#write.csv(Sup4seoane, "output/Sup4seoane.csv")
+Sup4seoane <- read.csv("output/Sup4seoane.csv", row.names = 1)
+Sup4genes <- Sup4seoane  %>% 
+  #filter(pval.expAnth<0.05) %>% 
+  distinct(entrez, .keep_all = TRUE) %>% 
+  dplyr::select(entrez)
+
+Sup4seoane  %>% 
+  # filter(pval.expAnth<0.05) %>% 
+  distinct(entrez, .keep_all = TRUE) %>% 
+  dplyr::select(entrez,gene,pval.exp,pval.anthr,pval.expAnth,adjpval) %>% 
+  kable(.,) %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+toplist3hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
+   mutate(chromprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("Seoane supp 4 enrichment proportions found in my pairwise 3 hour data")
+
+
+toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no")) %>% 
+  group_by(id,sigcount,chrom) %>% 
+  summarize(chromcount=n()) %>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %>% 
+   mutate(chromprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("Seoane supp 4 enrichment proportions found in my pairwise 24 hour data")
+
+
+chi_fun2 <-  toplistall %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="Trastuzumab") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+ mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no")) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
+print("Note, this is all 311 genes from the list using the pval.anthr column")
+chi_fun2
+
+
+
+
+```
+
+
+
+
+
+
+# Using Baysian gene set enrichment on Chromatin from Seoane
+```{r loading comotif sets }
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+list2env(DEG_cormotif,envir=.GlobalEnv)
+cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
+length(cpmcounts)
+colnames(cpmcounts) <- labeltop
+
+backGL <- read.csv("data/backGL.txt")
+##data sets to compare   Sup4genes$entrez,"y","no"
+
+motifSeoanesummary <- toplist24hr %>% 
+  distinct(ENTREZID) %>% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no")) %>% 
+  group_by(ER,LR,TI,NR,chrom) %>% 
+  summarize(motifcount=n())#%>% 
+   #  pivot_wider(id_cols = c(id,time), names_from='ER', values_from='motifcount')# %>% 
+   # mutate(chromprop=(y/(y+no)*100)) #%>% 
+   #     ggplot(., aes(x=id, y=chromprop)) +
+   #     geom_col()+
+   #     geom_text(aes(x=id, label = sprintf("%.2f",chromprop), vjust=-.2))+
+   #     #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+   #     facet_wrap(~ER)+
+   #     ggtitle("Seoane supp 4 enrichment proportions found in motif ER response set")
+
+
+    
+
+    
+```
+
+
+
+
 
