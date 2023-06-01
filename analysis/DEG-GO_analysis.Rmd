@@ -298,7 +298,7 @@ Interestingly, Over half of the daunorubicin specific genes are in the Daunoruci
 When I look at those 187 genes, I do not see a significant enrichment in GO:BP terms, only the KEGG pathway connection to Herpes simplex virus
 
 ```{r 3hour24hour daun overlap}
-list324venn <- get.venn.partitions(list(Daun3sp, sigVDA24$ENTREZID))
+list324venn <- VennDiagram::get.venn.partitions(list(Daun3sp, sigVDA24$ENTREZID))
 
 over3_24daun <- list324venn$..values..[[1]]
 
@@ -1114,31 +1114,31 @@ Below is that analysis.
 
 ```{r GO DDEresp genelist of SDEGs,  message=FALSE, warning=FALSE, include=FALSE}
 
-DDEresp <- list(DDEresp$x)#(ac +mtx)
-DDEgostres24 <- gost(query = DDEresp,
-                    organism = "hsapiens",
-                    ordered_query = TRUE,
-                    domain_scope = "custom",
-                    measure_underrepresentation = FALSE,
-                    evcodes = FALSE,
-                    user_threshold = 0.1,
-                    correction_method = c("fdr"),
-                    custom_bg = backGL$ENTREZID,
-                    sources=c("GO:BP","KEGG"))
+#DDEresp <- list(DDEresp$x)#(ac +mtx)
+# DDEgostres24 <- gost(query = DDEresp,
+                    # organism = "hsapiens",
+                    # ordered_query = TRUE,
+                    # domain_scope = "custom",
+                    # measure_underrepresentation = FALSE,
+                    # evcodes = FALSE,
+                    # user_threshold = 0.1,
+                    # correction_method = c("fdr"),
+                    # custom_bg = backGL$ENTREZID,
+                    # sources=c("GO:BP","KEGG"))
 # saveRDS(DDEgostres24,"data/DEG-GO/DDEgostres24-5155.RDS")
 # DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24-5155.RDS")
 # saveRDS(DDEgostres24only,"data/DEG-GO/DDEgostres24only.RDS")
 DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24.RDS")
 # saveRDS(DDEgostres24kegg,"data/DEG-GO/DDEgostres24kegg.RDS")
 DDE24kegg <- readRDS("data/DEG-GO/DDEgostres24kegg.RDS")
-DDEp24 <- gostplot(DDEgostres24only, capped = FALSE, interactive = TRUE)
+DDEp24 <- gostplot(DDEgostres24, capped = FALSE, interactive = TRUE)
 DDEp24
 
 kegg_term <- c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair")         
 
 DDEtable24kegg <- DDE24kegg$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
-DDEtable24<- DDEgostres24only$result %>% 
+DDEtable24<- DDEgostres24$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
 
 
