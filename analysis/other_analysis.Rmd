@@ -933,24 +933,24 @@ Seoane_4suppchi %>%
 
 
 ```{r supp 1}
-chi_list <- toplist24hr %>% 
+chi_list1 <- toplist24hr %>% 
   distinct(ENTREZID) %>% 
   mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
   mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
   mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
   mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
-  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no"))
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no"))
     
-erchi<-  chi_list %>% 
+erchi<-  chi_list1 %>% 
     summarise(pvalue= chisq.test(ER,chrom)$p.value) 
-tichi <-  chi_list %>% 
+tichi <-  chi_list1 %>% 
     summarise(pvalue= chisq.test(TI,chrom)$p.value)
-lrchi <-  chi_list %>% 
+lrchi <-  chi_list1 %>% 
     summarise(pvalue= chisq.test(LR,chrom)$p.value)
-nrchi <-  chi_list %>% 
+nrchi <-  chi_list1 %>% 
     summarise(pvalue= chisq.test(NR,chrom)$p.value)  
-Seoane_4suppchi=tibble(motif=c("ER","TI","LR","NR"),pvalue=c(erchi$pvalue,tichi$pvalue,lrchi$pvalue,nrchi$pvalue))
-Seoane_4suppchi %>%
+Seoane_1suppchi=tibble(motif=c("ER","TI","LR","NR"),pvalue=c(erchi$pvalue,tichi$pvalue,lrchi$pvalue,nrchi$pvalue))
+Seoane_1suppchi %>%
   mutate_at(.vars = 2, .funs= scientific_format()) %>% 
   kable(., caption= "P values from chisqure test" )%>% 
   kable_paper("striped", full_width = FALSE) %>%  
