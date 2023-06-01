@@ -886,7 +886,7 @@ motifSeoanesummary <- toplist24hr %>%
    #     facet_wrap(~ER)+
    #     ggtitle("Seoane supp 4 enrichment proportions found in motif ER response set")
 
-
+motifSeoanesummary
     
 
     
