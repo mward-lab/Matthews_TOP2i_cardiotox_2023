@@ -940,7 +940,6 @@ scale_fill_distiller(palette="Spectral", direction = -1)+
 
 
 
-
 #paletteer_d("fishualize::Bodianus_pulchellus")
 ```
 
@@ -1720,18 +1719,28 @@ plot_grid(g)
 ```
 
 
-### Genes of Interest log2 cpm
+# Genes of Interest log2 cpm
 Genes of Interest:
 
-Top2B
-Top2A
-CDKN1a
-ATM
-ATR
-mTOR
-Rictor
-Raptor
-RARG
+Top2B  
+
+Top2A  
+
+CDKN1a  
+
+ATM  
+
+ATR  
+
+mTOR  
+
+Rictor  
+
+Raptor  
+
+RARG  
+
+
 
 ```{r GOI-top2b, echo=FALSE}
 
@@ -2140,14 +2149,15 @@ cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
 level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
-# GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2" ))
+GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","UTGT1A6","UGT1A10","KDM4B","KAT6B","GNT1"))
 # ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 # my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
 # 
 # my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 # GOI_genelist<- getBM(attributes=my_attributes,filters ='hgnc_symbol',
 #          values = GOIcorr, mart = ensembl)
-#write.csv(GOI_genelist,"output/GOI_genelist.txt")
+# GOI_genelist <- GOI_genelist %>% distinct(entrezgene_id, .keep_all = TRUE)
+# write.csv(GOI_genelist,"output/GOI_genelist.txt")
 GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt", row.names = 1)
 
@@ -2180,6 +2190,7 @@ gene_corr_df <- cpmcounts %>%
                           "Mi"~"Mitoxantrone",
                           "Tr"~"Trastuzumab",
                           "Ve"~"Vehicle", .default = Drug)) 
+
   
 # now I have the long dataframe, time to combine with other data snf limit to just the GOIs
   gene_corr_frame <- gene_corr_df %>% 
@@ -2189,31 +2200,19 @@ gene_corr_df <- cpmcounts %>%
     mutate(Drug=factor(Drug)) %>% 
     full_join(.,GOI_genelist, by="entrezgene_id")
   
-
+# saveRDS(gene_corr_frame,"data/gene_corr_frame.RDS")
 
    
    library(Hmisc)
   rcorr(as.matrix(gene_corr_frame[,c(1,4,5,6)]), type = "pearson")
    
-# gene_corr_frame %>% 
-#   filter(entrezgene_id ==10818) #%>% 
-# ggplot(., aes(x=rtnni, y=counts))+
-#   geom_point()+
-#   geom_smooth(method="lm")+
-#   facet_wrap(~Drug, scales = "free")+
-#   theme_bw()+
-#   stat_cor(aes(label = after_stat(paste(rr.label,p.label))),
-#            color = "red")
-## ggplot by drug for tnni
-  
-  
-  for (gene in GOI_genelist$entrezgene_id){
+for (gene in GOI_genelist$entrezgene_id){
     gene_plot <- gene_corr_frame %>% 
       dplyr::filter(entrezgene_id == gene) %>%
       ggplot(., aes(x=rtnni, y=counts))+
       geom_point(aes(col=indv))+
       geom_smooth(method="lm")+
-      facet_wrap(entrezgene_id~Drug, scales="free")+
+      facet_wrap(hgnc_symbol~Drug, scales="free")+
       theme_classic()+
       xlab("troponin I expression") +
       ylab("Gene counts in log2 cpm") +
@@ -2229,7 +2228,7 @@ gene_corr_df <- cpmcounts %>%
             axis.title = element_text(size = 15, color = "black"),
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
    print(gene_plot)
    
   }
@@ -2244,7 +2243,7 @@ gene_corr_df <- cpmcounts %>%
       ggplot(., aes(x=rtnni, y=counts))+
       geom_point(aes(col=Drug))+
       geom_smooth(method="lm")+
-      facet_wrap(entrezgene_id~indv, scales="free")+
+      facet_wrap(hgnc_symbol~Drug, scales="free")+
       theme_classic()+
       xlab("troponin I expression") +
       ylab("Gene counts in log2 cpm") +
@@ -2260,7 +2259,7 @@ gene_corr_df <- cpmcounts %>%
             axis.title = element_text(size = 15, color = "black"),
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
    print(gene_plot)
    
   }
@@ -2276,8 +2275,7 @@ print(GOI_genelist)
       ggplot(., aes(x=rldh, y=counts))+
       geom_point(aes(col=indv))+
       geom_smooth(method="lm")+
-      facet_wrap(entrezgene_id~Drug, scales="free")+
-      theme_classic()+
+      facet_wrap(hgnc_symbol~Drug, scales="free")+
       xlab("troponin I expression") +
       ylab("Gene counts in log2 cpm") +
       ggtitle(expression(paste("Correlation between counts and LDH by drug")))+
@@ -2292,7 +2290,7 @@ print(GOI_genelist)
             axis.title = element_text(size = 15, color = "black"),
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
    print(gene_plot)
    
   }
@@ -2307,7 +2305,7 @@ print(GOI_genelist)
       ggplot(., aes(x=rldh, y=counts))+
       geom_point(aes(col=Drug))+
       geom_smooth(method="lm")+
-      facet_wrap(entrezgene_id~indv, scales="free")+
+      facet_wrap(hgnc_symbol~Drug, scales="free")+
       theme_classic()+
       xlab("troponin I expression") +
       ylab("Gene counts in log2 cpm") +
@@ -2323,10 +2321,20 @@ print(GOI_genelist)
             axis.title = element_text(size = 15, color = "black"),
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
    print(gene_plot)
    
   }
+GOIsig <- toplistall %>%
+  filter(ENTREZID %in% GOI_genelist$entrezgene_id) %>%
+  filter(adj.P.Val < 0.05) %>% 
+  select(time,id,ENTREZID,SYMBOL,adj.P.Val) 
+GOIsig%>% 
+  kable(., caption= "Significant (adj. P value of <0.05) Genes of interest by treatment") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+# write.csv(GOIsig,"data/GOIsig.csv")
 
 print(GOI_genelist)
 ```
