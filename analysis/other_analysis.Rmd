@@ -29,16 +29,17 @@ library(broom)
 
 Data set comparison order:
 
-Knowles data:
-  meQTLS(aka K4 supp)
-  reQTLS(aka K5 supp)
-ArrGWAS
-HFGWAS
-CADGWAS
-GTEx enrichment
-Seaone 2019
-  Supplemental 1 (408 genes)
-  Supplemental 4 (54 genes)
+Knowles data:  
+  meQTLS(aka K4 supp)  
+  reQTLS(aka K5 supp)  
+ArrGWAS  
+HFGWAS  
+CADGWAS  
+GTEx enrichment  
+Seaone 2019  
+  Supplemental 1 (408 genes)  
+  Supplemental 4 (54 genes)  
+  
 
 #Pairwise Data enrichment
 ## Knowles Comparison data:
@@ -118,9 +119,10 @@ sig05_dataframK_45 <- toplistall %>%
   group_by(time, id) %>%
   mutate(K4 = if_else(ENTREZID %in% knowles4,1,0))%>%
   mutate(K5 = if_else(ENTREZID %in% knowles5,1,0))%>%
-   filter(adj.P.Val<0.05) %>%
- summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
+  filter(adj.P.Val<0.05) %>%
+  dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
   as.data.frame()
+
 sig05_dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
   kable(., caption= "Count of genes in each treatment by using adj. P value of <0.05") %>% 
   kable_paper("striped", full_width = FALSE) %>% 
@@ -138,7 +140,7 @@ chi_squarek4 <- toplistall %>%
   mutate(id = as.factor(id)) %>%
   dplyr::filter(id!="Trastuzumab") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-   mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
+  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(meSNP, sigcount)$p.value) 
 
@@ -228,7 +230,7 @@ toplist24hr %>%
        geom_text(aes(x=id, label = sprintf("%.2f",K4prop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
        facet_wrap(~sigcount)+
-     ggtitle("non-significant and significant enrichment proporitions of Knowles min. eQTLS ")
+     ggtitle("non-significant and significant enrichment proportions of Knowles min. eQTLS ")
   
      toplistall %>%
   mutate(id = as.factor(id)) %>%
@@ -877,14 +879,14 @@ Mitoxantrone is significantly enriched at 24 hours in the 54 genes from suppleme
 
 
 ## Seoane Supplemental 4
-```{r loading comotif sets }
+```{r loading comotif  data sets }
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 list2env(DEG_cormotif,envir=.GlobalEnv)
-# cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
-# length(cpmcounts)
-# colnames(cpmcounts) <- labeltop
-
 backGL <- read.csv("data/backGL.txt")
+```
+
+
+```{r Seoane supp4 analysis}
 ##data sets to compare   Sup4genes$entrez,"y","no"
 
 motifSeoanesummary4 <- toplist24hr %>% 
@@ -894,37 +896,38 @@ motifSeoanesummary4 <- toplist24hr %>%
   mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
   mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
   mutate(chrom = if_else(ENTREZID %in% Sup4genes$entrez, "y", "no")) %>% 
-  group_by(ER,LR,TI,NR,chrom) %>% 
-  summarize(motifcount=n())#%>% 
-   
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
 motifSeoanesummary4 %>% kable(., caption= "Summary of genes from Cormotif that are also in Seoane Supp4" )%>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
     # chisqS4 <- 
-chi_list <- toplist24hr %>% 
+##making the matrix
+
+chi_list4 <- toplist24hr %>% 
   distinct(ENTREZID) %>% 
   mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
   mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
   mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
   mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
-  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no"))
-    
-erchi<-  chi_list %>% 
-    summarise(pvalue= chisq.test(ER,chrom)$p.value) 
-tichi <-  chi_list %>% 
-    summarise(pvalue= chisq.test(TI,chrom)$p.value)
-lrchi <-  chi_list %>% 
-    summarise(pvalue= chisq.test(LR,chrom)$p.value)
-nrchi <-  chi_list %>% 
-    summarise(pvalue= chisq.test(NR,chrom)$p.value)  
-Seoane_4suppchi=tibble(motif=c("ER","TI","LR","NR"),pvalue=c(erchi$pvalue,tichi$pvalue,lrchi$pvalue,nrchi$pvalue))
-Seoane_4suppchi %>%
-  mutate_at(.vars = 2, .funs= scientific_format()) %>% 
-  kable(., caption= "P values from chisqure test" )%>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "60%", height = "400px")
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no")) %>% 
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
+
+chisq.test(chi_list4[,c('NR','LR')])
+chisq.test(chi_list4[,c('NR','ER')])
+chisq.test(chi_list4[,c('NR','TI')])
+chisq.test(chi_list4[,c('ER','TI')])
+chisq.test(chi_list4[,c('ER','LR')])
+chisq.test(chi_list4[,c('TI','LR')])
+
 
 ```
 
@@ -933,29 +936,47 @@ Seoane_4suppchi %>%
 
 
 ```{r supp 1}
+ motifSeoanesummary1 <- toplist24hr %>% 
+  distinct(ENTREZID) %>% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+  mutate(chrom = if_else(ENTREZID %in% chrom_genes, "y", "no")) %>% 
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
+motifSeoanesummary1 %>% kable(., caption= "Summary of genes from Cormotif that are also in Seoane Supp1" )%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+    # chisqS4 <- 
+##making the matrix
+
 chi_list1 <- toplist24hr %>% 
   distinct(ENTREZID) %>% 
   mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
   mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
   mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
   mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
-  mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no"))
-    
-erchi<-  chi_list1 %>% 
-    summarise(pvalue= chisq.test(ER,chrom)$p.value) 
-tichi <-  chi_list1 %>% 
-    summarise(pvalue= chisq.test(TI,chrom)$p.value)
-lrchi <-  chi_list1 %>% 
-    summarise(pvalue= chisq.test(LR,chrom)$p.value)
-nrchi <-  chi_list1 %>% 
-    summarise(pvalue= chisq.test(NR,chrom)$p.value)  
-Seoane_1suppchi=tibble(motif=c("ER","TI","LR","NR"),pvalue=c(erchi$pvalue,tichi$pvalue,lrchi$pvalue,nrchi$pvalue))
-Seoane_1suppchi %>%
-  mutate_at(.vars = 2, .funs= scientific_format()) %>% 
-  kable(., caption= "P values from chisqure test" )%>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "60%", height = "400px")
+  mutate(chrom=if_else(ENTREZID %in% chrom_genes,"y","no")) %>% 
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
+
+chisq.test(chi_list1[,c('NR','LR')])
+chisq.test(chi_list1[,c('NR','ER')])
+chisq.test(chi_list1[,c('NR','TI')])
+chisq.test(chi_list1[,c('ER','TI')])
+chisq.test(chi_list1[,c('ER','LR')])
+chisq.test(chi_list1[,c('TI','LR')])
+
+
 ```
+
 
 
