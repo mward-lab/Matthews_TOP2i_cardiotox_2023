@@ -187,14 +187,13 @@ pie_chartdata <- data.frame(Set, gene_num, fills)
 
 ```
 
-```{r pieby ggplot}
-#library(stringr)
+```{r pieby using ggplot, echo=TRUE}
 
 ##label computation
 pie_chartdata <- pie_chartdata %>% 
    mutate(prop = gene_num / sum(pie_chartdata$gene_num) *100) %>%
   mutate(ypos = (prop)+ 0.5*prop )
-#data=pie_chartdata[,c(1,2)]
+
 
 pie_chartdata %>% 
   ggplot(.,aes(x="",y=gene_num, fill=Set))+
@@ -221,6 +220,7 @@ motif 4-  Late Top2$\beta$i response cluster: 5545 (gene list made by filtering 
 
 
 There was overlap between the previous sets and the new sets, so I moved on expecting similar responses in the GO analysis.  I did subset out the genes not used overall from the background gene list (rowmeans>0 from log(cpm(count matrix)))
+## GO and KEGG of each set  
 
 ```{r cormotif genelist analysis, message=FALSE, warning=FALSE}
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
@@ -235,7 +235,8 @@ backGL <- read.csv("data/backGL.txt")
 
 ```
 
-##  No response motif genes
+### No response motif genes  
+
 GO:BP
 ```{r noresponse data motif1, echo=FALSE, message=FALSE, warning=FALSE}
 # gostrescoNR <- gost(query = motif_NR ,
@@ -313,7 +314,7 @@ tableNR%>%
   
 ```
 
-## Late response Top2$\beta$ inhibitor motif genes
+### Late response Top2$\beta$ inhibitor motif genes
 GO:BP/KEGG
 ```{r Top2iLR motif set, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -391,7 +392,7 @@ tabletop2Bi_LR%>%
 
 ```
 
-##  Early Response Top2$\beta$ inhibitor motif genes
+###  Early Response Top2$\beta$ inhibitor motif genes
 GO:BP/KEGG
 ```{r Top2iER set motif, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -479,7 +480,7 @@ tabletop2Bi_ER %>%
 
 ```
 
-## Time-independent Top2$\beta$ inhibitor motif genes
+### Time-independent Top2$\beta$ inhibitor motif genes
 GO:BP/KEGG
 ```{r time independent, echo=FALSE, message=FALSE, warning=FALSE  }
 
@@ -636,7 +637,7 @@ grid.draw(g)
 
 ```
 
-###long go KEGG frame
+### long go KEGG frame
 
 ```{r kegg break, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -680,9 +681,9 @@ ggplot(., aes(x = log_val, y =reorder(term_name,p_value,desc=FALSE),col=motif)) 
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 ```
-## Example of genes from each cluster
+# Example of genes from each cluster
 
-### Motif_NR
+## Motif_NR
 ```{r clust1NR gene,echo=FALSE, message=FALSE, warning=FALSE}
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
@@ -739,7 +740,6 @@ cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
   theme_bw()+
   ylab(expression(atop("No Response set",italic("GCNT1")~log[2]~"cpm ")))+
   xlab("")+
-  xlab("")+
   theme(strip.background = element_rect(fill = "#C77CFF"),
         plot.title = element_text(size=18,hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
@@ -780,7 +780,7 @@ lfc_nums %>%
 
 
 
-### Motif_TI
+## Motif_TI
 ```{r clustTI,echo=FALSE, message=FALSE, warning=FALSE}
 
 cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
@@ -834,7 +834,7 @@ lfc_nums %>%
 
 
 
-### Motif_LR
+## Motif_LR
 ```{r motif_LR, echo=FALSE, message=FALSE, warning=FALSE}
 
 cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
@@ -891,7 +891,7 @@ lfc_nums %>%
 
 ```
 
-### Motif_ER
+## Motif_ER
 ```{r motif ER, echo=FALSE, message=FALSE, warning=FALSE}
 cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
@@ -907,7 +907,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
   scale_fill_manual(values=drug_pal)+
   facet_wrap("time",nrow=1, ncol=2)+
   theme_bw()+
-  ylab(expression(atop("Early Response set",italic("AHDC1")~log[2]~"cpm ")))
+  ylab(expression(atop("Early Response set",italic("AHDC1")~log[2]~"cpm ")))+
   xlab("")+
   xlab("")+
   theme(strip.background = element_rect(fill = "#F8766D"),
@@ -921,9 +921,6 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
 #### Log-Fold Change of Early Response
 
 ```{r lfc_ER, message=FALSE, warning=FALSE}
-
-
-
 lfc_nums %>% 
   dplyr::filter(ENTREZID %in% motif_ER) %>% 
   mutate(absFC=abs(logFC)) %>% 
@@ -946,6 +943,45 @@ lfc_nums %>%
         axis.text = element_text(size = 8, color = "black", angle = 10),   
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
  
+
+```
+```{r burridge way of lfc, echo=FALSE}
+##  I want the mean lfc by cluster with sid deg and non sid deg at 3 and 24 hourslfc_nums %>% 
+
+mean_lfc <- lfc_nums %>% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
+  group_by(id,time) %>% 
+  mutate(absFC=abs(logFC)) %>% 
+  dplyr::select(id,time,absFC,ER,TI,LR,NR) %>% 
+  summarize(ERm=mean(absFC[ER=="y"]),TIm=mean(absFC[TI=="y"]),LRm=mean(absFC[LR=="y"]),NRm=mean(absFC[NR=="y"])) %>% as.data.frame()
+
+
+mean_lfc %>% 
+  pivot_longer(!c(id,time), names_to = "Motif",values_to="meanLFC") %>% 
+  ggplot(., aes(x=time,y= meanLFC,col=Motif,group=Motif))+
+  geom_point()+
+  geom_line()+
+  # fill_palette(palette =drug_palNoVeh)+
+  # guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(~id)+
+  theme_bw()+
+  xlab("")+
+  ylab("|Log Fold Change|")+
+  theme_bw()+
+  ggtitle(" average |Log Fold| for genes across treatment each motif")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text = element_text(size = 8, color = "black", angle = 0),   
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
 
 ```
 
