@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6524ecdeabd4029da1d1bd6690bc1615c9e9400etargetblank6524ecda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree652d7e8f4bcb2c8cb09680fa0da4c52499ac67actargetblank652d7e8a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6524ecdeabd4029da1d1bd6690bc1615c9e9400e" target="_blank">6524ecd</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/652d7e8f4bcb2c8cb09680fa0da4c52499ac67ac" target="_blank">652d7e8</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6524ecdeabd4029da1d1bd6690bc1615c9e9400etargetblank6524ecda"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree652d7e8f4bcb2c8cb09680fa0da4c52499ac67actargetblank652d7e8a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6524ecdeabd4029da1d1bd6690bc1615c9e9400e" target="_blank">6524ecd</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/652d7e8f4bcb2c8cb09680fa0da4c52499ac67ac" target="_blank">652d7e8</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,7 +559,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/BC_cell_lines.csv
@@ -678,14 +677,7 @@ Untracked files:
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/Cormotifcluster_analysis.Rmd
-    Modified:   analysis/DEG-GO_analysis.Rmd
     Modified:   analysis/DRC_analysis.Rmd
-    Modified:   code/24hour_RNAeval.R
-    Modified:   code/Compare_tnni_ldh.R
-    Modified:   code/eQTLcodes.R
-    Modified:   code/sequencing_info_collection.R
-    Modified:   output/GOI_genelist.txt
 
 </code></pre>
 <p>
@@ -731,6 +723,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/652d7e8f4bcb2c8cb09680fa0da4c52499ac67ac/analysis/other_analysis.Rmd" target="_blank">652d7e8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-02
+</td>
+<td>
+updated heatmap Seoane Chisqure for cormotif
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/5aeda279932ec0ca001860f9e3692ac7a4398278/docs/other_analysis.html" target="_blank">5aeda27</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1180,8 +1206,8 @@ adding other_analysis and genes of interest log2cpm
 </div>
 </div>
 </div>
-<p>’</p>
-<p>Data set comparison order:</p>
+<div id="data-set-comparison-order" class="section level2">
+<h2>Data set comparison order:</h2>
 <p>Knowles data:<br />
 meQTLS(aka K4 supp)<br />
 reQTLS(aka K5 supp)<br />
@@ -1192,6 +1218,7 @@ GTEx enrichment<br />
 Seaone 2019<br />
 Supplemental 1 (408 genes)<br />
 Supplemental 4 (54 genes)</p>
+</div>
 <div id="pairwise-data-enrichment" class="section level1">
 <h1>Pairwise Data enrichment</h1>
 <div id="knowles-comparison-data" class="section level2">
@@ -2788,7 +2815,7 @@ print(&quot;after performing chi square test between DEgenes, and non DE genes&q
 6 Epirubicin   3_hours  0.983 
 7 Mitoxantrone 24_hours 0.816 
 8 Mitoxantrone 3_hours  1.00  </code></pre>
-<p><img src="figure/other_analysis.Rmd/HR%20heatmap-1.png" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/other_analysis.Rmd/HF%20heatmap-1.png" width="672" style="display: block; margin: auto;" />
 ## CAD GWAS</p>
 </div>
 </div>
@@ -5342,6 +5369,9 @@ X-squared = 1.1741, df = 1, p-value = 0.2786</code></pre>
 
 data:  chi_list1[, c(&quot;TI&quot;, &quot;LR&quot;)]
 X-squared = 0.003306, df = 1, p-value = 0.9541</code></pre>
+<div id="chi-square-heatmap" class="section level3">
+<h3>chi square heatmap</h3>
+<p><img src="figure/other_analysis.Rmd/heatmapsup4n1%20cormotif-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -5416,6 +5446,7 @@ loaded via a namespace (and not attached):
 [106] digest_0.6.31          webshot_0.5.4          httpuv_1.6.9          
 [109] stats4_4.2.2           munsell_0.5.0          viridisLite_0.4.1     
 [112] bslib_0.4.2           </code></pre>
+</div>
 </div>
 </div>
 </div>
