@@ -41,8 +41,10 @@ Seaone 2019
   Supplemental 4 (54 genes)  
   
 
-#Pairwise Data enrichment
-## Knowles Comparison data:
+# Pairwise Data enrichment  
+
+## Knowles Comparison data:  
+
 
 ```{r loading knowles data}
 toplistall <- read.csv("output/toplistall.csv", row.names = 1)
@@ -342,7 +344,7 @@ toplist3hr %>%
 ##make table of numbers:
 
 
-dataframARR3 <- toplist24hr %>% 
+dataframARR3 <- toplist3hr %>% 
   mutate(id = as.factor(id)) %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
@@ -350,7 +352,7 @@ dataframARR3 <- toplist24hr %>%
   summarize(ARRcount=n()) %>% 
   as.data.frame()
 
-dataframARR3 %>% kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 24 hour GWAS") %>% 
+dataframARR3 %>% kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 3 hour GWAS") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
@@ -360,7 +362,7 @@ dataframARR3 %>% kable(., caption= "Significant (adj. P value of <0.05) and non-
 
 #### chi square test ARR
 
-```{r chi ARR,echo=TRUE}
+```{r chi ARR, echo=TRUE, message=FALSE, warning=FALSE}
 
 
 chi_funarr <-  toplistall %>% 
@@ -373,7 +375,26 @@ chi_funarr <-  toplistall %>%
 print("after performing chi square test between DEgenes, and non DE genes")
 chi_funarr
 
+
 ```
+```{r ARR heatmap,echo=FALSE}
+library(ComplexHeatmap)
+  
+ARRmat <- chi_funarr %>% ungroup() %>% 
+  mutate(ARR= log(pvalue)*(-1)) %>% 
+  mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
+  unite("term_name",id,time,sep="_") %>% 
+  column_to_rownames('term_name') 
+  
+
+
+
+Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+
+
+
+```
+
 
 
 
@@ -494,6 +515,21 @@ chi_funhf
 
 ```
 
+```{r HR heatmap,echo=FALSE}
+library(ComplexHeatmap)
+  
+HFmat <- chi_funhf %>% ungroup() %>% 
+  mutate("HF"= log(pvalue)*(-1)) %>% 
+  mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
+  unite("term_name",id,time,sep="_") %>% 
+  column_to_rownames('term_name') 
+
+
+Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+
+
+
+```
 ## CAD GWAS
 
 ### 24 hour data set
@@ -602,7 +638,26 @@ print("after performing chi square test between DEgenes, and non DE genes")
 chi_funCAD
 
 ```
+```{r CAD heatmap,echo=FALSE}
+library(ComplexHeatmap)
+  
+CADmat <- chi_funCAD %>% ungroup() %>% 
+  mutate("CAD"= log(pvalue)*(-1)) %>% 
+  mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
+  unite("term_name",id,time,sep="_") %>% 
+  column_to_rownames('term_name') 
 
+
+
+Heatmap( as.matrix(CADmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+
+GWASmat <- bind_cols(CADmat$CAD,HFmat$HF,ARRmat$ARR) 
+colnames(GWASmat) <- c('CAD','HF','ARR')
+rownames(GWASmat) <- rownames(CADmat)# %>% tibble() %>% dplyr::select) %>% as.matrix()
+
+Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE, cluster_columns = FALSE, column_names_rot = 0)
+
+```
 ## GTEx V8 heart-left ventrical egenes
 
 ```{r GTEx enrichment check}
