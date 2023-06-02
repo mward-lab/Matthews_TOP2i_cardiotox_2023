@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-05-19" />
+<meta name="date" content="2023-06-02" />
 
 <title>LDH_analysis</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">LDH_analysis</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-05-19</h4>
+<h4 class="date">2023-06-02</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-05-19
+<strong>Last updated:</strong> 2023-06-02
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree69b989f7b0cfe6614cdf05197d9d563f833ee5f0targetblank69b989fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree89bce745d05bfb77c63bdabd8afd24ba7a88ec6etargetblank89bce74a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/69b989f7b0cfe6614cdf05197d9d563f833ee5f0" target="_blank">69b989f</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/89bce745d05bfb77c63bdabd8afd24ba7a88ec6e" target="_blank">89bce74</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree69b989f7b0cfe6614cdf05197d9d563f833ee5f0targetblank69b989fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree89bce745d05bfb77c63bdabd8afd24ba7a88ec6etargetblank89bce74a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/69b989f7b0cfe6614cdf05197d9d563f833ee5f0" target="_blank">69b989f</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/89bce745d05bfb77c63bdabd8afd24ba7a88ec6e" target="_blank">89bce74</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -575,8 +575,11 @@ Ignored files:
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
+    Ignored:    data/GTEX_setsimple.csv
     Ignored:    data/HFGWASgene_table.csv
+    Ignored:    data/Heart_Left_Ventricle.v8.egenes.txt
     Ignored:    data/Hf_GWAS.txt
     Ignored:    data/K_cluster
     Ignored:    data/K_cluster_kisthree.csv
@@ -612,6 +615,7 @@ Ignored files:
     Ignored:    data/filtered_raw_counts.csv
     Ignored:    data/filtermatrix_x.RDS
     Ignored:    data/folder_05top/
+    Ignored:    data/gene_corr_frame.RDS
     Ignored:    data/gene_prob_tran3h.RDS
     Ignored:    data/gene_probabilityk5.RDS
     Ignored:    data/gostresTop2bi_ER.RDS
@@ -619,6 +623,7 @@ Ignored files:
     Ignored:    data/gostresTop2bi_LR.RDS
     Ignored:    data/gostresTop2bi_TI.RDS
     Ignored:    data/gostrescoNR
+    Ignored:    data/gtex/
     Ignored:    data/heartgenes.csv
     Ignored:    data/individualDRCfile.RDS
     Ignored:    data/individual_LDH48.RDS
@@ -662,7 +667,7 @@ Untracked files:
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
-    Untracked:  output/GOI_genelist.txt
+    Untracked:  output/Sup4seoane.csv
     Untracked:  output/figure_1.Rmd
     Untracked:  output/output-old/
     Untracked:  output/plan2plot.png
@@ -670,7 +675,14 @@ Untracked files:
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/other_analysis.Rmd
+    Modified:   analysis/Cormotifcluster_analysis.Rmd
+    Modified:   analysis/DEG-GO_analysis.Rmd
+    Modified:   analysis/DRC_analysis.Rmd
+    Modified:   code/24hour_RNAeval.R
+    Modified:   code/Compare_tnni_ldh.R
+    Modified:   code/eQTLcodes.R
+    Modified:   code/sequencing_info_collection.R
+    Modified:   output/GOI_genelist.txt
 
 </code></pre>
 <p>
@@ -716,6 +728,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/89bce745d05bfb77c63bdabd8afd24ba7a88ec6e/analysis/LDH_analysis.Rmd" target="_blank">89bce74</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-02
+</td>
+<td>
+axis label update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/01a378119ed46ee8fc3d08f013e1952c956282f9/docs/LDH_analysis.html" target="_blank">01a3781</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
