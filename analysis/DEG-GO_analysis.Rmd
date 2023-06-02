@@ -2146,6 +2146,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
 ```
 
 
+
 ## expression correlation:
 
 
@@ -2333,7 +2334,7 @@ print(GOI_genelist)
 GOIsig <- toplistall %>%
   filter(ENTREZID %in% GOI_genelist$entrezgene_id) %>%
   filter(adj.P.Val < 0.05) %>% 
-  select(time,id,ENTREZID,SYMBOL,adj.P.Val) 
+  dplyr::select(time,id,ENTREZID,SYMBOL,adj.P.Val) 
 GOIsig%>% 
   kable(., caption= "Significant (adj. P value of <0.05) Genes of interest by treatment") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
