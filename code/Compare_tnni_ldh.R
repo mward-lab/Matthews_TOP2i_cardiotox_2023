@@ -512,3 +512,37 @@ ggplot(RNAnormlist, aes(x=Drug, y=normtnni))+
     theme_bw() +
     theme(plot.title = element_text(hjust =0.5, size = 18))+
     guides(alpha ="none", size = "none")
+
+
+
+# Omar data collection ----------------------------------------------------
+
+#  This is the collection of individuals 2, 3, and 5
+#Michelle wanted 1_ 0.4 uM 24 hour LDH, 2) 24 hour Tnni, 3) viability from drcs at 0.5 uM in the 48 hour groups:
+
+level_order2 <- c('75','87','77','79','78','71')
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+norm_LDH <- read.csv("data/norm_LDH.csv", row.names = 1)
+norm_LDH48_05 <- norm_LDH %>% mutate(Drug=case_match(Drug, "Control" ~"Vehicle",.default= Drug)) %>%
+  mutate(Drug=factor(Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Vehicle"))) %>%
+  mutate(indv=substring(indv,0,2)) %>%
+  mutate(indv= factor(indv,levels= level_order2)) %>%
+  filter(Conc==0.5)
+
+
+
+
+tnni_ldh_24 <- read.csv("output/TNNI_LDH_RNAnormlist.txt", row.names = 1)
+
+Ca_corr_omar <- tnni_ldh_24 %>%
+  mutate(indv= factor(indv,levels= level_order2)) %>%
+
+  dplyr::select(indv,Drug,rtnni,rldh) %>%
+  full_join(norm_LDH48_05, by=c("indv","Drug")) %>%
+filter(indv==87|indv ==77|indv ==78) %>%
+  rename(viability =norm_val) %>%
+  dplyr::select(indv, Drug, rtnni, rldh, viability)
+view(norm_LDH48_05)
+write.csv(Ca_corr_omar,"output/Ca_corr_omar.csv")
+

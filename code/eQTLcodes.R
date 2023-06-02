@@ -785,7 +785,7 @@ list3totvenn <- get.venn.partitions(total3)
 
 # boxplot absolute Fold change --------------------------------------------
 
-#load lists needed:  Knowles4, knowles5, and all experessed genes without the 4 and 5 sets (take out the all_QTLSknow)
+#load lists needed:  Knowles4, Knowles5, and all expressed genes without the 4 and 5 sets (take out the all_QTLSknow)
 cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 
 

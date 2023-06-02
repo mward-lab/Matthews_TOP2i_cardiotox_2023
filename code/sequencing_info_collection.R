@@ -43,3 +43,6 @@ write.csv(sequencing_info, "output/sequencing_info.txt")
 seqinfo <- read.csv("output/sequencing_info.txt")
 summary(seqinfo
         )
+
+
+

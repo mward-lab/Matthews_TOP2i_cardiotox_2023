@@ -52,7 +52,7 @@ toplistall <- list(toplist24hours,toplist3hours)
 names(toplistall) <- c("24_hours", "3_hours")
 toplistall <-map_df(toplistall, ~as.data.frame(.x), .id="time")
 saveRDS(toplistall, "data/toplistall.RDS")
-
+readRDS("data/toplistall.RDS")
 toplist24hours %>%
   filter(id =="Daunorubicin"|id=="Doxorubicin") %>%
   dplyr::select(id,logFC,ENTREZID) %>%
