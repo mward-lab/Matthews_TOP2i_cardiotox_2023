@@ -8,7 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
 ```
-'
+
 
 ```{r loading packages, message=FALSE, warning=FALSE}
 
@@ -26,8 +26,7 @@ library(broom)
 
 
 ```
-
-Data set comparison order:
+##  Data set comparison order:
 
 Knowles data:  
   meQTLS(aka K4 supp)  
@@ -491,13 +490,6 @@ dataframHF3 %>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
 
-
-
-
-
-
-
-
 ```
 #### chi square test HF
 ```{r chiHF,echo=TRUE}
@@ -515,7 +507,7 @@ chi_funhf
 
 ```
 
-```{r HR heatmap,echo=FALSE}
+```{r HF heatmap,echo=FALSE}
 library(ComplexHeatmap)
   
 HFmat <- chi_funhf %>% ungroup() %>% 
@@ -976,9 +968,12 @@ chi_list4 <- toplist24hr %>%
   pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
   rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
 
-chisq.test(chi_list4[,c('NR','LR')])
-chisq.test(chi_list4[,c('NR','ER')])
-chisq.test(chi_list4[,c('NR','TI')])
+chisup4LR <- chisq.test(chi_list4[,c('NR','LR')])
+chisup4LR
+chisup4ER <- chisq.test(chi_list4[,c('NR','ER')])
+chisup4ER
+chisup4TI <- chisq.test(chi_list4[,c('NR','TI')])
+chisup4TI
 chisq.test(chi_list4[,c('ER','TI')])
 chisq.test(chi_list4[,c('ER','LR')])
 chisq.test(chi_list4[,c('TI','LR')])
@@ -1023,15 +1018,38 @@ chi_list1 <- toplist24hr %>%
   pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
   rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
 
-chisq.test(chi_list1[,c('NR','LR')])
-chisq.test(chi_list1[,c('NR','ER')])
-chisq.test(chi_list1[,c('NR','TI')])
+chisup1LR <- chisq.test(chi_list1[,c('NR','LR')])
+chisup1LR
+chisup1ER <- chisq.test(chi_list1[,c('NR','ER')])
+chisup1ER
+chisup1TI <- chisq.test(chi_list1[,c('NR','TI')])
+chisup1TI
 chisq.test(chi_list1[,c('ER','TI')])
 chisq.test(chi_list1[,c('ER','LR')])
 chisq.test(chi_list1[,c('TI','LR')])
 
 
 ```
+### chi square heatmap
+```{r heatmapsup4n1 cormotif}
+supp45X <- NULL
+motif <- c('ER','TI','LR')
+pval1=c(chisup1ER$p.value,chisup1TI$p.value,chisup1LR$p.value)
+pval4=c(chisup4ER$p.value ,chisup4TI$p.value ,chisup4LR$p.value)
+supp45X <- tibble("motif"=motif,"pval1"=pval1,"pval4"=pval4)
+supp45Xmat <- supp45X %>% 
+  mutate(pval1=(-1*log(pval1))) %>% 
+  mutate(pval4=(-1*log(pval4))) %>% 
+  column_to_rownames('motif') %>% 
+  rename(c("n = 408"= pval1, "n = 54"=pval4))
+
+Heatmap( as.matrix(supp45Xmat), name = " Seoane CAG sets \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+
+
+
+```
+
+
 
 
 
