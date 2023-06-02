@@ -1740,6 +1740,10 @@ Raptor
 
 RARG  
 
+SLCO1A2  
+
+SLCO1B3
+
 
 
 ```{r GOI-top2b, echo=FALSE}
@@ -2149,7 +2153,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==5916) %>%
 level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
-GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","UTGT1A6","UGT1A10","KDM4B","KAT6B","GNT1"))
+GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","UTGT1A6","UGT1A10","KDM4B","KAT6B","GNT1",'SLCO1A2', 'SLCO1B3'))
 # ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 # my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
 # 
@@ -2276,6 +2280,7 @@ print(GOI_genelist)
       geom_point(aes(col=indv))+
       geom_smooth(method="lm")+
       facet_wrap(hgnc_symbol~Drug, scales="free")+
+      theme_classic()+
       xlab("troponin I expression") +
       ylab("Gene counts in log2 cpm") +
       ggtitle(expression(paste("Correlation between counts and LDH by drug")))+
