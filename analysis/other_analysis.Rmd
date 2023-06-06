@@ -46,7 +46,8 @@ Seaone 2019
 
 
 ```{r loading knowles data}
-toplistall <- read.csv("output/toplistall.csv", row.names = 1)
+# toplistall <- read.csv("output/toplistall.csv", row.names = 1)
+toplistall <- readRDS("data/toplistall.RDS")
 backGL <- read.csv("data/backGL.txt",     row.names =1)
  drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
@@ -75,10 +76,116 @@ knowles4 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
                   values =knowfig4, mart = ensembl)
 #524
 
-knowles4 <-unique(knowles4$entrezgene_id)
-knowles5 <-unique(knowles5$entrezgene_id)
 
-all_QTLSknow<- union(knowles5,knowles4)
+saveRDS(knowles4,"output/knowles4.RDS")
+saveRDS(knowles5,"output/knowles5.RDS")
+
+knowles4 <-knowles4 %>% 
+  distinct(entrezgene_id,.keep_all = TRUE)
+length(unique(knowles4$entrezgene_id))
+knowles5 <-knowles5 %>% 
+  distinct(entrezgene_id,.keep_all = TRUE)
+
+# all_QTLSknow<- union(knowles5$entrezgene_id,knowles4$entrezgene_id)
+
+DOXreQTLs <- toplistall %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
+   dplyr::filter(id == "Doxorubicin") %>% 
+   dplyr::filter(sigcount=='sig') %>% 
+   dplyr::filter(reQTL=="a") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+
+saveRDS(DOXreQTLs,"output/DOXreQTLs.RDS")
+DOXmeQTLs <- toplistall %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
+   dplyr::filter(id == "Doxorubicin") %>% 
+   dplyr::filter(sigcount=='sig') %>% 
+   dplyr::filter(meSNP=="y") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+saveRDS(DOXmeQTLs,"output/DOXmeQTLs.RDS")
+DNRreQTLs <- toplistall %>% 
+dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
+  dplyr::filter(id =="Daunorubicin") %>% 
+  dplyr::filter(sigcount=='sig') %>% 
+   dplyr::filter(reQTL=="a") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+saveRDS(DNRreQTLs,"output/DNRreQTLs.RDS")
+DNRmeQTLs <- toplistall %>% 
+dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
+  dplyr::filter(id =="Daunorubicin") %>% 
+  dplyr::filter(sigcount=='sig') %>% 
+   dplyr::filter(meSNP=="y") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+saveRDS(DNRmeQTLs,"output/DNRmeQTLs.RDS")
+
+EPIreQTLs <- toplistall %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
+   dplyr::filter(id =="Epirubicin") %>% 
+   dplyr::filter(sigcount=='sig') %>% 
+   dplyr::filter(reQTL=="a") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+saveRDS(EPIreQTLs,"output/EPIreQTLs.RDS")
+
+EPImeQTLs <- toplistall %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
+   dplyr::filter(id =="Epirubicin") %>% 
+   dplyr::filter(sigcount=='sig') %>% 
+    dplyr::filter(meSNP=="y") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+saveRDS(EPImeQTLs,"output/EPImeQTLs.RDS")
+
+
+
+MTXreQTLs <- toplistall %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
+   dplyr::filter(id =="Mitoxantrone") %>% 
+   dplyr::filter(sigcount=='sig') %>% 
+   dplyr::filter(reQTL=="a") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+saveRDS(MTXreQTLs,"output/MTXreQTLs.RDS")
+
+MTXmeQTLs <- toplistall %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
+   dplyr::filter(id =="Mitoxantrone") %>% 
+   dplyr::filter(sigcount=='sig') %>% 
+    dplyr::filter(meSNP=="y") %>% 
+   dplyr::select(time, id, ENTREZID,SYMBOL)
+saveRDS(MTXmeQTLs,"output/MTXmeQTLs.RDS")
+
+
+
+reQTLcombine=list(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)
+
+length(unique(c(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)))
+
+print("number of unique genes expressed in pairwise DE set")
+QTLoverlaps <- VennDiagram::get.venn.partitions(reQTLcombine)
+DoxonlyQTL <-  QTLoverlaps$..values..[[14]]
+     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c("DNR-187\nsigDEexpressed","DOX-180 \nsigDEexpressed","EPI-176\nsigDEexpressed","MTX-40\nsigDEexpressed"))  
 
 #total 794
 
@@ -94,11 +201,13 @@ Knowles $~~et~ al.~$ eLife 2018;7:e33480. DOI: https://doi.org/10.7554/eLife.334
 My first question was about transcription response at the 24 hour mark with my treatments.   3 hour RNA-seq had low levels of DEGs,so my focus is at 24 hours.  This also happens to be when the Knowles paper collected their RNA-seq data
 
 
-Supplementary 4 contains a list of 518 SNPs within 1 Mb of TSS, which had a detectable marginal effect on expression (5% FDR). When converted from ensembl gene id to entrez gene id,  my list of unique Entrezgeneids = 521.  I will call these meSNPs for marginal effect snps.
-In the meSNPs, 503 are within my DEG of 14084.  Using an adj. P value of 0.05, There are 199/6864 in 24 hour daunorubicin, 184/6516 in 24 hour doxorubicin, 182/6202 in 24 hour epirubicin, 30/1327 in 24 hour mitoxantrone and 0 in Trastuzumb
+Supplementary 4 contains a list of 518 SNPs within 1 Mb of TSS, which had a detectable marginal effect on expression (5% FDR). When converted from ensembl gene id to entrez gene id,  my list of unique Entrezgeneids = 521.  I will call these meQTLS for marginal effect QTLs.  
 
-Supplementary 5 contains a list of 376 response eQTLs (reQTLs).  These are variants that were associated with modulation of transcriptomic response to doxorubicin treatment. After database name conversion, I have 377 unique Entregene ids.
-Of the reQTLs list, 374 are within my DEG of 14084.  Using an adj. P value of 0.05, There are 187/6864 in 24 hour daunorubicin, 180/6516 in 24 hour doxorubicin, 176/6202 in 24 hour epirubicin, 40/1327 in 24 hour mitoxantrone and 0 in Trastuzumb.
+In the meQTLs, 503 are expressed out of 14084.  Using an adj. P value of 0.05, There are 199/6864 in 24 hour daunorubicin, 184/6516 in 24 hour doxorubicin, 182/6202 in 24 hour epirubicin, 30/1327 in 24 hour mitoxantrone and 0 in Trastuzumb.  
+
+Supplementary 5 contains a list of 376 response eQTLs (reQTLs).  These are variants that were associated with modulation of transcriptomic response to doxorubicin treatment. After database name conversion, I have 377 unique Entregene ids.  
+
+Of the reQTLs list, 374 are expressed out of all 14084 expressed genes.  Using an adj. P value of 0.05, There are 187/6864 in 24 hour daunorubicin, 180/6516 in 24 hour doxorubicin, 176/6202 in 24 hour epirubicin, 40/1327 in 24 hour mitoxantrone and 0 in Trastuzumb.
 
   
 ```{r  knowles data comparisons}
@@ -107,8 +216,8 @@ dataframK_45 <- toplistall %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time== "24_hours") %>%
   group_by(time, id) %>%
-  mutate(K4 = if_else(ENTREZID %in% knowles4,1,0))%>%
-  mutate(K5 = if_else(ENTREZID %in% knowles5,1,0))%>%
+  mutate(K4 = if_else(ENTREZID %in% knowles4$entrezgene_id,1,0))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,1,0))%>%
   # filter(adj.P.Val<0.05) %>%
  dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
   as.data.frame()
@@ -118,30 +227,31 @@ sig05_dataframK_45 <- toplistall %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time== "24_hours") %>%
   group_by(time, id) %>%
-  mutate(K4 = if_else(ENTREZID %in% knowles4,1,0))%>%
-  mutate(K5 = if_else(ENTREZID %in% knowles5,1,0))%>%
+  mutate(K4 = if_else(ENTREZID %in% knowles4$entrezgene_id,1,0))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,1,0))%>%
   filter(adj.P.Val<0.05) %>%
   dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
   as.data.frame()
 
-sig05_dataframK_45 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
-  kable(., caption= "Count of genes in each treatment by using adj. P value of <0.05") %>% 
+sig05_dataframK_45 %>%
+  #mutate_at(.vars = 6, .funs= scientific_format()) %>%
+  kable(., caption= "Significant DEG by treatment by (adj. P value of <0.05") %>% 
   kable_paper("striped", full_width = FALSE) %>% 
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "50%", height = "400px")
+  scroll_box(width = "80%", height = "400px")
 
 dataframK_45 %>% 
-  kable(., caption= "Count of genes in each treatment by total expressed genes") %>% 
+  kable(., caption= "total number of meQTLS and reQTLS in expressed genes") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "50%", height = "400px")
+  scroll_box(width = "80%", height = "400px")
 
 
 chi_squarek4 <- toplistall %>% 
   mutate(id = as.factor(id)) %>%
   dplyr::filter(id!="Trastuzumab") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(meSNP, sigcount)$p.value) 
 
@@ -150,7 +260,7 @@ chi_squarek5 <-
   mutate(id = as.factor(id)) %>%
   dplyr::filter(id!="Trastuzumab") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(reQTL, sigcount)$p.value) 
 
@@ -185,8 +295,8 @@ toplist3hr <-   toplistall %>%
 toplist24hr %>% 
   group_by(time, id) %>% 
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
-  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
-  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
   ggplot(., aes(x=id, y=abs(logFC)))+
   geom_boxplot(aes(fill=id))+
   fill_palette(palette =drug_palNoVeh)+
@@ -219,8 +329,8 @@ toplist24hr %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
-  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
-  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
   filter(time =="24_hours") %>% 
   group_by(id,sigcount,meSNP) %>% 
   summarize(K4count=n()) %>% 
@@ -237,8 +347,8 @@ toplist24hr %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
-  mutate(meSNP=if_else(ENTREZID %in%knowles4,"y","no")) %>% 
-  mutate(reQTL=if_else(ENTREZID %in%knowles5,"a","b")) %>% 
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
   filter(time =="24_hours") %>% 
   group_by(id,sigcount,reQTL) %>% 
   summarize(K5count=n())%>% 
@@ -255,16 +365,55 @@ toplist24hr %>%
 
 ```
 
+### enrichment comparison
+```{r Knowles comparison between sets}
+
+Knowles_count <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  group_by(time, id) %>%
+  mutate(K4 = if_else(ENTREZID %in% knowles4$entrezgene_id,1,0))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,1,0))%>%
+  filter(adj.P.Val<0.05) %>%
+  dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
+  as.data.frame() %>% 
+  dplyr::select(time,id,K4,K5) %>% rename("K4_y"='K4',"K5_y"='K5') %>% 
+  mutate(time = case_match(time, '3_hours'~'3 hrs',
+                           '24_hours'~'24 hrs',.default = time)) %>% 
+  mutate(K4_n= 503-K4_y, K5_n=371-K5_y) %>% 
+  pivot_longer(!c(time,id), names_to='QTL',values_to="gene_count") %>%
+  separate(QTL,into=c("QTL_type",'group'),sep = '_') %>%  
+  mutate(QTL_type =case_match(QTL_type, 'K4'~'meQTLs',
+                         'K5'~'reQTLs',.default = QTL_type)) %>% 
+  mutate(time=factor(time, levels=c("3 hrs","24 hrs"))) %>% 
+  group_by(id,time,QTL_type) %>% 
+  mutate(percent=gene_count/sum(gene_count)*100)
+  
+  ggplot(Knowles_count, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
+    geom_col(position='fill')+
+    guides(fill="none")+
+    facet_wrap(id~time,nrow=2,ncol=4)+
+    theme_classic()+
+   scale_color_manual(values=drug_palNoVeh)+
+    scale_fill_manual(values=drug_palNoVeh)+
+       scale_y_continuous(label = scales::percent)
+    
+  
+   Knowles_count %>% 
+     spread(gene_chout,group) #%>% 
+  summarize(pvalue= chisq.test(gene_count,group)$p.value) 
+     
+    tab <- tapply(Knowles_count$count, list(good_example$category, good_example$variable), FUN=sum)
+> chisq.test(tab, correct = FALSE                             
+chisq.test(tab[,-1],correct=FALSE)
+  
+  
+  
+  
+```
 
 
 
-  
-  
-  
-  
-  
-  
-  
 
 ## ArrGWAS to 24 hour DEG genes p < 0.05
 ### 24 hour data set
@@ -938,10 +1087,10 @@ backGL <- read.csv("data/backGL.txt")
 
 motifSeoanesummary4 <- toplist24hr %>% 
   distinct(ENTREZID) %>% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+  mutate(ER=if_else(ENTREZID %in% motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in% motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in% motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in% motif_NR,"y","no")) %>%
   mutate(chrom = if_else(ENTREZID %in% Sup4genes$entrez, "y", "no")) %>% 
   group_by(chrom,ER,TI,LR,NR) %>% 
   dplyr::summarize(n=n()) %>% 
