@@ -202,14 +202,14 @@ ID <- c("ind1a",
         "ind6a",
         "ind6b")
 names(individuals)
-saveRDS(individuals,"data/individual_LDH48.RDS")
+saveRDS(individuals,"data/individual_DRC48.RDS")
 full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
- write.csv(full_list,"data/LDH48hoursdata.csv")
+ write.csv(full_list,"data/DRC48hoursdata.csv")
 ```
  
  
 ```{r loading RDS data, message=FALSE, warning=FALSE, include=FALSE}
-individuals <- readRDS("data/individual_LDH48.RDS")
+individuals <- readRDS("data/individual_DRC48.RDS")
  ##make a smaller data frame###
  spec_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5b", "ind6a")### used to genrate ldh poster data in Dec 2022
  spec2_ind <-  c("ind1a", "ind2b", "ind3b", "ind4b", "ind5a", "ind6a")
@@ -316,6 +316,7 @@ averageFL <-  full_list %>%
     mutate(indv=substr(SampleID,4,4)) %>% 
     mutate(indv=factor(as.numeric(indv))) %>% 
     filter(Conc<5) %>% 
+    mutate(Conc= factor(as.numeric(Conc))) %>% 
     group_by(indv,Drug,Conc) %>% 
     dplyr::summarize(Viability=mean(Mean)) %>%
     ungroup() %>% 
@@ -331,15 +332,15 @@ averageFL <-  full_list %>%
     geom_hline(yintercept = 1,lty = 4)+
     ylab("Viability") +
     facet_wrap(~Conc)+ 
-    geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                  c("Doxorubicin","Vehicle"),
-                                  c("Epirubicin","Vehicle"),
-                                  c("Mitoxantrone","Vehicle"),
-                                  c("Trastuzumab","Vehicle")),
-                test= "t.test",
-                map_signif_level=TRUE,
-                textsize =4,
-                step_increase = 0.1)+
+    # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+    #                               c("Doxorubicin","Vehicle"),
+    #                               c("Epirubicin","Vehicle"),
+    #                               c("Mitoxantrone","Vehicle"),
+    #                               c("Trastuzumab","Vehicle")),
+    #             test= "t.test",
+    #             map_signif_level=TRUE,
+    #             textsize =4,
+    #             step_increase = 0.1)+
     ggtitle("Viablity across concentrations at 48 hours")+
     theme(axis.title=element_text(size=10),
           axis.ticks=element_line(size =2),
@@ -372,15 +373,15 @@ averageFL %>%
   geom_hline(yintercept = 1,lty = 4)+
   ylab("Viability") +
   facet_wrap(~Drug)+ 
-  geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-                                c("Doxorubicin","Vehicle"),
-                                c("Epirubicin","Vehicle"),
-                                c("Mitoxantrone","Vehicle"),
-                                c("Trastuzumab","Vehicle")),
-              test= "t.test",
-              map_signif_level=TRUE,
-              textsize =4,
-              step_increase = 0.1)+
+  # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
+  #                               c("Doxorubicin","Vehicle"),
+  #                               c("Epirubicin","Vehicle"),
+  #                               c("Mitoxantrone","Vehicle"),
+  #                               c("Trastuzumab","Vehicle")),
+  #             test= "t.test",
+  #             map_signif_level=TRUE,
+  #             textsize =4,
+  #             step_increase = 0.1)+
   ggtitle("Viablity across drugs at 48 hours")+
   theme(axis.title=element_text(size=10),
         axis.ticks=element_line(size =2),
@@ -483,7 +484,8 @@ daplot <- ggplot(DA2, aes(x=Conc, y= Percent, color = SampleID,alpha =0.4)) +
       
   #daplot
   # theme(plot.title = element_text(hjust = 0.5, size =20))
-    
+   library(tidydrc)
+
 ```
 
 ```{r doxplot, echo=FALSE, message=FALSE, warning=FALSE}
@@ -525,7 +527,7 @@ dxplot <-
       
   # theme(plot.title = element_text(hjust = 0.5, size =20))
     
-   # dxplot
+   dxplot
     
 ```
 
@@ -823,7 +825,7 @@ ID <- c("ind1a",
 
 for(k in ID){
 thingda <-  filter(DAi, SampleID==k)
-  thingda.m <- drm(Percent~Conc, data = thingda, fct=LL.4(c(NA, 0, 1, NA)))
+  thingda.m <- drm(Percent~Conc, data = thingda, fct=LL.4(c(NA, 1,0, NA)))
   dnr_sl[k] <- thingda.m$fit$par[1]
   onion <- ED(thingda.m, c(50), interval = "delta")
   daunls[k] <- onion[1]
@@ -853,12 +855,48 @@ thingdx <-  filter(DXi, SampleID==k)
   
 }
 
-
+thingdx <-  filter(DXi, SampleID=='ind2b')
+  thingdx.m <- drm(Percent~Conc, data = thingdx, fct=LL.4(c(NA, 0, 1, NA)))
+  dox_sl[k] <- thingdx.m$fit$par[1]
+  onionx <- ED(thingdx.m, c(50), interval = "delta")
+  doxols[k] <- onionx[1]
+  print(paste0(k, " Doxorubicin"))
+  plot(thingdx.m)
+  
+  
+  DAi %>% 
+    filter(SampleID=='ind2b') %>% 
+   ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+  guides(color="none", alpha = "none")+
+      stat_summary(fun.data=mean_se, 
+                   fun.args = list(mult=1), 
+                   geom = "errorbar", 
+                   size =.5, 
+                   width = .1)+
+      stat_smooth(method = "drm", 
+                  method.args = list(fct = L.4(c(NA,1,0,NA))), 
+                  se = FALSE)+
+      ylim(0,1.5)+
+      scale_color_brewer(palette = "Dark2")+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
+      ggtitle("Doxorubicin")+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = "bold"),
+            panel.grid.major = element_line(colour = 'lightgrey'),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = "#d7657e", colour = NA))
+  
 
 ```
 
 
 ```{r boxplot of slope}
+library(ggsignif)
 slope_table <- bind_rows(dnr_sl,dox_sl,epi_sl,mtx_sl)
 avg_slope <- slope_table %>% 
   rownames_to_column() %>% 
@@ -877,15 +915,13 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
     scale_fill_manual(values=drug_pal_fact)+
     theme_classic() +
     ylab("average slope") +
-    # geom_signif(comparisons =list(c("Daunorubicin","Vehicle"),
-    #                               c("Doxorubicin","Vehicle"),
-    #                               c("Epirubicin","Vehicle"),
-    #                               c("Mitoxantrone","Vehicle"),
-    #                               c("Trastuzumab","Vehicle")),
-    #             test= "t.test",
-    #             map_signif_level=TRUE,
-    #             textsize =4,
-    #             step_increase = 0.1)+
+    geom_signif(comparisons =list(c("DNR","DOX"),
+                                  c("EPI","DOX"),
+                                  c("MTX","DOX")),
+                test= "t.test",
+                map_signif_level=TRUE,
+                textsize =4,
+                step_increase = 0.1)+
     ggtitle("Average slope between treatments")+
     theme(axis.title=element_text(size=10),
           axis.ticks=element_line(size =2),
