@@ -795,7 +795,7 @@ trLD <- sapply(param_holder, "[[", 1)
 ```
 
 
-```{r extracting with drm, include=FALSE}
+```{r extracting with drm, echo=TRUE, message=FALSE, warning=FALSE}
 daunls <- list() ###daunorubicin list
 dnr_sl <- list()
 doxols <- list() ### doxorubicin list
@@ -853,6 +853,8 @@ thingdx <-  filter(DXi, SampleID==k)
   
 }
 
+
+
 ```
 
 
@@ -895,39 +897,51 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
 ### extracting slope
 ```{r slope extraction, message=FALSE, warning=FALSE, include=FALSE}
 #
-library(RColorBrewer)
-drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-# daunls <- plyr::quickdf(daunls) %>% 
+# library(RColorBrewer)
+# drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+# daunls <- plyr::quickdf(daunls) %>%
 #   pivot_longer(everything(),names_to = 'indv', values_to = "Daun")
-#                         
-# doxols <- plyr::quickdf(doxols) %>% 
+# 
+# doxols <- plyr::quickdf(doxols) %>%
 #   pivot_longer(everything(),names_to = 'indv', values_to = "Doxo")
-# epils <- plyr::quickdf(epils)%>% 
+# epils <- plyr::quickdf(epils)%>%
 #   pivot_longer(everything(),names_to = 'indv', values_to = "Epi")
-# mitols <- plyr::quickdf(mitols)%>% 
+# mitols <- plyr::quickdf(mitols)%>%
 #   pivot_longer(everything(), names_to = 'indv', values_to = "Mito")
 # 
 # LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
 # 
-# meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>% 
-# pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50') 
+# avgLD <- LDfull%>% 
+#   pivot_longer(!indv,names_to = 'treatment', values_to = 'LD50') %>% 
+#   mutate(indv=str_sub(indv, 4,4)) %>% 
+#   group_by(treatment,indv) %>% 
+#   summarise_at(vars(LD50),list(avg = mean))
+# ggplot(avgLD, aes(x))geom_boxplot(position="dodge", aes(fill=rowname))+
+#     geom_point(aes(color=indv))+
+#     guides(alpha = "none")+
+#     scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+#     scale_fill_manual(values=drug_pal_fact)+
+#     theme_classic() +
+# 
+# # meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>% 
+# # pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50') 
+# # 
+# # 
+# # avgLD50 <- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
+# #saveRDS(avgLD50,"data/avgLD50.RDS")
+# 
+# # LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
+# # colnames(LDfull) <- c("indv","Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
+# # summary(LDfull)
+# # BC_cell_lines <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx", sheet = "BC_sample_set")
+# #write.csv(BC_cell_lines ,"data/BC_cell_lines.csv")
 # 
 # 
-# avgLD50 <- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
-#saveRDS(avgLD50,"data/avgLD50.RDS")
-
-# LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
-# colnames(LDfull) <- c("indv","Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
-# summary(LDfull)
-# BC_cell_lines <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx", sheet = "BC_sample_set")
-#write.csv(BC_cell_lines ,"data/BC_cell_lines.csv")
-
-
-
-
-____________________________________
 # 
-# mtiplot <- ggplot(MTi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
+# 
+# ____________________________________
+# # 
+# # mtiplot <- ggplot(MTi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
 #             stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))),se = FALSE)+
 #         scale_x_log10() 
 # 
@@ -1216,7 +1230,7 @@ drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
 avgLD50 <- readRDS("data/avgLD50.RDS")
   
-graphLD50 <- avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
+graphLD50 <- avgLD50 %>%     mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
                                         "Doxo"~"Doxorubicin",
                                         "Epi"~"Epirubicin",
                                         "Mito"~"Mitoxantrone",
@@ -1248,6 +1262,7 @@ graphLD50 <- avgLD50 %>% mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubi
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
 
 graphLD50
+avgLD50 %>% dplyr::group_by(Treatment) %>% summarize_at(vars(LD50), list(median = median))
 
 
 graphBC <- BC_cell_lines %>%
