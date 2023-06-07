@@ -23,6 +23,8 @@ library(scales)
 library(sjmisc)
 library(kableExtra)
 library(broom)
+library(ComplexHeatmap)
+  
 
 
 ```
@@ -559,8 +561,7 @@ chi_funarr
 
 ```
 ```{r ARR heatmap,echo=FALSE}
-library(ComplexHeatmap)
-  
+
 ARRmat <- chi_funarr %>% ungroup() %>% 
   mutate(ARR= log(pvalue)*(-1)) %>% 
   mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
@@ -569,8 +570,8 @@ ARRmat <- chi_funarr %>% ungroup() %>%
   
 
 
-
-Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+col_fun1 = circlize::colorRamp2(c(-1, 3), c("white", "purple"))
+Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col=col_fun1)
 
 
 
@@ -695,7 +696,7 @@ HFmat <- chi_funhf %>% ungroup() %>%
   column_to_rownames('term_name') 
 
 
-Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col = col_fun1)
 
 
 
@@ -823,15 +824,16 @@ CADmat <- chi_funCAD %>% ungroup() %>%
   unite("term_name",id,time,sep="_") %>% 
   column_to_rownames('term_name') 
 
+col_fun4 = circlize::colorRamp2(c(-1, 4), c("white", "purple"))
 
-
-Heatmap( as.matrix(CADmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+Heatmap( as.matrix(CADmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col_fun4)
 
 GWASmat <- bind_cols(CADmat$CAD,HFmat$HF,ARRmat$ARR) 
 colnames(GWASmat) <- c('CAD','HF','ARR')
 rownames(GWASmat) <- rownames(CADmat)# %>% tibble() %>% dplyr::select) %>% as.matrix()
 
-Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE, cluster_columns = FALSE, column_names_rot = 0)
+
+Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE,row_order = c(1,3,5,7,2,4,6,8), cluster_columns = FALSE, column_names_rot = 0,col_fun4)
 
 ```
 ## GTEx V8 heart-left ventrical egenes
@@ -1227,13 +1229,120 @@ supp45Xmat <- supp45X %>%
   column_to_rownames('motif') %>% 
   rename(c("n = 408"= pval1, "n = 54"=pval4))
 
-Heatmap( as.matrix(supp45Xmat), name = " Seoane CAG sets \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+Heatmap( as.matrix(supp45Xmat), name = "Seoane CAG sets \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
 
 
 
 ```
 
 
+## Crispr list  
+
+
+```{r Crispr data analysis}
+library(readxl)
+# Crispr_list <- read_excel("C:/Users/renee/Downloads/41598_2021_92988_MOESM2_ESM.xlsx")
+#  View(Crispr_list)
+# crispr_genes <- Crispr_list %>% 
+#   dplyr::filter(p.value <0.05) %>% 
+#   select(GeneName)
+  
+
+# crispr_genes <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+                  # values =crispr_genes$GeneName, mart = ensembl)
+# write.csv(crispr_genes,'data/crispr_genes.csv')
+
+crispr_genes <- read.csv("data/crispr_genes.csv", row.names = 1)
+print(" number of unique crispr_genes after conversion from hgnc symbol to entrezid")
+length(unique(crispr_genes$entrezgene_id))
+crisprunique <- crispr_genes %>% distinct(entrezgene_id,.keep_all = TRUE)
+
+Doxcrispall <- toplistall %>%
+  distinct(ENTREZID,.keep_all = TRUE) %>% 
+  dplyr::select(ENTREZID,id,time)
+  
+
+crispmotifsummary <- Doxcrispall %>% 
+  mutate(ER=if_else(ENTREZID %in% motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in% motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in% motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in% motif_NR,"y","no")) %>%
+  mutate(crisp = if_else(ENTREZID %in% crisprunique$entrezgene_id, "y", "no")) %>% 
+  group_by(crisp,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(crisp), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("crisp"=crisp,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6)) 
+
+cris_mat <- crispmotifsummary %>% dplyr::select(ER:NR) %>% as.matrix()
+chicheck <- data.frame(one= c("LR","ER","TI"),two=rep("NR",3),p.value=c("","",""))
+  
+ chicheck$p.value[1] <- chisq.test(cris_mat[,c('LR','NR')],correct = FALSE)$p.value
+
+chicheck$p.value[2] <- chisq.test(cris_mat[,c('ER','NR')],correct = FALSE)$p.value
+chicheck$p.value[3] <- chisq.test(cris_mat[,c('TI','NR')],correct = FALSE)$p.value
+
+chicheck%>% kable(., caption= "chi square test p.values for encrichment of  Doxcrispr gene sets in motif sets" )%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+chicheck_1 <- chicheck %>% mutate(p.value=as.numeric(p.value)) %>% 
+  mutate(neg.logvalue=(-1*log(p.value))) %>% column_to_rownames('one') %>% dplyr::select(neg.logvalue) %>% as.matrix
+col_fun = circlize::colorRamp2(c(0, 2), c("white", "purple"))
+
+Heatmap( chicheck_1, name = "Doxcrispr enrichment \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun)
+```
+
+
+
+```{r crisper DEG}
+
+
+col_fun4 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
+
+
+pairwisecrispr <- toplistall %>%
+  filter(id!='Trastuzumab') %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(crisp = if_else(ENTREZID %in% crisprunique$entrezgene_id, "y", "no")) %>% 
+  group_by(time, id) %>%
+  summarise(pvalue= chisq.test(crisp, sigcount, correct=FALSE)$p.value)
+ 
+  
+  crisprnumbers <- toplistall %>%
+  filter(id!='Trastuzumab') %>% 
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(crisp = if_else(ENTREZID %in% crisprunique$entrezgene_id, "y", "no")) %>% 
+  group_by(time, id,sigcount,crisp) %>%
+  dplyr::summarize(n=n()) %>% 
+  as.tibble() #%>% 
+  
+crisprnumbers %>% kable(., caption= "Summary of genes found in both sigDE and non sigDE by treatment" )%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+pairwisecrispr%>% kable(., caption= "Summary of chisqure values between numbers of sigDE and non sigDE by treatment" )%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
+
+
+crisp_pair_mat <- pairwisecrispr %>%
+  mutate(neg.log.pvalue= (-1*log(pvalue))) %>% 
+  mutate(time= case_match(time, '3_hours'~'3_hrs', '24_hours'~'24_hrs',.default = id)) %>% 
+  mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
+  unite('pairset',time,id ) %>% 
+  column_to_rownames('pairset') %>% dplyr::select(neg.log.pvalue) %>% as.matrix()
+    
+Heatmap( crisp_pair_mat, name = "Doxcrispr pairwise enrichment \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun)
+
+```
 
 
 
