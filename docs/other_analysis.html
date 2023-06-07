@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0ecede3a8e7f18601d7dc3ac18736f74f590678btargetblank0ecede3a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree81f100c2b2c928fdd16d1632fd859f3928f81cadtargetblank81f100ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0ecede3a8e7f18601d7dc3ac18736f74f590678b" target="_blank">0ecede3</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/81f100c2b2c928fdd16d1632fd859f3928f81cad" target="_blank">81f100c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree0ecede3a8e7f18601d7dc3ac18736f74f590678btargetblank0ecede3a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree81f100c2b2c928fdd16d1632fd859f3928f81cadtargetblank81f100ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/0ecede3a8e7f18601d7dc3ac18736f74f590678b" target="_blank">0ecede3</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/81f100c2b2c928fdd16d1632fd859f3928f81cad" target="_blank">81f100c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -696,6 +696,7 @@ Untracked files:
     Untracked:  reneebasecode.R
 
 Unstaged changes:
+    Modified:   analysis/DEG-GO_analysis.Rmd
     Modified:   analysis/DRC_analysis.Rmd
     Modified:   code/eQTLcodes.R
 
@@ -743,6 +744,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/81f100c2b2c928fdd16d1632fd859f3928f81cad/analysis/other_analysis.Rmd" target="_blank">81f100c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-07
+</td>
+<td>
+add Dox reQTL grouping and AC shared numbers
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/47f85a29402175e486a4473027adccfd648c8279/docs/other_analysis.html" target="_blank">47f85a2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1332,6 +1367,395 @@ Supplemental 4 (54 genes)</p>
 <pre><code>[1] 218</code></pre>
 <pre><code>[1] &quot;number of unique genes expressed in pairwise DE set&quot;</code></pre>
 <p><img src="figure/other_analysis.Rmd/loading%20data%20files-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:80%; ">
+<table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
+<caption style="font-size: initial !important;">
+All genes (sig and nonsig) brokendown by drug and DOXreQTL status
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+id
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+DOXreQTLs
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+sigcount
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+7209
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+6695
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+169
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+7568
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+6336
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+180
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+7856
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+6048
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+154
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+12613
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+1291
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+144
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:right;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Trastuzumab
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+13904
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Trastuzumab
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:right;">
+180
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:80%; ">
+<table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
+<caption style="font-size: initial !important;">
+DOXreQTL genes with AC genes and DE sig and non-sig numbers
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+DOXreQTLs
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+sigcount
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+AC
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:right;">
+7105
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:right;">
+104
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:right;">
+2480
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:right;">
+4215
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+notsig
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:right;">
+53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:left;">
+sig
+</td>
+<td style="text-align:left;">
+y
+</td>
+<td style="text-align:right;">
+116
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>Determining the genetic basis of anthracycline-cardiotoxicity by
 molecular response QTL mapping in induced cardiomyocytes David A
 Knowles, Courtney K Burrows†, John D Blischak, Kristen M Patterson,
