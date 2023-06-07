@@ -199,6 +199,49 @@ DoxonlyQTL <-  QTLoverlaps$..values..[[14]]
 
 ```
   
+  
+  
+  
+```{r updated reQtl dox}
+  
+  toplistall %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(DOXreQTLs=if_else(ENTREZID %in%DOXreQTLs$ENTREZID,"y","no")) %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID,id,DOXreQTLs,sigcount) %>%
+  group_by(id,DOXreQTLs,sigcount) %>% 
+  tally() %>% 
+  kable(., caption= "All genes (sig and nonsig) brokendown by drug and DOXreQTL status") %>% 
+  kable_paper("striped", full_width = FALSE) %>% 
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "80%", height = "400px")
+
+    
+ 
+
+siglist <- readRDS("data/siglist.RDS")
+list2env(siglist,envir=.GlobalEnv)
+total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+store <- VennDiagram::get.venn.partitions(total24)
+  AClist <- store$..values..[9]
+  
+  DoxreQTL_AC <- toplistall %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(DOXreQTLs=if_else(ENTREZID %in%DOXreQTLs$ENTREZID,"y","no")) %>% 
+  mutate(AC=if_else(ENTREZID %in%AClist$'9',"y","no")) %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID,id,DOXreQTLs,sigcount,AC) %>%distinct(ENTREZID,.keep_all = TRUE) %>% 
+    group_by(DOXreQTLs,sigcount,AC) %>% tally()
+  #%>%
+  DoxreQTL_AC %>%   
+  kable(., caption= "DOXreQTL genes with AC genes and DE sig and non-sig numbers") %>% 
+  kable_paper("striped", full_width = FALSE) %>% 
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "80%", height = "400px")
+
+    
+```
+  
 Determining the genetic basis of anthracycline-cardiotoxicity by molecular
 response QTL mapping in induced cardiomyocytes
 David A Knowles, Courtney K Burrows†, John D Blischak,
