@@ -43,26 +43,10 @@ Seaone 2019
 # Pairwise Data enrichment  
 
 ## Knowles Comparison data:  
-
-
-```{r loading knowles data}
-# toplistall <- read.csv("output/toplistall.csv", row.names = 1)
-toplistall <- readRDS("data/toplistall.RDS")
-backGL <- read.csv("data/backGL.txt",     row.names =1)
- drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
-drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
-time <- ordered(time, levels =c("3h", "24h"))
-drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
-mat_drug <- c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone")
-indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
-labeltop <- (interaction(substring(drug, 0, 2), indv, time))
+```{r ensembl conversion, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-
 my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
-level_order2 <- c('75','87','77','79','78','71')
-
 knowfig4 <- read.csv("data/knowfig4.csv",row.names = 1)
 knowfig5 <- read.csv("data/knowfig5.csv",row.names = 1)
 
@@ -76,9 +60,31 @@ knowles4 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
                   values =knowfig4, mart = ensembl)
 #524
 
-
 saveRDS(knowles4,"output/knowles4.RDS")
 saveRDS(knowles5,"output/knowles5.RDS")
+
+```
+
+
+```{r loading data files,echo=FALSE,eval=TRUE}
+# toplistall <- read.csv("output/toplistall.csv", row.names = 1)
+
+backGL <- read.csv("data/backGL.txt",     row.names =1)
+ drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
+time <- ordered(time, levels =c("3h", "24h"))
+drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+mat_drug <- c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone")
+indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
+labeltop <- (interaction(substring(drug, 0, 2), indv, time))
+level_order2 <- c('75','87','77','79','78','71')
+
+
+toplistall <- readRDS("data/toplistall.RDS")
+knowles4 <-readRDS("output/knowles4.RDS")
+knowles5 <-readRDS("output/knowles5.RDS")
+
 
 knowles4 <-knowles4 %>% 
   distinct(entrezgene_id,.keep_all = TRUE)
@@ -360,8 +366,6 @@ toplist24hr %>%
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
        facet_wrap(~sigcount)+
        ggtitle("non-significant and significant enrichment proporitions of Knowles reQTLs ")
-  
-
 
 ```
 
@@ -369,6 +373,7 @@ toplist24hr %>%
 ```{r Knowles comparison between sets}
 
 Knowles_count <- toplistall %>%
+  filter(id!='Trastuzumab') %>% 
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   group_by(time, id) %>%
@@ -376,7 +381,7 @@ Knowles_count <- toplistall %>%
   mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,1,0))%>%
   filter(adj.P.Val<0.05) %>%
   dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
-  as.data.frame() %>% 
+  as.tibble() %>% 
   dplyr::select(time,id,K4,K5) %>% rename("K4_y"='K4',"K5_y"='K5') %>% 
   mutate(time = case_match(time, '3_hours'~'3 hrs',
                            '24_hours'~'24 hrs',.default = time)) %>% 
@@ -397,19 +402,45 @@ Knowles_count <- toplistall %>%
    scale_color_manual(values=drug_palNoVeh)+
     scale_fill_manual(values=drug_palNoVeh)+
        scale_y_continuous(label = scales::percent)
-    
+
+  ###This works
+  chi_frame <- Knowles_count %>%
+  pivot_wider(id_cols = c(time, id,QTL_type), names_from = group, values_from = gene_count) 
+
+testDNR3chi <- matrix(c(6,13,497, 358), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n"))) 
+    DNR_3chi <- chisq.test(testDNR3chi,correct=FALSE)$p.value
+testDNR24chi <- matrix(c(199,187,304, 184), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n")))  
+    DNR_24chi <- chisq.test(testDNR24chi,correct=FALSE)$p.value
+
+testDOX3chi <- matrix(c(0,0,503, 371), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n")))  
+    DOX_3chi <- chisq.test(testDOX3chi,correct=FALSE)$p.value
+testDOX24chi <- matrix(c(184,180,318, 191), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n"))) 
+    DOX_24chi <- chisq.test(testDOX24chi,correct=FALSE)$p.value
+
+testEPI3chi <- matrix(c(4,4,499, 367), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n"))) 
+    EPI_3chi <- chisq.test(testEPI3chi,correct=FALSE)$p.value
+testEPI24chi <- matrix(c(172,176,331, 195), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n"))) 
+    EPI_24chi <- chisq.test(testEPI24chi,correct=FALSE)$p.value
   
-   Knowles_count %>% 
-     spread(gene_chout,group) #%>% 
-  summarize(pvalue= chisq.test(gene_count,group)$p.value) 
-     
-    tab <- tapply(Knowles_count$count, list(good_example$category, good_example$variable), FUN=sum)
-> chisq.test(tab, correct = FALSE                             
-chisq.test(tab[,-1],correct=FALSE)
-  
-  
-  
-  
+testMTX3chi <- matrix(c(1,0,502, 370), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n"))) 
+    MTX_3chi <- chisq.test(testMTX3chi,correct=FALSE)$p.value
+testMTX24chi <- matrix(c(30,40,473, 331), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("k4", "k5"),c( "y", "n"))) 
+    MTX_24chi <- chisq.test(testMTX24chi,correct=FALSE)$p.value
+K4nK5chi <- data.frame(treatment=c('DNR_3','DNR_24','DOX_3','DOX_24','EPI_3','EPI_24','MTX_3','MTX_24'), chi_p.value=c(DNR_3chi,DNR_24chi,DOX_3chi,DOX_24chi,EPI_3chi,EPI_24chi,MTX_3chi,MTX_24chi))
+
+K4nK5chi %>% kable(., caption= "Chi Square p. values between proportions of meQTLs and reQTLS by time and treatment") %>% 
+  kable_paper("striped", full_width = TRUE) %>%  
+  kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box( height = "500px")
+ 
 ```
 
 
@@ -429,10 +460,12 @@ toplist24hr <- toplistall %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time== "24_hours")
 arr_GWAS <- read.csv("data/Arr_GWAS.txt", row.names = 1)
-Arr_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-                  values = arr_GWAS, mart = ensembl)
-#remove duplicates
-Arr_geneset <- Arr_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+Arr_geneset <- readRDS("data/Arr_geneset.RDS")
+# Arr_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+#                   values = arr_GWAS, mart = ensembl)
+# #remove duplicates
+# Arr_geneset <- Arr_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+# saveRDS(Arr_geneset,"data/Arr_geneset.RDS")
 #Apply sorting
 toplist24hr %>% 
   mutate(id = as.factor(id)) %>%
@@ -557,11 +590,13 @@ Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square -log p values", cluste
 # Hf_GWAS <- test2
 #write.csv(Hf_GWAS, "data/Hf_GWAS.txt")
 HF_GWAS <- read.csv("data/Hf_GWAS.txt", row.names =1)
-
-HF_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-                  values = HF_GWAS, mart = ensembl)
-#remove duplicates
-HF_geneset <- HF_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+# 
+# HF_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+#                   values = HF_GWAS, mart = ensembl)
+# #remove duplicates
+# HF_geneset <- HF_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+# saveRDS(HF_geneset,"data/HF_geneset.RDS")
+HF_geneset <- readRDS("data/HF_geneset.RDS")
 #Apply sorting
 toplist24hr %>% 
   mutate(id = as.factor(id)) %>%
@@ -594,12 +629,6 @@ dataframHF %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
-
-
-
-
-
-
 
 
 ```
@@ -689,11 +718,17 @@ Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values
 #write.csv(CAD_GWAS, "data/cvd_GWAS.txt")
 CAD_GWAS <- read.csv("data/cvd_GWAS.txt", row.names =1)
 
-CAD_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-                  values = CAD_GWAS, mart = ensembl)
-#remove duplicates
-CAD_geneset <- CAD_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+# CAD_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
+#                   values = CAD_GWAS, mart = ensembl)
+# #remove duplicates
+# CAD_geneset <- CAD_geneset %>% distinct(entrezgene_id, .keep_all =TRUE)
+# 
+# saveRDS(CAD_geneset,"data/CAD_geneset.RDS")
+CAD_geneset <- readRDS("data/CAD_geneset.RDS")
 #Apply sorting
+
+
+
 toplist24hr %>% 
   mutate(id = as.factor(id)) %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
