@@ -22,8 +22,8 @@ Welcome to my research website. I am using workflowr to create reproducible code
  
 ## Pairwise gene analysis
  [pairwise GO](https://reneeisnowhere.github.io/Cardiotoxicity/DEG-GO_analysis.html)
-
-
+ 
+ 
 [LDH analysis and Calcium analysis](https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html)
 
 
@@ -33,7 +33,24 @@ Welcome to my research website. I am using workflowr to create reproducible code
 Data set comparisons
 [reQTLS](https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html)
 
+### Paper figures
+[Figure 1](https://reneeisnowhere.github.io/Cardiotoxicity/Figure1.html)  
 
+[Figure 2](https://reneeisnowhere.github.io/Cardiotoxicity/Figure2.html)  
+
+[Figure 3](https://reneeisnowhere.github.io/Cardiotoxicity/Figure3.html)  
+
+[Fi gure 4](https://reneeisnowhere.github.io/Cardiotoxicity/Figure4.html)  
+
+[Figure 5](https://reneeisnowhere.github.io/Cardiotoxicity/Figure5.html)  
+
+[Figure 6](https://reneeisnowhere.github.io/Cardiotoxicity/Figure6.html)  
+
+[Figure 7](https://reneeisnowhere.github.io/Cardiotoxicity/Figure7.html)  
+
+[Figure 8](https://reneeisnowhere.github.io/Cardiotoxicity/Figure8.html)  
+
+[Figure 9](https://reneeisnowhere.github.io/Cardiotoxicity/Figure9.html)  
 
 # Older Analysis
 Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html) to see my results from the first analysis 
