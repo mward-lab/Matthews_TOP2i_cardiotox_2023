@@ -19,7 +19,7 @@ Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
 
 ## A. Project Overview
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::include_graphics("output/Fig_summary1.png")
 ```
 
