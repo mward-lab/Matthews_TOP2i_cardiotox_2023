@@ -23,13 +23,33 @@ Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
 knitr::include_graphics("output/Fig_summary1.png")
 ```
 
-things to note about this image so far:  Need to import into illustrator.  Goal is to have colors changes on Drugs from sick purple and jaudice yellow, to a red tone and a blue tone for non-ACs.  I also want to change to add a time line of treatment.
+things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
+
+## B. Example Dose response curves from 48 hour drug exposure.
+
+Lines are a log-logistic regression of the mean from quadruplicates at 8 separate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
+
+![DRC plot](C:/Program%20Files/R_WD/Cardiotoxicity/output/plan2plot.png)
+
+![Legend for DRC plot](C:/Program%20Files/R_WD/Cardiotoxicity/individual-legenddark2.png){30%}
+
+## C 48 hour 50% leatal dose plot
+
+```{r}
+library(car)
+#library(dr4pl) no longer used
+library(tidyverse)
+library(tinytex)
+library(BiocGenerics)
+library(data.table)
+library(drc)
+# library(Hmisc)
+# library(cowplot)
+# library(grid)
+library(ggsignif)
+library(RColorBrewer)
+library(broom)
 
 
-## B. Example Dose response curves from 48 hour drug exposure. Lines are a log-logistic regression of the mean from quadriplicates at 8 seperate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
 
-```{r message=FALSE, warning=FALSE}
-knitr::include_graphics('output/plan2plot.png')
-knitr::include_graphics('individual-legenddark2.png')
 ```
-
