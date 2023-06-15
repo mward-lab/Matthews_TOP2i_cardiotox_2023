@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-06-14" />
+<meta name="date" content="2023-06-15" />
 
 <title>GTEx_genes</title>
 
@@ -363,7 +363,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GTEx_genes</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-06-14</h4>
+<h4 class="date">2023-06-15</h4>
 
 </div>
 
@@ -392,7 +392,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-06-14
+<strong>Last updated:</strong> 2023-06-15
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeff0298978f92043090ea7528d639f966a42c930dtargetblankff02989a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreed5478771e9d452749ccdbd07bbe537ad93cf2597targetblankd547877a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/ff0298978f92043090ea7528d639f966a42c930d" target="_blank">ff02989</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/d5478771e9d452749ccdbd07bbe537ad93cf2597" target="_blank">d547877</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeff0298978f92043090ea7528d639f966a42c930dtargetblankff02989a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreed5478771e9d452749ccdbd07bbe537ad93cf2597targetblankd547877a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/ff0298978f92043090ea7528d639f966a42c930d" target="_blank">ff02989</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/d5478771e9d452749ccdbd07bbe537ad93cf2597" target="_blank">d547877</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -708,7 +708,7 @@ Untracked files:
 Unstaged changes:
     Modified:   analysis/DEG-GO_analysis.Rmd
     Modified:   analysis/Figure1.Rmd
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/Knowles2019.Rmd
     Modified:   code/eQTLcodes.R
 
 </code></pre>
@@ -755,6 +755,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d5478771e9d452749ccdbd07bbe537ad93cf2597/analysis/GTEx_genes.Rmd" target="_blank">d547877</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-15
+</td>
+<td>
+update on GTEx
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7600128faca947e3cc6662ac5fec29f57ab0d4f0/docs/GTEx_genes.html" target="_blank">7600128</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -914,10 +948,8 @@ overall than using the hgnc_symbol filter.</p>
 nQTL &lt;- not_eqtls
 # &#39;%!in%&#39; &lt;- function(x,y)!(&#39;%in%&#39;(x,y))
 
-# nQTL &lt;- toplistall %&gt;% 
-#   filter(adj.P.Val&lt;0.05) %&gt;% 
-#   distinct(ENTREZID) %&gt;% 
-#   dplyr:: filter(!ENTREZID %in%GTEx)
+nQTLmy &lt;- my_exp_genes %&gt;%
+   dplyr:: filter(!ENTREZID %in%GTEx)
 
 # testset &lt;- toplistall %&gt;% 
 #   filter(adj.P.Val&lt;0.05) %&gt;% 
@@ -928,656 +960,182 @@ data, I intersected my expressed genes list of 14084 genes with the
 GTEx_genes and found 6261 genes were shared between them. I called this
 set ‘GTEx’. Using the other eGenes from GTEx, I made another set
 intersected with my expressed gene set called ‘nQTL’. This nQTL set
-contains 6711 genes. Next, I then took my DEG top list and filtered out
+contains 7823 genes. Next, I then took my DEG top list and filtered out
 genes with an adj.P.value &lt; 0.05.</p>
-<pre class="r"><code>drug_palspc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#8B006D&quot;,&quot;#DF707E&quot;)
-
-GTEX_table &lt;-  toplistall %&gt;%
-  mutate(id = as.factor(id)) %&gt;%
-  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
-  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
-  mutate(nQTL=if_else(ENTREZID %in% nQTL$entrezgene_id,&#39;nQTL_y&#39;,&#39;nQTL_no&#39;)) %&gt;% 
-  mutate(GTEx=if_else(ENTREZID %in%GTEx,&quot;GTEx_y&quot;,&quot;GTEx_no&quot;)) %&gt;% 
-  dplyr::select( id, time,ENTREZID,GTEx,nQTL) %&gt;% 
-  group_by(id,time,GTEx,nQTL) %&gt;% 
-  tally() %&gt;% as.data.frame()#
-
-nQTL_table &lt;- toplistall %&gt;%
-  mutate(id = as.factor(id)) %&gt;%
-  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
-  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
-  mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id,&#39;nQTL_y&#39;,&#39;nQTL_no&#39;)) %&gt;% 
- 
-  dplyr::select( id, time,ENTREZID,nQTL) %&gt;% 
-  group_by(id,time,nQTL) %&gt;% 
-  summarize(total=n()) %&gt;% as.data.frame()
-
-
-GTEX_table_chi &lt;-  toplistall %&gt;%
-  mutate(id = as.factor(id)) %&gt;%
-  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
-  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
-  mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id, &#39;nQTL_y&#39;,&#39;nQTL_no&#39;)) %&gt;% 
-  mutate(GTEx=if_else(ENTREZID %in%GTEx,&quot;GTEx_y&quot;,&quot;GTEx_no&quot;)) %&gt;% 
-    dplyr::select( id, time,ENTREZID,GTEx,nQTL) %&gt;% 
-  group_by(id,time) %&gt;% 
-  summarise(pvalue= chisq.test(nQTL, GTEx)$p.value) 
- 
-toplistall %&gt;%
-  mutate(id = as.factor(id)) %&gt;%
-  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
-  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
-  mutate(nQTL= if_else(ENTREZID %in% nQTL$entrezgene_id,&#39;nQTL_y&#39;,&#39;nQTL_no&#39;)) %&gt;% 
-  mutate(GTEx=if_else(ENTREZID %in%GTEx,&quot;GTEx_y&quot;,&quot;GTEx_no&quot;)) %&gt;% 
-    dplyr::select( id, time,ENTREZID,GTEx,nQTL) %&gt;% 
-  group_by(id,time,nQTL,GTEx) %&gt;% 
-  # summarize(value=n())#%&gt;% 
-    pivot_longer(!c(id,time, ENTREZID)) %&gt;% 
-    ggplot(., aes(x=name))+
-    geom_bar(aes(fill=value),position=&quot;fill&quot;, stat=&quot;count&quot;)+
-  # guides(fill=&quot;none&quot;)+
-    facet_wrap(time~id,nrow=2,ncol=4)+
-    theme_classic()+
-   # scale_color_manual(values=drug_palNoVeh[c(1,2)])+
-    scale_fill_manual(values=drug_palspc)+
-       scale_y_continuous(label = scales::percent)</code></pre>
-<p><img src="figure/GTEx_genes.Rmd/GTEx%20proportion%20overall-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>GTEX_table %&gt;% kable(., caption= &quot;Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes&quot;)%&gt;% 
-  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
-  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
-  scroll_box(width = &quot;60%&quot;, height = &quot;800px&quot;)</code></pre>
-<div
-style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:800px; overflow-x: scroll; width:60%; ">
-<table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
-<caption style="font-size: initial !important;">
-Genes from Gtex that overlap and do not overlap DE genes, and all
-not_gtex genes that overlap and do not overlap DE genes
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-id
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-time
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-GTEx
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-nQTL
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-n
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-22
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-343
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-190
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-511
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-3321
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-3028
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-14
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-471
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-3168
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-2875
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-137
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-77
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-458
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-3058
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-2684
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-42
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-13
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-104
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_no
-</td>
-<td style="text-align:left;">
-nQTL_y
-</td>
-<td style="text-align:right;">
-689
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:left;">
-GTEx_y
-</td>
-<td style="text-align:left;">
-nQTL_no
-</td>
-<td style="text-align:right;">
-534
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<pre class="r"><code>GTEX_table_chi %&gt;% 
-  kable(., caption= &quot;Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes&quot;)%&gt;% 
-  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
-  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
-  scroll_box(width = &quot;60%&quot;, height = &quot;800px&quot;)</code></pre>
-<div
-style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:800px; overflow-x: scroll; width:60%; ">
-<table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
-<caption style="font-size: initial !important;">
-Genes from Gtex that overlap and do not overlap DE genes, and all
-not_gtex genes that overlap and do not overlap DE genes
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-id
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-time
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-pvalue
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Daunorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:right;">
-0.0042747
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Epirubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mitoxantrone
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-</tbody>
-</table>
-</div>
+<pre class="r"><code>drug_palspc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#8B006D&quot;,&quot;#DF707E&quot;)</code></pre>
 <p>The next step is to wrangle the data so that I can test the
 difference between the proportions of significantly DE genes found in
 the GTEx and nQTLs.</p>
+<pre class="r"><code>nQTLsum &lt;- toplistall %&gt;%
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
+  mutate(nQTL=if_else(ENTREZID %in% nQTLmy$ENTREZID,&#39;nQTL_y&#39;,&#39;nQTL_no&#39;)) %&gt;% 
+  group_by(id,time,nQTL) %&gt;% 
+  tally() %&gt;% 
+  separate(nQTL, into=c(&#39;set&#39;, &#39;group&#39;)) %&gt;% 
+  mutate(total=length(nQTLmy$ENTREZID) - n) %&gt;% 
+  dplyr::filter(group==&quot;y&quot;)
+
+GTExsum &lt;- toplistall %&gt;%
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
+   mutate(GTEx=if_else(ENTREZID %in%GTEx,&quot;GTEx_y&quot;,&quot;GTEx_no&quot;)) %&gt;% 
+  group_by(id,time,GTEx) %&gt;% 
+  tally() %&gt;% 
+  separate(GTEx, into=c(&#39;set&#39;, &#39;group&#39;)) %&gt;% 
+  mutate(total=length(GTEx) - n) %&gt;% 
+  dplyr::filter(group==&quot;y&quot;)
+
+GTEXcr8z &lt;- GTExsum %&gt;% 
+  rbind(., nQTLsum) %&gt;% 
+  dplyr::select(id,time,set, n,total) %&gt;% 
+  pivot_longer(cols=n:total, names_to=&quot;group&quot;,values_to=&quot;total&quot;)  
+  
+
+GTEXcr8z %&gt;% 
+  ggplot(., aes(x=set,y=total, fill=group))+
+   geom_col(position=&#39;fill&#39;)+
+    facet_wrap(time~id,nrow=2,ncol=4)+
+    theme_classic()+
+   # scale_color_manual(values=drug_palNoVeh[c(1,2)])+
+    scale_fill_manual(values=drug_palspc)</code></pre>
+<p><img src="figure/GTEx_genes.Rmd/still%20going-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>GTExsum %&gt;% 
+  rbind(., nQTLsum) %&gt;% 
+  dplyr::select(id,time,set, n, total) %&gt;% 
+   mutate(time = case_match(time, &#39;3_hours&#39;~&#39;3 hrs&#39;,
+                           &#39;24_hours&#39;~&#39;24 hrs&#39;,.default = time)) %&gt;% 
+  mutate(id =case_match( id, 
+                         &#39;Daunorubicin&#39;~&#39;DNR&#39;,   
+                         &#39;Doxorubicin&#39;~&#39;DOX&#39; ,
+                         &#39;Epirubicin&#39;~&#39;EPI&#39; , 
+                         &#39;Mitoxantrone&#39; ~ &#39;MTX&#39;, .default = id)) #%&gt;% </code></pre>
+<pre><code># A tibble: 16 × 5
+# Groups:   id, time [8]
+   id    time   set       n total
+   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt;
+ 1 DNR   3 hrs  GTEx    190  6071
+ 2 DNR   24 hrs GTEx   3032  3229
+ 3 DOX   3 hrs  GTEx      2  6259
+ 4 DOX   24 hrs GTEx   2877  3384
+ 5 EPI   3 hrs  GTEx     77  6184
+ 6 EPI   24 hrs GTEx   2686  3575
+ 7 MTX   3 hrs  GTEx     13  6248
+ 8 MTX   24 hrs GTEx    534  5727
+ 9 DNR   3 hrs  nQTL    365  7458
+10 DNR   24 hrs nQTL   3832  3991
+11 DOX   3 hrs  nQTL     14  7809
+12 DOX   24 hrs nQTL   3639  4184
+13 EPI   3 hrs  nQTL    143  7680
+14 EPI   24 hrs nQTL   3516  4307
+15 MTX   3 hrs  nQTL     45  7778
+16 MTX   24 hrs nQTL    793  7030</code></pre>
+<pre class="r"><code>testDNR3chix &lt;- matrix(c(365,190,7458, 6071), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;gtex&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
+    DNR_3chix &lt;- chisq.test(testDNR3chix,correct=TRUE)$p.value
+testDNR24chix &lt;- matrix(c(3832,3032,3991,3229), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;gtex&quot;),c( &quot;y&quot;, &quot;n&quot;)))  
+    DNR_24chix &lt;- chisq.test(testDNR24chix,correct=TRUE)$p.value
+
+testDOX3chix &lt;- matrix(c(14,2,7809,6259), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;gtex&quot;),c( &quot;y&quot;, &quot;n&quot;)))  
+    DOX_3chix &lt;- chisq.test(testDOX3chix,correct=TRUE)$p.value
+testDOX24chix &lt;- matrix(c(3639,2877,4184,3384), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;gtex&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
+    DOX_24chix &lt;- chisq.test(testDOX24chix,correct=TRUE)$p.value
+
+testEPI3chix &lt;- matrix(c(143,77,7680,6184), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;gtex&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
+    EPI_3chix &lt;- chisq.test(testEPI3chix)$p.value
+testEPI24chix &lt;- matrix(c(3516,2686,4307,3575), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;gtex&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
+    EPI_24chix &lt;- chisq.test(testEPI24chix)$p.value
+  
+testMTX3chix &lt;- matrix(c(45,13,7778,6248), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;nogtex&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
+    MTX_3chix &lt;- chisq.test(testMTX3chix)$p.value
+testMTX24chix &lt;- matrix(c(793,534,7030,5727), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c(&quot;nogtex&quot;,&quot;nogtex&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
+    MTX_24chix &lt;- chisq.test(testMTX24chix,correct=TRUE)$p.value
+GTEX_table_chix &lt;- data.frame(treatment=c(&#39;DNR_3&#39;,&#39;DNR_24&#39;,&#39;DOX_3&#39;,&#39;DOX_24&#39;,&#39;EPI_3&#39;,&#39;EPI_24&#39;,&#39;MTX_3&#39;,&#39;MTX_24&#39;), chi_p.value=c(DNR_3chix,DNR_24chix,DOX_3chix,DOX_24chix,EPI_3chix,EPI_24chix,MTX_3chix,MTX_24chix))
+
+GTEX_table_chix %&gt;% 
+  separate(treatment, into= c(&#39;Drug&#39;,&#39;time&#39;)) %&gt;% 
+  pivot_wider(id_cols = Drug, names_from = time, values_from = chi_p.value) %&gt;% 
+  kable(., caption= &quot;Chi Square p. values from chi-square test between proportions of sig-DE meQTLs and reQTLS by time and treatment&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = TRUE) %&gt;%  
+  kable_styling(full_width = FALSE, font_size = 16) %&gt;% 
+  scroll_box( height = &quot;500px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; ">
+<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Chi Square p. values from chi-square test between proportions of sig-DE
+meQTLs and reQTLS by time and treatment
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Drug
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+3
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+24
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+DNR
+</td>
+<td style="text-align:right;">
+0.0000010
+</td>
+<td style="text-align:right;">
+0.5220483
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DOX
+</td>
+<td style="text-align:right;">
+0.0202323
+</td>
+<td style="text-align:right;">
+0.5144642
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EPI
+</td>
+<td style="text-align:right;">
+0.0055023
+</td>
+<td style="text-align:right;">
+0.0159127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MTX
+</td>
+<td style="text-align:right;">
+0.0011436
+</td>
+<td style="text-align:right;">
+0.0012975
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
