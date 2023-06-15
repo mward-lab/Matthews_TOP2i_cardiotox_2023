@@ -119,10 +119,8 @@ GTEx <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
 nQTL <- not_eqtls
 # '%!in%' <- function(x,y)!('%in%'(x,y))
 
-# nQTL <- toplistall %>% 
-#   filter(adj.P.Val<0.05) %>% 
-#   distinct(ENTREZID) %>% 
-#   dplyr:: filter(!ENTREZID %in%GTEx)
+nQTLmy <- my_exp_genes %>%
+   dplyr:: filter(!ENTREZID %in%GTEx)
 
 # testset <- toplistall %>% 
 #   filter(adj.P.Val<0.05) %>% 
@@ -135,82 +133,105 @@ nQTL <- not_eqtls
 
 
 To find out how many genes from the gtex egenes were expressed in my data, I intersected my expressed genes list of `r length(my_exp_genes$ENTREZID)` genes with the GTEx_genes and found `r length(GTEx)` genes were shared between them. 
-I called this set 'GTEx'. Using the other eGenes from GTEx, I made another set intersected with my expressed gene set called 'nQTL'.  This nQTL set contains `r length(nQTL$entrezgene_id)` genes. Next, I then took my DEG top list and filtered out genes with an adj.P.value < 0.05.  
+I called this set 'GTEx'. Using the other eGenes from GTEx, I made another set intersected with my expressed gene set called 'nQTL'.  This nQTL set contains `r length(nQTLmy$ENTREZID)` genes. Next, I then took my DEG top list and filtered out genes with an adj.P.value < 0.05.  
 
 
 ```{r GTEx proportion overall}
 drug_palspc <- c("#8B006D","#DF707E","#8B006D","#DF707E")
 
-GTEX_table <-  toplistall %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  dplyr::filter(adj.P.Val <0.05) %>%
-  mutate(nQTL=if_else(ENTREZID %in% nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
-  mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
-  dplyr::select( id, time,ENTREZID,GTEx,nQTL) %>% 
-  group_by(id,time,GTEx,nQTL) %>% 
-  tally() %>% as.data.frame()#
-
-nQTL_table <- toplistall %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  dplyr::filter(adj.P.Val <0.05) %>%
-  mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
- 
-  dplyr::select( id, time,ENTREZID,nQTL) %>% 
-  group_by(id,time,nQTL) %>% 
-  summarize(total=n()) %>% as.data.frame()
-
-
-GTEX_table_chi <-  toplistall %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  dplyr::filter(adj.P.Val <0.05) %>%
-  mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id, 'nQTL_y','nQTL_no')) %>% 
-  mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
-    dplyr::select( id, time,ENTREZID,GTEx,nQTL) %>% 
-  group_by(id,time) %>% 
-  summarise(pvalue= chisq.test(nQTL, GTEx)$p.value) 
- 
-toplistall %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  dplyr::filter(adj.P.Val <0.05) %>%
-  mutate(nQTL= if_else(ENTREZID %in% nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
-  mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
-    dplyr::select( id, time,ENTREZID,GTEx,nQTL) %>% 
-  group_by(id,time,nQTL,GTEx) %>% 
-  # summarize(value=n())#%>% 
-    pivot_longer(!c(id,time, ENTREZID)) %>% 
-    ggplot(., aes(x=name))+
-    geom_bar(aes(fill=value),position="fill", stat="count")+
-  # guides(fill="none")+
-    facet_wrap(time~id,nrow=2,ncol=4)+
-    theme_classic()+
-   # scale_color_manual(values=drug_palNoVeh[c(1,2)])+
-    scale_fill_manual(values=drug_palspc)+
-       scale_y_continuous(label = scales::percent)
-  
-  
-  
-  
-GTEX_table %>% kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes")%>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "60%", height = "800px")
-
-
-GTEX_table_chi %>% 
-  kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes")%>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "60%", height = "800px")
-
-
-    
-
 ```
 
 The next step is to wrangle the data so that I can test the difference between the proportions of  significantly DE genes found in the GTEx and nQTLs.
 
+```{r still going}
+nQTLsum <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
+  mutate(nQTL=if_else(ENTREZID %in% nQTLmy$ENTREZID,'nQTL_y','nQTL_no')) %>% 
+  group_by(id,time,nQTL) %>% 
+  tally() %>% 
+  separate(nQTL, into=c('set', 'group')) %>% 
+  mutate(total=length(nQTLmy$ENTREZID) - n) %>% 
+  dplyr::filter(group=="y")
+
+GTExsum <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
+   mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
+  group_by(id,time,GTEx) %>% 
+  tally() %>% 
+  separate(GTEx, into=c('set', 'group')) %>% 
+  mutate(total=length(GTEx) - n) %>% 
+  dplyr::filter(group=="y")
+
+GTEXcr8z <- GTExsum %>% 
+  rbind(., nQTLsum) %>% 
+  dplyr::select(id,time,set, n,total) %>% 
+  pivot_longer(cols=n:total, names_to="group",values_to="total")  
+  
+
+GTEXcr8z %>% 
+  ggplot(., aes(x=set,y=total, fill=group))+
+   geom_col(position='fill')+
+    facet_wrap(time~id,nrow=2,ncol=4)+
+    theme_classic()+
+   # scale_color_manual(values=drug_palNoVeh[c(1,2)])+
+    scale_fill_manual(values=drug_palspc)
+      
+GTExsum %>% 
+  rbind(., nQTLsum) %>% 
+  dplyr::select(id,time,set, n, total) %>% 
+   mutate(time = case_match(time, '3_hours'~'3 hrs',
+                           '24_hours'~'24 hrs',.default = time)) %>% 
+  mutate(id =case_match( id, 
+                         'Daunorubicin'~'DNR',   
+                         'Doxorubicin'~'DOX' ,
+                         'Epirubicin'~'EPI' , 
+                         'Mitoxantrone' ~ 'MTX', .default = id)) #%>% 
+  
+
+```
+
+```{r trychi again}
+
+
+testDNR3chix <- matrix(c(365,190,7458, 6071), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","gtex"),c( "y", "n"))) 
+    DNR_3chix <- chisq.test(testDNR3chix,correct=TRUE)$p.value
+testDNR24chix <- matrix(c(3832,3032,3991,3229), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","gtex"),c( "y", "n")))  
+    DNR_24chix <- chisq.test(testDNR24chix,correct=TRUE)$p.value
+
+testDOX3chix <- matrix(c(14,2,7809,6259), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","gtex"),c( "y", "n")))  
+    DOX_3chix <- chisq.test(testDOX3chix,correct=TRUE)$p.value
+testDOX24chix <- matrix(c(3639,2877,4184,3384), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","gtex"),c( "y", "n"))) 
+    DOX_24chix <- chisq.test(testDOX24chix,correct=TRUE)$p.value
+
+testEPI3chix <- matrix(c(143,77,7680,6184), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","gtex"),c( "y", "n"))) 
+    EPI_3chix <- chisq.test(testEPI3chix)$p.value
+testEPI24chix <- matrix(c(3516,2686,4307,3575), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","gtex"),c( "y", "n"))) 
+    EPI_24chix <- chisq.test(testEPI24chix)$p.value
+  
+testMTX3chix <- matrix(c(45,13,7778,6248), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","nogtex"),c( "y", "n"))) 
+    MTX_3chix <- chisq.test(testMTX3chix)$p.value
+testMTX24chix <- matrix(c(793,534,7030,5727), nrow=2, ncol=2, byrow=FALSE,
+dimnames=list(c("nogtex","nogtex"),c( "y", "n"))) 
+    MTX_24chix <- chisq.test(testMTX24chix,correct=TRUE)$p.value
+GTEX_table_chix <- data.frame(treatment=c('DNR_3','DNR_24','DOX_3','DOX_24','EPI_3','EPI_24','MTX_3','MTX_24'), chi_p.value=c(DNR_3chix,DNR_24chix,DOX_3chix,DOX_24chix,EPI_3chix,EPI_24chix,MTX_3chix,MTX_24chix))
+
+GTEX_table_chix %>% 
+  separate(treatment, into= c('Drug','time')) %>% 
+  pivot_wider(id_cols = Drug, names_from = time, values_from = chi_p.value) %>% 
+  kable(., caption= "Chi Square p. values from chi-square test between proportions of sig-DE meQTLs and reQTLS by time and treatment") %>% 
+  kable_paper("striped", full_width = TRUE) %>%  
+  kable_styling(full_width = FALSE, font_size = 16) %>% 
+  scroll_box( height = "500px")
+```
 
