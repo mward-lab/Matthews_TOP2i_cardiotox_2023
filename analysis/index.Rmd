@@ -32,6 +32,7 @@ Welcome to my research website. I am using workflowr to create reproducible code
 
 Data set comparisons
 [reQTLS](https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html)
+[GTEx data](https://reneeisnowhere.github.io/Cardiotoxicity/GTEx_genes.html)
 
 ### Paper figures
 [Figure 1](https://reneeisnowhere.github.io/Cardiotoxicity/Figure1.html)  
