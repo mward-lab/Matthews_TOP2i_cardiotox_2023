@@ -41,7 +41,7 @@ GTEx_genes <- read.csv("data/GTEx_gene_list.csv",row.names = 1)
 not_eqtls <- read.csv("output/not_eqtls_GTEX.csv",row.names = 1)
 heart_gtex <- read.csv("output/heart_gtex.csv",row.names = 1)
 egenes <- read.csv("output/egenes.csv",row.names = 1)
-egenes_hgnc
+
 ```
 
 ```{r biomart holder,eval=FALSE,echo=FALSE}
