@@ -1011,3 +1011,18 @@ cormotfi4 %>%
 # backGL <- read.csv("data/backGL.txt")
 # NRresp <- read_csv("data/cormotif_NRset.txt")
 ##first filter and
+
+
+
+
+
+# new eqtl work 6-5-23 ----------------------------------------------------
+
+##lookng at the 180 genes from DoxDE24 and overlapping to see about enrichment
+##in both other gene sets and  Cormotif and me and reqtls
+
+
+
+
+
+

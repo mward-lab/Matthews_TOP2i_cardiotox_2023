@@ -12,8 +12,26 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 ```
-## Knowles data
 
+
+###### package loading                              
+```{r package loading, echo=FALSE}
+
+library(limma)
+library(tidyverse)
+library(ggsignif)
+library(biomaRt)
+library(RColorBrewer)
+library(cowplot)
+library(ggpubr)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(ComplexHeatmap)
+``` 
+## Knowles data
+  The code below is how I wrangled the knowles supplemental lists into entrezgene_ids to overlap with my expressed gene lists
 ```{r ensembl conversion, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
@@ -136,19 +154,9 @@ MTXmeSNPs <- toplistall %>%
    dplyr::select(time, id, ENTREZID,SYMBOL)
 saveRDS(MTXmeSNPs,"output/MTXmeSNPs.RDS")
 
-##saved for later positioning
-
-reQTLcombine=list(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)
-
-length(unique(c(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)))
-
-print("number of unique genes expressed in pairwise DE set")
-QTLoverlaps <- VennDiagram::get.venn.partitions(reQTLcombine)
-DoxonlyQTL <-  QTLoverlaps$..values..[[14]]
-     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c("DNR-187\nsigDEexpressed","DOX-180 \nsigDEexpressed","EPI-176\nsigDEexpressed","MTX-40\nsigDEexpressed"))  
 
 ```
-
+## Enrichiment and Pairwise
 
 ``` {r loading in data sets}
 
@@ -194,8 +202,7 @@ Jonathan K Pritchard, Yoav Gilad
 
 Knowles $~~et~ al.~$ eLife 2018;7:e33480. DOI: https://doi.org/10.7554/eLife.33480  
 
-My first question was about transcriptional response at the 24 hour mark with my treatments.   3 hour RNA-seq had low levels of DEGs,so my focus is at 24 hours.  This also happens to be when the Knowles paper collected their RNA-seq data
-
+My first question was about transcriptional response at the 24 hour mark with my treatments.   3 hour RNA-seq had low numbers of DEGs,so my initial focus is at 24 hours.  This time also happens to be when the Knowles paper collected their RNA-seq data.  
 
 Supplementary 4 contains a list of 518 SNPs within 1 Mb of TSS, which had a detectable marginal effect on expression (5% FDR). When converted from ensembl gene id to entrez gene id,  my list of genes for this supplement = `r length(knowles4$entrezgene_id)`.  I will call these meSNPS for marginal effect QTLs.  
 
@@ -236,9 +243,61 @@ reQTLdf %>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "80%", height = "400px")
 
+
+dataframK_45 <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(K4 = if_else(ENTREZID %in% knowles4$entrezgene_id,'y','no'))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,'y','no'))%>%
+  filter(adj.P.Val<0.05) %>%
+   group_by(time, id) %>%
+ dplyr::summarize(n=n(), meSNP=sum(if_else(K4=="y",1,0)), reQTL=sum(if_else(K5=="y",1,0))) %>% 
+  as.data.frame()
+
+
+dataframK_45 %>% 
+kable(., caption= "Summary of meSNPs and reQTLs found in my DEGs") %>% 
+  kable_paper("striped", full_width = FALSE) %>% 
+  kable_styling(font_size = 18) %>% 
+  scroll_box(width = "80%", height = "400px")
 ```
-###  chi square
-```{r chi square test}
+###  Visualization of proportions
+```{r K4K5 proportions}
+
+toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
+  filter(time =="24_hours") %>% 
+  group_by(id,sigcount,meSNP) %>% 
+  summarize(K4count=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(meSNP), values_from=K4count) %>% 
+   mutate(SNPprop=(y/(y+no)*100)) %>% 
+       ggplot(., aes(x=id, y=SNPprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",SNPprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of Knowles meSNPs ")
+toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
+  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
+  filter(time =="24_hours") %>% 
+  group_by(id,sigcount,reQTL) %>% 
+  summarize(K5count=n())%>% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(reQTL), values_from=K5count) %>% 
+   mutate(QTLprop=(a/(a+b)*100)) %>% 
+       ggplot(., aes(x=id, y=QTLprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf("%.2f",QTLprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle("non-significant and significant enrichment proporitions of Knowles reQTLs ")
 
 chi_squarek4 <- toplistall %>% 
   mutate(id = as.factor(id)) %>%
@@ -248,8 +307,7 @@ chi_squarek4 <- toplistall %>%
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(meSNP, sigcount)$p.value) 
 
-chi_squarek5 <- 
-  toplistall %>% 
+chi_squarek5 <-   toplistall %>% 
   mutate(id = as.factor(id)) %>%
   dplyr::filter(id!="Trastuzumab") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
@@ -258,61 +316,24 @@ chi_squarek5 <-
   summarise(pvalue= chisq.test(reQTL, sigcount)$p.value) 
 
 chi_squarek4 %>% 
-  kable(., caption= "meQTLs (mininmally expressed QTLS) chi-squared pvalues") %>% 
+  kable(., caption= "meSNPs (mininmally expressed QTLS) chi-squared pvalues") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "50%", height = "400px")
+  kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>%   scroll_box(width = "50%", height = "400px")
 
 chi_squarek5 %>% 
-  kable(., caption= "reQTLS in knowles data (reQTLS) chi-squared pvalues") %>% 
+  kable(., caption= "reQTLS (response eQTLS) chi-squared pvalues") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "50%", height = "400px")
+  kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>%   scroll_box(width = "50%", height = "400px")
 
 ```
 
+We can "see" the proportions of SNPs are not enriched significantly in the DE genes compared to the non-DE genes (chi square test).  
+We do not see significant enrichment of reQTLS in our DE gene sets over the non-DE gene sets.
+
+So what about enrichment of meSNPs in DE compared to reQTLs in significantly DE gene sets?
 
 
-
-
-
-
-
-
-
-```{r abs FC }
-toplistall %>% 
-  filter(time=="24_hours") %>% 
-  group_by(time, id) %>% 
-  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
-  mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
-  mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
-  ggplot(., aes(x=id, y=abs(logFC)))+
-  geom_boxplot(aes(fill=id))+
-  ggpubr::fill_palette(palette =drug_palNoVeh)+
-  guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(~time)+
-  theme_bw()+
-  xlab("")+
-  ylab("abs |Log Fold Change|")+
-  theme_bw()+
-  facet_wrap(~time)+
-  #ggtitle("All QTLs from all expressed genes (n=507)")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
-  
-```
-
-
-
-
-
-```{r Knowles comparison between sets}
+```{r Knowles comparison between sets, message=FALSE, warning=FALSE}
 
 Knowles_count <- 
   toplistall %>%
@@ -339,7 +360,7 @@ Knowles_count <-
   
   ggplot(Knowles_count, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
     geom_col(position='fill')+
-    guides(fill="none")+
+    # guides(fill="none")+
     facet_wrap(time~id,nrow=2,ncol=4)+
     theme_classic()+
    scale_color_manual(values=drug_palNoVeh)+
@@ -379,14 +400,97 @@ dimnames=list(c("k4", "k5"),c( "y", "n")))
     MTX_24chi <- chisq.test(testMTX24chi,correct=FALSE)$p.value
 K4nK5chi <- data.frame(treatment=c('DNR_3','DNR_24','DOX_3','DOX_24','EPI_3','EPI_24','MTX_3','MTX_24'), chi_p.value=c(DNR_3chi,DNR_24chi,DOX_3chi,DOX_24chi,EPI_3chi,EPI_24chi,MTX_3chi,MTX_24chi))
 
-K4nK5chi %>% kable(., caption= "Chi Square p. values between proportions of meQTLs and reQTLS by time and treatment") %>% 
+K4nK5chi %>% 
+  separate(treatment, into= c('Drug','time')) %>% 
+  pivot_wider(id_cols = Drug, names_from = time, values_from = chi_p.value) %>% 
+  kable(., caption= "Chi Square p. values from chi-square test between proportions of sig-DE meQTLs and reQTLS by time and treatment") %>% 
   kable_paper("striped", full_width = TRUE) %>%  
-  kable_styling(full_width = FALSE, position = "right",bootstrap_options = c("striped"),font_size = 18) %>% 
+  kable_styling(full_width = FALSE, font_size = 16) %>% 
   scroll_box( height = "500px")
  
 ```
 
+Here we found that 24 hour reQTLs are significantly enriched in sig-DEgens compared to meQTLS, with Daunorubicin 3 hour treatment also showing significant enrichment.
 
+```{r abs FC magnitude }
+toplistall %>% 
+  filter(time=="24_hours") %>% 
+  group_by(time, id) %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  ggplot(., aes(x=id, y=abs(logFC)))+
+  geom_boxplot(aes(fill=id))+
+  ggpubr::fill_palette(palette =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(sigcount~time)+
+  theme_bw()+
+  xlab("")+
+  ylab("abs |Log Fold Change|")+
+  theme_bw()+
+  facet_wrap(~time)+
+  #ggtitle("All QTLs from all expressed genes (n=507)")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+  
+```
+
+## Dox-reQTLs
+
+When I look ot the reQTLs across treatments at 24 hours, I see that dox has a total of 180 reQTLS.  Because this gene set was specifically about doxorubicin response eQTLs, I wanted to see if these reQTLs were only Dox specific, AC specific,  Top2i specific, or show any type of pattern.
+
+```{r Doxreqtl}
+reQTLcombine=list(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)
+
+length(unique(c(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)))
+
+print("number of unique genes expressed in pairwise DE set")
+QTLoverlaps <- VennDiagram::get.venn.partitions(reQTLcombine)
+DoxonlyQTL <-  QTLoverlaps$..values..[[14]]
+     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c("DNR-187\nsigDEG","DOX-180 \nsigDEG\n","EPI-176\nsigDEG\n","MTX-40\nsigDEG"),label = "count") +scale_x_continuous(expand = expansion(mult = .2))+scale_y_continuous(expand = expansion(mult = .1))
+```
+Here, I found 119 reQTLs that were related to all anthracyclines, with 31 reQTLS related to all Top2i drugs at 24 hours.
+
+
+```{r doxreqtl examine, message=FALSE, warning=FALSE}
+ DOXeQTL_table <- toplistall %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(DOXreQTLs=if_else(ENTREZID %in%DOXreQTLs$ENTREZID,"y","no")) %>% 
+  dplyr::filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID,id,DOXreQTLs,sigcount) %>%
+  group_by(id,DOXreQTLs,sigcount) %>% 
+  tally() %>% as.data.frame() %>% 
+  pivot_wider(.,id_cols = c(id,DOXreQTLs),names_from = sigcount,values_from = n) %>% 
+  dplyr::select(id,DOXreQTLs,sig) 
+DOXeQTL_table%>% 
+  kable(., caption= "All 24 hour sidDEGs broken down by drug and DOXreQTL status") %>% 
+  kable_paper("striped", full_width = FALSE) %>% 
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "80%", height = "400px")
+
+DOXeQTL_table %>%
+  dplyr::filter(DOXreQTLs=="y") %>% 
+  mutate(opp= 180-sig) %>% 
+  filter(id !=c('Trastuzumab','Doxorubicin')) %>% 
+  rename("yes"=sig, "no"=opp) %>% 
+  pivot_longer(!c(id,DOXreQTLs), names_to="group", values_to = "count") %>% 
+  mutate(id=factor(id, levels=c("Daunorubicin","Epirubicin", "Mitoxantrone"))) %>% 
+ggplot(., aes(y=id,x=count,fill=group))+
+     geom_col(position='fill')+
+    theme_classic()+
+   scale_color_manual(values=c("red4","navy"))+
+    scale_fill_manual(values=c("#2297E6","red2"))+
+  ggtitle("DOXreQTLs overlaps")
+```
+
+
+
+
+Enrichment of Bayesian-wise
 
 
 
@@ -431,6 +535,7 @@ write.csv(GWAS_goi,"output/GWAS_goi.csv")
 
 
 ``` 
+
 ```{r data sets loading, echo=FALSE, message=FALSE}
 library(ComplexHeatmap)
 library(tidyverse)
@@ -444,7 +549,7 @@ library(sjmisc)
 library(kableExtra)
 library(broom)
 library(ggstats)
-toplistall.csv <- read.csv("output/toplistall.csv", row.names = 1)
+toplistall.csv <- read.csv("output/toplistall.csv", row.names = 1) 
 
 drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 toplistall <- readRDS("data/toplistall.RDS")

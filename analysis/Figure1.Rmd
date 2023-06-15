@@ -21,6 +21,10 @@ Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::include_graphics("output/Fig_summary1.png",error=FALSE)
+
+knitr::include_graphics("output/plan2plot.png",error=FALSE)
+
+knitr::include_graphics("individual-legenddark2.png",error=FALSE)
 ```
 
 things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
@@ -29,11 +33,11 @@ things to note about this image so far: Need to import into illustrator. Goal is
 
 Lines are a log-logistic regression of the mean from quadruplicates at 8 separate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
 
-![DRC plot](output/plan2plot.png)
+
 
 ![Legend for DRC plot](C:/Program%20Files/R_WD/Cardiotoxicity/individual-legenddark2.png){30%}
 
-## C 48 hour 50% leatal dose plot
+## C 48 hour 50% leathal dose plot
 
 ```{r}
 library(car)

@@ -44,7 +44,7 @@ egenes <- read.csv("output/egenes.csv",row.names = 1)
 
 ```
 
-```{r biomart holder,eval=FALSE,echo=FALSE}
+```{r biomart holder, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 us_mart <- useEnsembl(biomart = "ensembl", mirror = "uswest")
@@ -66,7 +66,7 @@ I downloaded the GTEx_Analysis_v8.metasoft.txt.gz files from the Consortium at <
 
 I the extracted the Heart_Left_Ventricle.v8.egenes.txt file and uploaded into R under the data folder.
 
-```{r GTExdata, echo = TRUE,eval= FALSE}
+```{r GTExdata, eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
 heart_gtex <-
   readr::read_delim("data/Heart_Left_Ventricle.v8.egenes.txt",
                     delim = "\t",
@@ -98,7 +98,7 @@ not_eqtl_set <- getBM(attributes=my_attributes,
 not_eqtls <- not_eqtl_set %>% 
   distinct(entrezgene_id,.keep_all = TRUE) %>% 
   filter(entrezgene_id %in% my_exp_genes$ENTREZID)
-##6711 not_eqtls
+##6711 not_eqtls  ##wrong set
 GTEx_genes <- egenes_set %>% 
   distinct(entrezgene_id,.keep_all = TRUE)
 
@@ -116,8 +116,7 @@ I went with using ensemble_gene_id because I found ~600 more genes overall than 
 
 ```{r comparing with my data}
 GTEx <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
-nQTL <- not_eqtls
-# '%!in%' <- function(x,y)!('%in%'(x,y))
+
 
 nQTLmy <- my_exp_genes %>%
    dplyr:: filter(!ENTREZID %in%GTEx)
@@ -169,15 +168,14 @@ GTExsum <- toplistall %>%
 GTEXcr8z <- GTExsum %>% 
   rbind(., nQTLsum) %>% 
   dplyr::select(id,time,set, n,total) %>% 
-  pivot_longer(cols=n:total, names_to="group",values_to="total")  
+  pivot_longer(cols=n:total, names_to="group",values_to="total") %>% mutate(group=case_match(group, "n"~"yes","total"~"no",.default = group))  
   
 
-GTEXcr8z %>% 
+GTEXcr8z %>% #filter(time=="24_hours") %>% 
   ggplot(., aes(x=set,y=total, fill=group))+
    geom_col(position='fill')+
     facet_wrap(time~id,nrow=2,ncol=4)+
     theme_classic()+
-   # scale_color_manual(values=drug_palNoVeh[c(1,2)])+
     scale_fill_manual(values=drug_palspc)
       
 GTExsum %>% 
