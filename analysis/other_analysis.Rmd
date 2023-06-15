@@ -211,7 +211,7 @@ DoxonlyQTL <-  QTLoverlaps$..values..[[14]]
   dplyr::select(ENTREZID,id,DOXreQTLs,sigcount) %>%
   group_by(id,DOXreQTLs,sigcount) %>% 
   tally() %>% 
-  kable(., caption= "All genes (sig and nonsig) brokendown by drug and DOXreQTL status") %>% 
+  kable(., caption= "All genes (sig and nonsig) broken down by drug and DOXreQTL status") %>% 
   kable_paper("striped", full_width = FALSE) %>% 
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "80%", height = "400px")
@@ -655,7 +655,7 @@ Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square -log p values", cluste
 # test2 <- str_sub(test$nearest2,0,nchar(test$nearest2)-1)
 # Hf_GWAS <- test2
 #write.csv(Hf_GWAS, "data/Hf_GWAS.txt")
-HF_GWAS <- read.csv("data/Hf_GWAS.txt", row.names =1)
+# HF_GWAS <- read.csv("data/Hf_GWAS.txt", row.names =1)
 # 
 # HF_geneset <- getBM(attributes=my_attributes,filters ='hgnc_symbol',
 #                   values = HF_GWAS, mart = ensembl)
@@ -715,7 +715,7 @@ toplist3hr %>%
        geom_text(aes(x=id, label = sprintf("%.2f",HFprop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
        facet_wrap(~sigcount)+
-       ggtitle("non-significant and significant enrichment proporitions of Heart Failure GWAS ")
+       ggtitle("non-significant and significant enrichment proportions of Heart Failure GWAS ")
 
 ##make table of numbers:
 
@@ -759,9 +759,9 @@ HFmat <- chi_funhf %>% ungroup() %>%
   mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
   unite("term_name",id,time,sep="_") %>% 
   column_to_rownames('term_name') 
+col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
 
-
-Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col = col_fun1)
+Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col = col_fun5)
 
 
 
@@ -884,8 +884,7 @@ chi_funCAD
 
 
 ```{r CAD heatmap,echo=FALSE}
-library(ComplexHeatmap)
-  
+
 CADmat <- chi_funCAD %>% ungroup() %>% 
   mutate("CAD"= log(pvalue)*(-1)) %>% 
   mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
@@ -901,29 +900,39 @@ colnames(GWASmat) <- c('CAD','HF','ARR')
 rownames(GWASmat) <- rownames(CADmat)# %>% tibble() %>% dplyr::select) %>% as.matrix()
 
 
-Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE,row_order = c(1,3,5,7,2,4,6,8), cluster_columns = FALSE, column_names_rot = 0,col_fun4)
+Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE,row_order = c(1,3,5,7,2,4,6,8), cluster_columns = FALSE, column_names_rot = 0,col_fun5)
 
 ```
 ## GTEx V8 heart-left ventrical egenes
 
 ```{r GTEx enrichment check}
-# heart_gtex <- 
-#   readr::read_delim("data/Heart_Left_Ventricle.v8.egenes.txt",  
-#                                 delim = "\t", 
-#                                 escape_double = FALSE, 
+heart_gtex <-
+  readr::read_delim("data/Heart_Left_Ventricle.v8.egenes.txt",
+#                                 delim = "\t",
+#                                 escape_double = FALSE,
 #                                 trim_ws = TRUE)
-# heartset <- heart_gtex$gene_name
+# heartset <- heart_gtex %>% 
+#   filter(qval <=0.05) %>% 
+#   dplyr::select(gene_id,gene_name)
 # GTEX_set <- getBM(attributes=my_attributes,filters = 'hgnc_symbol',
-#                   values = heartset, mart = ensembl)
+#                   values = heartset$gene_name, mart = ensembl)
 # #remove duplicates
 # GTEX_set <- GTEX_set %>% dplyr::distinct(entrezgene_id, .keep_all =TRUE)
 # write.csv(GTEX_set,"data/GTEX_setsimple.csv")
+
+backGL <- read.csv("data/backGL.txt")
 GTEX_set <- read.csv("data/GTEX_setsimple.csv", row.names = 1)
- 
+notGTEXexpressed <-  setdiff(backGL$ENTREZID,GTEX_set$entrezgene_id) 
+  
+##5964 genes of gtex expressed,   
+#length(intersect(backGL$ENTREZID,GTEX_set$entrezgene_id))
+#8120 genes not GTEX, expressed in my expression data
+
+
 toplist24hr %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
- 
+
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(gtex=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>% 
   group_by(id,time,sigcount,gtex) %>% 
@@ -932,7 +941,7 @@ toplist24hr %>%
    mutate(gtexprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=gtexprop), group=time) +
        geom_col()+
-       geom_text(aes(x=id, label = sprintf("%.2f",gtexprop), vjust=-.2))+
+       geom_text(aes(x=id, label = sprintf("%.1f",gtexprop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
        facet_wrap(time~sigcount)+
        ggtitle("24 hour non-significant and significant enrichment proportions of GTEx eGenes ")
@@ -948,55 +957,103 @@ toplist3hr %>%
    mutate(gtexprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=gtexprop), group=time) +
        geom_col()+
-       geom_text(aes(x=id, label = sprintf("%.2f",gtexprop), vjust=-.2))+
+       geom_text(aes(x=id, label = sprintf("%.1f",gtexprop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0("number"~a,"out of",~b))))+
        facet_wrap(time~sigcount)+
        ggtitle("3 hour non-significant and significant enrichment proporitions of GTex eGenes ")
 
 ```
-####chi square
+#### chi square  
+
 ``` {r gtex counts and chi}
 
 
 dataframgtex <-  toplistall %>% 
   mutate(id = as.factor(id)) %>%
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(gtex=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>% 
-  group_by(id,time,sigcount,gtex) %>% 
-  summarize(gtexcount=n())%>% 
-    pivot_wider(id_cols = c(id,time,sigcount), names_from=c(gtex), values_from=gtexcount)# %>% 
-  
+   # dplyr::filter(time=="24_hours") %>% 
+  dplyr::filter(id!="Trastuzumab") %>% 
+  dplyr::filter(adj.P.Val <0.05)%>%
+  mutate(gtex_in=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>%
+  mutate(not_gtex=if_else(ENTREZID %in%nQTL,'a','b')) %>% 
+  group_by(id,time,gtex_in, not_gtex) %>% 
+  tally() #%>% #as.data.frame() %>% 
+  mutate(totals=c(length(sigVDA24$ENTREZID),
+                  length(sigVDA24$ENTREZID),
+                  length(sigVDA3$ENTREZID),
+                  length(sigVDA3$ENTREZID),
+                  length(sigVDX24$ENTREZID),
+                  length(sigVDX24$ENTREZID),
+                  length(sigVDX3$ENTREZID),
+                  length(sigVDX3$ENTREZID),
+                  length(sigVEP24$ENTREZID),      
+                  length(sigVEP24$ENTREZID),
+                  length(sigVEP3$ENTREZID),      
+                  length(sigVEP3$ENTREZID),
+                  length(sigVMT24$ENTREZID),
+                  length(sigVMT24$ENTREZID),
+                  length(sigVMT3$ENTREZID),
+                  length(sigVMT3$ENTREZID))) %>% 
+  group_by(time,id) %>% 
+  mutate(other=totals-n) %>% 
+  rename ("count"="n")%>% 
+  dplyr::select(id,time,gtex_in,not_gtex, count,other)
 
-dataframgtex %>% kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 24 hour GWAS") %>% 
+            
+ dataframe1 <- pivot_wider(dataframgtex,id_cols = c(time,id), names_from=c('gtex_in','not_gtex'), values_from=c(other, count)) %>% 
+   pivot_longer(,cols= other_no_a:count_y_b) %>% 
+   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+   separate(name, into=c('with','group','group1')) %>% 
+   unite(.,'class',group:group1) %>% 
+   mutate(class= case_match(class,"no_a"~"nQTL", "y_b"~"gTEX", .default = class)) %>% 
+   mutate(with= case_match(with,"other"~"yes", "count"~"no", .default = with)) %>% 
+   mutate(class= factor(class, levels=c("gTEX","nQTL")))
+
+ 
+ dataframe1 %>% 
+   ggplot(., aes(x= class, y=value, fill=with ,group=class))+
+   geom_col(position='fill')+
+    # guides(fill="none")+
+    facet_wrap(id~time,nrow=2,ncol=4)+
+    theme_classic()+
+   ggtitle("Proportion of eGenes in each DEG set vs Proportion of not eGenes in DEG set")+
+   scale_y_continuous(label = percent)
+
+           # , DOX_tot=length(unique(ENTREZID[id=="Doxorubicin"])),EPI_tot=length(unique(ENTREZID[id=="Epirubicin"])),MTX_tot=length(unique(ENTREZID[id=="Mitoxantrone"])))
+           # 
+setupframe <- tribble()
+ 
+dataframgtex %>% 
+  kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes")%>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
-  scroll_box(width = "60%", height = "400px")
+  scroll_box(width = "60%", height = "800px")
 
-
-# dataframgtex %>% 
-#   pivot_longer(., id_cols=c(id, time, sigcount), names_to="GTEx"
-#   
-# ggplot(dataframgtex, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
-#     geom_col(position='fill')+
-#     guides(fill="none")+
-#     facet_wrap(id~time,nrow=2,ncol=4)+
-#     theme_classic()+
-#    scale_color_manual(values=drug_palNoVeh)+
-#     scale_fill_manual(values=drug_palNoVeh)+
-#        scale_y_continuous(label = scales::percent)
-
-
-
-chi_fungtex <-  toplistall %>% 
+gtex_chi <- toplistall %>% 
   mutate(id = as.factor(id)) %>%
   dplyr::filter(id!="Trastuzumab") %>% 
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-   mutate(gtex=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>% 
+  dplyr::filter(adj.P.Val <0.05)%>%
+  mutate(gtex_in=if_else(ENTREZID %in%GTEX_set$entrezgene_id,"y","no")) %>%
+  mutate(not_gtex=if_else(ENTREZID %in%notGTEXexpressed,'a','b')) %>% 
   group_by(id,time) %>% 
-  summarise(pvalue= chisq.test(gtex, sigcount)$p.value) 
-print("after performing chi square test between DEgenes, and non DE genes")
-chi_fungtex
+  summarise(pvalue= chisq.test(gtex_in, not_gtex)$p.value)
 
+gtex_mat <- gtex_chi %>% 
+  
+  mutate(time= case_match(time, 
+                          '3_hours'~'3_hrs', 
+                          '24_hours'~'24_hrs',.default = id)) %>% 
+  mutate(id =case_match( id, 
+                         'Daunorubicin'~'DNR', 
+                         'Doxorubicin'~'DOX' ,
+                         'Epirubicin'~'EPI' , 
+                         'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
+ 
+  unite("mat_name",id,time) %>% 
+  column_to_rownames("mat_name")
+  
+ 
+gtex_chi
+                                            
 ```
 
 ## Seaone 2019
@@ -1180,7 +1237,24 @@ print("These are the chisquare values from the 54 genes")
 chi_fun2
 
 
+pairS14_mat <- chi_fun2 %>% 
+  full_join(chi_fun,by=c("id","time")) %>% 
+  mutate("n = 54"=-log(pvalue.x), "n = 408"=-log(pvalue.y)) %>% 
+  mutate(time= case_match(time, 
+                          '3_hours'~'3_hrs', 
+                          '24_hours'~'24_hrs',.default = id)) %>% 
+  mutate(id =case_match( id, 
+                         'Daunorubicin'~'DNR',   
+                         'Doxorubicin'~'DOX' ,
+                         'Epirubicin'~'EPI' , 
+                         'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
+  unite('pairset',time,id ) %>% 
+  dplyr::select(!c(pvalue.x,pvalue.y)) %>% 
+  column_to_rownames('pairset') %>% 
+  as.matrix()
+ rename(c("n = 408"= pval1, "n = 54"=pval4))
 
+Heatmap( pairS14_mat,column_title="Pairwise version of Chromatin gene sets \nchi square -log p values", name = "-log p values", cluster_rows = FALSE, cluster_columns = FALSE, column_names_rot = 0,col = col_fun5)
 
 ```
 
@@ -1310,7 +1384,7 @@ supp45Xmat <- supp45X %>%
   column_to_rownames('motif') %>% 
   rename(c("n = 408"= pval1, "n = 54"=pval4))
 
-Heatmap( as.matrix(supp45Xmat), name = "Seoane CAG sets \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
+Heatmap( as.matrix(supp45Xmat),column_title="Chromatin gene sets \nchi square -log p values", name = "-log p values", cluster_rows = FALSE, cluster_columns = FALSE, column_names_rot = 0,col = col_fun5)
 
 
 
@@ -1421,7 +1495,7 @@ crisp_pair_mat <- pairwisecrispr %>%
   unite('pairset',time,id ) %>% 
   column_to_rownames('pairset') %>% dplyr::select(neg.log.pvalue) %>% as.matrix()
     
-Heatmap( crisp_pair_mat, name = "Doxcrispr pairwise enrichment \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun)
+Heatmap( crisp_pair_mat, name = "Doxcrispr pairwise enrichment \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun5)
 
 ```
 

@@ -1,0 +1,210 @@
+---
+title: "GTEx_genes"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+# GTEx egenes and analysis
+
+```{r packages}
+library(ComplexHeatmap)
+library(tidyverse)
+library(ggsignif)
+library(biomaRt)
+library(RColorBrewer)
+library(cowplot)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(ggstats)
+
+```
+
+## Data import
+
+```{r data import}
+toplistall<- read.csv("output/toplistall.csv", row.names = 1)
+my_exp_genes <- read.csv("data/backGL.txt")
+egenes_set <- read.csv("output/egenes_set.csv",row.names = 1)
+egenes_hgnc <- read.csv("output/egenes_hgnc.csv",row.names = 1)
+GTEx_genes <- read.csv("data/GTEx_gene_list.csv",row.names = 1)
+not_eqtls <- read.csv("output/not_eqtls_GTEX.csv",row.names = 1)
+
+```
+
+```{r biomart holder,eval=FALSE,echo=FALSE}
+
+ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+us_mart <- useEnsembl(biomart = "ensembl", mirror = "uswest")
+my_chr <- c(1:22, 'M', 'X', 'Y')  
+
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol') 
+write.csv(egenes_set,"output/egenes_set.csv")
+write.csv(egenes_hgnc,"output/egenes_hgnc.csv")
+write.csv(GTEx_genes,"data/GTEx_gene_list.csv")
+write.csv(not_eqtls,"output/not_eqtls_GTEX.csv")
+```
+
+### Obtaining the GTEx data set
+
+I downloaded the GTEx_Analysis_v8.metasoft.txt.gz files from the Consortium at <https://www.gtexportal.org/home/datasets> .
+
+I the extracted the Heart_Left_Ventricle.v8.egenes.txt file and uploaded into R under the data folder.
+
+```{r GTExdata, echo = TRUE,eval= FALSE}
+heart_gtex <-
+  readr::read_delim("data/Heart_Left_Ventricle.v8.egenes.txt",
+                    delim = "\t",
+                    escape_double = FALSE,
+                    trim_ws = TRUE)
+egenes <- heart_gtex %>% 
+  dplyr::select(gene_id, gene_name, qval) %>% 
+  filter(qval<0.05) %>% 
+  separate(gene_id, into =c('ensembl_gene_id', 'gene_version'))
+not_eqtl <- heart_gtex %>% 
+  dplyr::select(gene_id, gene_name, qval) %>% 
+  filter(qval>0.05) %>% 
+  separate(gene_id, into =c('ensembl_gene_id', 'gene_version'))
+
+egenes_set <- getBM(attributes=my_attributes, 
+                    filters ='ensembl_gene_id',
+                    values =egenes$ensembl_gene_id,
+                    mart = ensembl)
+egenes_hgnc <- getBM(attributes=my_attributes,
+                     filters ='hgnc_symbol',
+                     values =egenes$gene_name, 
+                     mart = ensembl)
+not_eqtl_set <- getBM(attributes=my_attributes, 
+                    filters ='ensembl_gene_id',
+                    values =not_eqtl$ensembl_gene_id,
+                    mart = ensembl)
+
+not_eqtls <- not_eqtl_set %>% 
+  distinct(entrezgene_id,.keep_all = TRUE) %>% 
+  filter(entrezgene_id %in% my_exp_genes$ENTREZID)
+##6711 not_eqtls
+GTEx_genes <- egenes_set %>% 
+  distinct(entrezgene_id,.keep_all = TRUE)
+
+```
+
+This file contains several columns  `r  colnames(heart_gtex)`.
+
+I then chose the the 'gene_id','gene_name', and 'qval' columns. This left me with 21353 genes. Next I filtered the tissue specific expressed genes using a the 'qval < 0.05' for a total of `r length(egenes$gene_name)`. I then took the gene_name column and used biomart to convert to 'entrezgene_id'.  
+Because results vary by which way I look up genes in BioMart, I tested both egenes using ensemble_gene_id  and hgnc_symbol columns.
+I found `r length(unique(egenes_set$entrezgene_id))` for the ensemble_gene_ 
+set and `r length(unique(egenes_hgnc$entrezgene_id))` for the hgnc_symbol set.    
+I went with using ensemble_gene_id because I found ~600 more genes overall than using the hgnc_symbol filter.
+
+
+
+```{r comparing with my data}
+GTEx_over <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
+nQTL <- not_eqtls
+# '%!in%' <- function(x,y)!('%in%'(x,y))
+
+# nQTL <- toplistall %>% 
+#   filter(adj.P.Val<0.05) %>% 
+#   distinct(ENTREZID) %>% 
+#   dplyr:: filter(!ENTREZID %in%GTEx)
+
+# testset <- toplistall %>% 
+#   filter(adj.P.Val<0.05) %>% 
+#  select(ENTREZID) %>% distinct(ENTREZID) %>% 
+#   dplyr:: filter(ENTREZID %in%GTEx_genes$entrezgene_id)
+
+
+
+```
+
+
+To find out how many genes from the gtex egenes were expressed in my data, I intersected my expressed genes list of `r length(my_exp_genes$ENTREZID)` genes with the GTEx_genes and found `r length(GTEx_over)` genes were shared between them. 
+I called this set 'GTEx'. Using the other eGenes from GTEx, I made another set intersected with my expressed gene set called 'nQTL'.  This nQTL set contains `r length(nQTL$entrezgene_id)` genes. Next, I then took my DEG top list and filtered out genes with an adj.P.value < 0.05.  
+
+
+```{r GTEx proportion overall}
+drug_palspc <- c("#8B006D","#DF707E","#8B006D","#DF707E")
+
+GTEX_table <-  toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
+  mutate(nQTL=if_else(ENTREZID %in% nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
+  mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
+  select( id, time,ENTREZID,GTEx,nQTL) %>% 
+  group_by(id,time,GTEx,nQTL) %>% 
+  tally() %>% as.data.frame()#
+
+nQTL_table <- toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
+  mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
+ 
+  select( id, time,ENTREZID,nQTL) %>% 
+  group_by(id,time,nQTL) %>% 
+  summarize(total=n()) %>% as.data.frame()
+
+
+GTEX_table_chi <-  toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
+  mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id, 'nQTL_y','nQTL_no')) %>% 
+  mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
+    select( id, time,ENTREZID,GTEx,nQTL) %>% 
+  group_by(id,time) %>% 
+  summarise(pvalue= chisq.test(nQTL, GTEx)$p.value) 
+ 
+toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(adj.P.Val <0.05) %>%
+  mutate(nQTL= if_else(ENTREZID %in% nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
+  mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
+    select( id, time,ENTREZID,GTEx,nQTL) %>% 
+  group_by(id,time,nQTL,GTEx) %>% 
+  # summarize(value=n())#%>% 
+    pivot_longer(!c(id,time, ENTREZID)) %>% 
+    ggplot(., aes(x=name))+
+    geom_bar(aes(fill=value),position="fill", stat="count")+
+  # guides(fill="none")+
+    facet_wrap(time~id,nrow=2,ncol=4)+
+    theme_classic()+
+   # scale_color_manual(values=drug_palNoVeh[c(1,2)])+
+    scale_fill_manual(values=drug_palspc)+
+       scale_y_continuous(label = scales::percent)
+  
+  
+  
+  
+GTEX_table %>% kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes")%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "800px")
+
+
+kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes")%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
+  scroll_box(width = "60%", height = "800px")
+
+
+    
+
+```
+
+The next step is to wrangle the data so that I can test the difference between the proportions of  significantly DE genes found in the GTEx and nQTLs.
+
+Interestingly, NONE of the genes show overlap
+
