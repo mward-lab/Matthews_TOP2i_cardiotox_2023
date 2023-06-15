@@ -39,7 +39,9 @@ egenes_set <- read.csv("output/egenes_set.csv",row.names = 1)
 egenes_hgnc <- read.csv("output/egenes_hgnc.csv",row.names = 1)
 GTEx_genes <- read.csv("data/GTEx_gene_list.csv",row.names = 1)
 not_eqtls <- read.csv("output/not_eqtls_GTEX.csv",row.names = 1)
-
+heart_gtex <- read.csv("output/heart_gtex.csv",row.names = 1)
+egenes <- read.csv("output/egenes.csv",row.names = 1)
+egenes_hgnc
 ```
 
 ```{r biomart holder,eval=FALSE,echo=FALSE}
@@ -49,10 +51,13 @@ us_mart <- useEnsembl(biomart = "ensembl", mirror = "uswest")
 my_chr <- c(1:22, 'M', 'X', 'Y')  
 
 my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol') 
+write.csv(heart_gtex,"output/heart_gtex.csv")
 write.csv(egenes_set,"output/egenes_set.csv")
 write.csv(egenes_hgnc,"output/egenes_hgnc.csv")
 write.csv(GTEx_genes,"data/GTEx_gene_list.csv")
 write.csv(not_eqtls,"output/not_eqtls_GTEX.csv")
+write.csv(egenes,"output/egenes.csv")
+
 ```
 
 ### Obtaining the GTEx data set
@@ -71,6 +76,7 @@ egenes <- heart_gtex %>%
   dplyr::select(gene_id, gene_name, qval) %>% 
   filter(qval<0.05) %>% 
   separate(gene_id, into =c('ensembl_gene_id', 'gene_version'))
+
 not_eqtl <- heart_gtex %>% 
   dplyr::select(gene_id, gene_name, qval) %>% 
   filter(qval>0.05) %>% 
@@ -109,7 +115,7 @@ I went with using ensemble_gene_id because I found ~600 more genes overall than 
 
 
 ```{r comparing with my data}
-GTEx_over <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
+GTEx <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
 nQTL <- not_eqtls
 # '%!in%' <- function(x,y)!('%in%'(x,y))
 
@@ -128,7 +134,7 @@ nQTL <- not_eqtls
 ```
 
 
-To find out how many genes from the gtex egenes were expressed in my data, I intersected my expressed genes list of `r length(my_exp_genes$ENTREZID)` genes with the GTEx_genes and found `r length(GTEx_over)` genes were shared between them. 
+To find out how many genes from the gtex egenes were expressed in my data, I intersected my expressed genes list of `r length(my_exp_genes$ENTREZID)` genes with the GTEx_genes and found `r length(GTEx)` genes were shared between them. 
 I called this set 'GTEx'. Using the other eGenes from GTEx, I made another set intersected with my expressed gene set called 'nQTL'.  This nQTL set contains `r length(nQTL$entrezgene_id)` genes. Next, I then took my DEG top list and filtered out genes with an adj.P.value < 0.05.  
 
 
@@ -141,7 +147,7 @@ GTEX_table <-  toplistall %>%
   dplyr::filter(adj.P.Val <0.05) %>%
   mutate(nQTL=if_else(ENTREZID %in% nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
   mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
-  select( id, time,ENTREZID,GTEx,nQTL) %>% 
+  dplyr::select( id, time,ENTREZID,GTEx,nQTL) %>% 
   group_by(id,time,GTEx,nQTL) %>% 
   tally() %>% as.data.frame()#
 
@@ -151,7 +157,7 @@ nQTL_table <- toplistall %>%
   dplyr::filter(adj.P.Val <0.05) %>%
   mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
  
-  select( id, time,ENTREZID,nQTL) %>% 
+  dplyr::select( id, time,ENTREZID,nQTL) %>% 
   group_by(id,time,nQTL) %>% 
   summarize(total=n()) %>% as.data.frame()
 
@@ -162,17 +168,17 @@ GTEX_table_chi <-  toplistall %>%
   dplyr::filter(adj.P.Val <0.05) %>%
   mutate(nQTL=if_else(ENTREZID %in%nQTL$entrezgene_id, 'nQTL_y','nQTL_no')) %>% 
   mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
-    select( id, time,ENTREZID,GTEx,nQTL) %>% 
+    dplyr::select( id, time,ENTREZID,GTEx,nQTL) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(nQTL, GTEx)$p.value) 
  
 toplistall %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  filter(adj.P.Val <0.05) %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
   mutate(nQTL= if_else(ENTREZID %in% nQTL$entrezgene_id,'nQTL_y','nQTL_no')) %>% 
   mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
-    select( id, time,ENTREZID,GTEx,nQTL) %>% 
+    dplyr::select( id, time,ENTREZID,GTEx,nQTL) %>% 
   group_by(id,time,nQTL,GTEx) %>% 
   # summarize(value=n())#%>% 
     pivot_longer(!c(id,time, ENTREZID)) %>% 
@@ -194,7 +200,8 @@ GTEX_table %>% kable(., caption= "Genes from Gtex that overlap and do not overla
   scroll_box(width = "60%", height = "800px")
 
 
-kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes")%>% 
+GTEX_table_chi %>% 
+  kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and all not_gtex genes that overlap and  do not overlap DE genes")%>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "800px")
@@ -206,5 +213,4 @@ kable(., caption= "Genes from Gtex that overlap and do not overlap DE genes, and
 
 The next step is to wrangle the data so that I can test the difference between the proportions of  significantly DE genes found in the GTEx and nQTLs.
 
-Interestingly, NONE of the genes show overlap
 
