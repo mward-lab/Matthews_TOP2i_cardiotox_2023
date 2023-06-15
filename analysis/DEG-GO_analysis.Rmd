@@ -1744,7 +1744,7 @@ SLCO1A2
 
 SLCO1B3
   
-Adding KAT6B and KDM4b
+Adding KAT6B and KDM5b and KDM4b(23030)
 
 
 ```{r GOI-top2b, echo=FALSE}
@@ -2209,6 +2209,38 @@ cpmcounts %>% dplyr::filter(rownames(.)== 10765, ) %>%
   facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop(" ",italic("KDM5"*beta)~log[2]~"cpm ")))+
+  xlab("")+
+  xlab("")+
+  theme(strip.background = element_rect(fill = "#C77CFF"),
+        plot.title = element_text(size=18,hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.x = element_text(size = 12, color = "white", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+cpmcounts %>% dplyr::filter(rownames(.)== 23030, ) %>%
+  pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
+
+  separate(treatment,c("drug","indv","time")) %>%
+
+  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+  mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                          "Do"~"Doxorubicin",
+                          "Ep"~"Epirubicin",
+                          "Mi"~"Mitoxantrone",
+                          "Tr"~"Trastuzumab",
+                          "Ve"~"Vehicle", .default = drug))  %>%
+  ggplot(., aes(x=drug, y=counts))+
+  geom_boxplot(position="identity",aes(fill=drug))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(alpha= "none", size= "none")+
+  scale_color_brewer(palette = "Dark2",guide = "none")+
+  scale_fill_manual(values=drug_pal_vehend)+
+  facet_wrap("time",  nrow=1, ncol=2)+
+  theme_bw()+
+  ylab(expression(atop(" ",italic("KDM4b")~log[2]~"cpm ")))+
   xlab("")+
   xlab("")+
   theme(strip.background = element_rect(fill = "#C77CFF"),
