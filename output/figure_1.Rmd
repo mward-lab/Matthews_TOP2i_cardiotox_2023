@@ -1,0 +1,18 @@
+---
+title: "Figure_1"
+author: "ERM"
+date: '`r Sys.Date()`'
+output: html_document:
+  toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+This is all the code and data related to figure 1. (fingers crossed!)
+# A
+Opening image:
+
+
+
+
