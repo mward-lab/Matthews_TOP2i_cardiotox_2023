@@ -1,0 +1,124 @@
+---
+title: "Figure2"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{r packages loading echo=FALSE}
+library(car)
+library(tidyverse)
+library(tinytex)
+library(BiocGenerics)
+library(data.table)
+library(drc)
+library(cowplot)
+library(ggsignif)
+library(RColorBrewer)
+library(broom)
+```
+
+
+# Figure 2 
+Minimal cellular stress is induced following 24 hours of treatment
+
+## A. Lactate dehydrogenase release at 24 hours
+```{r data load}
+drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+
+level_order2 <- c('75','87','77','79','78','71')
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt",row.names = 1)
+RNAnormlist %>% 
+  mutate(Drug = factor(Drug, levels = c("Vehicle",
+                                        "Daunorubicin",                                                                      "Doxorubicin",
+                                        "Epirubicin",
+                                        "Mitoxantrone",
+                                        "Trastuzumab"))) %>%
+  ggplot(., aes(x=Drug, y=rldh))+
+  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_point(aes(col=indv, size =3, alpha=0.5))+
+  geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
+                                c("Vehicle","Doxorubicin"),
+                                c("Vehicle","Epirubicin"),
+                                c("Vehicle","Mitoxantrone"),
+                                c("Vehicle","Trastuzumab")),
+              test="t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
+  scale_color_distiller(palette = "Dark2", name = "Individual")+
+  xlab("")+
+  ylab("Relative LDH activity ")+
+  ggtitle("Lactate dehydrogenase release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+
+```
+## C. Troponin I release
+
+
+```{r troponin 24}
+
+
+RNAnormlist %>% 
+  mutate(Drug = factor(Drug, levels = c("Vehicle",
+                                        "Daunorubicin",                                                                      "Doxorubicin",
+                                        "Epirubicin",
+                                        "Mitoxantrone",
+                                        "Trastuzumab"))) %>%
+  ggplot(., aes(x=Drug, y=rtnni))+
+  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
+                                c("Vehicle","Doxorubicin"),
+                                c("Vehicle","Epirubicin"),
+                                c("Vehicle","Mitoxantrone"),
+                                c("Vehicle","Trastuzumab")),
+              test="t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
+  scale_color_distiller(palette = "Dark2", name = "Individual")+
+  xlab("")+
+  ylab("Relative Troponin I levels ")+
+  ggtitle("Troponin I release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+
+
+
+
+
+```
