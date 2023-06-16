@@ -953,9 +953,9 @@ supp45Xmat <- supp45X %>%
   rename(c("n = 408"= pval1, "n = 54"=pval4)) %>% 
   as.matrix()
 
-Heatmap( supp45Xmat,
+Heatmap(supp45Xmat,
          column_title="Chromatin gene sets \nchi square -log p values", 
-         name = "-log p values", 
+         name = "-log (p value)", 
          cluster_rows = FALSE, 
          cluster_columns = FALSE, 
          column_names_rot = 0,
