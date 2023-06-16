@@ -53,14 +53,34 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
 
 ```
 
+```{r library loading}
+library(ComplexHeatmap)
+library(tidyverse)
+library(ggsignif)
+library(biomaRt)
+library(RColorBrewer)
+library(cowplot)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(ggstats)
+library(Hmisc)
+library(ggpubr)
+```
+
 ```{r data loading}
+
 siglist <- readRDS("data/siglist.RDS")
 list2env(siglist,envir=.GlobalEnv)
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 list2env(DEG_cormotif,envir=.GlobalEnv)
-
+cpmcounts <- readRDS("data/cpmcount.RDS")
 level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_pal_vehend <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+toplistall <- read.csv("output/toplistall.csv", row.names = 1) 
 
 GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","UTGT1A6","UGT1A10","KDM4B","KAT6B","GNT1",'SLCO1A2', 'SLCO1B3'))
 #library(bioMart)
@@ -160,7 +180,7 @@ cpm_boxplot(cpmcounts,GOI='23030',"Dark2",drug_pal_vehend,
 
 
 ```{r expression correlation, echo=FALSE}
-
+library(kableExtra)
 
 GOIsig <- toplistall %>%
   filter(ENTREZID %in% GOI_genelist$entrezgene_id) %>%
@@ -217,7 +237,7 @@ gene_corr_df <- cpmcounts %>%
 # saveRDS(gene_corr_frame,"data/gene_corr_frame.RDS")
 
    
-   library(Hmisc)
+   
   rcorr(as.matrix(gene_corr_frame[,c(1,4,5,6)]), type = "pearson")
    
 for (gene in GOI_genelist$entrezgene_id){

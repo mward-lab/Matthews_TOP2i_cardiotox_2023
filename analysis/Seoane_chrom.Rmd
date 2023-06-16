@@ -21,13 +21,13 @@ library(ggsignif)
 library(biomaRt)
 library(RColorBrewer)
 library(cowplot)
-# library(ggpubr)
+library(ggpubr)
 library(scales)
 library(sjmisc)
 library(kableExtra)
 library(broom)
 library(ggstats)
-toplistall.csv <- read.csv("output/toplistall.csv", row.names = 1) 
+
 ```
 
 ```{r data set creations, eval=FALSE,echo=FALSE}
@@ -48,7 +48,10 @@ toplistall.csv <- read.csv("output/toplistall.csv", row.names = 1)
 
 ##DEG list sig and not sig
 toplistall <- read.csv("output/toplistall.csv", row.names = 1) 
-
+col_fun = circlize::colorRamp2(c(0, 2), c("white", "purple"))
+col_fun1 = circlize::colorRamp2(c(-1, 3), c("white", "purple"))
+col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
+col_fun4= circlize::colorRamp2(c(-1, 4), c("white", "purple"))
 toplist24hr <-   toplistall %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
