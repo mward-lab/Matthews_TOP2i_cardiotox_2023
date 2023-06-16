@@ -619,7 +619,8 @@ The stars represent all genes that have an adj. P. value of < 0.05 (significantl
 
 
 ```{r Crispr data analysis}
-
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+list2env(DEG_cormotif,envir=.GlobalEnv)
 # Crispr_list <- read_excel("C:/Users/renee/Downloads/41598_2021_92988_MOESM2_ESM.xlsx")
 #  View(Crispr_list)
 # crispr_genes <- Crispr_list %>% 
