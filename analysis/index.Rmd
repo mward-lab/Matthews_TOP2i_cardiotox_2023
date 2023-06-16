@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website. I am using workflowr to create reproducible code and data analysis.  
+Welcome to my workflowr Cardiotoxicity research website. I am using workflowr to create reproducible code and data analysis.  
 
 # Full data set information
 
@@ -23,6 +23,7 @@ Welcome to my research website. I am using workflowr to create reproducible code
 ## Pairwise gene analysis
  [pairwise GO](https://reneeisnowhere.github.io/Cardiotoxicity/DEG-GO_analysis.html)
  
+ [genes of interest(focus on cpm and LFC boxplots)]((https://reneeisnowhere.github.io/Cardiotoxicity/GOI_plots.html))
  
 [LDH analysis and Calcium analysis](https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html)
 
@@ -45,7 +46,7 @@ Data set comparisons
 
 [Figure 3](https://reneeisnowhere.github.io/Cardiotoxicity/Figure3.html)  
 
-[Fi gure 4](https://reneeisnowhere.github.io/Cardiotoxicity/Figure4.html)  
+[Figure 4](https://reneeisnowhere.github.io/Cardiotoxicity/Figure4.html)  
 
 [Figure 5](https://reneeisnowhere.github.io/Cardiotoxicity/Figure5.html)  
 

@@ -237,52 +237,7 @@ mean24tnni <-  pivot_longer(mean24tnni,
                             names_to = 'indv', 
                             values_to = "tnni")
 
-# ggplot(mean24ldh, aes(x=Drug,y=ldh))+
-#   geom_boxplot() +
-#   geom_point(aes(col=indv,shape=indv, size =3))+
-#   geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
-#                                 c("Vehicle","Doxorubicin"),
-#                                 c("Vehicle","Epirubicin"),
-#                                 c("Vehicle","Mitoxantrone"),
-#                                 c("Vehicle","Trastuzumab")),
-#               map_signif_level=FALSE, 
-#               textsize =6,
-#               tip_length = .1, 
-#               vjust = 0.2, step_increase = 0.1)+
-#   theme_bw()+
-#   ggtitle("Relative LDH release in media")+
-#      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-#               axis.title = element_text(size = rel(0.8))) 
-# 
-# 
-# ggplot(mean24tnni, aes(x=Drug,y=tnni))+
-#   geom_boxplot() +
-#   geom_point(aes(col=indv,  size =3))+
-#   geom_signif(comparisons =list(c("Control","Daunorubicin"),
-#                                 c("Control","Doxorubicin"),
-#                                 c("Control","Epirubicin"),
-#                                 c("Control","Mitoxantrone"),
-#                                 c("Control","Trastuzumab")),
-#               map_signif_level=FALSE, 
-#               textsize =6,
-#               tip_length = .1, 
-#               vjust = 0.2, step_increase = 0.1)+
-#   theme_bw()+
-#   ggtitle("Relative Troponin I release in media")+
-#      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-#               axis.title = element_text(size = rel(0.8))) 
-#   
-# 
-#  cor(mean24ldh$ldh, mean24tnni$tnni)
-# 
-# 
 tvl24hour <- full_join(mean24ldh,mean24tnni, by=c("Drug","indv"))
-
-# ggplot(tvl24hour, aes(x=ldh,y=tnni))+
-#   geom_point(aes(col=indv))+ geom_smooth(method="lm")+
-#   facet_wrap("Drug", scales= "free")+theme_bw()+
-#   stat_cor(aes(label = after_stat(rr.label)), color = "red", geom = "label")+
-#   ggtitle("ldh verses cTNNI 24 hour by Drug")
 
 
 ```
@@ -316,7 +271,7 @@ RNAnormlist <- RNAnormlist %>%
   mutate(rldh= ldh/Conc_ng.ul) %>%
   mutate(rtnni=tnni/Conc_ng.ul)
 
-write.csv(RNAnormlist,"output/TNNI_LDH_RNAnormlist.txt")
+# write.csv(RNAnormlist,"output/TNNI_LDH_RNAnormlist.txt")
 
 
 ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+

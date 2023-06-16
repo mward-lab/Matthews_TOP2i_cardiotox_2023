@@ -626,7 +626,13 @@ legend_b
 
 # plan1 <- plot_grid(daplot,dxplot,epplot,NULL,mtplot, trplot,veplot,legend_b,ncol =4)
 plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
-  
+saveRDS(daplot,"output/daplot.RDS")  
+saveRDS(dxplot,"output/dxplot.RDS")
+saveRDS(epplot,"output/epplot.RDS")
+saveRDS(mtplot,"output/mtplot.RDS")
+saveRDS(trplot,"output/trplot.RDS")
+saveRDS(veplot,"output/veplot.RDS")
+
 # drcfinal<- plot_grid(plan1, ncol =1, rel_heights = c(1,0.1))
 # save_plot('output/plan2plot.png', plan2)
 # save_plot('individual-legenddark2.png',ggpubr::as_ggplot(legend_b))
@@ -925,6 +931,7 @@ for (each in 1:6){
 ```{r boxplot of slope}
 library(ggsignif)
 slope_table <- bind_rows(dnr_sl,dox_sl,epi_sl,mtx_sl)
+# write.csv(slope_table,"data/slope_table.csv")
 avg_slope <- slope_table %>% 
   rownames_to_column() %>% 
   as.tibble()%>% 
@@ -957,147 +964,7 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
           panel.border=element_rect(fill = NA, size = 2),
           plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
 ```
-```{r slope extraction, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-#
-# library(RColorBrewer)
-# drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-# daunls <- plyr::quickdf(daunls) %>%
-#   pivot_longer(everything(),names_to = 'indv', values_to = "Daun")
-# 
-# doxols <- plyr::quickdf(doxols) %>%
-#   pivot_longer(everything(),names_to = 'indv', values_to = "Doxo")
-# epils <- plyr::quickdf(epils)%>%
-#   pivot_longer(everything(),names_to = 'indv', values_to = "Epi")
-# mitols <- plyr::quickdf(mitols)%>%
-#   pivot_longer(everything(), names_to = 'indv', values_to = "Mito")
-# 
-# LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
-# 
-# avgLD <- LDfull%>% 
-#   pivot_longer(!indv,names_to = 'treatment', values_to = 'LD50') %>% 
-#   mutate(indv=str_sub(indv, 4,4)) %>% 
-#   group_by(treatment,indv) %>% 
-#   summarise_at(vars(LD50),list(avg = mean))
-# ggplot(avgLD, aes(x))geom_boxplot(position="dodge", aes(fill=rowname))+
-#     geom_point(aes(color=indv))+
-#     guides(alpha = "none")+
-#     scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
-#     scale_fill_manual(values=drug_pal_fact)+
-#     theme_classic() +
-# 
-# # meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>% 
-# # pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50') 
-# # 
-# # 
-# # avgLD50 <- aggregate(LD50~Treatment+indv, data= meanLDfull, mean)
-# #saveRDS(avgLD50,"data/avgLD50.RDS")
-# 
-# # LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
-# # colnames(LDfull) <- c("indv","Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone")
-# # summary(LDfull)
-# # BC_cell_lines <- read_excel("~/Ward Lab/Cardiotoxicity/Kandace Planning LDH/BC_cell_lines.xlsx", sheet = "BC_sample_set")
-# #write.csv(BC_cell_lines ,"data/BC_cell_lines.csv")
-# 
-# 
-# 
-# 
-# ____________________________________
-# # 
-# # mtiplot <- ggplot(MTi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
-#             stat_smooth(method = "drm", method.args = list(fct = L.4(c(NA,0,1,NA))),se = FALSE)+
-#         scale_x_log10() 
-# 
-# daiplot <- ggplot(DAi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
-#             stat_smooth(method = "drm",method.args = list(fct = L.4(c(NA,0,1,NA))), se = FALSE)+
-#         scale_x_log10() 
-# 
-# dxiplot <- ggplot(DXi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
-#             stat_smooth(method = "drm", 
-#                   method.args = list(fct = L.4(c(NA,0,1,NA))), 
-#                   se = FALSE)+
-#         scale_x_log10() 
-# epiplot <- ggplot(EPi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
-#             stat_smooth(method = "drm", 
-#                   method.args = list(fct = L.4(c(NA,0,1,NA))), 
-#                   se = FALSE)+
-#         scale_x_log10() 
-# triplot <- ggplot(TRi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
-#             stat_smooth(method = "drm", 
-#                   method.args = list(fct = L.4(c(NA,0,1,NA))), 
-#                   se = FALSE)+
-#         scale_x_log10() 
-# vehplot <- ggplot(VEi, aes(x=Conc, y= Percent, color = SampleID, alpha=0.6))+
-#             stat_smooth(method = "drm", 
-#                   method.args = list(fct = L.4(c(NA,0,1,NA))), 
-#                   se = FALSE)+
-#         scale_x_log10() 
-# 
-# 
-# 
-# summary(mtiplot)
-# extracted_daun <- ggplot_build(daiplot)$data[[1]]
-# extracted_doxo <- ggplot_build(dxiplot)$data[[1]]
-# extracted_epi <- ggplot_build(epiplot)$data[[1]]
-# extracted_mito <- ggplot_build(mtiplot)$data[[1]]
-# extracted_tras <- ggplot_build(triplot)$data[[1]]
-# extracted_veh <- ggplot_build(veiplot)$data[[1]]
-# 
-# 
-# daun_slope <- extracted_daun %>% nest(data = -group) %>% 
-#   mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy))%>% 
-#   unnest(tidied) #%>% 
-#   dplyr::select(group,term,estimate) %>% 
-#   pivot_wider(id_cols= group, names_from= term, values_from= estimate)# %>% 
-#   rename(y='(Intercept)') %>% 
-#   mutate(da_slope = y/x) %>% 
-#   dplyr::select(group,da_slope)
-# 
-# 
-# 
-# doxo_slope <- extracted_doxo %>% nest(data = -group) %>% 
-#   mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
-#   unnest(tidied)%>% 
-#   dplyr::select(group,term,estimate) %>% 
-#   pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
-#   rename(y='(Intercept)') %>% 
-#   mutate(dx_slope = y/x) %>% 
-#   dplyr::select(group,dx_slope)
-# 
-# epi_slope <- extracted_epi %>% nest(data = -group) %>% 
-#   mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
-#   unnest(tidied)%>% 
-#   dplyr::select(group,term,estimate) %>% 
-#   pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
-#   rename(y='(Intercept)') %>% 
-#   mutate(ep_slope = y/x) %>% 
-#   dplyr::select(group,ep_slope)
-# 
-# mito_slope <- extracted_mito %>% nest(data = -group) %>% 
-#   mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
-#   unnest(tidied)#%>% 
-#   dplyr::select(group,term,estimate) %>% 
-#   pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
-#   rename(y='(Intercept)') #%>% 
-#   mutate(mt_slope = y/x) %>% 
-#   dplyr::select(group,mt_slope)
-# tras_slope <- extracted_tras %>% nest(data = -group) %>% 
-#   mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
-#   unnest(tidied)%>% 
-#   dplyr::select(group,term,estimate) %>% 
-#   pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
-#   rename(y='(Intercept)') %>% 
-#   mutate(tr_slope = y/x) %>% 
-#   dplyr::select(group,tr_slope)
-# 
-# veh_slope <- extracted_veh %>% nest(data = -group) %>% 
-#   mutate(model = map(data,~lm(y~x,data=.)), tidied = map(model,tidy)) %>% 
-#   unnest(tidied)%>% 
-#   dplyr::select(group,term,estimate) %>% 
-#   pivot_wider(id_cols= group, names_from= term, values_from= estimate) %>% 
-#   rename(y='(Intercept)') %>% 
-#   mutate(ve_slope = y/x) %>% 
-#   dplyr::select(group,ve_slope)
-
+```{r slope correlation, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 ```
 
