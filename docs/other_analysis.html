@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee02ca18cfdba1a09e2f8024c8fe2ae3f4d2c8953targetblanke02ca18a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree9afd6a00b03f24ef204973a84e91a5cba0dbce25targetblank9afd6a0a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e02ca18cfdba1a09e2f8024c8fe2ae3f4d2c8953" target="_blank">e02ca18</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/9afd6a00b03f24ef204973a84e91a5cba0dbce25" target="_blank">9afd6a0</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee02ca18cfdba1a09e2f8024c8fe2ae3f4d2c8953targetblanke02ca18a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree9afd6a00b03f24ef204973a84e91a5cba0dbce25targetblank9afd6a0a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e02ca18cfdba1a09e2f8024c8fe2ae3f4d2c8953" target="_blank">e02ca18</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/9afd6a00b03f24ef204973a84e91a5cba0dbce25" target="_blank">9afd6a0</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -677,32 +677,7 @@ Untracked files:
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
-    Untracked:  output/DNRmeQTLs.RDS
-    Untracked:  output/DNRmeSNPs.RDS
-    Untracked:  output/DNRreQTLs.RDS
-    Untracked:  output/DOXmeQTLs.RDS
-    Untracked:  output/DOXmeSNPs.RDS
-    Untracked:  output/DOXreQTLs.RDS
-    Untracked:  output/EPImeQTLs.RDS
-    Untracked:  output/EPImeSNPs.RDS
-    Untracked:  output/EPIreQTLs.RDS
-    Untracked:  output/Fig_summary1.png
-    Untracked:  output/GWAS_goi.csv
-    Untracked:  output/MTXmeQTLs.RDS
-    Untracked:  output/MTXmeSNPs.RDS
-    Untracked:  output/MTXreQTLs.RDS
-    Untracked:  output/Sup4seoane.csv
-    Untracked:  output/egenes.csv
-    Untracked:  output/egenes_hgnc.csv
-    Untracked:  output/egenes_set.csv
-    Untracked:  output/figure_1.Rmd
-    Untracked:  output/heart_gtex.csv
-    Untracked:  output/knowles4.RDS
-    Untracked:  output/knowles5.RDS
-    Untracked:  output/not_eqtls_GTEX.csv
     Untracked:  output/output-old/
-    Untracked:  output/plan2plot.png
-    Untracked:  output/plan48ldh.png
     Untracked:  reneebasecode.R
 
 </code></pre>
@@ -749,6 +724,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/9afd6a00b03f24ef204973a84e91a5cba0dbce25/analysis/other_analysis.Rmd" target="_blank">9afd6a0</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-15
+</td>
+<td>
+fixing wflow error
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/6b03af2d301e424370c468bea4857b159cbb7df8/docs/other_analysis.html" target="_blank">6b03af2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -5729,9 +5738,9 @@ supp45Xmat &lt;- supp45X %&gt;%
   rename(c(&quot;n = 408&quot;= pval1, &quot;n = 54&quot;=pval4)) %&gt;% 
   as.matrix()
 
-Heatmap( supp45Xmat,
+Heatmap(supp45Xmat,
          column_title=&quot;Chromatin gene sets \nchi square -log p values&quot;, 
-         name = &quot;-log p values&quot;, 
+         name = &quot;-log (p value)&quot;, 
          cluster_rows = FALSE, 
          cluster_columns = FALSE, 
          column_names_rot = 0,
