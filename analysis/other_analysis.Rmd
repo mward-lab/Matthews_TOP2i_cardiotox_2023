@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 ```
 
 
@@ -42,7 +42,7 @@ Seaone 2019
 
 ## GWAS
 
-```{r loading data files,echo=FALSE,eval=TRUE}
+```{r loading data files, echo=FALSE,eval=TRUE}
 # toplistall <- read.csv("output/toplistall.csv", row.names = 1)
 
 backGL <- read.csv("data/backGL.txt",     row.names =1)
@@ -59,12 +59,6 @@ level_order2 <- c('75','87','77','79','78','71')
 
 toplistall <- readRDS("data/toplistall.RDS")
 
-```
- 
-
-
-```{r toplist split by time}
-
 toplist24hr <-   toplistall %>%
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
@@ -76,10 +70,11 @@ toplist3hr <-   toplistall %>%
   filter(time=="3_hours")
 
 ```
+ 
 
 
-## ArrGWAS to 24 hour DEG genes p < 0.05
-### 24 hour data set
+### ArrGWAS to 24 hour DEG genes p < 0.05
+#### 24 hour data set
 ```{r 24 hour ArrGWAS}
 # How I did the string split
 # Arr_GWAS <- ArrGWAS[,13]
@@ -130,9 +125,9 @@ dataframARR %>%
 
 
 ```
-### 3 hour data set
+#### 3 hour data set
 
-```{r three hour ArrGWAS}
+```{r three hour ArrGWAS,echo=FALSE}
 
 #Apply sorting
 toplist3hr %>% 
@@ -181,8 +176,13 @@ chi_funarr <-  toplistall %>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(ARR, sigcount)$p.value) 
-print("after performing chi square test between DEgenes, and non DE genes")
-chi_funarr
+
+
+chi_funarr %>% 
+  kable(., caption= "after performing chi square test between DEgenes, and non DE genes") %>% 
+  kable_paper("striped") %>%  
+  kable_styling(full_width = FALSE,font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
 
 
 ```
@@ -204,7 +204,13 @@ ARRmat <- chi_funarr %>% ungroup() %>%
 
 
 col_fun1 = circlize::colorRamp2(c(-1, 3), c("white", "purple"))
-Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square \n-log (p values)", cluster_rows = FALSE, cluster_columns = FALSE,col=col_fun1,column_names_rot = 0)
+Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square \n-log (p values)", cluster_rows = FALSE, cluster_columns = FALSE,
+         col=col_fun1,
+         column_names_rot = 0,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(ARRmat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
 
 
 
@@ -213,8 +219,8 @@ Heatmap( as.matrix(ARRmat), name = "Arrhythmia chi square \n-log (p values)", cl
 
 
 
-## HFGWAS
-### 24 hours HF
+### HFGWAS
+#### 24 hours HF
 ```{r 24 hours HFGWAS}
 ##just like ARrGWAS- imported the total csv, the took the "nearest" column and separated out the gene info
 # test <- HFGWAS %>% 
@@ -267,7 +273,7 @@ dataframHF %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 ```
 ### 3 hours HF
-```{r 3 hours HFGWAS}
+```{r 3 hours HFGWAS, echo=FALSE}
 
 #Apply sorting
 toplist3hr %>% 
@@ -314,14 +320,17 @@ chi_funhf <-  toplistall %>%
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(HF, sigcount)$p.value) 
-print("after performing chi square test between DEgenes, and non DE genes")
-chi_funhf
+
+chi_funhf %>% 
+  kable(., caption= "after performing chi square test between DEgenes, and non DE genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE,font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
 
 ```
 
 ```{r HF heatmap,echo=FALSE}
-library(ComplexHeatmap)
-  
+
 HFmat <- chi_funhf %>% ungroup() %>% 
   mutate(HF= log(pvalue)*(-1)) %>% 
   filter(time=="24_hours") %>% 
@@ -337,7 +346,14 @@ HFmat <- chi_funhf %>% ungroup() %>%
   
 col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
 
-Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col = col_fun1,column_names_rot = 0)
+Heatmap( as.matrix(HFmat), name = "Heart Failure GWAS\n chi square -log p values", 
+         cluster_rows = FALSE, cluster_columns = FALSE,
+         col=col_fun1,
+         column_names_rot = 0,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(HFmat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
 
 
 
@@ -405,7 +421,7 @@ dataframCAD %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 ```
 ### 3 hour data set
-```{r CAD 3 GWAS}
+```{r CAD 3 GWAS,echo=FALSE}
 
 #Apply sorting
 toplist3hr %>% 
@@ -452,8 +468,12 @@ chi_funCAD <-  toplistall %>%
   mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(CAD, sigcount)$p.value) 
-print("after performing chi square test between DEgenes, and non DE genes")
-chi_funCAD
+
+chi_funCAD %>% 
+  kable(., caption= "after performing chi square test between DEgenes, and non DE genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE,font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
 
 ```
 
@@ -476,20 +496,27 @@ CADmat <- chi_funCAD %>% ungroup() %>%
 
 col_fun4 = circlize::colorRamp2(c(-1, 4), c("white", "purple"))
 
-Heatmap( as.matrix(CADmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col_fun1)
+Heatmap( as.matrix(CADmat), name = "Heart Failure GWAS\n chi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE,col =col_fun1,
+         column_names_rot = 0,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(CADmat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+
 
 GWASmat <- bind_cols(CADmat$CAD,HFmat$HF,ARRmat$ARR) 
 colnames(GWASmat) <- c('CAD','HF','ARR')
 rownames(GWASmat) <- c('DNR','DOX','EPI','MTX')# %>% tibble() %>% dplyr::select) %>% as.matrix()
 
 
-Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE,column_title = 'This is for GWAS 24 hours -log(chi square pvalue)', cluster_columns = FALSE,row_names_side = 'left', column_names_rot = 0, col_fun1,
-        layer_fun = function(j, i, x, y, w, h, fill) {
-        ind_mat = restore_matrix(j, i, x, y)
-        ind = unique(c(ind_mat[3,3], ind_mat[3, 3]))
-        grid.points(x[ind], y[ind], pch = 8, size = unit(4, "mm"))
-    }
-)
+# Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE,column_title = 'This is for GWAS 24 hours -log(chi square pvalue)', cluster_columns = FALSE,row_names_side = 'left', column_names_rot = 0, col_fun1,
+#         layer_fun = function(j, i, x, y, w, h, fill) {
+#         ind_mat = restore_matrix(j, i, x, y)
+#         ind = unique(c(ind_mat[3,3], ind_mat[3, 3]))
+#         grid.points(x[ind], y[ind], pch = 8, size = unit(4, "mm"))
+#     }
+# )
 
 Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_rows = FALSE, column_title = 'This is for GWAS 24 hours -log(chi square pvalue)', cluster_columns = FALSE,row_names_side = 'left', column_names_rot = 0, col_fun1,
          cell_fun = function(j, i, x, y, width, height, fill) {
@@ -499,12 +526,9 @@ Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", cluster_ro
 
 print('This is for  GWAS 24 hours -log(chi square pvalue)')
 
-
-
-
-
 ```
-```{r GWAS genes of interest}
+The star represents chi square p.value < 0.05.
+```{r GWAS genes of interest, echo=TRUE, message=FALSE, warning=FALSE}
 # GWAS_goi <- c('RARG', 'ITGB7', 'TNS2','ZNF740','SLC28A3','RMI1',
 # 'FEDORA' ,'GDF5','FRS2','HDDC2','EEF1B2')
 # 
@@ -542,8 +566,6 @@ gwas_sig_mat <- GWASabsFCsig %>%
    column_to_rownames(var="id") %>%
   as.matrix()
  
-
-
 
 GWASabsFC <- toplistall %>% 
   # mutate(absFC=abs(logFC)) %>% 
@@ -588,17 +610,15 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
  
 ```
 
-
-
+The stars represent all genes that have an adj. P. value of < 0.05 (significantly differentially expressed)
     
-## Seoane 2019
+### Seoane 2019
 
 Seoane, Jose  Chromatin gene comparison:   comes from supp data NAT. MED 2019
-### 24 hours in Pairwise with supplemental data 1
+#### 24 hours in Pairwise with supplemental data 1
 
 
 ```{r gene comparison, eval=TRUE, message=FALSE, warning=FALSE}
-library(readxl)
 
 # Seoane_chromatinregs <- read_excel("C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx", 
 #     range = "A13:H469")
@@ -655,7 +675,7 @@ toplist24hr %>%
 
 ### 3 hours data Pairwise
 
-```{r three hour seaone,message=FALSE, warning=FALSE}
+```{r three hour seaone,message=FALSE, warning=FALSE, echo=FALSE}
 toplist3hr %>% 
   mutate(id = as.factor(id)) %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
@@ -696,8 +716,12 @@ chi_fun <-  toplistall %>%
   mutate(chrom=if_else(ENTREZID %in%chrom_genes,"y","no")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
-print("after performing chi square test between DEgenes, and non DE genes")
-chi_fun
+
+chi_fun%>% 
+  kable(., caption= "after performing chi square test between DEgenes, and non DE genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE,font_size = 18) %>% 
+  scroll_box(width = "60%", height = "400px")
 
 
 ```
@@ -789,12 +813,21 @@ pairS14_mat <- chi_fun2 %>%
   as.matrix()
  
 
-Heatmap( pairS14_mat,column_title="Pairwise version of Chromatin gene sets \nchi square -log p values", name = "-log p values", cluster_rows = FALSE, cluster_columns = FALSE, column_names_rot = 0,col = col_fun5)
+Heatmap( pairS14_mat,
+         column_title="Pairwise version of Chromatin gene sets \nchi square -log p values", row_order = c(2,4,6,8,1,3,5,7),
+         name = "-log p values", 
+         cluster_rows = FALSE, 
+         cluster_columns = FALSE, 
+         column_names_rot = 0,
+         col = col_fun5, 
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(pairS14_mat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
 
 ```
 
-Mitoxantrone is significantly enriched at 24 hours in the 54 genes from supplemental 4 Seoane.
-
+Stars indicate a chi square pvalue < 0.05
 
 
 
@@ -802,7 +835,7 @@ Mitoxantrone is significantly enriched at 24 hours in the 54 genes from suppleme
 
 
 ## Seoane Supplemental 4
-```{r loading comotif  data sets }
+```{r loading comotif  data sets, message=FALSE, warning=FALSE}
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 list2env(DEG_cormotif,envir=.GlobalEnv)
 backGL <- read.csv("data/backGL.txt")
@@ -917,20 +950,31 @@ supp45Xmat <- supp45X %>%
   mutate(pval1=(-1*log(pval1))) %>% 
   mutate(pval4=(-1*log(pval4))) %>% 
   column_to_rownames('motif') %>% 
-  rename(c("n = 408"= pval1, "n = 54"=pval4))
+  rename(c("n = 408"= pval1, "n = 54"=pval4)) %>% 
+  as.matrix()
 
-Heatmap( as.matrix(supp45Xmat),column_title="Chromatin gene sets \nchi square -log p values", name = "-log p values", cluster_rows = FALSE, cluster_columns = FALSE, column_names_rot = 0,col = col_fun5)
+Heatmap( supp45Xmat,
+         column_title="Chromatin gene sets \nchi square -log p values", 
+         name = "-log p values", 
+         cluster_rows = FALSE, 
+         cluster_columns = FALSE, 
+         column_names_rot = 0,
+         col = col_fun5,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(supp45Xmat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
 
 
 
 ```
-
+Stars represent chi square p values of < 0.05
 
 ## Crispr list  
 
 
 ```{r Crispr data analysis}
-library(readxl)
+
 # Crispr_list <- read_excel("C:/Users/renee/Downloads/41598_2021_92988_MOESM2_ESM.xlsx")
 #  View(Crispr_list)
 # crispr_genes <- Crispr_list %>% 
@@ -981,7 +1025,11 @@ chicheck_1 <- chicheck %>% mutate(p.value=as.numeric(p.value)) %>%
   mutate(neg.logvalue=(-1*log(p.value))) %>% column_to_rownames('one') %>% dplyr::select(neg.logvalue) %>% as.matrix
 col_fun = circlize::colorRamp2(c(0, 2), c("white", "purple"))
 
-Heatmap( chicheck_1, name = "Doxcrispr enrichment \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun)
+Heatmap( chicheck_1, name = "Doxcrispr enrichment \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(chicheck_1[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
 ```
 
 
@@ -1030,7 +1078,14 @@ crisp_pair_mat <- pairwisecrispr %>%
   unite('pairset',time,id ) %>% 
   column_to_rownames('pairset') %>% dplyr::select(neg.log.pvalue) %>% as.matrix()
     
-Heatmap( crisp_pair_mat, name = "Doxcrispr pairwise enrichment \nchi square -log p values", cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun5)
+Heatmap( crisp_pair_mat, name = "Doxcrispr pairwise enrichment \nchi square -log p values", 
+         cluster_rows = FALSE, 
+         cluster_columns = FALSE, 
+         col=col_fun5, column_names_rot = 0,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(crisp_pair_mat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
 
 ```
 
