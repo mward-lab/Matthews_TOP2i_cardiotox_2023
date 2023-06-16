@@ -12,34 +12,7 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 ```
-
-# Figure 1
-
-Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
-
-## A. Project Overview
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("output/Fig_summary1.png",error=FALSE)
-
-knitr::include_graphics("output/plan2plot.png",error=FALSE)
-
-knitr::include_graphics("individual-legenddark2.png",error=FALSE)
-```
-
-things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
-
-## B. Example Dose response curves from 48 hour drug exposure.
-
-Lines are a log-logistic regression of the mean from quadruplicates at 8 separate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
-
-
-
-![Legend for DRC plot](C:/Program%20Files/R_WD/Cardiotoxicity/individual-legenddark2.png){30%}
-
-## C 48 hour 50% leathal dose plot
-
-```{r}
+```{r packages loading}
 library(car)
 #library(dr4pl) no longer used
 library(tidyverse)
@@ -48,12 +21,113 @@ library(BiocGenerics)
 library(data.table)
 library(drc)
 # library(Hmisc)
-# library(cowplot)
+library(cowplot)
 # library(grid)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
+```
+# Figure 1
+
+Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
+
+## A. Project Overview
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# knitr::include_graphics("output/Fig_summary1.png",error=FALSE)
+knitr::include_graphics("code/fig1plot.png")
+knitr::include_graphics("code/DRC_plotfigure1.png",error=FALSE)
+
+knitr::include_graphics("code/figurelegeddrc.png",error=FALSE)
+```
+
+things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
+
+## B. Example Dose response curves from 48 hour drug exposure.
+```{r B drc}
+daplot <- readRDS("output/daplot.RDS")  
+dxplot <- readRDS("output/dxplot.RDS")
+epplot<- readRDS("output/epplot.RDS")
+mtplot<- readRDS("output/mtplot.RDS")
+trplot<- readRDS("output/trplot.RDS")
+veplot<- readRDS("output/veplot.RDS")
+
+plan2 <-  cowplot::plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,ncol =3)
+print(plan2)
+```
+Lines are a log-logistic regression of the mean from quadruplicates at 8 separate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
 
 
+## C. 48 hour 50% lethal dose plot
 
+```{r LD50}
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
+avgLD50 <- readRDS("data/avgLD50.RDS")
+  
+graphLD50 <- 
+  avgLD50 %>%     
+  mutate(Treatment = case_match (Treatment, "Daun"~"Daunorubicin",  
+                                 "Doxo"~"Doxorubicin",
+                                 "Epi"~"Epirubicin",
+                                 "Mito"~"Mitoxantrone",
+                                 "Tras"~"Trastuzumab",
+                                 "Veh"~ "Vehicle", 
+                                 .default= Treatment)) %>%
+  mutate(indv= factor(indv)) %>%
+  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot(position = "identity", aes(fill=Treatment))+
+  geom_point(aes(color = indv,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
+  xlab("Treatment")+
+  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
+  scale_color_brewer(palette = "Dark2",
+                     name = "Individual", 
+                     labels = c("1","2","3","4","5","6"))+
+  ylim(-2,2)+
+  scale_fill_manual(values=drug_palc)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+        guides(alpha ="none", size = "none")+
+  #theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        # legend.position = "none",
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
+
+graphLD50
+```
+## D. Breast Cancer cell line 50% lethal dose plot
+```{r BCcells ld50}
+graphBC <- BC_cell_lines %>%
+    mutate(Cell_line= factor(Cell_line)) %>% 
+  pivot_longer(.,col=!Cell_line,names_to = 'Treatment',values_to = 'LD50') %>% 
+  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot(position = "identity",aes(fill=Treatment))+
+  geom_point(aes(color = Cell_line,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression("Breast cancer cell line reported  LD"[50]*"s"))+
+  xlab("")+
+  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
+  scale_color_brewer(palette = "Spectral",
+                     name = "Cell lines")+
+          scale_fill_manual(values=drug_palc)+
+  ylim(-2,2)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha ="none", size = "none", fill= "none")+
+  #theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        # legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
+  graphBC
+  
 ```
