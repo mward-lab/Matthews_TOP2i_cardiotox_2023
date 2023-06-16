@@ -156,7 +156,7 @@ saveRDS(MTXmeSNPs,"output/MTXmeSNPs.RDS")
 
 
 ```
-## Enrichiment and Pairwise
+## Enrichment of Pairwise
 
 ``` {r loading in data sets}
 
