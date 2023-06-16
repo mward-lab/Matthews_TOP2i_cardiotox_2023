@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree637531cd7f160fb39ee28043c8985c5e80852eb9targetblank637531ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree9ad6b911145da135d780f778f7c27c67be082f00targetblank9ad6b91a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/637531cd7f160fb39ee28043c8985c5e80852eb9" target="_blank">637531c</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/9ad6b911145da135d780f778f7c27c67be082f00" target="_blank">9ad6b91</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree637531cd7f160fb39ee28043c8985c5e80852eb9targetblank637531ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree9ad6b911145da135d780f778f7c27c67be082f00targetblank9ad6b91a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/637531cd7f160fb39ee28043c8985c5e80852eb9" target="_blank">637531c</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/9ad6b911145da135d780f778f7c27c67be082f00" target="_blank">9ad6b91</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,7 +559,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -750,6 +749,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/9ad6b911145da135d780f778f7c27c67be082f00/analysis/other_analysis.Rmd" target="_blank">9ad6b91</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-15
+</td>
+<td>
+showing code adding pvalue text
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/750ee45b49395e0a3b0b697c5cf6b321d329b47d/docs/other_analysis.html" target="_blank">750ee45</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1454,6 +1487,18 @@ adding other_analysis and genes of interest log2cpm
 </div>
 </div>
 </div>
+<pre class="r"><code>library(limma)
+library(tidyverse)
+library(ggsignif)
+library(biomaRt)
+library(RColorBrewer)
+library(cowplot)
+library(ggpubr)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(ComplexHeatmap)</code></pre>
 <div id="data-set-comparison-order" class="section level2">
 <h2>Data set comparison order:</h2>
 <p>ArrGWAS<br />
@@ -1465,12 +1510,55 @@ Supplemental 4 (54 genes)</p>
 </div>
 <div id="gwas" class="section level2">
 <h2>GWAS</h2>
-</div>
-<div id="arrgwas-to-24-hour-deg-genes-p-0.05" class="section level2">
-<h2>ArrGWAS to 24 hour DEG genes p &lt; 0.05</h2>
-<div id="hour-data-set" class="section level3">
-<h3>24 hour data set</h3>
-<img src="figure/other_analysis.Rmd/24%20hour%20ArrGWAS-1.png" width="672" style="display: block; margin: auto;" />
+<div id="arrgwas-to-24-hour-deg-genes-p-0.05" class="section level3">
+<h3>ArrGWAS to 24 hour DEG genes p &lt; 0.05</h3>
+<div id="hour-data-set" class="section level4">
+<h4>24 hour data set</h4>
+<pre class="r"><code># How I did the string split
+# Arr_GWAS &lt;- ArrGWAS[,13]
+# names(Arr_GWAS) &lt;- &quot;genesplit&quot;
+# Arr_GWAS &lt;- Arr_GWAS %&gt;% 
+#   separate_longer_delim(genesplit, delim = &quot;,&quot;)
+#write.csv(Arr_GWAS,&quot;data/Arr_GWAS.txt&quot;)
+arr_GWAS &lt;- read.csv(&quot;data/Arr_GWAS.txt&quot;, row.names = 1)
+Arr_geneset &lt;- readRDS(&quot;data/Arr_geneset.RDS&quot;)
+# Arr_geneset &lt;- getBM(attributes=my_attributes,filters =&#39;hgnc_symbol&#39;,
+#                   values = arr_GWAS, mart = ensembl)
+# #remove duplicates
+# Arr_geneset &lt;- Arr_geneset %&gt;% distinct(entrezgene_id, .keep_all =TRUE)
+# saveRDS(Arr_geneset,&quot;data/Arr_geneset.RDS&quot;)
+#Apply sorting
+toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,ARR) %&gt;% 
+  summarize(ARRcount=n())%&gt;% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(ARR), values_from=ARRcount) %&gt;% 
+   mutate(ARRprop=(y/(y+no)*100)) %&gt;% 
+       ggplot(., aes(x=id, y=ARRprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,ARRprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle(&quot;24 hour non-significant and significant enrichment proporitions of Arrhythmia GWAS &quot;)</code></pre>
+<p><img src="figure/other_analysis.Rmd/24%20hour%20ArrGWAS-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##make table of numbers:
+
+
+dataframARR &lt;- toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,ARR) %&gt;% 
+  summarize(ARRcount=n()) %&gt;% 
+  as.data.frame()
+
+dataframARR %&gt;% 
+  kable(., caption= &quot;Significant (adj. P value of &lt;0.05) and non-sig gene counts in Arrhythmia 24 hour GWAS&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -1751,8 +1839,8 @@ y
 </table>
 </div>
 </div>
-<div id="hour-data-set-1" class="section level3">
-<h3>3 hour data set</h3>
+<div id="hour-data-set-1" class="section level4">
+<h4>3 hour data set</h4>
 <img src="figure/other_analysis.Rmd/three%20hour%20ArrGWAS-1.png" width="672" style="display: block; margin: auto;" />
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
@@ -2019,6 +2107,7 @@ y
 </tbody>
 </table>
 </div>
+</div>
 <div id="chi-square-test-arr" class="section level4">
 <h4>chi square test ARR</h4>
 <pre class="r"><code>chi_funarr &lt;-  toplistall %&gt;% 
@@ -2028,30 +2117,178 @@ y
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
   group_by(id,time) %&gt;% 
   summarise(pvalue= chisq.test(ARR, sigcount)$p.value) 
-print(&quot;after performing chi square test between DEgenes, and non DE genes&quot;)</code></pre>
-<pre><code>[1] &quot;after performing chi square test between DEgenes, and non DE genes&quot;</code></pre>
-<pre class="r"><code>chi_funarr</code></pre>
-<pre><code># A tibble: 8 × 3
-# Groups:   id [4]
-  id           time      pvalue
-  &lt;fct&gt;        &lt;chr&gt;      &lt;dbl&gt;
-1 Daunorubicin 24_hours 0.0662 
-2 Daunorubicin 3_hours  0.0246 
-3 Doxorubicin  24_hours 0.142  
-4 Doxorubicin  3_hours  1.00   
-5 Epirubicin   24_hours 0.0313 
-6 Epirubicin   3_hours  0.644  
-7 Mitoxantrone 24_hours 0.708  
-8 Mitoxantrone 3_hours  0.00409</code></pre>
+
+
+chi_funarr %&gt;% 
+  kable(., caption= &quot;after performing chi square test between DEgenes, and non DE genes&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;) %&gt;%  
+  kable_styling(full_width = FALSE,font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
+<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+after performing chi square test between DEgenes, and non DE genes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+id
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+time
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+pvalue
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.0661799
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.0245603
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.1422138
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.0313365
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.6437411
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.7079851
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.0040856
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p><img src="figure/other_analysis.Rmd/ARR%20heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-</div>
-<div id="hfgwas" class="section level2">
-<h2>HFGWAS</h2>
-<div id="hours-hf" class="section level3">
-<h3>24 hours HF</h3>
-<img src="figure/other_analysis.Rmd/24%20hours%20HFGWAS-1.png" width="672" style="display: block; margin: auto;" />
+<div id="hfgwas" class="section level3">
+<h3>HFGWAS</h3>
+<div id="hours-hf" class="section level4">
+<h4>24 hours HF</h4>
+<pre class="r"><code>##just like ARrGWAS- imported the total csv, the took the &quot;nearest&quot; column and separated out the gene info
+# test &lt;- HFGWAS %&gt;% 
+#   select(nearest) %&gt;% 
+#   separate_wider_delim(nearest, delim = &quot;[&quot;, names_sep = &quot;&quot;, too_few = &quot;align_start&quot;)
+# test2 &lt;- str_sub(test$nearest2,0,nchar(test$nearest2)-1)
+# Hf_GWAS &lt;- test2
+#write.csv(Hf_GWAS, &quot;data/Hf_GWAS.txt&quot;)
+# HF_GWAS &lt;- read.csv(&quot;data/Hf_GWAS.txt&quot;, row.names =1)
+# 
+# HF_geneset &lt;- getBM(attributes=my_attributes,filters =&#39;hgnc_symbol&#39;,
+#                   values = HF_GWAS, mart = ensembl)
+# #remove duplicates
+# HF_geneset &lt;- HF_geneset %&gt;% distinct(entrezgene_id, .keep_all =TRUE)
+# saveRDS(HF_geneset,&quot;data/HF_geneset.RDS&quot;)
+HF_geneset &lt;- readRDS(&quot;data/HF_geneset.RDS&quot;)
+#Apply sorting
+toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,HF) %&gt;% 
+  summarize(HFcount=n())%&gt;% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(HF), values_from=HFcount) %&gt;% 
+   mutate(HFprop=(y/(y+no)*100)) %&gt;% 
+       ggplot(., aes(x=id, y=HFprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,HFprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle(&quot;non-significant and significant enrichment proporitions of Heart Failure GWAS &quot;)</code></pre>
+<p><img src="figure/other_analysis.Rmd/24%20hours%20HFGWAS-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##make table of numbers:
+
+
+dataframHF &lt;- toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,HF) %&gt;% 
+  summarize(HFcount=n()) %&gt;% 
+  as.data.frame()
+
+dataframHF %&gt;% #mutate_at(.vars = 6, .funs= scientific_format()) %&gt;% 
+  kable(., caption= &quot;Significant (adj. P value of &lt;0.05) and non-sig gene counts in HFhythmia GWAS&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -2332,6 +2569,7 @@ y
 </table>
 </div>
 </div>
+</div>
 <div id="hours-hf-1" class="section level3">
 <h3>3 hours HF</h3>
 <img src="figure/other_analysis.Rmd/3%20hours%20HFGWAS-1.png" width="672" style="display: block; margin: auto;" />
@@ -2581,28 +2819,185 @@ y
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
   group_by(id,time) %&gt;% 
   summarise(pvalue= chisq.test(HF, sigcount)$p.value) 
-print(&quot;after performing chi square test between DEgenes, and non DE genes&quot;)</code></pre>
-<pre><code>[1] &quot;after performing chi square test between DEgenes, and non DE genes&quot;</code></pre>
-<pre class="r"><code>chi_funhf</code></pre>
-<pre><code># A tibble: 8 × 3
-# Groups:   id [4]
-  id           time     pvalue
-  &lt;fct&gt;        &lt;chr&gt;     &lt;dbl&gt;
-1 Daunorubicin 24_hours 0.0589
-2 Daunorubicin 3_hours  0.858 
-3 Doxorubicin  24_hours 0.0674
-4 Doxorubicin  3_hours  1.00  
-5 Epirubicin   24_hours 0.164 
-6 Epirubicin   3_hours  0.983 
-7 Mitoxantrone 24_hours 0.816 
-8 Mitoxantrone 3_hours  1.00  </code></pre>
+
+chi_funhf %&gt;% 
+  kable(., caption= &quot;after performing chi square test between DEgenes, and non DE genes&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE,font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
+<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+after performing chi square test between DEgenes, and non DE genes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+id
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+time
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+pvalue
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.0589189
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.8581056
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.0674061
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.1635851
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.9826436
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.8156838
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p><img src="figure/other_analysis.Rmd/HF%20heatmap-1.png" width="672" style="display: block; margin: auto;" />
 ## CAD GWAS</p>
 </div>
 </div>
 <div id="hour-data-set-2" class="section level3">
 <h3>24 hour data set</h3>
-<img src="figure/other_analysis.Rmd/CAD%2024%20GWAS-1.png" width="672" style="display: block; margin: auto;" />
+<pre class="r"><code># test &lt;- CADGWAS %&gt;% 
+#    select(nearest) %&gt;% 
+#    separate_wider_delim(nearest, delim = &quot;[&quot;, names_sep = &quot;&quot;, too_few = &quot;align_start&quot;)
+#  test2 &lt;- str_sub(test$nearest2,0,nchar(test$nearest2)-1)
+# 
+# test2[c(32,38,44,74,112,126,191,212)] &lt;- c(&quot;TPCN1&quot;,&quot;C2orf43&quot;,&quot;FAM222A&quot;, &quot;TDRD15&quot;  ,&quot;AGPAT4&quot;,&quot;SVOP&quot;,&quot;SVOP&quot;,&quot;PLG&quot;)
+#    
+#  test2 [c(218,226,228,233,239,245,256,270,281,322,324,332,335,338,347,351,352,358)] &lt;-  c(&quot;HPCAL1&quot;, &quot;KLHL29&quot;  , &quot;COL4A3BP&quot;  , &quot;ARAP1&quot; ,
+#  &quot;VEGFA&quot;, &quot;TBPL1&quot;,&quot;SLC22A3&quot; ,&quot;C19orf38&quot;,&quot;LPA&quot;,&quot;VPS29&quot;,&quot;ATP2A2&quot; ,&quot;ATP2A2&quot;,&quot;KLHL29&quot;,&quot;GUCY1A3&quot;,&quot;KCNE2&quot;,  &quot;HOXB9&quot;,&quot;P2RY2&quot; ,&quot;CTC-236F12.4&quot;)
+#  
+#  CAD_GWAS &lt;- test2
+#write.csv(CAD_GWAS, &quot;data/cvd_GWAS.txt&quot;)
+CAD_GWAS &lt;- read.csv(&quot;data/cvd_GWAS.txt&quot;, row.names =1)
+
+# CAD_geneset &lt;- getBM(attributes=my_attributes,filters =&#39;hgnc_symbol&#39;,
+#                   values = CAD_GWAS, mart = ensembl)
+# #remove duplicates
+# CAD_geneset &lt;- CAD_geneset %&gt;% distinct(entrezgene_id, .keep_all =TRUE)
+# 
+# saveRDS(CAD_geneset,&quot;data/CAD_geneset.RDS&quot;)
+CAD_geneset &lt;- readRDS(&quot;data/CAD_geneset.RDS&quot;)
+#Apply sorting
+
+
+
+toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,CAD) %&gt;% 
+  summarize(CADcount=n())%&gt;% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(CAD), values_from=CADcount) %&gt;% 
+   mutate(CADprop=(y/(y+no)*100)) %&gt;% 
+       ggplot(., aes(x=id, y=CADprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,CADprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle(&quot;non-significant and significant enrichment proporitions of CAD GWAS &quot;)</code></pre>
+<p><img src="figure/other_analysis.Rmd/CAD%2024%20GWAS-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##make table of numbers:
+
+
+dataframCAD &lt;- toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,CAD) %&gt;% 
+  summarize(CADcount=n()) %&gt;% 
+  as.data.frame()
+
+dataframCAD %&gt;% #mutate_at(.vars = 6, .funs= scientific_format()) %&gt;% 
+  kable(., caption= &quot;Significant (adj. P value of &lt;0.05) and non-sig gene counts in CAD GWAS&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -3160,32 +3555,252 @@ y
   mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
   group_by(id,time) %&gt;% 
   summarise(pvalue= chisq.test(CAD, sigcount)$p.value) 
-print(&quot;after performing chi square test between DEgenes, and non DE genes&quot;)</code></pre>
-<pre><code>[1] &quot;after performing chi square test between DEgenes, and non DE genes&quot;</code></pre>
-<pre class="r"><code>chi_funCAD</code></pre>
-<pre><code># A tibble: 8 × 3
-# Groups:   id [4]
-  id           time     pvalue
-  &lt;fct&gt;        &lt;chr&gt;     &lt;dbl&gt;
-1 Daunorubicin 24_hours 0.604 
-2 Daunorubicin 3_hours  0.0105
-3 Doxorubicin  24_hours 0.836 
-4 Doxorubicin  3_hours  1.00  
-5 Epirubicin   24_hours 0.304 
-6 Epirubicin   3_hours  0.0351
-7 Mitoxantrone 24_hours 0.636 
-8 Mitoxantrone 3_hours  1.00  </code></pre>
-<p><img src="figure/other_analysis.Rmd/CAD%20heatmap-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/other_analysis.Rmd/CAD%20heatmap-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/other_analysis.Rmd/CAD%20heatmap-3.png" width="672" style="display: block; margin: auto;" /></p>
+
+chi_funCAD %&gt;% 
+  kable(., caption= &quot;after performing chi square test between DEgenes, and non DE genes&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE,font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
+<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+after performing chi square test between DEgenes, and non DE genes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+id
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+time
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+pvalue
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.6037088
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.0104647
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.8356522
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.3040510
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.0350528
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.6358068
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img src="figure/other_analysis.Rmd/CAD%20heatmap-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/other_analysis.Rmd/CAD%20heatmap-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>[1] &quot;This is for  GWAS 24 hours -log(chi square pvalue)&quot;</code></pre>
+<p>The star represents chi square p.value &lt; 0.05.</p>
+<pre class="r"><code># GWAS_goi &lt;- c(&#39;RARG&#39;, &#39;ITGB7&#39;, &#39;TNS2&#39;,&#39;ZNF740&#39;,&#39;SLC28A3&#39;,&#39;RMI1&#39;,
+# &#39;FEDORA&#39; ,&#39;GDF5&#39;,&#39;FRS2&#39;,&#39;HDDC2&#39;,&#39;EEF1B2&#39;)
+# 
+# library(biomaRt)
+# ensembl &lt;- useMart(&quot;ensembl&quot;, dataset=&quot;hsapiens_gene_ensembl&quot;)
+# my_chr &lt;- c(1:22, &#39;M&#39;, &#39;X&#39;, &#39;Y&#39;)  
+# my_attributes &lt;- c(&#39;entrezgene_id&#39;, &#39;ensembl_gene_id&#39;, &#39;hgnc_symbol&#39;)
+# 
+# 
+# GWAS_goi&lt;- getBM(attributes=my_attributes,filters =&#39;hgnc_symbol&#39;,
+#          values = GWAS_goi, mart = ensembl)
+# GWAS_goi&lt;-GWAS_goi %&gt;% distinct(entrezgene_id,.keep_all = TRUE) %&gt;% add_row(entrezgene_id=&#39;124903732&#39;,ensembl_gene_id=&#39;ENSG00000260788&#39;, hgnc_symbol=&quot;RP11-298D21.1
+# &quot;)
+
+  
+# write.csv(GWAS_goi,&quot;output/GWAS_goi.csv&quot;)
+GWAS_goi &lt;- read.csv(&quot;output/GWAS_goi.csv&quot;)
+##get the abs FC of all GOI
+GWASabsFCsig &lt;- 
+  toplistall %&gt;% 
+  # mutate(absFC=abs(logFC)) %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  filter(id !=&quot;Trastuzumab&quot;) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  filter(ENTREZID %in% GWAS_goi$entrezgene_id) %&gt;% 
+   filter(time ==&quot;24_hours&quot;) %&gt;% 
+  dplyr::select(ENTREZID ,time, id,logFC, adj.P.Val, SYMBOL) %&gt;% 
+  # filter(adj.P.Val &lt;0.05) %&gt;% 
+  mutate(id =case_match(id,&#39;Daunorubicin&#39;~&#39;DNR&#39;,&#39;Doxorubicin&#39;~&#39;DOX&#39;,&#39;Epirubicin&#39;~&#39;EPI&#39;,&#39;Mitoxantrone&#39;~&#39;MTX&#39;, .default = id)) %&gt;% 
+  # mutate(time =case_match(time,&quot;3_hours&quot;~&#39;3_hr&#39;,&quot;24_hours&quot;~&#39;24_hr&#39;,.default = time)) %&gt;% 
+ # unite(&quot;trt_time&quot;,id:time,sep = &#39;_&#39;) %&gt;% 
+  pivot_wider(id_cols=id, names_from = SYMBOL, values_from =adj.P.Val)# %&gt;% 
+  
+gwas_sig_mat &lt;- GWASabsFCsig %&gt;% 
+   column_to_rownames(var=&quot;id&quot;) %&gt;%
+  as.matrix()
+ 
+
+GWASabsFC &lt;- toplistall %&gt;% 
+  # mutate(absFC=abs(logFC)) %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  filter(id !=&quot;Trastuzumab&quot;) %&gt;% 
+  filter(time==&quot;24_hours&quot;) %&gt;% 
+  # mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  filter(ENTREZID %in% GWAS_goi$entrezgene_id) %&gt;% 
+  dplyr::select(SYMBOL ,time, id, logFC) %&gt;% 
+  mutate(id =case_match(id,&#39;Daunorubicin&#39;~&#39;DNR&#39;,&#39;Doxorubicin&#39;~&#39;DOX&#39;,&#39;Epirubicin&#39;~&#39;EPI&#39;,&#39;Mitoxantrone&#39;~&#39;MTX&#39;, .default = id)) %&gt;% 
+  # mutate(time =case_match(time,&quot;3_hours&quot;~&#39;3_hr&#39;,&quot;24_hours&quot;~&#39;24_hr&#39;,.default = time)) %&gt;%
+  # unite(&quot;trt_time&quot;,id:time,sep = &#39;_&#39;) %&gt;% 
+  pivot_wider(id_cols=id, names_from = SYMBOL, values_from = logFC) %&gt;% 
+  column_to_rownames(var=&quot;id&quot;) %&gt;%
+  as.matrix()
+
+ 
+
+Heatmap(GWASabsFC, name = &quot;Fold change\nvalues&quot;, 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = &quot;left&quot;,
+        column_title = &quot;Fold change values of GWAS and TWAS genes&quot;, 
+        column_title_side = &quot;top&quot;,
+        column_title_gp = gpar(fontsize = 16, fontface = &quot;bold&quot;),
+        column_order= c(&#39;RARG&#39;,
+                        &#39;TNS2&#39;, 
+                        &#39;ZNF740&#39;,
+                        &#39;SLC28A3&#39;,
+                        &#39;RMI1&#39;,
+                        &#39;EEF1B2&#39;,
+                        &#39;FRS2&#39;, 
+                        &#39;HDDC2&#39;),
+        column_names_rot = 0, 
+        column_names_gp = gpar(fontsize = 12),
+        column_names_centered = TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(gwas_sig_mat[i, j] &lt;0.05)
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+})</code></pre>
 <p><img src="figure/other_analysis.Rmd/GWAS%20genes%20of%20interest-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The stars represent all genes that have an adj. P. value of &lt; 0.05
+(significantly differentially expressed)</p>
 </div>
 </div>
-</div>
-<div id="seoane-2019" class="section level2">
-<h2>Seoane 2019</h2>
+<div id="seoane-2019" class="section level3">
+<h3>Seoane 2019</h3>
 <p>Seoane, Jose Chromatin gene comparison: comes from supp data NAT. MED
-2019 ### 24 hours in Pairwise with supplemental data 1</p>
-<img src="figure/other_analysis.Rmd/gene%20comparison-1.png" width="672" style="display: block; margin: auto;" />
+2019 #### 24 hours in Pairwise with supplemental data 1</p>
+<pre class="r"><code># Seoane_chromatinregs &lt;- read_excel(&quot;C:/Users/renee/Downloads/Supplements folde manuscriptr/NIHMS1539805-supplement-SuppTables.xlsx&quot;, 
+#     range = &quot;A13:H469&quot;)
+
+#write.csv(Seoane_chromatinregs, &quot;data/Seonane2019supp1.txt&quot;)
+
+chrom_reg_Seoane &lt;- read_csv(file = &quot;data/Seonane2019supp1.txt&quot;,col_types = cols(...1 = col_skip()))
+                            
+Seoane_2019 &lt;- chrom_reg_Seoane[,2]
+names(Seoane_2019) &lt;- &quot;ENTREZID&quot;
+chrom_genes &lt;- (unique(Seoane_2019$ENTREZID))
+
+toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,chrom) %&gt;% 
+  summarize(chromcount=n()) %&gt;% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %&gt;% 
+   mutate(chromprop=(y/(y+no)*100)) %&gt;% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle(&quot;non-significant and significant enrichment proportions of chromatin gene set &quot;)</code></pre>
+<p><img src="figure/other_analysis.Rmd/gene%20comparison-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dataframchrom &lt;- toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,chrom) %&gt;% 
+  summarize(chromcount=n()) %&gt;% 
+  as.data.frame()
+
+dataframchrom %&gt;%
+  pivot_wider(., names_from=c(&#39;sigcount&#39;,&#39;chrom&#39;), values_from = &#39;chromcount&#39;) %&gt;% 
+  kable(., caption= &quot;Significant (adj. P value of &lt;0.05) and non-sig gene counts in Seoane geneset&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -3301,6 +3916,13 @@ NA
 </tbody>
 </table>
 </div>
+<pre class="r"><code>toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+   dplyr::filter(id!=&quot;Trastuzumab&quot;) %&gt;% 
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(chrom=if_else(ENTREZID %in%chrom_genes,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id) %&gt;% 
+ summarise(pvalue= chisq.test(chrom, sigcount)$p.value) </code></pre>
 <pre><code># A tibble: 4 × 2
   id               pvalue
   &lt;fct&gt;             &lt;dbl&gt;
@@ -3308,6 +3930,7 @@ NA
 2 Doxorubicin  0.0771    
 3 Epirubicin   0.0314    
 4 Mitoxantrone 0.00000326</code></pre>
+</div>
 <div id="hours-data-pairwise" class="section level3">
 <h3>3 hours data Pairwise</h3>
 <img src="figure/other_analysis.Rmd/three%20hour%20seaone-1.png" width="672" style="display: block; margin: auto;" />
@@ -3436,26 +4059,148 @@ chi_fun &lt;-  toplistall %&gt;%
   mutate(chrom=if_else(ENTREZID %in%chrom_genes,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
   group_by(id,time) %&gt;% 
   summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
-print(&quot;after performing chi square test between DEgenes, and non DE genes&quot;)</code></pre>
-<pre><code>[1] &quot;after performing chi square test between DEgenes, and non DE genes&quot;</code></pre>
-<pre class="r"><code>chi_fun</code></pre>
-<pre><code># A tibble: 8 × 3
-# Groups:   id [4]
-  id           time          pvalue
-  &lt;fct&gt;        &lt;chr&gt;          &lt;dbl&gt;
-1 Daunorubicin 24_hours 0.128      
-2 Daunorubicin 3_hours  0.0000332  
-3 Doxorubicin  24_hours 0.0771     
-4 Doxorubicin  3_hours  1.00       
-5 Epirubicin   24_hours 0.0314     
-6 Epirubicin   3_hours  0.000000346
-7 Mitoxantrone 24_hours 0.00000326 
-8 Mitoxantrone 3_hours  0.902      </code></pre>
+
+chi_fun%&gt;% 
+  kable(., caption= &quot;after performing chi square test between DEgenes, and non DE genes&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE,font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
+<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+after performing chi square test between DEgenes, and non DE genes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+id
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+time
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+pvalue
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.1276264
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.0000332
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.0770694
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.0313650
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.0000003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.0000033
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mitoxantrone
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.9023793
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div id="supplemental-4-seoane-3-hours-followed-by-24-hours"
 class="section level3">
 <h3>Supplemental 4 Seoane 3 hours followed by 24 hours</h3>
+<pre class="r"><code># library(readxl)
+# Sup4seoane &lt;- read_excel(&quot;~/Ward Lab/Cardiotoxicity/Manuscript/seoane201941591_2019_638_MOESM3_ESM.xlsx&quot;, 
+#     sheet = &quot;SupTable4&quot;, range = &quot;A16:J567&quot;)
+
+#     sheet = &quot;SupTable4&quot;, range = &quot;A16:J567&quot;)
+#write.csv(Sup4seoane, &quot;output/Sup4seoane.csv&quot;)
+Sup4seoane &lt;- read.csv(&quot;output/Sup4seoane.csv&quot;, row.names = 1)
+Sup4genes &lt;- Sup4seoane  %&gt;% 
+  filter(pval.expAnth&lt;0.05) %&gt;% 
+  distinct(entrez, .keep_all = TRUE) %&gt;% 
+  dplyr::select(entrez)
+
+Sup4seoane  %&gt;% 
+  filter(pval.expAnth&lt;0.05) %&gt;% 
+  distinct(entrez, .keep_all = TRUE) %&gt;% 
+  dplyr::select(entrez,gene,pval.exp,pval.anthr,pval.expAnth,adjpval) %&gt;% 
+  kable(., caption = &quot;List of Seoane Supplemental 4 genes&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;,&quot;hover&quot;)) %&gt;% 
+  scroll_box(width = &quot;100%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
 <table class=" lightable-paper lightable-striped table table-striped table-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; width: auto !important; ">
@@ -4568,8 +5313,47 @@ RUVBL2
 </tbody>
 </table>
 </div>
-<p><img src="figure/other_analysis.Rmd/supp4%20seoane-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/other_analysis.Rmd/supp4%20seoane-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist3hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,chrom) %&gt;% 
+  summarize(chromcount=n()) %&gt;% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %&gt;% 
+   mutate(chromprop=(y/(y+no)*100)) %&gt;% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle(&quot;Seoane supp 4 enrichment proportions found in my pairwise 3 hour data&quot;)</code></pre>
+<p><img src="figure/other_analysis.Rmd/supp4%20seoane-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,sigcount,chrom) %&gt;% 
+  summarize(chromcount=n()) %&gt;% 
+    pivot_wider(id_cols = c(id,sigcount), names_from=c(chrom), values_from=chromcount) %&gt;% 
+   mutate(chromprop=(y/(y+no)*100)) %&gt;% 
+       ggplot(., aes(x=id, y=chromprop)) +
+       geom_col()+
+       geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,chromprop), vjust=-.2))+
+       #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
+       facet_wrap(~sigcount)+
+       ggtitle(&quot;Seoane supp 4 enrichment proportions found in my pairwise 24 hour data&quot;)</code></pre>
+<p><img src="figure/other_analysis.Rmd/supp4%20seoane-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code> chi_fun2 &lt;-  
+  toplistall %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  dplyr::filter(id!=&quot;Trastuzumab&quot;) %&gt;% 
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+ mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(id,time) %&gt;% 
+  summarise(pvalue= chisq.test(chrom, sigcount)$p.value) 
+print(&quot;These are the chisquare values from the 54 genes&quot;)</code></pre>
 <pre><code>[1] &quot;These are the chisquare values from the 54 genes&quot;</code></pre>
+<pre class="r"><code>chi_fun2</code></pre>
 <pre><code># A tibble: 8 × 3
 # Groups:   id [4]
   id           time     pvalue
@@ -4582,9 +5366,36 @@ RUVBL2
 6 Epirubicin   3_hours  0.748 
 7 Mitoxantrone 24_hours 0.0202
 8 Mitoxantrone 3_hours  1.00  </code></pre>
+<pre class="r"><code>pairS14_mat &lt;- chi_fun2 %&gt;% 
+  full_join(chi_fun,by=c(&quot;id&quot;,&quot;time&quot;)) %&gt;% 
+  mutate(&quot;n = 54&quot;=-log(pvalue.x), &quot;n = 408&quot;=-log(pvalue.y)) %&gt;% 
+  mutate(time= case_match(time, 
+                          &#39;3_hours&#39;~&#39;3_hrs&#39;, 
+                          &#39;24_hours&#39;~&#39;24_hrs&#39;,.default = id)) %&gt;% 
+  mutate(id =case_match( id, 
+                         &#39;Daunorubicin&#39;~&#39;DNR&#39;,   
+                         &#39;Doxorubicin&#39;~&#39;DOX&#39; ,
+                         &#39;Epirubicin&#39;~&#39;EPI&#39; , 
+                         &#39;Mitoxantrone&#39; ~ &#39;MTX&#39;,.default = id)) %&gt;% 
+  unite(&#39;pairset&#39;,time,id ) %&gt;% 
+  dplyr::select(!c(pvalue.x,pvalue.y)) %&gt;% 
+  column_to_rownames(&#39;pairset&#39;) %&gt;% 
+  as.matrix()
+ 
+
+Heatmap( pairS14_mat,
+         column_title=&quot;Pairwise version of Chromatin gene sets \nchi square -log p values&quot;, row_order = c(2,4,6,8,1,3,5,7),
+         name = &quot;-log p values&quot;, 
+         cluster_rows = FALSE, 
+         cluster_columns = FALSE, 
+         column_names_rot = 0,
+         col = col_fun5, 
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(pairS14_mat[i, j] &gt; -log(0.05))
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+})</code></pre>
 <p><img src="figure/other_analysis.Rmd/supp4%20seoane-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Mitoxantrone is significantly enriched at 24 hours in the 54 genes
-from supplemental 4 Seoane.</p>
+<p>Stars indicate a chi square pvalue &lt; 0.05</p>
 </div>
 </div>
 <div id="using-baysian-gene-sets-to-look-at-enrichment-of-seoane-data"
@@ -4592,7 +5403,28 @@ class="section level1">
 <h1>Using Baysian gene sets to look at enrichment of Seoane data</h1>
 <div id="seoane-supplemental-4" class="section level2">
 <h2>Seoane Supplemental 4</h2>
+<pre class="r"><code>DEG_cormotif &lt;- readRDS(&quot;data/DEG_cormotif.RDS&quot;)
+list2env(DEG_cormotif,envir=.GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<pre class="r"><code>backGL &lt;- read.csv(&quot;data/backGL.txt&quot;)</code></pre>
+<pre class="r"><code>##data sets to compare   Sup4genes$entrez,&quot;y&quot;,&quot;no&quot;
+
+motifSeoanesummary4 &lt;- toplist24hr %&gt;% 
+  distinct(ENTREZID) %&gt;% 
+  mutate(ER=if_else(ENTREZID %in% motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  mutate(LR=if_else(ENTREZID %in% motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(TI=if_else(ENTREZID %in% motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(NR=if_else(ENTREZID %in% motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(chrom = if_else(ENTREZID %in% Sup4genes$entrez, &quot;y&quot;, &quot;no&quot;)) %&gt;% 
+  group_by(chrom,ER,TI,LR,NR) %&gt;% 
+  dplyr::summarize(n=n()) %&gt;% 
+  as.tibble  %&gt;% 
+  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
+  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
+motifSeoanesummary4 %&gt;% kable(., caption= &quot;Summary of genes from Cormotif that are also in Seoane Supp4&quot; )%&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -4665,31 +5497,56 @@ NA
 </tbody>
 </table>
 </div>
+<pre class="r"><code>    # chisqS4 &lt;- 
+##making the matrix
+
+chi_list4 &lt;- toplist24hr %&gt;% 
+  distinct(ENTREZID) %&gt;% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(chrom,ER,TI,LR,NR) %&gt;% 
+  dplyr::summarize(n=n()) %&gt;% 
+  as.tibble  %&gt;% 
+  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
+  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
+
+chisup4LR &lt;- chisq.test(chi_list4[,c(&#39;NR&#39;,&#39;LR&#39;)])
+chisup4LR</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list4[, c(&quot;NR&quot;, &quot;LR&quot;)]
 X-squared = 0.36327, df = 1, p-value = 0.5467</code></pre>
+<pre class="r"><code>chisup4ER &lt;- chisq.test(chi_list4[,c(&#39;NR&#39;,&#39;ER&#39;)])
+chisup4ER</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list4[, c(&quot;NR&quot;, &quot;ER&quot;)]
 X-squared = 6.3065, df = 1, p-value = 0.01203</code></pre>
+<pre class="r"><code>chisup4TI &lt;- chisq.test(chi_list4[,c(&#39;NR&#39;,&#39;TI&#39;)])
+chisup4TI</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list4[, c(&quot;NR&quot;, &quot;TI&quot;)]
 X-squared = 4.099, df = 1, p-value = 0.04291</code></pre>
+<pre class="r"><code>chisq.test(chi_list4[,c(&#39;ER&#39;,&#39;TI&#39;)])</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list4[, c(&quot;ER&quot;, &quot;TI&quot;)]
 X-squared = 0.26698, df = 1, p-value = 0.6054</code></pre>
+<pre class="r"><code>chisq.test(chi_list4[,c(&#39;ER&#39;,&#39;LR&#39;)])</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list4[, c(&quot;ER&quot;, &quot;LR&quot;)]
 X-squared = 0.47936, df = 1, p-value = 0.4887</code></pre>
+<pre class="r"><code>chisq.test(chi_list4[,c(&#39;TI&#39;,&#39;LR&#39;)])</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
@@ -4698,6 +5555,22 @@ X-squared = 0.13763, df = 1, p-value = 0.7107</code></pre>
 </div>
 <div id="seoane-supplemental-1" class="section level2">
 <h2>Seoane Supplemental 1</h2>
+<pre class="r"><code> motifSeoanesummary1 &lt;- toplist24hr %&gt;% 
+  distinct(ENTREZID) %&gt;% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(chrom = if_else(ENTREZID %in% chrom_genes, &quot;y&quot;, &quot;no&quot;)) %&gt;% 
+  group_by(chrom,ER,TI,LR,NR) %&gt;% 
+  dplyr::summarize(n=n()) %&gt;% 
+  as.tibble  %&gt;% 
+  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
+  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
+motifSeoanesummary1 %&gt;% kable(., caption= &quot;Summary of genes from Cormotif that are also in Seoane Supp1&quot; )%&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -4770,31 +5643,56 @@ y
 </tbody>
 </table>
 </div>
+<pre class="r"><code>    # chisqS4 &lt;- 
+##making the matrix
+
+chi_list1 &lt;- toplist24hr %&gt;% 
+  distinct(ENTREZID) %&gt;% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(chrom=if_else(ENTREZID %in% chrom_genes,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  group_by(chrom,ER,TI,LR,NR) %&gt;% 
+  dplyr::summarize(n=n()) %&gt;% 
+  as.tibble  %&gt;% 
+  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
+  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
+
+chisup1LR &lt;- chisq.test(chi_list1[,c(&#39;NR&#39;,&#39;LR&#39;)])
+chisup1LR</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list1[, c(&quot;NR&quot;, &quot;LR&quot;)]
 X-squared = 11.832, df = 1, p-value = 0.0005824</code></pre>
+<pre class="r"><code>chisup1ER &lt;- chisq.test(chi_list1[,c(&#39;NR&#39;,&#39;ER&#39;)])
+chisup1ER</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list1[, c(&quot;NR&quot;, &quot;ER&quot;)]
 X-squared = 62.351, df = 1, p-value = 2.873e-15</code></pre>
+<pre class="r"><code>chisup1TI &lt;- chisq.test(chi_list1[,c(&#39;NR&#39;,&#39;TI&#39;)])
+chisup1TI</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list1[, c(&quot;NR&quot;, &quot;TI&quot;)]
 X-squared = 37.066, df = 1, p-value = 1.142e-09</code></pre>
+<pre class="r"><code>chisq.test(chi_list1[,c(&#39;ER&#39;,&#39;TI&#39;)])</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list1[, c(&quot;ER&quot;, &quot;TI&quot;)]
 X-squared = 5.6896, df = 1, p-value = 0.01707</code></pre>
+<pre class="r"><code>chisq.test(chi_list1[,c(&#39;ER&#39;,&#39;LR&#39;)])</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
 data:  chi_list1[, c(&quot;ER&quot;, &quot;LR&quot;)]
 X-squared = 1.1741, df = 1, p-value = 0.2786</code></pre>
+<pre class="r"><code>chisq.test(chi_list1[,c(&#39;TI&#39;,&#39;LR&#39;)])</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 
@@ -4802,13 +5700,82 @@ data:  chi_list1[, c(&quot;TI&quot;, &quot;LR&quot;)]
 X-squared = 0.003306, df = 1, p-value = 0.9541</code></pre>
 <div id="chi-square-heatmap" class="section level3">
 <h3>chi square heatmap</h3>
-<p><img src="figure/other_analysis.Rmd/heatmapsup4n1%20cormotif-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>supp45X &lt;- NULL
+motif &lt;- c(&#39;ER&#39;,&#39;TI&#39;,&#39;LR&#39;)
+pval1=c(chisup1ER$p.value,chisup1TI$p.value,chisup1LR$p.value)
+pval4=c(chisup4ER$p.value ,chisup4TI$p.value ,chisup4LR$p.value)
+supp45X &lt;- tibble(&quot;motif&quot;=motif,&quot;pval1&quot;=pval1,&quot;pval4&quot;=pval4)
+supp45Xmat &lt;- supp45X %&gt;% 
+  mutate(pval1=(-1*log(pval1))) %&gt;% 
+  mutate(pval4=(-1*log(pval4))) %&gt;% 
+  column_to_rownames(&#39;motif&#39;) %&gt;% 
+  rename(c(&quot;n = 408&quot;= pval1, &quot;n = 54&quot;=pval4)) %&gt;% 
+  as.matrix()
+
+Heatmap( supp45Xmat,
+         column_title=&quot;Chromatin gene sets \nchi square -log p values&quot;, 
+         name = &quot;-log p values&quot;, 
+         cluster_rows = FALSE, 
+         cluster_columns = FALSE, 
+         column_names_rot = 0,
+         col = col_fun5,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(supp45Xmat[i, j] &gt; -log(0.05))
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+})</code></pre>
+<p><img src="figure/other_analysis.Rmd/heatmapsup4n1%20cormotif-1.png" width="672" style="display: block; margin: auto;" />
+Stars represent chi square p values of &lt; 0.05</p>
 </div>
 </div>
 <div id="crispr-list" class="section level2">
 <h2>Crispr list</h2>
+<pre class="r"><code># Crispr_list &lt;- read_excel(&quot;C:/Users/renee/Downloads/41598_2021_92988_MOESM2_ESM.xlsx&quot;)
+#  View(Crispr_list)
+# crispr_genes &lt;- Crispr_list %&gt;% 
+#   dplyr::filter(p.value &lt;0.05) %&gt;% 
+#   select(GeneName)
+  
+
+# crispr_genes &lt;- getBM(attributes=my_attributes,filters =&#39;hgnc_symbol&#39;,
+                  # values =crispr_genes$GeneName, mart = ensembl)
+# write.csv(crispr_genes,&#39;data/crispr_genes.csv&#39;)
+
+crispr_genes &lt;- read.csv(&quot;data/crispr_genes.csv&quot;, row.names = 1)
+print(&quot; number of unique crispr_genes after conversion from hgnc symbol to entrezid&quot;)</code></pre>
 <pre><code>[1] &quot; number of unique crispr_genes after conversion from hgnc symbol to entrezid&quot;</code></pre>
+<pre class="r"><code>length(unique(crispr_genes$entrezgene_id))</code></pre>
 <pre><code>[1] 154</code></pre>
+<pre class="r"><code>crisprunique &lt;- crispr_genes %&gt;% distinct(entrezgene_id,.keep_all = TRUE)
+
+Doxcrispall &lt;- toplistall %&gt;%
+  distinct(ENTREZID,.keep_all = TRUE) %&gt;% 
+  dplyr::select(ENTREZID,id,time)
+  
+
+crispmotifsummary &lt;- Doxcrispall %&gt;% 
+  mutate(ER=if_else(ENTREZID %in% motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
+  mutate(LR=if_else(ENTREZID %in% motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(TI=if_else(ENTREZID %in% motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(NR=if_else(ENTREZID %in% motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
+  mutate(crisp = if_else(ENTREZID %in% crisprunique$entrezgene_id, &quot;y&quot;, &quot;no&quot;)) %&gt;% 
+  group_by(crisp,ER,TI,LR,NR) %&gt;% 
+  dplyr::summarize(n=n()) %&gt;% 
+  as.tibble  %&gt;% 
+  pivot_wider(id_cols = c(crisp), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
+  rename(.,c(&quot;crisp&quot;=crisp,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6)) 
+
+cris_mat &lt;- crispmotifsummary %&gt;% dplyr::select(ER:NR) %&gt;% as.matrix()
+chicheck &lt;- data.frame(one= c(&quot;LR&quot;,&quot;ER&quot;,&quot;TI&quot;),two=rep(&quot;NR&quot;,3),p.value=c(&quot;&quot;,&quot;&quot;,&quot;&quot;))
+  
+ chicheck$p.value[1] &lt;- chisq.test(cris_mat[,c(&#39;LR&#39;,&#39;NR&#39;)],correct = FALSE)$p.value
+
+chicheck$p.value[2] &lt;- chisq.test(cris_mat[,c(&#39;ER&#39;,&#39;NR&#39;)],correct = FALSE)$p.value
+chicheck$p.value[3] &lt;- chisq.test(cris_mat[,c(&#39;TI&#39;,&#39;NR&#39;)],correct = FALSE)$p.value
+
+chicheck%&gt;% kable(., caption= &quot;chi square test p.values for encrichment of  Doxcrispr gene sets in motif sets&quot; )%&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -4866,7 +5833,43 @@ NR
 </tbody>
 </table>
 </div>
+<pre class="r"><code>chicheck_1 &lt;- chicheck %&gt;% mutate(p.value=as.numeric(p.value)) %&gt;% 
+  mutate(neg.logvalue=(-1*log(p.value))) %&gt;% column_to_rownames(&#39;one&#39;) %&gt;% dplyr::select(neg.logvalue) %&gt;% as.matrix
+col_fun = circlize::colorRamp2(c(0, 2), c(&quot;white&quot;, &quot;purple&quot;))
+
+Heatmap( chicheck_1, name = &quot;Doxcrispr enrichment \nchi square -log p values&quot;, cluster_rows = FALSE, cluster_columns = FALSE, col=col_fun,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(chicheck_1[i, j] &gt; -log(0.05))
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+})</code></pre>
 <p><img src="figure/other_analysis.Rmd/Crispr%20data%20analysis-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>col_fun4 = circlize::colorRamp2(c(0, 5), c(&quot;white&quot;, &quot;purple&quot;))
+
+
+pairwisecrispr &lt;- toplistall %&gt;%
+  filter(id!=&#39;Trastuzumab&#39;) %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(crisp = if_else(ENTREZID %in% crisprunique$entrezgene_id, &quot;y&quot;, &quot;no&quot;)) %&gt;% 
+  group_by(time, id) %&gt;%
+  summarise(pvalue= chisq.test(crisp, sigcount, correct=FALSE)$p.value)
+ 
+  
+  crisprnumbers &lt;- toplistall %&gt;%
+  filter(id!=&#39;Trastuzumab&#39;) %&gt;% 
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  mutate(crisp = if_else(ENTREZID %in% crisprunique$entrezgene_id, &quot;y&quot;, &quot;no&quot;)) %&gt;% 
+  group_by(time, id,sigcount,crisp) %&gt;%
+  dplyr::summarize(n=n()) %&gt;% 
+  as.tibble() #%&gt;% 
+  
+crisprnumbers %&gt;% kable(., caption= &quot;Summary of genes found in both sigDE and non sigDE by treatment&quot; )%&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -5406,6 +6409,10 @@ y
 </tbody>
 </table>
 </div>
+<pre class="r"><code>pairwisecrispr%&gt;% kable(., caption= &quot;Summary of chisqure values between numbers of sigDE and non sigDE by treatment&quot; )%&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
+  scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
@@ -5518,6 +6525,21 @@ Mitoxantrone
 </tbody>
 </table>
 </div>
+<pre class="r"><code>crisp_pair_mat &lt;- pairwisecrispr %&gt;%
+  mutate(neg.log.pvalue= (-1*log(pvalue))) %&gt;% 
+  mutate(time= case_match(time, &#39;3_hours&#39;~&#39;3_hrs&#39;, &#39;24_hours&#39;~&#39;24_hrs&#39;,.default = id)) %&gt;% 
+  mutate(id =case_match( id, &#39;Daunorubicin&#39;~&#39;DNR&#39;,   &#39;Doxorubicin&#39;~&#39;DOX&#39; ,&#39;Epirubicin&#39;~&#39;EPI&#39; , &#39;Mitoxantrone&#39; ~ &#39;MTX&#39;,.default = id)) %&gt;% 
+  unite(&#39;pairset&#39;,time,id ) %&gt;% 
+  column_to_rownames(&#39;pairset&#39;) %&gt;% dplyr::select(neg.log.pvalue) %&gt;% as.matrix()
+    
+Heatmap( crisp_pair_mat, name = &quot;Doxcrispr pairwise enrichment \nchi square -log p values&quot;, 
+         cluster_rows = FALSE, 
+         cluster_columns = FALSE, 
+         col=col_fun5, column_names_rot = 0,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(crisp_pair_mat[i, j] &gt; -log(0.05))
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+})</code></pre>
 <p><img src="figure/other_analysis.Rmd/crisper%20DEG-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
@@ -5527,6 +6549,7 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.2.2 (2022-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
@@ -5545,14 +6568,14 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] readxl_1.4.2          ComplexHeatmap_2.12.1 broom_1.0.5          
- [4] kableExtra_1.3.4      sjmisc_2.8.9          scales_1.2.1         
- [7] ggpubr_0.6.0          cowplot_1.1.1         RColorBrewer_1.1-3   
-[10] biomaRt_2.52.0        ggsignif_0.6.4        lubridate_1.9.2      
-[13] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.2          
-[16] purrr_1.0.1           readr_2.1.4           tidyr_1.3.0          
-[19] tibble_3.2.1          ggplot2_3.4.2         tidyverse_2.0.0      
-[22] limma_3.52.4          workflowr_1.7.0      
+ [1] ComplexHeatmap_2.12.1 broom_1.0.5           kableExtra_1.3.4     
+ [4] sjmisc_2.8.9          scales_1.2.1          ggpubr_0.6.0         
+ [7] cowplot_1.1.1         RColorBrewer_1.1-3    biomaRt_2.52.0       
+[10] ggsignif_0.6.4        lubridate_1.9.2       forcats_1.0.0        
+[13] stringr_1.5.0         dplyr_1.1.2           purrr_1.0.1          
+[16] readr_2.1.4           tidyr_1.3.0           tibble_3.2.1         
+[19] ggplot2_3.4.2         tidyverse_2.0.0       limma_3.52.4         
+[22] workflowr_1.7.0      
 
 loaded via a namespace (and not attached):
   [1] colorspace_2.1-0       rjson_0.2.21           sjlabelled_1.2.0      
@@ -5568,30 +6591,30 @@ loaded via a namespace (and not attached):
  [31] prettyunits_1.1.1      tools_4.2.2            gtable_0.3.3          
  [34] glue_1.6.2             GenomeInfoDbData_1.2.8 rappdirs_0.3.3        
  [37] Rcpp_1.0.10            carData_3.0-5          Biobase_2.56.0        
- [40] cellranger_1.1.0       jquerylib_0.1.4        vctrs_0.6.2           
- [43] Biostrings_2.64.1      svglite_2.1.1          iterators_1.0.14      
- [46] insight_0.19.2         xfun_0.39              ps_1.7.5              
- [49] rvest_1.0.3            timechange_0.2.0       lifecycle_1.0.3       
- [52] rstatix_0.7.2          XML_3.99-0.14          getPass_0.2-2         
- [55] zlibbioc_1.42.0        vroom_1.6.3            hms_1.1.3             
- [58] promises_1.2.0.1       parallel_4.2.2         yaml_2.3.7            
- [61] curl_5.0.1             memoise_2.0.1          sass_0.4.6            
- [64] stringi_1.7.12         RSQLite_2.3.1          highr_0.10            
- [67] S4Vectors_0.34.0       foreach_1.5.2          BiocGenerics_0.42.0   
- [70] filelock_1.0.2         shape_1.4.6            GenomeInfoDb_1.32.4   
- [73] matrixStats_1.0.0      rlang_1.1.1            pkgconfig_2.0.3       
- [76] systemfonts_1.0.4      bitops_1.0-7           evaluate_0.21         
- [79] labeling_0.4.2         bit_4.0.5              processx_3.8.1        
- [82] tidyselect_1.2.0       magrittr_2.0.3         R6_2.5.1              
- [85] IRanges_2.30.1         generics_0.1.3         DBI_1.1.3             
- [88] pillar_1.9.0           whisker_0.4.1          withr_2.5.0           
- [91] KEGGREST_1.36.3        abind_1.4-5            RCurl_1.98-1.12       
- [94] crayon_1.5.2           car_3.1-2              utf8_1.2.3            
- [97] BiocFileCache_2.4.0    tzdb_0.4.0             rmarkdown_2.22        
-[100] GetoptLong_1.0.5       progress_1.2.2         blob_1.2.4            
-[103] callr_3.7.3            git2r_0.32.0           digest_0.6.31         
-[106] webshot_0.5.4          httpuv_1.6.11          stats4_4.2.2          
-[109] munsell_0.5.0          viridisLite_0.4.2      bslib_0.5.0           </code></pre>
+ [40] jquerylib_0.1.4        vctrs_0.6.2            Biostrings_2.64.1     
+ [43] svglite_2.1.1          iterators_1.0.14       insight_0.19.2        
+ [46] xfun_0.39              ps_1.7.5               rvest_1.0.3           
+ [49] timechange_0.2.0       lifecycle_1.0.3        rstatix_0.7.2         
+ [52] XML_3.99-0.14          getPass_0.2-2          zlibbioc_1.42.0       
+ [55] vroom_1.6.3            hms_1.1.3              promises_1.2.0.1      
+ [58] parallel_4.2.2         yaml_2.3.7             curl_5.0.1            
+ [61] memoise_2.0.1          sass_0.4.6             stringi_1.7.12        
+ [64] RSQLite_2.3.1          highr_0.10             S4Vectors_0.34.0      
+ [67] foreach_1.5.2          BiocGenerics_0.42.0    filelock_1.0.2        
+ [70] shape_1.4.6            GenomeInfoDb_1.32.4    matrixStats_1.0.0     
+ [73] rlang_1.1.1            pkgconfig_2.0.3        systemfonts_1.0.4     
+ [76] bitops_1.0-7           evaluate_0.21          labeling_0.4.2        
+ [79] bit_4.0.5              processx_3.8.1         tidyselect_1.2.0      
+ [82] magrittr_2.0.3         R6_2.5.1               IRanges_2.30.1        
+ [85] generics_0.1.3         DBI_1.1.3              pillar_1.9.0          
+ [88] whisker_0.4.1          withr_2.5.0            KEGGREST_1.36.3       
+ [91] abind_1.4-5            RCurl_1.98-1.12        crayon_1.5.2          
+ [94] car_3.1-2              utf8_1.2.3             BiocFileCache_2.4.0   
+ [97] tzdb_0.4.0             rmarkdown_2.22         GetoptLong_1.0.5      
+[100] progress_1.2.2         blob_1.2.4             callr_3.7.3           
+[103] git2r_0.32.0           digest_0.6.31          webshot_0.5.4         
+[106] httpuv_1.6.11          stats4_4.2.2           munsell_0.5.0         
+[109] viridisLite_0.4.2      bslib_0.5.0           </code></pre>
 </div>
 </div>
 </div>
