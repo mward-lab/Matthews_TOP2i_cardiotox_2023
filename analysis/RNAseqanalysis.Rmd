@@ -344,8 +344,8 @@ store <- calc_pca(t(dat_cpm))### using the calc_pca function
 store.var <- store$sdev^2
 prop.store <- store.var/sum(store.var)
 
-prop.store %>%as.data.frame() %>%  
-  ggplot(., aes(x=1, y=2))+
+# prop.store %>%as.data.frame() %>%  
+#   ggplot(., aes(x=1, y=2))+
   
 
 ```
@@ -496,7 +496,7 @@ return(x)})
 summary(efit2
         )
 
-toplistgenes
+
 #make the list, and rename the items on the list
  ##print count files to data directory (write.table needs the full file name) 
 # for(i in seq_along(siglist)) {
@@ -643,7 +643,7 @@ volcanosig <- function(df, psig.lvl,topg) {
               axis.title = element_text(size = rel(0.8))) 
 }
 #v1<- volcanosig(V.DA24.top, 0.01,0)
-v1 <- volcanosig(V.DA.top, 0.01,0)+ ggtitle("Daunorubicin 3 hour")+
+v1 <- volcanosig(V.DA.top, 0.01,0)+ ggtitle("Daunorubicin 3 hour")
 v2 <- volcanosig(V.DA24.top, 0.01,0)+ ggtitle("Daunorubicin 24 hour")+ylab("")
 v3 <- volcanosig(V.DX.top, 0.01,0)+ ggtitle("Doxorubicin 3 hour")
 v4 <- volcanosig(V.DX24.top, 0.01,0)+ ggtitle("Doxorubicin 24 hour")+ylab("")
@@ -667,7 +667,7 @@ plot_grid(v9,v10,  rel_widths =c(.8,1))
 ```
 
 ```{r cormotif things, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
-library(Cormotif)
+
 library(pheatmap)
 
 
