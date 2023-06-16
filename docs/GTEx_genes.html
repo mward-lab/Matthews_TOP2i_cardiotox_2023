@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreed5478771e9d452749ccdbd07bbe537ad93cf2597targetblankd547877a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeaf934216165419b55b29d2303e558217fd2cef63targetblankaf93421a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/d5478771e9d452749ccdbd07bbe537ad93cf2597" target="_blank">d547877</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/af934216165419b55b29d2303e558217fd2cef63" target="_blank">af93421</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreed5478771e9d452749ccdbd07bbe537ad93cf2597targetblankd547877a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeaf934216165419b55b29d2303e558217fd2cef63targetblankaf93421a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/d5478771e9d452749ccdbd07bbe537ad93cf2597" target="_blank">d547877</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/af934216165419b55b29d2303e558217fd2cef63" target="_blank">af93421</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -706,10 +706,7 @@ Untracked files:
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/DEG-GO_analysis.Rmd
-    Modified:   analysis/Figure1.Rmd
-    Modified:   analysis/Knowles2019.Rmd
-    Modified:   code/eQTLcodes.R
+    Modified:   analysis/other_analysis.Rmd
 
 </code></pre>
 <p>
@@ -755,6 +752,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f8f511af8663414efe663a35368a3786c78607b4/analysis/GTEx_genes.Rmd" target="_blank">f8f511a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-15
+</td>
+<td>
+updates and simplifications of code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/144b03c0a24165da521ffd8df1833de7b3744461/docs/GTEx_genes.html" target="_blank">144b03c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -925,7 +956,7 @@ not_eqtl_set &lt;- getBM(attributes=my_attributes,
 not_eqtls &lt;- not_eqtl_set %&gt;% 
   distinct(entrezgene_id,.keep_all = TRUE) %&gt;% 
   filter(entrezgene_id %in% my_exp_genes$ENTREZID)
-##6711 not_eqtls
+##6711 not_eqtls  ##wrong set
 GTEx_genes &lt;- egenes_set %&gt;% 
   distinct(entrezgene_id,.keep_all = TRUE)</code></pre>
 <p>This file contains several columns gene_id, gene_name, gene_chr,
@@ -945,8 +976,7 @@ for the ensemble_gene_ set and 7271 for the hgnc_symbol set.<br />
 I went with using ensemble_gene_id because I found ~600 more genes
 overall than using the hgnc_symbol filter.</p>
 <pre class="r"><code>GTEx &lt;- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
-nQTL &lt;- not_eqtls
-# &#39;%!in%&#39; &lt;- function(x,y)!(&#39;%in%&#39;(x,y))
+
 
 nQTLmy &lt;- my_exp_genes %&gt;%
    dplyr:: filter(!ENTREZID %in%GTEx)
@@ -991,15 +1021,14 @@ GTExsum &lt;- toplistall %&gt;%
 GTEXcr8z &lt;- GTExsum %&gt;% 
   rbind(., nQTLsum) %&gt;% 
   dplyr::select(id,time,set, n,total) %&gt;% 
-  pivot_longer(cols=n:total, names_to=&quot;group&quot;,values_to=&quot;total&quot;)  
+  pivot_longer(cols=n:total, names_to=&quot;group&quot;,values_to=&quot;total&quot;) %&gt;% mutate(group=case_match(group, &quot;n&quot;~&quot;yes&quot;,&quot;total&quot;~&quot;no&quot;,.default = group))  
   
 
-GTEXcr8z %&gt;% 
+GTEXcr8z %&gt;% #filter(time==&quot;24_hours&quot;) %&gt;% 
   ggplot(., aes(x=set,y=total, fill=group))+
    geom_col(position=&#39;fill&#39;)+
     facet_wrap(time~id,nrow=2,ncol=4)+
     theme_classic()+
-   # scale_color_manual(values=drug_palNoVeh[c(1,2)])+
     scale_fill_manual(values=drug_palspc)</code></pre>
 <p><img src="figure/GTEx_genes.Rmd/still%20going-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>GTExsum %&gt;% 
