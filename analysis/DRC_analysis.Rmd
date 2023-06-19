@@ -930,6 +930,7 @@ for (each in 1:6){
 
 ```{r boxplot of slope}
 library(ggsignif)
+
 slope_table <- bind_rows(dnr_sl,dox_sl,epi_sl,mtx_sl)
 # write.csv(slope_table,"data/slope_table.csv")
 avg_slope <- slope_table %>% 
@@ -965,7 +966,48 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
           plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
 ```
 ```{r slope correlation, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+ read.csv("data/slope_table.csv",row.names = 1)
+avgSlope <- slope_table %>% 
+  rownames_to_column() %>% 
+  as.tibble()%>% 
+  mutate(rowname=case_match(rowname,'1'~'DNR','2'~'DOX','3'~'EPI','4'~'MTX', .default = rowname))%>% 
+  pivot_longer(!rowname,names_to = 'indv', values_to = 'slope') %>% 
+  mutate(indv=str_sub(indv, 4,4)) %>% 
+  group_by(rowname,indv) %>% 
+  summarise_at(vars(slope),list(name = mean)) %>% 
+  rename('Treatment'='rowname',"slope"="name")
 
+avgLD50 <- readRDS("data/avgLD50.RDS")
+
+slope_ld50 <- avgLD50 %>%  
+  mutate(Treatment= case_match (Treatment, 'Daun'~'DNR','Doxo'~'DOX','Epi'~'EPI','Mito'~'MTX', .default = Treatment)) %>% 
+  right_join(., avgSlope, by=c('Treatment','indv'))
+
+slope_ld50 %>% 
+  ggplot(., aes(x=slope, y=LD50))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  stat_cor(method="pearson",  
+           label.x.npc = 0, 
+           label.y.npc = 1,  
+           aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           color = "red")+
+  facet_wrap("Treatment", scales="free")+
+  scale_color_brewer(palette = "Dark2")+
+  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  
+  ylab(expression("LD"[50]))+
+  xlab("slope")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))+
+  ggtitle(expression("Correlation between LD"[50]*" and slope"))
 ```
 
 
@@ -1123,43 +1165,11 @@ Test <- as.data.frame(Test)
 
 
 
-```{r eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# ###make data frame
-dn <- c('Vehicle', 'Daunorubicin', 'Doxorubicin', 'Epirubicin', 'Mitoxantrone', 'Trastuzumab','Vehicle', 'Daunorubicin', 'Doxorubicin', 'Epirubicin', 'Mitoxantrone', 'Trastuzumab')
-# 
-# ng <- c(9615.9,7800.61,3454.27,6171.64,4276.96,11619.86,5237.35,19541.6,16257.39,21097.08,21774.27,26494.72)
-# relng <- c(1.003,0.814,0.359,0.628,0.433,1.211,0.921,3.437,2.808,3.712,3.831,4.658)
-# relstdv <- c(0.005,0.035,0.097,0.401,0.301,0.129,0.112,0.233,1.547,0.084,0.123,0.533)
-# stdv <- c(43,339,930,3845,2886,1241,638,1327,8791,480,698,3027)
-# hrs <- c((rep(3,6)), (rep(24,6)))
-# 
-tidata <- data.frame(dn, relng, relstdv, hrs)
-# 
-# 
-# ##make the plot##
+```{r making slope and ld50 cor}
 
-tropimage <- ggplot(tidata, aes(factor (dn, level = c('Vehicle', 'Daunorubicin', 'Doxorubicin', 'Epirubicin', 'Mitoxantrone', 'Trastuzumab')), y = relng, group = hrs, fill = as.factor(hrs)))+ 
-  geom_bar(position = "dodge", stat = "identity")+
-  scale_fill_manual(values= c( "dark green","purple4")) +
-  ggtitle("Levels of Troponin I release in cell media")+
-  theme_bw() +
-   xlab("Treatment at 0.5 uM")+
-  ylab("Relative Units")+
-  scale_y_continuous(
-    # don't expand y scale at the lower end
-    expand = expansion(mult = c(0, 0.05)))+
-  labs(fill = "Hours")+
-  theme(axis.title=element_text(size=15, color ="black"),
-        plot.title = element_text(hjust =0.5, size = 18),
-        axis.ticks=element_line(size =1.5),
-        axis.text=element_text(size=9, color ="black"),
-        panel.border=element_rect(fill = NA, size = 2))+ 
-      #axis.text.y = element_text(angle=45, vjust=1.1, hjust=0.5))+
-  geom_errorbar(aes(ymin=relng, ymax=relng+relstdv), width=.2,
-                 position=position_dodge(.9))
 
-tropimage 
-save_plot("tropimage.png",tropimage)
+
+
 
 ```
 
