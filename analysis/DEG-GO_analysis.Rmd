@@ -1355,8 +1355,18 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
 
 
 ``` 
-I feel a little dumb for not remembering this results on Wednesday....   now that I ran this using the new adj. p value of < 0.05, I am more confident they are consistent.   as above, I will pull the specific genes and look at logCPM of these genes soon to examine if the change is seen in the other AC genes at 24 hours.
+  As above, I will pull the specific genes and look at logCPM of these genes soon to examine if the change is seen in the other AC genes at 24 hours.
 
+
+```{r Dox specific LFC and cpm}
+
+
+
+
+
+
+
+````
 
 ## No Response genes n=5727
  
