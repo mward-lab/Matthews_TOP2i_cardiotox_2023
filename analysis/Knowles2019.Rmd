@@ -591,7 +591,7 @@ Dox24_lfc <- toplist24hr %>%
   
   toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
-  # filter(adj.P.Val<0.05) %>%
+  filter(adj.P.Val<0.05) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id,position="dodge"))+
     # geom_density(aes(fill=id))+
@@ -633,9 +633,9 @@ for (g in seq(from=1, to=length(sampset$entrezgene_id))){
 
 
 
-### More investigation  of 24 hour specific genes
+## More investigation  of 24 hour specific genes
 
-#### Doxorubicin
+### Doxorubicin
 ```{r Dox investigation}
 DOXdeg_sp <- toplist24hr %>% 
   filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
@@ -669,7 +669,7 @@ toplist24hr %>%
     # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
 
 toplist24hr %>% 
-  filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  # filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
   group_by(time,id) %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   filter(adj.P.Val <0.05) %>% 
@@ -678,14 +678,33 @@ toplist24hr %>%
   geom_vline(xintercept=0.01,linetype=2)+
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
-  ggtitle("DOX adj p. value <0.05")+
+  ggtitle("all DE-DOX adj p. value <0.05")+
+    fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+toplist24hr %>% 
+  filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01,linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle("all Dox specific DEG adj p. value <0.01")+
     fill_palette(palette = drug_palNoVeh)+
   theme_bw()
 
 
-
 toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
+  # filter(adj.P.Val<0.05) %>%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+toplist24hr %>% 
+  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
   # filter(adj.P.Val<0.05) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
@@ -703,7 +722,7 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
 }
 
 ```
-#### Mitoxantrone
+### Mitoxantrone
 ```{r mitoonly}
 MTXdeg_sp <- toplist24hr %>% 
   filter(if_else(id=="Mitoxantrone",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
@@ -753,6 +772,20 @@ toplist24hr %>%
     fill_palette(palette = drug_palNoVeh, drop = FALSE)+
   theme_bw()
 
+toplist24hr %>% 
+  # filter(if_else(id=="Mitoxantrone",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  filter(ENTREZID %in% MtxonlyDEG) %>% 
+  filter(adj.P.Val <0.05) %>% 
+   add_row(time="24_hours",id="Epirubicin") %>% 
+   mutate(id= factor(id, levels = c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone"))) %>% 
+   ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01, linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle("MTX adj p. value <0.05")+
+    fill_palette(palette = drug_palNoVeh, drop = FALSE)+
+  theme_bw()
 
 
 toplist24hr %>% 
@@ -761,7 +794,17 @@ toplist24hr %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()
+  theme_bw()+
+   ggtitle("All sigDE (adj.P.val <0.05) MTX genes")
+
+toplist24hr %>% 
+  filter(ENTREZID %in% MTXdeg_sp$ENTREZID) %>% 
+  # filter(adj.P.Val<0.05) %>%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()+
+  ggtitle("Only MTX specific (n=48) genes across all treatments")
 
 set.seed(12345)
 sampset <- MTXdeg_sp %>% 
@@ -812,6 +855,21 @@ toplist24hr %>%
     # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
 
 toplist24hr %>% 
+  # filter(if_else(id=="Daunorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% DnronlyDEG) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01,linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle("DNR adj p. value <0.05")+
+    fill_palette(palette = drug_palNoVeh)+
+  theme_bw()+
+  ggtitle("All sigDE (adj.P.val <0.05) DNR genes")
+
+toplist24hr %>% 
   filter(if_else(id=="Daunorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
   group_by(time,id) %>% 
   filter(ENTREZID %in% DnronlyDEG) %>% 
@@ -823,17 +881,28 @@ toplist24hr %>%
     facet_wrap(~id)+
   ggtitle("DNR adj p. value <0.05")+
     fill_palette(palette = drug_palNoVeh)+
-  theme_bw()
+  theme_bw()+
+  ggtitle("only DNR-sp genes, n=131")
 
 
 
 toplist24hr %>% 
-  filter(ENTREZID %in% DnronlyDEG) %>% 
+   filter(ENTREZID %in% DnronlyDEG) %>% 
+  
   # filter(adj.P.Val<0.05) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()
+  theme_bw()+
+  ggtitle("All sigDE (adj.P.val <0.05) DNR genes")
+toplist24hr %>% 
+ filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %>% 
+  # filter(adj.P.Val<0.05) %>%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()+
+  ggtitle("Only DNR specific n=131 genes")
 
 set.seed(12345)
 sampset <- DNRdeg_sp %>% 
@@ -896,7 +965,8 @@ toplist24hr %>%
     facet_wrap(~id)+
   ggtitle("EPI adj p. value <0.05")+
     fill_palette(palette = drug_palNoVeh)+
-  theme_bw()
+  theme_bw() +
+  ggtitle("only showing EPI n=81 specific genes ")
 
 
 
