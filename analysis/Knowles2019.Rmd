@@ -485,6 +485,9 @@ toplistall %>%
 When I look ot the reQTLs across treatments at 24 hours, I see that dox has a total of 180 reQTLS.  Because this gene set was specifically about doxorubicin response eQTLs, I wanted to see if these reQTLs were only Dox specific, AC specific,  Top2i specific, or show any type of pattern.
 
 ```{r Doxreqtl}
+
+siglist <- readRDS("data/siglist.RDS")
+list2env(siglist,.GlobalEnv)
 reQTLcombine=list(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)
 
 length(unique(c(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)))
@@ -525,7 +528,14 @@ ggplot(., aes(y=id,x=count,fill=group))+
     theme_classic()+
    scale_color_manual(values=c("red4","navy"))+
     scale_fill_manual(values=c("#2297E6","red2"))+
-  ggtitle("DOXreQTLs overlaps")
+  ggtitle("DOXreQTLs overlaps")+
+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
 
 #### DOX specific-Dox dE-reqtl
@@ -554,29 +564,24 @@ for (g in seq(from=1, to=length(geneDoxonlyQTL$entrezgene_id))){
 total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 ## do venn partition and pull doxspe genes
 
-listtovenn
+
 
 venn_24h <- VennDiagram::get.venn.partitions(total24)
 DoxonlyDEG <- venn_24h$..values..[[14]]
-
+EpionlyDEG <- venn_24h$..values..[[12]]
+DnronlyDEG <- venn_24h$..values..[[15]]
+MtxonlyDEG <- venn_24h$..values..[[8]]
+  
+  
 Dox24_lfc <- toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   filter(adj.P.Val<0.05) %>% 
+  mutate(logFC=logFC*(-1)) %>% 
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
   theme_classic()+
   fill_palette(palette = drug_palNoVeh)+
   ggtitle("LogFC of Dox specific DEGs")+
-  # geom_signif(comparisons = 
-  #               list(c("Daunorubicin", "Doxorubicin"),
-  #                    c("Epirubicin", "Doxorubicin"),
-  #                    c("Mitoxantrone", "Doxorubicin")
-  #                    ),
-  #             test = "t.test",
-  #             map_signif_level = TRUE,
-  #             step_increase = 0.1,
-  #             textsize = 4)+
-  
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
     axis.title = element_text(size = 15, color = "black"),
@@ -593,15 +598,12 @@ Dox24_lfc <- toplist24hr %>%
     facet_wrap(~id)+
     fill_palette(palette = drug_palNoVeh)
 toplist24hr %>% 
-  filter(ENTREZID %in% DoxonlyDEG) %>% 
-  # filter(adj.P.Val<0.05) %>%
+  filter(ENTREZID %in% DoxonlyDEG) %>%
   ggplot(., aes(x=adj.P.Val))+
-  # geom_histogram(aes(fill=id,position="dodge"))+
-    geom_density(aes(fill=id, alpha= 0.8))+
-    # facet_wrap(~id)+
-    fill_palette(palette = drug_palNoVeh)
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)
 
-
+print(Dox24_lfc)
 
 ```
 
@@ -620,11 +622,302 @@ Doxonly_deg <- read.csv("output/Doxonly_deg.csv", row.names = 1)
 set.seed(12345)
 sampset <- Doxonly_deg %>% 
   distinct(entrezgene_id,.keep_all = TRUE) %>% 
-  sample_n(.,20)
+  sample_n(.,12)
 for (g in seq(from=1, to=length(sampset$entrezgene_id))){
   a <- sampset$hgnc_symbol[g]
   cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
                 ylab=bquote(~italic(.(a))~log[2]~"cpm "))
 
 }
+```
+
+
+
+### More investigation  of 24 hour specific genes
+
+#### Doxorubicin
+```{r Dox investigation}
+DOXdeg_sp <- toplist24hr %>% 
+  filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  filter(ENTREZID %in% DoxonlyDEG) %>% 
+  filter(id=="Doxorubicin") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+
+DOXdeg_sp %>% 
+  kable(., caption= "DOX specific genes") %>% 
+  kable_paper("striped", full_width = TRUE) %>%  
+  kable_styling(full_width = FALSE, font_size = 16) %>% 
+  scroll_box( height = "500px")
+
+
+toplist24hr %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  # filter(id=="Doxorubicin")
+  mutate(logFC=logFC*(-1)) %>% 
+  ggplot(., aes(x= id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  theme_classic()+
+  fill_palette(palette = drug_palNoVeh)+
+  ggtitle("LogFC of n=62 Dox specific DEGs")+
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 20))
+    # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+
+toplist24hr %>% 
+  filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% DoxonlyDEG) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01,linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle("DOX adj p. value <0.05")+
+    fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+
+
+
+toplist24hr %>% 
+  filter(ENTREZID %in% DoxonlyDEG) %>% 
+  # filter(adj.P.Val<0.05) %>%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+
+set.seed(12345)
+sampset <- DOXdeg_sp %>% 
+  sample_n(.,12)
+
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+}
+
+```
+#### Mitoxantrone
+```{r mitoonly}
+MTXdeg_sp <- toplist24hr %>% 
+  filter(if_else(id=="Mitoxantrone",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  filter(ENTREZID %in% MtxonlyDEG) %>% 
+  filter(id=="Mitoxantrone") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+
+MTXdeg_sp %>% 
+  kable(., caption= "MTX specific genes") %>% 
+  kable_paper("striped", full_width = TRUE) %>%  
+  kable_styling(full_width = FALSE, font_size = 16) %>% 
+  scroll_box( height = "500px")
+
+
+toplist24hr %>% 
+  filter(ENTREZID %in% MTXdeg_sp$ENTREZID) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  # filter(id=="Mitoxantrone")
+  mutate(logFC=logFC*(-1)) %>% 
+  add_row(time="24_hours",id="Epirubicin") %>% 
+  add_row(time="24_hours",id="Daunorubicin") %>% 
+  mutate(id= factor(id,levels= c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone"))) %>% 
+  ggplot(., aes(x= id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  theme_classic()+
+  fill_palette(palette = drug_palNoVeh,drop = FALSE)+
+  ggtitle("LogFC of n=48 MTX specific DEGs")+
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 20))
+    # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+
+toplist24hr %>% 
+  filter(if_else(id=="Mitoxantrone",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  filter(ENTREZID %in% MtxonlyDEG) %>% 
+  filter(adj.P.Val <0.05) %>% 
+   add_row(time="24_hours",id="Epirubicin") %>% 
+   mutate(id= factor(id, levels = c("Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone"))) %>% 
+   ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01, linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle("MTX adj p. value <0.05")+
+    fill_palette(palette = drug_palNoVeh, drop = FALSE)+
+  theme_bw()
+
+
+
+toplist24hr %>% 
+  filter(ENTREZID %in% MtxonlyDEG) %>% 
+  # filter(adj.P.Val<0.05) %>%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+
+set.seed(12345)
+sampset <- MTXdeg_sp %>% 
+  sample_n(.,12)
+
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+}
+
+
+```
+
+
+####  Daunorubicin
+
+```{r dnr only}
+DNRdeg_sp <- toplist24hr %>% 
+  filter(if_else(id=="Daunorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  filter(ENTREZID %in% DnronlyDEG) %>% 
+  filter(id=="Daunorubicin") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+
+DNRdeg_sp %>% 
+  kable(., caption= "DNR specific genes") %>% 
+  kable_paper("striped", full_width = TRUE) %>%  
+  kable_styling(full_width = FALSE, font_size = 16) %>% 
+  scroll_box( height = "500px")
+
+
+toplist24hr %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  # filter(id=="Daunorubicin")
+  mutate(logFC=logFC*(-1)) %>% 
+  ggplot(., aes(x= id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  theme_classic()+
+  fill_palette(palette = drug_palNoVeh)+
+  ggtitle("LogFC of n=131 DNR specific DEGs")+
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 20))
+    # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+
+toplist24hr %>% 
+  filter(if_else(id=="Daunorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% DnronlyDEG) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01,linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle("DNR adj p. value <0.05")+
+    fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+
+
+
+toplist24hr %>% 
+  filter(ENTREZID %in% DnronlyDEG) %>% 
+  # filter(adj.P.Val<0.05) %>%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+
+set.seed(12345)
+sampset <- DNRdeg_sp %>% 
+  sample_n(.,12)
+
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+}
+
+
+
+  
+```
+#### Epirubicin
+
+```{r epi only}
+
+EPIdeg_sp <- toplist24hr %>% 
+  filter(if_else(id=="Epirubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  filter(ENTREZID %in% EpionlyDEG) %>% 
+  filter(id=="Epirubicin") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+
+EPIdeg_sp %>% 
+  kable(., caption= "EPI specific genes") %>% 
+  kable_paper("striped", full_width = TRUE) %>%  
+  kable_styling(full_width = FALSE, font_size = 16) %>% 
+  scroll_box( height = "500px")
+
+
+toplist24hr %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% EPIdeg_sp$ENTREZID) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  # filter(id=="Epirubicin")
+  mutate(logFC=logFC*(-1)) %>% 
+  ggplot(., aes(x= id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  theme_classic()+
+  fill_palette(palette = drug_palNoVeh)+
+  ggtitle("LogFC of n=81 EPI specific DEGs")+
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 20))
+    # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+
+toplist24hr %>% 
+  filter(if_else(id=="Epirubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% EpionlyDEG) %>% 
+  filter(adj.P.Val <0.05) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01,linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle("EPI adj p. value <0.05")+
+    fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+
+
+
+toplist24hr %>% 
+  filter(ENTREZID %in% EpionlyDEG) %>% 
+  # filter(adj.P.Val<0.05) %>%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()
+
+set.seed(12345)
+sampset <- EPIdeg_sp %>% 
+  sample_n(.,12)
+
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+}
+
+
+
 ```
