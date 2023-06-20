@@ -70,7 +70,7 @@ list2env(DEG_cormotif,envir=.GlobalEnv)
 
 backGL <- read_csv("data/backGL.txt", 
     col_types = cols(...1 = col_skip()))
-cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
+cpmcounts <- readRDS("data/cpmcount.RDS")
 ##sup1()
 chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
 Seoane_2019 <- chrom_reg_Seoane[,2]
@@ -426,3 +426,78 @@ Heatmap(supp45Xmat,
 
 ```
 Stars represent chi square p values of < 0.05
+
+
+
+### Seoane / Knowles data enrichment test
+
+
+```{r loading in gtex info}
+knowles4 <- readRDS("output/knowles4.RDS")
+knowles5 <- readRDS("output/knowles5.RDS")
+Sup4seoane <- read.csv("output/Sup4seoane.csv", row.names = 1)
+Sup4genes <- Sup4seoane  %>% 
+  filter(pval.expAnth<0.05) %>% 
+  distinct(entrez, .keep_all = TRUE) %>% 
+  dplyr::select(entrez) %>% 
+  rename("ENTREZID"='entrez')
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+Sup1genes <- Seoane_2019 %>% 
+  distinct(ENTREZID,.keep_all = TRUE)
+ supp1_counts <- Sup1genes %>% 
+   mutate(eQTL = if_else ( ENTREZID %in% knowles4$entrezgene_id, "y" , "no")) %>% 
+   mutate(reQTL = if_else ( ENTREZID %in% knowles5$entrezgene_id, "y" , "no"))  %>% 
+  group_by(eQTL,reQTL) %>% 
+   tally() %>%  data.frame()
+supp4_counts <- Sup4genes %>% 
+   mutate(eQTL = if_else ( ENTREZID %in% knowles4$entrezgene_id, "y" , "no")) %>% 
+   mutate(reQTL = if_else ( ENTREZID %in% knowles5$entrezgene_id, "y" , "no"))  %>% 
+  group_by(eQTL,reQTL) %>% 
+  tally() %>%  data.frame()
+
+enrich_chromtest <- data.frame(ids=c(rep('chrom_reg n= 408',2), rep('Dox_reg n = 54',2)), type=c(rep(c('eQTL','reQTL'),2 )), yes=c(7,10,0,2), no=c(401,398,54,52))
+
+
+enrich_chromtest %>% 
+  pivot_longer(cols=!c('ids','type'), 
+               names_to="group", values_to = "count") %>% 
+  ggplot(., aes(x=type, y=count), fill=group) +
+       geom_col(position='fill', aes(fill=group))+
+    facet_wrap(~ids)+
+    theme_classic()+
+    scale_fill_manual(values=drug_palc)+
+       
+       ggtitle("Checking for eQTL v. reQTL enrichment in n = 408(sup1) and n=54(sup4) ")
+
+testS1 <- matrix(c(7,10,401,398),nrow = 2,byrow = TRUE)
+
+testS4 <- matrix(c(0,2,54,52),nrow = 2,byrow = TRUE)
+
+chitable_result <- data.frame(test=c("eQTL vs reQTL Supp 1", "eQTL vs reQTL Supp 4"), pvalue=c(chisq.test(testS1)$p.value,chisq.test(testS4)$p.value))
+chitable_result %>% 
+  kable(., caption= "Chi square pvalue of test for enrichment")%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE,font_size = 18) #%>%
+  # scroll_box(width = "60%", height = "400px"))
+
+supp1_counts %>% 
+  kable(., caption= "number of genes in reQTL or eQTL sets for n=408")%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE,font_size = 18)
+supp4_counts %>% 
+  kable(., caption= "number of genes in reQTL or eQTL sets for n=54")%>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE,font_size = 18)
+
+
+
+```
+
+
+
+
+
+
+
