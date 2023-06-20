@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7376396d39594107d233e522158581b3d1b9ce05targetblank7376396a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreec26c27b1eb7c477eb1a294fced104fffaa57036ctargetblankc26c27ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7376396d39594107d233e522158581b3d1b9ce05" target="_blank">7376396</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/c26c27b1eb7c477eb1a294fced104fffaa57036c" target="_blank">c26c27b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7376396d39594107d233e522158581b3d1b9ce05targetblank7376396a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreec26c27b1eb7c477eb1a294fced104fffaa57036ctargetblankc26c27ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7376396d39594107d233e522158581b3d1b9ce05" target="_blank">7376396</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/c26c27b1eb7c477eb1a294fced104fffaa57036c" target="_blank">c26c27b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -741,6 +741,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/c26c27b1eb7c477eb1a294fced104fffaa57036c/analysis/Knowles2019.Rmd" target="_blank">c26c27b</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-20
+</td>
+<td>
+updating titles on graphs
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/a77fd98328bc1d4bdbe6798b59f606e8891b699d/docs/Knowles2019.html" target="_blank">a77fd98</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2579,7 +2613,7 @@ Dox24_lfc &lt;- toplist24hr %&gt;%
   
   toplist24hr %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
-  # filter(adj.P.Val&lt;0.05) %&gt;%
+  filter(adj.P.Val&lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id,position=&quot;dodge&quot;))+
     # geom_density(aes(fill=id))+
@@ -2615,11 +2649,12 @@ for (g in seq(from=1, to=length(sampset$entrezgene_id))){
 
 }</code></pre>
 <p><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/lcpm%20of%20some%20dox%20spec%20genes-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 <div id="more-investigation-of-24-hour-specific-genes"
-class="section level3">
-<h3>More investigation of 24 hour specific genes</h3>
-<div id="doxorubicin" class="section level4">
-<h4>Doxorubicin</h4>
+class="section level2">
+<h2>More investigation of 24 hour specific genes</h2>
+<div id="doxorubicin" class="section level3">
+<h3>Doxorubicin</h3>
 <pre class="r"><code>DOXdeg_sp &lt;- toplist24hr %&gt;% 
   filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
@@ -3355,7 +3390,7 @@ MTMR9
 <pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
 
 toplist24hr %&gt;% 
-  filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
+  # filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
   group_by(time,id) %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
   filter(adj.P.Val &lt;0.05) %&gt;% 
@@ -3364,10 +3399,24 @@ toplist24hr %&gt;%
   geom_vline(xintercept=0.01,linetype=2)+
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
-  ggtitle(&quot;DOX adj p. value &lt;0.05&quot;)+
+  ggtitle(&quot;all DE-DOX adj p. value &lt;0.05&quot;)+
     fill_palette(palette = drug_palNoVeh)+
   theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
+  filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
+  group_by(time,id) %&gt;% 
+  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
+  filter(adj.P.Val &lt;0.05) %&gt;% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01,linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle(&quot;all Dox specific DEG adj p. value &lt;0.01&quot;)+
+    fill_palette(palette = drug_palNoVeh)+
+  theme_bw()</code></pre>
+<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
   # filter(adj.P.Val&lt;0.05) %&gt;%
@@ -3375,7 +3424,15 @@ toplist24hr %&gt;%
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
   theme_bw()</code></pre>
-<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
+  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
+  # filter(adj.P.Val&lt;0.05) %&gt;%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()</code></pre>
+<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>set.seed(12345)
 sampset &lt;- DOXdeg_sp %&gt;% 
   sample_n(.,12)
@@ -3385,8 +3442,8 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
   cpm_boxplot(cpmcounts,GOI=sampset[g,1],&quot;Dark2&quot;,drug_palc,
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 }</code></pre>
-<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-15.png" width="672" style="display: block; margin: auto;" />
-#### Mitoxantrone</p>
+<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-17.png" width="672" style="display: block; margin: auto;" />
+### Mitoxantrone</p>
 <pre class="r"><code>MTXdeg_sp &lt;- toplist24hr %&gt;% 
   filter(if_else(id==&quot;Mitoxantrone&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
   filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
@@ -3985,13 +4042,38 @@ toplist24hr %&gt;%
   theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/mitoonly-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
+  # filter(if_else(id==&quot;Mitoxantrone&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
+  filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
+  filter(adj.P.Val &lt;0.05) %&gt;% 
+   add_row(time=&quot;24_hours&quot;,id=&quot;Epirubicin&quot;) %&gt;% 
+   mutate(id= factor(id, levels = c(&quot;Daunorubicin&quot;, &quot;Doxorubicin&quot;, &quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;))) %&gt;% 
+   ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01, linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle(&quot;MTX adj p. value &lt;0.05&quot;)+
+    fill_palette(palette = drug_palNoVeh, drop = FALSE)+
+  theme_bw()</code></pre>
+<p><img src="figure/Knowles2019.Rmd/mitoonly-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
   filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
   # filter(adj.P.Val&lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
-<p><img src="figure/Knowles2019.Rmd/mitoonly-3.png" width="672" style="display: block; margin: auto;" /></p>
+  theme_bw()+
+   ggtitle(&quot;All sigDE (adj.P.val &lt;0.05) MTX genes&quot;)</code></pre>
+<p><img src="figure/Knowles2019.Rmd/mitoonly-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
+  filter(ENTREZID %in% MTXdeg_sp$ENTREZID) %&gt;% 
+  # filter(adj.P.Val&lt;0.05) %&gt;%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()+
+  ggtitle(&quot;Only MTX specific (n=48) genes across all treatments&quot;)</code></pre>
+<p><img src="figure/Knowles2019.Rmd/mitoonly-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>set.seed(12345)
 sampset &lt;- MTXdeg_sp %&gt;% 
   sample_n(.,12)
@@ -4001,8 +4083,7 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
   cpm_boxplot(cpmcounts,GOI=sampset[g,1],&quot;Dark2&quot;,drug_palc,
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 }</code></pre>
-<p><img src="figure/Knowles2019.Rmd/mitoonly-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-15.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
+<p><img src="figure/Knowles2019.Rmd/mitoonly-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-17.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="daunorubicin" class="section level4">
 <h4>Daunorubicin</h4>
 <pre class="r"><code>DNRdeg_sp &lt;- toplist24hr %&gt;% 
@@ -5499,6 +5580,21 @@ TRIM38
 <pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
 
 toplist24hr %&gt;% 
+  # filter(if_else(id==&quot;Daunorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
+  group_by(time,id) %&gt;% 
+  filter(ENTREZID %in% DnronlyDEG) %&gt;% 
+  filter(adj.P.Val &lt;0.05) %&gt;% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(fill=id))+
+  geom_vline(xintercept=0.01,linetype=2)+
+    # geom_density(aes(fill=id))+
+    facet_wrap(~id)+
+  ggtitle(&quot;DNR adj p. value &lt;0.05&quot;)+
+    fill_palette(palette = drug_palNoVeh)+
+  theme_bw()+
+  ggtitle(&quot;All sigDE (adj.P.val &lt;0.05) DNR genes&quot;)</code></pre>
+<p><img src="figure/Knowles2019.Rmd/dnr%20only-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
   filter(if_else(id==&quot;Daunorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
   group_by(time,id) %&gt;% 
   filter(ENTREZID %in% DnronlyDEG) %&gt;% 
@@ -5510,16 +5606,28 @@ toplist24hr %&gt;%
     facet_wrap(~id)+
   ggtitle(&quot;DNR adj p. value &lt;0.05&quot;)+
     fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
-<p><img src="figure/Knowles2019.Rmd/dnr%20only-2.png" width="672" style="display: block; margin: auto;" /></p>
+  theme_bw()+
+  ggtitle(&quot;only DNR-sp genes, n=131&quot;)</code></pre>
+<p><img src="figure/Knowles2019.Rmd/dnr%20only-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
-  filter(ENTREZID %in% DnronlyDEG) %&gt;% 
+   filter(ENTREZID %in% DnronlyDEG) %&gt;% 
+  
   # filter(adj.P.Val&lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
-<p><img src="figure/Knowles2019.Rmd/dnr%20only-3.png" width="672" style="display: block; margin: auto;" /></p>
+  theme_bw()+
+  ggtitle(&quot;All sigDE (adj.P.val &lt;0.05) DNR genes&quot;)</code></pre>
+<p><img src="figure/Knowles2019.Rmd/dnr%20only-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
+ filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %&gt;% 
+  # filter(adj.P.Val&lt;0.05) %&gt;%
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
+  theme_bw()+
+  ggtitle(&quot;Only DNR specific n=131 genes&quot;)</code></pre>
+<p><img src="figure/Knowles2019.Rmd/dnr%20only-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>set.seed(12345)
 sampset &lt;- DNRdeg_sp %&gt;% 
   sample_n(.,12)
@@ -5529,7 +5637,7 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
   cpm_boxplot(cpmcounts,GOI=sampset[g,1],&quot;Dark2&quot;,drug_palc,
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 }</code></pre>
-<p><img src="figure/Knowles2019.Rmd/dnr%20only-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-15.png" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/Knowles2019.Rmd/dnr%20only-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-17.png" width="672" style="display: block; margin: auto;" />
 #### Epirubicin</p>
 <pre class="r"><code>EPIdeg_sp &lt;- toplist24hr %&gt;% 
   filter(if_else(id==&quot;Epirubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
@@ -6486,7 +6594,8 @@ toplist24hr %&gt;%
     facet_wrap(~id)+
   ggtitle(&quot;EPI adj p. value &lt;0.05&quot;)+
     fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
+  theme_bw() +
+  ggtitle(&quot;only showing EPI n=81 specific genes &quot;)</code></pre>
 <p><img src="figure/Knowles2019.Rmd/epi%20only-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
   filter(ENTREZID %in% EpionlyDEG) %&gt;% 
