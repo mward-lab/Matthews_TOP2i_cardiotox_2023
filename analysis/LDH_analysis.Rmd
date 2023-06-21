@@ -678,7 +678,8 @@ k_means <- read.csv("data/K_cluster_kisthree.csv")
 #   scale_color_manual(values = c("purple3", "darkgreen", "darkblue"))
 
 
-k_means %>% mutate(Drug =case_match(Drug_Name, "Dau_0.5"~"Daunorubicin",
+k_means %>% mutate(Drug =case_match(Drug_Name,
+                                    "Dau_0.5"~"Daunorubicin",
                                     "Dau_0.5.1" ~"Daunorubicin",
                                     "Dau_0.5.2" ~"Daunorubicin",
                                     "Dox_0.5"~"Doxorubicin",  
@@ -706,9 +707,9 @@ k_means %>% mutate(Drug =case_match(Drug_Name, "Dau_0.5"~"Daunorubicin",
   ggplot(., aes(x=PC1, y=PC2, col= Drug))+
   geom_point(shape = 17,size=7)+
   scale_color_manual(values=drug_pal)+
-  geom_encircle(aes(group=Cluster))+
-  annotate("text", label = c("Cluster 1","Cluster 2", "Cluster 3"), x = c(-2,0,1.5),y=c(-0.5,0,0.5))+
-  ggtitle(expression("PCA of Ca"^"2+"~"data with K-means clustering"))+
+  # geom_encircle(aes(group=Cluster))+
+  # annotate("text", label = c("Cluster 1","Cluster 2", "Cluster 3"), x = c(-2,0,1.5),y=c(-0.5,0,0.5))+
+  ggtitle(expression("PCA of Ca"^"2+"~"data"))+
   theme_bw()+
   labs(x = "PC 1 (54 %)",y = "PC 2 (34%)")+
   theme(plot.title=element_text(size= 14,hjust = 0.5),
