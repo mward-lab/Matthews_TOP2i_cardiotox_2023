@@ -14,15 +14,12 @@ knitr::opts_chunk$set(
 ```
 ```{r packages loading}
 library(car)
-#library(dr4pl) no longer used
 library(tidyverse)
 library(tinytex)
 library(BiocGenerics)
 library(data.table)
 library(drc)
-# library(Hmisc)
 library(cowplot)
-# library(grid)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
@@ -81,6 +78,13 @@ graphLD50 <-
                  size = 5,alpha = 0.5)) +
   ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
   xlab("Treatment")+
+  geom_signif(comparisons =list(c ("Doxorubicin","Daunorubicin"),
+                                c("Doxorubicin","Epirubicin"),
+                                c("Doxorubicin","Mitoxantrone")),
+             test="t.test",
+             map_signif_level=TRUE,
+             textsize =4,
+             step_increase = 0.15)+
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Dark2",
                      name = "Individual", 
@@ -112,6 +116,13 @@ graphBC <- BC_cell_lines %>%
                  size = 5,alpha = 0.5)) +
   ggtitle(expression("Breast cancer cell line reported  LD"[50]*"s"))+
   xlab("")+
+  geom_signif(comparisons =list(c ("Doxorubicin","Daunorubicin"),
+                                c("Doxorubicin","Epirubicin"),
+                                c("Doxorubicin","Mitoxantrone")),
+             test="t.test",
+             map_signif_level=TRUE,
+             textsize =4,
+             step_increase = 0.15)+
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Spectral",
                      name = "Cell lines")+
