@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-06-20" />
+<meta name="date" content="2023-06-21" />
 
 <title>Knowles 2019 data</title>
 
@@ -363,7 +363,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Knowles 2019 data</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-06-20</h4>
+<h4 class="date">2023-06-21</h4>
 
 </div>
 
@@ -392,7 +392,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-06-20
+<strong>Last updated:</strong> 2023-06-21
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreec26c27b1eb7c477eb1a294fced104fffaa57036ctargetblankc26c27ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree347bf4c7a5f5c9a6e7e60ee7bfd6c15357251e29targetblank347bf4ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/c26c27b1eb7c477eb1a294fced104fffaa57036c" target="_blank">c26c27b</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/347bf4c7a5f5c9a6e7e60ee7bfd6c15357251e29" target="_blank">347bf4c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreec26c27b1eb7c477eb1a294fced104fffaa57036ctargetblankc26c27ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree347bf4c7a5f5c9a6e7e60ee7bfd6c15357251e29targetblank347bf4ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/c26c27b1eb7c477eb1a294fced104fffaa57036c" target="_blank">c26c27b</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/347bf4c7a5f5c9a6e7e60ee7bfd6c15357251e29" target="_blank">347bf4c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -741,6 +741,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/347bf4c7a5f5c9a6e7e60ee7bfd6c15357251e29/analysis/Knowles2019.Rmd" target="_blank">347bf4c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-21
+</td>
+<td>
+adding in Doxspecific to graph
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/774967683c290d6d8271cdfced8ff82e16deac06/docs/Knowles2019.html" target="_blank">7749676</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -971,7 +1005,9 @@ updating code
 </div>
 <div id="package-loading" class="section level6">
 <h6>package loading</h6>
-<p>##function load</p>
+</div>
+<div id="function-load" class="section level2">
+<h2>function load</h2>
 </div>
 <div id="knowles-data" class="section level2">
 <h2>Knowles data</h2>
@@ -2406,7 +2442,7 @@ Here, I found 119 reQTLs that were related to all anthracyclines, with
   pivot_wider(.,id_cols = c(id,DOXreQTLs),names_from = sigcount,values_from = n) %&gt;% 
   dplyr::select(id,DOXreQTLs,sig) 
 DOXeQTL_table%&gt;% 
-  kable(., caption= &quot;All 24 hour sidDEGs broken down by drug and DOXreQTL status&quot;) %&gt;% 
+  kable(., caption= &quot;All 24 hour sigDEGs broken down by drug and DOXreQTL status&quot;) %&gt;% 
   kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;% 
   kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;),font_size = 18) %&gt;% 
   scroll_box(width = &quot;80%&quot;, height = &quot;400px&quot;)</code></pre>
@@ -2414,7 +2450,7 @@ DOXeQTL_table%&gt;%
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:80%; ">
 <table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
 <caption style="font-size: initial !important;">
-All 24 hour sidDEGs broken down by drug and DOXreQTL status
+All 24 hour sigDEGs broken down by drug and DOXreQTL status
 </caption>
 <thead>
 <tr>
@@ -2544,18 +2580,22 @@ NA
 </table>
 </div>
 <pre class="r"><code>DOXeQTL_table %&gt;%
+  add_row(id=c(&quot;Dox-specific DEGs&quot;,&quot;Dox-specific DEGs&quot;),DOXreQTLs=c(&quot;no&quot;,&quot;y&quot;), sig = c(62,1)) %&gt;% 
   dplyr::filter(DOXreQTLs==&quot;y&quot;) %&gt;% 
   mutate(opp= 180-sig) %&gt;% 
   filter(id !=c(&#39;Trastuzumab&#39;,&#39;Doxorubicin&#39;)) %&gt;% 
   rename(&quot;yes&quot;=sig, &quot;no&quot;=opp) %&gt;% 
-  pivot_longer(!c(id,DOXreQTLs), names_to=&quot;group&quot;, values_to = &quot;count&quot;) %&gt;% 
-  mutate(id=factor(id, levels=c(&quot;Daunorubicin&quot;,&quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;))) %&gt;% 
+  mutate(y_percent= paste0(sprintf(&quot;%2.1f&quot;, yes/(yes+no)*100), &quot;%&quot;),n_percent = paste0(sprintf(&quot;%2.1f&quot;, no/(yes+no)*100),&quot;%&quot;)) %&gt;% 
+  pivot_longer(!c(id,DOXreQTLs,y_percent,n_percent), names_to=&quot;group&quot;, values_to = &quot;count&quot;) %&gt;% 
+  mutate(id=factor(id, levels=c(&quot;Daunorubicin&quot;,&quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;,&quot;Dox-specific DEGs&quot;))) %&gt;% 
 ggplot(., aes(y=id,x=count,fill=group))+
      geom_col(position=&#39;fill&#39;)+
     theme_classic()+
    scale_color_manual(values=c(&quot;red4&quot;,&quot;navy&quot;))+
     scale_fill_manual(values=c(&quot;#2297E6&quot;,&quot;red2&quot;))+
   ggtitle(&quot;DOXreQTLs overlaps&quot;)+
+  scale_y_discrete(limits=rev)+
+  geom_text(aes(y=id,x=1, label = n_percent,hjust=.8))+
 
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = &quot;black&quot;),
@@ -3370,6 +3410,8 @@ MTMR9
 </tbody>
 </table>
 </div>
+<pre class="r"><code>intersect(DOXreQTLs$ENTREZID, DOXdeg_sp$ENTREZID)</code></pre>
+<pre><code>[1] &quot;57338&quot;</code></pre>
 <pre class="r"><code>toplist24hr %&gt;% 
   group_by(time,id) %&gt;% 
   filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
@@ -3389,9 +3431,7 @@ MTMR9
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
 
-toplist24hr %&gt;% 
-  # filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
-  group_by(time,id) %&gt;% 
+toplist24hr %&gt;% group_by(time,id) %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
   filter(adj.P.Val &lt;0.05) %&gt;% 
   ggplot(., aes(x=adj.P.Val))+
