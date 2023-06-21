@@ -73,10 +73,15 @@ cormotif_initial was created after calling corMotif, then running the corMotifcu
 
 After generating the Motifs from 1 to 8, the number of motifs that best fit the data was 4 using the BIC and AIC results below.
 
-```{r plot motifs, echo=TRUE, message=FALSE, warning=FALSE}
-cormotif_initial <- readRDS("data/cormotif_initialall.RDS")#
+```{r plot motifs,fig.keep='all',echo=TRUE, message=FALSE, warning=FALSE}
+cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
+myColors <-  rev(c("#FFFFFF", "#E6E6E6" ,"#CCCCCC", "#B3B3B3", "#999999", "#808080", "#666666","#4C4C4C", "#333333", "#191919","#000000"))
+
+
 plotIC(cormotif_initial)
 plotMotif(cormotif_initial)
+plot.new()
+legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4",  "0.5", "0.6", "0.7", "0.8","0.9", "1")), box.col="white",title = "Probability\nlegend", horiz=FALSE,title.cex=.8)
 
 ```
 
