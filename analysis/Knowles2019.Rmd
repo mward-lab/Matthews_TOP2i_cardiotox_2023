@@ -30,7 +30,7 @@ library(kableExtra)
 library(broom)
 library(ComplexHeatmap)
 ``` 
-##function load
+## function load
 ```{r cpmboxplot function, echo= FALSE}
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
   ##GOI needs to be ENTREZID
@@ -96,9 +96,6 @@ knowles4 <-knowles4 %>%
 knowles5 <-knowles5 %>% 
   distinct(entrezgene_id,.keep_all = TRUE) 
 #377
-
-
-
 
 saveRDS(knowles4,"output/knowles4.RDS")
 saveRDS(knowles5,"output/knowles5.RDS")
@@ -303,7 +300,7 @@ kable(., caption= "Summary of meSNPs and reQTLs found in my DEGs") %>%
   scroll_box(width = "80%", height = "400px")
 ```
 ###  Visualization of proportions
-```{r K4K5 proportions}
+```{r K4K5 proportions, message=FALSE, warning=FALSE}
 
 toplistall %>%
   mutate(id = as.factor(id)) %>%
@@ -511,24 +508,28 @@ Here, I found 119 reQTLs that were related to all anthracyclines, with 31 reQTLS
   pivot_wider(.,id_cols = c(id,DOXreQTLs),names_from = sigcount,values_from = n) %>% 
   dplyr::select(id,DOXreQTLs,sig) 
 DOXeQTL_table%>% 
-  kable(., caption= "All 24 hour sidDEGs broken down by drug and DOXreQTL status") %>% 
+  kable(., caption= "All 24 hour sigDEGs broken down by drug and DOXreQTL status") %>% 
   kable_paper("striped", full_width = FALSE) %>% 
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "80%", height = "400px")
 
 DOXeQTL_table %>%
+  add_row(id=c("Dox-specific DEGs","Dox-specific DEGs"),DOXreQTLs=c("no","y"), sig = c(62,1)) %>% 
   dplyr::filter(DOXreQTLs=="y") %>% 
   mutate(opp= 180-sig) %>% 
   filter(id !=c('Trastuzumab','Doxorubicin')) %>% 
   rename("yes"=sig, "no"=opp) %>% 
-  pivot_longer(!c(id,DOXreQTLs), names_to="group", values_to = "count") %>% 
-  mutate(id=factor(id, levels=c("Daunorubicin","Epirubicin", "Mitoxantrone"))) %>% 
+  mutate(y_percent= paste0(sprintf("%2.1f", yes/(yes+no)*100), "%"),n_percent = paste0(sprintf("%2.1f", no/(yes+no)*100),"%")) %>% 
+  pivot_longer(!c(id,DOXreQTLs,y_percent,n_percent), names_to="group", values_to = "count") %>% 
+  mutate(id=factor(id, levels=c("Daunorubicin","Epirubicin", "Mitoxantrone","Dox-specific DEGs"))) %>% 
 ggplot(., aes(y=id,x=count,fill=group))+
      geom_col(position='fill')+
     theme_classic()+
    scale_color_manual(values=c("red4","navy"))+
     scale_fill_manual(values=c("#2297E6","red2"))+
   ggtitle("DOXreQTLs overlaps")+
+  scale_y_discrete(limits=rev)+
+  geom_text(aes(y=id,x=1, label = n_percent,hjust=.8))+
 
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
@@ -605,6 +606,7 @@ toplist24hr %>%
 
 print(Dox24_lfc)
 
+
 ```
 
 
@@ -649,6 +651,8 @@ DOXdeg_sp %>%
   kable_styling(full_width = FALSE, font_size = 16) %>% 
   scroll_box( height = "500px")
 
+intersect(DOXreQTLs$ENTREZID, DOXdeg_sp$ENTREZID)
+
 
 toplist24hr %>% 
   group_by(time,id) %>% 
@@ -668,9 +672,7 @@ toplist24hr %>%
     axis.text = element_text(size = 8, color = "black", angle = 20))
     # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
 
-toplist24hr %>% 
-  # filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
-  group_by(time,id) %>% 
+toplist24hr %>% group_by(time,id) %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   filter(adj.P.Val <0.05) %>% 
   ggplot(., aes(x=adj.P.Val))+
