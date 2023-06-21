@@ -531,6 +531,8 @@ print('This is for  GWAS 24 hours -log(chi square pvalue)')
 
 ```
 The star represents chi square p.value < 0.05.
+
+### GWAS heatmap
 ```{r GWAS genes of interest, echo=TRUE, message=FALSE, warning=FALSE}
 # GWAS_goi <- c('RARG', 'ITGB7', 'TNS2','ZNF740','SLC28A3','RMI1',
 # 'FEDORA' ,'GDF5','FRS2','HDDC2','EEF1B2')
@@ -558,12 +560,16 @@ GWASabsFCsig <-
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(ENTREZID %in% GWAS_goi$entrezgene_id) %>% 
    filter(time =="24_hours") %>% 
-  dplyr::select(ENTREZID ,time, id,logFC, adj.P.Val, SYMBOL) %>% 
-  # filter(adj.P.Val <0.05) %>% 
-  mutate(id =case_match(id,'Daunorubicin'~'DNR','Doxorubicin'~'DOX','Epirubicin'~'EPI','Mitoxantrone'~'MTX', .default = id)) %>% 
-  # mutate(time =case_match(time,"3_hours"~'3_hr',"24_hours"~'24_hr',.default = time)) %>% 
- # unite("trt_time",id:time,sep = '_') %>% 
-  pivot_wider(id_cols=id, names_from = SYMBOL, values_from =adj.P.Val)# %>% 
+  dplyr::select(ENTREZID ,time, id,logFC, adj.P.Val, SYMBOL) %>%
+  mutate(id =case_match(id,
+                        'Daunorubicin'~'DNR',
+                        'Doxorubicin'~'DOX',
+                        'Epirubicin'~'EPI',
+                        'Mitoxantrone'~'MTX',
+                        .default = id)) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val)
   
 gwas_sig_mat <- GWASabsFCsig %>% 
    column_to_rownames(var="id") %>%
@@ -575,13 +581,17 @@ GWASabsFC <- toplistall %>%
   mutate(id = as.factor(id)) %>%
   filter(id !="Trastuzumab") %>% 
   filter(time=="24_hours") %>% 
-  # mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(logFC= logFC*(-1)) %>%
   filter(ENTREZID %in% GWAS_goi$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
-  mutate(id =case_match(id,'Daunorubicin'~'DNR','Doxorubicin'~'DOX','Epirubicin'~'EPI','Mitoxantrone'~'MTX', .default = id)) %>% 
-  # mutate(time =case_match(time,"3_hours"~'3_hr',"24_hours"~'24_hr',.default = time)) %>%
-  # unite("trt_time",id:time,sep = '_') %>% 
-  pivot_wider(id_cols=id, names_from = SYMBOL, values_from = logFC) %>% 
+  mutate(id =case_match(id,'Daunorubicin'~'DNR', 
+                        'Doxorubicin'~'DOX',
+                        'Epirubicin'~'EPI',
+                        'Mitoxantrone'~'MTX',
+                        .default = id)) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
   column_to_rownames(var="id") %>%
   as.matrix()
 
