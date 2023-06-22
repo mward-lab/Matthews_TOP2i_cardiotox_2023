@@ -198,7 +198,7 @@ saveRDS(MTXmeSNPs,"output/MTXmeSNPs.RDS")
 
 ``` {r loading in data sets}
 
-backGL <- read.csv("data/backGL.txt",     row.names =1)
+backGL <- read.csv("data/backGL.txt")
 drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
@@ -871,20 +871,6 @@ toplist24hr %>%
   theme_bw()+
   ggtitle("All sigDE (adj.P.val <0.05) DNR genes")
 
-toplist24hr %>% 
-  filter(if_else(id=="Daunorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
-  group_by(time,id) %>% 
-  filter(ENTREZID %in% DnronlyDEG) %>% 
-  filter(adj.P.Val <0.05) %>% 
-  ggplot(., aes(x=adj.P.Val))+
-  geom_histogram(aes(fill=id))+
-  geom_vline(xintercept=0.01,linetype=2)+
-    # geom_density(aes(fill=id))+
-    facet_wrap(~id)+
-  ggtitle("DNR adj p. value <0.05")+
-    fill_palette(palette = drug_palNoVeh)+
-  theme_bw()+
-  ggtitle("only DNR-sp genes, n=131")
 
 
 
@@ -941,7 +927,7 @@ toplist24hr %>%
   group_by(time,id) %>% 
   filter(ENTREZID %in% EPIdeg_sp$ENTREZID) %>% 
   filter(adj.P.Val <0.05) %>% 
-  # filter(id=="Epirubicin")
+  # filter(id=="Daunorubicin")
   mutate(logFC=logFC*(-1)) %>% 
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
@@ -956,8 +942,8 @@ toplist24hr %>%
     # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
 
 toplist24hr %>% 
-  filter(if_else(id=="Epirubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
   group_by(time,id) %>% 
+  filter(adj.P.Val <0.05) %>% 
   filter(ENTREZID %in% EpionlyDEG) %>% 
   filter(adj.P.Val <0.05) %>% 
   ggplot(., aes(x=adj.P.Val))+
@@ -992,4 +978,28 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
 
 
 
+```
+
+
+#### GO analysis
+```{r a little GO analysis, eval=FALSE}
+library(gprofiler2)
+
+# DOXdeg_sp had NO enrichment, even at 0.1 user_threshold
+# DNRdeg_sp had NO enrichment
+# EPIdeg_sp had NO enrichment
+# MTXdeg_sep had 2, both were DNA-templated DNA replication
+
+gostresMTXdeg_sp <- gost(query = c(MTXdeg_sp),
+                      organism = "hsapiens",
+                      ordered_query = FALSE,
+                      domain_scope = "custom",
+                      measure_underrepresentation = FALSE,
+                      evcodes = FALSE,
+                      user_threshold = 0.05,
+                      correction_method = c("fdr"),
+                      custom_bg = backGL$ENTREZID,
+                      sources=c("GO:BP", "KEGG"))
+
+ 
 ```
