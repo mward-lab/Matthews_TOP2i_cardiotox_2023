@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree26afd1e3021a36ec84e1ff66780fbf276423558dtargetblank26afd1ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeb327d60fc3f6a54f1c5b2e8f21f11d00fabcc11ctargetblankb327d60a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/26afd1e3021a36ec84e1ff66780fbf276423558d" target="_blank">26afd1e</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/b327d60fc3f6a54f1c5b2e8f21f11d00fabcc11c" target="_blank">b327d60</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree26afd1e3021a36ec84e1ff66780fbf276423558dtargetblank26afd1ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeb327d60fc3f6a54f1c5b2e8f21f11d00fabcc11ctargetblankb327d60a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/26afd1e3021a36ec84e1ff66780fbf276423558d" target="_blank">26afd1e</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/b327d60fc3f6a54f1c5b2e8f21f11d00fabcc11c" target="_blank">b327d60</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,7 +559,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -741,6 +740,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b327d60fc3f6a54f1c5b2e8f21f11d00fabcc11c/analysis/GOI_plots.Rmd" target="_blank">b327d60</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+<td>
+fix images not loading
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/995ce6848d78508197e8f1e329bddbf181582538/docs/GOI_plots.html" target="_blank">995ce68</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/26afd1e3021a36ec84e1ff66780fbf276423558d/analysis/GOI_plots.Rmd" target="_blank">26afd1e</a>
 </td>
 <td>
@@ -828,45 +861,796 @@ updates on Friday
 </div>
 </div>
 </div>
+<pre class="r"><code>cpm_boxplot &lt;-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
+  ##GOI needs to be ENTREZID
+  df &lt;- cpmcounts
+    df_plot &lt;- df %&gt;% 
+      dplyr::filter(rownames(.)==GOI) %&gt;%
+      pivot_longer(everything(),
+                   names_to = &quot;treatment&quot;,values_to = &quot;counts&quot;) %&gt;%
+      separate(treatment, c(&quot;drug&quot;,&quot;indv&quot;,&quot;time&quot;)) %&gt;%
+      mutate(time=factor(time, levels =c(&quot;3h&quot;, &quot;24h&quot;))) %&gt;%
+      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %&gt;%
+      mutate(drug =case_match(drug, &quot;Da&quot;~&quot;Daunorubicin&quot;,
+                            &quot;Do&quot;~&quot;Doxorubicin&quot;,
+                            &quot;Ep&quot;~&quot;Epirubicin&quot;,
+                            &quot;Mi&quot;~&quot;Mitoxantrone&quot;,
+                            &quot;Tr&quot;~&quot;Trastuzumab&quot;,
+                            &quot;Ve&quot;~&quot;Vehicle&quot;, .default = drug))
+    plot &lt;- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
+      geom_boxplot(position=&quot;identity&quot;,aes(fill=drug))+
+      geom_point(aes(col=indv, size=2, alpha=0.5))+
+      guides(alpha= &quot;none&quot;, size= &quot;none&quot;)+
+      scale_color_brewer(palette = brewer_palette, guide = &quot;none&quot;)+
+      scale_fill_manual(values=fill_colors)+
+      facet_wrap(&quot;time&quot;, nrow=1, ncol=2)+
+      theme_bw()+
+      ylab(ylab)+
+      xlab(&quot;&quot;)+
+      theme(strip.background = element_rect(fill = &quot;white&quot;),
+          plot.title = element_text(size=18,hjust = 0.5),
+          axis.title = element_text(size = 15, color = &quot;black&quot;),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text.x = element_text(size = 12, color = &quot;white&quot;, angle = 0),
+          strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))
+    print(plot)
+}</code></pre>
+<pre class="r"><code>library(ComplexHeatmap)
+library(tidyverse)
+library(ggsignif)
+library(RColorBrewer)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(ggstats)
+library(Hmisc)
+library(ggpubr)</code></pre>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
 <div id="genes-of-interest-log2-cpm" class="section level1">
 <h1>Genes of Interest log2 cpm</h1>
 <div id="top2b" class="section level3">
 <h3>TOP2B</h3>
-</div>
-<div id="cdkn1a" class="section level3">
-<h3>CDKN1a</h3>
+<p><img src="figure/GOI_plots.Rmd/GOI-top2b-1.png" width="672" style="display: block; margin: auto;" />
+### CDKN1a</p>
+<p><img src="figure/GOI_plots.Rmd/GOI%20CDKN1a-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="top2a" class="section level3">
 <h3>Top2a</h3>
-</div>
-<div id="atm" class="section level3">
-<h3>ATM</h3>
-</div>
-<div id="atr" class="section level3">
-<h3>ATR</h3>
+<p><img src="figure/GOI_plots.Rmd/GOI-top2a-1.png" width="672" style="display: block; margin: auto;" />
+### ATM
+<img src="figure/GOI_plots.Rmd/GOI-atm-1.png" width="672" style="display: block; margin: auto;" />
+### ATR
+<img src="figure/GOI_plots.Rmd/GOI-atr-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="rictor" class="section level3">
 <h3>Rictor</h3>
-</div>
-<div id="mtor" class="section level3">
-<h3>mTOR</h3>
-</div>
-<div id="rarg" class="section level3">
-<h3>RARG</h3>
+<p><img src="figure/GOI_plots.Rmd/GOI-rictor-1.png" width="672" style="display: block; margin: auto;" />
+### mTOR
+<img src="figure/GOI_plots.Rmd/GOImtor-1.png" width="672" style="display: block; margin: auto;" />
+### RARG
+<img src="figure/GOI_plots.Rmd/GOI%20RARG-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="kat6b" class="section level3">
 <h3>KAT6b</h3>
+<pre class="r"><code>cpm_boxplot(cpmcounts,GOI=&#39;23522&#39;,&quot;Dark2&quot;,drug_pal_vehend,
+  ylab=(expression(atop(&quot; &quot;,italic(&quot;KAT6B&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
+<p><img src="figure/GOI_plots.Rmd/KAT6b%20logcpm-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="kdm5b" class="section level3">
 <h3>KDM5b</h3>
+<pre class="r"><code>cpm_boxplot(cpmcounts,GOI=&#39;10765&#39;,&quot;Dark2&quot;,drug_pal_vehend,
+            ylab=(expression(atop(&quot; &quot;,italic(&quot;KDM5B&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
+<p><img src="figure/GOI_plots.Rmd/KDM5b%20logcpm-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="kdm4b" class="section level3">
 <h3>KDM4b</h3>
+<pre class="r"><code>cpm_boxplot(cpmcounts,GOI=&#39;23030&#39;,&quot;Dark2&quot;,drug_pal_vehend,
+  ylab=(expression(atop(&quot; &quot;,italic(&quot;KDM4B&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
+<p><img src="figure/GOI_plots.Rmd/KDM4b%20logcpm-1.png" width="672" style="display: block; margin: auto;" />
+## expression correlation:</p>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
+<table class=" lightable-paper lightable-striped table table-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; ">
+<caption style="font-size: initial !important;">
+Significant (adj. P value of &lt;0.05) Genes of interest by treatment
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+time
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+id
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ENTREZID
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+SYMBOL
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+adj.P.Val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+23254…1
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:right;">
+23254
+</td>
+<td style="text-align:left;">
+KAZN
+</td>
+<td style="text-align:right;">
+0.0000175
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23030…2
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:right;">
+23030
+</td>
+<td style="text-align:left;">
+KDM4B
+</td>
+<td style="text-align:right;">
+0.0001975
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+283337…3
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:right;">
+283337
+</td>
+<td style="text-align:left;">
+ZNF740
+</td>
+<td style="text-align:right;">
+0.0002275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10818…4
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:right;">
+10818
+</td>
+<td style="text-align:left;">
+FRS2
+</td>
+<td style="text-align:right;">
+0.0005879
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+51020…5
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:right;">
+51020
+</td>
+<td style="text-align:left;">
+HDDC2
+</td>
+<td style="text-align:right;">
+0.0020530
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5916…6
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Daunorubicin
+</td>
+<td style="text-align:right;">
+5916
+</td>
+<td style="text-align:left;">
+RARG
+</td>
+<td style="text-align:right;">
+0.0052878
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10818…7
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:right;">
+10818
+</td>
+<td style="text-align:left;">
+FRS2
+</td>
+<td style="text-align:right;">
+0.0000482
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23254…8
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:right;">
+23254
+</td>
+<td style="text-align:left;">
+KAZN
+</td>
+<td style="text-align:right;">
+0.0001905
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23030…9
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:right;">
+23030
+</td>
+<td style="text-align:left;">
+KDM4B
+</td>
+<td style="text-align:right;">
+0.0013753
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+51020…10
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:right;">
+51020
+</td>
+<td style="text-align:left;">
+HDDC2
+</td>
+<td style="text-align:right;">
+0.0065896
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+283337…11
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:right;">
+283337
+</td>
+<td style="text-align:left;">
+ZNF740
+</td>
+<td style="text-align:right;">
+0.0141077
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+64078…12
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:right;">
+64078
+</td>
+<td style="text-align:left;">
+SLC28A3
+</td>
+<td style="text-align:right;">
+0.0292968
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5916…13
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:right;">
+5916
+</td>
+<td style="text-align:left;">
+RARG
+</td>
+<td style="text-align:right;">
+0.0439585
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10818…14
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:right;">
+10818
+</td>
+<td style="text-align:left;">
+FRS2
+</td>
+<td style="text-align:right;">
+0.0001665
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23254…15
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:right;">
+23254
+</td>
+<td style="text-align:left;">
+KAZN
+</td>
+<td style="text-align:right;">
+0.0007793
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+51020…16
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:right;">
+51020
+</td>
+<td style="text-align:left;">
+HDDC2
+</td>
+<td style="text-align:right;">
+0.0010982
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5916…17
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:right;">
+5916
+</td>
+<td style="text-align:left;">
+RARG
+</td>
+<td style="text-align:right;">
+0.0124123
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+64078…18
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:right;">
+64078
+</td>
+<td style="text-align:left;">
+SLC28A3
+</td>
+<td style="text-align:right;">
+0.0149064
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+283337…19
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:right;">
+283337
+</td>
+<td style="text-align:left;">
+ZNF740
+</td>
+<td style="text-align:right;">
+0.0177562
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23030…20
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:left;">
+Epirubicin
+</td>
+<td style="text-align:right;">
+23030
+</td>
+<td style="text-align:left;">
+KDM4B
+</td>
+<td style="text-align:right;">
+0.0236417
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="expression-correlation" class="section level2">
-<h2>expression correlation:</h2>
+<pre><code>   entrezgene_id ensembl_gene_id hgnc_symbol
+1          10818 ENSG00000166225        FRS2
+2          51020 ENSG00000111906       HDDC2
+3          23522 ENSG00000281813       KAT6B
+4          23254 ENSG00000189337        KAZN
+5          23030 ENSG00000127663       KDM4B
+6           5916 ENSG00000172819        RARG
+7          64078 ENSG00000197506     SLC28A3
+8           6579 ENSG00000084453     SLCO1A2
+9          28234 ENSG00000111700     SLCO1B3
+10         54575 ENSG00000242515     UGT1A10
+11        283337 ENSG00000139651      ZNF740</code></pre>
+<p><img src="figure/GOI_plots.Rmd/expression%20correlation-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-11.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>   entrezgene_id ensembl_gene_id hgnc_symbol
+1          10818 ENSG00000166225        FRS2
+2          51020 ENSG00000111906       HDDC2
+3          23522 ENSG00000281813       KAT6B
+4          23254 ENSG00000189337        KAZN
+5          23030 ENSG00000127663       KDM4B
+6           5916 ENSG00000172819        RARG
+7          64078 ENSG00000197506     SLC28A3
+8           6579 ENSG00000084453     SLCO1A2
+9          28234 ENSG00000111700     SLCO1B3
+10         54575 ENSG00000242515     UGT1A10
+11        283337 ENSG00000139651      ZNF740</code></pre>
+<p><img src="figure/GOI_plots.Rmd/expression%20correlation-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-17.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-18.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-19.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-20.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-21.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-22.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-23.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-24.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-25.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-26.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-27.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-28.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-29.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-30.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-31.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-32.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-33.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>   entrezgene_id ensembl_gene_id hgnc_symbol
+1          10818 ENSG00000166225        FRS2
+2          51020 ENSG00000111906       HDDC2
+3          23522 ENSG00000281813       KAT6B
+4          23254 ENSG00000189337        KAZN
+5          23030 ENSG00000127663       KDM4B
+6           5916 ENSG00000172819        RARG
+7          64078 ENSG00000197506     SLC28A3
+8           6579 ENSG00000084453     SLCO1A2
+9          28234 ENSG00000111700     SLCO1B3
+10         54575 ENSG00000242515     UGT1A10
+11        283337 ENSG00000139651      ZNF740</code></pre>
+<p><img src="figure/GOI_plots.Rmd/expression%20correlation-34.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-35.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-36.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-37.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-38.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-39.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-40.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-41.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-42.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-43.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/expression%20correlation-44.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 <div id="rarg-correlation" class="section level3">
 <h3>RARG correlation</h3>
+<pre class="r"><code>ld50_via_RARG &lt;- read.csv(&quot;data/LD50_05via.csv&quot;,row.names=1)
+ld50_via_RARG &lt;- ld50_via_RARG %&gt;% 
+  mutate(indv=factor(indv))
+test &lt;- RNAnormlist %&gt;% 
+  mutate(indv=factor(indv,levels = level_order2)) %&gt;% 
+  mutate(indv=as.numeric(indv)) %&gt;%
+  mutate(indv=factor(indv)) %&gt;% 
+  mutate(Drug = factor(Drug, levels = c(&quot;Daunorubicin&quot;, 
+                                       &quot;Doxorubicin&quot;,
+                                       &quot;Epirubicin&quot;,
+                                       &quot;Mitoxantrone&quot;,
+                                       &quot;Trastuzumab&quot;,
+                                       &quot;Vehicle&quot;))) %&gt;% 
+  dplyr::select(indv, Drug,rldh,rtnni) #%&gt;% 
+  
+
+
+
+RARG_corr_frame &lt;- gene_corr_df %&gt;% 
+    filter(entrezgene_id ==5916) %&gt;%  
+    left_join(., ld50_via_RARG, by=c(&quot;Drug&quot;,&quot;indv&quot;)) %&gt;% 
+    dplyr::select(indv, Drug,sDrug,entrezgene_id,counts, Viability,LD50) %&gt;% 
+    mutate(Drug=factor(Drug)) %&gt;% 
+    full_join(.,GOI_genelist, by=&quot;entrezgene_id&quot;) %&gt;% 
+  full_join(., test, by=c(&quot;Drug&quot;,&quot;indv&quot; )) %&gt;% as.data.frame()
+
+SL25_corr_frame &lt;- gene_corr_df %&gt;% 
+    filter( entrezgene_id ==64078) %&gt;%  
+    left_join(., ld50_via_RARG, by=c(&quot;Drug&quot;,&quot;indv&quot;)) %&gt;% 
+    dplyr::select(indv, Drug,sDrug,entrezgene_id,counts, Viability,LD50) %&gt;% 
+    mutate(Drug=factor(Drug)) %&gt;% 
+    full_join(.,GOI_genelist, by=&quot;entrezgene_id&quot;) %&gt;% 
+  full_join(., test, by=c(&quot;Drug&quot;,&quot;indv&quot; )) %&gt;% as.data.frame()
+
+
+ 
+ RARG_plotld50 &lt;- RARG_corr_frame %&gt;%
+      dplyr::filter(entrezgene_id == 5916) %&gt;%
+      ggplot(., aes(x=LD50, y=counts))+
+      geom_point(aes(col=indv))+
+      geom_smooth(method=&quot;lm&quot;)+
+      facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
+      theme_classic()+
+      xlab(bquote(&#39;LD&#39;[50]~&#39;in &#39;*mu*M)) +
+      ylab(bquote(&quot;Gene counts in log&quot;[2]~&quot; cpm&quot;)) +
+      ggtitle(bquote(&quot;Correlation of LD&quot;[50]~&quot; and Log&quot;[2]~&quot;cpm&quot;))+
+      scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+      stat_cor(method=&quot;pearson&quot;,
+               aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+               color = &quot;red&quot;,
+               label.x.npc = 0,
+               label.y.npc=1,
+               size = 3)+
+      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
+            axis.title = element_text(size = 15, color = &quot;black&quot;),
+            axis.ticks = element_line(size = 1.5),
+            axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
+            strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+ print(RARG_plotld50)</code></pre>
+<p><img src="figure/GOI_plots.Rmd/RARG%20corr-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>RARG_plotrtnni &lt;- RARG_corr_frame %&gt;%
+      dplyr::filter(entrezgene_id == 5916) %&gt;%
+      ggplot(., aes(x=rtnni, y=counts))+
+      geom_point(aes(col=indv))+
+      geom_smooth(method=&quot;lm&quot;)+
+      facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
+      theme_classic()+
+      xlab(bquote(&quot;relative Troponin I release&quot;)) +
+      ylab(bquote(&quot;Gene counts in log &quot;[2]~&quot; cpm&quot;)) +
+      ggtitle(bquote(&quot;Correlation of cTNNT at 0.5&quot;*mu*&quot;M and Log&quot;[2]~&quot;cpm&quot;))+
+      scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+      stat_cor(method=&quot;pearson&quot;,
+               aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+               color = &quot;red&quot;,
+               label.x.npc = 0,
+               label.y.npc=1,
+               size = 3)+
+      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
+            axis.title = element_text(size = 15, color = &quot;black&quot;),
+            axis.ticks = element_line(size = 1.5),
+            axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
+            strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+rarg_plot_data &lt;- ggplot_build(RARG_plotrtnni)
+ rarg_dataT &lt;- data.frame(&#39;rho_tnni&#39;= rarg_plot_data$data[[3]]$r, &#39;sig&#39;=c(rarg_plot_data$data[[3]]$p.value))
+ row.names(rarg_dataT) &lt;- list(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRX&quot;, &quot;VEH&quot;)</code></pre>
+<pre class="r"><code> slc_plotld50 &lt;- SL25_corr_frame %&gt;%
+      dplyr::filter(entrezgene_id == 64078) %&gt;%
+      ggplot(., aes(x=LD50, y=counts))+
+      geom_point(aes(col=indv))+
+      geom_smooth(method=&quot;lm&quot;)+
+      facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
+      theme_classic()+
+      xlab(bquote(&#39;LD&#39;[50]~&#39;in &#39;*mu*M)) +
+      ylab(bquote(&quot;Gene counts in log&quot;[2]~&quot; cpm&quot;)) +
+      ggtitle(bquote(&quot;Correlation of LD&quot;[50]~&quot; and Log&quot;[2]~&quot;cpm&quot;))+
+      scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+      stat_cor(method=&quot;pearson&quot;,
+               aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+               color = &quot;red&quot;,
+               label.x.npc = 0,
+               label.y.npc=1,
+               size = 3)+
+      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
+            axis.title = element_text(size = 15, color = &quot;black&quot;),
+            axis.ticks = element_line(size = 1.5),
+            axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
+            strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+print (slc_plotld50)</code></pre>
+<p><img src="figure/GOI_plots.Rmd/slc28A3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>slc_plotvia &lt;- SL25_corr_frame %&gt;%
+      dplyr::filter(entrezgene_id == 64078) %&gt;%
+      ggplot(., aes(x=Viability, y=counts))+
+      geom_point(aes(col=indv))+
+      geom_smooth(method=&quot;lm&quot;)+
+      facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
+      theme_classic()+
+      xlab(bquote(&quot;viability/100&quot;)) +
+      ylab(bquote(&quot;Gene counts in log &quot;[2]~&quot; cpm&quot;)) +
+      ggtitle(bquote(&quot;Correlation of viability at 0.5&quot;*mu*&quot;M and Log&quot;[2]~&quot;cpm&quot;))+
+      scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+      stat_cor(method=&quot;pearson&quot;,
+               aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+               color = &quot;red&quot;,
+               label.x.npc = 0,
+               label.y.npc=1,
+               size = 3)+
+      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
+            axis.title = element_text(size = 15, color = &quot;black&quot;),
+            axis.ticks = element_line(size = 1.5),
+            axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
+            strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+print(slc_plotvia)</code></pre>
+<p><img src="figure/GOI_plots.Rmd/slc28A3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>slc_plottnni &lt;- SL25_corr_frame %&gt;%
+      dplyr::filter(entrezgene_id == 64078) %&gt;%
+      ggplot(., aes(x=rtnni, y=counts))+
+      geom_point(aes(col=indv))+
+      geom_smooth(method=&quot;lm&quot;)+
+      facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
+      theme_classic()+
+      xlab(bquote(&quot;relative Troponin I&quot;)) +
+      ylab(bquote(&quot;Gene counts in log &quot;[2]~&quot; cpm&quot;)) +
+      ggtitle(bquote(&quot;Correlation Troponin I release and Log&quot;[2]~&quot;cpm&quot;))+
+      scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+      stat_cor(method=&quot;pearson&quot;,
+               aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+               color = &quot;red&quot;,
+               label.x.npc = 0,
+               label.y.npc=1,
+               size = 3)+
+      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
+            axis.title = element_text(size = 15, color = &quot;black&quot;),
+            axis.ticks = element_line(size = 1.5),
+            axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
+            strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+print(slc_plottnni)</code></pre>
+<p><img src="figure/GOI_plots.Rmd/slc28A3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##RARG info:
+rarg_plot_dataL &lt;- ggplot_build(RARG_plotld50)
+ rarg_data &lt;- data.frame(&#39;rho_LD50&#39;= c(rarg_plot_dataL$data[[3]]$r,NA,NA), &#39;sig_LD50&#39;=c(rarg_plot_dataL$data[[3]]$p.value,NA,NA),&#39;rowname&#39;=c(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRX&quot;, &quot;VEH&quot;))
+
+ 
+rarg_plot_data &lt;- ggplot_build(RARG_plotrtnni)
+ rarg_dataT &lt;- data.frame(&#39;rho_tnni&#39;= rarg_plot_data$data[[3]]$r, &#39;sig_tnni&#39;=c(rarg_plot_data$data[[3]]$p.value),&#39;rowname&#39;=c(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRX&quot;, &quot;VEH&quot;))
+ row.names(rarg_dataT) &lt;- list(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRX&quot;, &quot;VEH&quot;)
+ 
+rarg_mat &lt;- rarg_data %&gt;% 
+  left_join(.,rarg_dataT,join_by(rowname)) %&gt;% 
+  column_to_rownames(&#39;rowname&#39;) %&gt;% 
+  select(rho_LD50,rho_tnni) %&gt;% 
+  as.matrix()
+
+rarg_mat_sig &lt;- rarg_data %&gt;% 
+  left_join(.,rarg_dataT,join_by(rowname)) %&gt;% 
+  column_to_rownames(&#39;rowname&#39;) %&gt;% 
+  select(sig_LD50,sig_tnni) %&gt;% 
+  mutate_all(~replace(., is.na(.), 1)) %&gt;% 
+  as.matrix()
+  
+
+# col_fun5 = circlize::colorRamp2(c(0, 5), c(&quot;white&quot;, &quot;purple&quot;))
+
+Heatmap( rarg_mat, name = &quot;correlation value&quot;, 
+         column_title = &quot;Correlations of LD50 and troponin release to log2cpm&quot;,
+         cluster_rows = FALSE, cluster_columns = FALSE,
+         # col=col_fun1,
+         column_names_rot = 0,na_col = &quot;grey&quot;,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+           if(rarg_mat_sig[i, j]&lt;0.05)
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+          })</code></pre>
+<p><img src="figure/GOI_plots.Rmd/RARGbbuilding%20heatmap%20and%20sig%20mat-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##Slc info:
+slc_plot_dataL &lt;- ggplot_build(slc_plotld50)
+ slc_data &lt;- data.frame(&#39;rho_LD50&#39;= c(slc_plot_dataL$data[[3]]$r,NA,NA), &#39;sig_LD50&#39;=c(slc_plot_dataL$data[[3]]$p.value,NA,NA),&#39;rowname&#39;=c(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRX&quot;, &quot;VEH&quot;))
+
+ 
+slc_plot_data &lt;- ggplot_build(slc_plottnni)
+ slc_dataT &lt;- data.frame(&#39;rho_tnni&#39;= slc_plot_data$data[[3]]$r, &#39;sig_tnni&#39;=c(slc_plot_data$data[[3]]$p.value),&#39;rowname&#39;=c(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRX&quot;, &quot;VEH&quot;))
+ # row.names(rarg_dataT) &lt;- list(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRX&quot;, &quot;VEH&quot;)
+ 
+slc_mat &lt;- slc_data %&gt;% 
+  left_join(.,slc_dataT,join_by(rowname)) %&gt;% 
+  column_to_rownames(&#39;rowname&#39;) %&gt;% 
+  select(rho_LD50,rho_tnni) %&gt;% 
+  as.matrix()
+
+slc_mat_sig &lt;- slc_data %&gt;% 
+  left_join(.,slc_dataT,join_by(rowname)) %&gt;% 
+  column_to_rownames(&#39;rowname&#39;) %&gt;% 
+  select(sig_LD50,sig_tnni) %&gt;% 
+  mutate_all(~replace(., is.na(.), 1)) %&gt;% 
+  as.matrix()
+  
+
+# col_fun5 = circlize::colorRamp2(c(0, 5), c(&quot;white&quot;, &quot;purple&quot;))
+
+Heatmap( rarg_mat, name = &quot;correlation value&quot;, 
+         column_title = &quot;Correlations of LD50 and troponin release to log2cpm of SCL28A3&quot;,
+         cluster_rows = FALSE, cluster_columns = FALSE,
+         # col=col_fun1,
+         column_names_rot = 0,na_col = &quot;grey&quot;,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+           if(slc_mat_sig[i, j]&lt;0.05)
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+          })</code></pre>
+<p><img src="figure/GOI_plots.Rmd/SLC28A3%20bbuilding%20heatmap%20and%20sig%20mat-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -875,8 +1659,68 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19045)
 
-</div>
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] ggpubr_0.6.0          Hmisc_5.1-0           ggstats_0.3.0        
+ [4] broom_1.0.5           kableExtra_1.3.4      sjmisc_2.8.9         
+ [7] scales_1.2.1          RColorBrewer_1.1-3    ggsignif_0.6.4       
+[10] lubridate_1.9.2       forcats_1.0.0         stringr_1.5.0        
+[13] dplyr_1.1.2           purrr_1.0.1           readr_2.1.4          
+[16] tidyr_1.3.0           tibble_3.2.1          ggplot2_3.4.2        
+[19] tidyverse_2.0.0       ComplexHeatmap_2.12.1 workflowr_1.7.0      
+
+loaded via a namespace (and not attached):
+  [1] colorspace_2.1-0    rjson_0.2.21        sjlabelled_1.2.0   
+  [4] rprojroot_2.0.3     circlize_0.4.15     htmlTable_2.4.1    
+  [7] GlobalOptions_0.1.2 base64enc_0.1-3     fs_1.6.2           
+ [10] clue_0.3-64         rstudioapi_0.14     farver_2.1.1       
+ [13] fansi_1.0.4         xml2_1.3.4          codetools_0.2-19   
+ [16] splines_4.2.2       doParallel_1.0.17   cachem_1.0.8       
+ [19] knitr_1.43          Formula_1.2-5       jsonlite_1.8.5     
+ [22] cluster_2.1.4       png_0.1-8           compiler_4.2.2     
+ [25] httr_1.4.6          backports_1.4.1     Matrix_1.5-4.1     
+ [28] fastmap_1.1.1       cli_3.6.1           later_1.3.1        
+ [31] htmltools_0.5.5     tools_4.2.2         gtable_0.3.3       
+ [34] glue_1.6.2          Rcpp_1.0.10         carData_3.0-5      
+ [37] jquerylib_0.1.4     vctrs_0.6.3         nlme_3.1-162       
+ [40] svglite_2.1.1       iterators_1.0.14    insight_0.19.2     
+ [43] xfun_0.39           ps_1.7.5            rvest_1.0.3        
+ [46] timechange_0.2.0    lifecycle_1.0.3     rstatix_0.7.2      
+ [49] getPass_0.2-2       hms_1.1.3           promises_1.2.0.1   
+ [52] parallel_4.2.2      yaml_2.3.7          gridExtra_2.3      
+ [55] sass_0.4.6          rpart_4.1.19        stringi_1.7.12     
+ [58] highr_0.10          S4Vectors_0.34.0    foreach_1.5.2      
+ [61] checkmate_2.2.0     BiocGenerics_0.42.0 shape_1.4.6        
+ [64] rlang_1.1.1         pkgconfig_2.0.3     systemfonts_1.0.4  
+ [67] matrixStats_1.0.0   lattice_0.21-8      evaluate_0.21      
+ [70] htmlwidgets_1.6.2   labeling_0.4.2      processx_3.8.1     
+ [73] tidyselect_1.2.0    magrittr_2.0.3      R6_2.5.1           
+ [76] IRanges_2.30.1      generics_0.1.3      pillar_1.9.0       
+ [79] whisker_0.4.1       foreign_0.8-84      withr_2.5.0        
+ [82] mgcv_1.8-42         abind_1.4-5         nnet_7.3-19        
+ [85] crayon_1.5.2        car_3.1-2           utf8_1.2.3         
+ [88] tzdb_0.4.0          rmarkdown_2.22      GetoptLong_1.0.5   
+ [91] data.table_1.14.8   callr_3.7.3         git2r_0.32.0       
+ [94] digest_0.6.31       webshot_0.5.4       httpuv_1.6.11      
+ [97] stats4_4.2.2        munsell_0.5.0       viridisLite_0.4.2  
+[100] bslib_0.5.0        </code></pre>
 </div>
 </div>
 </div>
