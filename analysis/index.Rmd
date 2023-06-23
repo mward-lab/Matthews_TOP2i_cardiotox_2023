@@ -23,7 +23,7 @@ Welcome to my workflowr Cardiotoxicity research website. I am using workflowr to
 ## Pairwise gene analysis
  [pairwise GO](https://reneeisnowhere.github.io/Cardiotoxicity/DEG-GO_analysis.html)
  
- [genes of interest(focus on cpm and LFC boxplots)]((https://reneeisnowhere.github.io/Cardiotoxicity/GOI_plots.html))
+ [genes of interest(focus on cpm and LFC boxplots)](https://reneeisnowhere.github.io/Cardiotoxicity/GOI_plots.html)
  
 [LDH analysis and Calcium analysis](https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html)
 
