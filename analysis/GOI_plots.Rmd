@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(
 	message = FALSE,
 	warning = FALSE,
-	include = FALSE
+	include = TRUE
 )
 ```
 
@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
   ##GOI needs to be ENTREZID
   df <- cpmcounts
-  ##order of dataframe should have time,id, ENTREZID,SYMBOL logFC,AveExpr,and adj.P.Val (8 columns)
     df_plot <- df %>% 
       dplyr::filter(rownames(.)==GOI) %>%
       pivot_longer(everything(),
@@ -53,7 +52,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
 
 ```
 
-```{r library loading}
+```{r library loading, echo=TRUE, message=FALSE, warning=FALSE}
 library(ComplexHeatmap)
 library(tidyverse)
 library(ggsignif)
@@ -67,7 +66,7 @@ library(Hmisc)
 library(ggpubr)
 ```
 
-```{r data loading}
+```{r data loading,echo=FALSE, message=FALSE, warning=FALSE}
 
 siglist <- readRDS("data/siglist.RDS")
 list2env(siglist,envir=.GlobalEnv)
@@ -98,7 +97,7 @@ RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt", row.names = 1)
 
 ### TOP2B
 
-```{r GOI-top2b, echo=FALSE}
+```{r GOI-top2b, echo=FALSE, message=FALSE, warning=FALSE}
 cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_vehend,
   ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm "))))
 ```
