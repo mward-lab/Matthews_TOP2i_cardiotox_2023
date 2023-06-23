@@ -36,10 +36,8 @@ Step one in R is loading the libraries needed for analysis:
 
 ```{r Libraries to load, echo=TRUE, message=FALSE, warning=FALSE}
 library(car)
-#library(dr4pl) no longer used
 library(tidyverse)
 library(tinytex)
-# library(readxl)
 library(BiocGenerics)
 library(data.table)
 library(drc)
@@ -202,9 +200,9 @@ ID <- c("ind1a",
         "ind6a",
         "ind6b")
 names(individuals)
-saveRDS(individuals,"data/individual_DRC48.RDS")
-full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
- write.csv(full_list,"data/DRC48hoursdata.csv")
+# saveRDS(individuals,"data/individual_DRC48.RDS")
+# full_list <- data.table::rbindlist(individuals, idcol = "SampleID")
+#  write.csv(full_list,"data/DRC48hoursdata.csv")
 ```
  
  
@@ -284,6 +282,7 @@ averageFL <-   full_list %>%
                            "Tras"~"Trastuzumab",
                            "Veh"~ "Vehicle", .default= Drug)) %>%
     dplyr::summarize(Mean = mean(Percent))
+# saveRDS(averageFL,"data/averageviabilitytable.RDS")
 
   averageFL %>% 
     ungroup() %>% 
@@ -930,9 +929,12 @@ for (each in 1:6){
 
 ```{r boxplot of slope}
 library(ggsignif)
-
+# ld50_table <- bind_rows(daunls,doxols,epils,mitols)
+# write.csv(ld50_table,"data/ld50_table.csv",
+#           row.names =c("DNR","DOX","EPI","MTX"))
 slope_table <- bind_rows(dnr_sl,dox_sl,epi_sl,mtx_sl)
-# write.csv(slope_table,"data/slope_table.csv")
+# write.csv(slope_table,"data/slope_table.csv",
+#           row.names =c("DNR","DOX","EPI","MTX"))
 avg_slope <- slope_table %>% 
   rownames_to_column() %>% 
   as.tibble()%>% 
@@ -965,49 +967,16 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
           panel.border=element_rect(fill = NA, size = 2),
           plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
 ```
-```{r slope correlation, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
- read.csv("data/slope_table.csv",row.names = 1)
-avgSlope <- slope_table %>% 
-  rownames_to_column() %>% 
-  as.tibble()%>% 
-  mutate(rowname=case_match(rowname,'1'~'DNR','2'~'DOX','3'~'EPI','4'~'MTX', .default = rowname))%>% 
-  pivot_longer(!rowname,names_to = 'indv', values_to = 'slope') %>% 
-  mutate(indv=str_sub(indv, 4,4)) %>% 
-  group_by(rowname,indv) %>% 
-  summarise_at(vars(slope),list(name = mean)) %>% 
-  rename('Treatment'='rowname',"slope"="name")
+```{r slope correlation, fig.keep='all',eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+  slope_table <- read.csv("data/slope_table.csv",row.names = 1)
 
-avgLD50 <- readRDS("data/avgLD50.RDS")
+slopecorr <- cor(slope_table)
+pheatmap::pheatmap(slopecorr,cluster_rows=FALSE,cluster_cols = FALSE, main="slope")
+# avgLD50 <- readRDS("data/avgLD50.RDS")
+ld50corr <- cor(ld50_table)
+corrplot::corrplot(ld50corr)
+pheatmap::pheatmap(ld50corr , cluster_rows = FALSE, cluster_cols = FALSE, main="ld50")
 
-slope_ld50 <- avgLD50 %>%  
-  mutate(Treatment= case_match (Treatment, 'Daun'~'DNR','Doxo'~'DOX','Epi'~'EPI','Mito'~'MTX', .default = Treatment)) %>% 
-  right_join(., avgSlope, by=c('Treatment','indv'))
-
-slope_ld50 %>% 
-  ggplot(., aes(x=slope, y=LD50))+
-  geom_point(aes(col=indv))+
-  geom_smooth(method="lm")+
-  stat_cor(method="pearson",  
-           label.x.npc = 0, 
-           label.y.npc = 1,  
-           aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
-           color = "red")+
-  facet_wrap("Treatment", scales="free")+
-  scale_color_brewer(palette = "Dark2")+
-  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-  
-  ylab(expression("LD"[50]))+
-  xlab("slope")+
-  theme_classic()+
-  theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = "none",
-         axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))+
-  ggtitle(expression("Correlation between LD"[50]*" and slope"))
 ```
 
 
@@ -1165,11 +1134,52 @@ Test <- as.data.frame(Test)
 
 
 
-```{r making slope and ld50 cor}
+```{r making viability and ld50 correleation for RARG}
+write.csv(RNAnormlist,"output/TNNI_LDH_RNAnormlist.txt")
+avg_05_via <-   full_list %>%
+  na.omit()%>% 
+    mutate(sDrug=Drug) %>% 
+    mutate(sDrug=case_match(Drug,"Daun"~"DNR",
+                            "Doxo"~"DOX",
+                            "Epi"~"EPI",
+                            "Mito"~"MTX",
+                            "Tras"~"TRX",
+                            "Veh"~ "VEH", .default= Drug)) %>%
+    group_by(SampleID, Drug,Conc,sDrug) %>%
+    mutate(indv=substr(SampleID,4,4)) %>%
+    mutate(indv=factor(as.numeric(indv))) %>% 
+    mutate(Drug = factor(Drug, levels = c("Daun",
+                                          "Doxo",
+                                          "Epi",
+                                          "Mito",
+                                          "Tras","Veh"))) %>%
+    # mutate(Drug=case_match(Drug,"Daun"~"Daunorubicin",
+    #                        "Doxo"~"Doxorubicin",
+    #                        "Epi"~"Epirubicin",
+    #                        "Mito"~"Mitoxantrone",
+    #                        "Tras"~"Trastuzumab",
+    #                        "Veh"~ "Vehicle", .default= Drug)) %>%
+  filter(Conc==0.5) %>% 
+    dplyr::summarize(Mean = mean(Percent)) %>% 
+  ungroup() %>% 
+    mutate(indv=substr(SampleID,4,4)) %>% 
+    mutate(indv=factor(as.numeric(indv))) %>%
+    group_by(indv,Drug,Conc,sDrug) %>% 
+    dplyr::summarize(Viability=mean(Mean)) 
+     
 
 
+avg_05via_ld50 <- avg_05_via %>% 
+  rename("Treatment"="Drug") %>% 
+  full_join(., avgLD50, by=c("Treatment", "indv")) %>% 
+  mutate(Drug=case_match(Treatment,"Daun"~"Daunorubicin",
+                           "Doxo"~"Doxorubicin",
+                           "Epi"~"Epirubicin",
+                           "Mito"~"Mitoxantrone",
+                           "Tras"~"Trastuzumab",
+                           "Veh"~ "Vehicle", .default= Treatment)) %>% 
+  as.data.frame()
 
-
-
+# write.csv(avg_05via_ld50,"data/LD50_05via.csv")
 ```
 

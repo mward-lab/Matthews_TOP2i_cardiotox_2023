@@ -96,7 +96,7 @@ ggplot(norm_LDH48, aes(x = as.factor(Conc), y = ldh, group=as.factor(Conc))) +
   ggplot(., aes(x=per.live, y=ldh))+
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
-  facet_wrap("Drug", scales="free")+
+  facet_wrap("Drug")+
   theme_classic()+
   xlab("Average viability of cardiomyocytes/100") +
   ylab("Average LDH") +
@@ -299,13 +299,14 @@ ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
   ggtitle("Correlation between Troponin I release and LDH activity")
 
 RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c("Vehicle",
-                                        "Daunorubicin",                                                                      "Doxorubicin",
-                                        "Epirubicin",
-                                        "Mitoxantrone",
-                                        "Trastuzumab"))) %>%
+  mutate(Drug = factor(Drug, levels = c(  "Daunorubicin", 
+                                          "Doxorubicin",
+                                          "Epirubicin",
+                                          "Mitoxantrone",
+                                          "Trastuzumab",
+                                          "Vehicle"))) %>%
   ggplot(., aes(x=Drug, y=rldh))+
-  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_boxplot(position = "identity", fill = drug_pal_fact)+
   geom_point(aes(col=indv, size =3,alpha=0.5))+
   geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
                                 c("Vehicle","Doxorubicin"),
@@ -334,14 +335,14 @@ RNAnormlist %>%
 
 
 RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c("Vehicle",
-                                        "Daunorubicin", 
+  mutate(Drug = factor(Drug, levels = c("Daunorubicin", 
                                         "Doxorubicin",
                                         "Epirubicin",
                                         "Mitoxantrone",
-                                        "Trastuzumab"))) %>%
+                                        "Trastuzumab",
+                                        "Vehicle"))) %>%
   ggplot(., aes(x=Drug, y=rtnni))+
-  geom_boxplot(position = "identity", fill = drug_pal)+
+  geom_boxplot(position = "identity", fill = drug_pal_fact)+
   geom_point(aes(col=indv, size =3,alpha=0.5))+
   geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
                                 c("Vehicle","Doxorubicin"),
@@ -405,7 +406,7 @@ calcium_data <- calcium_data %>%
                           "Control" ~"Vehicle", 
                           .default = Treatment)) %>%
   mutate(Drug=factor(Drug, 
-                     levels = c("Vehicle", "Daunorubicin",      "Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab"))) %>%
+                     levels = c("Daunorubicin",      "Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab","Vehicle"))) %>%
   mutate(Conc =case_match(Treatment, "Dau_0.5"~"0.5",
                           "Dau_1" ~"1.0",
                           "Dox_0.5"~"0.5",
@@ -434,12 +435,11 @@ clamp_summary <- clamp_summary%>%
                           "Tras_1"~"Trastuzumab",
                           "Control" ~"Vehicle" ,
                           .default = Treatment)) %>%
-  mutate(Drug=factor(Drug, levels = c("Vehicle", 
-                                      "Daunorubicin",
+  mutate(Drug=factor(Drug, levels = c( "Daunorubicin",
                                       "Doxorubicin",
                                       "Epirubicin",
                                       "Mitoxantrone",
-                                      "Trastuzumab"))) %>%
+                                      "Trastuzumab","Vehicle"))) %>%
   mutate(Conc =case_match(Treatment, 
                           "Dau_0.5"~"0.5",
                           "Dau_1" ~"1.0",
@@ -475,14 +475,14 @@ calcium_data %>%
   mutate(norm_rate=Rate/contrl) %>%
   filter(Conc==0| Conc==0.5) %>%
   ggplot(., aes(x=Drug, y=Rate))+
-  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none")+
-  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
-                                 c("Doxorubicin", "Vehicle"),
-                                 c("Epirubicin", "Vehicle"),
-                                 c("Mitoxantrone", "Vehicle"),
-                                 c("Trastuzumab","Vehicle")),
+ geom_signif(comparisons = list(c("Vehicle","Trastuzumab"),
+                                 c("Vehicle","Mitoxantrone"),
+                                 c("Vehicle","Epirubicin"),
+                                 c( "Vehicle","Doxorubicin"),
+                                 c( "Vehicle","Daunorubicin")),
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
@@ -511,15 +511,15 @@ calcium_data %>%
 clamp_summary %>% 
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
   ggplot(.,aes(Drug,Mean_Amplitude))+
-  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none",size="none")+
   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
-                                 c("Doxorubicin", "Vehicle"),
-                                 c("Epirubicin", "Vehicle"),
-                                 c("Mitoxantrone", "Vehicle"),
-                                 c("Trastuzumab","Vehicle")),
+  geom_signif(comparisons = list(c("Vehicle","Trastuzumab"),
+                                 c("Vehicle","Mitoxantrone"),
+                                 c("Vehicle","Epirubicin"),
+                                 c( "Vehicle","Doxorubicin"),
+                                 c( "Vehicle","Daunorubicin")),
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
@@ -548,15 +548,15 @@ clamp_summary %>%
 clamp_summary %>%
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
   ggplot(.,aes(Drug,FWHM))+
-  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none",size="none")+
   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
-                                 c("Doxorubicin", "Vehicle"),
-                                 c("Epirubicin", "Vehicle"),
-                                 c("Mitoxantrone", "Vehicle"),
-                                 c("Trastuzumab","Vehicle")),
+  geom_signif(comparisons = list(c("Vehicle","Trastuzumab"),
+                                 c("Vehicle","Mitoxantrone"),
+                                 c("Vehicle","Epirubicin"),
+                                 c( "Vehicle","Doxorubicin"),
+                                 c( "Vehicle","Daunorubicin")),
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
@@ -587,15 +587,15 @@ clamp_summary %>%
 clamp_summary %>%
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
   ggplot(.,aes(Drug,Rise_Slope))+
-  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha="none", indv = "none", size = "none")+
    scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
-                                 c("Doxorubicin", "Vehicle"),
-                                 c("Epirubicin", "Vehicle"),
-                                 c("Mitoxantrone", "Vehicle"),
-                                 c("Trastuzumab","Vehicle")),
+ geom_signif(comparisons = list(c("Vehicle","Trastuzumab"),
+                                 c("Vehicle","Mitoxantrone"),
+                                 c("Vehicle","Epirubicin"),
+                                 c( "Vehicle","Doxorubicin"),
+                                 c( "Vehicle","Daunorubicin")),
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
@@ -623,15 +623,15 @@ clamp_summary %>%
 clamp_summary %>%
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
   ggplot(.,aes(Drug,Decay_Slope))+
-  geom_boxplot(position = "identity", fill= drug_pal)+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha="none", indv = "none", size = "none")+
    scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
-  geom_signif(comparisons = list(c("Daunorubicin", "Vehicle"),
-                                 c("Doxorubicin", "Vehicle"),
-                                 c("Epirubicin", "Vehicle"),
-                                 c("Mitoxantrone", "Vehicle"),
-                                 c("Trastuzumab","Vehicle")),
+  geom_signif(comparisons = list(c("Vehicle","Trastuzumab"),
+                                 c("Vehicle","Mitoxantrone"),
+                                 c("Vehicle","Epirubicin"),
+                                 c( "Vehicle","Doxorubicin"),
+                                 c( "Vehicle","Daunorubicin")),
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
@@ -654,28 +654,6 @@ clamp_summary %>%
 
 
 k_means <- read.csv("data/K_cluster_kisthree.csv")
-
-# k_means %>% mutate(Drug =case_match(Drug_Name, "Dau_0.5"~"Daunorubicin",  
-#                                     "Dau_0.5.1" ~"Daunorubicin",
-#                                     "Dau_0.5.2" ~"Daunorubicin",
-#                                     "Dox_0.5"~"Doxorubicin",  
-#                                     "Dox_0.5.1" ~"Doxorubicin",
-#                                     "Dox_0.5.2" ~"Doxorubicin",
-#                                     "Epi_0.5"~"Epirubicin", 
-#                                     "Epi_0.5.1"~"Epirubicin",
-#                                     "Epi_0.5.2" ~ "Epirubicin",
-#                                     "Mito_0.5" ~ "Mitoxantrone", 
-#                                     "Mito_0.5.1" ~"Mitoxantrone", 
-#                                     "Mito_0.5.2" ~ "Mitoxantrone",
-#                                     "Tras_0.5" ~ "Trastuzumab", 
-#                                     "Tras_0.5.1" ~"Trastuzumab", 
-#                                     "Tras_0.5.2" ~ "Trastuzumab",
-#                                     "Control.1" ~ "Vehicle", 
-#                                     "Control.2" ~  "Vehicle", 
-#                                     "Control" ~ "Vehicle", .default = Drug_Name)) %>%
-#   ggplot(., aes(x = PC1,y = PC2,col = factor(Cluster),shape = Cluster)) +
-#   geom_point(size = 5) +
-#   scale_color_manual(values = c("purple3", "darkgreen", "darkblue"))
 
 
 k_means %>% mutate(Drug =case_match(Drug_Name,

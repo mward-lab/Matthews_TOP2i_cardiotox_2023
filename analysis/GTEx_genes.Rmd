@@ -232,4 +232,3 @@ GTEX_table_chix %>%
   kable_styling(full_width = FALSE, font_size = 16) %>% 
   scroll_box( height = "500px")
 ```
-

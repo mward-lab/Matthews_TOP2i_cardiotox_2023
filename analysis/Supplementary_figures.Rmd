@@ -1,0 +1,176 @@
+---
+title: "Supplementary figures"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r packages}
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+library(zoo)
+library(ggsignif)
+library(RColorBrewer)
+library(kableExtra)
+library(ComplexHeatmap)
+
+```
+
+```{r Fig S1}
+
+ctnnt <- read.csv("data/ctnnt_results.txt", row.names = 1)
+ctnnt %>% 
+  mutate(Individual=fct_inorder(Individual)) %>% 
+  ggplot(., aes(Individual,Percent , fill=Individual))+
+  geom_boxplot()+
+  geom_point()+
+  geom_hline(yintercept =70,linetype="dashed", alpha=0.75)+###adds a line indicating high positivity +
+coord_cartesian(ylim = c(0,105))+ ##set those limits
+  theme_bw()+  ##white background
+  labs(title="Cardiomyocyte Purity")+ #subtitle = "from  n>3 differentiations")+
+  geom_boxplot(color="black",alpha =0.2, fill=NA, fatten=0, show.legend = FALSE)+
+  scale_fill_brewer(palette = "Dark2",name="" )+
+  xlab(NULL)+ 
+  ylab("% cTNNT+ ")+
+  guides(fill = NULL)+
+  theme(plot.title = element_text(hjust = 0.5, size =20, face= "bold"), 
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank(),###removes all axis names and tick names etc.####
+        axis.ticks.x=element_blank(),
+        # legend.text=element_text(size=15), 
+        axis.title.y=element_text(size=15),
+        axis.ticks.y=element_line(size =2),
+        axis.text.y=element_text(size=10, face = "bold"),
+       panel.grid.major = element_line(colour = 'grey'),
+       panel.border=element_rect(fill = NA, size = 3),
+       plot.subtitle=element_text(size=18, hjust=0.5, face="italic", color="black")) 
+(summary(ctnnt)) %>% 
+  kable(., caption= "Stats summary of cTNNT+ FACs readings") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE,font_size = 18) #%>% 
+  # scroll_box(width = "60%", height = "400px")
+
+```
+```{r Fig S2}
+
+
+ld50_table <- read.csv("data/ld50_table.csv",row.names = 1)
+ld_corr <- cor(ld50_table)
+col_fun1 = circlize::colorRamp2(c(-1, 1), c("white", "purple"))
+
+Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, col = col_fun1,column_title = expression("LD "[50]*" correlation"),row_title=" ",row_split = factor(rep(c("1","2","3","4","5","6"),each=2)), column_split = 
+    factor(rep(c("1","2","3","4","5","6"),each=2)))
+
+Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, column_title = expression("LD "[50]*" correlation"),row_title=" ",row_split = factor(rep(c("1","2","3","4","5","6"),each=2)), column_split = 
+    factor(rep(c("1","2","3","4","5","6"),each=2)))
+
+```
+
+
+```{r Fig S3}
+
+
+```
+
+```{r Fig S4}
+viabilitytable <- readRDS("data/averageviabilitytable.RDS")
+viabilitytable %>% 
+  ungroup() %>% 
+    mutate(indv=substr(SampleID,4,4)) %>% 
+    mutate(indv=factor(as.numeric(indv))) %>%
+    filter(Conc <5) %>% 
+    mutate(Conc= factor(as.numeric(Conc))) %>% 
+    group_by(indv,Drug,Conc,sDrug) %>% 
+    dplyr::summarize(Viability=mean(Mean)) %>%
+    ungroup() %>% 
+    ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
+    geom_boxplot(position="dodge", outlier.colour = "transparent",
+                 aes(fill=Drug))+
+    geom_point(aes(color=indv))+
+    guides(alpha = "none")+
+    ylim(0,150.5)+
+    scale_color_brewer(palette = "Dark2",
+                       guide="legend",
+                       name ="Individual", 
+                       labels(c(1,2,3,4,5,6)))+
+    scale_fill_manual(values=drug_pal_fact)+
+    theme_classic() +
+    # geom_hline(yintercept = 1,lty = 4)+
+    ylab("Viability") +
+  xlab("Treatment")+
+    facet_wrap(~Conc)+ 
+    ggtitle("Viablity across concentrations at 48 hours")+
+    theme(axis.title=element_text(size=10),
+          axis.ticks=element_line(size =2),
+          axis.text=element_text(size=9, face = "bold"),
+          panel.grid.major = element_line(colour = 'darkgrey'),
+          panel.border=element_rect(fill = NA, size = 2),
+          plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
+   
+
+```
+
+
+```{r Fig S5}
+
+
+```
+
+
+```{r Fig S6}
+
+
+```
+
+
+```{r Fig S7}
+
+
+```
+
+
+```{r Fig S8}
+
+
+```
+
+
+```{r Fig S9}
+
+
+```
+
+```{r Fig S10}
+
+
+```
+
+
+```{r Fig S11}
+
+
+```
+
+
+```{r Fig S12}
+
+
+```
+
+
+
+```{r Fig S13}
+
+
+```
+
+
+
+```{r Fig S14}
+
+
+```
