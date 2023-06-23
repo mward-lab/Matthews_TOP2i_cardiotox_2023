@@ -57,15 +57,13 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
 library(ComplexHeatmap)
 library(tidyverse)
 library(ggsignif)
-# library(biomaRt)
 library(RColorBrewer)
-# library(cowplot)
 library(scales)
 library(sjmisc)
 library(kableExtra)
 library(broom)
 library(ggstats)
-# library(Hmisc)
+library(Hmisc)
 library(ggpubr)
 ```
 
@@ -234,10 +232,10 @@ GOI_join <- RNAnormlist %>%
 #     mutate(Drug=factor(Drug)) %>% 
 #     full_join(.,GOI_genelist, by="entrezgene_id")
 #   
-  
+  # saveRDS(gene_corr_df,"data/gene_corr_df.RDS")
 # saveRDS(gene_corr_frame,"data/gene_corr_frame.RDS")
-readRDS("data/gene_corr_frame.RDS")
-   
+gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
+   gene_corr_df <- readRDS("data/gene_corr_df.RDS")
    
   # rcorr(as.matrix(gene_corr_frame[,c(1,4,5,6)]), type = "pearson")
    
@@ -299,7 +297,7 @@ for (gene in GOI_genelist$entrezgene_id){
    
   }
 
-print(GOI_genelist)
+
 
 ## ggplot by drug for ldh
  plot_data_ldh <- list() 
@@ -406,16 +404,6 @@ SL25_corr_frame <- gene_corr_df %>%
   full_join(., test, by=c("Drug","indv" )) %>% as.data.frame()
 
 
-  # storetest <- RARG_corr_frame %>% 
-  # dplyr::select(indv,Drug,LD50,rtnni,rldh,Viability,counts) %>% 
-  # dplyr::group_by(Drug) %>% 
-  #   summarize(across(LD50:counts, ~ cor(.,counts)))
- rarg_plot_data <- ggplot_build(RARG_plotld50)
- rarg_data <- data.frame('rho'= rarg_plot_data$data[[3]]$r, 'sig'=c(rarg_plot_data$data[[3]]$p.value))
- 
- stat_cor_extract(RARG_plotld50,'LD50','counts')
- RARG_plotld50 <- RARG_corr_frame %>%
-  dplyr::filter(entrezgene_id == 5916) 
  
  RARG_plotld50 <- RARG_corr_frame %>%
       dplyr::filter(entrezgene_id == 5916) %>%
@@ -439,18 +427,18 @@ SL25_corr_frame <- gene_corr_df %>%
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
             strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+ print(RARG_plotld50)
 
- 
-RARG_corr_frame %>%
+RARG_plotrtnni <- RARG_corr_frame %>%
       dplyr::filter(entrezgene_id == 5916) %>%
-      ggplot(., aes(x=Viability, y=counts))+
+      ggplot(., aes(x=rtnni, y=counts))+
       geom_point(aes(col=indv))+
       geom_smooth(method="lm")+
       facet_wrap(hgnc_symbol~Drug, scales="free")+
       theme_classic()+
-      xlab(bquote("viability/100")) +
+      xlab(bquote("relative Troponin I release")) +
       ylab(bquote("Gene counts in log "[2]~" cpm")) +
-      ggtitle(bquote("Correlation of viability at 0.5"*mu*"M and Log"[2]~"cpm"))+
+      ggtitle(bquote("Correlation of cTNNT at 0.5"*mu*"M and Log"[2]~"cpm"))+
       scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
       stat_cor(method="pearson",
                aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
@@ -463,13 +451,14 @@ RARG_corr_frame %>%
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
             strip.text.x = element_text(size = 12, color = "black", face = "italic"))
-
+rarg_plot_data <- ggplot_build(RARG_plotrtnni)
+ rarg_dataT <- data.frame('rho_tnni'= rarg_plot_data$data[[3]]$r, 'sig'=c(rarg_plot_data$data[[3]]$p.value))
+ row.names(rarg_dataT) <- list("DNR","DOX","EPI","MTX", "TRX", "VEH")
+ 
 ```
 
 ```{r slc28A3}
 
-slc28A3_plot_data <- ggplot_build(slc_plotld50)
- slc28a3_data <- data.frame('rho'= slc28A3_plot_data$data[[3]]$r, 'sig'=slc28A3_plot_data$data[[3]]$p.value)
  slc_plotld50 <- SL25_corr_frame %>%
       dplyr::filter(entrezgene_id == 64078) %>%
       ggplot(., aes(x=LD50, y=counts))+
@@ -492,8 +481,8 @@ slc28A3_plot_data <- ggplot_build(slc_plotld50)
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
             strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+print (slc_plotld50)
 
- 
 slc_plotvia <- SL25_corr_frame %>%
       dplyr::filter(entrezgene_id == 64078) %>%
       ggplot(., aes(x=Viability, y=counts))+
@@ -516,10 +505,116 @@ slc_plotvia <- SL25_corr_frame %>%
             axis.ticks = element_line(size = 1.5),
             axis.text = element_text(size = 8, color = "black", angle = 20),
             strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+print(slc_plotvia)
+slc_plottnni <- SL25_corr_frame %>%
+      dplyr::filter(entrezgene_id == 64078) %>%
+      ggplot(., aes(x=rtnni, y=counts))+
+      geom_point(aes(col=indv))+
+      geom_smooth(method="lm")+
+      facet_wrap(hgnc_symbol~Drug, scales="free")+
+      theme_classic()+
+      xlab(bquote("relative Troponin I")) +
+      ylab(bquote("Gene counts in log "[2]~" cpm")) +
+      ggtitle(bquote("Correlation Troponin I release and Log"[2]~"cpm"))+
+      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+      stat_cor(method="pearson",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+               color = "red",
+               label.x.npc = 0,
+               label.y.npc=1,
+               size = 3)+
+      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+            axis.title = element_text(size = 15, color = "black"),
+            axis.ticks = element_line(size = 1.5),
+            axis.text = element_text(size = 8, color = "black", angle = 20),
+            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+print(slc_plottnni)
+
+
+
+
+
 ```
 
 
+```{r RARGbbuilding heatmap and sig mat}
 
+##RARG info:
+rarg_plot_dataL <- ggplot_build(RARG_plotld50)
+ rarg_data <- data.frame('rho_LD50'= c(rarg_plot_dataL$data[[3]]$r,NA,NA), 'sig_LD50'=c(rarg_plot_dataL$data[[3]]$p.value,NA,NA),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
+
+ 
+rarg_plot_data <- ggplot_build(RARG_plotrtnni)
+ rarg_dataT <- data.frame('rho_tnni'= rarg_plot_data$data[[3]]$r, 'sig_tnni'=c(rarg_plot_data$data[[3]]$p.value),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
+ row.names(rarg_dataT) <- list("DNR","DOX","EPI","MTX", "TRX", "VEH")
+ 
+rarg_mat <- rarg_data %>% 
+  left_join(.,rarg_dataT,join_by(rowname)) %>% 
+  column_to_rownames('rowname') %>% 
+  select(rho_LD50,rho_tnni) %>% 
+  as.matrix()
+
+rarg_mat_sig <- rarg_data %>% 
+  left_join(.,rarg_dataT,join_by(rowname)) %>% 
+  column_to_rownames('rowname') %>% 
+  select(sig_LD50,sig_tnni) %>% 
+  mutate_all(~replace(., is.na(.), 1)) %>% 
+  as.matrix()
+  
+
+# col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
+
+Heatmap( rarg_mat, name = "correlation value", 
+         column_title = "Correlations of LD50 and troponin release to log2cpm",
+         cluster_rows = FALSE, cluster_columns = FALSE,
+         # col=col_fun1,
+         column_names_rot = 0,na_col = "grey",
+         cell_fun = function(j, i, x, y, width, height, fill) {
+           if(rarg_mat_sig[i, j]<0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+          })
+ 
+```
+
+
+```{r SLC28A3 bbuilding heatmap and sig mat}
+
+##Slc info:
+slc_plot_dataL <- ggplot_build(slc_plotld50)
+ slc_data <- data.frame('rho_LD50'= c(slc_plot_dataL$data[[3]]$r,NA,NA), 'sig_LD50'=c(slc_plot_dataL$data[[3]]$p.value,NA,NA),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
+
+ 
+slc_plot_data <- ggplot_build(slc_plottnni)
+ slc_dataT <- data.frame('rho_tnni'= slc_plot_data$data[[3]]$r, 'sig_tnni'=c(slc_plot_data$data[[3]]$p.value),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
+ # row.names(rarg_dataT) <- list("DNR","DOX","EPI","MTX", "TRX", "VEH")
+ 
+slc_mat <- slc_data %>% 
+  left_join(.,slc_dataT,join_by(rowname)) %>% 
+  column_to_rownames('rowname') %>% 
+  select(rho_LD50,rho_tnni) %>% 
+  as.matrix()
+
+slc_mat_sig <- slc_data %>% 
+  left_join(.,slc_dataT,join_by(rowname)) %>% 
+  column_to_rownames('rowname') %>% 
+  select(sig_LD50,sig_tnni) %>% 
+  mutate_all(~replace(., is.na(.), 1)) %>% 
+  as.matrix()
+  
+
+# col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
+
+Heatmap( rarg_mat, name = "correlation value", 
+         column_title = "Correlations of LD50 and troponin release to log2cpm of SCL28A3",
+         cluster_rows = FALSE, cluster_columns = FALSE,
+         # col=col_fun1,
+         column_names_rot = 0,na_col = "grey",
+         cell_fun = function(j, i, x, y, width, height, fill) {
+           if(slc_mat_sig[i, j]<0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+          })
+ 
+```
 
 
 
