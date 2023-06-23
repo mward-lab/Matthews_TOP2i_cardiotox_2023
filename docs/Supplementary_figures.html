@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="ERM" />
+
+<meta name="date" content="2023-06-23" />
+
+<title>Supplementary figures</title>
+
+<script src="site_libs/header-attrs-2.22/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Cardiotoxicity</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/reneeisnowhere/Cardiotoxicity">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Supplementary figures</h1>
+<h4 class="author">ERM</h4>
+<h4 class="date">2023-06-23</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2023-06-23
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230109code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230109)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230109code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230109)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2b109c3cc369bba77a84b6a33681e8f9ff0bfbe4targetblank2b109c3a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2b109c3cc369bba77a84b6a33681e8f9ff0bfbe4" target="_blank">2b109c3</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2b109c3cc369bba77a84b6a33681e8f9ff0bfbe4targetblank2b109c3a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2b109c3cc369bba77a84b6a33681e8f9ff0bfbe4" target="_blank">2b109c3</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
+    Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
+    Ignored:    data/Arr_GWAS.txt
+    Ignored:    data/Arr_geneset.RDS
+    Ignored:    data/BC_cell_lines.csv
+    Ignored:    data/CADGWASgene_table.csv
+    Ignored:    data/CAD_geneset.RDS
+    Ignored:    data/Clamp_Summary.csv
+    Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/DAgostres24.RDS
+    Ignored:    data/DAtable1.csv
+    Ignored:    data/DDEMresp_list.csv
+    Ignored:    data/DDE_reQTL.txt
+    Ignored:    data/DDEresp_list.csv
+    Ignored:    data/DEG-GO/
+    Ignored:    data/DEG_cormotif.RDS
+    Ignored:    data/DF_Plate_Peak.csv
+    Ignored:    data/DRC48hoursdata.csv
+    Ignored:    data/Da24counts.txt
+    Ignored:    data/Dx24counts.txt
+    Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/Ep24counts.txt
+    Ignored:    data/GOIsig.csv
+    Ignored:    data/GOplots.R
+    Ignored:    data/GTEX_setsimple.csv
+    Ignored:    data/GTEx_gene_list.csv
+    Ignored:    data/HFGWASgene_table.csv
+    Ignored:    data/HF_geneset.RDS
+    Ignored:    data/Heart_Left_Ventricle.v8.egenes.txt
+    Ignored:    data/Hf_GWAS.txt
+    Ignored:    data/K_cluster
+    Ignored:    data/K_cluster_kisthree.csv
+    Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/LD50_05via.csv
+    Ignored:    data/LDH48hoursdata.csv
+    Ignored:    data/Mt24counts.txt
+    Ignored:    data/RINsamplelist.txt
+    Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
+    Ignored:    data/TR24counts.txt
+    Ignored:    data/Top2biresp_cluster24h.csv
+    Ignored:    data/Viabilitylistfull.csv
+    Ignored:    data/allexpressedgenes.txt
+    Ignored:    data/allgenes.txt
+    Ignored:    data/allmatrix.RDS
+    Ignored:    data/averageviabilitytable.RDS
+    Ignored:    data/avgLD50.RDS
+    Ignored:    data/backGL.txt
+    Ignored:    data/cormotif_3hk1-8.RDS
+    Ignored:    data/cormotif_initalK5.RDS
+    Ignored:    data/cormotif_initialK5.RDS
+    Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/counts24hours.RDS
+    Ignored:    data/cpmcount.RDS
+    Ignored:    data/cpmnorm_counts.csv
+    Ignored:    data/crispr_genes.csv
+    Ignored:    data/ctnnt_results.txt
+    Ignored:    data/cvd_GWAS.txt
+    Ignored:    data/dat_cpm.RDS
+    Ignored:    data/data_outline.txt
+    Ignored:    data/efit2.RDS
+    Ignored:    data/efit2results.RDS
+    Ignored:    data/ensembl_backup.RDS
+    Ignored:    data/ensgtotal.txt
+    Ignored:    data/filcpm_counts.RDS
+    Ignored:    data/filenameonly.txt
+    Ignored:    data/filtered_cpm_counts.csv
+    Ignored:    data/filtered_raw_counts.csv
+    Ignored:    data/filtermatrix_x.RDS
+    Ignored:    data/folder_05top/
+    Ignored:    data/geneDoxonlyQTL.csv
+    Ignored:    data/gene_corr_df.RDS
+    Ignored:    data/gene_corr_frame.RDS
+    Ignored:    data/gene_prob_tran3h.RDS
+    Ignored:    data/gene_probabilityk5.RDS
+    Ignored:    data/gostresTop2bi_ER.RDS
+    Ignored:    data/gostresTop2bi_LR
+    Ignored:    data/gostresTop2bi_LR.RDS
+    Ignored:    data/gostresTop2bi_TI.RDS
+    Ignored:    data/gostrescoNR
+    Ignored:    data/gtex/
+    Ignored:    data/heartgenes.csv
+    Ignored:    data/individualDRCfile.RDS
+    Ignored:    data/individual_DRC48.RDS
+    Ignored:    data/individual_LDH48.RDS
+    Ignored:    data/knowfig4.csv
+    Ignored:    data/knowfig5.csv
+    Ignored:    data/ld50_table.csv
+    Ignored:    data/mymatrix.RDS
+    Ignored:    data/nonresponse_cluster24h.csv
+    Ignored:    data/norm_LDH.csv
+    Ignored:    data/norm_counts.csv
+    Ignored:    data/old_sets/
+    Ignored:    data/plan2plot.png
+    Ignored:    data/raw_counts.csv
+    Ignored:    data/response_cluster24h.csv
+    Ignored:    data/sigVDA24.txt
+    Ignored:    data/sigVDA3.txt
+    Ignored:    data/sigVDX24.txt
+    Ignored:    data/sigVDX3.txt
+    Ignored:    data/sigVEP24.txt
+    Ignored:    data/sigVEP3.txt
+    Ignored:    data/sigVMT24.txt
+    Ignored:    data/sigVMT3.txt
+    Ignored:    data/sigVTR24.txt
+    Ignored:    data/sigVTR3.txt
+    Ignored:    data/siglist.RDS
+    Ignored:    data/slope_table.csv
+    Ignored:    data/supp_normLDH48.RDS
+    Ignored:    data/supp_pca_all_anno.RDS
+    Ignored:    data/table3a.omar
+    Ignored:    data/toplistall.RDS
+    Ignored:    data/tvl24hour.txt
+    Ignored:    data/tvl24hourw.txt
+    Ignored:    data/venn_code.R
+    Ignored:    data/viability.RDS
+
+Untracked files:
+    Untracked:  .RDataTmp
+    Untracked:  .RDataTmp1
+    Untracked:  .RDataTmp2
+    Untracked:  OmicNavigator_learn.R
+    Untracked:  code/DRC_plotfigure1.png
+    Untracked:  code/cpm_boxplot.R
+    Untracked:  code/extracting_ggplot_data.R
+    Untracked:  code/fig1plot.png
+    Untracked:  code/figurelegeddrc.png
+    Untracked:  cormotif_probability_genelist.csv
+    Untracked:  individual-legenddark2.png
+    Untracked:  installed_old.rda
+    Untracked:  motif_ER.txt
+    Untracked:  motif_LR.txt
+    Untracked:  motif_NR.txt
+    Untracked:  motif_TI.txt
+    Untracked:  output/output-old/
+    Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/x_counts.RDS
+    Untracked:  reneebasecode.R
+
+Unstaged changes:
+    Modified:   analysis/Cormotifcluster_analysis.Rmd
+    Modified:   analysis/Knowles2019.Rmd
+    Modified:   analysis/LDH_analysis.Rmd
+    Modified:   analysis/RNAseqanalysis.Rmd
+    Modified:   analysis/run_all_analysis.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/Supplementary_figures.Rmd</code>)
+and HTML (<code>docs/Supplementary_figures.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2b109c3cc369bba77a84b6a33681e8f9ff0bfbe4/analysis/Supplementary_figures.Rmd" target="_blank">2b109c3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+<td>
+adding some supp graphs
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/c1d667f03ba3bb1dc3cfb40559c8991a31f74974/analysis/Supplementary_figures.Rmd" target="_blank">c1d667f</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+<td>
+updating the codes at Friday start.
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(tidyverse)
+library(ggpubr)
+library(rstatix)
+library(zoo)
+library(ggsignif)
+library(RColorBrewer)
+library(kableExtra)
+library(ComplexHeatmap)
+library(gridExtra)</code></pre>
+<pre class="r"><code>ctnnt &lt;- read.csv(&quot;data/ctnnt_results.txt&quot;, row.names = 1)
+ctnnt %&gt;% 
+  mutate(Individual=fct_inorder(Individual)) %&gt;% 
+  ggplot(., aes(Individual,Percent , fill=Individual))+
+  geom_boxplot()+
+  geom_point()+
+  geom_hline(yintercept =70,linetype=&quot;dashed&quot;, alpha=0.75)+###adds a line indicating high positivity +
+coord_cartesian(ylim = c(0,105))+ ##set those limits
+  theme_bw()+  ##white background
+  labs(title=&quot;Cardiomyocyte Purity&quot;)+ #subtitle = &quot;from  n&gt;3 differentiations&quot;)+
+  geom_boxplot(color=&quot;black&quot;,alpha =0.2, fill=NA, fatten=0, show.legend = FALSE)+
+  scale_fill_brewer(palette = &quot;Dark2&quot;,name=&quot;&quot; )+
+  xlab(NULL)+ 
+  ylab(&quot;% cTNNT+ &quot;)+
+  guides(fill = NULL)+
+  theme(plot.title = element_text(hjust = 0.5, size =20, face= &quot;bold&quot;), 
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank(),###removes all axis names and tick names etc.####
+        axis.ticks.x=element_blank(),
+        # legend.text=element_text(size=15), 
+        axis.title.y=element_text(size=15),
+        axis.ticks.y=element_line(size =2),
+        axis.text.y=element_text(size=10, face = &quot;bold&quot;),
+       panel.grid.major = element_line(colour = &#39;grey&#39;),
+       panel.border=element_rect(fill = NA, size = 3),
+       plot.subtitle=element_text(size=18, hjust=0.5, face=&quot;italic&quot;, color=&quot;black&quot;)) </code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>(summary(ctnnt)) %&gt;% 
+  kable(., caption= &quot;Stats summary of cTNNT+ FACs readings&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE,font_size = 18) #%&gt;% </code></pre>
+<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Stats summary of cTNNT+ FACs readings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Percent
+</th>
+<th style="text-align:left;">
+Individual
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Min. :63.10
+</td>
+<td style="text-align:left;">
+Length:17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1st Qu.:91.80
+</td>
+<td style="text-align:left;">
+Class :character
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Median :96.65
+</td>
+<td style="text-align:left;">
+Mode :character
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Mean :92.80
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+3rd Qu.:98.50
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Max. :99.90
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  # scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
+<pre class="r"><code>ld50_table &lt;- read.csv(&quot;data/ld50_table.csv&quot;,row.names = 1)
+ld_corr &lt;- cor(ld50_table)
+col_fun1 = circlize::colorRamp2(c(-1, 1), c(&quot;white&quot;, &quot;purple&quot;))
+
+Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, col = col_fun1,column_title = expression(&quot;LD &quot;[50]*&quot; correlation&quot;),row_title=&quot; &quot;,row_split = factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)), column_split = 
+    factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, column_title = expression(&quot;LD &quot;[50]*&quot; correlation&quot;),row_title=&quot; &quot;,row_split = factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)), column_split = 
+    factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>drug_pal_fact &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+viability &lt;- readRDS(&quot;data/viability.RDS&quot;)
+norm_LDH48 &lt;- readRDS(&quot;data/supp_normLDH48.RDS&quot;)
+viability %&gt;% 
+  full_join(., norm_LDH48,by = c(&quot;indv&quot;,&quot;Drug&quot;,&quot;Conc&quot;)) %&gt;% 
+  ggplot(., aes(x=per.live, y=ldh))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method=&quot;lm&quot;)+
+  facet_wrap(&quot;Drug&quot;)+
+  theme_bw()+
+  xlab(&quot;Average viability of cardiomyocytes/100&quot;) +
+  ylab(&quot;Average LDH&quot;) +
+  ggtitle(&quot;Relative viability and relative LDH release at 48 hours&quot;)+
+  scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+  stat_cor(method=&quot;pearson&quot;,aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+           color = &quot;red&quot;)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.background = element_rect(fill = &quot;white&quot;)) </code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>viabilitytable &lt;- readRDS(&quot;data/averageviabilitytable.RDS&quot;)
+viabilitytable %&gt;% 
+  ungroup() %&gt;% 
+    mutate(indv=substr(SampleID,4,4)) %&gt;% 
+    mutate(indv=factor(as.numeric(indv))) %&gt;%
+    filter(Conc &lt;5) %&gt;% 
+    mutate(Conc= factor(as.numeric(Conc))) %&gt;% 
+    group_by(indv,Drug,Conc,sDrug) %&gt;% 
+    dplyr::summarize(Viability=mean(Mean)) %&gt;%
+    ungroup() %&gt;% 
+    ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
+    geom_boxplot(position=&quot;dodge&quot;, outlier.colour = &quot;transparent&quot;,
+                 aes(fill=Drug))+
+    geom_point(aes(color=indv))+
+    guides(alpha = &quot;none&quot;)+
+    ylim(0,150.5)+
+    scale_color_brewer(palette = &quot;Dark2&quot;,
+                       guide=&quot;legend&quot;,
+                       name =&quot;Individual&quot;, 
+                       labels(c(1,2,3,4,5,6)))+
+    scale_fill_manual(values=drug_pal_fact)+
+    theme_classic() +
+    # geom_hline(yintercept = 1,lty = 4)+
+    ylab(&quot;Viability&quot;) +
+  xlab(&quot;Treatment&quot;)+
+    facet_wrap(~Conc)+ 
+    ggtitle(&quot;Viablity across concentrations at 48 hours&quot;)+
+    theme(axis.title=element_text(size=10),
+          axis.ticks=element_line(size =2),
+          axis.text=element_text(size=9, face = &quot;bold&quot;),
+          panel.grid.major = element_line(colour = &#39;darkgrey&#39;),
+          panel.border=element_rect(fill = NA, size = 2),
+          plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(limma)
+library(edgeR)
+library(cowplot)
+x &lt;- readRDS(&quot;data/filtermatrix_x.RDS&quot;)
+ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
+  geom_boxplot(aes(fill=as.factor(time)))+ 
+  theme_bw()+
+  ylim(c(0,10))+
+  labs(x= &quot;&quot;, fill =&quot;Time in hours&quot;,y =&quot;RNA Integrity Number&quot;)+ 
+  ggtitle(&quot;Boxplot of RIN by time and drug&quot;)+
+  facet_wrap(~drug)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 1, vjust = 0.2),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.background = element_rect(fill = &quot;white&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>seq_info &lt;-read.csv(&quot;output/sequencing_info.txt&quot;, row.names = 1)
+seq_info %&gt;% 
+  filter(type==&quot;Total_reads&quot;) %&gt;% 
+  ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
+  geom_boxplot()+
+  scale_fill_manual(values=drug_pal_fact)+
+  ggtitle(expression(&quot;Total number of reads by treatment&quot;))+
+  xlab(&quot; &quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 12, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;white&quot;),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>seq_info %&gt;% 
+  separate(samplenames, into=c(NA,NA,NA,&quot;samplenames&quot;)) %&gt;% 
+  mutate(shortnames = paste(&quot;Sample&quot;,str_trim(samplenames))) %&gt;% 
+  filter(type==&quot;Total_reads&quot;) %&gt;% 
+  ggplot(., aes (x =shortnames, y=Total.Sequences, fill = drug, group_by=indv))+
+  geom_col()+
+ geom_hline(aes(yintercept=20000000))+
+ scale_fill_manual(values=drug_pal_fact)+
+  ggtitle(expression(&quot;Total number of reads by sample&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =6, color = &quot;black&quot;, angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>filcpm_matrix &lt;- readRDS(&quot;data/filcpm_counts.RDS&quot;)
+
+mcor &lt;- cor(filcpm_matrix) 
+# pheatmap::pheatmap(mcor)
+Heatmap(mcor)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S6-1.png" width="672" style="display: block; margin: auto;" />
+heatmap is pending a few changes! just not my focus today.</p>
+<pre class="r"><code>pca_all_anno &lt;- readRDS(&quot;data/supp_pca_all_anno.RDS&quot;)
+pca_all_anno &lt;- pca_all_anno %&gt;% 
+  mutate(drug = case_match(drug, &quot;Daunorubicin&quot;~&quot;DNR&quot;,&quot;Doxorubicin&quot;~&quot;DOX&quot;, &quot;Epirubicin&quot;~&quot;EPI&quot;,&quot;Mitoxantrone&quot;~&quot;MTX&quot;,&quot;Trastuzumab&quot;~&quot;TRX&quot;,&quot;Vehicle&quot;~&quot;VEH&quot;, .default = drug))
+
+
+facs &lt;- c(&quot;indv&quot;, &quot;drug&quot;, &quot;time&quot;)
+names(facs) &lt;- c(&quot;Individual&quot;, &quot;Treatment&quot;, &quot;Time&quot;)
+
+get_regr_pval &lt;- function(mod) {
+  # Returns the p-value for the Fstatistic of a linear model
+  # mod: class lm
+  stopifnot(class(mod) == &quot;lm&quot;)
+  fstat &lt;- summary(mod)$fstatistic
+  pval &lt;- 1 - pf(fstat[1], fstat[2], fstat[3])
+  return(pval)
+}
+
+plot_versus_pc &lt;- function(df, pc_num, fac) {
+  # df: data.frame
+  # pc_num: numeric, specific PC for plotting
+  # fac: column name of df for plotting against PC
+  pc_char &lt;- paste0(&quot;PC&quot;, pc_num)
+  # Calculate F-statistic p-value for linear model
+  pval &lt;- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
+  if (is.numeric(df[, f])) {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
+      geom_smooth(method = &quot;lm&quot;) + labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
+  } else {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
+      labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
+  }
+}
+
+for (f in facs) {
+    # Plot f versus PC1 and PC2
+  f_v_pc1 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)+theme_bw())
+  f_v_pc2 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)+theme_bw())
+  grid.arrange(f_v_pc1, f_v_pc2, ncol = 2, top = names(facs)[which(facs == f)])
+}</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S7-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toptablebydrug &lt;- readRDS(&quot;output/toptablebydrug.RDS&quot;)
+
+
+list2env(toptablebydrug,envir=.GlobalEnv)</code></pre>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<pre class="r"><code>volcanosig &lt;- function(df, psig.lvl) {
+    df &lt;- df %&gt;% 
+    mutate(threshold = ifelse(adj.P.Val &gt; psig.lvl, &quot;A&quot;, ifelse(adj.P.Val &lt;= psig.lvl &amp; logFC&lt;=0,&quot;B&quot;,&quot;C&quot;)))
+      # ifelse(adj.P.Val &lt;= psig.lvl &amp; logFC &gt;= 0,&quot;B&quot;, &quot;C&quot;)))
+    
+    df &lt;- df %&gt;% mutate(genelabels = &quot;&quot;)
+    
+  ggplot(df, aes(x=logFC, y=-log10(P.Value))) + 
+    geom_point(aes(color=threshold))+
+    xlab(expression(&quot;Log&quot;[2]*&quot; FC&quot;))+
+    ylim(0,30)+
+    ylab(expression(&quot;-log&quot;[10]*&quot;P Value&quot;))+
+    scale_color_manual(values = c(&quot;black&quot;, &quot;red&quot;,&quot;blue&quot;))+
+    theme_cowplot()+
+    theme(legend.position = &quot;none&quot;,
+              plot.title = element_text(hjust = 0.5),
+              axis.title = element_text(size = rel(0.8))) 
+}
+
+v1 &lt;- volcanosig(V.DA.top, 0.01)+ ggtitle(&quot;Daunorubicin\n 3 hr&quot;)+ ylab(&quot;&quot;)
+v2 &lt;- volcanosig(V.DA24.top, 0.01)+ ggtitle(&quot;Daunorubicin\n 24 hr&quot;)+ylab(&quot;&quot;)
+v3 &lt;- volcanosig(V.DX.top, 0.01)+ ggtitle(&quot;Doxorubicin\n 3 hr&quot;)
+v4 &lt;- volcanosig(V.DX24.top, 0.01)+ ggtitle(&quot;Doxorubicin\n 24 hr&quot;)
+v5 &lt;- volcanosig(V.EP.top, 0.01)+ ggtitle(&quot;Epirubicin\n 3 hr&quot;)
+v6 &lt;- volcanosig(V.EP24.top, 0.01)+ ggtitle(&quot;Epirubicin\n 24 hr&quot;)
+v7 &lt;- volcanosig(V.MT.top, 0.01)+ ggtitle(&quot;Mitoxatrone\n 3 hr&quot;)
+v8 &lt;- volcanosig(V.MT24.top, 0.01)+ ggtitle(&quot;Mitoxatrone\n 24 hr&quot;)
+v9 &lt;- volcanosig(V.TR.top, 0.01)+ ggtitle(&quot;Trastuzumab\n 3 hr&quot;)
+v10 &lt;- volcanosig(V.TR24.top, 0.01)+ ggtitle(&quot;Trastuzumab\n 24 hr&quot;)
+
+plot_grid(v1,v3,v5,v7,v9,nrow=1,ncol=5, rel_widths = 0.5)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S8%20volcano-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_grid(v2,v4,v6,v8,v10,nrow=1,ncol=5, rel_widths = 0.5)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S8%20volcano-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
+toplistall %&gt;% 
+  group_by(time, id) %&gt;% 
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;% 
+  # mutate(sigcount = if_else(adj.P.Val &lt; 0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  ggplot(., aes(x=id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  ggpubr::fill_palette(palette =drug_pal_fact)+
+  guides(fill=guide_legend(title = &quot;Treatment&quot;))+
+  facet_wrap(sigcount~time)+
+  theme_bw()+
+  xlab(&quot;&quot;)+
+  ylab(&quot;Log Fold Change&quot;)+
+  theme_bw()+
+  facet_wrap(~time)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = &quot;transparent&quot;),
+        axis.text.x = element_text(size = 8, color = &quot;white&quot;, angle = 0),
+        strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
+
+
+DOXreQTLs &lt;- readRDS(&quot;output/DOXreQTLs.RDS&quot;)
+
+DNRreQTLs &lt;- readRDS(&quot;output/DNRreQTLs.RDS&quot;)
+
+EPIreQTLs &lt;- readRDS(&quot;output/EPIreQTLs.RDS&quot;)
+
+MTXreQTLs &lt;- readRDS(&quot;output/MTXreQTLs.RDS&quot;)
+
+toplist24hr &lt;-   toplistall %&gt;%
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  filter(time==&quot;24_hours&quot;)
+
+toplist3hr &lt;-   toplistall %&gt;%
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  filter(time==&quot;3_hours&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] cowplot_1.1.1         edgeR_3.38.4          limma_3.52.4         
+ [4] gridExtra_2.3         ComplexHeatmap_2.12.1 kableExtra_1.3.4     
+ [7] RColorBrewer_1.1-3    ggsignif_0.6.4        zoo_1.8-12           
+[10] rstatix_0.7.2         ggpubr_0.6.0          lubridate_1.9.2      
+[13] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.2          
+[16] purrr_1.0.1           readr_2.1.4           tidyr_1.3.0          
+[19] tibble_3.2.1          ggplot2_3.4.2         tidyverse_2.0.0      
+[22] workflowr_1.7.0      
+
+loaded via a namespace (and not attached):
+ [1] nlme_3.1-162        matrixStats_1.0.0   fs_1.6.2           
+ [4] doParallel_1.0.17   webshot_0.5.4       httr_1.4.6         
+ [7] rprojroot_2.0.3     tools_4.2.2         backports_1.4.1    
+[10] bslib_0.5.0         utf8_1.2.3          R6_2.5.1           
+[13] mgcv_1.8-42         BiocGenerics_0.42.0 colorspace_2.1-0   
+[16] GetoptLong_1.0.5    withr_2.5.0         tidyselect_1.2.0   
+[19] processx_3.8.1      compiler_4.2.2      git2r_0.32.0       
+[22] cli_3.6.1           rvest_1.0.3         xml2_1.3.4         
+[25] labeling_0.4.2      sass_0.4.6          scales_1.2.1       
+[28] callr_3.7.3         systemfonts_1.0.4   digest_0.6.31      
+[31] rmarkdown_2.22      svglite_2.1.1       pkgconfig_2.0.3    
+[34] htmltools_0.5.5     highr_0.10          fastmap_1.1.1      
+[37] rlang_1.1.1         GlobalOptions_0.1.2 rstudioapi_0.14    
+[40] farver_2.1.1        shape_1.4.6         jquerylib_0.1.4    
+[43] generics_0.1.3      jsonlite_1.8.5      car_3.1-2          
+[46] magrittr_2.0.3      Matrix_1.5-4.1      Rcpp_1.0.10        
+[49] munsell_0.5.0       S4Vectors_0.34.0    fansi_1.0.4        
+[52] abind_1.4-5         lifecycle_1.0.3     stringi_1.7.12     
+[55] whisker_0.4.1       yaml_2.3.7          carData_3.0-5      
+[58] parallel_4.2.2      promises_1.2.0.1    crayon_1.5.2       
+[61] lattice_0.21-8      splines_4.2.2       circlize_0.4.15    
+[64] hms_1.1.3           locfit_1.5-9.8      knitr_1.43         
+[67] ps_1.7.5            pillar_1.9.0        rjson_0.2.21       
+[70] stats4_4.2.2        codetools_0.2-19    glue_1.6.2         
+[73] evaluate_0.21       getPass_0.2-2       vctrs_0.6.3        
+[76] png_0.1-8           tzdb_0.4.0          httpuv_1.6.11      
+[79] foreach_1.5.2       gtable_0.3.3        clue_0.3-64        
+[82] cachem_1.0.8        xfun_0.39           broom_1.0.5        
+[85] later_1.3.1         viridisLite_0.4.2   iterators_1.0.14   
+[88] IRanges_2.30.1      cluster_2.1.4       timechange_0.2.0   </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
