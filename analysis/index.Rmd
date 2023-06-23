@@ -57,7 +57,7 @@ Data set comparisons
 [Figure 8](https://reneeisnowhere.github.io/Cardiotoxicity/Figure8.html)  
 
 [Figure 9](https://reneeisnowhere.github.io/Cardiotoxicity/Figure9.html)  
-
+[Supplementary Figures](https://reneeisnowhere.github.io/Cardiotoxicity/Supplementary_figures.html)
 # Older Analysis
 Click on this [link](https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html) to see my results from the first analysis 
 You can also look at my page of GO analysis on both the Bayesian gene analysis and Pairwise gene analysis.  
