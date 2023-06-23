@@ -6,9 +6,9 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE)
 ```
-```{r packages}
+```{r packages, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(ggpubr)
 library(rstatix)
@@ -17,6 +17,7 @@ library(ggsignif)
 library(RColorBrewer)
 library(kableExtra)
 library(ComplexHeatmap)
+library(gridExtra)
 
 ```
 
@@ -72,7 +73,28 @@ Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, column_title = ex
 
 
 ```{r Fig S3}
-
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+viability <- readRDS("data/viability.RDS")
+norm_LDH48 <- readRDS("data/supp_normLDH48.RDS")
+viability %>% 
+  full_join(., norm_LDH48,by = c("indv","Drug","Conc")) %>% 
+  ggplot(., aes(x=per.live, y=ldh))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method="lm")+
+  facet_wrap("Drug")+
+  theme_bw()+
+  xlab("Average viability of cardiomyocytes/100") +
+  ylab("Average LDH") +
+  ggtitle("Relative viability and relative LDH release at 48 hours")+
+  scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+  stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+           color = "red")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 20),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.background = element_rect(fill = "white")) 
 
 ```
 
@@ -116,35 +138,217 @@ viabilitytable %>%
 
 
 ```{r Fig S5}
+library(limma)
+library(edgeR)
+library(cowplot)
+x <- readRDS("data/filtermatrix_x.RDS")
+ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
+  geom_boxplot(aes(fill=as.factor(time)))+ 
+  theme_bw()+
+  ylim(c(0,10))+
+  labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ 
+  ggtitle("Boxplot of RIN by time and drug")+
+  facet_wrap(~drug)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 1, vjust = 0.2),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.background = element_rect(fill = "white"))
+
+
+
+seq_info <-read.csv("output/sequencing_info.txt", row.names = 1)
+seq_info %>% 
+  filter(type=="Total_reads") %>% 
+  ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
+  geom_boxplot()+
+  scale_fill_manual(values=drug_pal_fact)+
+  ggtitle(expression("Total number of reads by treatment"))+
+  xlab(" ")+
+  ylab(expression("RNA -sequencing reads"))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = "white"),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
+
+seq_info %>% 
+  separate(samplenames, into=c(NA,NA,NA,"samplenames")) %>% 
+  mutate(shortnames = paste("Sample",str_trim(samplenames))) %>% 
+  filter(type=="Total_reads") %>% 
+  ggplot(., aes (x =shortnames, y=Total.Sequences, fill = drug, group_by=indv))+
+  geom_col()+
+ geom_hline(aes(yintercept=20000000))+
+ scale_fill_manual(values=drug_pal_fact)+
+  ggtitle(expression("Total number of reads by sample"))+
+  xlab("")+
+  ylab(expression("RNA -sequencing reads"))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =6, color = "black", angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+        strip.text.y = element_text(color = "white"))
 
 
 ```
 
 
 ```{r Fig S6}
+filcpm_matrix <- readRDS("data/filcpm_counts.RDS")
+
+mcor <- cor(filcpm_matrix) 
+# pheatmap::pheatmap(mcor)
+Heatmap(mcor)
 
 
 ```
+heatmap is pending a few changes!  just not my focus today.
 
 
 ```{r Fig S7}
+pca_all_anno <- readRDS("data/supp_pca_all_anno.RDS")
+pca_all_anno <- pca_all_anno %>% 
+  mutate(drug = case_match(drug, "Daunorubicin"~"DNR","Doxorubicin"~"DOX", "Epirubicin"~"EPI","Mitoxantrone"~"MTX","Trastuzumab"~"TRX","Vehicle"~"VEH", .default = drug))
 
+
+facs <- c("indv", "drug", "time")
+names(facs) <- c("Individual", "Treatment", "Time")
+
+get_regr_pval <- function(mod) {
+  # Returns the p-value for the Fstatistic of a linear model
+  # mod: class lm
+  stopifnot(class(mod) == "lm")
+  fstat <- summary(mod)$fstatistic
+  pval <- 1 - pf(fstat[1], fstat[2], fstat[3])
+  return(pval)
+}
+
+plot_versus_pc <- function(df, pc_num, fac) {
+  # df: data.frame
+  # pc_num: numeric, specific PC for plotting
+  # fac: column name of df for plotting against PC
+  pc_char <- paste0("PC", pc_num)
+  # Calculate F-statistic p-value for linear model
+  pval <- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
+  if (is.numeric(df[, f])) {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
+      geom_smooth(method = "lm") + labs(title = sprintf("p-val: %.2f", pval))
+  } else {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
+      labs(title = sprintf("p-val: %.2f", pval))
+  }
+}
+
+for (f in facs) {
+    # Plot f versus PC1 and PC2
+  f_v_pc1 <- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)+theme_bw())
+  f_v_pc2 <- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)+theme_bw())
+  grid.arrange(f_v_pc1, f_v_pc2, ncol = 2, top = names(facs)[which(facs == f)])
+}
 
 ```
 
 
-```{r Fig S8}
+```{r Fig S8 volcano}
 
 
+toptablebydrug <- readRDS("output/toptablebydrug.RDS")
+
+
+list2env(toptablebydrug,envir=.GlobalEnv)
+volcanosig <- function(df, psig.lvl) {
+    df <- df %>% 
+    mutate(threshold = ifelse(adj.P.Val > psig.lvl, "A", ifelse(adj.P.Val <= psig.lvl & logFC<=0,"B","C")))
+      # ifelse(adj.P.Val <= psig.lvl & logFC >= 0,"B", "C")))
+    
+    df <- df %>% mutate(genelabels = "")
+    
+  ggplot(df, aes(x=logFC, y=-log10(P.Value))) + 
+    geom_point(aes(color=threshold))+
+    xlab(expression("Log"[2]*" FC"))+
+    ylim(0,30)+
+    ylab(expression("-log"[10]*"P Value"))+
+    scale_color_manual(values = c("black", "red","blue"))+
+    theme_cowplot()+
+    theme(legend.position = "none",
+              plot.title = element_text(hjust = 0.5),
+              axis.title = element_text(size = rel(0.8))) 
+}
+
+v1 <- volcanosig(V.DA.top, 0.01)+ ggtitle("Daunorubicin\n 3 hr")+ ylab("")
+v2 <- volcanosig(V.DA24.top, 0.01)+ ggtitle("Daunorubicin\n 24 hr")+ylab("")
+v3 <- volcanosig(V.DX.top, 0.01)+ ggtitle("Doxorubicin\n 3 hr")
+v4 <- volcanosig(V.DX24.top, 0.01)+ ggtitle("Doxorubicin\n 24 hr")
+v5 <- volcanosig(V.EP.top, 0.01)+ ggtitle("Epirubicin\n 3 hr")
+v6 <- volcanosig(V.EP24.top, 0.01)+ ggtitle("Epirubicin\n 24 hr")
+v7 <- volcanosig(V.MT.top, 0.01)+ ggtitle("Mitoxatrone\n 3 hr")
+v8 <- volcanosig(V.MT24.top, 0.01)+ ggtitle("Mitoxatrone\n 24 hr")
+v9 <- volcanosig(V.TR.top, 0.01)+ ggtitle("Trastuzumab\n 3 hr")
+v10 <- volcanosig(V.TR24.top, 0.01)+ ggtitle("Trastuzumab\n 24 hr")
+
+plot_grid(v1,v3,v5,v7,v9,nrow=1,ncol=5, rel_widths = 0.5)
+plot_grid(v2,v4,v6,v8,v10,nrow=1,ncol=5, rel_widths = 0.5)
 ```
 
 
 ```{r Fig S9}
+toplistall <- readRDS("data/toplistall.RDS")
+toplistall %>% 
+  group_by(time, id) %>% 
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
+  # mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  ggplot(., aes(x=id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  ggpubr::fill_palette(palette =drug_pal_fact)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(sigcount~time)+
+  theme_bw()+
+  xlab("")+
+  ylab("Log Fold Change")+
+  theme_bw()+
+  facet_wrap(~time)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text.x = element_text(size = 8, color = "white", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 
 ```
 
 ```{r Fig S10}
+
+toplistall <- readRDS("data/toplistall.RDS")
+
+
+DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
+
+DNRreQTLs <- readRDS("output/DNRreQTLs.RDS")
+
+EPIreQTLs <- readRDS("output/EPIreQTLs.RDS")
+
+MTXreQTLs <- readRDS("output/MTXreQTLs.RDS")
+
+toplist24hr <-   toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time=="24_hours")
+
+toplist3hr <-   toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  filter(time=="3_hours")
 
 
 ```
@@ -162,15 +366,3 @@ viabilitytable %>%
 ```
 
 
-
-```{r Fig S13}
-
-
-```
-
-
-
-```{r Fig S14}
-
-
-```
