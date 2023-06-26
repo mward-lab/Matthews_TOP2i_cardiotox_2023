@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-06-22" />
+<meta name="date" content="2023-06-26" />
 
 <title>Knowles 2019 data</title>
 
@@ -363,7 +363,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Knowles 2019 data</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-06-22</h4>
+<h4 class="date">2023-06-26</h4>
 
 </div>
 
@@ -392,7 +392,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-06-22
+<strong>Last updated:</strong> 2023-06-26
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -523,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree001d509d0fcac799d6787d515de4caf72d4f3172targetblank001d509a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree982e608fcb180c151667df56d7398ff456a58f11targetblank982e608a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/001d509d0fcac799d6787d515de4caf72d4f3172" target="_blank">001d509</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/982e608fcb180c151667df56d7398ff456a58f11" target="_blank">982e608</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree001d509d0fcac799d6787d515de4caf72d4f3172targetblank001d509a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree982e608fcb180c151667df56d7398ff456a58f11targetblank982e608a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/001d509d0fcac799d6787d515de4caf72d4f3172" target="_blank">001d509</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/982e608fcb180c151667df56d7398ff456a58f11" target="_blank">982e608</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -591,6 +591,7 @@ Ignored files:
     Ignored:    data/K_cluster
     Ignored:    data/K_cluster_kisthree.csv
     Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/LD50_05via.csv
     Ignored:    data/LDH48hoursdata.csv
     Ignored:    data/Mt24counts.txt
     Ignored:    data/RINsamplelist.txt
@@ -618,15 +619,18 @@ Ignored files:
     Ignored:    data/dat_cpm.RDS
     Ignored:    data/data_outline.txt
     Ignored:    data/efit2.RDS
+    Ignored:    data/efit2_final.RDS
     Ignored:    data/efit2results.RDS
     Ignored:    data/ensembl_backup.RDS
     Ignored:    data/ensgtotal.txt
+    Ignored:    data/filcpm_counts.RDS
     Ignored:    data/filenameonly.txt
     Ignored:    data/filtered_cpm_counts.csv
     Ignored:    data/filtered_raw_counts.csv
     Ignored:    data/filtermatrix_x.RDS
     Ignored:    data/folder_05top/
     Ignored:    data/geneDoxonlyQTL.csv
+    Ignored:    data/gene_corr_df.RDS
     Ignored:    data/gene_corr_frame.RDS
     Ignored:    data/gene_prob_tran3h.RDS
     Ignored:    data/gene_probabilityk5.RDS
@@ -662,21 +666,25 @@ Ignored files:
     Ignored:    data/sigVTR24.txt
     Ignored:    data/sigVTR3.txt
     Ignored:    data/siglist.RDS
+    Ignored:    data/siglist_final.RDS
     Ignored:    data/slope_table.csv
+    Ignored:    data/supp_normLDH48.RDS
+    Ignored:    data/supp_pca_all_anno.RDS
     Ignored:    data/table3a.omar
     Ignored:    data/toplistall.RDS
     Ignored:    data/tvl24hour.txt
     Ignored:    data/tvl24hourw.txt
     Ignored:    data/venn_code.R
+    Ignored:    data/viability.RDS
 
 Untracked files:
     Untracked:  .RDataTmp
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
     Untracked:  OmicNavigator_learn.R
-    Untracked:  analysis/Supplementary_figures.Rmd
     Untracked:  code/DRC_plotfigure1.png
     Untracked:  code/cpm_boxplot.R
+    Untracked:  code/extracting_ggplot_data.R
     Untracked:  code/fig1plot.png
     Untracked:  code/figurelegeddrc.png
     Untracked:  cormotif_probability_genelist.csv
@@ -687,12 +695,15 @@ Untracked files:
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
     Untracked:  output/output-old/
+    Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
+    Modified:   analysis/Cormotifcluster_analysis.Rmd
     Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/GTEx_genes.Rmd
     Modified:   analysis/LDH_analysis.Rmd
+    Modified:   analysis/RNAseqanalysis.Rmd
 
 </code></pre>
 <p>
@@ -738,6 +749,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/982e608fcb180c151667df56d7398ff456a58f11/analysis/Knowles2019.Rmd" target="_blank">982e608</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-26
+</td>
+<td>
+updated Epi and found the sig bug from friday
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/c134a427b312edffb2ec496d8aea4b3c9864d342/docs/Knowles2019.html" target="_blank">c134a42</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2668,7 +2713,8 @@ MtxonlyDEG &lt;- venn_24h$..values..[[8]]
   
 Dox24_lfc &lt;- toplist24hr %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
-  filter(adj.P.Val&lt;0.05) %&gt;% 
+  # group_by(id) %&gt;% 
+  # dplyr::filter(adj.P.Val&lt;0.05) #%&gt;% 
   mutate(logFC=logFC*(-1)) %&gt;% 
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
@@ -2683,7 +2729,7 @@ Dox24_lfc &lt;- toplist24hr %&gt;%
     # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
   
   toplist24hr %&gt;% 
-  filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
+  # filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;%
   filter(adj.P.Val&lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id,position=&quot;dodge&quot;))+
@@ -2692,7 +2738,7 @@ Dox24_lfc &lt;- toplist24hr %&gt;%
     fill_palette(palette = drug_palNoVeh)</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20specific%20LFC-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
-  filter(ENTREZID %in% DoxonlyDEG) %&gt;%
+  dplyr::filter(ENTREZID %in% DoxonlyDEG) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)</code></pre>
@@ -2727,8 +2773,8 @@ class="section level2">
 <div id="doxorubicin" class="section level3">
 <h3>Doxorubicin</h3>
 <pre class="r"><code>DOXdeg_sp &lt;- toplist24hr %&gt;% 
-  filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
-  filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
+  dplyr::filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
+  dplyr::filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
   filter(id==&quot;Doxorubicin&quot;) %&gt;% 
   dplyr::select(ENTREZID, SYMBOL)  
 
@@ -3445,9 +3491,7 @@ MTMR9
 <pre><code>[1] &quot;57338&quot;</code></pre>
 <pre class="r"><code>toplist24hr %&gt;% 
   group_by(time,id) %&gt;% 
-  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
-  # filter(id==&quot;Doxorubicin&quot;)
+  dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
   mutate(logFC=logFC*(-1)) %&gt;% 
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
@@ -3463,8 +3507,8 @@ MTMR9
 <pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
 
 toplist24hr %&gt;% group_by(time,id) %&gt;% 
-  filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
+  dplyr::filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;% 
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
@@ -3475,10 +3519,8 @@ toplist24hr %&gt;% group_by(time,id) %&gt;%
   theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
-  filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
-  group_by(time,id) %&gt;% 
-  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
+  dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
@@ -3488,13 +3530,14 @@ toplist24hr %&gt;% group_by(time,id) %&gt;%
     fill_palette(palette = drug_palNoVeh)+
   theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>toplist24hr %&gt;% 
+<pre class="r"><code>densityDOXsp &lt;- toplist24hr %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
-  # filter(adj.P.Val&lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
+  theme_bw()
+
+densityDOXsp</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
   filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
@@ -6720,55 +6763,47 @@ attached base packages:
 other attached packages:
  [1] ComplexHeatmap_2.12.1 broom_1.0.5           kableExtra_1.3.4     
  [4] sjmisc_2.8.9          scales_1.2.1          ggpubr_0.6.0         
- [7] cowplot_1.1.1         RColorBrewer_1.1-3    biomaRt_2.52.0       
-[10] ggsignif_0.6.4        lubridate_1.9.2       forcats_1.0.0        
-[13] stringr_1.5.0         dplyr_1.1.2           purrr_1.0.1          
-[16] readr_2.1.4           tidyr_1.3.0           tibble_3.2.1         
-[19] ggplot2_3.4.2         tidyverse_2.0.0       limma_3.52.4         
-[22] workflowr_1.7.0      
+ [7] cowplot_1.1.1         ggsignif_0.6.4        lubridate_1.9.2      
+[10] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.2          
+[13] purrr_1.0.1           readr_2.1.4           tidyr_1.3.0          
+[16] tibble_3.2.1          ggplot2_3.4.2         tidyverse_2.0.0      
+[19] RColorBrewer_1.1-3    limma_3.52.4          workflowr_1.7.0      
 
 loaded via a namespace (and not attached):
-  [1] backports_1.4.1        circlize_0.4.15        BiocFileCache_2.4.0   
-  [4] systemfonts_1.0.4      GenomeInfoDb_1.32.4    digest_0.6.31         
-  [7] foreach_1.5.2          htmltools_0.5.5        fansi_1.0.4           
- [10] magrittr_2.0.3         memoise_2.0.1          cluster_2.1.4         
- [13] doParallel_1.0.17      tzdb_0.4.0             Biostrings_2.64.1     
- [16] matrixStats_1.0.0      svglite_2.1.1          timechange_0.2.0      
- [19] prettyunits_1.1.1      RVenn_1.1.0            colorspace_2.1-0      
- [22] blob_1.2.4             rvest_1.0.3            rappdirs_0.3.3        
- [25] xfun_0.39              callr_3.7.3            crayon_1.5.2          
- [28] RCurl_1.98-1.12        jsonlite_1.8.5         iterators_1.0.14      
- [31] glue_1.6.2             gtable_0.3.3           zlibbioc_1.42.0       
- [34] XVector_0.36.0         webshot_0.5.4          GetoptLong_1.0.5      
- [37] car_3.1-2              shape_1.4.6            BiocGenerics_0.42.0   
- [40] abind_1.4-5            futile.options_1.0.1   DBI_1.1.3             
- [43] rstatix_0.7.2          Rcpp_1.0.10            viridisLite_0.4.2     
- [46] progress_1.2.2         units_0.8-2            clue_0.3-64           
- [49] proxy_0.4-27           bit_4.0.5              stats4_4.2.2          
- [52] httr_1.4.6             pkgconfig_2.0.3        XML_3.99-0.14         
- [55] farver_2.1.1           sass_0.4.6             dbplyr_2.3.2          
- [58] utf8_1.2.3             tidyselect_1.2.0       labeling_0.4.2        
- [61] rlang_1.1.1            later_1.3.1            AnnotationDbi_1.58.0  
- [64] munsell_0.5.0          tools_4.2.2            cachem_1.0.8          
- [67] cli_3.6.1              generics_0.1.3         RSQLite_2.3.1         
- [70] ggVennDiagram_1.2.2    sjlabelled_1.2.0       evaluate_0.21         
- [73] fastmap_1.1.1          yaml_2.3.7             processx_3.8.1        
- [76] knitr_1.43             bit64_4.0.5            fs_1.6.2              
- [79] KEGGREST_1.36.3        whisker_0.4.1          formatR_1.14          
- [82] xml2_1.3.4             compiler_4.2.2         rstudioapi_0.14       
- [85] filelock_1.0.2         curl_5.0.1             png_0.1-8             
- [88] e1071_1.7-13           bslib_0.5.0            stringi_1.7.12        
- [91] highr_0.10             ps_1.7.5               futile.logger_1.4.3   
- [94] classInt_0.4-9         vctrs_0.6.3            pillar_1.9.0          
- [97] lifecycle_1.0.3        jquerylib_0.1.4        GlobalOptions_0.1.2   
-[100] bitops_1.0-7           insight_0.19.2         httpuv_1.6.11         
-[103] R6_2.5.1               promises_1.2.0.1       KernSmooth_2.23-21    
-[106] IRanges_2.30.1         codetools_0.2-19       lambda.r_1.2.4        
-[109] rprojroot_2.0.3        rjson_0.2.21           withr_2.5.0           
-[112] S4Vectors_0.34.0       GenomeInfoDbData_1.2.8 parallel_4.2.2        
-[115] hms_1.1.3              VennDiagram_1.7.3      class_7.3-22          
-[118] rmarkdown_2.22         carData_3.0-5          git2r_0.32.0          
-[121] sf_1.0-13              getPass_0.2-2          Biobase_2.56.0        </code></pre>
+  [1] ggVennDiagram_1.2.2  colorspace_2.1-0     rjson_0.2.21        
+  [4] class_7.3-22         sjlabelled_1.2.0     rprojroot_2.0.3     
+  [7] circlize_0.4.15      futile.logger_1.4.3  GlobalOptions_0.1.2 
+ [10] fs_1.6.2             proxy_0.4-27         clue_0.3-64         
+ [13] rstudioapi_0.14      farver_2.1.1         fansi_1.0.4         
+ [16] xml2_1.3.4           codetools_0.2-19     doParallel_1.0.17   
+ [19] cachem_1.0.8         knitr_1.43           jsonlite_1.8.5      
+ [22] cluster_2.1.4        png_0.1-8            compiler_4.2.2      
+ [25] httr_1.4.6           backports_1.4.1      fastmap_1.1.1       
+ [28] cli_3.6.1            later_1.3.1          formatR_1.14        
+ [31] htmltools_0.5.5      tools_4.2.2          gtable_0.3.3        
+ [34] glue_1.6.2           Rcpp_1.0.10          carData_3.0-5       
+ [37] jquerylib_0.1.4      vctrs_0.6.3          svglite_2.1.1       
+ [40] iterators_1.0.14     insight_0.19.2       xfun_0.39           
+ [43] ps_1.7.5             rvest_1.0.3          timechange_0.2.0    
+ [46] lifecycle_1.0.3      rstatix_0.7.2        getPass_0.2-2       
+ [49] hms_1.1.3            promises_1.2.0.1     parallel_4.2.2      
+ [52] lambda.r_1.2.4       yaml_2.3.7           sass_0.4.6          
+ [55] stringi_1.7.12       highr_0.10           S4Vectors_0.34.0    
+ [58] foreach_1.5.2        e1071_1.7-13         BiocGenerics_0.42.0 
+ [61] shape_1.4.6          rlang_1.1.1          pkgconfig_2.0.3     
+ [64] systemfonts_1.0.4    matrixStats_1.0.0    evaluate_0.21       
+ [67] sf_1.0-13            labeling_0.4.2       processx_3.8.1      
+ [70] tidyselect_1.2.0     magrittr_2.0.3       R6_2.5.1            
+ [73] IRanges_2.30.1       generics_0.1.3       DBI_1.1.3           
+ [76] pillar_1.9.0         whisker_0.4.1        withr_2.5.0         
+ [79] units_0.8-2          abind_1.4-5          crayon_1.5.2        
+ [82] car_3.1-2            futile.options_1.0.1 KernSmooth_2.23-21  
+ [85] utf8_1.2.3           RVenn_1.1.0          tzdb_0.4.0          
+ [88] rmarkdown_2.22       GetoptLong_1.0.5     callr_3.7.3         
+ [91] git2r_0.32.0         classInt_0.4-9       digest_0.6.31       
+ [94] webshot_0.5.4        VennDiagram_1.7.3    httpuv_1.6.11       
+ [97] stats4_4.2.2         munsell_0.5.0        viridisLite_0.4.2   
+[100] bslib_0.5.0         </code></pre>
 </div>
 </div>
 </div>
