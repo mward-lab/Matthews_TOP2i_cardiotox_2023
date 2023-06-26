@@ -10,9 +10,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE,
                       dev = c("svg","png","pdf"),
-                      dpi = 300,
-                      echo = FALSE,
-                      cache = TRUE)
+                      dpi = 300)
 ```
 
 ```{r packages, message=FALSE, warning=FALSE}
