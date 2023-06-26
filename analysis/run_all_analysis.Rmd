@@ -149,7 +149,7 @@ genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
   keytype="ENTREZID")
 genes <- genes[!duplicated(genes$ENTREZID),]
 mymatrix$genes <- genes
-#saveRDS(mymatrix, "data/allmatrix.RDS")
+# saveRDS(mymatrix, "data/allmatrix.RDS")
 ##note-not filtered!
 
 
@@ -299,6 +299,8 @@ seq_info %>%
 ## Initial histograms from count matrix
 
 ```{r readinfo,echo=FALSE, message=FALSE, warning=FALSE}
+label <- (interaction(substring(drug, 0, 2), indv, time))
+
 cpm <- cpm(mymatrix)
 lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
 dim(cpm)
@@ -306,11 +308,13 @@ row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
 #write.csv(x$counts, "data/filtered_raw_counts.csv")
-saveRDS(x,"data/filtermatrix_x.RDS")
+# saveRDS(x,"data/filtermatrix_x.RDS")
 
 # lib_size <- (as.data.frame(mymatrix$sample$lib.size))
-filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
-write.csv(filcpm_matrix, "data/filtered_cpm_counts.csv")
+# filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
+# colnames(filcpm_matrix) <- label
+filcpm_counts <- cpm(x$counts, log = TRUE)
+# write.csv(filcpm_counts, "data/filtered_cpm_counts.csv")
 
 hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
      xlab =expression("Log"[2]*" counts-per-million"), col =4 )
@@ -322,7 +326,7 @@ hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMe
 boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
 x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
-boxplot(filcpm_matrix, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
+boxplot(filcpm_counts, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
 x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 
@@ -333,7 +337,7 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 
 ```{r individual PCA by drug and time steps, echo=FALSE, message=FALSE, warning=FALSE}
-#readRDS("data/filtermatrix_x.RDS")
+# readRDS("data/filtermatrix_x.RDS")
 
 
 #dat_cpm <- readRDS("data/dat_cpm.RDS")
@@ -365,7 +369,7 @@ for (b in treattype) {
  
   grid.arrange(drug_time_pca, indv_pca,  nrow =2, top =paste(b)) 
   }
-write.csv(x$counts, "data/cpmnorm_counts.csv")
+# write.csv(x$counts, "data/cpmnorm_counts.csv")
 
 pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
@@ -429,7 +433,7 @@ genecardiccheck <- c("MYH7", "TNNT2","MYH6","ACTN2","BMP3","TNNI3","RYR2","CACNA
                 # values = genecardiccheck, mart = ensembl)
 #write.csv(heartgenes, "data/heartgenes.csv")
 heartgenes <-read.csv("data/heartgenes.csv")
-fungraph <- as.data.frame(filcpm_matrix[rownames(filcpm_matrix) %in% heartgenes$entrezgene_id,])
+fungraph <- as.data.frame(filcpm_counts[rownames(filcpm_counts) %in% heartgenes$entrezgene_id,])
 
 
 fungraph %>% 
@@ -461,9 +465,10 @@ fungraph %>%
 ## correlation heatmap of counts matrix
 ```{R pheatmap clustering of gene counts}
 
-colnames(filcpm_matrix) <- label
-mcor <- cor(filcpm_matrix)
-pheatmap::pheatmap(mcor , cluster_rows = TRUE, cluster_cols = TRUE)
+colnames(filcpm_counts) <- label
+# saveRDS(filcpm_counts,"data/filcpm_counts.RDS")
+mcort <- cor(filcpm_counts)
+pheatmap::pheatmap(mcort , cluster_rows = TRUE, cluster_cols = TRUE)
 ```
 
 
@@ -500,13 +505,13 @@ vfit <- lmFit(y, mm)
 vfit<- contrasts.fit(vfit, contrasts=cm)
 
 efit2 <- eBayes(vfit)
-#saveRDS(efit2,"data/efit2.RDS")
+# saveRDS(efit2,"data/efit2_final.RDS")
 
 
 ```
 
 ```{r Differential expression, echo=FALSE}
-#efit2 <- readRDS("data/efit2.RDS")
+# efit2 <- readRDS("data/efit2.RDS")
 # countstotal <- efit2$
 # colnames(countstotal) <- smlabel
 V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
@@ -553,14 +558,19 @@ names(siglist) <- c("sigVDA3",
              "sigVTR24")
 # siglist <- lapply(siglist, function(x) {colnames(x) <- gsub(pattern = "^siglist\\.", replacement = "", x = colnames(x))
 # return(x)})
-
+plot_filenames <- c("V.DA.top","V.DX.top","V.EP.top","V.MT.top","V.TR.top","V.DA24.top",
+"V.DX24.top","V.EP24.top","V.MT24.top","V.TR24.top")
+toptablebydrug <- list(V.DA.top,V.DX.top , V.EP.top , V.MT.top , V.TR.top , V.DA24.top ,
+ V.DX24.top , V.EP24.top , V.MT24.top , V.TR24.top )
+names(toptablebydrug) <- plot_filenames
+# saveRDS(toptablebydrug,"output/toptablebydrug.RDS")
 
  for(i in seq_along(siglist)) {
  fnl <- paste0("data/",names(siglist)[i],".txt")
     write.csv(siglist[i], fnl, col.names = TRUE, row.names =FALSE, sep="")
  }
 
-saveRDS(siglist,"data/siglist.RDS")
+# saveRDS(siglist,"data/siglist_final.RDS")
 
 
 ```
@@ -569,7 +579,7 @@ saveRDS(siglist,"data/siglist.RDS")
 # DEG analysis
 ## summary
 ```{r summary of DEG}
-efit2 <- readRDS("data/efit2.RDS")
+efit2 <- readRDS("data/efit2_final.RDS")
 sum <- summary(decideTests(efit2))
 
 sum
@@ -578,46 +588,7 @@ sum
 
 
 ### cormotif analysis [More In-depth](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
-```{r cormotif analysis info, eval=FALSE, include=FALSE}
-library(Cormotif)
-library(IRanges)
-group_fac <- group1
-groupid <- as.numeric(group_fac)
 
-compid<- data.frame(c1= c(1,2,3,4,5,7,8,9,10,11), c2 = c( 6,6,6,6,6,12,12,12,12,12))
-
-
-y_TMM_cpm <- filcpm_matrix
-colnames(y_TMM_cpm) <- label
-
-cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
-
-plotIC(cormotif_initial)
-plotMotif(cormotif_initial)
-
-gene_prob_tran <- cormotif_initial$bestmotif$p.post
-rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
-# dim(gene_prob_tran)
-#this info is done on the following scripts: Cormotifcluster_analysis_RMD
-#Corrscripts.R and corMotifcustom.R
-
-nonresponse_cluster  <- rownames(gene_prob_tran[(gene_prob_tran[,1] <0.5 &
-                                                   gene_prob_tran[,2] <0.5 &               
-                                                   gene_prob_tran[,3] <0.5 &
-                                                   gene_prob_tran[,4] <0.5&  
-                                                   gene_prob_tran[,5] <0.5 &  
-                                                   gene_prob_tran[,6] <0.5 &  
-                                                   gene_prob_tran[,7] <0.5 &
-                                                   gene_prob_tran[,8] <0.5 &  
-                                                   gene_prob_tran[,9] <0.5 & 
-                                                   gene_prob_tran[,10] <0.5),])
-
-#write_csv(as.data.frame(nonresponse_cluster), "data/cormotif_NRset.txt")
-#write_csv(as.data.frame(TI_respint1), "data/cormotif_TI_cluster.txt")
-#write_csv(as.data.frame(ER_respint1), "data/cormotif_ER_cluster.txt")
- #write_csv(as.data.frame(LR_respint1), "data/cormotif_LR_cluster.txt")
-
-```
 written summary so far: 
 Response sets look similar to previous results.  This data is based on the filtered count matrix (using rowmeans>0 of cpm(log=true)).
 Classification of patterns appear to be:
@@ -641,14 +612,11 @@ More analysis on corMotif (aka Baysian gene anaylsis can be found on this page:)
 
 ```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
 library(cowplot)
-plot_filenames <- c("V.DA.top","V.DX.top","V.EP.top","V.MT.top","V.TR.top","V.DA24.top",
-"V.DX24.top","V.EP24.top","V.MT24.top","V.TR24.top")
+
 
 volcanosig <- function(df, psig.lvl,topg) {
     df <- df %>% 
     mutate(threshold = ifelse(adj.P.Val > psig.lvl, "A", ifelse(adj.P.Val <= psig.lvl & logFC<=0,"B","C")))
-      # ifelse(adj.P.Val <= psig.lvl & logFC >= 0,"B", "C")))
-    
     df <- df %>% mutate(genelabels = "")
     df$genelabels[1:topg] <- df$SYMBOL[1:topg]
     
