@@ -18,10 +18,9 @@ knitr::opts_chunk$set(
 ```{r package loading, echo=FALSE}
 
 library(limma)
+library(RColorBrewer)
 library(tidyverse)
 library(ggsignif)
-library(biomaRt)
-library(RColorBrewer)
 library(cowplot)
 library(ggpubr)
 library(scales)
@@ -74,6 +73,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
 ## Knowles data
   The code below is how I wrangled the knowles supplemental lists into entrezgene_ids to overlap with my expressed gene lists
 ```{r ensembl conversion, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(biomaRt)
 ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
 my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
@@ -576,7 +576,8 @@ MtxonlyDEG <- venn_24h$..values..[[8]]
   
 Dox24_lfc <- toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
-  filter(adj.P.Val<0.05) %>% 
+  # group_by(id) %>% 
+  # dplyr::filter(adj.P.Val<0.05) #%>% 
   mutate(logFC=logFC*(-1)) %>% 
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
@@ -591,7 +592,7 @@ Dox24_lfc <- toplist24hr %>%
     # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
   
   toplist24hr %>% 
-  filter(ENTREZID %in% DoxonlyDEG) %>% 
+  # filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>%
   filter(adj.P.Val<0.05) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id,position="dodge"))+
@@ -599,7 +600,7 @@ Dox24_lfc <- toplist24hr %>%
     facet_wrap(~id)+
     fill_palette(palette = drug_palNoVeh)
 toplist24hr %>% 
-  filter(ENTREZID %in% DoxonlyDEG) %>%
+  dplyr::filter(ENTREZID %in% DoxonlyDEG) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)
@@ -640,8 +641,8 @@ for (g in seq(from=1, to=length(sampset$entrezgene_id))){
 ### Doxorubicin
 ```{r Dox investigation}
 DOXdeg_sp <- toplist24hr %>% 
-  filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
-  filter(ENTREZID %in% DoxonlyDEG) %>% 
+  dplyr::filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
+  dplyr::filter(ENTREZID %in% DoxonlyDEG) %>% 
   filter(id=="Doxorubicin") %>% 
   dplyr::select(ENTREZID, SYMBOL)  
 
@@ -656,9 +657,7 @@ intersect(DOXreQTLs$ENTREZID, DOXdeg_sp$ENTREZID)
 
 toplist24hr %>% 
   group_by(time,id) %>% 
-  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
-  filter(adj.P.Val <0.05) %>% 
-  # filter(id=="Doxorubicin")
+  dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
   mutate(logFC=logFC*(-1)) %>% 
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
@@ -673,8 +672,8 @@ toplist24hr %>%
     # strip.text.x = element_text(size = 12, color = "black", face = "italic"))
 
 toplist24hr %>% group_by(time,id) %>% 
-  filter(ENTREZID %in% DoxonlyDEG) %>% 
-  filter(adj.P.Val <0.05) %>% 
+  dplyr::filter(ENTREZID %in% DoxonlyDEG) %>% 
+  dplyr::filter(adj.P.Val <0.05) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
@@ -683,11 +682,11 @@ toplist24hr %>% group_by(time,id) %>%
   ggtitle("all DE-DOX adj p. value <0.05")+
     fill_palette(palette = drug_palNoVeh)+
   theme_bw()
+
+
 toplist24hr %>% 
-  filter(if_else(id=="Doxorubicin",adj.P.Val<0.01,adj.P.Val>0.01 )) %>% 
-  group_by(time,id) %>% 
-  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
-  filter(adj.P.Val <0.05) %>% 
+  dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
+  dplyr::filter(adj.P.Val <0.05) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
@@ -698,13 +697,14 @@ toplist24hr %>%
   theme_bw()
 
 
-toplist24hr %>% 
+densityDOXsp <- toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
-  # filter(adj.P.Val<0.05) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
   theme_bw()
+
+densityDOXsp
 toplist24hr %>% 
   filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>% 
   # filter(adj.P.Val<0.05) %>%
