@@ -251,7 +251,7 @@ for (gene in GOI_genelist$entrezgene_id){
       ggtitle(expression(paste("Correlation between counts and troponin I by drug")))+
       scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
       stat_cor(method="pearson",
-               aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
                color = "red",
                label.x.npc = 0.01,
                label.y.npc=0.01, 
@@ -282,7 +282,7 @@ for (gene in GOI_genelist$entrezgene_id){
       ggtitle(expression(paste("Correlation between counts and troponin I by individual")))+
       scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
       stat_cor(method="pearson",
-               aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
                color = "red",
                label.x.npc = 0.01,
                label.y.npc=0.01, 
@@ -590,20 +590,20 @@ slc_plot_data <- ggplot_build(slc_plottnni)
 slc_mat <- slc_data %>% 
   left_join(.,slc_dataT,join_by(rowname)) %>% 
   column_to_rownames('rowname') %>% 
-  select(rho_LD50,rho_tnni) %>% 
+  dplyr::select(rho_LD50,rho_tnni) %>% 
   as.matrix()
 
 slc_mat_sig <- slc_data %>% 
   left_join(.,slc_dataT,join_by(rowname)) %>% 
   column_to_rownames('rowname') %>% 
-  select(sig_LD50,sig_tnni) %>% 
+  dplyr::select(sig_LD50,sig_tnni) %>% 
   mutate_all(~replace(., is.na(.), 1)) %>% 
   as.matrix()
   
 
 # col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
 
-Heatmap( rarg_mat, name = "correlation value", 
+Heatmap( slc_mat, name = "correlation value", 
          column_title = "Correlations of LD50 and troponin release to log2cpm of SCL28A3",
          cluster_rows = FALSE, cluster_columns = FALSE,
          # col=col_fun1,
