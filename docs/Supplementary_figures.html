@@ -371,7 +371,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -382,8 +382,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -396,9 +396,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
@@ -492,63 +492,16 @@ versions is critical for reproducibility.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongdetected">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>Cache:</strong> detected </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
 </p>
 </div>
-<div id="strongCachestrongdetected" class="panel-collapse collapse">
+<div id="strongCachestrongnone" class="panel-collapse collapse">
 <div class="panel-body">
-The following chunks had caches available:
-<ul>
-<li>
-Fig S1
-</li>
-<li>
-Fig S10 Drug-specific genes and pathways
-</li>
-<li>
-Fig S12 Cormotif genes
-</li>
-<li>
-Fig S12 Cormotif
-</li>
-<li>
-Fig S2
-</li>
-<li>
-Fig S3
-</li>
-<li>
-Fig S4
-</li>
-<li>
-Fig S5
-</li>
-<li>
-Fig S6
-</li>
-<li>
-Fig S7
-</li>
-<li>
-Fig S8 volcano
-</li>
-<li>
-Fig S9
-</li>
-<li>
-Fig venntimepoints
-</li>
-<li>
-packages
-</li>
-</ul>
-<p>To ensure reproducibility of the results, delete the cache directory
-<code>Supplementary_figures_cache</code> and re-run the analysis. To
-have workflowr automatically delete the cache directory prior to
-building the file, set <code>delete_cache = TRUE</code> when running
-<code>wflow_build()</code> or <code>wflow_publish()</code>.</p>
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
 </div>
 </div>
 </div>
@@ -570,15 +523,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6e50959c3929749167be6933504c7238536acf64targetblank6e50959a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreed7b9ff1f1a8e0542b9b4a951b1e7f0de6298d0fctargetblankd7b9ff1a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6e50959c3929749167be6933504c7238536acf64" target="_blank">6e50959</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/d7b9ff1f1a8e0542b9b4a951b1e7f0de6298d0fc" target="_blank">d7b9ff1</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6e50959c3929749167be6933504c7238536acf64targetblank6e50959a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreed7b9ff1f1a8e0542b9b4a951b1e7f0de6298d0fctargetblankd7b9ff1a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -588,7 +541,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6e50959c3929749167be6933504c7238536acf64" target="_blank">6e50959</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/d7b9ff1f1a8e0542b9b4a951b1e7f0de6298d0fc" target="_blank">d7b9ff1</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -606,8 +559,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/Supplementary_figures_cache/
-    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -817,6 +768,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d7b9ff1f1a8e0542b9b4a951b1e7f0de6298d0fc/analysis/Supplementary_figures.Rmd" target="_blank">d7b9ff1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-26
+</td>
+<td>
+Adding supplementary figures
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/537bc2eaae49e2ce7fd9561bcf6d0667227a10a8/docs/Supplementary_figures.html" target="_blank">537bc2e</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/6e50959c3929749167be6933504c7238536acf64/analysis/Supplementary_figures.Rmd" target="_blank">6e50959</a>
 </td>
 <td>
@@ -887,296 +872,383 @@ updating the codes at Friday start.
 </div>
 </div>
 </div>
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk<span class="math inline">\(set(autodep =
-TRUE)&lt;/code&gt; at the top of the file (in a chunk that is not
-cached). Alternatively, you can customize the option
-&lt;code&gt;dependson&lt;/code&gt; for each individual chunk that is
-cached. Using either &lt;code&gt;autodep&lt;/code&gt; or
-&lt;code&gt;dependson&lt;/code&gt; will remove this warning. See the
-&lt;a href=&quot;https://yihui.name/knitr/options/#cache&quot; &gt;knitr
-cache options&lt;/a&gt; for more details. &lt;/p&gt; &lt;/div&gt; ###
-Fig. S1 &lt;img src=&quot;figure/Supplementary_figures.Rmd/Fig
-S1-1.svg&quot; width=&quot;2100&quot; style=&quot;display: block;
-margin: auto;&quot; /&gt;&lt;table class=&quot; lightable-paper
-lightable-striped table&quot; style=&#39;font-family: &quot;Arial
-Narrow&quot;, arial, helvetica, sans-serif; width: auto !important;
-margin-left: auto; margin-right: auto; font-size: 18px; width: auto
-!important; margin-left: auto; margin-right: auto;&#39;&gt; &lt;caption
-style=&quot;font-size: initial !important;&quot;&gt;Stats summary of
-cTNNT+ FACs readings&lt;/caption&gt;  &lt;thead&gt;  &lt;tr&gt;  &lt;th
-style=&quot;text-align:left;&quot;&gt; &lt;/th&gt;  &lt;th
-style=&quot;text-align:left;&quot;&gt; Percent &lt;/th&gt;  &lt;th
-style=&quot;text-align:left;&quot;&gt; Individual
-&lt;/th&gt;  &lt;/tr&gt;  &lt;/thead&gt;
-&lt;tbody&gt;  &lt;tr&gt;  &lt;td style=&quot;text-align:left;&quot;&gt;
-&lt;/td&gt;  &lt;td style=&quot;text-align:left;&quot;&gt; Min. :63.10
-&lt;/td&gt;  &lt;td style=&quot;text-align:left;&quot;&gt; Length:17
-&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; 1st Qu.:91.80 &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; Class :character
-&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; Median :96.65 &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; Mode :character
-&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; Mean :92.80 &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; NA
-&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; 3rd Qu.:98.50 &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; NA
-&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; Max. :99.90 &lt;/td&gt;  &lt;td
-style=&quot;text-align:left;&quot;&gt; NA &lt;/td&gt;  &lt;/tr&gt;
-&lt;/tbody&gt; &lt;/table&gt; &lt;div class=&quot;alert
-alert-warning&quot;&gt; &lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt;
-The above code chunk cached its results, but it won&#39;t be re-run if
-previous chunks it depends on are updated. If you need to use caching,
-it is highly recommended to also set
-&lt;code&gt;knitr::opts_chunk\)</span>set(autodep = TRUE)</code> at the
-top of the file (in a chunk that is not cached). Alternatively, you can
-customize the option <code>dependson</code> for each individual chunk
-that is cached. Using either <code>autodep</code> or
-<code>dependson</code> will remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
+<pre class="r"><code>library(tidyverse)
+library(ggpubr)
+library(rstatix)
+library(zoo)
+library(ggsignif)
+library(RColorBrewer)
+library(kableExtra)
+library(ComplexHeatmap)
+library(gridExtra)
+library(cowplot)</code></pre>
+<div id="fig.-s1" class="section level3">
+<h3>Fig. S1</h3>
+<pre class="r"><code>ctnnt &lt;- read.csv(&quot;data/ctnnt_results.txt&quot;, row.names = 1)
+ctnnt %&gt;% 
+  mutate(Individual=fct_inorder(Individual)) %&gt;% 
+  ggplot(., aes(Individual,Percent , fill=Individual))+
+  geom_boxplot()+
+  geom_point()+
+  geom_hline(yintercept =70,linetype=&quot;dashed&quot;, alpha=0.75)+###adds a line indicating high positivity +
+coord_cartesian(ylim = c(0,105))+ ##set those limits
+  theme_bw()+  ##white background
+  labs(title=&quot;Cardiomyocyte Purity&quot;)+ #subtitle = &quot;from  n&gt;3 differentiations&quot;)+
+  geom_boxplot(color=&quot;black&quot;,alpha =0.2, fill=NA, fatten=0, show.legend = FALSE)+
+  scale_fill_brewer(palette = &quot;Dark2&quot;,name=&quot;&quot; )+
+  xlab(NULL)+ 
+  ylab(&quot;% cTNNT+ &quot;)+
+  guides(fill = NULL)+
+  theme(plot.title = element_text(hjust = 0.5, size =20, face= &quot;bold&quot;), 
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank(),###removes all axis names and tick names etc.####
+        axis.ticks.x=element_blank(),
+        # legend.text=element_text(size=15), 
+        axis.title.y=element_text(size=15),
+        axis.ticks.y=element_line(size =2),
+        axis.text.y=element_text(size=10, face = &quot;bold&quot;),
+       panel.grid.major = element_line(colour = &#39;grey&#39;),
+       panel.border=element_rect(fill = NA, size = 3),
+       plot.subtitle=element_text(size=18, hjust=0.5, face=&quot;italic&quot;, color=&quot;black&quot;)) </code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S1-1.svg" width="2100" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>(summary(ctnnt)) %&gt;% 
+  kable(., caption= &quot;Stats summary of cTNNT+ FACs readings&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE,font_size = 18) #%&gt;% </code></pre>
+<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 18px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Stats summary of cTNNT+ FACs readings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Percent
+</th>
+<th style="text-align:left;">
+Individual
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Min. :63.10
+</td>
+<td style="text-align:left;">
+Length:17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1st Qu.:91.80
+</td>
+<td style="text-align:left;">
+Class :character
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Median :96.65
+</td>
+<td style="text-align:left;">
+Mode :character
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Mean :92.80
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+3rd Qu.:98.50
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Max. :99.90
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  # scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 </div>
 <div id="fig.-s2" class="section level3">
 <h3>Fig. S2</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S2-1.svg" width="2100" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S2-2.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
-</div>
-<div id="fig.-s3" class="section level3">
-<h3>Fig. S3</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S3-1.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+<pre class="r"><code>ld50_table &lt;- read.csv(&quot;data/ld50_table.csv&quot;,row.names = 1)
+ld_corr &lt;- cor(ld50_table)
+col_fun1 = circlize::colorRamp2(c(-1, 1), c(&quot;white&quot;, &quot;purple&quot;))
+
+Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, col = col_fun1,column_title = expression(&quot;LD &quot;[50]*&quot; correlation&quot;),row_title=&quot; &quot;,row_split = factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)), column_split = 
+    factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S2-1.svg" width="2100" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, column_title = expression(&quot;LD &quot;[50]*&quot; correlation&quot;),row_title=&quot; &quot;,row_split = factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)), column_split = 
+    factor(rep(c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;),each=2)))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S2-2.svg" width="2100" style="display: block; margin: auto;" />
+### Fig. S3</p>
+<pre class="r"><code>drug_pal_fact &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+viability &lt;- readRDS(&quot;data/viability.RDS&quot;)
+norm_LDH48 &lt;- readRDS(&quot;data/supp_normLDH48.RDS&quot;)
+viability %&gt;% 
+  full_join(., norm_LDH48,by = c(&quot;indv&quot;,&quot;Drug&quot;,&quot;Conc&quot;)) %&gt;% 
+  ggplot(., aes(x=per.live, y=ldh))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method=&quot;lm&quot;)+
+  facet_wrap(&quot;Drug&quot;)+
+  theme_bw()+
+  xlab(&quot;Average viability of cardiomyocytes/100&quot;) +
+  ylab(&quot;Average LDH&quot;) +
+  ggtitle(&quot;Relative viability and relative LDH release at 48 hours&quot;)+
+  scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+  stat_cor(method=&quot;pearson&quot;,aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+           color = &quot;red&quot;)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.background = element_rect(fill = &quot;white&quot;)) </code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S3-1.svg" width="2100" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s4" class="section level3">
 <h3>Fig. S4</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S4-1.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+<pre class="r"><code>viabilitytable &lt;- readRDS(&quot;data/averageviabilitytable.RDS&quot;)
+viabilitytable %&gt;% 
+  ungroup() %&gt;% 
+    mutate(indv=substr(SampleID,4,4)) %&gt;% 
+    mutate(indv=factor(as.numeric(indv))) %&gt;%
+    filter(Conc &lt;5) %&gt;% 
+    mutate(Conc= factor(as.numeric(Conc))) %&gt;% 
+    group_by(indv,Drug,Conc,sDrug) %&gt;% 
+    dplyr::summarize(Viability=mean(Mean)) %&gt;%
+    ungroup() %&gt;% 
+    ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
+    geom_boxplot(position=&quot;dodge&quot;, outlier.colour = &quot;transparent&quot;,
+                 aes(fill=Drug))+
+    geom_point(aes(color=indv))+
+    guides(alpha = &quot;none&quot;)+
+    ylim(0,150.5)+
+    scale_color_brewer(palette = &quot;Dark2&quot;,
+                       guide=&quot;legend&quot;,
+                       name =&quot;Individual&quot;, 
+                       labels(c(1,2,3,4,5,6)))+
+    scale_fill_manual(values=drug_pal_fact)+
+    theme_classic() +
+    # geom_hline(yintercept = 1,lty = 4)+
+    ylab(&quot;Viability&quot;) +
+  xlab(&quot;Treatment&quot;)+
+    facet_wrap(~Conc)+ 
+    ggtitle(&quot;Viablity across concentrations at 48 hours&quot;)+
+    theme(axis.title=element_text(size=10),
+          axis.ticks=element_line(size =2),
+          axis.text=element_text(size=9, face = &quot;bold&quot;),
+          panel.grid.major = element_line(colour = &#39;darkgrey&#39;),
+          panel.border=element_rect(fill = NA, size = 2),
+          plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S4-1.svg" width="2100" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s5" class="section level3">
 <h3>Fig. S5</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S5-1.svg" width="2100" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S5-2.svg" width="2100" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S5-3.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
-</div>
-<div id="fig.-s6" class="section level3">
-<h3>Fig. S6</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S6-1.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
-<p>heatmap is pending a few changes! just not my focus today.</p>
+<pre class="r"><code>library(limma)
+library(edgeR)
+library(cowplot)
+x &lt;- readRDS(&quot;data/filtermatrix_x.RDS&quot;)
+ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
+  geom_boxplot(aes(fill=as.factor(time)))+ 
+  theme_bw()+
+  ylim(c(0,10))+
+  labs(x= &quot;&quot;, fill =&quot;Time in hours&quot;,y =&quot;RNA Integrity Number&quot;)+ 
+  ggtitle(&quot;Boxplot of RIN by time and drug&quot;)+
+  facet_wrap(~drug)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 1, vjust = 0.2),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.background = element_rect(fill = &quot;white&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-1.svg" width="2100" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>seq_info &lt;-read.csv(&quot;output/sequencing_info.txt&quot;, row.names = 1)
+seq_info %&gt;% 
+  filter(type==&quot;Total_reads&quot;) %&gt;% 
+  ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
+  geom_boxplot()+
+  scale_fill_manual(values=drug_pal_fact)+
+  ggtitle(expression(&quot;Total number of reads by treatment&quot;))+
+  xlab(&quot; &quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 12, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;white&quot;),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-2.svg" width="2100" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>seq_info %&gt;% 
+  separate(samplenames, into=c(NA,NA,NA,&quot;samplenames&quot;)) %&gt;% 
+  mutate(shortnames = paste(&quot;Sample&quot;,str_trim(samplenames))) %&gt;% 
+  filter(type==&quot;Total_reads&quot;) %&gt;% 
+  ggplot(., aes (x =shortnames, y=Total.Sequences, fill = drug, group_by=indv))+
+  geom_col()+
+ geom_hline(aes(yintercept=20000000))+
+ scale_fill_manual(values=drug_pal_fact)+
+  ggtitle(expression(&quot;Total number of reads by sample&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =6, color = &quot;black&quot;, angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-3.svg" width="2100" style="display: block; margin: auto;" />
+### Fig. S6</p>
+<pre class="r"><code>filcpm_matrix &lt;- readRDS(&quot;data/filcpm_counts.RDS&quot;)
+
+mcor &lt;- cor(filcpm_matrix) 
+# pheatmap::pheatmap(mcor)
+Heatmap(mcor)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S6-1.svg" width="2100" style="display: block; margin: auto;" />
+heatmap is pending a few changes! just not my focus today.</p>
 </div>
 <div id="fig.-s7" class="section level3">
 <h3>Fig. S7</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S7-1.svg" width="2100" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S7-2.svg" width="2100" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S7-3.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+<pre class="r"><code>pca_all_anno &lt;- readRDS(&quot;data/supp_pca_all_anno.RDS&quot;)
+pca_all_anno &lt;- pca_all_anno %&gt;% 
+  mutate(drug = case_match(drug, &quot;Daunorubicin&quot;~&quot;DNR&quot;,&quot;Doxorubicin&quot;~&quot;DOX&quot;, &quot;Epirubicin&quot;~&quot;EPI&quot;,&quot;Mitoxantrone&quot;~&quot;MTX&quot;,&quot;Trastuzumab&quot;~&quot;TRX&quot;,&quot;Vehicle&quot;~&quot;VEH&quot;, .default = drug))
+
+
+facs &lt;- c(&quot;indv&quot;, &quot;drug&quot;, &quot;time&quot;)
+names(facs) &lt;- c(&quot;Individual&quot;, &quot;Treatment&quot;, &quot;Time&quot;)
+
+get_regr_pval &lt;- function(mod) {
+  # Returns the p-value for the Fstatistic of a linear model
+  # mod: class lm
+  stopifnot(class(mod) == &quot;lm&quot;)
+  fstat &lt;- summary(mod)$fstatistic
+  pval &lt;- 1 - pf(fstat[1], fstat[2], fstat[3])
+  return(pval)
+}
+
+plot_versus_pc &lt;- function(df, pc_num, fac) {
+  # df: data.frame
+  # pc_num: numeric, specific PC for plotting
+  # fac: column name of df for plotting against PC
+  pc_char &lt;- paste0(&quot;PC&quot;, pc_num)
+  # Calculate F-statistic p-value for linear model
+  pval &lt;- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
+  if (is.numeric(df[, f])) {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
+      geom_smooth(method = &quot;lm&quot;) + labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
+  } else {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
+      labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
+  }
+}
+
+for (f in facs) {
+    # Plot f versus PC1 and PC2
+  f_v_pc1 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)+theme_bw())
+  f_v_pc2 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)+theme_bw())
+  grid.arrange(f_v_pc1, f_v_pc2, ncol = 2, top = names(facs)[which(facs == f)])
+}</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S7-1.svg" width="2100" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-2.svg" width="2100" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-3.svg" width="2100" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s8" class="section level3">
 <h3>Fig. S8</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S8 volcano-1.svg" width="3000" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+<pre class="r"><code>Volcanoplots &lt;- readRDS(&quot;output/Volcanoplot_10.RDS&quot;)
+Volcanoplots</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S8%20volcano-1.svg" width="3000" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s9" class="section level3">
 <h3>Fig. S9</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S9-1.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk<span class="math inline">\(set(autodep =
-TRUE)&lt;/code&gt; at the top of the file (in a chunk that is not
-cached). Alternatively, you can customize the option
-&lt;code&gt;dependson&lt;/code&gt; for each individual chunk that is
-cached. Using either &lt;code&gt;autodep&lt;/code&gt; or
-&lt;code&gt;dependson&lt;/code&gt; will remove this warning. See the
-&lt;a href=&quot;https://yihui.name/knitr/options/#cache&quot; &gt;knitr
-cache options&lt;/a&gt; for more details. &lt;/p&gt; &lt;/div&gt; ###
-Fig. S10 &lt;img src=&quot;figure/Supplementary_figures.Rmd/Fig S10
-Drug-specific genes and pathways-1.svg&quot; width=&quot;4200&quot;
-style=&quot;display: block; margin: auto;&quot; /&gt; &lt;div
-class=&quot;alert alert-warning&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt; The above code chunk
-cached its results, but it won&#39;t be re-run if previous chunks it
-depends on are updated. If you need to use caching, it is highly
-recommended to also set
-&lt;code&gt;knitr::opts_chunk\)</span>set(autodep = TRUE)</code> at the
-top of the file (in a chunk that is not cached). Alternatively, you can
-customize the option <code>dependson</code> for each individual chunk
-that is cached. Using either <code>autodep</code> or
-<code>dependson</code> will remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
-</div>
-<div id="fig.-s11" class="section level3">
-<h3>Fig. S11</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig venntimepoints-1.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+<pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
+toplistall %&gt;% 
+  group_by(time, id) %&gt;% 
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;% 
+  # mutate(sigcount = if_else(adj.P.Val &lt; 0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
+  ggplot(., aes(x=id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  ggpubr::fill_palette(palette =drug_pal_fact)+
+  guides(fill=guide_legend(title = &quot;Treatment&quot;))+
+  facet_wrap(sigcount~time)+
+  theme_bw()+
+  xlab(&quot;&quot;)+
+  ylab(&quot;Log Fold Change&quot;)+
+  theme_bw()+
+  facet_wrap(~time)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = &quot;transparent&quot;),
+        axis.text.x = element_text(size = 8, color = &quot;white&quot;, angle = 0),
+        strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S9-1.svg" width="2100" style="display: block; margin: auto;" />
+### Fig. S10</p>
+<pre class="r"><code>allfinal &lt;- readRDS(&quot;output/allfinal_sup10.RDS&quot;)
+allfinal</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S10%20Drug-specific%20genes%20and%20pathways-1.svg" width="4200" style="display: block; margin: auto;" />
+### Fig. S11</p>
+<pre class="r"><code>DNRvenn&lt;- readRDS (&quot;output/DNRvenn.RDS&quot;)
+DOXvenn&lt;- readRDS (&quot;output/DOXvenn.RDS&quot;)
+EPIvenn&lt;- readRDS (&quot;output/EPIvenn.RDS&quot;)
+MTXvenn&lt;- readRDS (&quot;output/MTXvenn.RDS&quot;)
+
+plot_grid(DNRvenn,DOXvenn,EPIvenn,MTXvenn,nrow=2, ncol = 2)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20venntimepoints-1.svg" width="2100" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s12" class="section level3">
 <h3>Fig. S12</h3>
-<img src="figure/Supplementary_figures.Rmd/Fig S12 Cormotif-1.svg" width="2100" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
-<img src="figure/Supplementary_figures.Rmd/Fig S12 Cormotif genes-1.svg" width="80%" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S12 Cormotif genes-2.svg" width="80%" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S12 Cormotif genes-3.svg" width="80%" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S12 Cormotif genes-4.svg" width="80%" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig S12 Cormotif genes-5.svg" width="80%" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+<pre class="r"><code>cormotif_initial &lt;- readRDS(&quot;data/cormotif_initialall.RDS&quot;)
+Cormotif::plotIC(cormotif_initial)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif-1.svg" width="2100" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>motif_NRrep &lt;-  readRDS(&quot;output/motif_NRrep.RDS&quot;)
+motif_ERrep &lt;-  readRDS(&quot;output/motif_ERrep.RDS&quot;)
+motif_TIrep &lt;-  readRDS(&quot;output/motif_TI_rep.RDS&quot;)
+motif_LRrep &lt;-  readRDS(&quot;output/motif_LRrep.RDS&quot;)
+# motif_NRrep &lt;- motif_NRrep+theme(axis.title.y = element_text(size=1))
+
+plot_grid(motif_ERrep,motif_LRrep,motif_TIrep,motif_NRrep,nrow = 4,ncol = 1)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif%20genes-1.svg" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>motif_NRrep </code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif%20genes-2.svg" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>motif_ERrep </code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif%20genes-3.svg" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>motif_TIrep</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif%20genes-4.svg" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>motif_LRrep</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif%20genes-5.svg" width="80%" style="display: block; margin: auto;" /></p>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
-<img src="figure/Supplementary_figures.Rmd/Fig%20S12%20GO%20Cormotif-1.svg" width="2400" height="80%" style="display: block; margin: auto;" />
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20GO%20Cormotif-1.svg" width="2400" height="80%" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1185,6 +1257,7 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.2.2 (2022-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
@@ -1213,49 +1286,42 @@ other attached packages:
 [22] workflowr_1.7.0      
 
 loaded via a namespace (and not attached):
- [1] matrixStats_1.0.0   fs_1.6.2            doParallel_1.0.17  
- [4] webshot_0.5.4       httr_1.4.6          rprojroot_2.0.3    
- [7] tools_4.2.2         backports_1.4.1     bslib_0.5.0        
-[10] utf8_1.2.3          R6_2.5.1            BiocGenerics_0.42.0
-[13] colorspace_2.1-0    GetoptLong_1.0.5    withr_2.5.0        
-[16] tidyselect_1.2.0    processx_3.8.1      compiler_4.2.2     
-[19] git2r_0.32.0        cli_3.6.1           rvest_1.0.3        
-[22] xml2_1.3.4          labeling_0.4.2      sass_0.4.6         
-[25] scales_1.2.1        callr_3.7.3         systemfonts_1.0.4  
-[28] digest_0.6.31       rmarkdown_2.22      svglite_2.1.1      
-[31] pkgconfig_2.0.3     htmltools_0.5.5     highr_0.10         
-[34] fastmap_1.1.1       rlang_1.1.1         GlobalOptions_0.1.2
-[37] rstudioapi_0.14     farver_2.1.1        shape_1.4.6        
-[40] jquerylib_0.1.4     generics_0.1.3      jsonlite_1.8.5     
-[43] car_3.1-2           magrittr_2.0.3      Rcpp_1.0.10        
-[46] munsell_0.5.0       S4Vectors_0.34.0    fansi_1.0.4        
-[49] abind_1.4-5         lifecycle_1.0.3     stringi_1.7.12     
-[52] whisker_0.4.1       yaml_2.3.7          carData_3.0-5      
-[55] parallel_4.2.2      promises_1.2.0.1    crayon_1.5.2       
-[58] lattice_0.21-8      circlize_0.4.15     hms_1.1.3          
-[61] locfit_1.5-9.8      knitr_1.43          ps_1.7.5           
-[64] pillar_1.9.0        rjson_0.2.21        stats4_4.2.2       
-[67] codetools_0.2-19    glue_1.6.2          evaluate_0.21      
-[70] getPass_0.2-2       data.table_1.14.8   vctrs_0.6.3        
-[73] png_0.1-8           tzdb_0.4.0          httpuv_1.6.11      
-[76] foreach_1.5.2       gtable_0.3.3        clue_0.3-64        
-[79] cachem_1.0.8        xfun_0.39           broom_1.0.5        
-[82] later_1.3.1         viridisLite_0.4.2   iterators_1.0.14   
-[85] IRanges_2.30.1      cluster_2.1.4       timechange_0.2.0   </code></pre>
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but
-it won’t be re-run if previous chunks it depends on are updated. If you
-need to use caching, it is highly recommended to also set
-<code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the
-file (in a chunk that is not cached). Alternatively, you can customize
-the option <code>dependson</code> for each individual chunk that is
-cached. Using either <code>autodep</code> or <code>dependson</code> will
-remove this warning. See the
-<a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
+  [1] ggVennDiagram_1.2.2   colorspace_2.1-0      rjson_0.2.21         
+  [4] class_7.3-22          rprojroot_2.0.3       circlize_0.4.15      
+  [7] GlobalOptions_0.1.2   fs_1.6.2              proxy_0.4-27         
+ [10] clue_0.3-64           rstudioapi_0.14       farver_2.1.1         
+ [13] affyio_1.66.0         fansi_1.0.4           xml2_1.3.4           
+ [16] codetools_0.2-19      splines_4.2.2         doParallel_1.0.17    
+ [19] cachem_1.0.8          knitr_1.43            jsonlite_1.8.5       
+ [22] broom_1.0.5           cluster_2.1.4         png_0.1-8            
+ [25] BiocManager_1.30.21   compiler_4.2.2        httr_1.4.6           
+ [28] backports_1.4.1       Matrix_1.5-4.1        fastmap_1.1.1        
+ [31] cli_3.6.1             later_1.3.1           htmltools_0.5.5      
+ [34] tools_4.2.2           affy_1.74.0           gtable_0.3.3         
+ [37] glue_1.6.2            Rcpp_1.0.10           Biobase_2.56.0       
+ [40] carData_3.0-5         jquerylib_0.1.4       vctrs_0.6.3          
+ [43] preprocessCore_1.58.0 svglite_2.1.1         nlme_3.1-162         
+ [46] iterators_1.0.14      Cormotif_1.42.0       xfun_0.39            
+ [49] ps_1.7.5              rvest_1.0.3           timechange_0.2.0     
+ [52] lifecycle_1.0.3       zlibbioc_1.42.0       getPass_0.2-2        
+ [55] scales_1.2.1          hms_1.1.3             promises_1.2.0.1     
+ [58] parallel_4.2.2        yaml_2.3.7            sass_0.4.6           
+ [61] stringi_1.7.12        highr_0.10            S4Vectors_0.34.0     
+ [64] foreach_1.5.2         e1071_1.7-13          BiocGenerics_0.42.0  
+ [67] shape_1.4.6           rlang_1.1.1           pkgconfig_2.0.3      
+ [70] systemfonts_1.0.4     matrixStats_1.0.0     evaluate_0.21        
+ [73] lattice_0.21-8        sf_1.0-13             labeling_0.4.2       
+ [76] processx_3.8.1        tidyselect_1.2.0      magrittr_2.0.3       
+ [79] R6_2.5.1              IRanges_2.30.1        generics_0.1.3       
+ [82] DBI_1.1.3             pillar_1.9.0          whisker_0.4.1        
+ [85] withr_2.5.0           mgcv_1.8-42           units_0.8-2          
+ [88] abind_1.4-5           crayon_1.5.2          car_3.1-2            
+ [91] KernSmooth_2.23-21    utf8_1.2.3            RVenn_1.1.0          
+ [94] tzdb_0.4.0            rmarkdown_2.22        GetoptLong_1.0.5     
+ [97] locfit_1.5-9.8        data.table_1.14.8     callr_3.7.3          
+[100] git2r_0.32.0          classInt_0.4-9        digest_0.6.31        
+[103] webshot_0.5.4         httpuv_1.6.11         stats4_4.2.2         
+[106] munsell_0.5.0         viridisLite_0.4.2     bslib_0.5.0          </code></pre>
 </div>
 </div>
 
