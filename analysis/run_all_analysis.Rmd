@@ -617,13 +617,13 @@ library(cowplot)
 volcanosig <- function(df, psig.lvl,topg) {
     df <- df %>% 
     mutate(threshold = ifelse(adj.P.Val > psig.lvl, "A", ifelse(adj.P.Val <= psig.lvl & logFC<=0,"B","C")))
-    df <- df %>% mutate(genelabels = "")
-    df$genelabels[1:topg] <- df$SYMBOL[1:topg]
-    
+    # df <- df %>% mutate(genelabels = "")
+    # df$genelabels[1:topg] <- df$SYMBOL[1:topg]
+    # 
   ggplot(df, aes(x=logFC, y=-log10(P.Value))) + 
     geom_point(aes(color=threshold))+
-    geom_text_repel(aes(label = genelabels), segment.curvature = -1e-20,force = 1,size=2.5,
-    arrow = arrow(length = unit(0.015, "npc")), max.overlaps = Inf) +
+    # geom_text_repel(aes(label = genelabels), segment.curvature = -1e-20,force = 1,size=2.5,
+    # arrow = arrow(length = unit(0.015, "npc")), max.overlaps = Inf) +
     #geom_hline(yintercept = -log10(psig.lvl))+
     xlab(expression("Log"[2]*" FC"))+
     ylim(0,30)+
@@ -631,31 +631,34 @@ volcanosig <- function(df, psig.lvl,topg) {
     scale_color_manual(values = c("black", "red","blue"))+
     theme_cowplot()+
     theme(legend.position = "none",
-              plot.title = element_text(size = rel(1.5), hjust = 0.5),
-              axis.title = element_text(size = rel(0.8))) 
+          plot.title = element_text(size = rel(0.8), hjust = 0.5),
+          axis.title = element_text(size = rel(0.8))) 
 }
 #v1<- volcanosig(V.DA24.top, 0.01,0)
-v1 <- volcanosig(V.DA.top, 0.01,0)+ ggtitle("Daunorubicin 3 hour")
-v2 <- volcanosig(V.DA24.top, 0.01,0)+ ggtitle("Daunorubicin 24 hour")+ylab("")
-v3 <- volcanosig(V.DX.top, 0.01,0)+ ggtitle("Doxorubicin 3 hour")
-v4 <- volcanosig(V.DX24.top, 0.01,0)+ ggtitle("Doxorubicin 24 hour")+ylab("")
-v5 <- volcanosig(V.EP.top, 0.01,0)+ ggtitle("Epirubicin 3 hour")
-v6 <- volcanosig(V.EP24.top, 0.01,0)+ ggtitle("Epirubicin 24 hour")+ylab("")
-v7 <- volcanosig(V.MT.top, 0.01,0)+ ggtitle("Mitoxatrone 3 hour")
-v8 <- volcanosig(V.MT24.top, 0.01,0)+ ggtitle("Mitoxatrone 24 hour")+ylab("")
-v9 <- volcanosig(V.TR.top, 0.01,0)+ ggtitle("Trastuzumab 3 hour")
-v10 <- volcanosig(V.TR24.top, 0.01,0)+ ggtitle("Trastuzumab 24 hour")+ylab("")
+v1 <- volcanosig(V.DA.top, 0.01,0)+ ggtitle("Daunorubicin\n 3 hour")
+v2 <- volcanosig(V.DA24.top, 0.01,0)+ ggtitle("Daunorubicin\n 24 hour")
+v3 <- volcanosig(V.DX.top, 0.01,0)+ ggtitle("Doxorubicin\n 3 hour")+ylab("")
+v4 <- volcanosig(V.DX24.top, 0.01,0)+ ggtitle("Doxorubicin\n 24 hour")+ylab("")
+v5 <- volcanosig(V.EP.top, 0.01,0)+ ggtitle("Epirubicin\n 3 hour")+ylab("")
+v6 <- volcanosig(V.EP24.top, 0.01,0)+ ggtitle("Epirubicin\n 24 hour")+ylab("")
+v7 <- volcanosig(V.MT.top, 0.01,0)+ ggtitle("Mitoxatrone\n 3 hour")+ylab("")
+v8 <- volcanosig(V.MT24.top, 0.01,0)+ ggtitle("Mitoxatrone\n 24 hour")+ylab("")
+v9 <- volcanosig(V.TR.top, 0.01,0)+ ggtitle("Trastuzumab\n 3 hour")+ylab("")
+v10 <- volcanosig(V.TR24.top, 0.01,0)+ ggtitle("Trastuzumab\n 24 hour")+ylab("")
 # volcanoplot(efit2,coef = 10,style = "p-value",
 #                           highlight = 8,
 #                           names = efit2$genes$SYMBOL,
 #                           hl.col = "red",xlab = "Log2 Fold Change",
 #                           ylab = NULL,pch = 16,cex = 0.35,
 #                           main = "Using Trastuzuman 24 hour data and volcanoplot function")
-plot_grid(v1,v2,  rel_widths =c(.8,1))
-plot_grid(v3,v4,  rel_widths =c(.8,1))
-plot_grid(v5,v6,  rel_widths =c(.8,1))
-plot_grid(v7,v8,  rel_widths =c(.8,1))
-plot_grid(v9,v10,  rel_widths =c(.8,1))
+# plot_grid(v1,v2,  rel_widths =c(.8,1))
+# plot_grid(v3,v4,  rel_widths =c(.8,1))
+# plot_grid(v5,v6,  rel_widths =c(.8,1))
+# plot_grid(v7,v8,  rel_widths =c(.8,1))
+# plot_grid(v9,v10,  rel_widths =c(.8,1))
+Volcanoplots <- plot_grid(v1,v3,v5,v7,v9,v2,v4,v6,v8,v10, nrow = 2, ncol = 5)
+Volcanoplots
+# saveRDS(Volcanoplots,"output/Volcanoplot_10.RDS")
 ```
 
 
