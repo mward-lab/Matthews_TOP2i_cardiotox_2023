@@ -2,12 +2,19 @@
 title: "Supplementary figures"
 author: "ERM"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document:
+  keep_md: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE,
+                      dev = c("svg","png","pdf"),
+                      dpi = 300,
+                      echo = FALSE,
+                      cache = TRUE)
 ```
+
 ```{r packages, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(ggpubr)
@@ -18,9 +25,10 @@ library(RColorBrewer)
 library(kableExtra)
 library(ComplexHeatmap)
 library(gridExtra)
+library(cowplot)
 
 ```
-
+### Fig. S1
 ```{r Fig S1}
 
 ctnnt <- read.csv("data/ctnnt_results.txt", row.names = 1)
@@ -56,6 +64,10 @@ coord_cartesian(ylim = c(0,105))+ ##set those limits
   # scroll_box(width = "60%", height = "400px")
 
 ```
+
+### Fig. S2
+
+
 ```{r Fig S2}
 
 
@@ -70,6 +82,7 @@ Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, column_title = ex
     factor(rep(c("1","2","3","4","5","6"),each=2)))
 
 ```
+### Fig. S3
 
 
 ```{r Fig S3}
@@ -97,6 +110,8 @@ viability %>%
         strip.background = element_rect(fill = "white")) 
 
 ```
+
+### Fig. S4 
 
 ```{r Fig S4}
 viabilitytable <- readRDS("data/averageviabilitytable.RDS")
@@ -136,6 +151,7 @@ viabilitytable %>%
 
 ```
 
+### Fig. S5
 
 ```{r Fig S5}
 library(limma)
@@ -200,6 +216,7 @@ seq_info %>%
 
 
 ```
+### Fig. S6
 
 
 ```{r Fig S6}
@@ -212,6 +229,8 @@ Heatmap(mcor)
 
 ```
 heatmap is pending a few changes!  just not my focus today.
+
+### Fig. S7
 
 
 ```{r Fig S7}
@@ -257,48 +276,14 @@ for (f in facs) {
 
 ```
 
+### Fig. S8
+```{r Fig S8 volcano, fig.width=10}
 
-```{r Fig S8 volcano}
-
-
-toptablebydrug <- readRDS("output/toptablebydrug.RDS")
-
-
-list2env(toptablebydrug,envir=.GlobalEnv)
-volcanosig <- function(df, psig.lvl) {
-    df <- df %>% 
-    mutate(threshold = ifelse(adj.P.Val > psig.lvl, "A", ifelse(adj.P.Val <= psig.lvl & logFC<=0,"B","C")))
-      # ifelse(adj.P.Val <= psig.lvl & logFC >= 0,"B", "C")))
-    
-    df <- df %>% mutate(genelabels = "")
-    
-  ggplot(df, aes(x=logFC, y=-log10(P.Value))) + 
-    geom_point(aes(color=threshold))+
-    xlab(expression("Log"[2]*" FC"))+
-    ylim(0,30)+
-    ylab(expression("-log"[10]*"P Value"))+
-    scale_color_manual(values = c("black", "red","blue"))+
-    theme_cowplot()+
-    theme(legend.position = "none",
-              plot.title = element_text(hjust = 0.5),
-              axis.title = element_text(size = rel(0.8))) 
-}
-
-v1 <- volcanosig(V.DA.top, 0.01)+ ggtitle("Daunorubicin\n 3 hr")+ ylab("")
-v2 <- volcanosig(V.DA24.top, 0.01)+ ggtitle("Daunorubicin\n 24 hr")+ylab("")
-v3 <- volcanosig(V.DX.top, 0.01)+ ggtitle("Doxorubicin\n 3 hr")
-v4 <- volcanosig(V.DX24.top, 0.01)+ ggtitle("Doxorubicin\n 24 hr")
-v5 <- volcanosig(V.EP.top, 0.01)+ ggtitle("Epirubicin\n 3 hr")
-v6 <- volcanosig(V.EP24.top, 0.01)+ ggtitle("Epirubicin\n 24 hr")
-v7 <- volcanosig(V.MT.top, 0.01)+ ggtitle("Mitoxatrone\n 3 hr")
-v8 <- volcanosig(V.MT24.top, 0.01)+ ggtitle("Mitoxatrone\n 24 hr")
-v9 <- volcanosig(V.TR.top, 0.01)+ ggtitle("Trastuzumab\n 3 hr")
-v10 <- volcanosig(V.TR24.top, 0.01)+ ggtitle("Trastuzumab\n 24 hr")
-
-plot_grid(v1,v3,v5,v7,v9,nrow=1,ncol=5, rel_widths = 0.5)
-plot_grid(v2,v4,v6,v8,v10,nrow=1,ncol=5, rel_widths = 0.5)
+Volcanoplots <- readRDS("output/Volcanoplot_10.RDS")
+Volcanoplots
 ```
 
+### Fig. S9
 
 ```{r Fig S9}
 toplistall <- readRDS("data/toplistall.RDS")
@@ -326,42 +311,89 @@ toplistall %>%
 
 
 ```
-
-```{r Fig S10}
-
-toplistall <- readRDS("data/toplistall.RDS")
+### Fig. S10
+```{r Fig S10 Drug-specific genes and pathways,fig.width=14, fig.height=8.5}
 
 
-DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
+allfinal <- readRDS("output/allfinal_sup10.RDS")
+allfinal
 
-DNRreQTLs <- readRDS("output/DNRreQTLs.RDS")
+```
+### Fig. S11
 
-EPIreQTLs <- readRDS("output/EPIreQTLs.RDS")
+```{r Fig venntimepoints}
+DNRvenn<- readRDS ("output/DNRvenn.RDS")
+DOXvenn<- readRDS ("output/DOXvenn.RDS")
+EPIvenn<- readRDS ("output/EPIvenn.RDS")
+MTXvenn<- readRDS ("output/MTXvenn.RDS")
 
-MTXreQTLs <- readRDS("output/MTXreQTLs.RDS")
+plot_grid(DNRvenn,DOXvenn,EPIvenn,MTXvenn,nrow=2, ncol = 2)
+```
 
-toplist24hr <-   toplistall %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  filter(time=="24_hours")
+### Fig. S12
+```{r Fig S12 Cormotif}
 
-toplist3hr <-   toplistall %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  filter(time=="3_hours")
+cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
+Cormotif::plotIC(cormotif_initial)
+```
 
+```{r Fig S12 Cormotif genes, fig.height=10, fig.width=8,out.width ="80%"}
+motif_NRrep <-  readRDS("output/motif_NRrep.RDS")
+motif_ERrep <-  readRDS("output/motif_ERrep.RDS")
+motif_TIrep <-  readRDS("output/motif_TI_rep.RDS")
+motif_LRrep <-  readRDS("output/motif_LRrep.RDS")
+# motif_NRrep <- motif_NRrep+theme(axis.title.y = element_text(size=1))
+
+plot_grid(motif_ERrep,motif_LRrep,motif_TIrep,motif_NRrep,nrow = 4,ncol = 1)
+motif_NRrep 
+motif_ERrep 
+motif_TIrep
+motif_LRrep
 
 ```
 
+```{r Fig S12 GO Cormotif, echo=FALSE, fig.height=15, fig.width=8, out.height="80%"}
+motif_list_GO <- readRDS("output/supplementary_motif_list_GO.RDS")
+list2env(motif_list_GO,envir=.GlobalEnv)
 
-```{r Fig S11}
+GOmotiflong <-list("Early Response"=ER3f,"Late Response"=LR3f,"Time-Independent\nResponse"=TI3f, "No Response"=NR1f)
+GOBPlong <- data.table::rbindlist(GOmotiflong, idcol = "motif")
 
 
-```
+
+p <- GOBPlong %>% 
+  mutate(motif=fct_inorder(motif)) %>% 
+  ggplot(., aes(x = log_val, y= reorder(term_name, order_val, desc=FALSE),col=motif)) +
+  geom_point(aes(size = intersection_size, col=motif)) +
+  scale_y_discrete(labels = scales::wrap_format(40))+
+  facet_grid(motif~., scales = "free_y")+
+  guides(col=guide_legend(title="Motif group"), 
+         size=guide_legend(title = "# of intersected \n terms"))+
+  ggtitle('Top 10 enriched GO:BP terms for each motif') +
+  xlab(expression("-log"[10]~"(p-value)"))+
+  ylab("GO:BP term")+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+#https://stackoverflow.com/questions/41631806/change-facet-label-text-and-background-colour/60046113#60046113
 
 
-```{r Fig S12}
-
+g <- ggplot_gtable(ggplot_build(p))
+stripr <- which(grepl('strip-r', g$layout$name))
+fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
+k <- 1
+for (i in stripr) {
+  j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+  k <- k+1
+}
+# print(grid::grid.draw(g))
+grid.draw(g)
 
 ```
 
