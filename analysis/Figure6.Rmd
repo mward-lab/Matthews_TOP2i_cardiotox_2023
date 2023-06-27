@@ -1,0 +1,125 @@
+---
+title: "Figure 6"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+```{r packages loading}
+library(car)
+library(tidyverse)
+library(tinytex)
+library(BiocGenerics)
+library(data.table)
+library(Cormotif)
+library(cowplot)
+library(ggsignif)
+library(RColorBrewer)
+library(broom)
+```
+```{r data loading}
+toplistall <- readRDS("data/toplistall.RDS")
+siglist <- readRDS("data/siglist.RDS")
+list2env(siglist, envir = .GlobalEnv)
+cpmcounts <- readRDS("data/cpmcount.RDS")
+cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+list2env(DEG_cormotif,envir=.GlobalEnv)
+drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
+
+```
+
+
+# Figure 5
+TOP2i induce a time-dependent gene expression response in cardiomyocytes  
+
+## A. Cormotif plot unedited
+```{r Cormotif}
+plotMotif(cormotif_initial)
+myColors <-  rev(c("#FFFFFF", "#E6E6E6" ,"#CCCCCC", "#B3B3B3", "#999999", "#808080", "#666666","#4C4C4C", "#333333", "#191919","#000000"))
+
+plot.new()
+legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4",  "0.5", "0.6", "0.7", "0.8","0.9", "1")), box.col="white",title = "Probability\nlegend", horiz=FALSE,title.cex=.8)
+
+```
+## B. Pie chart of motifs
+
+```{r Pie chart of groups}
+Set <- c("Early Response", "Time-Independent Response","Late Response", "No Response")
+gene_num <- c(487,589,5596,7409)
+fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
+
+pie_chartdata <- data.frame(Set, gene_num, fills)
+pie_chartdata <- pie_chartdata %>% 
+   mutate(prop = gene_num / sum(pie_chartdata$gene_num) *100) %>%
+  mutate(ypos = (prop)+ 0.5*prop )
+
+
+pie_chartdata %>% 
+  ggplot(.,aes(x="",y=gene_num, fill=Set))+
+  geom_col(width =1) +
+  coord_polar("y", pi/2)+
+  theme_void()+
+  ggtitle("Distribution of genes in each motif")+
+  geom_text(aes(label = paste0(Set," (",gene_num,")")),
+                position = position_stack(vjust =.55)) +
+  theme(legend.position="none") +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+  
+
+```
+
+## C. Average absolute value of LFC by motif
+
+```{r average LFC}
+
+lfc_nums <- readRDS("data/toplistall.RDS")
+mean_lfc <- lfc_nums %>% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
+  group_by(id,time) %>% 
+  mutate(absFC=abs(logFC)) %>% 
+  dplyr::select(id,time,absFC,ER,TI,LR,NR) %>% 
+  dplyr::summarize(ERm=mean(absFC[ER=="y"]),TIm=mean(absFC[TI=="y"]),LRm=mean(absFC[LR=="y"]),NRm=mean(absFC[NR=="y"])) %>% as.data.frame()
+
+
+mean_lfc %>% 
+   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
+  mutate(id=factor(id, levels=c("Daunorubicin" ,"Doxorubicin", "Epirubicin" , "Mitoxantrone" ,"Trastuzumab"))) %>% 
+  pivot_longer(!c(id,time), names_to = "Motif",values_to="meanLFC") %>% 
+  ggplot(., aes(x=time,y= meanLFC,col=id,group=id))+
+  geom_point()+
+  geom_line()+
+  ggpubr::fill_palette(drug_pal_fact)+
+  # guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(~Motif)+
+  theme_bw()+
+  xlab("")+
+  scale_color_manual(values=drug_pal_fact)+
+  ylab("|Log Fold Change|")+
+  theme_bw()+
+  ggtitle(" average |Log Fold| for genes across treatment each motif")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text = element_text(size = 8, color = "black", angle = 0),   
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+
+
+```
+
+
