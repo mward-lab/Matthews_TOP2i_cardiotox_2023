@@ -1,0 +1,284 @@
+---
+title: "Figure 5"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+```{r packages loading}
+library(car)
+library(tidyverse)
+library(BiocGenerics)
+library(data.table)
+library(cowplot)
+library(ggsignif)
+library(RColorBrewer)
+library(broom)
+library(limma)
+library(corrplot)
+library(ggVennDiagram)
+```
+```{r data loading}
+toplistall <- readRDS("data/toplistall.RDS")
+siglist <- readRDS("data/siglist.RDS")
+list2env(siglist, envir = .GlobalEnv)
+cpmcounts <- readRDS("data/cpmcount.RDS")
+
+```
+
+
+# Figure 5
+
+Gene expression responses to AC treatments converge over time
+
+## A. Differentially expressed genes by treatment
+
+
+```{r DEG}
+drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
+drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
+
+toplistall %>%
+  mutate(id = as.factor(id)) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  group_by(time, id) %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  count(sigcount) %>% 
+  pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %>% 
+  mutate(prop = sig/(sig+notsig)*100) %>% 
+  mutate(prop=if_else(is.na(prop),0,prop)) %>% 
+  ggplot(., aes(x=id, y= prop))+
+  geom_col(aes(fill=id))+
+  geom_text(aes(label = sprintf("%.2f",prop)),
+            position=position_dodge(0.9),vjust=-.2 )+
+  scale_fill_manual(values =drug_palNoVeh)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
+  theme_bw()+
+  xlab("")+
+  ylab("Percentage of expressed genes")+
+  theme_bw()+
+  facet_wrap(~time)+
+  ggtitle("Percent DEGs (adj. P value <0.05)")+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text.x = element_text(size = 8, color = "white", angle = 0),
+        axis.text.y = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+```
+
+
+
+
+## B. Fold change correlation across all expressed genes n=14084
+
+
+```{r corrFC}
+efit2 <- readRDS("data/efit2_final.RDS")
+FCmatrix <- subset(efit2$coefficients)
+is.matrix(subset(FCmatrix))
+colnames(FCmatrix) <- c("DNR\n3h","DOX\n3h", "EPI\n3h","MTX\n3h", "TRZ\n3h","DNR\n24h","DOX\n24h", "EPI\n24h","MTX\n24h", "TRZ\n24h")
+
+
+mat_col <- data.frame(time= c(rep("3 hours",5), rep("24 hours",5)))
+rownames(mat_col) <- colnames(FCmatrix)
+# list(group=c("#C25757", "#A77E69")
+# names(mat_colors$group) <-c("3 hours", "24 hours")
+mat_colors <- list(time=c("#C25757", "#A77E69"))
+names(mat_colors$time) <- unique(mat_col$time)
+corrFC <- cor(FCmatrix)
+
+
+pheatmap::pheatmap(corrFC, display_numbers = TRUE, number_format = "%.2f",main=("Correlation of FC values across all expressed genes, n=14084"),annotation_col = mat_col, annotation_colors = mat_colors,fontsize_row = 8,angle_col="0")
+
+
+
+```
+
+
+
+## C. Venn Diagram of 3 hour DEGs
+
+
+```{r 3_hr_venn}
+library(paletteer)
+total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID, sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL, sigVEP3$SYMBOL,sigVMT3$SYMBOL)
+
+
+ggVennDiagram::ggVennDiagram(total3,
+              category.names = c("Daunorubicin\nn = 555   ",
+                                 "Doxorubicin\nn = 16\n",
+                                 "Epirubicin\nn = 220\n",
+                                 "Mitoxantrone\n  n = 58"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(6,6,6,6),
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  scale_fill_distiller(palette="Spectral", direction = -1)+
+  labs(title = "3 hour comparison of DE genes p.adj. <0.05",
+       caption = paste("n=", length(unique(totalin_common3))))+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+
+```
+
+
+
+
+
+## D.  Venn Diagram of 24 hour DEGs
+
+
+```{r 24_hr_venn}
+
+total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
+
+
+ggVennDiagram::ggVennDiagram(total24,
+              category.names = c("Daunorubicin\n n = 7017   ",
+                                 "Doxorubicin\n n = 6645\n",
+                                 "Epirubicin\n n = 6328\n",
+                                 "Mitoxantrone\n  n = 1115"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(6,6,6,6),
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 3,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  scale_fill_distiller(palette="Spectral", direction = -1)+
+  labs(title = "24 hour comparison of DE genes p.adj. <0.05",
+       caption = paste("n=", length(unique(in_common24))))+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+
+```
+
+
+
+
+
+## E.  KEGG Pathway analysis
+
+```{r KEGG}
+# kegglistDEG <- list(DDEdegk,DDEMdegk,DAdegk,DXdegk,EPdegk, MTdegk)
+# names(kegglistDEG) <-c("DDEdegk","DDEMdegk","DAdegk","DXdegk","EPdegk", "MTdegk")
+# saveRDS(kegglistDEG,"data/kegglistDEG.RDS")
+kegglistDEG <- readRDS("data/kegglistDEG.RDS")
+list2env(kegglistDEG, envir=.GlobalEnv)
+
+
+library(ComplexHeatmap)
+  
+keggDEGlong <-list("DNR"=DAdegk,
+                 "DOX"=DXdegk,
+                 "EPI"=EPdegk,
+                 "MTX"=MTdegk,
+                 "Athracyclines"=DDEdegk,
+                 "TOP2Bi"=DDEMdegk)
+
+keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
+kegg_sig_mat <- keggtable %>% 
+  dplyr::select(deg,p_value,term_name) %>%
+  pivot_wider(id_cols = everything(),
+              names_from="term_name",
+              values_from="p_value",
+              values_fill = list(p_value = 1)) %>% 
+  column_to_rownames('deg') %>% 
+  as.matrix()# 
+
+kegg_mat<- keggtable%>%
+  dplyr::select(deg,log_val,term_name) %>% 
+  pivot_wider(id_cols = everything(),
+              names_from="term_name",values_from="log_val") %>% 
+  column_to_rownames('deg') %>% 
+  as.matrix()# 
+
+Heatmap(kegg_mat,
+        column_title = "KEGG Pathway -log p values",
+        name = "-log (p value)",
+        cluster_rows = FALSE, 
+        cluster_columns = FALSE,
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(kegg_sig_mat[i, j]< 0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+  
+
+```
+
+
+## F. Log~2~ cpm of *CDKN1a*
+
+```{r cdk1a cpm}
+cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
+  ##GOI needs to be ENTREZID
+  df <- cpmcounts
+    df_plot <- df %>% 
+      dplyr::filter(rownames(.)==GOI) %>%
+      pivot_longer(everything(),
+                   names_to = "treatment",values_to = "counts") %>%
+      separate(treatment, c("drug","indv","time")) %>%
+      mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+      mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                            "Do"~"Doxorubicin",
+                            "Ep"~"Epirubicin",
+                            "Mi"~"Mitoxantrone",
+                            "Tr"~"Trastuzumab",
+                            "Ve"~"Vehicle", .default = drug))
+    plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
+      geom_boxplot(position="identity",aes(fill=drug))+
+      geom_point(aes(col=indv, size=2, alpha=0.5))+
+      guides(alpha= "none", size= "none")+
+      scale_color_brewer(palette = brewer_palette, guide = "none")+
+      scale_fill_manual(values=fill_colors)+
+      facet_wrap("time", nrow=1, ncol=2)+
+      theme_bw()+
+      ylab(ylab)+
+      xlab("")+
+      theme(strip.background = element_rect(fill = "white"),
+          plot.title = element_text(size=18,hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text.x = element_text(size = 12, color = "white", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+    print(plot)
+}
+
+
+cpm_boxplot(cpmcounts,GOI='1026',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("CDKN1A")~log[2]~"cpm "))))
+
+
+```
+
+
