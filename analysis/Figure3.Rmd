@@ -24,6 +24,7 @@ library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
+
 ```
 ```{r loading dataframes}
 clamp_summary <- read.csv("data/Clamp_Summary.csv", row.names=1)
@@ -32,19 +33,9 @@ calcium_data <- read_csv("data/DF_Plate_Peak.csv", col_types = cols(...1 = col_s
 
 drug_palexpand <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","purple3","darkgreen", "darkblue")
 
-drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_pal_fact <- c <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 level_order2 <- c('75','87','77','79','78','71')
-label_list <- readRDS("data/label_list.RDS")
-list2env(label_list,envir =.GlobalEnv)
 
-label <- (interaction(substring(drug, 0, 2), indv, time))
-x <- readRDS("data/filtermatrix_x.RDS")
-
-x <- calcNormFactors(x, method = "TMM")
-normalized_lib_size <- x$samples$lib.size * x$samples$norm.factors
-dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size, log=TRUE)
-
-colnames(dat_cpm) <- label
 
 calcium_data <- calcium_data %>% 
   rename('Treatment'='Condition','indv'='Experiment') %>%
@@ -136,7 +127,7 @@ Calcium dysregulation occurs at sub-lethal concentrations of TOP2i
 
 
 ## B. Mean amplitude
-```{r Man_amp}
+```{r Mean_amp}
 
 clamp_summary %>% 
   dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
@@ -311,36 +302,48 @@ calcium_data %>%
 ```
 
 
-## G. PCA of `r paste("PCA of CA"^2+~" data")`
+## G. PCA of Calcium data
 
 ```{r PCA_G}
-calc_pca <- function(x) {
-  # Performs principal components analysis with prcomp
-  # x: a sample-by-gene numeric matrix
-  prcomp(x, scale. = TRUE, retx = TRUE)
-}
-time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
-
-time <- ordered(time, levels =c("3h", "24h"))
-
-anno <- readRDS("data/annotation_data_frame.RDS")
-cpm_per_sample <- cbind(anno, t(dat_cpm)) 
-pca_all <- calc_pca(t(dat_cpm))
-pca_all_anno <- data.frame(anno, pca_all$x)
 
 
-pca_all_anno %>%
-  ggplot(.,aes(x = PC1, y = PC2, col=drug, shape=time))+
-  geom_point(size= 5)+
-  scale_color_manual(values=drug_palc)+
-   ggrepel::geom_text_repel(label=indv)+
-   ggtitle(expression("PCA of log"[2]*"(cpm)"))+
+k_means <- read.csv("data/K_cluster_kisthree.csv")
+
+k_means %>% mutate(Drug =case_match(Drug_Name,
+                                    "Dau_0.5"~"Daunorubicin",
+                                    "Dau_0.5.1" ~"Daunorubicin",
+                                    "Dau_0.5.2" ~"Daunorubicin",
+                                    "Dox_0.5"~"Doxorubicin",  
+                                    "Dox_0.5.1" ~"Doxorubicin",
+                                    "Dox_0.5.2" ~"Doxorubicin",
+                                    "Epi_0.5"~"Epirubicin",
+                                    "Epi_0.5.1"~"Epirubicin",
+                                    "Epi_0.5.2"~"Epirubicin",
+                                    "Mito_0.5"~"Mitoxantrone",
+                                    "Mito_0.5.1"~"Mitoxantrone",
+                                    "Mito_0.5.2"~"Mitoxantrone",
+                                    "Tras_0.5"~"Trastuzumab", 
+                                    "Tras_0.5.1"~"Trastuzumab", 
+                                    "Tras_0.5.2"~"Trastuzumab",
+                                    "Control.1"~"Vehicle",
+                                    "Control.2"~"Vehicle",
+                                    "Control"~"Vehicle",.default = Drug_Name)) %>%
+  mutate(Drug=factor(Drug, levels = c("Vehicle", 
+                                      "Daunorubicin",
+                                      "Doxorubicin",
+                                      "Epirubicin",
+                                      "Mitoxantrone",
+                                      "Trastuzumab"))) %>%
+  mutate(Cluster=factor(Cluster)) %>%
+  ggplot(., aes(x=PC1, y=PC2, col= Drug))+
+  geom_point(shape = 17,size=7)+
+  scale_color_manual(values=drug_pal_fact)+
+  ggtitle(expression("PCA of Ca"^"2+"~"data"))+
   theme_bw()+
-  guides( size =4)+
-  labs(y = "PC 2 (15.76%)", x ="PC 1 (29.06%)")+
+  labs(x = "PC 1 (54 %)",y = "PC 2 (34%)")+
   theme(plot.title=element_text(size= 14,hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"))
-
-
-
+        axis.title = element_text(size = 10, color = "black"),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
