@@ -37,7 +37,7 @@ drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B33
 ```
 
 
-# Figure 5
+# Figure 6
 TOP2i induce a time-dependent gene expression response in cardiomyocytes  
 
 ## A. Cormotif plot unedited
