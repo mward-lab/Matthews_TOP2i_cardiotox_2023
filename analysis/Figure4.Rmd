@@ -1,0 +1,138 @@
+---
+title: "Figure 4"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{r package loading}
+library(car)
+library(tidyverse)
+library(tinytex)
+library(BiocGenerics)
+library(drc)
+library(cowplot)
+library(ggsignif)
+library(RColorBrewer)
+library(broom)
+library(edgeR)
+```
+
+# Figure 4
+
+Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
+
+## A. PCA of log~2~ cpm
+
+```{r PCA}
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+level_order2 <- c('75','87','77','79','78','71')
+
+label_list <- readRDS("data/label_list.RDS")
+list2env(label_list,envir =.GlobalEnv)
+
+label <- (interaction(substring(drug, 0, 2), indv, time))
+x <- readRDS("data/filtermatrix_x.RDS")
+
+x <- calcNormFactors(x, method = "TMM")
+normalized_lib_size <- x$samples$lib.size * x$samples$norm.factors
+dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size, log=TRUE)
+
+colnames(dat_cpm) <- label
+
+calc_pca <- function(x) {
+  # Performs principal components analysis with prcomp
+  # x: a sample-by-gene numeric matrix
+  prcomp(x, scale. = TRUE, retx = TRUE)
+}
+time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
+
+time <- ordered(time, levels =c("3h", "24h"))
+
+anno <- readRDS("data/annotation_data_frame.RDS")
+cpm_per_sample <- cbind(anno, t(dat_cpm)) 
+pca_all <- calc_pca(t(dat_cpm))
+pca_all_anno <- data.frame(anno, pca_all$x)
+
+
+pca_all_anno %>%
+  ggplot(.,aes(x = PC1, y = PC2, col=drug, shape=time))+
+  geom_point(size= 5)+
+  scale_color_manual(values=drug_pal_fact)+
+   ggrepel::geom_text_repel(label=indv)+
+   ggtitle(expression("PCA of log"[2]*"(cpm)"))+
+  theme_bw()+
+  guides( size =4)+
+  labs(y = "PC 2 (15.76%)", x ="PC 1 (29.06%)")+
+  theme(plot.title=element_text(size= 14,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"))
+
+
+
+```
+
+## B. *Top2*$\beta$ expression
+
+```{r function,echo=TRUE}
+cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
+  ##GOI needs to be ENTREZID
+  df <- cpmcounts
+    df_plot <- df %>% 
+      dplyr::filter(rownames(.)==GOI) %>%
+      pivot_longer(everything(),
+                   names_to = "treatment",values_to = "counts") %>%
+      separate(treatment, c("drug","indv","time")) %>%
+      mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+      mutate(drug =case_match(drug, "Da"~"Daunorubicin",
+                            "Do"~"Doxorubicin",
+                            "Ep"~"Epirubicin",
+                            "Mi"~"Mitoxantrone",
+                            "Tr"~"Trastuzumab",
+                            "Ve"~"Vehicle", .default = drug))
+    plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
+      geom_boxplot(position="identity",aes(fill=drug))+
+      geom_point(aes(col=indv, size=2, alpha=0.5))+
+      guides(alpha= "none", size= "none")+
+      scale_color_brewer(palette = brewer_palette, guide = "none")+
+      scale_fill_manual(values=fill_colors)+
+      facet_wrap("time", nrow=1, ncol=2)+
+      theme_bw()+
+      ylab(ylab)+
+      xlab("")+
+      theme(strip.background = element_rect(fill = "white"),
+          plot.title = element_text(size=18,hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text.x = element_text(size = 12, color = "white", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+    print(plot)
+}
+```
+
+```{r top2b}
+toplistall <- readRDS("data/toplistall.RDS") 
+cpmcounts <- readRDS("data/cpmcount.RDS")
+cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm "))))
+
+```
+
+## C. *Top2*$\alpha$ expression 
+
+```{r Top2a}
+
+cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm "))))
+
+```
