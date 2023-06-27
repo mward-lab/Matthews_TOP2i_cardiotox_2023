@@ -36,27 +36,54 @@ toplistall <- read.csv("output/toplistall.csv")
   #get sig files made with 0.05 data this way(data created on run)
 siglist <- readRDS("data/siglist.RDS")
 list2env(siglist,envir=.GlobalEnv)
-##readin the filenameonly.txt file from data to use for naming and filtering.
-# 
-# 
-# filenameonly <- read.csv("data/filenameonly.txt")
-# #loop through the list of files and make a separate dataframe for each file under the 'real'  name of the data set
-# for (k in 1:length(file.names)){
-#     assign(paste0(filenameonly$x[k]) , read.csv(file.names[k]))
-# }
-# 
-# ##rename the columns to the previous names
-# 
-# colnames(sigVDA24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVDX24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVEP24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVMT24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVTR24)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVDA3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVDX3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVEP3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVMT3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
-# colnames(sigVTR3)<- c("ENTREZID","SYMBOL","logFC","AveExpr","t","P.Value","adj.P.Val","B")
+
+```
+
+
+```{r creation of toplist, echo=TRUE, eval=FALSE}
+##creation of the toplistall file:
+efit2 <- readRDS("data/efit2_final.RDS")
+
+##define 3hr and 24 hour toplist
+V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
+V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
+V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
+V.MT.top= topTable(efit2, coef=4, adjust="BH", number=Inf, sort.by="p")
+V.TR.top= topTable(efit2, coef=5, adjust="BH", number=Inf, sort.by="p")
+
+V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf, sort.by="p")
+V.DX24.top= topTable(efit2, coef=7, adjust="BH", number=Inf, sort.by="p")
+V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
+V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
+V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
+
+toplist3hours <-list(V.DA.top[,c(1:3,4,6:7)],
+                              V.DX.top[,c(1:3,4,6:7)],
+                              V.EP.top[,c(1:3,4,6:7)],
+                              V.MT.top[,c(1:3,4,6:7)],
+                              V.TR.top[,c(1:3,4,6:7)])
+names(toplist3hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Mitoxantrone", "Trastuzumab")
+
+toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
+
+
+toplist24hours <-list(V.DA24.top[,c(1:3,4,6:7)],
+                    V.DX24.top[,c(1:3,4,6:7)],
+                    V.EP24.top[,c(1:3,4,6:7)],
+                    V.MT24.top[,c(1:3,4,6:7)],
+                    V.TR24.top[,c(1:3,4,6:7)])
+names(toplist24hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Mitoxantrone", "Trastuzumab")
+
+toplist24hours <- map_df(toplist24hours, ~as.data.frame(.x), .id="id")
+
+###Combine 3 and 24 for toplist all
+
+toplistall <- list(toplist24hours,toplist3hours)
+names(toplistall) <- c("24_hours", "3_hours")
+toplistall <-map_df(toplistall, ~as.data.frame(.x), .id="time")
+saveRDS(toplistall, "data/toplistall.RDS")
+write.csv(toplistall, "output/toplistall.csv")
+
 ```
 
 The analysis is based on all genes that passed the rowMeans\>0 from the previous page which are about 14084 genes expressed in my RNA-seq data [link](https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html)
@@ -982,7 +1009,8 @@ Because the 3 hour DEGs are low (expecially in Doxorubicin),  we have chosen to 
 Dauncomp <- list(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
 in_commonDa <- c(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
 length(unique(in_commonDa))
-ggVennDiagram(Dauncomp,
+# DNRvenn <- 
+  ggVennDiagram(Dauncomp,
               category.names = c("Daunorubicin-24","Daunorubicin-3"),
               show_intersect = FALSE,
               set_color = "black",
@@ -994,16 +1022,17 @@ ggVennDiagram(Dauncomp,
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparision of Dauno 3h v 24h", caption = "n = 8203 genes")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+  labs(title = "Comparison of DNR 3h v 24h", caption = "n = 7237 genes")+
+  theme(plot.title = element_text(size = rel(1), hjust = 0.5))
 #Davenlist <- intersect(Dauncomp[[1]],Dauncomp[[2]])
-
+# saveRDS(DNRvenn,"output/DNRvenn.RDS")
 
 # Doxocomp ----------------------------------------------------------------
 Doxcomp <- list(sigVDX24$ENTREZID,sigVDX3$ENTREZID)
 in_commonDx <- c(sigVDX24$ENTREZID,sigVDX3$ENTREZID)
 length(unique(in_commonDx))
-ggVennDiagram(Doxcomp,
+# DOXvenn <-
+  ggVennDiagram(Doxcomp,
               category.names = c("Doxorubicin-24","Doxorubicin-3"),
               show_intersect = FALSE,
               set_color = "black",
@@ -1015,9 +1044,11 @@ ggVennDiagram(Doxcomp,
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparision of Doxo 3h v 24h", caption = "n = 7573 genes")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-#Dxvenlist <- intersect(Doxcomp[[1]],Doxcomp[[2]])
+  labs(title = "Comparison of Doxo 3h v 24h", caption = "n = 6656 genes")+
+  theme(plot.title = element_text(size = rel(1), hjust = 0.5))
+# saveRDS(DOXvenn,"output/DOXvenn.RDS")
+
+# Dxvenlist <- intersect(Doxcomp[[1]],Doxcomp[[2]])
 #length(intersect(Dxvenlist,Davenlist))## 7 of DX are in DA
 # Epi Comp ----------------------------------------------------------------
 
@@ -1025,7 +1056,8 @@ Epicomp <- list(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
 in_commonEp <- c(sigVEP24$ENTREZID,sigVEP3$ENTREZID)
 length(unique(in_commonEp))
 
-ggVennDiagram(Epicomp,
+# EPIvenn <-
+  ggVennDiagram(Epicomp,
               category.names = c("Epirubicin-24","Epirubicin-3"),
               show_intersect = FALSE,
               set_color = "black",
@@ -1037,16 +1069,17 @@ ggVennDiagram(Epicomp,
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparision of Epi 3h v 24h", caption = "n = 7394 genes")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-
+  labs(title = "Comparison of EPI 3h v 24h", caption = "n = 6416 genes")+
+  theme(plot.title = element_text(size = rel(1), hjust = 0.5))
+# saveRDS(EPIvenn,"output/EPIvenn.RDS")
 #
 # Mito comp ---------------------------------------------------------------
 Mitocomp <- list(sigVMT24$ENTREZID,sigVMT3$ENTREZID)
 in_commonMt <-c(sigVMT24$ENTREZID,sigVMT3$ENTREZID)
 length(unique(in_commonMt))
 
-ggVennDiagram(Mitocomp,
+# MTXvenn<-
+  ggVennDiagram(Mitocomp,
               category.names = c("Mitoxantrone-24","Mitoxantrone-3"),
               show_intersect = FALSE,
               set_color = "black",
@@ -1058,10 +1091,10 @@ ggVennDiagram(Mitocomp,
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .21))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparision of Mito 3h v 24h", caption = "n = 1642 genes")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
+  labs(title = "Comparison of Mito 3h v 24h", caption = "n = 1174 genes")+
+  theme(plot.title = element_text(size = rel(1), hjust = 0.5))
 
-
+# saveRDS(MTXvenn,"output/MTXvenn.RDS")
 
 ```
 
@@ -1310,7 +1343,7 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = wrap_format(30))+
+    scale_y_discrete(labels = sclaes::wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Doxorubicin specific DEGs (n=342) 24 hr GO:BP terms') +
    xlab(expression(" -"~log[10]~("adj. p-value")))+
@@ -1730,6 +1763,11 @@ plot_grid(g)
 
 
 ```{r kegg 24 hour DEG heat}
+# kegglistDEG <- list(DDEdegk,DDEMdegk,DAdegk,DXdegk,EPdegk, MTdegk)
+# names(kegglistDEG) <-c("DDEdegk","DDEMdegk","DAdegk","DXdegk","EPdegk", "MTdegk")
+# saveRDS(kegglistDEG,"data/kegglistDEG.RDS")
+kegglistDEG <- readRDS("data/kegglistDEG.RDS")
+list2env(kegglistDEG, envir=.GlobalEnv)
 
 
 DDEdegk <- DDEtable24 %>% dplyr::filter(source=="KEGG") %>% 
@@ -1785,15 +1823,24 @@ keggDEGlong <-list("DNR"=DAdegk,
 keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
 
 
-kegg_mat<- keggtable%>% 
+kegg_mat<- keggtable%>%
   dplyr::select(deg,log_val,term_name) %>% 
-  pivot_wider(id_cols = everything(),names_from="term_name",values_from="log_val") %>% 
- column_to_rownames('deg') %>% 
+  pivot_wider(id_cols = everything(),
+              names_from="term_name",values_from="log_val") %>% 
+  column_to_rownames('deg') %>% 
   as.matrix()# 
 
-Heatmap(kegg_mat, name = "KEGG Pathway -log p values", cluster_rows = FALSE, cluster_columns = FALSE)
-
+Heatmap(kegg_mat,
+        column_title = "KEGG Pathway -log p values",
+        name = "-log (p value)",
+        cluster_rows = FALSE, 
+        cluster_columns = FALSE,
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(kegg_mat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
   
+
 ```
 
 

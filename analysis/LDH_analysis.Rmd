@@ -50,7 +50,7 @@ via48_full <- read.csv("data/LDH48hoursdata.csv", row.names = 1)
    mutate(Drug=factor(Drug, levels = c( "Daunorubicin", "Doxorubicin", "Epirubicin", "Mitoxantrone", "Trastuzumab","Vehicle"))) %>%
    dplyr::select(indv,Drug,Conc,Percent) %>%
   group_by(indv,Drug,Conc) %>% summarise(per.live= mean(Percent))
-  
+  # saveRDS(viability,"data/viability.RDS")
 norm_LDH <- read.csv("data/norm_LDH.csv",row.names = 1)
 norm_LDH48 <- norm_LDH %>% 
   mutate(Drug=case_match(Drug, "Control" ~"Vehicle",.default= Drug)) %>%
@@ -60,7 +60,7 @@ norm_LDH48 <- norm_LDH %>%
   group_by(indv,Drug,Conc) %>% 
   summarise(ldh= mean(norm_val))
 
-
+# saveRDS(norm_LDH48,"data/supp_normLDH48.RDS")
 
 
 
@@ -97,7 +97,7 @@ ggplot(norm_LDH48, aes(x = as.factor(Conc), y = ldh, group=as.factor(Conc))) +
   geom_point(aes(col=indv))+
   geom_smooth(method="lm")+
   facet_wrap("Drug")+
-  theme_classic()+
+  theme_bw()+
   xlab("Average viability of cardiomyocytes/100") +
   ylab("Average LDH") +
   ggtitle("Relative viability and relative LDH release at 48 hours")+

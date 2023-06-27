@@ -23,7 +23,7 @@ detachAllPackages <- function() {
 
 detachAllPackages()
 ####plotting the DXoggplots
-efit2<- readRDS(file ="data/efit2results.RDS")
+efit2<- readRDS(file ="data/efit2_final.RDS")
 
 # saveRDS(efit2, file ="data/efit2results.RDS")
 

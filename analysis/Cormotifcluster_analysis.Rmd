@@ -49,7 +49,7 @@ label <- (interaction(substring(drug, 0, 2), indv, time))
 colnames(x_counts) <- label
 group_fac <- group1
 groupid <- as.numeric(group_fac)
-
+# saveRDS(x_counts,"output/x_counts.RDS")
 compid <- data.frame(c1= c(1,2,3,4,5,7,8,9,10,11), c2 = c( 6,6,6,6,6,12,12,12,12,12))
 
 y_TMM_cpm <- cpm(x_counts, log = TRUE)
@@ -597,6 +597,9 @@ ER3f <- tabletop2Bi_ER %>%
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value))  %>% mutate(order_val=rev(as.numeric(rownames(.))))
+# motif_list_GO <- list(ER3f,TI3f,LR3f,NR1f)
+# names(motif_list_GO) <- c("ER3f","TI3f","LR3f","NR1f")
+# saveRDS(motif_list_GO,"output/supplementary_motif_list_GO.RDS")
 
 GOmotiflong <-list("Early Response"=ER3f,"Late Response"=LR3f,"Time-Independent\nResponse"=TI3f, "No Response"=NR1f)
 GOBPlong <- data.table::rbindlist(GOmotiflong, idcol = "motif")
@@ -729,7 +732,8 @@ cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 length(cpmcounts)
 colnames(cpmcounts) <- labeltop
 
-cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
+# motif_NRrep <- 
+  cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
   mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
   mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
@@ -752,6 +756,9 @@ cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  # saveRDS(motif_NRrep,"output/motif_NRrep.RDS")
+  
 
 ```
 #### Log-Fold Change of Motif_NR
@@ -788,7 +795,8 @@ lfc_nums %>%
 ## Motif_TI
 ```{r clustTI,echo=FALSE, message=FALSE, warning=FALSE}
 
-cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
+# motif_TI_rep <- 
+  cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
   mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
   mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>% mutate(time=factor(time, levels =c("3h", "24h"))) %>%
@@ -810,7 +818,7 @@ cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-
+# saveRDS(motif_TI_rep,"output/motif_TI_rep.RDS")
 ```
 #### Log-Fold Change of TI response
 ```{r TI Foldchange}
@@ -842,7 +850,8 @@ lfc_nums %>%
 ## Motif_LR
 ```{r motif_LR, echo=FALSE, message=FALSE, warning=FALSE}
 
-cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
+# motif_LRrep <- 
+  cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
   mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
   mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
@@ -866,6 +875,8 @@ cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+# saveRDS(motif_LRrep,"output/motif_LRrep.RDS")
 ```
 #### Log-Fold Change of Late Response
 ```{r motifLR LFC, message=FALSE, warning=FALSE}
@@ -898,7 +909,8 @@ lfc_nums %>%
 
 ## Motif_ER
 ```{r motif ER, echo=FALSE, message=FALSE, warning=FALSE}
-cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
+# motif_ERrep <- 
+  cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
   mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
   mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
@@ -922,6 +934,8 @@ cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+# saveRDS(motif_ERrep,"output/motif_ERrep.RDS") 
 ```
 #### Log-Fold Change of Early Response
 

@@ -694,7 +694,8 @@ thingda <-  filter(DA, SampleID==k)
   daunls[k] <- thingda.m$fit$par[3]
   # print(paste0(k, " Daunorubicin"))
 }
-
+```
+```{r DOX}
 for(k in ID){  
 thingdx <-  filter(DX, SampleID==k)
   thingdx.m <- drm(Percent~Conc, data = thingdx, fct=LL.4(c(NA, NA,1, NA),names=c("Slope","Lower Limit","Upper Limit","ED50")))
@@ -703,7 +704,8 @@ thingdx <-  filter(DX, SampleID==k)
   doxols[k] <-thingdx.m$fit$par[3]
   # print(paste0(k, " Doxorubicin"))
 }
-
+```
+```{r EPI}
  for(k in ID){ 
  thingep <-  filter(EP, SampleID==k)
   thingep.m <- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, NA,1, NA),names=c("Slope", "Lower Limit","Upper Limit","ED50")))
@@ -712,6 +714,8 @@ thingdx <-  filter(DX, SampleID==k)
   epils[k] <- thingep.m$fit$par[3]
   # print(paste0(k, " Epirubicin"))
  }
+```
+```{r MTX}
 
 for(k in ID){
   thingmt <-  filter(MT, SampleID==k)
@@ -971,11 +975,19 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
   slope_table <- read.csv("data/slope_table.csv",row.names = 1)
 
 slopecorr <- cor(slope_table)
-pheatmap::pheatmap(slopecorr,cluster_rows=FALSE,cluster_cols = FALSE, main="slope")
+heatmap(slopecorr,cluster_rows=FALSE,cluster_cols = FALSE, main="slope")
 # avgLD50 <- readRDS("data/avgLD50.RDS")
-ld50corr <- cor(ld50_table)
-corrplot::corrplot(ld50corr)
-pheatmap::pheatmap(ld50corr , cluster_rows = FALSE, cluster_cols = FALSE, main="ld50")
+
+
+
+library(ComplexHeatmap)
+col_fun1 = circlize::colorRamp2(c(-1, 1), c("white", "purple"))
+
+Heatmap(slopecorr, cluster_rows = FALSE,cluster_columns = FALSE, col = col_fun1,column_title = expression("Slope correlation"),row_title=" ",row_split = factor(rep(c("1","2","3","4","5","6"),each=2)), column_split = 
+    factor(rep(c("1","2","3","4","5","6"),each=2)))
+
+Heatmap(slopecorr, cluster_rows = FALSE,cluster_columns = FALSE, column_title = expression("Slope correlation"),row_title=" ",row_split = factor(rep(c("1","2","3","4","5","6"),each=2)), column_split = 
+    factor(rep(c("1","2","3","4","5","6"),each=2)))
 
 ```
 

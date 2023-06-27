@@ -323,7 +323,7 @@ for (b in treattype) {
  
   grid.arrange(drug_time_pca, indv_pca, drug_pca, nrow =3, top =paste(b)) 
   }
-write.csv(x$counts, "data/cpmnorm_counts.csv")
+# write.csv(x$counts, "data/cpmnorm_counts.csv")
 
 
 
@@ -347,7 +347,7 @@ prop.store <- store.var/sum(store.var)
 # prop.store %>%as.data.frame() %>%  
 #   ggplot(., aes(x=1, y=2))+
   
-
+saveRDS(pca_all_anno,"data/supp_pca_all_anno.RDS")
 ```
 ## Variance contribution from treatment, extraction time, or individual on PC1 and PC2
 
@@ -355,6 +355,8 @@ prop.store <- store.var/sum(store.var)
 facs <- c("indv", "drug", "time")
 names(facs) <- c("Individual", "Treatment", "Time")
 drug1 <- unique(drug)##for changing shapes and colors
+
+##gglistmaking
 for (f in facs) {
   # PC1 v PC2
   pca_plot(pca_all_anno, col_var = f, shape_var = time,
@@ -365,7 +367,7 @@ for (f in facs) {
   f_v_pc1 <- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f))
   f_v_pc2 <- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f))
   grid.arrange(f_v_pc1, f_v_pc2, ncol = 2, top = names(facs)[which(facs == f)])
-  #summary(plot_versus_pc(pca_all_anno, 1, f))
+  # summary(plot_versus_pc(pca_all_anno, 1, f))
   #summary(plot_versus_pc(pca_all_anno, 2, f))
 }
 library(ggfortify)
@@ -373,7 +375,7 @@ library(ggfortify)
 # autoplot(saveddata,  x=1,y=2)
 
 
-
+print(last_plot())
 ```
 
 
