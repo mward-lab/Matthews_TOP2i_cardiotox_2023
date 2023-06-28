@@ -93,7 +93,7 @@ GTEXcr8z %>%
 ```
 
 ## B. 24 hour DEG enrichment in reQTLs
-```{r reQTLenrich}
+```{r reQTLenrich,fig.height=3}
 
 knowles4 <-readRDS("output/knowles4.RDS")
 knowles5 <-readRDS("output/knowles5.RDS")
@@ -136,7 +136,7 @@ Knowles_count <-
 
 
 ## C. DOXreQTLS strongly overlap other AC drugs
-```{r DOXreQTLs across other treatments}
+```{r DOXreQTLs across other treatments,fig.height=3}
 DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
 DOXeQTL_table <- toplistall %>% 
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
