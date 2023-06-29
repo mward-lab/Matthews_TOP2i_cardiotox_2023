@@ -119,10 +119,10 @@ totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL, sigVEP3$SYMBOL,sigVMT3$SYMBO
 
 
 ggVennDiagram::ggVennDiagram(total3,
-              category.names = c("Daunorubicin\nn = 555   ",
-                                 "Doxorubicin\nn = 16\n",
-                                 "Epirubicin\nn = 220\n",
-                                 "Mitoxantrone\n  n = 58"),
+              category.names = c("Daunorubicin\nn = 532   ",
+                                 "Doxorubicin\nn = 19\n",
+                                 "Epirubicin\nn = 210\n",
+                                 "Mitoxantrone\n  n = 75"),
               show_intersect = FALSE,
               set_color = "black",
               category_size = c(6,6,6,6),
@@ -137,7 +137,7 @@ ggVennDiagram::ggVennDiagram(total3,
   scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
   scale_fill_distiller(palette="Spectral", direction = -1)+
   labs(title = "3 hour comparison of DE genes p.adj. <0.05",
-       caption = paste("n=", length(unique(totalin_common3))))+
+       caption = paste("n =", length(unique(totalin_common3)),"genes"))+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 
 
@@ -160,7 +160,7 @@ ggVennDiagram::ggVennDiagram(total24,
               category.names = c("Daunorubicin\n n = 7017   ",
                                  "Doxorubicin\n n = 6645\n",
                                  "Epirubicin\n n = 6328\n",
-                                 "Mitoxantrone\n  n = 1115"),
+                                 " Mitoxantrone\n   n = 1115"),
               show_intersect = FALSE,
               set_color = "black",
               category_size = c(6,6,6,6),
@@ -175,7 +175,8 @@ ggVennDiagram::ggVennDiagram(total24,
   scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
   scale_fill_distiller(palette="Spectral", direction = -1)+
   labs(title = "24 hour comparison of DE genes p.adj. <0.05",
-       caption = paste("n=", length(unique(in_common24))))+
+       caption = paste("n =", length(unique(in_common24)),"genes"))+
+  
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 
 
