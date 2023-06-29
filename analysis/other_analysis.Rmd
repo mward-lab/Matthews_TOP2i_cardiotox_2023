@@ -98,7 +98,7 @@ toplist24hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
-  summarize(ARRcount=n())%>% 
+  dplyr::summarize(ARRcount=n())%>% 
     pivot_wider(id_cols = c(id,sigcount), names_from=c(ARR), values_from=ARRcount) %>% 
    mutate(ARRprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=ARRprop)) +
@@ -116,7 +116,7 @@ dataframARR <- toplist24hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
-  summarize(ARRcount=n()) %>% 
+  dplyr::summarize(ARRcount=n()) %>% 
   as.data.frame()
 
 dataframARR %>% 
