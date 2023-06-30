@@ -37,7 +37,9 @@ Data set comparisons
 
 [GTEx data](https://reneeisnowhere.github.io/Cardiotoxicity/GTEx_genes.html)  
 
-[Other data/Seoane/GWAS/crispr](https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html)
+[Other data/GWAS/crispr](https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html)
+
+[Seoane data](https://reneeisnowhere.github.io/Cardiotoxicity/Seoane_chrom.html)
 
 ### Paper figures
 [Figure 1](https://reneeisnowhere.github.io/Cardiotoxicity/Figure1.html)  
