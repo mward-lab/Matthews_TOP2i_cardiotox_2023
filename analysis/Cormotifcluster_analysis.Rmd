@@ -25,6 +25,7 @@ library(ggpubr)
 ```
 
 # Creation of the data set:
+
 ```{r echo=FALSE, r,file='corMotifcustom.R'}
 
 ```
@@ -60,7 +61,7 @@ set.seed(12345)
 cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
                              groupid = groupid,
                              compid = compid,
-                             K=1:8, max.iter = 500,runtype="logCPM")
+                               K=1:8, max.iter = 500, runtype="logCPM")
 gene_prob_tran <- cormotif_initial$bestmotif$p.post
 rownames(gene_prob_tran) <- rownames(y_TMM_cpm)
 motif_prob <- cormotif_initial$bestmotif$clustlike
@@ -74,6 +75,8 @@ cormotif_initial was created after calling corMotif, then running the corMotifcu
 After generating the Motifs from 1 to 8, the number of motifs that best fit the data was 4 using the BIC and AIC results below.
 
 ```{r plot motifs,fig.keep='all',echo=TRUE, message=FALSE, warning=FALSE}
+
+
 cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
 myColors <-  rev(c("#FFFFFF", "#E6E6E6" ,"#CCCCCC", "#B3B3B3", "#999999", "#808080", "#666666","#4C4C4C", "#333333", "#191919","#000000"))
 
@@ -89,20 +92,17 @@ Viewing the motifs, the following groups were named:
 
 -   Motif 1: No Response (n=7409)
 
--   Motif 2: Top2$\beta$ inhibitor response, Time-independent     
+-   Motif 2: Top2 inhibitor response, Time-independent
 
-    + (Time-independent response, n= 589)
+    -   (Time-independent response, n= 589)
 
--   Motif 3: Top2$\beta$ inhibitor response, Early 
+-   Motif 3: Top2 inhibitor response, Early
 
-    + (Early response, n= 487)
-    
--   Motif 4: Top2$\beta$ inhibitor response, Late 
+    -   (Early response, n= 487)
 
-    + (Late response, n= 5596)
-    
-    
+-   Motif 4: Top2 inhibitor response, Late
 
+    -   (Late response, n= 5596)
 
 ```{r cormotif_inital analysis, eval= FALSE,echo=TRUE, message=FALSE, warning=FALSE}
 clust1 <- motif_prob %>%
@@ -213,19 +213,18 @@ pie_chartdata %>%
   
  
 ```
+
 The genes belonging to each set were identified by the following:
 
-motif 1-  No Response set: 7504 (gene list made by filtering likelihood of gene belonging to cluster 1 <0.5) 
+motif 1- No Response set: 7504 (gene list made by filtering likelihood of gene belonging to cluster 1 \<0.5)
 
-motif 2-  Time-independent Top2$\beta$i response cluster: 528 (gene list made by filtering likelihood of gene belonging to cluster 2 <0.5) 
+motif 2- Time-independent Top2i response cluster: 528 (gene list made by filtering likelihood of gene belonging to cluster 2 \<0.5)
 
-motif 3- Early Top2$\beta$i response cluster: 444 (gene list made by filtering likelihood of gene belonging to cluster 3 <0.5) 
+motif 3- Early Top2i response cluster: 444 (gene list made by filtering likelihood of gene belonging to cluster 3 \<0.5)
 
-motif 4-  Late Top2$\beta$i response cluster: 5545 (gene list made by filtering likelihood of gene belonging to cluster 4 <0.5) 
+motif 4- Late Top2i response cluster: 5545 (gene list made by filtering likelihood of gene belonging to cluster 4 \<0.5)
 
-
-There was overlap between the previous sets and the new sets, so I moved on expecting similar responses in the GO analysis.  I did subset out the genes not used overall from the background gene list (rowmeans>0 from log(cpm(count matrix)))
-## GO and KEGG of each set  
+There was overlap between the previous sets and the new sets, so I moved on expecting similar responses in the GO analysis. I did subset out the genes not used overall from the background gene list (rowmeans\>0 from log(cpm(count matrix))) \## GO and KEGG of each set
 
 ```{r cormotif genelist analysis, message=FALSE, warning=FALSE}
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
@@ -234,15 +233,16 @@ list2env(DEG_cormotif,envir=.GlobalEnv)
 # motif_TI <- DEG_cormotif$motif_TI
 # motif_LR <- DEG_cormotif$motif_LR
 # motif_ER <- DEG_cormotif$motif_ER
-  
+ 
 backGL <- read.csv("data/backGL.txt")
 #NRresp <- read_csv("data/cormotif_NRset.txt")
 
 ```
 
-### No response motif genes  
+### No response motif genes
 
-GO:BP
+<GO:BP>
+
 ```{r noresponse data motif1, echo=FALSE, message=FALSE, warning=FALSE}
 # gostrescoNR <- gost(query = motif_NR ,
 #                      organism = "hsapiens",
@@ -255,7 +255,7 @@ GO:BP
 #                        custom_bg = backGL$ENTREZID,
 #                        sources=c("GO:BP", "KEGG"))
 
-#saveRDS(gostrescoNR, "data/gostrescoNR.")
+# saveRDS(gostrescoNR, "data/gostrescoNR.")
 gostrescoNR <- readRDS("data/gostrescoNR")
 cormotifNRcluster <- gostplot(gostrescoNR, capped = FALSE, interactive = TRUE)
 cormotifNRcluster
@@ -264,7 +264,7 @@ cormotifNRcluster
 tableNR <- gostrescoNR$result %>%
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
 tableNR%>% 
-  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
   kable(.,) %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
@@ -282,7 +282,7 @@ tableNR%>%
    xlab(expression("-log"[10]~"(p-value)"))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ylab("GO: BP term")+
-    scale_y_discrete(labels = wrap_format(30))+
+    scale_y_discrete(labels = scales::label_wrap(30))+
       theme_bw()+
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
@@ -303,7 +303,7 @@ tableNR%>%
                  col=intersection_size)) +
     geom_point(aes(size = intersection_size, col="red")) +
     ggtitle('No response enriched KEGG terms') +
-    scale_y_discrete(labels = wrap_format(30))+
+    scale_y_discrete(labels = scales::label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     xlab(expression("-log"[10]~"(p-value)"))+
     ylab("KEGG term")+
@@ -320,7 +320,9 @@ tableNR%>%
 ```
 
 ### Late response Top2$\beta$ inhibitor motif genes
-GO:BP/KEGG
+
+<GO:BP/KEGG>
+
 ```{r Top2iLR motif set, echo=FALSE, message=FALSE, warning=FALSE}
 
 
@@ -344,7 +346,7 @@ tabletop2Bi_LR <- gostresTop2bi_LR$result %>%
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
   
 tabletop2Bi_LR%>% 
-  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
   kable(.,) %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
@@ -358,7 +360,7 @@ tabletop2Bi_LR%>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,log_val), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = wrap_format(30))+
+    scale_y_discrete(labels = scales::label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Late Response enriched GO:BP terms') +
     xlab(expression("-log"[10]~"(p-value)"))+
@@ -380,7 +382,7 @@ tabletop2Bi_LR%>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size, col="red")) +
-   scale_y_discrete(labels = wrap_format(30))+
+   scale_y_discrete(labels = scales::label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Late Response enriched KEGG terms') +
    xlab(expression("-log"[10]~"(p-value)"))+
@@ -397,8 +399,10 @@ tabletop2Bi_LR%>%
 
 ```
 
-###  Early Response Top2$\beta$ inhibitor motif genes
-GO:BP/KEGG
+### Early Response Top2 inhibitor motif genes
+
+<GO:BP/KEGG>
+
 ```{r Top2iER set motif, echo=FALSE, message=FALSE, warning=FALSE}
 
 
@@ -412,13 +416,13 @@ GO:BP/KEGG
 #                       correction_method = c("fdr"),
 #                       custom_bg = backGL$ENTREZID,
 #                       sources=c("GO:BP", "KEGG"))
- #saveRDS(gostresTop2bi_ER, "data/gostresTop2bi_ER.RDS")
+# saveRDS(gostresTop2bi_ER, "data/gostresTop2bi_ER.RDS")
 
 gostresTop2bi_ER <- readRDS("data/gostresTop2bi_ER.RDS")
 cormotifrespTop2bi_ER <- gostplot(gostresTop2bi_ER, capped = FALSE, interactive = TRUE)
 
 gostresTop2bi_ER$result %>% 
-  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
   kable(.,) %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
@@ -428,12 +432,12 @@ tabletop2Bi_ER <- gostresTop2bi_ER$result %>%
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
 write.csv(tabletop2Bi_ER,"output/tabletop2Bi_ER.csv")
 #%>% 
-  # mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  # mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
   # kable(.,) %>% 
   # kable_paper("striped", full_width = FALSE) %>%  
   # kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover"))
 tabletop2Bi_ER %>% 
-  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
   kable(.,) %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
@@ -447,7 +451,7 @@ tabletop2Bi_ER %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = wrap_format(35))+
+    scale_y_discrete(labels = scales::label_wrap(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Early Response enriched GO:BP terms') +
     xlab(expression("-log"[10]~"(p-value)"))+
@@ -468,7 +472,7 @@ tabletop2Bi_ER %>%
    ggplot(., aes(x = log_val,y = reorder(term_name,p_value),
                  col=intersection_size)) +
   geom_point(aes(size = intersection_size, col="red")) +
-  scale_y_discrete(labels = wrap_format(35))+
+  scale_y_discrete(labels = scales::label_wrap(35))+
   guides(col="none", 
          size=guide_legend(title ="# of intersected \n terms"))+
   ggtitle('Early Response enriched KEGG terms') +
@@ -485,8 +489,10 @@ tabletop2Bi_ER %>%
 
 ```
 
-### Time-independent Top2$\beta$ inhibitor motif genes
-GO:BP/KEGG
+### Time-independent Top2inhibitor motif genes
+
+<GO:BP/KEGG>
+
 ```{r time independent, echo=FALSE, message=FALSE, warning=FALSE  }
 
 # gostresTop2bi_TI <- gost(query = c(motif_TI),
@@ -499,8 +505,8 @@ GO:BP/KEGG
 #                       correction_method = c("fdr"),
 #                       custom_bg = backGL$ENTREZID,
 #                       sources=c("GO:BP", "KEGG"))
-# 
-#  saveRDS(gostresTop2bi_TI, "data/gostresTop2bi_TI.RDS")
+
+ # saveRDS(gostresTop2bi_TI, "data/gostresTop2bi_TI.RDS")
 
 gostresTop2bi_TI <- readRDS("data/gostresTop2bi_TI.RDS")
 cormotifrespTop2bi_TI <- gostplot(gostresTop2bi_TI, capped = FALSE, interactive = TRUE)
@@ -512,7 +518,7 @@ tabletop2Bi_TI <- gostresTop2bi_TI$result %>%
 write.csv(tabletop2Bi_TI,"output/tabletop2Bi_TI.csv")
 
 tabletop2Bi_TI %>% 
-  mutate_at(.cols = 6, .funs= scientific_format()) %>% 
+  mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
   kable(.,) %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
@@ -530,7 +536,7 @@ tabletop2Bi_TI %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = wrap_format(35))+
+    scale_y_discrete(labels = scales::label_wrap(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Time independent response enriched GO:BP terms') +
     xlab(expression("-log"[10]~"(p-value)"))+
@@ -554,7 +560,7 @@ tabletop2Bi_TI %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
     geom_point(aes(size = intersection_size, col="red")) +
-  scale_y_discrete(labels = wrap_format(35))+
+  scale_y_discrete(labels = scales::label_wrap(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Time independent response enriched KEGG terms') +
    xlab(expression("-log"[10]~"(p-value)"))+
@@ -571,9 +577,9 @@ tabletop2Bi_TI %>%
 
 ```
 
-### long GO:BP frame
+### long <GO:BP> frame
 
-```{r all go in one loooooong frame, echo=FALSE, fig.height=15, fig.width=8, message=FALSE, warning=FALSE}
+```{r all go in one loooooong frame, echo=FALSE, fig.height=16, fig.width=8, message=FALSE, warning=FALSE}
 
 NR1f <- tableNR %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
@@ -607,7 +613,7 @@ p <- GOBPlong %>% mutate(motif=fct_inorder(motif)) %>%
   
 ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=FALSE),col=motif)) +
     geom_point(aes(size = intersection_size, col=motif)) +
-  scale_y_discrete(labels = wrap_format(40))+
+  scale_y_discrete(labels = scales::label_wrap(40))+
   facet_grid(motif~., scales = "free_y")+
   
     guides(col=guide_legend(title="Motif group"), size=guide_legend(title = "# of intersected \n terms"))+
@@ -674,7 +680,7 @@ KEGGlong <- data.table::rbindlist(KEGGmotiflong, idcol = "motif")
 KEGGlong %>% group_by(motif) %>% 
 ggplot(., aes(x = log_val, y =reorder(term_name,p_value,desc=FALSE),col=motif)) +
     geom_point(aes(size = intersection_size, col=motif)) +
-  scale_y_discrete(limits=rev,labels = wrap_format(30))+
+  scale_y_discrete(limits=rev,labels = scales::label_wrap(30))+
     guides(col=guide_legend(title="Motif group"), size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Top enriched KEGG terms for each motif') +
     xlab(expression("-log"[10]~"(p-value)"))+
@@ -689,9 +695,11 @@ ggplot(., aes(x = log_val, y =reorder(term_name,p_value,desc=FALSE),col=motif)) 
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 ```
+
 # Example of genes from each cluster
 
 ## Motif_NR
+
 ```{r clust1NR gene,echo=FALSE, message=FALSE, warning=FALSE}
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
@@ -730,8 +738,8 @@ Motif_expr<- getBM(attributes=my_attributes,filters ='entrezgene_id',
 #namelist <- c("1026"="CDKN1A","23411"= "SIRT1","27113"= "BBC3","4193"= "MDM2")
 cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 length(cpmcounts)
-colnames(cpmcounts) <- labeltop
-
+colnames(cpmcounts) <- label
+# saveRDS(cpmcounts,"data/cpmcount.RDS")
 # motif_NRrep <- 
   cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
@@ -761,6 +769,7 @@ colnames(cpmcounts) <- labeltop
   
 
 ```
+
 #### Log-Fold Change of Motif_NR
 
 ```{r LFC motif NR}
@@ -789,10 +798,8 @@ lfc_nums %>%
 
 ```
 
-
-
-
 ## Motif_TI
+
 ```{r clustTI,echo=FALSE, message=FALSE, warning=FALSE}
 
 # motif_TI_rep <- 
@@ -820,7 +827,9 @@ lfc_nums %>%
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 # saveRDS(motif_TI_rep,"output/motif_TI_rep.RDS")
 ```
+
 #### Log-Fold Change of TI response
+
 ```{r TI Foldchange}
 lfc_nums %>% 
   dplyr::filter(ENTREZID %in% motif_TI) %>% 
@@ -845,9 +854,8 @@ lfc_nums %>%
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 ```
 
-
-
 ## Motif_LR
+
 ```{r motif_LR, echo=FALSE, message=FALSE, warning=FALSE}
 
 # motif_LRrep <- 
@@ -878,7 +886,9 @@ lfc_nums %>%
 
 # saveRDS(motif_LRrep,"output/motif_LRrep.RDS")
 ```
+
 #### Log-Fold Change of Late Response
+
 ```{r motifLR LFC, message=FALSE, warning=FALSE}
 lfc_nums %>% 
   dplyr::filter(ENTREZID %in% motif_LR) %>% 
@@ -908,6 +918,7 @@ lfc_nums %>%
 ```
 
 ## Motif_ER
+
 ```{r motif ER, echo=FALSE, message=FALSE, warning=FALSE}
 # motif_ERrep <- 
   cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
@@ -937,6 +948,7 @@ lfc_nums %>%
 
 # saveRDS(motif_ERrep,"output/motif_ERrep.RDS") 
 ```
+
 #### Log-Fold Change of Early Response
 
 ```{r lfc_ER, message=FALSE, warning=FALSE}
@@ -964,6 +976,7 @@ lfc_nums %>%
  
 
 ```
+
 ```{r burridge way of lfc, echo=FALSE}
 ##  I want the mean lfc by cluster with sid deg and non sid deg at 3 and 24 hourslfc_nums %>% 
 
@@ -1006,5 +1019,3 @@ mean_lfc %>%
 
 
 ```
-
-
