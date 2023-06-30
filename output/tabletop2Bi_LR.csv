@@ -1,67 +1,71 @@
 "","source","term_id","term_name","intersection_size","term_size","p_value"
-"1","GO:BP","GO:0007059","chromosome segregation",207,378,4.06500756804065e-06
-"2","GO:BP","GO:0000280","nuclear division",190,354,8.76086531101536e-05
-"3","GO:BP","GO:0051301","cell division",284,567,0.000173188061630798
-"4","GO:BP","GO:0007049","cell cycle",689,1522,0.000411273902723965
-"5","GO:BP","GO:0098813","nuclear chromosome segregation",155,287,0.000442477753620701
-"6","GO:BP","GO:0007051","spindle organization",107,186,0.000512930374150328
-"7","GO:BP","GO:0000070","mitotic sister chromatid segregation",110,193,0.000575025351896893
-"8","GO:BP","GO:0140014","mitotic nuclear division",143,264,0.000650167864818465
-"9","GO:BP","GO:0006261","DNA-templated DNA replication",88,149,0.000741641102983494
-"10","GO:BP","GO:0048285","organelle fission",203,397,0.000741641102983494
-"11","GO:BP","GO:0061982","meiosis I cell cycle process",53,80,0.000885403787812048
-"12","GO:BP","GO:0022402","cell cycle process",495,1075,0.000931257224645803
-"13","GO:BP","GO:0140013","meiotic nuclear division",73,121,0.00168057211171923
-"14","GO:BP","GO:0000278","mitotic cell cycle",390,833,0.00170702698966596
-"15","GO:BP","GO:0007127","meiosis I",50,76,0.00181116937830759
-"16","GO:BP","GO:1903046","meiotic cell cycle process",80,136,0.00184941187918806
-"17","GO:BP","GO:0000226","microtubule cytoskeleton organization",268,552,0.00203110191945574
-"18","GO:BP","GO:0000819","sister chromatid segregation",126,234,0.00206572746876045
-"19","GO:BP","GO:0045132","meiotic chromosome segregation",46,69,0.00209187611904924
-"20","GO:BP","GO:1903047","mitotic cell cycle process",331,700,0.00251442899514885
-"21","GO:BP","GO:0051276","chromosome organization",261,543,0.00574486775947409
-"22","GO:BP","GO:0007017","microtubule-based process",352,756,0.00638714801724113
-"23","GO:BP","GO:0006260","DNA replication",134,258,0.00924440078887555
-"24","GO:BP","GO:2001251","negative regulation of chromosome organization",55,90,0.00982703913800454
-"25","GO:BP","GO:0070925","organelle assembly",370,803,0.0106172789648902
-"26","GO:BP","GO:0051716","cellular response to stimulus",2043,4935,0.0113915118347294
-"27","GO:BP","GO:0050896","response to stimulus",2360,5741,0.0134800480893578
-"28","GO:BP","GO:0032465","regulation of cytokinesis",49,79,0.0135227708827833
-"29","GO:BP","GO:1902850","microtubule cytoskeleton organization involved in mitosis",86,156,0.0144657974297951
-"30","GO:BP","GO:0045930","negative regulation of mitotic cell cycle",110,208,0.0144657974297951
-"31","GO:BP","GO:0045839","negative regulation of mitotic nuclear division",36,54,0.0149233913321365
-"32","GO:BP","GO:2000816","negative regulation of mitotic sister chromatid separation",32,47,0.0188948004782758
-"33","GO:BP","GO:0033048","negative regulation of mitotic sister chromatid segregation",32,47,0.0188948004782758
-"34","GO:BP","GO:0046474","glycerophospholipid biosynthetic process",101,190,0.0188948004782758
-"35","GO:BP","GO:0033046","negative regulation of sister chromatid segregation",32,47,0.0188948004782758
-"36","GO:BP","GO:0008654","phospholipid biosynthetic process",122,236,0.0188948004782758
-"37","GO:BP","GO:0045017","glycerolipid biosynthetic process",114,219,0.0208746080069289
-"38","GO:BP","GO:0006996","organelle organization",1253,2971,0.0222554675027982
-"39","GO:BP","GO:0051784","negative regulation of nuclear division",37,57,0.0222683155214024
-"40","GO:BP","GO:0071174","mitotic spindle checkpoint signaling",30,44,0.0258961041175011
-"41","GO:BP","GO:0071173","spindle assembly checkpoint signaling",30,44,0.0258961041175011
-"42","GO:BP","GO:0007094","mitotic spindle assembly checkpoint signaling",30,44,0.0258961041175011
-"43","GO:BP","GO:0045841","negative regulation of mitotic metaphase/anaphase transition",31,46,0.0271986287366775
-"44","GO:BP","GO:1905819","negative regulation of chromosome separation",32,48,0.0276429200791905
-"45","GO:BP","GO:0051985","negative regulation of chromosome segregation",32,48,0.0276429200791905
-"46","GO:BP","GO:0007093","mitotic cell cycle checkpoint signaling",75,136,0.0278720642796467
-"47","GO:BP","GO:0006270","DNA replication initiation",25,35,0.0278737094149772
-"48","GO:BP","GO:0033047","regulation of mitotic sister chromatid segregation",34,52,0.0285219278094687
-"49","GO:BP","GO:0051304","chromosome separation",45,74,0.0310193006122326
-"50","GO:BP","GO:0000075","cell cycle checkpoint signaling",95,180,0.0310193006122326
-"51","GO:BP","GO:0007052","mitotic spindle organization",71,128,0.0310193006122326
-"52","GO:BP","GO:0021537","telencephalon development",103,198,0.0338669011649044
-"53","GO:BP","GO:0051225","spindle assembly",66,118,0.0352247895680257
-"54","GO:BP","GO:0031577","spindle checkpoint signaling",30,45,0.0378558337289619
-"55","GO:BP","GO:0045786","negative regulation of cell cycle",163,334,0.0384175956101469
-"56","GO:BP","GO:1902100","negative regulation of metaphase/anaphase transition of cell cycle",31,47,0.0384175956101469
-"57","GO:BP","GO:1901653","cellular response to peptide",139,280,0.042580615382562
-"58","GO:BP","GO:1905818","regulation of chromosome separation",42,69,0.0432684399946633
-"59","GO:BP","GO:0051256","mitotic spindle midzone assembly",9,9,0.0443422779584528
-"60","GO:BP","GO:0090407","organophosphate biosynthetic process",241,517,0.0481023184240027
-"61","GO:BP","GO:0010889","regulation of sequestering of triglyceride",11,12,0.0481023184240027
-"62","GO:BP","GO:0019692","deoxyribose phosphate metabolic process",26,38,0.0481023184240027
-"63","GO:BP","GO:0051255","spindle midzone assembly",11,12,0.0481023184240027
-"64","GO:BP","GO:0009262","deoxyribonucleotide metabolic process",26,38,0.0481023184240027
-"65","KEGG","KEGG:00230","Purine metabolism",56,97,0.0267105727524896
-"66","KEGG","KEGG:03030","DNA replication",25,35,0.0267105727524896
+"1","GO:BP","GO:0007059","chromosome segregation",200,369,2.59809321274835e-05
+"2","GO:BP","GO:0000280","nuclear division",185,344,0.000113560027033077
+"3","GO:BP","GO:0051301","cell division",286,570,0.000128740224033414
+"4","GO:BP","GO:0007049","cell cycle",694,1529,0.000232523312018932
+"5","GO:BP","GO:0006261","DNA-templated DNA replication",89,148,0.00041740935473623
+"6","GO:BP","GO:0022402","cell cycle process",502,1086,0.000643948239424658
+"7","GO:BP","GO:0098813","nuclear chromosome segregation",147,273,0.000643948239424658
+"8","GO:BP","GO:0061982","meiosis I cell cycle process",54,81,0.000643948239424658
+"9","GO:BP","GO:0007051","spindle organization",107,188,0.000643948239424658
+"10","GO:BP","GO:0140014","mitotic nuclear division",137,251,0.000643948239424658
+"11","GO:BP","GO:0048285","organelle fission",198,388,0.000988539322404668
+"12","GO:BP","GO:0000070","mitotic sister chromatid segregation",102,179,0.000988539322404668
+"13","GO:BP","GO:0007127","meiosis I",51,77,0.00122537289708544
+"14","GO:BP","GO:0000278","mitotic cell cycle",387,827,0.00204051384012111
+"15","GO:BP","GO:1903047","mitotic cell cycle process",329,694,0.00277436798712759
+"16","GO:BP","GO:0006260","DNA replication",135,255,0.00349742732188141
+"17","GO:BP","GO:0045132","meiotic chromosome segregation",43,64,0.00359228535505651
+"18","GO:BP","GO:0140013","meiotic nuclear division",71,120,0.00426719399688795
+"19","GO:BP","GO:0000226","microtubule cytoskeleton organization",266,552,0.00426719399688795
+"20","GO:BP","GO:1903046","meiotic cell cycle process",78,135,0.00505336166905432
+"21","GO:BP","GO:0007017","microtubule-based process",353,760,0.00864456431714686
+"22","GO:BP","GO:2001251","negative regulation of chromosome organization",55,90,0.0107684482919169
+"23","GO:BP","GO:0000819","sister chromatid segregation",115,217,0.0113166980910081
+"24","GO:BP","GO:0045930","negative regulation of mitotic cell cycle",112,211,0.0125895230544809
+"25","GO:BP","GO:0051716","cellular response to stimulus",2050,4953,0.0130299294341517
+"26","GO:BP","GO:0032465","regulation of cytokinesis",49,79,0.0137961530480751
+"27","GO:BP","GO:0070925","organelle assembly",375,817,0.0137961530480751
+"28","GO:BP","GO:0051276","chromosome organization",258,543,0.0137961530480751
+"29","GO:BP","GO:0008654","phospholipid biosynthetic process",122,234,0.0137961530480751
+"30","GO:BP","GO:0045839","negative regulation of mitotic nuclear division",36,54,0.0154554677822536
+"31","GO:BP","GO:0046474","glycerophospholipid biosynthetic process",101,189,0.0167459651634793
+"32","GO:BP","GO:1902850","microtubule cytoskeleton organization involved in mitosis",86,157,0.0176142295176317
+"33","GO:BP","GO:0050896","response to stimulus",2369,5770,0.0176142295176317
+"34","GO:BP","GO:0045017","glycerolipid biosynthetic process",114,218,0.0177692934616065
+"35","GO:BP","GO:0033046","negative regulation of sister chromatid segregation",32,47,0.0179431484762677
+"36","GO:BP","GO:0033048","negative regulation of mitotic sister chromatid segregation",32,47,0.0179431484762677
+"37","GO:BP","GO:2000816","negative regulation of mitotic sister chromatid separation",32,47,0.0179431484762677
+"38","GO:BP","GO:0019692","deoxyribose phosphate metabolic process",26,36,0.017982128232942
+"39","GO:BP","GO:0009262","deoxyribonucleotide metabolic process",26,36,0.017982128232942
+"40","GO:BP","GO:0007093","mitotic cell cycle checkpoint signaling",77,139,0.0212284999223378
+"41","GO:BP","GO:0051784","negative regulation of nuclear division",37,57,0.0212284999223378
+"42","GO:BP","GO:0071173","spindle assembly checkpoint signaling",30,44,0.0244384688602412
+"43","GO:BP","GO:0071174","mitotic spindle checkpoint signaling",30,44,0.0244384688602412
+"44","GO:BP","GO:0007094","mitotic spindle assembly checkpoint signaling",30,44,0.0244384688602412
+"45","GO:BP","GO:0000075","cell cycle checkpoint signaling",97,183,0.0244384688602412
+"46","GO:BP","GO:0045841","negative regulation of mitotic metaphase/anaphase transition",31,46,0.0254609947625313
+"47","GO:BP","GO:1905819","negative regulation of chromosome separation",32,48,0.0257041703177668
+"48","GO:BP","GO:0051985","negative regulation of chromosome segregation",32,48,0.0257041703177668
+"49","GO:BP","GO:0045786","negative regulation of cell cycle",166,338,0.0257041703177668
+"50","GO:BP","GO:0006270","DNA replication initiation",25,35,0.0257041703177668
+"51","GO:BP","GO:0009394","2'-deoxyribonucleotide metabolic process",25,35,0.0257041703177668
+"52","GO:BP","GO:0033047","regulation of mitotic sister chromatid segregation",34,52,0.0263735206565349
+"53","GO:BP","GO:0051304","chromosome separation",46,76,0.0291756878716856
+"54","GO:BP","GO:0006996","organelle organization",1261,3000,0.0302767786781906
+"55","GO:BP","GO:0071417","cellular response to organonitrogen compound",229,485,0.0312221112506099
+"56","GO:BP","GO:0031577","spindle checkpoint signaling",30,45,0.0365464353814765
+"57","GO:BP","GO:0021537","telencephalon development",104,201,0.0365967703153232
+"58","GO:BP","GO:1902100","negative regulation of metaphase/anaphase transition of cell cycle",31,47,0.0365967703153232
+"59","GO:BP","GO:0007052","mitotic spindle organization",71,129,0.0365967703153232
+"60","GO:BP","GO:0045143","homologous chromosome segregation",24,34,0.0400857378546617
+"61","GO:BP","GO:0090407","organophosphate biosynthetic process",237,506,0.0400857378546617
+"62","GO:BP","GO:1905818","regulation of chromosome separation",43,71,0.0402085306009636
+"63","GO:BP","GO:1901653","cellular response to peptide",142,287,0.0404760055955801
+"64","GO:BP","GO:0051256","mitotic spindle midzone assembly",9,9,0.0407965603846663
+"65","GO:BP","GO:0010889","regulation of sequestering of triglyceride",11,12,0.0463248773014044
+"66","GO:BP","GO:0051255","spindle midzone assembly",11,12,0.0463248773014044
+"67","GO:BP","GO:1901699","cellular response to nitrogen compound",241,517,0.0463248773014044
+"68","GO:BP","GO:0010564","regulation of cell cycle process",287,626,0.0498855557574026
+"69","KEGG","KEGG:03030","DNA replication",25,35,0.0269289111538116
+"70","KEGG","KEGG:00230","Purine metabolism",56,97,0.0269289111538116

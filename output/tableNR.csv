@@ -1,58 +1,57 @@
 "","source","term_id","term_name","intersection_size","term_size","p_value"
-"1","GO:BP","GO:0002181","cytoplasmic translation",117,155,9.0185019592644e-06
-"2","GO:BP","GO:0019646","aerobic electron transport chain",63,74,9.0185019592644e-06
-"3","GO:BP","GO:0009060","aerobic respiration",133,180,9.0185019592644e-06
-"4","GO:BP","GO:0006119","oxidative phosphorylation",104,134,9.0185019592644e-06
-"5","GO:BP","GO:0022904","respiratory electron transport chain",83,103,9.0185019592644e-06
-"6","GO:BP","GO:0042775","mitochondrial ATP synthesis coupled electron transport",68,82,1.50949876530601e-05
-"7","GO:BP","GO:0042773","ATP synthesis coupled electron transport",68,82,1.50949876530601e-05
-"8","GO:BP","GO:0045333","cellular respiration",158,222,1.66701194994916e-05
-"9","GO:BP","GO:0034645","cellular macromolecule biosynthetic process",624,1030,8.48534703817003e-05
-"10","GO:BP","GO:1901566","organonitrogen compound biosynthetic process",878,1499,0.00077259099897252
-"11","GO:BP","GO:0009100","glycoprotein metabolic process",209,317,0.000999979442953385
-"12","GO:BP","GO:0022900","electron transport chain",102,141,0.0012889540937796
-"13","GO:BP","GO:1901564","organonitrogen compound metabolic process",2774,5018,0.00140155063414147
-"14","GO:BP","GO:0043603","amide metabolic process",597,999,0.00144193314800983
-"15","GO:BP","GO:0006518","peptide metabolic process",481,793,0.00150357620426698
-"16","GO:BP","GO:0015980","energy derivation by oxidation of organic compounds",196,298,0.00190902211101754
-"17","GO:BP","GO:0070085","glycosylation",139,204,0.00272806546502083
-"18","GO:BP","GO:0033108","mitochondrial respiratory chain complex assembly",71,94,0.00272806546502083
-"19","GO:BP","GO:0006486","protein glycosylation",130,189,0.00272806546502083
-"20","GO:BP","GO:0043413","macromolecule glycosylation",130,189,0.00272806546502083
-"21","GO:BP","GO:0006412","translation",393,644,0.00409966321803352
-"22","GO:BP","GO:0006091","generation of precursor metabolites and energy",272,432,0.00409966321803352
-"23","GO:BP","GO:0022613","ribonucleoprotein complex biogenesis",281,449,0.0055172113017134
-"24","GO:BP","GO:0019538","protein metabolic process",2347,4252,0.0153618027695545
-"25","GO:BP","GO:0015986","proton motive force-driven ATP synthesis",51,66,0.0153618027695545
-"26","GO:BP","GO:0043043","peptide biosynthetic process",400,664,0.0153618027695545
-"27","GO:BP","GO:0043604","amide biosynthetic process",458,767,0.0153618027695545
-"28","GO:BP","GO:0009101","glycoprotein biosynthetic process",165,254,0.0186929000773787
-"29","GO:BP","GO:0006487","protein N-linked glycosylation",50,65,0.0202045988389375
-"30","GO:BP","GO:0006754","ATP biosynthetic process",64,87,0.0209969944848643
-"31","GO:BP","GO:1901135","carbohydrate derivative metabolic process",529,899,0.0268479542122148
-"32","GO:BP","GO:0010257","NADH dehydrogenase complex assembly",43,55,0.0307178133892152
-"33","GO:BP","GO:0032981","mitochondrial respiratory chain complex I assembly",43,55,0.0307178133892152
-"34","GO:BP","GO:0010466","negative regulation of peptidase activity",101,149,0.0419642885811389
-"35","GO:BP","GO:0042776","proton motive force-driven mitochondrial ATP synthesis",44,57,0.0419642885811389
-"36","KEGG","KEGG:05171","Coronavirus disease - COVID-19",122,162,7.18338043985014e-07
-"37","KEGG","KEGG:03010","Ribosome",98,127,1.54364475731559e-06
-"38","KEGG","KEGG:04510","Focal adhesion",126,175,9.65356822450909e-06
-"39","KEGG","KEGG:05208","Chemical carcinogenesis - reactive oxygen species",133,186,9.65356822450909e-06
-"40","KEGG","KEGG:00190","Oxidative phosphorylation",81,106,2.52172342906923e-05
-"41","KEGG","KEGG:04512","ECM-receptor interaction",55,69,0.000136365093004698
-"42","KEGG","KEGG:05012","Parkinson disease",153,226,0.000136365093004698
-"43","KEGG","KEGG:04714","Thermogenesis",134,195,0.000138797377773273
-"44","KEGG","KEGG:05020","Prion disease",148,220,0.000251891511417751
-"45","KEGG","KEGG:05415","Diabetic cardiomyopathy",117,169,0.000264137852539387
-"46","KEGG","KEGG:00531","Glycosaminoglycan degradation",16,16,0.00101631312885141
-"47","KEGG","KEGG:04141","Protein processing in endoplasmic reticulum",110,161,0.00101631312885141
-"48","KEGG","KEGG:05016","Huntington disease",165,256,0.00207238427404624
-"49","KEGG","KEGG:05010","Alzheimer disease",197,315,0.00539695984034571
-"50","KEGG","KEGG:00513","Various types of N-glycan biosynthesis",29,36,0.0108455592306602
-"51","KEGG","KEGG:04932","Non-alcoholic fatty liver disease",88,131,0.0108455592306602
-"52","KEGG","KEGG:04142","Lysosome",80,118,0.0117143542787174
-"53","KEGG","KEGG:00510","N-Glycan biosynthesis",36,48,0.0240535097330177
-"54","KEGG","KEGG:04810","Regulation of actin cytoskeleton",114,179,0.0321519755760758
-"55","KEGG","KEGG:01200","Carbon metabolism",66,98,0.0379675839113122
-"56","KEGG","KEGG:03040","Spliceosome",86,132,0.0393452905687994
-"57","KEGG","KEGG:05022","Pathways of neurodegeneration - multiple diseases",230,385,0.0428019596619976
+"1","GO:BP","GO:0002181","cytoplasmic translation",117,156,1.50715680418655e-05
+"2","GO:BP","GO:0042773","ATP synthesis coupled electron transport",68,82,1.50715680418655e-05
+"3","GO:BP","GO:0042775","mitochondrial ATP synthesis coupled electron transport",68,82,1.50715680418655e-05
+"4","GO:BP","GO:0019646","aerobic electron transport chain",63,74,1.50715680418655e-05
+"5","GO:BP","GO:0009060","aerobic respiration",125,168,1.50715680418655e-05
+"6","GO:BP","GO:0006119","oxidative phosphorylation",96,122,1.50715680418655e-05
+"7","GO:BP","GO:0022904","respiratory electron transport chain",83,104,1.50715680418655e-05
+"8","GO:BP","GO:0045333","cellular respiration",150,211,4.42555754980475e-05
+"9","GO:BP","GO:1901566","organonitrogen compound biosynthetic process",872,1484,0.000453873254457277
+"10","GO:BP","GO:0009100","glycoprotein metabolic process",209,316,0.000778423807699037
+"11","GO:BP","GO:0006518","peptide metabolic process",469,771,0.0017708840263612
+"12","GO:BP","GO:0043603","amide metabolic process",593,993,0.00204187144344077
+"13","GO:BP","GO:0022900","electron transport chain",102,142,0.00204187144344077
+"14","GO:BP","GO:0006412","translation",396,646,0.00278331627235767
+"15","GO:BP","GO:0006486","protein glycosylation",129,187,0.00278331627235767
+"16","GO:BP","GO:0043413","macromolecule glycosylation",129,187,0.00278331627235767
+"17","GO:BP","GO:0070085","glycosylation",138,202,0.00278331627235767
+"18","GO:BP","GO:0033108","mitochondrial respiratory chain complex assembly",71,94,0.00279898256596715
+"19","GO:BP","GO:0015980","energy derivation by oxidation of organic compounds",189,288,0.00300846682182694
+"20","GO:BP","GO:1901564","organonitrogen compound metabolic process",2733,4955,0.00332528529729038
+"21","GO:BP","GO:0022613","ribonucleoprotein complex biogenesis",283,453,0.00688867134429595
+"22","GO:BP","GO:0043043","peptide biosynthetic process",403,666,0.00990415274294637
+"23","GO:BP","GO:0043604","amide biosynthetic process",464,775,0.010332165538325
+"24","GO:BP","GO:0019538","protein metabolic process",2342,4241,0.0153248533017629
+"25","GO:BP","GO:0015986","proton motive force-driven ATP synthesis",51,66,0.0157570936820842
+"26","GO:BP","GO:0009101","glycoprotein biosynthetic process",164,252,0.0183068032340457
+"27","GO:BP","GO:0006487","protein N-linked glycosylation",50,65,0.0216375028286778
+"28","GO:BP","GO:0006754","ATP biosynthetic process",64,87,0.0224397654409611
+"29","GO:BP","GO:0010257","NADH dehydrogenase complex assembly",43,55,0.0336809508393056
+"30","GO:BP","GO:0032981","mitochondrial respiratory chain complex I assembly",43,55,0.0336809508393056
+"31","GO:BP","GO:0006091","generation of precursor metabolites and energy",230,369,0.0369714696174055
+"32","GO:BP","GO:0042776","proton motive force-driven mitochondrial ATP synthesis",44,57,0.0444122646953935
+"33","GO:BP","GO:0046034","ATP metabolic process",81,116,0.0444122646953935
+"34","GO:BP","GO:0042254","ribosome biogenesis",190,301,0.0497845836422512
+"35","KEGG","KEGG:05171","Coronavirus disease - COVID-19",122,162,7.22545454552949e-07
+"36","KEGG","KEGG:03010","Ribosome",98,127,1.5512941635888e-06
+"37","KEGG","KEGG:05208","Chemical carcinogenesis - reactive oxygen species",133,186,1.13629088820394e-05
+"38","KEGG","KEGG:04510","Focal adhesion",127,177,1.19832384456506e-05
+"39","KEGG","KEGG:00190","Oxidative phosphorylation",81,106,2.5318610897275e-05
+"40","KEGG","KEGG:05012","Parkinson disease",153,226,0.000136770352847619
+"41","KEGG","KEGG:04512","ECM-receptor interaction",55,69,0.000136770352847619
+"42","KEGG","KEGG:04714","Thermogenesis",134,195,0.000139503083552966
+"43","KEGG","KEGG:05020","Prion disease",148,220,0.000253213099485595
+"44","KEGG","KEGG:05415","Diabetic cardiomyopathy",117,169,0.000265338646871917
+"45","KEGG","KEGG:04141","Protein processing in endoplasmic reticulum",110,161,0.00102049520507658
+"46","KEGG","KEGG:00531","Glycosaminoglycan degradation",16,16,0.00102049520507658
+"47","KEGG","KEGG:05016","Huntington disease",165,256,0.00208275127708013
+"48","KEGG","KEGG:05010","Alzheimer disease",197,315,0.00542515725671696
+"49","KEGG","KEGG:00513","Various types of N-glycan biosynthesis",29,36,0.0108796495939286
+"50","KEGG","KEGG:04932","Non-alcoholic fatty liver disease",88,131,0.0108796495939286
+"51","KEGG","KEGG:04142","Lysosome",80,118,0.0117489046516678
+"52","KEGG","KEGG:00510","N-Glycan biosynthesis",36,48,0.0240955688846301
+"53","KEGG","KEGG:04810","Regulation of actin cytoskeleton",114,179,0.0322591732478301
+"54","KEGG","KEGG:01200","Carbon metabolism",66,98,0.0380588368443471
+"55","KEGG","KEGG:03040","Spliceosome",86,132,0.0394545302207276
+"56","KEGG","KEGG:05022","Pathways of neurodegeneration - multiple diseases",230,385,0.0430051196428524
