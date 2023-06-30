@@ -39,14 +39,14 @@ V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
 
 
 
-toplist24hours <-list(V.DA24.top[,c(1:3,4,6:7)],
-                    V.DX24.top[,c(1:3,4,6:7)],
-                    V.EP24.top[,c(1:3,4,6:7)],
-                    V.MT24.top[,c(1:3,4,6:7)],
-                    V.TR24.top[,c(1:3,4,6:7)])
+toplist24hours <-list(V.DA24.top,
+                    V.DX24.top,
+                    V.EP24.top,
+                    V.MT24.top,
+                    V.TR24.top)
 names(toplist24hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Mitoxantrone", "Trastuzumab")
 
-toplist24hours <- map_df(toplist24hours, ~as.data.frame(.x), .id="id")
+toplist24hours <- map_dfr(toplist24hours, ~as.data.frame(.x), .id="id")
 
 toplistall <- list(toplist24hours,toplist3hours)
 names(toplistall) <- c("24_hours", "3_hours")

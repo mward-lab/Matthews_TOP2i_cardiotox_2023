@@ -9,7 +9,7 @@ design <- read.csv("data/data_outline.txt", row.names = 1)
  # <- read.csv("data/cpmnorm_counts.csv",row.names = 1)
 mymatrix <- readRDS("data/filtermatrix_x.RDS")#should be 14084
 x_counts <- mymatrix$counts
-colSums(x_counts)### counts after filtering
+
 
 
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
@@ -37,15 +37,15 @@ set.seed(12345)
 
 ##after execution, was saved to the RDS
 # cormotif_initial <- cormotiffit(exprs = y_TMM_cpm,
-#                              groupid = groupid,
-#                              compid = compid,
-#                              K=1:8, max.iter = 500,runtype="logCPM")
+                             # groupid = groupid,
+                             # compid = compid,
+                             # K=1:8, max.iter = 500,runtype="logCPM")
 # cormotif_initialX <- cormotiffit(exprs = y_TMM_cpm,
 #                                 groupid = groupid,
 #                                 compid = compid,
 #                                 K=5, max.iter = 400, runtype="logCPM")
 
-#saveRDS(cormotif_initial,"data/cormotif_initialall.RDS")##saved so Ido not have to run every time
+# saveRDS(cormotif_initial,"data/cormotif_initialall.RDS")##saved so Ido not have to run every time
 cormotif_initial <- readRDS("data/cormotif_initialall.RDS")##getting the final data back in
 
 plotIC(cormotif_initial)
