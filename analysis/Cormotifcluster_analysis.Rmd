@@ -233,6 +233,9 @@ list2env(DEG_cormotif,envir=.GlobalEnv)
 # motif_TI <- DEG_cormotif$motif_TI
 # motif_LR <- DEG_cormotif$motif_LR
 # motif_ER <- DEG_cormotif$motif_ER
+label_list <- readRDS("data/label_list.RDS")
+list2env(label_list,envir=.GlobalEnv)
+label <- (interaction(substring(drug, 0, 2), indv, time))
  
 backGL <- read.csv("data/backGL.txt")
 #NRresp <- read_csv("data/cormotif_NRset.txt")
@@ -712,7 +715,8 @@ library(tidyverse)
 library(biomaRt)
 library(RColorBrewer)
 library(ggpubr)
-drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+# drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 #fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
@@ -752,7 +756,7 @@ colnames(cpmcounts) <- label
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none", size= "none",  indv="none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
-  scale_fill_manual(values=drug_pal)+
+  scale_fill_manual(values=drug_pal_fact)+
     facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop("No Response set",italic("GCNT1")~log[2]~"cpm ")))+
@@ -781,11 +785,11 @@ lfc_nums %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
-  fill_palette(palette =drug_palNoVeh)+
+  scale_fill_manual(values=drug_pal_fact)+
   guides(fill=guide_legend(title = "Treatment"))+
   facet_wrap(~time)+
   theme_bw()+
-  xlab("")+
+  xlab(" ")+
   ylab("|Log Fold Change|")+
   theme_bw()+
   ggtitle("|Log Fold| for all genes in NR set")+
@@ -793,7 +797,8 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#C77CFF"),
-        axis.text = element_text(size = 8, color = "black", angle = 15),         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+        axis.text.x = element_text(size = 8, color = "white", angle = 15),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 
 ```
@@ -801,8 +806,8 @@ lfc_nums %>%
 ## Motif_TI
 
 ```{r clustTI,echo=FALSE, message=FALSE, warning=FALSE}
-
-# motif_TI_rep <- 
+# 
+# motif_TI_rep <-
   cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
   mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
@@ -813,7 +818,7 @@ lfc_nums %>%
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none", size= "none",  indv="none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
-  scale_fill_manual(values=drug_pal)+
+  scale_fill_manual(values=drug_pal_fact)+
   facet_wrap("time", nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop("Time-Independent set",italic("MEX3A")~log[2]~"cpm ")))+
@@ -838,7 +843,7 @@ lfc_nums %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
-  fill_palette(palette =drug_palNoVeh)+
+  scale_fill_manual(values=drug_pal_fact)+
   guides(fill=guide_legend(title = "Treatment"))+
   facet_wrap(~time)+
   theme_bw()+
@@ -850,7 +855,7 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#00BFC4"),
-        axis.text = element_text(size = 8, color = "black", angle = 10),    
+        axis.text = element_text(size = 8, color = "white", angle = 10),    
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 ```
 
@@ -870,7 +875,7 @@ lfc_nums %>%
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none", size= "none",  indv="none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
-  scale_fill_manual(values=drug_pal)+
+  scale_fill_manual(values=drug_pal_fact)+
   facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop("Late Response set",italic("MED29")~log[2]~"cpm ")))+
@@ -897,7 +902,7 @@ lfc_nums %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
-  fill_palette(palette =drug_palNoVeh)+
+  scale_fill_manual(values=drug_pal_fact)+
   guides(fill=guide_legend(title = "Treatment"))+
   facet_wrap(~time)+
   theme_bw()+
@@ -909,7 +914,7 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#7CAE00"),
-        axis.text = element_text(size = 8, color = "black", angle = 10),     
+        axis.text = element_text(size = 8, color = "white", angle = 10),     
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
  
 
@@ -932,7 +937,7 @@ lfc_nums %>%
   geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(alpha= "none", size= "none",  indv="none")+
   scale_color_brewer(palette = "Dark2",guide = "none")+
-  scale_fill_manual(values=drug_pal)+
+  scale_fill_manual(values=drug_pal_fact)+
   facet_wrap("time",nrow=1, ncol=2)+
   theme_bw()+
   ylab(expression(atop("Early Response set",italic("AHDC1")~log[2]~"cpm ")))+
@@ -959,7 +964,7 @@ lfc_nums %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
-  fill_palette(palette =drug_palNoVeh)+
+  scale_fill_manual(values=drug_pal_fact)+
   guides(fill=guide_legend(title = "Treatment"))+
   facet_wrap(~time)+
   theme_bw()+
@@ -971,7 +976,7 @@ lfc_nums %>%
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "#F8766D"),
-        axis.text = element_text(size = 8, color = "black", angle = 10),   
+        axis.text = element_text(size = 8, color = "white", angle = 10),   
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
  
 
@@ -1000,12 +1005,11 @@ mean_lfc %>%
   ggplot(., aes(x=time,y= meanLFC,col=id,group=id))+
   geom_point()+
   geom_line()+
-  fill_palette(drug_palNoVeh)+
-  # guides(fill=guide_legend(title = "Treatment"))+
+ scale_fill_manual(values=drug_pal_fact)+
   facet_wrap(~Motif)+
   theme_bw()+
   xlab("")+
-  scale_color_manual(values=drug_palNoVeh)+
+  scale_color_manual(values=drug_pal_fact)+
   ylab("|Log Fold Change|")+
   theme_bw()+
   ggtitle(" average |Log Fold| for genes across treatment each motif")+
