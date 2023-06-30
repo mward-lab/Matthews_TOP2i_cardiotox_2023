@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-06-26" />
+<meta name="date" content="2023-06-30" />
 
 <title>Knowles 2019 data</title>
 
@@ -39,6 +39,13 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 <link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
 
@@ -363,7 +370,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Knowles 2019 data</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-06-26</h4>
+<h4 class="date">2023-06-30</h4>
 
 </div>
 
@@ -392,7 +399,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-06-26
+<strong>Last updated:</strong> 2023-06-30
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -523,15 +530,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree982e608fcb180c151667df56d7398ff456a58f11targetblank982e608a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeace4a80040175593e61e211c80a6960182c341e0targetblankace4a80a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/982e608fcb180c151667df56d7398ff456a58f11" target="_blank">982e608</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/ace4a80040175593e61e211c80a6960182c341e0" target="_blank">ace4a80</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree982e608fcb180c151667df56d7398ff456a58f11targetblank982e608a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeace4a80040175593e61e211c80a6960182c341e0targetblankace4a80a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +548,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/982e608fcb180c151667df56d7398ff456a58f11" target="_blank">982e608</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/ace4a80040175593e61e211c80a6960182c341e0" target="_blank">ace4a80</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,6 +566,7 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -583,6 +591,7 @@ Ignored files:
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
     Ignored:    data/GTEX_setsimple.csv
+    Ignored:    data/GTEX_sig24.RDS
     Ignored:    data/GTEx_gene_list.csv
     Ignored:    data/HFGWASgene_table.csv
     Ignored:    data/HF_geneset.RDS
@@ -594,8 +603,10 @@ Ignored files:
     Ignored:    data/LD50_05via.csv
     Ignored:    data/LDH48hoursdata.csv
     Ignored:    data/Mt24counts.txt
+    Ignored:    data/NoRespDEG_final.csv
     Ignored:    data/RINsamplelist.txt
     Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
     Ignored:    data/Top2biresp_cluster24h.csv
@@ -603,6 +614,8 @@ Ignored files:
     Ignored:    data/allexpressedgenes.txt
     Ignored:    data/allgenes.txt
     Ignored:    data/allmatrix.RDS
+    Ignored:    data/allmymatrix.RDS
+    Ignored:    data/annotation_data_frame.RDS
     Ignored:    data/averageviabilitytable.RDS
     Ignored:    data/avgLD50.RDS
     Ignored:    data/backGL.txt
@@ -644,8 +657,10 @@ Ignored files:
     Ignored:    data/individualDRCfile.RDS
     Ignored:    data/individual_DRC48.RDS
     Ignored:    data/individual_LDH48.RDS
+    Ignored:    data/kegglistDEG.RDS
     Ignored:    data/knowfig4.csv
     Ignored:    data/knowfig5.csv
+    Ignored:    data/label_list.RDS
     Ignored:    data/ld50_table.csv
     Ignored:    data/mymatrix.RDS
     Ignored:    data/nonresponse_cluster24h.csv
@@ -667,6 +682,7 @@ Ignored files:
     Ignored:    data/sigVTR3.txt
     Ignored:    data/siglist.RDS
     Ignored:    data/siglist_final.RDS
+    Ignored:    data/siglist_old.RDS
     Ignored:    data/slope_table.csv
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
@@ -682,6 +698,7 @@ Untracked files:
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
     Untracked:  OmicNavigator_learn.R
+    Untracked:  analysis/Figure9.Rmd
     Untracked:  code/DRC_plotfigure1.png
     Untracked:  code/cpm_boxplot.R
     Untracked:  code/extracting_ggplot_data.R
@@ -694,16 +711,37 @@ Untracked files:
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/DNRvenn.RDS
+    Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EPIvenn.RDS
+    Untracked:  output/MTXvenn.RDS
+    Untracked:  output/Volcanoplot_10
+    Untracked:  output/Volcanoplot_10.RDS
+    Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/motif_ERrep.RDS
+    Untracked:  output/motif_LRrep.RDS
+    Untracked:  output/motif_NRrep.RDS
+    Untracked:  output/motif_TI_rep.RDS
     Untracked:  output/output-old/
+    Untracked:  output/supplementary_motif_list_GO.RDS
     Untracked:  output/toptablebydrug.RDS
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/Cormotifcluster_analysis.Rmd
-    Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/LDH_analysis.Rmd
-    Modified:   analysis/RNAseqanalysis.Rmd
+    Modified:   Cardiotoxicity.Rproj
+    Modified:   analysis/Figure1.Rmd
+    Modified:   analysis/GTEx_genes.Rmd
+    Modified:   analysis/Supplementary_figures.Rmd
+    Modified:   analysis/run_all_analysis.Rmd
+    Modified:   output/DNRmeSNPs.RDS
+    Modified:   output/DNRreQTLs.RDS
+    Modified:   output/DOXmeSNPs.RDS
+    Modified:   output/DOXreQTLs.RDS
+    Modified:   output/EPImeSNPs.RDS
+    Modified:   output/EPIreQTLs.RDS
+    Modified:   output/MTXmeSNPs.RDS
+    Modified:   output/MTXreQTLs.RDS
 
 </code></pre>
 <p>
@@ -749,6 +787,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/ace4a80040175593e61e211c80a6960182c341e0/analysis/Knowles2019.Rmd" target="_blank">ace4a80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-30
+</td>
+<td>
+updated with final counts
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f4bd5e1825a070e966a3bf7fb79eb10a09545fa3/analysis/Knowles2019.Rmd" target="_blank">f4bd5e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-27
+</td>
+<td>
+checking code changes overtime
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/a9c79b14e0a47cca2f4b242816c8cdbfa8190499/docs/Knowles2019.html" target="_blank">a9c79b1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1198,7 +1287,7 @@ Daunorubicin
 notsig
 </td>
 <td style="text-align:right;">
-13032
+13055
 </td>
 <td style="text-align:right;">
 497
@@ -1215,7 +1304,7 @@ Daunorubicin
 sig
 </td>
 <td style="text-align:right;">
-549
+526
 </td>
 <td style="text-align:right;">
 6
@@ -1232,10 +1321,10 @@ Daunorubicin
 notsig
 </td>
 <td style="text-align:right;">
-6916
+6772
 </td>
 <td style="text-align:right;">
-304
+295
 </td>
 </tr>
 <tr>
@@ -1249,10 +1338,10 @@ Daunorubicin
 sig
 </td>
 <td style="text-align:right;">
-6665
+6809
 </td>
 <td style="text-align:right;">
-199
+208
 </td>
 </tr>
 <tr>
@@ -1266,7 +1355,7 @@ Doxorubicin
 notsig
 </td>
 <td style="text-align:right;">
-13565
+13562
 </td>
 <td style="text-align:right;">
 503
@@ -1283,7 +1372,7 @@ Doxorubicin
 sig
 </td>
 <td style="text-align:right;">
-16
+19
 </td>
 <td style="text-align:right;">
 NA
@@ -1300,10 +1389,10 @@ Doxorubicin
 notsig
 </td>
 <td style="text-align:right;">
-7249
+7122
 </td>
 <td style="text-align:right;">
-319
+317
 </td>
 </tr>
 <tr>
@@ -1317,10 +1406,10 @@ Doxorubicin
 sig
 </td>
 <td style="text-align:right;">
-6332
+6459
 </td>
 <td style="text-align:right;">
-184
+186
 </td>
 </tr>
 <tr>
@@ -1334,7 +1423,7 @@ Epirubicin
 notsig
 </td>
 <td style="text-align:right;">
-13365
+13375
 </td>
 <td style="text-align:right;">
 499
@@ -1351,7 +1440,7 @@ Epirubicin
 sig
 </td>
 <td style="text-align:right;">
-216
+206
 </td>
 <td style="text-align:right;">
 4
@@ -1368,10 +1457,10 @@ Epirubicin
 notsig
 </td>
 <td style="text-align:right;">
-7551
+7426
 </td>
 <td style="text-align:right;">
-331
+330
 </td>
 </tr>
 <tr>
@@ -1385,10 +1474,10 @@ Epirubicin
 sig
 </td>
 <td style="text-align:right;">
-6030
+6155
 </td>
 <td style="text-align:right;">
-172
+173
 </td>
 </tr>
 <tr>
@@ -1402,10 +1491,10 @@ Mitoxantrone
 notsig
 </td>
 <td style="text-align:right;">
-13524
+13508
 </td>
 <td style="text-align:right;">
-502
+501
 </td>
 </tr>
 <tr>
@@ -1419,10 +1508,10 @@ Mitoxantrone
 sig
 </td>
 <td style="text-align:right;">
-57
+73
 </td>
 <td style="text-align:right;">
-1
+2
 </td>
 </tr>
 <tr>
@@ -1436,10 +1525,10 @@ Mitoxantrone
 notsig
 </td>
 <td style="text-align:right;">
-12284
+12491
 </td>
 <td style="text-align:right;">
-473
+478
 </td>
 </tr>
 <tr>
@@ -1453,10 +1542,10 @@ Mitoxantrone
 sig
 </td>
 <td style="text-align:right;">
-1297
+1090
 </td>
 <td style="text-align:right;">
-30
+25
 </td>
 </tr>
 <tr>
@@ -1549,10 +1638,10 @@ Daunorubicin
 notsig
 </td>
 <td style="text-align:right;">
-13168
+13192
 </td>
 <td style="text-align:right;">
-361
+360
 </td>
 </tr>
 <tr>
@@ -1566,10 +1655,10 @@ Daunorubicin
 sig
 </td>
 <td style="text-align:right;">
-542
+518
 </td>
 <td style="text-align:right;">
-13
+14
 </td>
 </tr>
 <tr>
@@ -1583,10 +1672,10 @@ Daunorubicin
 notsig
 </td>
 <td style="text-align:right;">
-7033
+6888
 </td>
 <td style="text-align:right;">
-187
+179
 </td>
 </tr>
 <tr>
@@ -1600,10 +1689,10 @@ Daunorubicin
 sig
 </td>
 <td style="text-align:right;">
-6677
+6822
 </td>
 <td style="text-align:right;">
-187
+195
 </td>
 </tr>
 <tr>
@@ -1617,7 +1706,7 @@ Doxorubicin
 notsig
 </td>
 <td style="text-align:right;">
-13694
+13691
 </td>
 <td style="text-align:right;">
 374
@@ -1634,7 +1723,7 @@ Doxorubicin
 sig
 </td>
 <td style="text-align:right;">
-16
+19
 </td>
 <td style="text-align:right;">
 NA
@@ -1651,10 +1740,10 @@ Doxorubicin
 notsig
 </td>
 <td style="text-align:right;">
-7374
+7251
 </td>
 <td style="text-align:right;">
-194
+188
 </td>
 </tr>
 <tr>
@@ -1668,10 +1757,10 @@ Doxorubicin
 sig
 </td>
 <td style="text-align:right;">
-6336
+6459
 </td>
 <td style="text-align:right;">
-180
+186
 </td>
 </tr>
 <tr>
@@ -1685,7 +1774,7 @@ Epirubicin
 notsig
 </td>
 <td style="text-align:right;">
-13494
+13504
 </td>
 <td style="text-align:right;">
 370
@@ -1702,7 +1791,7 @@ Epirubicin
 sig
 </td>
 <td style="text-align:right;">
-216
+206
 </td>
 <td style="text-align:right;">
 4
@@ -1719,7 +1808,7 @@ Epirubicin
 notsig
 </td>
 <td style="text-align:right;">
-7684
+7558
 </td>
 <td style="text-align:right;">
 198
@@ -1736,7 +1825,7 @@ Epirubicin
 sig
 </td>
 <td style="text-align:right;">
-6026
+6152
 </td>
 <td style="text-align:right;">
 176
@@ -1753,10 +1842,10 @@ Mitoxantrone
 notsig
 </td>
 <td style="text-align:right;">
-13652
+13636
 </td>
 <td style="text-align:right;">
-374
+373
 </td>
 </tr>
 <tr>
@@ -1770,10 +1859,10 @@ Mitoxantrone
 sig
 </td>
 <td style="text-align:right;">
-58
+74
 </td>
 <td style="text-align:right;">
-NA
+1
 </td>
 </tr>
 <tr>
@@ -1787,10 +1876,10 @@ Mitoxantrone
 notsig
 </td>
 <td style="text-align:right;">
-12423
+12631
 </td>
 <td style="text-align:right;">
-334
+338
 </td>
 </tr>
 <tr>
@@ -1804,10 +1893,10 @@ Mitoxantrone
 sig
 </td>
 <td style="text-align:right;">
-1287
+1079
 </td>
 <td style="text-align:right;">
-40
+36
 </td>
 </tr>
 <tr>
@@ -1897,13 +1986,13 @@ reQTL
 Daunorubicin
 </td>
 <td style="text-align:right;">
-555
+532
 </td>
 <td style="text-align:right;">
 6
 </td>
 <td style="text-align:right;">
-13
+14
 </td>
 </tr>
 <tr>
@@ -1914,7 +2003,7 @@ Daunorubicin
 Doxorubicin
 </td>
 <td style="text-align:right;">
-16
+19
 </td>
 <td style="text-align:right;">
 0
@@ -1931,7 +2020,7 @@ Doxorubicin
 Epirubicin
 </td>
 <td style="text-align:right;">
-220
+210
 </td>
 <td style="text-align:right;">
 4
@@ -1948,13 +2037,13 @@ Epirubicin
 Mitoxantrone
 </td>
 <td style="text-align:right;">
-58
+75
+</td>
+<td style="text-align:right;">
+2
 </td>
 <td style="text-align:right;">
 1
-</td>
-<td style="text-align:right;">
-0
 </td>
 </tr>
 <tr>
@@ -1965,13 +2054,13 @@ Mitoxantrone
 Daunorubicin
 </td>
 <td style="text-align:right;">
-6864
+7017
 </td>
 <td style="text-align:right;">
-199
+208
 </td>
 <td style="text-align:right;">
-187
+195
 </td>
 </tr>
 <tr>
@@ -1982,13 +2071,13 @@ Daunorubicin
 Doxorubicin
 </td>
 <td style="text-align:right;">
-6516
+6645
 </td>
 <td style="text-align:right;">
-184
+186
 </td>
 <td style="text-align:right;">
-180
+186
 </td>
 </tr>
 <tr>
@@ -1999,10 +2088,10 @@ Doxorubicin
 Epirubicin
 </td>
 <td style="text-align:right;">
-6202
+6328
 </td>
 <td style="text-align:right;">
-172
+173
 </td>
 <td style="text-align:right;">
 176
@@ -2016,13 +2105,13 @@ Epirubicin
 Mitoxantrone
 </td>
 <td style="text-align:right;">
-1327
+1115
 </td>
 <td style="text-align:right;">
-30
+25
 </td>
 <td style="text-align:right;">
-40
+36
 </td>
 </tr>
 </tbody>
@@ -2046,7 +2135,7 @@ Mitoxantrone
        geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,SNPprop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
        facet_wrap(~sigcount)+
-       ggtitle(&quot;non-significant and significant enrichment proporitions of Knowles meSNPs &quot;)</code></pre>
+       ggtitle(&quot;non-significant and significant enrichment proportions of Knowles meSNPs &quot;)</code></pre>
 <p><img src="figure/Knowles2019.Rmd/K4K5%20proportions-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplistall %&gt;%
   mutate(id = as.factor(id)) %&gt;%
@@ -2064,7 +2153,7 @@ Mitoxantrone
        geom_text(aes(x=id, label = sprintf(&quot;%.2f&quot;,QTLprop), vjust=-.2))+
        #geom_text(aes(label = expression(paste0(&quot;number&quot;~a,&quot;out of&quot;,~b))))+
        facet_wrap(~sigcount)+
-       ggtitle(&quot;non-significant and significant enrichment proporitions of Knowles reQTLs &quot;)</code></pre>
+       ggtitle(&quot;non-significant and significant enrichment proportions of Knowles reQTLs &quot;)</code></pre>
 <p><img src="figure/Knowles2019.Rmd/K4K5%20proportions-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>chi_squarek4 &lt;- toplistall %&gt;% 
   mutate(id = as.factor(id)) %&gt;%
@@ -2114,7 +2203,7 @@ Daunorubicin
 24_hours
 </td>
 <td style="text-align:right;">
-0.0000338
+0.0001314
 </td>
 </tr>
 <tr>
@@ -2125,7 +2214,7 @@ Daunorubicin
 3_hours
 </td>
 <td style="text-align:right;">
-0.0018777
+0.0029100
 </td>
 </tr>
 <tr>
@@ -2136,7 +2225,7 @@ Doxorubicin
 24_hours
 </td>
 <td style="text-align:right;">
-0.0000113
+0.0000038
 </td>
 </tr>
 <tr>
@@ -2147,7 +2236,7 @@ Doxorubicin
 3_hours
 </td>
 <td style="text-align:right;">
-0.9232984
+0.8251668
 </td>
 </tr>
 <tr>
@@ -2158,7 +2247,7 @@ Epirubicin
 24_hours
 </td>
 <td style="text-align:right;">
-0.0000074
+0.0000016
 </td>
 </tr>
 <tr>
@@ -2169,7 +2258,7 @@ Epirubicin
 3_hours
 </td>
 <td style="text-align:right;">
-0.2189641
+0.2610310
 </td>
 </tr>
 <tr>
@@ -2180,7 +2269,7 @@ Mitoxantrone
 24_hours
 </td>
 <td style="text-align:right;">
-0.0086490
+0.0160211
 </td>
 </tr>
 <tr>
@@ -2191,7 +2280,7 @@ Mitoxantrone
 3_hours
 </td>
 <td style="text-align:right;">
-0.6853643
+0.9112927
 </td>
 </tr>
 </tbody>
@@ -2229,7 +2318,7 @@ Daunorubicin
 24_hours
 </td>
 <td style="text-align:right;">
-0.6576304
+0.3921463
 </td>
 </tr>
 <tr>
@@ -2240,40 +2329,40 @@ Daunorubicin
 3_hours
 </td>
 <td style="text-align:right;">
-0.7387684
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-24_hours
-</td>
-<td style="text-align:right;">
-0.4965954
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Doxorubicin
-</td>
-<td style="text-align:left;">
-3_hours
-</td>
-<td style="text-align:right;">
 1.0000000
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+24_hours
+</td>
+<td style="text-align:right;">
+0.3424614
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Doxorubicin
+</td>
+<td style="text-align:left;">
+3_hours
+</td>
+<td style="text-align:right;">
+0.9948230
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 Epirubicin
 </td>
 <td style="text-align:left;">
 24_hours
 </td>
 <td style="text-align:right;">
-0.2539396
+0.4318542
 </td>
 </tr>
 <tr>
@@ -2284,7 +2373,7 @@ Epirubicin
 3_hours
 </td>
 <td style="text-align:right;">
-0.5705567
+0.6415467
 </td>
 </tr>
 <tr>
@@ -2295,7 +2384,7 @@ Mitoxantrone
 24_hours
 </td>
 <td style="text-align:right;">
-0.4445513
+0.2528166
 </td>
 </tr>
 <tr>
@@ -2306,7 +2395,7 @@ Mitoxantrone
 3_hours
 </td>
 <td style="text-align:right;">
-0.3946217
+0.7233217
 </td>
 </tr>
 </tbody>
@@ -2354,31 +2443,31 @@ significantly DE gene sets?</p>
   chi_frame &lt;- Knowles_count %&gt;%
   pivot_wider(id_cols = c(time, id,QTL_type), names_from = group, values_from = gene_count) 
 
-testDNR3chi &lt;- matrix(c(6,13,497, 358), nrow=2, ncol=2, byrow=FALSE,
+testDNR3chi &lt;- matrix(c(6,14,497, 357), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
     DNR_3chi &lt;- chisq.test(testDNR3chi,correct=FALSE)$p.value
-testDNR24chi &lt;- matrix(c(199,187,304, 184), nrow=2, ncol=2, byrow=FALSE,
+testDNR24chi &lt;- matrix(c(208,195,295, 176), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;)))  
     DNR_24chi &lt;- chisq.test(testDNR24chi,correct=FALSE)$p.value
 
 testDOX3chi &lt;- matrix(c(0,0,503, 371), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;)))  
     DOX_3chi &lt;- chisq.test(testDOX3chi,correct=FALSE)$p.value
-testDOX24chi &lt;- matrix(c(184,180,318, 191), nrow=2, ncol=2, byrow=FALSE,
+testDOX24chi &lt;- matrix(c(186,186,317, 185), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
     DOX_24chi &lt;- chisq.test(testDOX24chi,correct=FALSE)$p.value
 
 testEPI3chi &lt;- matrix(c(4,4,499, 367), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
     EPI_3chi &lt;- chisq.test(testEPI3chi,correct=FALSE)$p.value
-testEPI24chi &lt;- matrix(c(172,176,331, 195), nrow=2, ncol=2, byrow=FALSE,
+testEPI24chi &lt;- matrix(c(173,176,330, 195), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
     EPI_24chi &lt;- chisq.test(testEPI24chi,correct=FALSE)$p.value
   
-testMTX3chi &lt;- matrix(c(1,0,502, 370), nrow=2, ncol=2, byrow=FALSE,
+testMTX3chi &lt;- matrix(c(2,1,501, 370), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
     MTX_3chi &lt;- chisq.test(testMTX3chi,correct=FALSE)$p.value
-testMTX24chi &lt;- matrix(c(30,40,473, 331), nrow=2, ncol=2, byrow=FALSE,
+testMTX24chi &lt;- matrix(c(25,36,478, 335), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c(&quot;k4&quot;, &quot;k5&quot;),c( &quot;y&quot;, &quot;n&quot;))) 
     MTX_24chi &lt;- chisq.test(testMTX24chi,correct=FALSE)$p.value
 K4nK5chi &lt;- data.frame(treatment=c(&#39;DNR_3&#39;,&#39;DNR_24&#39;,&#39;DOX_3&#39;,&#39;DOX_24&#39;,&#39;EPI_3&#39;,&#39;EPI_24&#39;,&#39;MTX_3&#39;,&#39;MTX_24&#39;), chi_p.value=c(DNR_3chi,DNR_24chi,DOX_3chi,DOX_24chi,EPI_3chi,EPI_24chi,MTX_3chi,MTX_24chi))
@@ -2416,10 +2505,10 @@ Drug
 DNR
 </td>
 <td style="text-align:right;">
-0.0205682
+0.0116724
 </td>
 <td style="text-align:right;">
-0.0014217
+0.0010175
 </td>
 </tr>
 <tr>
@@ -2430,7 +2519,7 @@ DOX
 NaN
 </td>
 <td style="text-align:right;">
-0.0004405
+0.0001010
 </td>
 </tr>
 <tr>
@@ -2441,7 +2530,7 @@ EPI
 0.6641977
 </td>
 <td style="text-align:right;">
-0.0000770
+0.0000993
 </td>
 </tr>
 <tr>
@@ -2449,10 +2538,10 @@ EPI
 MTX
 </td>
 <td style="text-align:right;">
-0.3908069
+0.7489890
 </td>
 <td style="text-align:right;">
-0.0095036
+0.0066385
 </td>
 </tr>
 </tbody>
@@ -2493,20 +2582,20 @@ dox has a total of 180 reQTLS. Because this gene set was specifically
 about doxorubicin response eQTLs, I wanted to see if these reQTLs were
 only Dox specific, AC specific, Top2i specific, or show any type of
 pattern.</p>
-<pre class="r"><code>siglist &lt;- readRDS(&quot;data/siglist.RDS&quot;)
+<pre class="r"><code>siglist &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
 list2env(siglist,.GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
 <pre class="r"><code>reQTLcombine=list(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)
 
 length(unique(c(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)))</code></pre>
-<pre><code>[1] 218</code></pre>
+<pre><code>[1] 219</code></pre>
 <pre class="r"><code>print(&quot;number of unique genes expressed in pairwise DE set&quot;)</code></pre>
 <pre><code>[1] &quot;number of unique genes expressed in pairwise DE set&quot;</code></pre>
 <pre class="r"><code>QTLoverlaps &lt;- VennDiagram::get.venn.partitions(reQTLcombine)
 DoxonlyQTL &lt;-  QTLoverlaps$..values..[[14]]
-     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c(&quot;DNR-187\nsigDEG&quot;,&quot;DOX-180 \nsigDEG\n&quot;,&quot;EPI-176\nsigDEG\n&quot;,&quot;MTX-40\nsigDEG&quot;),label = &quot;count&quot;) +scale_x_continuous(expand = expansion(mult = .2))+scale_y_continuous(expand = expansion(mult = .1))</code></pre>
+     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c(&quot;DNR-195\nsigDEG&quot;,&quot;DOX-186 \nsigDEG\n&quot;,&quot;EPI-176\nsigDEG\n&quot;,&quot;MTX-36\nsigDEG&quot;),label = &quot;count&quot;) +scale_x_continuous(expand = expansion(mult = .2))+scale_y_continuous(expand = expansion(mult = .1))</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Doxreqtl-1.png" width="672" style="display: block; margin: auto;" />
-Here, I found 119 reQTLs that were related to all anthracyclines, with
+Here, I found 121 reQTLs that were related to all anthracyclines, with
 31 reQTLS related to all Top2i drugs at 24 hours.</p>
 <pre class="r"><code> DOXeQTL_table &lt;- toplistall %&gt;% 
   mutate(sigcount = if_else(adj.P.Val &lt; 0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
@@ -2550,7 +2639,7 @@ Daunorubicin
 no
 </td>
 <td style="text-align:right;">
-6695
+6843
 </td>
 </tr>
 <tr>
@@ -2561,7 +2650,7 @@ Daunorubicin
 y
 </td>
 <td style="text-align:right;">
-169
+174
 </td>
 </tr>
 <tr>
@@ -2572,7 +2661,7 @@ Doxorubicin
 no
 </td>
 <td style="text-align:right;">
-6336
+6459
 </td>
 </tr>
 <tr>
@@ -2583,7 +2672,7 @@ Doxorubicin
 y
 </td>
 <td style="text-align:right;">
-180
+186
 </td>
 </tr>
 <tr>
@@ -2594,7 +2683,7 @@ Epirubicin
 no
 </td>
 <td style="text-align:right;">
-6048
+6170
 </td>
 </tr>
 <tr>
@@ -2605,7 +2694,7 @@ Epirubicin
 y
 </td>
 <td style="text-align:right;">
-154
+158
 </td>
 </tr>
 <tr>
@@ -2616,7 +2705,7 @@ Mitoxantrone
 no
 </td>
 <td style="text-align:right;">
-1291
+1081
 </td>
 </tr>
 <tr>
@@ -2627,7 +2716,7 @@ Mitoxantrone
 y
 </td>
 <td style="text-align:right;">
-36
+34
 </td>
 </tr>
 <tr>
@@ -2682,11 +2771,11 @@ ggplot(., aes(y=id,x=count,fill=group))+
 <p><img src="figure/Knowles2019.Rmd/doxreqtl%20examine-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="dox-specific-dox-de-reqtl" class="section level4">
 <h4>DOX specific-Dox dE-reqtl</h4>
-<pre class="r"><code>DoxonlyQTL &lt;-  as.numeric(QTLoverlaps$..values..[[14]])
+<pre class="r"><code># DoxonlyQTL &lt;-  as.numeric(QTLoverlaps$..values..[[14]])
 # geneDoxonlyQTL &lt;- getBM(attributes=my_attributes,filters =&#39;entrezgene_id&#39;,
 #                   values =DoxonlyQTL, mart = ensembl)
 # write.csv(geneDoxonlyQTL,&quot;data/geneDoxonlyQTL.csv&quot;)
-# saveRDS(cpmcounts,&quot;data/cpmcount.RDS&quot;)
+
 geneDoxonlyQTL &lt;- read.csv(&quot;data/geneDoxonlyQTL.csv&quot;,row.names = 1)
 cpmcounts &lt;- readRDS(&quot;data/cpmcount.RDS&quot;)
 
@@ -2696,13 +2785,12 @@ for (g in seq(from=1, to=length(geneDoxonlyQTL$entrezgene_id))){
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 
 }</code></pre>
-<p><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-6.png" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/DOX%20spec%20DEreQTL-5.png" width="672" style="display: block; margin: auto;" />
 ### Dox specific DEG examination</p>
 <pre class="r"><code>#pull list
 total24 &lt;-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 ## do venn partition and pull doxspe genes
-
-
+# total24 &lt;- list(sigVDA24$SYMBOL,sigVDX24$SYMBOL,sigVEP24$SYMBOL,sigVMT24$SYMBOL)
 
 venn_24h &lt;- VennDiagram::get.venn.partitions(total24)
 DoxonlyDEG &lt;- venn_24h$..values..[[14]]
@@ -2710,8 +2798,10 @@ EpionlyDEG &lt;- venn_24h$..values..[[12]]
 DnronlyDEG &lt;- venn_24h$..values..[[15]]
 MtxonlyDEG &lt;- venn_24h$..values..[[8]]
   
-  
-Dox24_lfc &lt;- toplist24hr %&gt;% 
+
+intersect(DoxonlyDEG,DOXreQTLs$ENTREZID)</code></pre>
+<pre><code>[1] &quot;57338&quot; &quot;29097&quot; &quot;7027&quot;  &quot;10179&quot; &quot;9852&quot; </code></pre>
+<pre class="r"><code>Dox24_lfc &lt;- toplist24hr %&gt;% 
   filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
   # group_by(id) %&gt;% 
   # dplyr::filter(adj.P.Val&lt;0.05) #%&gt;% 
@@ -2773,13 +2863,13 @@ class="section level2">
 <div id="doxorubicin" class="section level3">
 <h3>Doxorubicin</h3>
 <pre class="r"><code>DOXdeg_sp &lt;- toplist24hr %&gt;% 
-  dplyr::filter(if_else(id==&quot;Doxorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
-  dplyr::filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
+  dplyr::filter(ENTREZID %in% DoxonlyDEG) %&gt;%
+  dplyr::filter(adj.P.Val&lt;0.01) %&gt;% 
   filter(id==&quot;Doxorubicin&quot;) %&gt;% 
   dplyr::select(ENTREZID, SYMBOL)  
 
 DOXdeg_sp %&gt;% 
-  kable(., caption= &quot;DOX specific genes&quot;) %&gt;% 
+  kable(., caption= &quot;68 DOX specific genes&quot;) %&gt;% 
   kable_paper(&quot;striped&quot;, full_width = TRUE) %&gt;%  
   kable_styling(full_width = FALSE, font_size = 16) %&gt;% 
   scroll_box( height = &quot;500px&quot;)</code></pre>
@@ -2787,7 +2877,7 @@ DOXdeg_sp %&gt;%
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; ">
 <table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-DOX specific genes
+68 DOX specific genes
 </caption>
 <thead>
 <tr>
@@ -2815,17 +2905,6 @@ TMEM64
 </tr>
 <tr>
 <td style="text-align:left;">
-653082
-</td>
-<td style="text-align:left;">
-653082
-</td>
-<td style="text-align:left;">
-ZDHHC11B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 1452
 </td>
 <td style="text-align:left;">
@@ -2837,46 +2916,13 @@ CSNK1A1
 </tr>
 <tr>
 <td style="text-align:left;">
-23108
+653082
 </td>
 <td style="text-align:left;">
-23108
+653082
 </td>
 <td style="text-align:left;">
-RAP1GAP2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-114882
-</td>
-<td style="text-align:left;">
-114882
-</td>
-<td style="text-align:left;">
-OSBPL8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8501
-</td>
-<td style="text-align:left;">
-8501
-</td>
-<td style="text-align:left;">
-SLC43A1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5000
-</td>
-<td style="text-align:left;">
-5000
-</td>
-<td style="text-align:left;">
-ORC4
+ZDHHC11B
 </td>
 </tr>
 <tr>
@@ -2892,6 +2938,39 @@ LOC202181
 </tr>
 <tr>
 <td style="text-align:left;">
+8501
+</td>
+<td style="text-align:left;">
+8501
+</td>
+<td style="text-align:left;">
+SLC43A1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+114882
+</td>
+<td style="text-align:left;">
+114882
+</td>
+<td style="text-align:left;">
+OSBPL8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23108
+</td>
+<td style="text-align:left;">
+23108
+</td>
+<td style="text-align:left;">
+RAP1GAP2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 135154
 </td>
 <td style="text-align:left;">
@@ -2903,442 +2982,13 @@ SDHAF4
 </tr>
 <tr>
 <td style="text-align:left;">
-122553
+5000
 </td>
 <td style="text-align:left;">
-122553
+5000
 </td>
 <td style="text-align:left;">
-TRAPPC6B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79065
-</td>
-<td style="text-align:left;">
-79065
-</td>
-<td style="text-align:left;">
-ATG9A
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8763
-</td>
-<td style="text-align:left;">
-8763
-</td>
-<td style="text-align:left;">
-CD164
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-284900
-</td>
-<td style="text-align:left;">
-284900
-</td>
-<td style="text-align:left;">
-TTC28-AS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26994
-</td>
-<td style="text-align:left;">
-26994
-</td>
-<td style="text-align:left;">
-RNF11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-256586
-</td>
-<td style="text-align:left;">
-256586
-</td>
-<td style="text-align:left;">
-LYSMD2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-54165
-</td>
-<td style="text-align:left;">
-54165
-</td>
-<td style="text-align:left;">
-DCUN1D1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8515
-</td>
-<td style="text-align:left;">
-8515
-</td>
-<td style="text-align:left;">
-ITGA10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-440944
-</td>
-<td style="text-align:left;">
-440944
-</td>
-<td style="text-align:left;">
-THUMPD3-AS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57181
-</td>
-<td style="text-align:left;">
-57181
-</td>
-<td style="text-align:left;">
-SLC39A10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57338
-</td>
-<td style="text-align:left;">
-57338
-</td>
-<td style="text-align:left;">
-JPH3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2230
-</td>
-<td style="text-align:left;">
-2230
-</td>
-<td style="text-align:left;">
-FDX1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23548
-</td>
-<td style="text-align:left;">
-23548
-</td>
-<td style="text-align:left;">
-TTC33
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-81532
-</td>
-<td style="text-align:left;">
-81532
-</td>
-<td style="text-align:left;">
-MOB2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-27430
-</td>
-<td style="text-align:left;">
-27430
-</td>
-<td style="text-align:left;">
-MAT2B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9524
-</td>
-<td style="text-align:left;">
-9524
-</td>
-<td style="text-align:left;">
-TECR
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-805
-</td>
-<td style="text-align:left;">
-805
-</td>
-<td style="text-align:left;">
-CALM2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-147
-</td>
-<td style="text-align:left;">
-147
-</td>
-<td style="text-align:left;">
-ADRA1B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2551
-</td>
-<td style="text-align:left;">
-2551
-</td>
-<td style="text-align:left;">
-GABPA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26001
-</td>
-<td style="text-align:left;">
-26001
-</td>
-<td style="text-align:left;">
-RNF167
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-100131211
-</td>
-<td style="text-align:left;">
-100131211
-</td>
-<td style="text-align:left;">
-NEMP2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79624
-</td>
-<td style="text-align:left;">
-79624
-</td>
-<td style="text-align:left;">
-ARMT1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10190
-</td>
-<td style="text-align:left;">
-10190
-</td>
-<td style="text-align:left;">
-TXNDC9
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-7917
-</td>
-<td style="text-align:left;">
-7917
-</td>
-<td style="text-align:left;">
-BAG6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6653
-</td>
-<td style="text-align:left;">
-6653
-</td>
-<td style="text-align:left;">
-SORL1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9039
-</td>
-<td style="text-align:left;">
-9039
-</td>
-<td style="text-align:left;">
-UBA3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57862
-</td>
-<td style="text-align:left;">
-57862
-</td>
-<td style="text-align:left;">
-ZNF410
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6498
-</td>
-<td style="text-align:left;">
-6498
-</td>
-<td style="text-align:left;">
-SKIL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-112858
-</td>
-<td style="text-align:left;">
-112858
-</td>
-<td style="text-align:left;">
-TP53RK
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-101927720
-</td>
-<td style="text-align:left;">
-101927720
-</td>
-<td style="text-align:left;">
-ZNF793-AS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-56998
-</td>
-<td style="text-align:left;">
-56998
-</td>
-<td style="text-align:left;">
-CTNNBIP1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5431
-</td>
-<td style="text-align:left;">
-5431
-</td>
-<td style="text-align:left;">
-POLR2B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-25842
-</td>
-<td style="text-align:left;">
-25842
-</td>
-<td style="text-align:left;">
-ASF1A
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55664
-</td>
-<td style="text-align:left;">
-55664
-</td>
-<td style="text-align:left;">
-CDC37L1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57186
-</td>
-<td style="text-align:left;">
-57186
-</td>
-<td style="text-align:left;">
-RALGAPA2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5598
-</td>
-<td style="text-align:left;">
-5598
-</td>
-<td style="text-align:left;">
-MAPK7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5594
-</td>
-<td style="text-align:left;">
-5594
-</td>
-<td style="text-align:left;">
-MAPK1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-58490
-</td>
-<td style="text-align:left;">
-58490
-</td>
-<td style="text-align:left;">
-RPRD1B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8848
-</td>
-<td style="text-align:left;">
-8848
-</td>
-<td style="text-align:left;">
-TSC22D1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-29944
-</td>
-<td style="text-align:left;">
-29944
-</td>
-<td style="text-align:left;">
-PNMA3
+ORC4
 </td>
 </tr>
 <tr>
@@ -3354,35 +3004,189 @@ EWSR1
 </tr>
 <tr>
 <td style="text-align:left;">
-6139
+122553
 </td>
 <td style="text-align:left;">
-6139
+122553
 </td>
 <td style="text-align:left;">
-RPL17
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9446
-</td>
-<td style="text-align:left;">
-9446
-</td>
-<td style="text-align:left;">
-GSTO1
+TRAPPC6B
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-102723508
+54165
 </td>
 <td style="text-align:left;">
-102723508
+54165
 </td>
 <td style="text-align:left;">
-KANTR
+DCUN1D1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+57862
+</td>
+<td style="text-align:left;">
+57862
+</td>
+<td style="text-align:left;">
+ZNF410
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+57181
+</td>
+<td style="text-align:left;">
+57181
+</td>
+<td style="text-align:left;">
+SLC39A10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+112858
+</td>
+<td style="text-align:left;">
+112858
+</td>
+<td style="text-align:left;">
+TP53RK
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+79065
+</td>
+<td style="text-align:left;">
+79065
+</td>
+<td style="text-align:left;">
+ATG9A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8515
+</td>
+<td style="text-align:left;">
+8515
+</td>
+<td style="text-align:left;">
+ITGA10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+25842
+</td>
+<td style="text-align:left;">
+25842
+</td>
+<td style="text-align:left;">
+ASF1A
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+284900
+</td>
+<td style="text-align:left;">
+284900
+</td>
+<td style="text-align:left;">
+TTC28-AS1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2230
+</td>
+<td style="text-align:left;">
+2230
+</td>
+<td style="text-align:left;">
+FDX1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9524
+</td>
+<td style="text-align:left;">
+9524
+</td>
+<td style="text-align:left;">
+TECR
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+256586
+</td>
+<td style="text-align:left;">
+256586
+</td>
+<td style="text-align:left;">
+LYSMD2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+57338
+</td>
+<td style="text-align:left;">
+57338
+</td>
+<td style="text-align:left;">
+JPH3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+440944
+</td>
+<td style="text-align:left;">
+440944
+</td>
+<td style="text-align:left;">
+THUMPD3-AS1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10190
+</td>
+<td style="text-align:left;">
+10190
+</td>
+<td style="text-align:left;">
+TXNDC9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+805
+</td>
+<td style="text-align:left;">
+805
+</td>
+<td style="text-align:left;">
+CALM2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+100131211
+</td>
+<td style="text-align:left;">
+100131211
+</td>
+<td style="text-align:left;">
+NEMP2
 </td>
 </tr>
 <tr>
@@ -3398,13 +3202,123 @@ OPRL1
 </tr>
 <tr>
 <td style="text-align:left;">
-84458
+79624
 </td>
 <td style="text-align:left;">
-84458
+79624
 </td>
 <td style="text-align:left;">
-LCOR
+ARMT1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23548
+</td>
+<td style="text-align:left;">
+23548
+</td>
+<td style="text-align:left;">
+TTC33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+27430
+</td>
+<td style="text-align:left;">
+27430
+</td>
+<td style="text-align:left;">
+MAT2B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+81532
+</td>
+<td style="text-align:left;">
+81532
+</td>
+<td style="text-align:left;">
+MOB2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+158234
+</td>
+<td style="text-align:left;">
+158234
+</td>
+<td style="text-align:left;">
+TRMT10B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+147
+</td>
+<td style="text-align:left;">
+147
+</td>
+<td style="text-align:left;">
+ADRA1B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+26001
+</td>
+<td style="text-align:left;">
+26001
+</td>
+<td style="text-align:left;">
+RNF167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+57186
+</td>
+<td style="text-align:left;">
+57186
+</td>
+<td style="text-align:left;">
+RALGAPA2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5431
+</td>
+<td style="text-align:left;">
+5431
+</td>
+<td style="text-align:left;">
+POLR2B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8763
+</td>
+<td style="text-align:left;">
+8763
+</td>
+<td style="text-align:left;">
+CD164
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+55234
+</td>
+<td style="text-align:left;">
+55234
+</td>
+<td style="text-align:left;">
+SMU1
 </td>
 </tr>
 <tr>
@@ -3420,6 +3334,28 @@ B3GNT9
 </tr>
 <tr>
 <td style="text-align:left;">
+375056
+</td>
+<td style="text-align:left;">
+375056
+</td>
+<td style="text-align:left;">
+MIA3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7917
+</td>
+<td style="text-align:left;">
+7917
+</td>
+<td style="text-align:left;">
+BAG6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 54629
 </td>
 <td style="text-align:left;">
@@ -3431,35 +3367,244 @@ MINDY2
 </tr>
 <tr>
 <td style="text-align:left;">
-54469
+102723508
 </td>
 <td style="text-align:left;">
-54469
+102723508
 </td>
 <td style="text-align:left;">
-ZFAND6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-144363
-</td>
-<td style="text-align:left;">
-144363
-</td>
-<td style="text-align:left;">
-ETFRF1
+KANTR
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-9821
+26994
 </td>
 <td style="text-align:left;">
-9821
+26994
 </td>
 <td style="text-align:left;">
-RB1CC1
+RNF11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+29944
+</td>
+<td style="text-align:left;">
+29944
+</td>
+<td style="text-align:left;">
+PNMA3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9446
+</td>
+<td style="text-align:left;">
+9446
+</td>
+<td style="text-align:left;">
+GSTO1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7881
+</td>
+<td style="text-align:left;">
+7881
+</td>
+<td style="text-align:left;">
+KCNAB1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6139
+</td>
+<td style="text-align:left;">
+6139
+</td>
+<td style="text-align:left;">
+RPL17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+100133331
+</td>
+<td style="text-align:left;">
+100133331
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+101927720
+</td>
+<td style="text-align:left;">
+101927720
+</td>
+<td style="text-align:left;">
+ZNF793-AS1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6653
+</td>
+<td style="text-align:left;">
+6653
+</td>
+<td style="text-align:left;">
+SORL1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5966
+</td>
+<td style="text-align:left;">
+5966
+</td>
+<td style="text-align:left;">
+REL
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5411
+</td>
+<td style="text-align:left;">
+5411
+</td>
+<td style="text-align:left;">
+PNN
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6498
+</td>
+<td style="text-align:left;">
+6498
+</td>
+<td style="text-align:left;">
+SKIL
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8218
+</td>
+<td style="text-align:left;">
+8218
+</td>
+<td style="text-align:left;">
+CLTCL1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+83695
+</td>
+<td style="text-align:left;">
+83695
+</td>
+<td style="text-align:left;">
+RHNO1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1838
+</td>
+<td style="text-align:left;">
+1838
+</td>
+<td style="text-align:left;">
+DTNB
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+347918
+</td>
+<td style="text-align:left;">
+347918
+</td>
+<td style="text-align:left;">
+EP400P1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9894
+</td>
+<td style="text-align:left;">
+9894
+</td>
+<td style="text-align:left;">
+TELO2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10973
+</td>
+<td style="text-align:left;">
+10973
+</td>
+<td style="text-align:left;">
+ASCC3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5598
+</td>
+<td style="text-align:left;">
+5598
+</td>
+<td style="text-align:left;">
+MAPK7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8241
+</td>
+<td style="text-align:left;">
+8241
+</td>
+<td style="text-align:left;">
+RBM10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+27229
+</td>
+<td style="text-align:left;">
+27229
+</td>
+<td style="text-align:left;">
+TUBGCP4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2281
+</td>
+<td style="text-align:left;">
+2281
+</td>
+<td style="text-align:left;">
+FKBP1B
 </td>
 </tr>
 <tr>
@@ -3475,13 +3620,24 @@ LYSMD3
 </tr>
 <tr>
 <td style="text-align:left;">
-66036
+56998
 </td>
 <td style="text-align:left;">
-66036
+56998
 </td>
 <td style="text-align:left;">
-MTMR9
+CTNNBIP1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2551
+</td>
+<td style="text-align:left;">
+2551
+</td>
+<td style="text-align:left;">
+GABPA
 </td>
 </tr>
 </tbody>
@@ -3489,36 +3645,25 @@ MTMR9
 </div>
 <pre class="r"><code>intersect(DOXreQTLs$ENTREZID, DOXdeg_sp$ENTREZID)</code></pre>
 <pre><code>[1] &quot;57338&quot;</code></pre>
-<pre class="r"><code>toplist24hr %&gt;% 
+<pre class="r"><code>##lfc
+toplist24hr %&gt;% 
   group_by(time,id) %&gt;% 
-  dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
+  dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;%
   mutate(logFC=logFC*(-1)) %&gt;% 
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
   theme_classic()+
   fill_palette(palette = drug_palNoVeh)+
-  ggtitle(&quot;LogFC of n=62 Dox specific DEGs&quot;)+
+  ggtitle(&quot;LogFC of n = 68 Dox specific DEGs&quot;)+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
     axis.title = element_text(size = 15, color = &quot;black&quot;),
     axis.ticks = element_line(size = 1.5),
     axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20))</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+<pre class="r"><code>##histo check
 
-toplist24hr %&gt;% group_by(time,id) %&gt;% 
-  dplyr::filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
-  dplyr::filter(adj.P.Val &lt;0.05) %&gt;% 
-  ggplot(., aes(x=adj.P.Val))+
-  geom_histogram(aes(fill=id))+
-  geom_vline(xintercept=0.01,linetype=2)+
-    # geom_density(aes(fill=id))+
-    facet_wrap(~id)+
-  ggtitle(&quot;all DE-DOX adj p. value &lt;0.05&quot;)+
-    fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
-<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>toplist24hr %&gt;% 
+toplist24hr %&gt;% 
   dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
   dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
@@ -3528,6 +3673,13 @@ toplist24hr %&gt;% group_by(time,id) %&gt;%
     facet_wrap(~id)+
   ggtitle(&quot;all Dox specific DEG adj p. value &lt;0.01&quot;)+
     fill_palette(palette = drug_palNoVeh)+
+  theme_bw()</code></pre>
+<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>toplist24hr %&gt;% 
+  filter(ENTREZID %in% DoxonlyDEG) %&gt;% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
   theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>densityDOXsp &lt;- toplist24hr %&gt;% 
@@ -3539,14 +3691,6 @@ toplist24hr %&gt;% group_by(time,id) %&gt;%
 
 densityDOXsp</code></pre>
 <p><img src="figure/Knowles2019.Rmd/Dox%20investigation-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>toplist24hr %&gt;% 
-  filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %&gt;% 
-  # filter(adj.P.Val&lt;0.05) %&gt;%
-  ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
-<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>set.seed(12345)
 sampset &lt;- DOXdeg_sp %&gt;% 
   sample_n(.,12)
@@ -3556,11 +3700,14 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
   cpm_boxplot(cpmcounts,GOI=sampset[g,1],&quot;Dark2&quot;,drug_palc,
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 }</code></pre>
-<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-17.png" width="672" style="display: block; margin: auto;" />
-### Mitoxantrone</p>
+<p><img src="figure/Knowles2019.Rmd/Dox%20investigation-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Dox%20investigation-16.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##most convincing of these is ZNF793-AS1 101927720</code></pre>
+</div>
+<div id="mitoxantrone" class="section level3">
+<h3>Mitoxantrone</h3>
 <pre class="r"><code>MTXdeg_sp &lt;- toplist24hr %&gt;% 
-  filter(if_else(id==&quot;Mitoxantrone&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
-  filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
+   dplyr::filter(ENTREZID %in% MtxonlyDEG) %&gt;%
+  dplyr::filter(adj.P.Val&lt;0.01) %&gt;% 
   filter(id==&quot;Mitoxantrone&quot;) %&gt;% 
   dplyr::select(ENTREZID, SYMBOL)  
 
@@ -3601,50 +3748,6 @@ PLEKHG4
 </tr>
 <tr>
 <td style="text-align:left;">
-126432
-</td>
-<td style="text-align:left;">
-126432
-</td>
-<td style="text-align:left;">
-RINL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-100128191
-</td>
-<td style="text-align:left;">
-100128191
-</td>
-<td style="text-align:left;">
-TMPO-AS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-63827
-</td>
-<td style="text-align:left;">
-63827
-</td>
-<td style="text-align:left;">
-BCAN
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55147
-</td>
-<td style="text-align:left;">
-55147
-</td>
-<td style="text-align:left;">
-RBM23
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 253714
 </td>
 <td style="text-align:left;">
@@ -3656,46 +3759,24 @@ MMS22L
 </tr>
 <tr>
 <td style="text-align:left;">
-23582
+126432
 </td>
 <td style="text-align:left;">
-23582
+126432
 </td>
 <td style="text-align:left;">
-CCNDBP1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-4077
-</td>
-<td style="text-align:left;">
-4077
-</td>
-<td style="text-align:left;">
-NBR1
+RINL
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-7014
+4001
 </td>
 <td style="text-align:left;">
-7014
+4001
 </td>
 <td style="text-align:left;">
-TERF2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-25886
-</td>
-<td style="text-align:left;">
-25886
-</td>
-<td style="text-align:left;">
-POC1A
+LMNB1
 </td>
 </tr>
 <tr>
@@ -3722,24 +3803,57 @@ CDCA7
 </tr>
 <tr>
 <td style="text-align:left;">
-79758
+25886
 </td>
 <td style="text-align:left;">
-79758
+25886
 </td>
 <td style="text-align:left;">
-DHRS12
+POC1A
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-23786
+100128191
 </td>
 <td style="text-align:left;">
-23786
+100128191
 </td>
 <td style="text-align:left;">
-BCL2L13
+TMPO-AS1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+84892
+</td>
+<td style="text-align:left;">
+84892
+</td>
+<td style="text-align:left;">
+POMGNT2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+27346
+</td>
+<td style="text-align:left;">
+27346
+</td>
+<td style="text-align:left;">
+TMEM97
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+63827
+</td>
+<td style="text-align:left;">
+63827
+</td>
+<td style="text-align:left;">
+BCAN
 </td>
 </tr>
 <tr>
@@ -3755,13 +3869,13 @@ ASF1B
 </tr>
 <tr>
 <td style="text-align:left;">
-22950
+4173
 </td>
 <td style="text-align:left;">
-22950
+4173
 </td>
 <td style="text-align:left;">
-SLC4A1AP
+MCM4
 </td>
 </tr>
 <tr>
@@ -3777,13 +3891,90 @@ WDR55
 </tr>
 <tr>
 <td style="text-align:left;">
-4001
+8317
 </td>
 <td style="text-align:left;">
-4001
+8317
 </td>
 <td style="text-align:left;">
-LMNB1
+CDC7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+57699
+</td>
+<td style="text-align:left;">
+57699
+</td>
+<td style="text-align:left;">
+CPNE5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+655
+</td>
+<td style="text-align:left;">
+655
+</td>
+<td style="text-align:left;">
+BMP7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9401
+</td>
+<td style="text-align:left;">
+9401
+</td>
+<td style="text-align:left;">
+RECQL4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+126382
+</td>
+<td style="text-align:left;">
+126382
+</td>
+<td style="text-align:left;">
+NR2C2AP
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+79109
+</td>
+<td style="text-align:left;">
+79109
+</td>
+<td style="text-align:left;">
+MAPKAP1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+441478
+</td>
+<td style="text-align:left;">
+441478
+</td>
+<td style="text-align:left;">
+NRARP
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+22950
+</td>
+<td style="text-align:left;">
+22950
+</td>
+<td style="text-align:left;">
+SLC4A1AP
 </td>
 </tr>
 <tr>
@@ -3810,6 +4001,39 @@ ERMARD
 </tr>
 <tr>
 <td style="text-align:left;">
+3148
+</td>
+<td style="text-align:left;">
+3148
+</td>
+<td style="text-align:left;">
+HMGB2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3983
+</td>
+<td style="text-align:left;">
+3983
+</td>
+<td style="text-align:left;">
+ABLIM1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9134
+</td>
+<td style="text-align:left;">
+9134
+</td>
+<td style="text-align:left;">
+CCNE2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 25981
 </td>
 <td style="text-align:left;">
@@ -3817,6 +4041,17 @@ ERMARD
 </td>
 <td style="text-align:left;">
 DNAH1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9811
+</td>
+<td style="text-align:left;">
+9811
+</td>
+<td style="text-align:left;">
+CTIF
 </td>
 </tr>
 <tr>
@@ -3832,123 +4067,90 @@ ATXN7L3
 </tr>
 <tr>
 <td style="text-align:left;">
-11152
+79758
 </td>
 <td style="text-align:left;">
-11152
+79758
 </td>
 <td style="text-align:left;">
-WDR45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9820
-</td>
-<td style="text-align:left;">
-9820
-</td>
-<td style="text-align:left;">
-CUL7
+DHRS12
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-23558
+55147
 </td>
 <td style="text-align:left;">
-23558
+55147
 </td>
 <td style="text-align:left;">
-WBP2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6293
-</td>
-<td style="text-align:left;">
-6293
-</td>
-<td style="text-align:left;">
-VPS52
+RBM23
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-150962
+65057
 </td>
 <td style="text-align:left;">
-150962
+65057
 </td>
 <td style="text-align:left;">
-PUS10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26164
-</td>
-<td style="text-align:left;">
-26164
-</td>
-<td style="text-align:left;">
-MTG2
+ACD
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-64799
+645954
 </td>
 <td style="text-align:left;">
-64799
+645954
 </td>
 <td style="text-align:left;">
-IQCH
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-27346
-</td>
-<td style="text-align:left;">
-27346
-</td>
-<td style="text-align:left;">
-TMEM97
+SVIL2P
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-55717
+64116
 </td>
 <td style="text-align:left;">
-55717
+64116
 </td>
 <td style="text-align:left;">
-WDR11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8723
-</td>
-<td style="text-align:left;">
-8723
-</td>
-<td style="text-align:left;">
-SNX4
+SLC39A8
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-4173
+147645
 </td>
 <td style="text-align:left;">
-4173
+147645
 </td>
 <td style="text-align:left;">
-MCM4
+VSIG10L
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23582
+</td>
+<td style="text-align:left;">
+23582
+</td>
+<td style="text-align:left;">
+CCNDBP1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8321
+</td>
+<td style="text-align:left;">
+8321
+</td>
+<td style="text-align:left;">
+FZD1
 </td>
 </tr>
 <tr>
@@ -3964,230 +4166,86 @@ RBM14
 </tr>
 <tr>
 <td style="text-align:left;">
-655
+9820
 </td>
 <td style="text-align:left;">
-655
+9820
 </td>
 <td style="text-align:left;">
-BMP7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9391
-</td>
-<td style="text-align:left;">
-9391
-</td>
-<td style="text-align:left;">
-CIAO1
+CUL7
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-3148
+55706
 </td>
 <td style="text-align:left;">
-3148
+55706
 </td>
 <td style="text-align:left;">
-HMGB2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8317
-</td>
-<td style="text-align:left;">
-8317
-</td>
-<td style="text-align:left;">
-CDC7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-441478
-</td>
-<td style="text-align:left;">
-441478
-</td>
-<td style="text-align:left;">
-NRARP
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-90120
-</td>
-<td style="text-align:left;">
-90120
-</td>
-<td style="text-align:left;">
-TMEM250
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57699
-</td>
-<td style="text-align:left;">
-57699
-</td>
-<td style="text-align:left;">
-CPNE5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6273
-</td>
-<td style="text-align:left;">
-6273
-</td>
-<td style="text-align:left;">
-S100A2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55670
-</td>
-<td style="text-align:left;">
-55670
-</td>
-<td style="text-align:left;">
-PEX26
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79027
-</td>
-<td style="text-align:left;">
-79027
-</td>
-<td style="text-align:left;">
-ZNF655
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-11176
-</td>
-<td style="text-align:left;">
-11176
-</td>
-<td style="text-align:left;">
-BAZ2A
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-100131067
-</td>
-<td style="text-align:left;">
-100131067
-</td>
-<td style="text-align:left;">
-CKMT2-AS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-84892
-</td>
-<td style="text-align:left;">
-84892
-</td>
-<td style="text-align:left;">
-POMGNT2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9134
-</td>
-<td style="text-align:left;">
-9134
-</td>
-<td style="text-align:left;">
-CCNE2
+NDC1
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-<pre class="r"><code>toplist24hr %&gt;% 
-  filter(ENTREZID %in% MTXdeg_sp$ENTREZID) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
-  # filter(id==&quot;Mitoxantrone&quot;)
+<pre class="r"><code>#intersect(DOXreQTLs$ENTREZID, MTXdeg_sp$ENTREZID)#none
+
+##lfc
+
+toplist24hr %&gt;% 
+  group_by(time,id) %&gt;% 
+  filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
   mutate(logFC=logFC*(-1)) %&gt;% 
-  add_row(time=&quot;24_hours&quot;,id=&quot;Epirubicin&quot;) %&gt;% 
-  add_row(time=&quot;24_hours&quot;,id=&quot;Daunorubicin&quot;) %&gt;% 
-  mutate(id= factor(id,levels= c(&quot;Daunorubicin&quot;, &quot;Doxorubicin&quot;, &quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;))) %&gt;% 
-  ggplot(., aes(x= id, y=logFC))+
+  mutate(treatment =case_match( id, 
+                         &#39;Daunorubicin&#39;~&#39;DNR&#39;,   
+                         &#39;Doxorubicin&#39;~&#39;DOX&#39; ,
+                         &#39;Epirubicin&#39;~&#39;EPI&#39; , 
+                         &#39;Mitoxantrone&#39; ~ &#39;MTX&#39;,
+                         &#39;Trastuzumab&#39;~ &#39;TRX&#39;, .default = id)) %&gt;% 
+
+  ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
+  xlab(&quot; &quot;)+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh,drop = FALSE)+
-  ggtitle(&quot;LogFC of n=48 MTX specific DEGs&quot;)+
+  fill_palette(palette = drug_palNoVeh)+
+  ggtitle(&quot;LogFC of MTX specific DEGs (n = 48)&quot;)+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
     axis.title = element_text(size = 15, color = &quot;black&quot;),
     axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20))</code></pre>
+    axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 0))</code></pre>
 <p><img src="figure/Knowles2019.Rmd/mitoonly-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+<pre class="r"><code>##histo check
 
 toplist24hr %&gt;% 
-  filter(if_else(id==&quot;Mitoxantrone&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
-  filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
-   add_row(time=&quot;24_hours&quot;,id=&quot;Epirubicin&quot;) %&gt;% 
-   mutate(id= factor(id, levels = c(&quot;Daunorubicin&quot;, &quot;Doxorubicin&quot;, &quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;))) %&gt;% 
-   ggplot(., aes(x=adj.P.Val))+
+  dplyr::filter(ENTREZID %in% MTXdeg_sp$ENTREZID) %&gt;% 
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
+  ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
-  geom_vline(xintercept=0.01, linetype=2)+
+  geom_vline(xintercept=0.01,linetype=2)+
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
-  ggtitle(&quot;MTX adj p. value &lt;0.05&quot;)+
-    fill_palette(palette = drug_palNoVeh, drop = FALSE)+
+  ggtitle(&quot;all MTX specific DEG adj p. value &lt;0.01&quot;)+
+    fill_palette(palette = drug_palNoVeh)+
   theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/mitoonly-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
-  # filter(if_else(id==&quot;Mitoxantrone&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
   filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
-   add_row(time=&quot;24_hours&quot;,id=&quot;Epirubicin&quot;) %&gt;% 
-   mutate(id= factor(id, levels = c(&quot;Daunorubicin&quot;, &quot;Doxorubicin&quot;, &quot;Epirubicin&quot;, &quot;Mitoxantrone&quot;))) %&gt;% 
-   ggplot(., aes(x=adj.P.Val))+
-  geom_histogram(aes(fill=id))+
-  geom_vline(xintercept=0.01, linetype=2)+
-    # geom_density(aes(fill=id))+
-    facet_wrap(~id)+
-  ggtitle(&quot;MTX adj p. value &lt;0.05&quot;)+
-    fill_palette(palette = drug_palNoVeh, drop = FALSE)+
+  ggplot(., aes(x=adj.P.Val))+
+  geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palNoVeh)+
   theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/mitoonly-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>toplist24hr %&gt;% 
+<pre class="r"><code>densityMTXsp &lt;- toplist24hr %&gt;% 
   filter(ENTREZID %in% MtxonlyDEG) %&gt;% 
-  # filter(adj.P.Val&lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()+
-   ggtitle(&quot;All sigDE (adj.P.val &lt;0.05) MTX genes&quot;)</code></pre>
+  theme_bw()
+
+densityMTXsp</code></pre>
 <p><img src="figure/Knowles2019.Rmd/mitoonly-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>toplist24hr %&gt;% 
-  filter(ENTREZID %in% MTXdeg_sp$ENTREZID) %&gt;% 
-  # filter(adj.P.Val&lt;0.05) %&gt;%
-  ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
-  theme_bw()+
-  ggtitle(&quot;Only MTX specific (n=48) genes across all treatments&quot;)</code></pre>
-<p><img src="figure/Knowles2019.Rmd/mitoonly-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>set.seed(12345)
 sampset &lt;- MTXdeg_sp %&gt;% 
   sample_n(.,12)
@@ -4197,1536 +4255,63 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
   cpm_boxplot(cpmcounts,GOI=sampset[g,1],&quot;Dark2&quot;,drug_palc,
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 }</code></pre>
-<p><img src="figure/Knowles2019.Rmd/mitoonly-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Knowles2019.Rmd/mitoonly-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/mitoonly-16.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##most convincing of these is 54853 WDR55 </code></pre>
 <div id="daunorubicin" class="section level4">
 <h4>Daunorubicin</h4>
 <pre class="r"><code>DNRdeg_sp &lt;- toplist24hr %&gt;% 
-  filter(if_else(id==&quot;Daunorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
+  filter(adj.P.Val&lt;0.01) %&gt;% 
   filter(ENTREZID %in% DnronlyDEG) %&gt;% 
   filter(id==&quot;Daunorubicin&quot;) %&gt;% 
   dplyr::select(ENTREZID, SYMBOL)  
 
-DNRdeg_sp %&gt;% 
-  kable(., caption= &quot;DNR specific genes&quot;) %&gt;% 
-  kable_paper(&quot;striped&quot;, full_width = TRUE) %&gt;%  
-  kable_styling(full_width = FALSE, font_size = 16) %&gt;% 
-  scroll_box( height = &quot;500px&quot;)</code></pre>
-<div
-style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; ">
-<table class=" lightable-paper lightable-striped table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">
-DNR specific genes
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-ENTREZID
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-SYMBOL
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-5742
-</td>
-<td style="text-align:left;">
-5742
-</td>
-<td style="text-align:left;">
-PTGS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-114826
-</td>
-<td style="text-align:left;">
-114826
-</td>
-<td style="text-align:left;">
-SMYD4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6117
-</td>
-<td style="text-align:left;">
-6117
-</td>
-<td style="text-align:left;">
-RPA1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-54550
-</td>
-<td style="text-align:left;">
-54550
-</td>
-<td style="text-align:left;">
-NECAB2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55000
-</td>
-<td style="text-align:left;">
-55000
-</td>
-<td style="text-align:left;">
-TUG1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23150
-</td>
-<td style="text-align:left;">
-23150
-</td>
-<td style="text-align:left;">
-FRMD4B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-128637
-</td>
-<td style="text-align:left;">
-128637
-</td>
-<td style="text-align:left;">
-TBC1D20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8864
-</td>
-<td style="text-align:left;">
-8864
-</td>
-<td style="text-align:left;">
-PER2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132430
-</td>
-<td style="text-align:left;">
-132430
-</td>
-<td style="text-align:left;">
-PABPC4L
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-54973
-</td>
-<td style="text-align:left;">
-54973
-</td>
-<td style="text-align:left;">
-INTS11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-140465
-</td>
-<td style="text-align:left;">
-140465
-</td>
-<td style="text-align:left;">
-MYL6B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-81628
-</td>
-<td style="text-align:left;">
-81628
-</td>
-<td style="text-align:left;">
-TSC22D4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-53838
-</td>
-<td style="text-align:left;">
-53838
-</td>
-<td style="text-align:left;">
-C11orf24
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-387640
-</td>
-<td style="text-align:left;">
-387640
-</td>
-<td style="text-align:left;">
-SKIDA1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57654
-</td>
-<td style="text-align:left;">
-57654
-</td>
-<td style="text-align:left;">
-UVSSA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-11273
-</td>
-<td style="text-align:left;">
-11273
-</td>
-<td style="text-align:left;">
-ATXN2L
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-56624
-</td>
-<td style="text-align:left;">
-56624
-</td>
-<td style="text-align:left;">
-ASAH2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-255043
-</td>
-<td style="text-align:left;">
-255043
-</td>
-<td style="text-align:left;">
-TMEM86B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23428
-</td>
-<td style="text-align:left;">
-23428
-</td>
-<td style="text-align:left;">
-SLC7A8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-4007
-</td>
-<td style="text-align:left;">
-4007
-</td>
-<td style="text-align:left;">
-PRICKLE3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5915
-</td>
-<td style="text-align:left;">
-5915
-</td>
-<td style="text-align:left;">
-RARB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79137
-</td>
-<td style="text-align:left;">
-79137
-</td>
-<td style="text-align:left;">
-RETREG2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57605
-</td>
-<td style="text-align:left;">
-57605
-</td>
-<td style="text-align:left;">
-PITPNM2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-4241
-</td>
-<td style="text-align:left;">
-4241
-</td>
-<td style="text-align:left;">
-MELTF
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10043
-</td>
-<td style="text-align:left;">
-10043
-</td>
-<td style="text-align:left;">
-TOM1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8766
-</td>
-<td style="text-align:left;">
-8766
-</td>
-<td style="text-align:left;">
-RAB11A
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10233
-</td>
-<td style="text-align:left;">
-10233
-</td>
-<td style="text-align:left;">
-LRRC23
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23140
-</td>
-<td style="text-align:left;">
-23140
-</td>
-<td style="text-align:left;">
-ZZEF1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-7675
-</td>
-<td style="text-align:left;">
-7675
-</td>
-<td style="text-align:left;">
-ZNF121
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-83606
-</td>
-<td style="text-align:left;">
-83606
-</td>
-<td style="text-align:left;">
-GUCD1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6726
-</td>
-<td style="text-align:left;">
-6726
-</td>
-<td style="text-align:left;">
-SRP9
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5026
-</td>
-<td style="text-align:left;">
-5026
-</td>
-<td style="text-align:left;">
-P2RX5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6550
-</td>
-<td style="text-align:left;">
-6550
-</td>
-<td style="text-align:left;">
-SLC9A3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10457
-</td>
-<td style="text-align:left;">
-10457
-</td>
-<td style="text-align:left;">
-GPNMB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-22982
-</td>
-<td style="text-align:left;">
-22982
-</td>
-<td style="text-align:left;">
-DIP2C
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-1200
-</td>
-<td style="text-align:left;">
-1200
-</td>
-<td style="text-align:left;">
-TPP1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-84922
-</td>
-<td style="text-align:left;">
-84922
-</td>
-<td style="text-align:left;">
-FIZ1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-200014
-</td>
-<td style="text-align:left;">
-200014
-</td>
-<td style="text-align:left;">
-CC2D1B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-4149
-</td>
-<td style="text-align:left;">
-4149
-</td>
-<td style="text-align:left;">
-MAX
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55818
-</td>
-<td style="text-align:left;">
-55818
-</td>
-<td style="text-align:left;">
-KDM3A
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-3710
-</td>
-<td style="text-align:left;">
-3710
-</td>
-<td style="text-align:left;">
-ITPR3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5350
-</td>
-<td style="text-align:left;">
-5350
-</td>
-<td style="text-align:left;">
-PLN
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-22938
-</td>
-<td style="text-align:left;">
-22938
-</td>
-<td style="text-align:left;">
-SNW1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-284612
-</td>
-<td style="text-align:left;">
-284612
-</td>
-<td style="text-align:left;">
-SYPL2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10992
-</td>
-<td style="text-align:left;">
-10992
-</td>
-<td style="text-align:left;">
-SF3B2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5463
-</td>
-<td style="text-align:left;">
-5463
-</td>
-<td style="text-align:left;">
-POU6F1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9757
-</td>
-<td style="text-align:left;">
-9757
-</td>
-<td style="text-align:left;">
-KMT2B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-146880
-</td>
-<td style="text-align:left;">
-146880
-</td>
-<td style="text-align:left;">
-ARHGAP27P1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-1827
-</td>
-<td style="text-align:left;">
-1827
-</td>
-<td style="text-align:left;">
-RCAN1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-29763
-</td>
-<td style="text-align:left;">
-29763
-</td>
-<td style="text-align:left;">
-PACSIN3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10081
-</td>
-<td style="text-align:left;">
-10081
-</td>
-<td style="text-align:left;">
-PDCD7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-56132
-</td>
-<td style="text-align:left;">
-56132
-</td>
-<td style="text-align:left;">
-PCDHB3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-257144
-</td>
-<td style="text-align:left;">
-257144
-</td>
-<td style="text-align:left;">
-GCSAM
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9929
-</td>
-<td style="text-align:left;">
-9929
-</td>
-<td style="text-align:left;">
-JOSD1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-7052
-</td>
-<td style="text-align:left;">
-7052
-</td>
-<td style="text-align:left;">
-TGM2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-11190
-</td>
-<td style="text-align:left;">
-11190
-</td>
-<td style="text-align:left;">
-CEP250
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-388722
-</td>
-<td style="text-align:left;">
-388722
-</td>
-<td style="text-align:left;">
-C1orf53
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2188
-</td>
-<td style="text-align:left;">
-2188
-</td>
-<td style="text-align:left;">
-FANCF
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-375690
-</td>
-<td style="text-align:left;">
-375690
-</td>
-<td style="text-align:left;">
-WASH5P
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-28957
-</td>
-<td style="text-align:left;">
-28957
-</td>
-<td style="text-align:left;">
-MRPS28
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-644150
-</td>
-<td style="text-align:left;">
-644150
-</td>
-<td style="text-align:left;">
-WIPF3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-4861
-</td>
-<td style="text-align:left;">
-4861
-</td>
-<td style="text-align:left;">
-NPAS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55876
-</td>
-<td style="text-align:left;">
-55876
-</td>
-<td style="text-align:left;">
-GSDMB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6832
-</td>
-<td style="text-align:left;">
-6832
-</td>
-<td style="text-align:left;">
-SUPV3L1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-90993
-</td>
-<td style="text-align:left;">
-90993
-</td>
-<td style="text-align:left;">
-CREB3L1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-64761
-</td>
-<td style="text-align:left;">
-64761
-</td>
-<td style="text-align:left;">
-PARP12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-7249
-</td>
-<td style="text-align:left;">
-7249
-</td>
-<td style="text-align:left;">
-TSC2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-158431
-</td>
-<td style="text-align:left;">
-158431
-</td>
-<td style="text-align:left;">
-ZNF782
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10580
-</td>
-<td style="text-align:left;">
-10580
-</td>
-<td style="text-align:left;">
-SORBS1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-220869
-</td>
-<td style="text-align:left;">
-220869
-</td>
-<td style="text-align:left;">
-CBWD5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55140
-</td>
-<td style="text-align:left;">
-55140
-</td>
-<td style="text-align:left;">
-ELP3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5587
-</td>
-<td style="text-align:left;">
-5587
-</td>
-<td style="text-align:left;">
-PRKD1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-80347
-</td>
-<td style="text-align:left;">
-80347
-</td>
-<td style="text-align:left;">
-COASY
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6302
-</td>
-<td style="text-align:left;">
-6302
-</td>
-<td style="text-align:left;">
-TSPAN31
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9564
-</td>
-<td style="text-align:left;">
-9564
-</td>
-<td style="text-align:left;">
-BCAR1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-7760
-</td>
-<td style="text-align:left;">
-7760
-</td>
-<td style="text-align:left;">
-ZNF213
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26267
-</td>
-<td style="text-align:left;">
-26267
-</td>
-<td style="text-align:left;">
-FBXO10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5570
-</td>
-<td style="text-align:left;">
-5570
-</td>
-<td style="text-align:left;">
-PKIB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6938
-</td>
-<td style="text-align:left;">
-6938
-</td>
-<td style="text-align:left;">
-TCF12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55132
-</td>
-<td style="text-align:left;">
-55132
-</td>
-<td style="text-align:left;">
-LARP1B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-143689
-</td>
-<td style="text-align:left;">
-143689
-</td>
-<td style="text-align:left;">
-PIWIL4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6455
-</td>
-<td style="text-align:left;">
-6455
-</td>
-<td style="text-align:left;">
-SH3GL1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57610
-</td>
-<td style="text-align:left;">
-57610
-</td>
-<td style="text-align:left;">
-RANBP10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-337876
-</td>
-<td style="text-align:left;">
-337876
-</td>
-<td style="text-align:left;">
-CHSY3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-54520
-</td>
-<td style="text-align:left;">
-54520
-</td>
-<td style="text-align:left;">
-CCDC93
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23476
-</td>
-<td style="text-align:left;">
-23476
-</td>
-<td style="text-align:left;">
-BRD4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-84897
-</td>
-<td style="text-align:left;">
-84897
-</td>
-<td style="text-align:left;">
-TBRG1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-81575
-</td>
-<td style="text-align:left;">
-81575
-</td>
-<td style="text-align:left;">
-APOLD1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-728492
-</td>
-<td style="text-align:left;">
-728492
-</td>
-<td style="text-align:left;">
-SERF1B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-285464
-</td>
-<td style="text-align:left;">
-285464
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-960
-</td>
-<td style="text-align:left;">
-960
-</td>
-<td style="text-align:left;">
-CD44
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-25850
-</td>
-<td style="text-align:left;">
-25850
-</td>
-<td style="text-align:left;">
-ZNF345
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6158
-</td>
-<td style="text-align:left;">
-6158
-</td>
-<td style="text-align:left;">
-RPL28
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-157773
-</td>
-<td style="text-align:left;">
-157773
-</td>
-<td style="text-align:left;">
-C8orf48
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26156
-</td>
-<td style="text-align:left;">
-26156
-</td>
-<td style="text-align:left;">
-RSL1D1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-1487
-</td>
-<td style="text-align:left;">
-1487
-</td>
-<td style="text-align:left;">
-CTBP1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23467
-</td>
-<td style="text-align:left;">
-23467
-</td>
-<td style="text-align:left;">
-NPTXR
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-91355
-</td>
-<td style="text-align:left;">
-91355
-</td>
-<td style="text-align:left;">
-LRP5L
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26005
-</td>
-<td style="text-align:left;">
-26005
-</td>
-<td style="text-align:left;">
-C2CD3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-11108
-</td>
-<td style="text-align:left;">
-11108
-</td>
-<td style="text-align:left;">
-PRDM4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-25936
-</td>
-<td style="text-align:left;">
-25936
-</td>
-<td style="text-align:left;">
-NSL1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-128826
-</td>
-<td style="text-align:left;">
-128826
-</td>
-<td style="text-align:left;">
-MIR1-1HG
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-254048
-</td>
-<td style="text-align:left;">
-254048
-</td>
-<td style="text-align:left;">
-UBN2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-145165
-</td>
-<td style="text-align:left;">
-145165
-</td>
-<td style="text-align:left;">
-ST13P4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-105371592
-</td>
-<td style="text-align:left;">
-105371592
-</td>
-<td style="text-align:left;">
-LOC105371592
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6143
-</td>
-<td style="text-align:left;">
-6143
-</td>
-<td style="text-align:left;">
-RPL19
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57139
-</td>
-<td style="text-align:left;">
-57139
-</td>
-<td style="text-align:left;">
-RGL3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6767
-</td>
-<td style="text-align:left;">
-6767
-</td>
-<td style="text-align:left;">
-ST13
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6992
-</td>
-<td style="text-align:left;">
-6992
-</td>
-<td style="text-align:left;">
-PPP1R11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-989
-</td>
-<td style="text-align:left;">
-989
-</td>
-<td style="text-align:left;">
-SEPTIN7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2115
-</td>
-<td style="text-align:left;">
-2115
-</td>
-<td style="text-align:left;">
-ETV1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-643180
-</td>
-<td style="text-align:left;">
-643180
-</td>
-<td style="text-align:left;">
-CCT6P3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-4152
-</td>
-<td style="text-align:left;">
-4152
-</td>
-<td style="text-align:left;">
-MBD1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57404
-</td>
-<td style="text-align:left;">
-57404
-</td>
-<td style="text-align:left;">
-CYP20A1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-171391
-</td>
-<td style="text-align:left;">
-171391
-</td>
-<td style="text-align:left;">
-GATD1-DT
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6612
-</td>
-<td style="text-align:left;">
-6612
-</td>
-<td style="text-align:left;">
-SUMO3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-642799
-</td>
-<td style="text-align:left;">
-642799
-</td>
-<td style="text-align:left;">
-NPIPA2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8934
-</td>
-<td style="text-align:left;">
-8934
-</td>
-<td style="text-align:left;">
-RAB29
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-6722
-</td>
-<td style="text-align:left;">
-6722
-</td>
-<td style="text-align:left;">
-SRF
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10628
-</td>
-<td style="text-align:left;">
-10628
-</td>
-<td style="text-align:left;">
-TXNIP
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79894
-</td>
-<td style="text-align:left;">
-79894
-</td>
-<td style="text-align:left;">
-ZNF672
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-118987
-</td>
-<td style="text-align:left;">
-118987
-</td>
-<td style="text-align:left;">
-PDZD8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-157697
-</td>
-<td style="text-align:left;">
-157697
-</td>
-<td style="text-align:left;">
-ERICH1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-81502
-</td>
-<td style="text-align:left;">
-81502
-</td>
-<td style="text-align:left;">
-HM13
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55787
-</td>
-<td style="text-align:left;">
-55787
-</td>
-<td style="text-align:left;">
-TXLNG
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-11135
-</td>
-<td style="text-align:left;">
-11135
-</td>
-<td style="text-align:left;">
-CDC42EP1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5493
-</td>
-<td style="text-align:left;">
-5493
-</td>
-<td style="text-align:left;">
-PPL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55102
-</td>
-<td style="text-align:left;">
-55102
-</td>
-<td style="text-align:left;">
-ATG2B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-3925
-</td>
-<td style="text-align:left;">
-3925
-</td>
-<td style="text-align:left;">
-STMN1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-147700
-</td>
-<td style="text-align:left;">
-147700
-</td>
-<td style="text-align:left;">
-KLC3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10475
-</td>
-<td style="text-align:left;">
-10475
-</td>
-<td style="text-align:left;">
-TRIM38
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<pre class="r"><code>toplist24hr %&gt;% 
-  group_by(time,id) %&gt;% 
+##lfc
+
+toplist24hr %&gt;% 
   filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
-  # filter(id==&quot;Daunorubicin&quot;)
+  group_by(time,id) %&gt;% 
+  
   mutate(logFC=logFC*(-1)) %&gt;% 
-  ggplot(., aes(x= id, y=logFC))+
+  mutate(treatment =case_match( id, 
+                         &#39;Daunorubicin&#39;~&#39;DNR&#39;,   
+                         &#39;Doxorubicin&#39;~&#39;DOX&#39; ,
+                         &#39;Epirubicin&#39;~&#39;EPI&#39; , 
+                         &#39;Mitoxantrone&#39; ~ &#39;MTX&#39;,
+                         &#39;Trastuzumab&#39;~ &#39;TRX&#39;, .default = id)) %&gt;% 
+
+  ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
+  xlab(&quot; &quot;)+
   theme_classic()+
   fill_palette(palette = drug_palNoVeh)+
-  ggtitle(&quot;LogFC of n=131 DNR specific DEGs&quot;)+
+   ggtitle(&quot;LogFC of DNR specific DEGs (n = 112)&quot;)+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
     axis.title = element_text(size = 15, color = &quot;black&quot;),
     axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20))</code></pre>
+    axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 0))</code></pre>
 <p><img src="figure/Knowles2019.Rmd/dnr%20only-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+<pre class="r"><code>##histo check
 
 toplist24hr %&gt;% 
-  # filter(if_else(id==&quot;Daunorubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
-  group_by(time,id) %&gt;% 
-  filter(ENTREZID %in% DnronlyDEG) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
+  dplyr::filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %&gt;% 
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
-  ggtitle(&quot;DNR adj p. value &lt;0.05&quot;)+
+  ggtitle(&quot;all DNR specific DEG adj p. value &lt;0.01&quot;)+
     fill_palette(palette = drug_palNoVeh)+
-  theme_bw()+
-  ggtitle(&quot;All sigDE (adj.P.val &lt;0.05) DNR genes&quot;)</code></pre>
+  theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/dnr%20only-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>toplist24hr %&gt;% 
-   filter(ENTREZID %in% DnronlyDEG) %&gt;% 
-  
-  # filter(adj.P.Val&lt;0.05) %&gt;%
+  filter(ENTREZID %in% DnronlyDEG) %&gt;% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()+
-  ggtitle(&quot;All sigDE (adj.P.val &lt;0.05) DNR genes&quot;)</code></pre>
+  theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/dnr%20only-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>toplist24hr %&gt;% 
- filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %&gt;% 
-  # filter(adj.P.Val&lt;0.05) %&gt;%
-  ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
-  theme_bw()+
-  ggtitle(&quot;Only DNR specific n=131 genes&quot;)</code></pre>
-<p><img src="figure/Knowles2019.Rmd/dnr%20only-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>set.seed(12345)
 sampset &lt;- DNRdeg_sp %&gt;% 
   sample_n(.,12)
@@ -5736,10 +4321,13 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
   cpm_boxplot(cpmcounts,GOI=sampset[g,1],&quot;Dark2&quot;,drug_palc,
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 }</code></pre>
-<p><img src="figure/Knowles2019.Rmd/dnr%20only-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-16.png" width="672" style="display: block; margin: auto;" />
-#### Epirubicin</p>
+<p><img src="figure/Knowles2019.Rmd/dnr%20only-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/dnr%20only-15.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##most convincing of these is 114826 SMYD4</code></pre>
+</div>
+<div id="epirubicin" class="section level4">
+<h4>Epirubicin</h4>
 <pre class="r"><code>EPIdeg_sp &lt;- toplist24hr %&gt;% 
-  filter(if_else(id==&quot;Epirubicin&quot;,adj.P.Val&lt;0.01,adj.P.Val&gt;0.01 )) %&gt;% 
+  filter(adj.P.Val&lt;0.01) %&gt;% 
   filter(ENTREZID %in% EpionlyDEG) %&gt;% 
   filter(id==&quot;Epirubicin&quot;) %&gt;% 
   dplyr::select(ENTREZID, SYMBOL)  
@@ -5770,17 +4358,6 @@ SYMBOL
 <tbody>
 <tr>
 <td style="text-align:left;">
-79798
-</td>
-<td style="text-align:left;">
-79798
-</td>
-<td style="text-align:left;">
-ARMC5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 9685
 </td>
 <td style="text-align:left;">
@@ -5788,17 +4365,6 @@ ARMC5
 </td>
 <td style="text-align:left;">
 CLINT1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55006
-</td>
-<td style="text-align:left;">
-55006
-</td>
-<td style="text-align:left;">
-TRMT61B
 </td>
 </tr>
 <tr>
@@ -5814,24 +4380,24 @@ PLAA
 </tr>
 <tr>
 <td style="text-align:left;">
-54508
+55006
 </td>
 <td style="text-align:left;">
-54508
+55006
 </td>
 <td style="text-align:left;">
-EPB41L4A-DT
+TRMT61B
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-55702
+79798
 </td>
 <td style="text-align:left;">
-55702
+79798
 </td>
 <td style="text-align:left;">
-YJU2
+ARMC5
 </td>
 </tr>
 <tr>
@@ -5843,6 +4409,50 @@ YJU2
 </td>
 <td style="text-align:left;">
 ZNF668
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+51434
+</td>
+<td style="text-align:left;">
+51434
+</td>
+<td style="text-align:left;">
+ANAPC7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+54508
+</td>
+<td style="text-align:left;">
+54508
+</td>
+<td style="text-align:left;">
+EPB41L4A-DT
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+92140
+</td>
+<td style="text-align:left;">
+92140
+</td>
+<td style="text-align:left;">
+MTDH
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11097
+</td>
+<td style="text-align:left;">
+11097
+</td>
+<td style="text-align:left;">
+NUP42
 </td>
 </tr>
 <tr>
@@ -5869,57 +4479,35 @@ CFAP97
 </tr>
 <tr>
 <td style="text-align:left;">
-23086
+57325
 </td>
 <td style="text-align:left;">
-23086
+57325
 </td>
 <td style="text-align:left;">
-EXPH5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-90864
-</td>
-<td style="text-align:left;">
-90864
-</td>
-<td style="text-align:left;">
-SPSB3
+KAT14
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-11097
+201627
 </td>
 <td style="text-align:left;">
-11097
+201627
 </td>
 <td style="text-align:left;">
-NUP42
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-64863
-</td>
-<td style="text-align:left;">
-64863
-</td>
-<td style="text-align:left;">
-METTL4
+DENND6A
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-10342
+55702
 </td>
 <td style="text-align:left;">
-10342
+55702
 </td>
 <td style="text-align:left;">
-TFG
+YJU2
 </td>
 </tr>
 <tr>
@@ -5935,61 +4523,6 @@ RLIM
 </tr>
 <tr>
 <td style="text-align:left;">
-57325
-</td>
-<td style="text-align:left;">
-57325
-</td>
-<td style="text-align:left;">
-KAT14
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-285636
-</td>
-<td style="text-align:left;">
-285636
-</td>
-<td style="text-align:left;">
-RIMOC1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-220963
-</td>
-<td style="text-align:left;">
-220963
-</td>
-<td style="text-align:left;">
-SLC16A9
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-7110
-</td>
-<td style="text-align:left;">
-7110
-</td>
-<td style="text-align:left;">
-TMF1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-51434
-</td>
-<td style="text-align:left;">
-51434
-</td>
-<td style="text-align:left;">
-ANAPC7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 55105
 </td>
 <td style="text-align:left;">
@@ -6001,24 +4534,46 @@ GPATCH2
 </tr>
 <tr>
 <td style="text-align:left;">
-92140
+64863
 </td>
 <td style="text-align:left;">
-92140
+64863
 </td>
 <td style="text-align:left;">
-MTDH
+METTL4
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-1938
+90864
 </td>
 <td style="text-align:left;">
-1938
+90864
 </td>
 <td style="text-align:left;">
-EEF2
+SPSB3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8624
+</td>
+<td style="text-align:left;">
+8624
+</td>
+<td style="text-align:left;">
+PSMG1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+60561
+</td>
+<td style="text-align:left;">
+60561
+</td>
+<td style="text-align:left;">
+RINT1
 </td>
 </tr>
 <tr>
@@ -6034,46 +4589,68 @@ YLPM1
 </tr>
 <tr>
 <td style="text-align:left;">
-7592
+55339
 </td>
 <td style="text-align:left;">
-7592
+55339
 </td>
 <td style="text-align:left;">
-ZNF41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79038
-</td>
-<td style="text-align:left;">
-79038
-</td>
-<td style="text-align:left;">
-ZFYVE21
+WDR33
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-11232
+23086
 </td>
 <td style="text-align:left;">
-11232
+23086
 </td>
 <td style="text-align:left;">
-POLG2
+EXPH5
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-339210
+1938
 </td>
 <td style="text-align:left;">
-339210
+1938
 </td>
 <td style="text-align:left;">
-C17orf67
+EEF2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+493812
+</td>
+<td style="text-align:left;">
+493812
+</td>
+<td style="text-align:left;">
+HCG11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7110
+</td>
+<td style="text-align:left;">
+7110
+</td>
+<td style="text-align:left;">
+TMF1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+83852
+</td>
+<td style="text-align:left;">
+83852
+</td>
+<td style="text-align:left;">
+SETDB2
 </td>
 </tr>
 <tr>
@@ -6100,222 +4677,13 @@ ARMCX5
 </tr>
 <tr>
 <td style="text-align:left;">
-493812
+220963
 </td>
 <td style="text-align:left;">
-493812
+220963
 </td>
 <td style="text-align:left;">
-HCG11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-105371932
-</td>
-<td style="text-align:left;">
-105371932
-</td>
-<td style="text-align:left;">
-LOC105371932
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-130507
-</td>
-<td style="text-align:left;">
-130507
-</td>
-<td style="text-align:left;">
-UBR3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10111
-</td>
-<td style="text-align:left;">
-10111
-</td>
-<td style="text-align:left;">
-RAD50
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26135
-</td>
-<td style="text-align:left;">
-26135
-</td>
-<td style="text-align:left;">
-SERBP1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-27246
-</td>
-<td style="text-align:left;">
-27246
-</td>
-<td style="text-align:left;">
-RNF115
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-57609
-</td>
-<td style="text-align:left;">
-57609
-</td>
-<td style="text-align:left;">
-DIP2B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-85457
-</td>
-<td style="text-align:left;">
-85457
-</td>
-<td style="text-align:left;">
-CIPC
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-60561
-</td>
-<td style="text-align:left;">
-60561
-</td>
-<td style="text-align:left;">
-RINT1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-339122
-</td>
-<td style="text-align:left;">
-339122
-</td>
-<td style="text-align:left;">
-RAB43
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-54942
-</td>
-<td style="text-align:left;">
-54942
-</td>
-<td style="text-align:left;">
-ABITRAM
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-5533
-</td>
-<td style="text-align:left;">
-5533
-</td>
-<td style="text-align:left;">
-PPP3CC
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10021
-</td>
-<td style="text-align:left;">
-10021
-</td>
-<td style="text-align:left;">
-HCN4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23122
-</td>
-<td style="text-align:left;">
-23122
-</td>
-<td style="text-align:left;">
-CLASP2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-84967
-</td>
-<td style="text-align:left;">
-84967
-</td>
-<td style="text-align:left;">
-LSM10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-340359
-</td>
-<td style="text-align:left;">
-340359
-</td>
-<td style="text-align:left;">
-KLHL38
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79713
-</td>
-<td style="text-align:left;">
-79713
-</td>
-<td style="text-align:left;">
-IGFLR1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-83852
-</td>
-<td style="text-align:left;">
-83852
-</td>
-<td style="text-align:left;">
-SETDB2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55937
-</td>
-<td style="text-align:left;">
-55937
-</td>
-<td style="text-align:left;">
-APOM
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2043
-</td>
-<td style="text-align:left;">
-2043
-</td>
-<td style="text-align:left;">
-EPHA4
+SLC16A9
 </td>
 </tr>
 <tr>
@@ -6331,46 +4699,13 @@ COG2
 </tr>
 <tr>
 <td style="text-align:left;">
-1032
+11232
 </td>
 <td style="text-align:left;">
-1032
+11232
 </td>
 <td style="text-align:left;">
-CDKN2D
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-8624
-</td>
-<td style="text-align:left;">
-8624
-</td>
-<td style="text-align:left;">
-PSMG1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-26046
-</td>
-<td style="text-align:left;">
-26046
-</td>
-<td style="text-align:left;">
-LTN1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-64844
-</td>
-<td style="text-align:left;">
-64844
-</td>
-<td style="text-align:left;">
-MARCHF7
+POLG2
 </td>
 </tr>
 <tr>
@@ -6386,156 +4721,35 @@ CREB1
 </tr>
 <tr>
 <td style="text-align:left;">
-84541
+10111
 </td>
 <td style="text-align:left;">
-84541
+10111
 </td>
 <td style="text-align:left;">
-KBTBD8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55676
-</td>
-<td style="text-align:left;">
-55676
-</td>
-<td style="text-align:left;">
-SLC30A6
+RAD50
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-79797
+10342
 </td>
 <td style="text-align:left;">
-79797
+10342
 </td>
 <td style="text-align:left;">
-ZNF408
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-143282
-</td>
-<td style="text-align:left;">
-143282
-</td>
-<td style="text-align:left;">
-FGFBP3
+TFG
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-55339
+57609
 </td>
 <td style="text-align:left;">
-55339
+57609
 </td>
 <td style="text-align:left;">
-WDR33
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-79230
-</td>
-<td style="text-align:left;">
-79230
-</td>
-<td style="text-align:left;">
-ZNF557
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-55223
-</td>
-<td style="text-align:left;">
-55223
-</td>
-<td style="text-align:left;">
-TRIM62
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23466
-</td>
-<td style="text-align:left;">
-23466
-</td>
-<td style="text-align:left;">
-CBX6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-201627
-</td>
-<td style="text-align:left;">
-201627
-</td>
-<td style="text-align:left;">
-DENND6A
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-284232
-</td>
-<td style="text-align:left;">
-284232
-</td>
-<td style="text-align:left;">
-ANKRD20A9P
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-7869
-</td>
-<td style="text-align:left;">
-7869
-</td>
-<td style="text-align:left;">
-SEMA3B
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9972
-</td>
-<td style="text-align:left;">
-9972
-</td>
-<td style="text-align:left;">
-NUP153
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10240
-</td>
-<td style="text-align:left;">
-10240
-</td>
-<td style="text-align:left;">
-MRPS31
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-63943
-</td>
-<td style="text-align:left;">
-63943
-</td>
-<td style="text-align:left;">
-FKBPL
+DIP2B
 </td>
 </tr>
 <tr>
@@ -6551,90 +4765,244 @@ BTBD7
 </tr>
 <tr>
 <td style="text-align:left;">
-79657
+2043
 </td>
 <td style="text-align:left;">
-79657
+2043
 </td>
 <td style="text-align:left;">
-RPAP3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-23258
-</td>
-<td style="text-align:left;">
-23258
-</td>
-<td style="text-align:left;">
-DENND5A
+EPHA4
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-84859
+339210
 </td>
 <td style="text-align:left;">
-84859
+339210
 </td>
 <td style="text-align:left;">
-LRCH3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-51507
-</td>
-<td style="text-align:left;">
-51507
-</td>
-<td style="text-align:left;">
-RTF2
+C17orf67
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-3665
+9972
 </td>
 <td style="text-align:left;">
-3665
+9972
 </td>
 <td style="text-align:left;">
-IRF7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-138241
-</td>
-<td style="text-align:left;">
-138241
-</td>
-<td style="text-align:left;">
-C9orf85
+NUP153
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-727851
+285636
 </td>
 <td style="text-align:left;">
-727851
+285636
 </td>
 <td style="text-align:left;">
-RGPD8
+RIMOC1
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-140456
+54942
 </td>
 <td style="text-align:left;">
-140456
+54942
 </td>
 <td style="text-align:left;">
-ASB11
+ABITRAM
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+143282
+</td>
+<td style="text-align:left;">
+143282
+</td>
+<td style="text-align:left;">
+FGFBP3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+340359
+</td>
+<td style="text-align:left;">
+340359
+</td>
+<td style="text-align:left;">
+KLHL38
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+339122
+</td>
+<td style="text-align:left;">
+339122
+</td>
+<td style="text-align:left;">
+RAB43
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+79038
+</td>
+<td style="text-align:left;">
+79038
+</td>
+<td style="text-align:left;">
+ZFYVE21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5533
+</td>
+<td style="text-align:left;">
+5533
+</td>
+<td style="text-align:left;">
+PPP3CC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2966
+</td>
+<td style="text-align:left;">
+2966
+</td>
+<td style="text-align:left;">
+GTF2H2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+105371932
+</td>
+<td style="text-align:left;">
+105371932
+</td>
+<td style="text-align:left;">
+LOC105371932
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+55223
+</td>
+<td style="text-align:left;">
+55223
+</td>
+<td style="text-align:left;">
+TRIM62
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+84967
+</td>
+<td style="text-align:left;">
+84967
+</td>
+<td style="text-align:left;">
+LSM10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7592
+</td>
+<td style="text-align:left;">
+7592
+</td>
+<td style="text-align:left;">
+ZNF41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11282
+</td>
+<td style="text-align:left;">
+11282
+</td>
+<td style="text-align:left;">
+MGAT4B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7869
+</td>
+<td style="text-align:left;">
+7869
+</td>
+<td style="text-align:left;">
+SEMA3B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+65260
+</td>
+<td style="text-align:left;">
+65260
+</td>
+<td style="text-align:left;">
+COA7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9967
+</td>
+<td style="text-align:left;">
+9967
+</td>
+<td style="text-align:left;">
+THRAP3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10240
+</td>
+<td style="text-align:left;">
+10240
+</td>
+<td style="text-align:left;">
+MRPS31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+130507
+</td>
+<td style="text-align:left;">
+130507
+</td>
+<td style="text-align:left;">
+UBR3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9829
+</td>
+<td style="text-align:left;">
+9829
+</td>
+<td style="text-align:left;">
+DNAJC6
 </td>
 </tr>
 <tr>
@@ -6650,59 +5018,319 @@ WDR86
 </tr>
 <tr>
 <td style="text-align:left;">
-2966
+55676
 </td>
 <td style="text-align:left;">
-2966
+55676
 </td>
 <td style="text-align:left;">
-GTF2H2
+SLC30A6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+64844
+</td>
+<td style="text-align:left;">
+64844
+</td>
+<td style="text-align:left;">
+MARCHF7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23122
+</td>
+<td style="text-align:left;">
+23122
+</td>
+<td style="text-align:left;">
+CLASP2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+26046
+</td>
+<td style="text-align:left;">
+26046
+</td>
+<td style="text-align:left;">
+LTN1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+138241
+</td>
+<td style="text-align:left;">
+138241
+</td>
+<td style="text-align:left;">
+C9orf85
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10021
+</td>
+<td style="text-align:left;">
+10021
+</td>
+<td style="text-align:left;">
+HCN4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+84859
+</td>
+<td style="text-align:left;">
+84859
+</td>
+<td style="text-align:left;">
+LRCH3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+85457
+</td>
+<td style="text-align:left;">
+85457
+</td>
+<td style="text-align:left;">
+CIPC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+79713
+</td>
+<td style="text-align:left;">
+79713
+</td>
+<td style="text-align:left;">
+IGFLR1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+79657
+</td>
+<td style="text-align:left;">
+79657
+</td>
+<td style="text-align:left;">
+RPAP3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5887
+</td>
+<td style="text-align:left;">
+5887
+</td>
+<td style="text-align:left;">
+RAD23B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8899
+</td>
+<td style="text-align:left;">
+8899
+</td>
+<td style="text-align:left;">
+PRPF4B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+54904
+</td>
+<td style="text-align:left;">
+54904
+</td>
+<td style="text-align:left;">
+NSD3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+27246
+</td>
+<td style="text-align:left;">
+27246
+</td>
+<td style="text-align:left;">
+RNF115
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23064
+</td>
+<td style="text-align:left;">
+23064
+</td>
+<td style="text-align:left;">
+SETX
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6897
+</td>
+<td style="text-align:left;">
+6897
+</td>
+<td style="text-align:left;">
+TARS1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+55937
+</td>
+<td style="text-align:left;">
+55937
+</td>
+<td style="text-align:left;">
+APOM
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+79230
+</td>
+<td style="text-align:left;">
+79230
+</td>
+<td style="text-align:left;">
+ZNF557
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11054
+</td>
+<td style="text-align:left;">
+11054
+</td>
+<td style="text-align:left;">
+OGFR
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1032
+</td>
+<td style="text-align:left;">
+1032
+</td>
+<td style="text-align:left;">
+CDKN2D
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+55958
+</td>
+<td style="text-align:left;">
+55958
+</td>
+<td style="text-align:left;">
+KLHL9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5048
+</td>
+<td style="text-align:left;">
+5048
+</td>
+<td style="text-align:left;">
+PAFAH1B1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+728229
+</td>
+<td style="text-align:left;">
+728229
+</td>
+<td style="text-align:left;">
+TMEM191B
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+80176
+</td>
+<td style="text-align:left;">
+80176
+</td>
+<td style="text-align:left;">
+SPSB1
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-<pre class="r"><code>toplist24hr %&gt;% 
-  group_by(time,id) %&gt;% 
+<pre class="r"><code>##lfc
+
+toplist24hr %&gt;% 
   filter(ENTREZID %in% EPIdeg_sp$ENTREZID) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
-  # filter(id==&quot;Daunorubicin&quot;)
+  group_by(time,id) %&gt;% 
   mutate(logFC=logFC*(-1)) %&gt;% 
-  ggplot(., aes(x= id, y=logFC))+
+  mutate(treatment =case_match( id, 
+                         &#39;Daunorubicin&#39;~&#39;DNR&#39;,   
+                         &#39;Doxorubicin&#39;~&#39;DOX&#39; ,
+                         &#39;Epirubicin&#39;~&#39;EPI&#39; , 
+                         &#39;Mitoxantrone&#39; ~ &#39;MTX&#39;,
+                         &#39;Trastuzumab&#39;~ &#39;TRX&#39;, .default = id)) %&gt;% 
+
+  ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
+  xlab(&quot; &quot;)+
   theme_classic()+
   fill_palette(palette = drug_palNoVeh)+
-  ggtitle(&quot;LogFC of n=81 EPI specific DEGs&quot;)+
+ ggtitle(&quot;LogFC of EPI specific DEGs (n = 84) &quot;)+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
     axis.title = element_text(size = 15, color = &quot;black&quot;),
     axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20))</code></pre>
+    axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 0))</code></pre>
 <p><img src="figure/Knowles2019.Rmd/epi%20only-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>    # strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+<pre class="r"><code>##histo check
 
 toplist24hr %&gt;% 
-  group_by(time,id) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
-  filter(ENTREZID %in% EpionlyDEG) %&gt;% 
-  filter(adj.P.Val &lt;0.05) %&gt;% 
+  dplyr::filter(ENTREZID %in% EPIdeg_sp$ENTREZID) %&gt;% 
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
-  ggtitle(&quot;EPI adj p. value &lt;0.05&quot;)+
+  ggtitle(&quot;all DNR specific DEG adj p. value &lt;0.01&quot;)+
     fill_palette(palette = drug_palNoVeh)+
-  theme_bw() +
-  ggtitle(&quot;only showing EPI n=81 specific genes &quot;)</code></pre>
+  theme_bw()</code></pre>
 <p><img src="figure/Knowles2019.Rmd/epi%20only-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>toplist24hr %&gt;% 
+<pre class="r"><code>densityEPIsp &lt;- toplist24hr %&gt;% 
   filter(ENTREZID %in% EpionlyDEG) %&gt;% 
-  # filter(adj.P.Val&lt;0.05) %&gt;%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
-  theme_bw()</code></pre>
+  theme_bw()
+
+
+densityEPIsp</code></pre>
 <p><img src="figure/Knowles2019.Rmd/epi%20only-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>set.seed(12345)
 sampset &lt;- EPIdeg_sp %&gt;% 
@@ -6714,26 +5342,1006 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 }</code></pre>
 <p><img src="figure/Knowles2019.Rmd/epi%20only-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/epi%20only-15.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##most convincing of these is   220963 SLC16A9</code></pre>
 </div>
 <div id="go-analysis" class="section level4">
 <h4>GO analysis</h4>
 <pre class="r"><code>library(gprofiler2)
 
-# DOXdeg_sp had NO enrichment, even at 0.1 user_threshold
+# 
 # DNRdeg_sp had NO enrichment
 # EPIdeg_sp had NO enrichment
-# MTXdeg_sep had 2, both were DNA-templated DNA replication
+# MTXdeg_sep had 2, &quot;DNA-templated DNA replication&quot; &quot;nuclear pore localization&quot;     &quot;DNA replication&quot; 
 
-gostresMTXdeg_sp &lt;- gost(query = c(MTXdeg_sp),
-                      organism = &quot;hsapiens&quot;,
-                      ordered_query = FALSE,
-                      domain_scope = &quot;custom&quot;,
-                      measure_underrepresentation = FALSE,
-                      evcodes = FALSE,
-                      user_threshold = 0.05,
-                      correction_method = c(&quot;fdr&quot;),
-                      custom_bg = backGL$ENTREZID,
-                      sources=c(&quot;GO:BP&quot;, &quot;KEGG&quot;))</code></pre>
+# gostresDOXdeg_sp &lt;- gost(query = c(DOXdeg_sp),
+#                       organism = &quot;hsapiens&quot;,
+#                       ordered_query = FALSE,
+#                       domain_scope = &quot;custom&quot;,
+#                       measure_underrepresentation = FALSE,
+#                       evcodes = FALSE,
+#                       user_threshold = 0.05,
+#                       correction_method = c(&quot;fdr&quot;),
+#                       custom_bg = backGL$ENTREZID,
+#                       sources=c(&quot;GO:BP&quot;, &quot;KEGG&quot;))
+# 
+# saveRDS(gostresDOXdeg_sp,&quot;data/DEG-GO/gostresDOXdeg_sp.RDS&quot;)
+DX_sp_DEGgostres &lt;- readRDS(&quot;data/DEG-GO/gostresDOXdeg_sp.RDS&quot;)
+DX_spgenes &lt;- gostplot(DX_sp_DEGgostres, capped = FALSE, interactive = TRUE)
+DX_spgenes</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-cbd347f90b02880d8cbf" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-cbd347f90b02880d8cbf">{"x":{"data":[{"x":[189.09180634745726,55.767053567563345,151.03660569819442,105.60783045051917,55.746815027951968,189.08506016758679,64.051362448487779,105.61457663038964,168.23261818799605,99.037051256691484,151.02985951832395,163.06504440722395,64.071600988099163,99.064035976173329,101.74901556461627,77.43578331147971,64.044616268617318,32.86377290735286,99.030305076821037,32.870519087223315,163.0582982273535,55.760307387692883,32.857026727482399,165.01469038978681,34.428886637299499,103.77961570562462,49.155797294512894,116.46243386208877,55.740068848081513,115.41677598216752,98.692996083298056,99.057289796302868,19.782930138531619,99.050543616432407,168.22587200812558,105.6213228102601,98.686249903427594,21.051211954178033,99.394598789825864],"y":[3.3206580402707413,2.7032979576310714,2.7032979576310714,2.7032979576310714,2.7032979576310714,2.7032979576310714,2.7032979576310714,2.6008833138825831,2.6008833138825831,2.5406511945503101,2.5301696243144933,2.5301696243144933,2.5301696243144933,2.4508714290875129,2.1537267703271152,2.1315312009417027,2.0186111068816786,1.9698789723286836,1.7648098269484842,1.7182356230140536,1.6665284527234803,1.6665284527234803,1.6665284527234803,1.6659797334293103,1.6659797334293103,1.642348360056419,1.6300356254221866,1.5822597466208397,1.5406383520001536,1.5406383520001536,1.4568832712792308,1.4507721686581696,1.4380806524358762,1.4380806524358762,1.4219452605879526,1.4219452605879526,1.3997068200016993,1.3930951304917325,1.3611390722808669],"text":["GO:2001258 (30) <br> negative regulation of cation channel activity <br> 4.779e-04","GO:0032413 (51) <br> negative regulation of ion transmembrane transporter activity <br> 1.980e-03","GO:1901020 (27) <br> negative regulation of calcium ion transmembrane transporter activity <br> 1.980e-03","GO:0060314 (23) <br> regulation of ryanodine-sensitive calcium-release channel activity <br> 1.980e-03","GO:0032410 (58) <br> negative regulation of transporter activity <br> 1.980e-03","GO:2001257 (100) <br> regulation of cation channel activity <br> 1.980e-03","GO:0034763 (96) <br> negative regulation of transmembrane transport <br> 1.980e-03","GO:0060315 (10) <br> negative regulation of ryanodine-sensitive calcium-release channel activity <br> 2.507e-03","GO:1904063 (64) <br> negative regulation of cation transmembrane transport <br> 2.507e-03","GO:0051280 (11) <br> negative regulation of release of sequestered calcium ion into cytosol <br> 2.880e-03","GO:1901019 (71) <br> regulation of calcium ion transmembrane transporter activity <br> 2.950e-03","GO:1903170 (35) <br> negative regulation of calcium ion transmembrane transport <br> 2.950e-03","GO:0034766 (70) <br> negative regulation of monoatomic ion transmembrane transport <br> 2.950e-03","GO:0051284 (13) <br> positive regulation of sequestering of calcium ion <br> 3.541e-03","GO:0051926 (45) <br> negative regulation of calcium ion transport <br> 7.019e-03","GO:0043271 (90) <br> negative regulation of monoatomic ion transport <br> 7.387e-03","GO:0034762 (391) <br> regulation of transmembrane transport <br> 9.581e-03","GO:0010881 (20) <br> regulation of cardiac muscle contraction by regulation of the release of sequestered calcium ion <br> 1.072e-02","GO:0051279 (60) <br> regulation of release of sequestered calcium ion into cytosol <br> 1.719e-02","GO:0010882 (25) <br> regulation of cardiac muscle contraction by calcium ion signaling <br> 1.913e-02","GO:1903169 (122) <br> regulation of calcium ion transmembrane transport <br> 2.155e-02","GO:0032412 (190) <br> regulation of monoatomic ion transmembrane transporter activity <br> 2.155e-02","GO:0010880 (27) <br> regulation of release of sequestered calcium ion into cytosol by sarcoplasmic reticulum <br> 2.155e-02","GO:1903514 (28) <br> release of sequestered calcium ion into cytosol by endoplasmic reticulum <br> 2.158e-02","GO:0014808 (28) <br> release of sequestered calcium ion into cytosol by sarcoplasmic reticulum <br> 2.158e-02","GO:0055117 (70) <br> regulation of cardiac muscle contraction <br> 2.279e-02","GO:0022898 (199) <br> regulation of transmembrane transporter activity <br> 2.344e-02","GO:0070296 (31) <br> sarcoplasmic reticulum calcium ion transport <br> 2.617e-02","GO:0032409 (211) <br> regulation of transporter activity <br> 2.880e-02","GO:0065009 (1939) <br> regulation of molecular function <br> 2.880e-02","GO:0051209 (82) <br> release of sequestered calcium ion into cytosol <br> 3.492e-02","GO:0051283 (83) <br> negative regulation of sequestering of calcium ion <br> 3.542e-02","GO:0006942 (85) <br> regulation of striated muscle contraction <br> 3.647e-02","GO:0051282 (85) <br> regulation of sequestering of calcium ion <br> 3.647e-02","GO:1904062 (230) <br> regulation of monoatomic cation transmembrane transport <br> 3.785e-02","GO:0060316 (9) <br> positive regulation of ryanodine-sensitive calcium-release channel activity <br> 3.785e-02","GO:0051208 (89) <br> sequestering of calcium ion <br> 3.984e-02","GO:0007204 (90) <br> positive regulation of cytosolic calcium ion concentration <br> 4.045e-02","GO:0051342 (10) <br> regulation of cyclic-nucleotide phosphodiesterase activity <br> 4.354e-02"],"key":["GO:2001258","GO:0032413","GO:1901020","GO:0060314","GO:0032410","GO:2001257","GO:0034763","GO:0060315","GO:1904063","GO:0051280","GO:1901019","GO:1903170","GO:0034766","GO:0051284","GO:0051926","GO:0043271","GO:0034762","GO:0010881","GO:0051279","GO:0010882","GO:1903169","GO:0032412","GO:0010880","GO:1903514","GO:0014808","GO:0055117","GO:0022898","GO:0070296","GO:0032409","GO:0065009","GO:0051209","GO:0051283","GO:0006942","GO:0051282","GO:1904062","GO:0060316","GO:0051208","GO:0007204","GO:0051342"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.80000000000000004,"size":[12.725332807911469,14.517218605027841,12.324945872247712,11.676760209239768,14.908190446058306,16.430806668336189,16.323109457802918,6.4258943898286729,15.198389012928452,7.4317151679592648,15.496596925506228,13.280777224217672,15.456293780888958,8.723460247935785,14.122567803504763,16.150930296736611,19.612672119670755,11.064881469650439,15.008977935189915,12.02019589977332,16.942824025119446,18.017453999405809,12.324945872247712,12.465234905072647,12.465234905072647,15.456293780888958,18.125077611709017,12.846332598472268,18.260094315363563,22.677165354330711,15.898270679500492,15.931467124529908,15.99641408343687,15.99641408343687,18.456648844547573,3.7795275590551185,16.120877661599604,16.150930296736611,6.4258943898286729],"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDataa6251d00","name":"GO:BP","legendgroup":"GO:BP","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[189.09180634745726,189.08506016758679,55.767053567563345,64.051362448487779,55.746815027951968,105.60783045051917],"y":[1.7246931944145152,1.3520655783377578,1.3520655783377578,1.3520655783377578,1.3341155367060498,1.3341155367060498],"text":["GO:2001258 (30) <br> negative regulation of cation channel activity <br> 1.885e-02","GO:2001257 (100) <br> regulation of cation channel activity <br> 4.446e-02","GO:0032413 (51) <br> negative regulation of ion transmembrane transporter activity <br> 4.446e-02","GO:0034763 (96) <br> negative regulation of transmembrane transport <br> 4.446e-02","GO:0032410 (58) <br> negative regulation of transporter activity <br> 4.633e-02","GO:0060314 (23) <br> regulation of ryanodine-sensitive calcium-release channel activity <br> 4.633e-02"],"key":["GO:2001258","GO:2001257","GO:0032413","GO:0034763","GO:0032410","GO:0060314"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,153,0,1)","opacity":0.80000000000000004,"size":[12.725332807911469,16.430806668336189,14.517218605027841,16.323109457802918,14.908190446058306,11.676760209239768],"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(255,153,0,1)"}},"hoveron":"points","set":"SharedDataa6251d00","name":"GO:BP","legendgroup":"GO:BP","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[2,189.46284624033251],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.338582677165356,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2,189.46284624033251],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.338582677165356,"color":"rgba(255,153,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[196.20878334639363,200.00674593710605],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.338582677165356,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[196.20878334639363,200.00674593710605],"y":[-1,-1],"text":"","type":"scatter","mode":"lines","line":{"width":11.338582677165356,"color":"rgba(221,68,119,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":29.2835201328352,"r":6.6417600664176026,"b":55.878166138820184,"l":61.037775010377771},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:BP","KEGG"],"tickvals":[95.731423120166255,198.10776464174984],"categoryorder":"array","categoryarray":["GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.62681610626816},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0.52782874838769256,1],"automargin":true,"type":"linear","autorange":false,"range":[-1,9],"tickmode":"array","ticktext":["0.0","2.5","5.0","7.5"],"tickvals":[0,2.5,5,7.5],"categoryorder":"array","categoryarray":["0.0","2.5","5.0","7.5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176002,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"annotations":[{"text":"-log10(p-adj)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-37.393109173931094},{"text":"ENTREZID","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.283520132835198},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"SYMBOL","x":0.5,"y":0.47217125161230744,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(169,169,169,1)","family":"","size":13.283520132835198},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0.52782874838769256,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.973017849730184,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":0.47217125161230744},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":24.973017849730184,"yanchor":0.47217125161230744,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[0,210],"tickmode":"array","ticktext":["GO:BP","KEGG"],"tickvals":[95.731423120166255,198.10776464174984],"categoryorder":"array","categoryarray":["GO:BP","KEGG"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":10.62681610626816},"tickangle":-45,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.132835201328352,"showgrid":false,"domain":[0,1],"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[-1,9],"tickmode":"array","ticktext":["0.0","2.5","5.0","7.5"],"tickvals":[0,2.5,5,7.5],"categoryorder":"array","categoryarray":["0.0","2.5","5.0","7.5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(190,190,190,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":true,"linecolor":"rgba(190,190,190,1)","linewidth":0.66417600664176002,"showgrid":false,"domain":[0,0.47217125161230744],"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"15705ef47c78":{"x":{},"y":{},"text":{},"colour":{},"size":{},"alpha":{},"type":"scatter"},"157018f152c5":{"x":{},"xend":{},"y":{},"yend":{}},"157048b64744":{"x":{},"xend":{},"y":{},"yend":{}}},"cur_data":"15705ef47c78","visdat":{"15705ef47c78":["function (y) ","x"],"157018f152c5":["function (y) ","x"],"157048b64744":["function (y) ","x"]},"highlight":{"on":"plotly_click","off":"plotly_doubleclick","persistent":false,"dynamic":false,"color":null,"selectize":false,"defaultValues":null,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDataa6251d00"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>DX_sp_DEGtable &lt;- DX_sp_DEGgostres$result %&gt;%
+  dplyr::select(c(source, term_id,term_name,intersection_size, 
+                   term_size, p_value))
+  
+DX_sp_DEGtable  %&gt;% 
+    dplyr::filter(source==&quot;GO:BP&quot;) %&gt;% 
+    dplyr::select(p_value,term_name,intersection_size) %&gt;%
+    slice_min(., n=10 ,order_by=p_value) %&gt;%
+    mutate(log_val = -log10(p_value)) %&gt;%
+   # slice_max(., n=10,order_by = p_value) %&gt;%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = wrap_format(30))+
+    guides(col=&quot;none&quot;, size=guide_legend(title = &quot;# of intersected \n terms&quot;))+
+    ggtitle(&#39;DOX specific gene set GO:BP terms&#39;) +
+    xlab(expression(&quot; -&quot;~log[10]~(&quot;adj. p-value&quot;)))+
+    ylab(&quot;GO: BP term&quot;)+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/Knowles2019.Rmd/a%20little%20GO%20analysis-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>DX_sp_DEGtable %&gt;% 
+  mutate_at(.vars = 6, .funs= scientific_format()) %&gt;% 
+  kable(., caption= &quot;Significant (adj. P value of &lt;0.01) Doxorubicin specific genes (n = 68) and top 10 enriched GO terms&quot;) %&gt;% 
+  kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
+  kable_styling(full_width = FALSE, position = &quot;left&quot;,bootstrap_options = c(&quot;striped&quot;,&quot;hover&quot;)) %&gt;% 
+  scroll_box(width = &quot;100%&quot;, height = &quot;400px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class=" lightable-paper lightable-striped table table-striped table-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; width: auto !important; ">
+<caption>
+Significant (adj. P value of &lt;0.01) Doxorubicin specific genes (n =
+68) and top 10 enriched GO terms
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+source
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+term_id
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+term_name
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+intersection_size
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+term_size
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+p_value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:2001258" class="uri">GO:2001258</a>
+</td>
+<td style="text-align:left;">
+negative regulation of cation channel activity
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:left;">
+4.78e-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0032413" class="uri">GO:0032413</a>
+</td>
+<td style="text-align:left;">
+negative regulation of ion transmembrane transporter activity
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:left;">
+1.98e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1901020" class="uri">GO:1901020</a>
+</td>
+<td style="text-align:left;">
+negative regulation of calcium ion transmembrane transporter activity
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:left;">
+1.98e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0060314" class="uri">GO:0060314</a>
+</td>
+<td style="text-align:left;">
+regulation of ryanodine-sensitive calcium-release channel activity
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:left;">
+1.98e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0032410" class="uri">GO:0032410</a>
+</td>
+<td style="text-align:left;">
+negative regulation of transporter activity
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+1.98e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:2001257" class="uri">GO:2001257</a>
+</td>
+<td style="text-align:left;">
+regulation of cation channel activity
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+1.98e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0034763" class="uri">GO:0034763</a>
+</td>
+<td style="text-align:left;">
+negative regulation of transmembrane transport
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:left;">
+1.98e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0060315" class="uri">GO:0060315</a>
+</td>
+<td style="text-align:left;">
+negative regulation of ryanodine-sensitive calcium-release channel
+activity
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+2.51e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1904063" class="uri">GO:1904063</a>
+</td>
+<td style="text-align:left;">
+negative regulation of cation transmembrane transport
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:left;">
+2.51e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051280" class="uri">GO:0051280</a>
+</td>
+<td style="text-align:left;">
+negative regulation of release of sequestered calcium ion into cytosol
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:left;">
+2.88e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1901019" class="uri">GO:1901019</a>
+</td>
+<td style="text-align:left;">
+regulation of calcium ion transmembrane transporter activity
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+71
+</td>
+<td style="text-align:left;">
+2.95e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1903170" class="uri">GO:1903170</a>
+</td>
+<td style="text-align:left;">
+negative regulation of calcium ion transmembrane transport
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:left;">
+2.95e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0034766" class="uri">GO:0034766</a>
+</td>
+<td style="text-align:left;">
+negative regulation of monoatomic ion transmembrane transport
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:left;">
+2.95e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051284" class="uri">GO:0051284</a>
+</td>
+<td style="text-align:left;">
+positive regulation of sequestering of calcium ion
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:left;">
+3.54e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051926" class="uri">GO:0051926</a>
+</td>
+<td style="text-align:left;">
+negative regulation of calcium ion transport
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:left;">
+7.02e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0043271" class="uri">GO:0043271</a>
+</td>
+<td style="text-align:left;">
+negative regulation of monoatomic ion transport
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+90
+</td>
+<td style="text-align:left;">
+7.39e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0034762" class="uri">GO:0034762</a>
+</td>
+<td style="text-align:left;">
+regulation of transmembrane transport
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+391
+</td>
+<td style="text-align:left;">
+9.58e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0010881" class="uri">GO:0010881</a>
+</td>
+<td style="text-align:left;">
+regulation of cardiac muscle contraction by regulation of the release of
+sequestered calcium ion
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:left;">
+1.07e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051279" class="uri">GO:0051279</a>
+</td>
+<td style="text-align:left;">
+regulation of release of sequestered calcium ion into cytosol
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:left;">
+1.72e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0010882" class="uri">GO:0010882</a>
+</td>
+<td style="text-align:left;">
+regulation of cardiac muscle contraction by calcium ion signaling
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:left;">
+1.91e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1903169" class="uri">GO:1903169</a>
+</td>
+<td style="text-align:left;">
+regulation of calcium ion transmembrane transport
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+122
+</td>
+<td style="text-align:left;">
+2.16e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0032412" class="uri">GO:0032412</a>
+</td>
+<td style="text-align:left;">
+regulation of monoatomic ion transmembrane transporter activity
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+190
+</td>
+<td style="text-align:left;">
+2.16e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0010880" class="uri">GO:0010880</a>
+</td>
+<td style="text-align:left;">
+regulation of release of sequestered calcium ion into cytosol by
+sarcoplasmic reticulum
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:left;">
+2.16e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1903514" class="uri">GO:1903514</a>
+</td>
+<td style="text-align:left;">
+release of sequestered calcium ion into cytosol by endoplasmic reticulum
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+2.16e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0014808" class="uri">GO:0014808</a>
+</td>
+<td style="text-align:left;">
+release of sequestered calcium ion into cytosol by sarcoplasmic
+reticulum
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+2.16e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0055117" class="uri">GO:0055117</a>
+</td>
+<td style="text-align:left;">
+regulation of cardiac muscle contraction
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:left;">
+2.28e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0022898" class="uri">GO:0022898</a>
+</td>
+<td style="text-align:left;">
+regulation of transmembrane transporter activity
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+199
+</td>
+<td style="text-align:left;">
+2.34e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0070296" class="uri">GO:0070296</a>
+</td>
+<td style="text-align:left;">
+sarcoplasmic reticulum calcium ion transport
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:left;">
+2.62e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0032409" class="uri">GO:0032409</a>
+</td>
+<td style="text-align:left;">
+regulation of transporter activity
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+211
+</td>
+<td style="text-align:left;">
+2.88e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0065009" class="uri">GO:0065009</a>
+</td>
+<td style="text-align:left;">
+regulation of molecular function
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+1939
+</td>
+<td style="text-align:left;">
+2.88e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051209" class="uri">GO:0051209</a>
+</td>
+<td style="text-align:left;">
+release of sequestered calcium ion into cytosol
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+82
+</td>
+<td style="text-align:left;">
+3.49e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051283" class="uri">GO:0051283</a>
+</td>
+<td style="text-align:left;">
+negative regulation of sequestering of calcium ion
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+83
+</td>
+<td style="text-align:left;">
+3.54e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0006942" class="uri">GO:0006942</a>
+</td>
+<td style="text-align:left;">
+regulation of striated muscle contraction
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:left;">
+3.65e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051282" class="uri">GO:0051282</a>
+</td>
+<td style="text-align:left;">
+regulation of sequestering of calcium ion
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:left;">
+3.65e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:1904062" class="uri">GO:1904062</a>
+</td>
+<td style="text-align:left;">
+regulation of monoatomic cation transmembrane transport
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:left;">
+3.78e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0060316" class="uri">GO:0060316</a>
+</td>
+<td style="text-align:left;">
+positive regulation of ryanodine-sensitive calcium-release channel
+activity
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+3.78e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051208" class="uri">GO:0051208</a>
+</td>
+<td style="text-align:left;">
+sequestering of calcium ion
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+89
+</td>
+<td style="text-align:left;">
+3.98e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0007204" class="uri">GO:0007204</a>
+</td>
+<td style="text-align:left;">
+positive regulation of cytosolic calcium ion concentration
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+90
+</td>
+<td style="text-align:left;">
+4.04e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0051342" class="uri">GO:0051342</a>
+</td>
+<td style="text-align:left;">
+regulation of cyclic-nucleotide phosphodiesterase activity
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+4.35e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:2001258" class="uri">GO:2001258</a>
+</td>
+<td style="text-align:left;">
+negative regulation of cation channel activity
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:left;">
+1.88e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:2001257" class="uri">GO:2001257</a>
+</td>
+<td style="text-align:left;">
+regulation of cation channel activity
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+4.45e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0032413" class="uri">GO:0032413</a>
+</td>
+<td style="text-align:left;">
+negative regulation of ion transmembrane transporter activity
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:left;">
+4.45e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0034763" class="uri">GO:0034763</a>
+</td>
+<td style="text-align:left;">
+negative regulation of transmembrane transport
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:left;">
+4.45e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0032410" class="uri">GO:0032410</a>
+</td>
+<td style="text-align:left;">
+negative regulation of transporter activity
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+4.63e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="GO:BP" class="uri">GO:BP</a>
+</td>
+<td style="text-align:left;">
+<a href="GO:0060314" class="uri">GO:0060314</a>
+</td>
+<td style="text-align:left;">
+regulation of ryanodine-sensitive calcium-release channel activity
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:left;">
+4.63e-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="grid-for-supplement" class="section level5">
+<h5>Grid for supplement</h5>
+<p><img src="figure/Knowles2019.Rmd/Bgrid%20plot-1.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Bgrid%20plot-2.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Bgrid%20plot-3.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Bgrid%20plot-4.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Knowles2019.Rmd/Bgrid%20plot-5.png" width="1344" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -6761,49 +6369,54 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] ComplexHeatmap_2.12.1 broom_1.0.5           kableExtra_1.3.4     
- [4] sjmisc_2.8.9          scales_1.2.1          ggpubr_0.6.0         
- [7] cowplot_1.1.1         ggsignif_0.6.4        lubridate_1.9.2      
-[10] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.2          
-[13] purrr_1.0.1           readr_2.1.4           tidyr_1.3.0          
-[16] tibble_3.2.1          ggplot2_3.4.2         tidyverse_2.0.0      
-[19] RColorBrewer_1.1-3    limma_3.52.4          workflowr_1.7.0      
+ [1] gprofiler2_0.2.2      ComplexHeatmap_2.12.1 broom_1.0.5          
+ [4] kableExtra_1.3.4      sjmisc_2.8.9          scales_1.2.1         
+ [7] ggpubr_0.6.0          cowplot_1.1.1         ggsignif_0.6.4       
+[10] lubridate_1.9.2       forcats_1.0.0         stringr_1.5.0        
+[13] dplyr_1.1.2           purrr_1.0.1           readr_2.1.4          
+[16] tidyr_1.3.0           tibble_3.2.1          ggplot2_3.4.2        
+[19] tidyverse_2.0.0       RColorBrewer_1.1-3    limma_3.52.4         
+[22] workflowr_1.7.0      
 
 loaded via a namespace (and not attached):
   [1] ggVennDiagram_1.2.2  colorspace_2.1-0     rjson_0.2.21        
-  [4] class_7.3-22         sjlabelled_1.2.0     rprojroot_2.0.3     
-  [7] circlize_0.4.15      futile.logger_1.4.3  GlobalOptions_0.1.2 
- [10] fs_1.6.2             proxy_0.4-27         clue_0.3-64         
- [13] rstudioapi_0.14      farver_2.1.1         fansi_1.0.4         
- [16] xml2_1.3.4           codetools_0.2-19     doParallel_1.0.17   
- [19] cachem_1.0.8         knitr_1.43           jsonlite_1.8.5      
- [22] cluster_2.1.4        png_0.1-8            compiler_4.2.2      
- [25] httr_1.4.6           backports_1.4.1      fastmap_1.1.1       
- [28] cli_3.6.1            later_1.3.1          formatR_1.14        
- [31] htmltools_0.5.5      tools_4.2.2          gtable_0.3.3        
- [34] glue_1.6.2           Rcpp_1.0.10          carData_3.0-5       
- [37] jquerylib_0.1.4      vctrs_0.6.3          svglite_2.1.1       
- [40] iterators_1.0.14     insight_0.19.2       xfun_0.39           
- [43] ps_1.7.5             rvest_1.0.3          timechange_0.2.0    
- [46] lifecycle_1.0.3      rstatix_0.7.2        getPass_0.2-2       
- [49] hms_1.1.3            promises_1.2.0.1     parallel_4.2.2      
- [52] lambda.r_1.2.4       yaml_2.3.7           sass_0.4.6          
- [55] stringi_1.7.12       highr_0.10           S4Vectors_0.34.0    
- [58] foreach_1.5.2        e1071_1.7-13         BiocGenerics_0.42.0 
- [61] shape_1.4.6          rlang_1.1.1          pkgconfig_2.0.3     
- [64] systemfonts_1.0.4    matrixStats_1.0.0    evaluate_0.21       
- [67] sf_1.0-13            labeling_0.4.2       processx_3.8.1      
- [70] tidyselect_1.2.0     magrittr_2.0.3       R6_2.5.1            
- [73] IRanges_2.30.1       generics_0.1.3       DBI_1.1.3           
- [76] pillar_1.9.0         whisker_0.4.1        withr_2.5.0         
- [79] units_0.8-2          abind_1.4-5          crayon_1.5.2        
- [82] car_3.1-2            futile.options_1.0.1 KernSmooth_2.23-21  
- [85] utf8_1.2.3           RVenn_1.1.0          tzdb_0.4.0          
- [88] rmarkdown_2.22       GetoptLong_1.0.5     callr_3.7.3         
- [91] git2r_0.32.0         classInt_0.4-9       digest_0.6.31       
- [94] webshot_0.5.4        VennDiagram_1.7.3    httpuv_1.6.11       
- [97] stats4_4.2.2         munsell_0.5.0        viridisLite_0.4.2   
-[100] bslib_0.5.0         </code></pre>
+  [4] ellipsis_0.3.2       class_7.3-22         sjlabelled_1.2.0    
+  [7] rprojroot_2.0.3      circlize_0.4.15      futile.logger_1.4.3 
+ [10] GlobalOptions_0.1.2  fs_1.6.2             proxy_0.4-27        
+ [13] clue_0.3-64          rstudioapi_0.14      farver_2.1.1        
+ [16] fansi_1.0.4          xml2_1.3.4           codetools_0.2-19    
+ [19] doParallel_1.0.17    cachem_1.0.8         knitr_1.43          
+ [22] jsonlite_1.8.5       cluster_2.1.4        png_0.1-8           
+ [25] shiny_1.7.4          compiler_4.2.2       httr_1.4.6          
+ [28] backports_1.4.1      lazyeval_0.2.2       fastmap_1.1.1       
+ [31] cli_3.6.1            later_1.3.1          formatR_1.14        
+ [34] htmltools_0.5.5      tools_4.2.2          gtable_0.3.3        
+ [37] glue_1.6.2           Rcpp_1.0.10          carData_3.0-5       
+ [40] jquerylib_0.1.4      vctrs_0.6.3          svglite_2.1.1       
+ [43] crosstalk_1.2.0      iterators_1.0.14     insight_0.19.2      
+ [46] xfun_0.39            ps_1.7.5             rvest_1.0.3         
+ [49] mime_0.12            timechange_0.2.0     lifecycle_1.0.3     
+ [52] rstatix_0.7.2        getPass_0.2-2        hms_1.1.3           
+ [55] promises_1.2.0.1     parallel_4.2.2       lambda.r_1.2.4      
+ [58] yaml_2.3.7           sass_0.4.6           stringi_1.7.12      
+ [61] highr_0.10           S4Vectors_0.34.0     foreach_1.5.2       
+ [64] e1071_1.7-13         BiocGenerics_0.42.0  shape_1.4.6         
+ [67] rlang_1.1.1          pkgconfig_2.0.3      systemfonts_1.0.4   
+ [70] matrixStats_1.0.0    evaluate_0.21        sf_1.0-13           
+ [73] htmlwidgets_1.6.2    labeling_0.4.2       processx_3.8.1      
+ [76] tidyselect_1.2.0     magrittr_2.0.3       R6_2.5.1            
+ [79] IRanges_2.30.1       generics_0.1.3       DBI_1.1.3           
+ [82] pillar_1.9.0         whisker_0.4.1        withr_2.5.0         
+ [85] units_0.8-2          abind_1.4-5          crayon_1.5.2        
+ [88] car_3.1-2            futile.options_1.0.1 KernSmooth_2.23-21  
+ [91] utf8_1.2.3           plotly_4.10.2        RVenn_1.1.0         
+ [94] tzdb_0.4.0           rmarkdown_2.22       GetoptLong_1.0.5    
+ [97] data.table_1.14.8    callr_3.7.3          git2r_0.32.0        
+[100] classInt_0.4-9       digest_0.6.31        webshot_0.5.4       
+[103] xtable_1.8-4         VennDiagram_1.7.3    httpuv_1.6.11       
+[106] stats4_4.2.2         munsell_0.5.0        viridisLite_0.4.2   
+[109] bslib_0.5.0         </code></pre>
+</div>
 </div>
 </div>
 </div>
