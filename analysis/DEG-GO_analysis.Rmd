@@ -101,6 +101,7 @@ All analysis is completed with an adjusted p value of 0.05
 This is updated from the 0.1 value I had been using.
 
 2023-04-19 RM
+ran final RNA-seq DEG code on 6-30-23 RM
 
 ```{r tras had no DEGs}
 
@@ -150,7 +151,7 @@ This is analysis on the significantly differentially expressed genes for Daunoru
 #                     domain_scope = "custom",
 #                     measure_underrepresentation = FALSE,
 #                     evcodes = FALSE,
-#                     user_threshold = 0.2,
+#                     user_threshold = 0.05,
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
@@ -176,7 +177,7 @@ DAtable3 %>%
     ggtitle('Daunorubicin 3 hour GO:BP terms') +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
-      theme_bw()+
+    theme_bw()+
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
@@ -206,7 +207,7 @@ Daun3sp <- list3totvenn3$..values..[[15]]
 Daun24sp <- list24totvenn24$..values..[[15]]
 
 
-# DAspgostres3 <- gost(query = Daun3sp, 
+# DAspgostres3 <- gost(query = Daun3sp,
 #                     organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
@@ -233,7 +234,7 @@ DAsptable3 <- DAspgostres3$result %>%
 
 ```{r DA24sp }
 ###no enrichment
-# Daun24spgost <- gost(query = Daun24sp, 
+# Daun24spgost <- gost(query = Daun24sp,
 #                    organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                      domain_scope = "custom",
@@ -305,9 +306,9 @@ ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
               category.names = c("3 hour\n Daun- specific","24 hours\n DEG p < 0.05"),
               show_intersect = FALSE,
               set_color = "black",
-              label = "both",
+              label = "count",
               label_percent_digit = 1,
-              label_size = 3.5,
+              label_size = 5,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid") +
@@ -318,15 +319,15 @@ ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
 
 
 ```
-Interestingly, Over half of the daunorubicin specific genes are in the Daunorucin 24 hour group.
+Interestingly, Over half of the Daunorubicin specific genes are in the Daunorubicin 24 hour group.
 
-When I look at those 187 genes, I do not see a significant enrichment in GO:BP terms, only the KEGG pathway connection to Herpes simplex virus
+When I look at those  genes, I do not see a significant enrichment in GO:BP terms, only the KEGG pathway connection to Herpes simplex virus
 
 ```{r 3hour24hour daun overlap}
 list324venn <- VennDiagram::get.venn.partitions(list(Daun3sp, sigVDA24$ENTREZID))
 
 over3_24daun <- list324venn$..values..[[1]]
-
+# 
 # over3_24gost <- gost(query = over3_24daun,
 #                   organism = "hsapiens",
 #                   ordered_query = TRUE,
@@ -337,7 +338,7 @@ over3_24daun <- list324venn$..values..[[1]]
 #                   correction_method = c("fdr"),
 #                   custom_bg = backGL$ENTREZID,
 #                   sources=c("GO:BP","KEGG"))
-#saveRDS(over3_24gost, "data/DEG-GO/over3_24gost.RDS")
+# saveRDS(over3_24gost, "data/DEG-GO/over3_24gost.RDS")
 over3_24gost <- readRDS("data/DEG-GO/over3_24gost.RDS")
 DA3_24table <- gostplot(over3_24gost, capped = FALSE, interactive = TRUE)
 DA3_24table
@@ -349,7 +350,9 @@ plDA3_24table <- over3_24gost$result%>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
 ```
-###Daunorubicin 24 sigDEG
+
+
+### Daunorubicin 24 sigDEG
 
 Looking at the Daunorubicin 24 hour geneset using adj. P value of 0.05, I have enrichment  in the terms cell cycle and chromosome segregation. 
 ```{r DA sig deg 24}
@@ -404,16 +407,16 @@ DAtable124 <- DAgostres24$result %>%
   
 ###Daunorubicin 3 v 24 intersection
 
-All 187 3 hour Daun-specific genes are in the 304 genes between the two full lists of daunorubicin sigDEGs for 3 hours and 24 hours. This could possibly support the idea that Daunorubicin's more toxic effect is related to earlier impacts on cell function.  Note the enriched go terms for the 304 genes that they share.  I need to see if there is a trend in EP and DX.  I do see in Mito 3 hour (looked a little later).
+All `r length(Daun3sp)` 3 hour Daun-specific genes are in the intersection of the daunorubicin sigDEGs for 3 hours and 24 hours. This could support the idea that DNR's more toxic effect is related to earlier impacts on cell function.  Note the enriched go terms for the 304 genes that they share.  I need to see if there is a trend in EP and DX.  I do see in Mito 3 hour (looked a little later).
 
 ```{r DA 3v24 int, echo=FALSE, message=FALSE, warning=FALSE}
 daun3v24int <- intersect(sigVDA3$ENTREZID,sigVDA24$ENTREZID)
 length(union(sigVDA3$ENTREZID,sigVDA24$ENTREZID))
 ggVennDiagram::ggVennDiagram(list(sigVDA3$ENTREZID, sigVDA24$ENTREZID),
-              category.names = c("3 hour Daunrubicin\nn=555","24 hours Daunorubicin\n   n=6864"),
+              category.names = c("3 hour Daunrubicin\nn=532","24 hours Daunorubicin\n   n=7017"),
               show_intersect = FALSE,
               set_color = "black",
-              label = "both",
+              label = "count",
               label_percent_digit = 1,
               label_size = 3.5,
               label_alpha = 0,
@@ -421,7 +424,8 @@ ggVennDiagram::ggVennDiagram(list(sigVDA3$ENTREZID, sigVDA24$ENTREZID),
               edge_lty = "solid") +
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "red4", high = "tan1")+
-  labs(title = "DEG p < 0.05, All daunorubicin 3hour and 24 hours sets", caption = "n = 7115 genes")+
+  labs(title = "DEG p < 0.05, All daunorubicin 3hour and 24 hours sets", 
+       caption = paste("n =", length(union(sigVDA3$ENTREZID,sigVDA24$ENTREZID)),"genes"))+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
 
@@ -437,7 +441,7 @@ length(intersect(over3_24daun, intersect(sigVDA3$ENTREZID, sigVDA24$ENTREZID)))
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
 
-#saveRDS(DAgostresint,"data/DEG-GO/DAgostresint.RDS")
+# saveRDS(DAgostresint,"data/DEG-GO/DAgostresint.RDS")
 DAgostresint <- readRDS("data/DEG-GO/DAgostresint.RDS")
 DApint <- gostplot(DAgostresint, capped = FALSE, interactive = TRUE)
 DApint
@@ -481,7 +485,7 @@ DAtable_int <- DAgostresint$result %>%
 
 ## Doxorubicin 3 hour and 24 hour
 ```{r intial analysis DX3 and DX24, echo=FALSE, message=FALSE, warning=FALSE}
-# DXgostres <- gost(query = sigVDX3$ENTREZID,  
+# DXgostres <- gost(query = sigVDX3$ENTREZID,
 #                   organism = "hsapiens",
 #                   ordered_query = TRUE,
 #                   domain_scope = "custom",
@@ -490,7 +494,7 @@ DAtable_int <- DAgostresint$result %>%
 #                   user_threshold = 0.05,
 #                   correction_method = c("fdr"),
 #                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
+                  # sources=c("GO:BP","KEGG"))
 # saveRDS(DXgostres,"data/DEG-GO/DXgostres.RDS")
 
 DXgostres <- readRDS("data/DEG-GO/DXgostres.RDS")
@@ -529,18 +533,18 @@ DXtable1 <- DXgostres$result %>%
   scroll_box(width = "100%", height = "400px")
   
  # ---------------------------------------------------------
-  # 
-  # DXgostres24 <- gost(query = sigVDX24$ENTREZID,  
-  #                   organism = "hsapiens",
-  #                   ordered_query = TRUE,
-  #                   domain_scope = "custom",
-  #                   measure_underrepresentation = FALSE,
-  #                   evcodes = FALSE,
-  #                   user_threshold = 0.05,
-  #                   correction_method = c("fdr"),
-  #                   custom_bg = backGL$ENTREZID,
-  #                   sources=c("GO:BP","KEGG"))
-#saveRDS(DXgostres24,"data/DEG-GO/gostres24.RDS") 
+#   # 
+#   DXgostres24 <- gost(query = sigVDX24$ENTREZID,
+#                     organism = "hsapiens",
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg = backGL$ENTREZID,
+#                     sources=c("GO:BP","KEGG"))
+# saveRDS(DXgostres24,"data/DEG-GO/gostres24.RDS")
   DXgostres24 <- readRDS("data/DEG-GO/gostres24.RDS")
 gostres24 <- readRDS("data/DEG-GO/gostres24.RDS")  
   p24 <- gostplot(gostres24, capped = FALSE, interactive = TRUE)
@@ -581,12 +585,12 @@ DXtable124 %>%
 ## Epirubicin  
 All Epi DEGs adj. p value < 0.05
 
-
+EPspecific genes set now does not show enrichment in any terms.
 ```{r intial analysis EP3 and EP24, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-
-# EPgostres <- gost(query = sigVEP3$ENTREZID,  
+EPsp3 <- list3totvenn3$..values..[[12]]
+# EPspgostres <- gost(query = EPsp3,
 #                   organism = "hsapiens",
 #                   ordered_query = TRUE,
 #                   domain_scope = "custom",
@@ -596,6 +600,8 @@ All Epi DEGs adj. p value < 0.05
 #                   correction_method = c("fdr"),
 #                   custom_bg = backGL$ENTREZID,
 #                   sources=c("GO:BP","KEGG"))
+
+
 # saveRDS(EPgostres,"data/DEG-GO/EPgostres.RDS")
 EPgostres <- readRDS("data/DEG-GO/EPgostres.RDS")
 EPp <- gostplot(EPgostres, capped = FALSE, interactive = TRUE)
@@ -686,12 +692,12 @@ EPtable124%>%
 
 ##epi 24 specifi n = 533
 epsp24 <- list24totvenn24$..values..[[12]]
+##ep 3 hour above
 
 
 
-
-
-# EPgostres24sp <- gost(query = epsp24,
+# 
+# EPspgostres24sp <- gost(query = epsp24,
 #                     organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
@@ -701,40 +707,40 @@ epsp24 <- list24totvenn24$..values..[[12]]
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
-
-#saveRDS(EPgostres24sp,"data/DEG-GO/EPgostres24sp.RDS")
-EPgostres24sp <- readRDS("data/DEG-GO/EPgostres24sp.RDS")
-
-EPsptable124 <- EPgostres24sp$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
-EPsptable124%>% 
-    dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = wrap_format(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle("Epirubicin specific 24 hour top GO:BP terms") +
-     xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+# saveRDS(EPspgostres,"data/DEG-GO/EPspgostres.RDS")
+# saveRDS(EPgostres24sp,"data/DEG-GO/EPgostres24sp.RDS")
+EPspgostres<- readRDS("data/DEG-GO/EPspgostres.RDS")
+# 
+# EPsptable <- EPspgostres$result %>%
+#   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+# EPsptable %>%
+#     dplyr::filter(source=="KEGG") %>%
+#     dplyr::select(p_value,term_name,intersection_size) %>%
+#     slice_min(., n=10 ,order_by=p_value) %>%
+#     mutate(log_val = -log10(p_value)) %>%
+#    # slice_max(., n=10,order_by = p_value) %>%
+#    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+#     geom_point(aes(size = intersection_size)) +
+#     scale_y_discrete(labels = wrap_format(30))+
+#     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+#     ggtitle("Epirubicin specific 3 hour top KEGG terms") +
+#      xlab(expression(" -"~log[10]~("adj. p-value")))+
+#     ylab("KEGG term")+
+#       theme_bw()+
+#     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+#         axis.title = element_text(size = 15, color = "black"),
+#         axis.ticks = element_line(linewidth = 1.5),
+#         axis.line = element_line(linewidth = 1.5),
+#         axis.text = element_text(size = 10, color = "black", angle = 0),
+#         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 ```
-Epirubicin specific genes at 24 hours n= 489 genes are starting to show some apoptosis enrichment for myeloid cells. 
+
 
 
 ```{r mito specific at 24 hours}
 
 mtsp24 <- list24totvenn24$..values..[[8]]
-# MTgostres24sp <- gost(query = mtsp24,  
+# MTgostres24sp <- gost(query = mtsp24,
 #                     organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
@@ -814,7 +820,7 @@ MTtable1 %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Mitoxatrone 3 hour GO:BP terms') +
+    ggtitle('Mitoxantrone 3 hour GO:BP terms') +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -832,16 +838,16 @@ MTtable1 %>%
   scroll_box(width = "100%", height = "400px")
  # ---------------------------------------------------------
 #   
-#   MTgostres24 <- gost(query = sigVMT24$ENTREZID,
-#                     organism = "hsapiens",
-#                     ordered_query = TRUE,
-#                     domain_scope = "custom",
-#                     measure_underrepresentation = FALSE,
-#                     evcodes = FALSE,
-#                     user_threshold = 0.05,
-#                     correction_method = c("fdr"),
-#                     custom_bg = backGL$ENTREZID,
-#                     sources=c("GO:BP","KEGG"))
+  # MTgostres24 <- gost(query = sigVMT24$ENTREZID,
+  #                   organism = "hsapiens",
+  #                   ordered_query = TRUE,
+  #                   domain_scope = "custom",
+  #                   measure_underrepresentation = FALSE,
+  #                   evcodes = FALSE,
+  #                   user_threshold = 0.05,
+  #                   correction_method = c("fdr"),
+  #                   custom_bg = backGL$ENTREZID,
+  #                   sources=c("GO:BP","KEGG"))
 # saveRDS(MTgostres24,"data/DEG-GO/MTgostres24.RDS")
 MTgostres24 <- readRDS("data/DEG-GO/MTgostres24.RDS")
   
@@ -881,59 +887,15 @@ MTtable124 %>% dplyr::filter(source=="GO:BP") %>%
   scroll_box(width = "100%", height = "400px")
   
 
-  
-  
-  
-  
-
-```
-AT 3 hours, the Mitoxantrone DEGs, adj. p value < 0.01, look similar to daunorubicin gene sets a 3 hours.  hmmm
-
-
-
-```{r up down trial data3, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-#results_sig = subset(sigVDA3,adj.P.Val < 0.05)
-# # get the significant up-regulated genes
-#   up = subset(sigVDA3, logFC > 0)
-# # get the significant down-regulated genes
-# down = subset(sigVDA3, logFC < 0)
-# gp_up = gost(query = up$ENTREZID,  organism = "hsapiens",
-#   ordered_query = TRUE,
-#   domain_scope = "custom",
-#   measure_underrepresentation = FALSE,
-#   evcodes = FALSE,
-#   user_threshold = 0.001,
-#   correction_method = c("fdr"),
-#   custom_bg = backGL$ENTREZID,
-#   sources=c("GO:BP","GO:MF", "GO:CC"))
-#   
-#   
-# #gp_down = gost(query = down$ENTREZID,  organism = "hsapiens",
-#   # ordered_query = TRUE,
-#   # domain_scope = "custom",
-#   # measure_underrepresentation = FALSE,
-#   # evcodes = FALSE,
-#   # user_threshold = 0.05,
-#   # correction_method = c("bonferroni"),
-#   # custom_bg = backGL$ENTREZID,
-#   # sources=c("GO:BP","GO:MF", "GO:CC"))
-# p2_up <- gostplot(gp_up, capped = FALSE, interactive = TRUE)
-# 
-# p2_up #+ ggtitle("Daunorubicin up regulated gene enrichment at 3 hours")
-
 ```
 
-```{r showing it all, eval = FALSE, echo=FALSE, message=FALSE, warning=FALSE}
-
-#p2_down <- gostplot(gp_down, capped = FALSE, interactive = TRUE)
-
-#p2_down #+ ggtitle("Daunorubicin down regulated gene enrichment at 3 hours")
 
 
-```
 
-## Venn Diagrams 
-### All DEGs adj. p value < 0.05, 24 hour
+## Venn Diagrams  
+
+### All DEGs adj. p value < 0.05, 24 hour  
+
 ```{r venndiagram, echo=FALSE, message=FALSE, warning=FALSE}
 library(paletteer)
 
@@ -951,7 +913,7 @@ ggVennDiagram::ggVennDiagram(total24,
               category_size = c(6,6,6,6),
               label = "count",
               label_percent_digit = 1,
-              label_size = 3,
+              label_size = 4,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid", set_size = 4.5)+
@@ -1018,9 +980,9 @@ length(unique(in_commonDa))
               category.names = c("Daunorubicin-24","Daunorubicin-3"),
               show_intersect = FALSE,
               set_color = "black",
-              label = "both",
+              label = "count",
               label_percent_digit = 1,
-              label_size = 3,
+              label_size = 4,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid", set_size = )+
@@ -1040,15 +1002,16 @@ length(unique(in_commonDx))
               category.names = c("Doxorubicin-24","Doxorubicin-3"),
               show_intersect = FALSE,
               set_color = "black",
-              label = "both",
+              label = "count",
               label_percent_digit = 1,
-              label_size = 3,
+              label_size = 4,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparison of Doxo 3h v 24h", caption = "n = 6656 genes")+
+  labs(title = "Comparison of Doxo 3h v 24h", 
+       caption = paste("n =", length(unique(in_commonDx)),"genes"))+
   theme(plot.title = element_text(size = rel(1), hjust = 0.5))
 # saveRDS(DOXvenn,"output/DOXvenn.RDS")
 
@@ -1065,15 +1028,15 @@ length(unique(in_commonEp))
               category.names = c("Epirubicin-24","Epirubicin-3"),
               show_intersect = FALSE,
               set_color = "black",
-              label = "both",
+              label = "count",
               label_percent_digit = 1,
-              label_size = 3,
+              label_size = 4,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparison of EPI 3h v 24h", caption = "n = 6416 genes")+
+  labs(title = "Comparison of EPI 3h v 24h", caption = paste("n =", length(unique(in_commonEp)),"genes"))+
   theme(plot.title = element_text(size = rel(1), hjust = 0.5))
 # saveRDS(EPIvenn,"output/EPIvenn.RDS")
 #
@@ -1087,15 +1050,16 @@ length(unique(in_commonMt))
               category.names = c("Mitoxantrone-24","Mitoxantrone-3"),
               show_intersect = FALSE,
               set_color = "black",
-              label = "both",
+              label = "count",
               label_percent_digit = 1,
-              label_size = 3,
+              label_size = 4,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .21))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparison of Mito 3h v 24h", caption = "n = 1174 genes")+
+  labs(title = "Comparison of Mito 3h v 24h", 
+       caption = paste("n =", length(unique(in_commonMt)),"genes"))+
   theme(plot.title = element_text(size = rel(1), hjust = 0.5))
 
 # saveRDS(MTXvenn,"output/MTXvenn.RDS")
@@ -1114,8 +1078,8 @@ length(unique(in_commonMt))
 DDEresp<- list24totvenn24$..values..[[9]]
 #DDEresp1<- read.csv("data/DDEresp_list.csv",row.names = 1)
 # write.csv(DDEresp,"data/DDEresp_list.csv")
-# DDEMresp<- list24totvenn24$..values..[[1]]
-DDEMresp<-read.csv("data/DDEMresp_list.csv")
+DDEMresp<- list24totvenn24$..values..[[1]]
+# DDEMresp<-read.csv("data/DDEMresp_list.csv", row.names = 1)
 # write.csv(DDEMresp,"data/DDEMresp_list.csv")
 # DDEall <-(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
 # length(intersect(DDEresp,sigVMT24))
@@ -1137,44 +1101,52 @@ length(complete$ENTREZID)
 NoRespDEG <- setdiff(backGL$ENTREZID ,complete$ENTREZID) #
 print("Number of No response genes in DEG set, adj. P value  < 0.05")
 length(NoRespDEG) 
-
+# write.csv(NoRespDEG,"data/NoRespDEG_final.csv")
  #5716
 ```
 ## DDE response set
 
-adj. P value  < 0.05, intersection of DNE-DOX-EPI, excluding those in common with MTX
-n= 4435
+adj. P value  < 0.05, intersection of DNR-DOX-EPI, excluding those in common with MTX, n =
+`r length(DDEresp)` genes.
 
-no significant enrichment found!   I tried going for only the 
-I did the intersection of all AC drugs and found a list that was 6129 genes long. 
-Below is that analysis.
+no significant enrichment found!  
+
+AC specific enrichment at 24 hours did not occur.  The next step was Top2 inhibitior enrichment.  This would be the intersection of all Top2bi drugs. This was `r length( DDEMresp)` genes long.  Below is that analysis.  
+
+
+
 
 ```{r GO DDEresp genelist of SDEGs,  message=FALSE, warning=FALSE, include=FALSE}
+##No enrichment for DDE only resp!
 
-#DDEresp <- list(DDEresp$x)#(ac +mtx)
-# DDEgostres24 <- gost(query = DDEresp,
-                    # organism = "hsapiens",
-                    # ordered_query = TRUE,
-                    # domain_scope = "custom",
-                    # measure_underrepresentation = FALSE,
-                    # evcodes = FALSE,
-                    # user_threshold = 0.1,
-                    # correction_method = c("fdr"),
-                    # custom_bg = backGL$ENTREZID,
-                    # sources=c("GO:BP","KEGG"))
-# saveRDS(DDEgostres24,"data/DEG-GO/DDEgostres24-5155.RDS")
+##overlap of DDEM + AC only gives: 
+
+DDErespAll <- (union(DDEresp,DDEMresp))
+# DDEgostres24 <- gost(query = DDErespAll,
+#                      organism = "hsapiens",
+#                      ordered_query = TRUE,
+#                      domain_scope = "custom",
+#                      measure_underrepresentation = FALSE,
+#                      evcodes = FALSE,
+#                      user_threshold = 0.05,
+#                      correction_method = c("fdr"),
+#                      custom_bg = backGL$ENTREZID,
+#                      sources=c("GO:BP","KEGG"))
+# saveRDS(DDEgostres24,"data/DEG-GO/DDE_allgostres24.RDS")
 # DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24-5155.RDS")
 # saveRDS(DDEgostres24only,"data/DEG-GO/DDEgostres24only.RDS")
-DDEgostres24 <- readRDS("data/DEG-GO/DDEgostres24.RDS")
+DDEgostres24 <- readRDS("data/DEG-GO/DDE_allgostres24.RDS")  
 # saveRDS(DDEgostres24kegg,"data/DEG-GO/DDEgostres24kegg.RDS")
-DDE24kegg <- readRDS("data/DEG-GO/DDEgostres24kegg.RDS")
+
 DDEp24 <- gostplot(DDEgostres24, capped = FALSE, interactive = TRUE)
 DDEp24
 
-kegg_term <- c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair")         
+kegg_term <- c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair")  
 
-DDEtable24kegg <- DDE24kegg$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+
+DDEtable24kegg <- DDEgostres24$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) %>% 
+  dplyr::filter(source=="KEGG")
 DDEtable24<- DDEgostres24$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
 
@@ -1231,16 +1203,16 @@ DDEtable24kegg %>% dplyr::filter(source=="KEGG") %>%
 
 ``` 
 
-of the AC genes that overlapped without Mito (n=4178)
-and all AC gens plus those which overlapped with Mito (n=5155), the significantly  enriched GO: BP terms are the same.  This may lend the idea that the specific AC set can tell us more about mechanism in AC induced cardiotoxicity.
+of the AC genes that overlapped without Mito (n= `r length(DDEresp)`
+and all AC gens plus those which overlapped with Mito (n= `r length(DDEMresp)`, the significantly  enriched GO: BP terms are the same.  This may support the idea that the specific AC set can tell us more about mechanism in AC induced cardiotoxicity.
 
 
 
-## DDEM response of 977
-```{r GO DDEM 977 genelist of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
+## DDEM response of `r length(DDEMresp)`
+```{r GO DDEM list of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-# DDEMgostres24 <- gost(query = DDEMresp,  
+# DDEMgostres24 <- gost(query = DDEMresp,
 #                     organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
@@ -1250,8 +1222,8 @@ and all AC gens plus those which overlapped with Mito (n=5155), the significantl
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
-
-#saveRDS(DDEMgostres24,"data/DEG-GO/DDEMgostres24.RDS")
+# 
+# saveRDS(DDEMgostres24,"data/DEG-GO/DDEMgostres24.RDS")
 DDEMgostres24 <- readRDS("data/DEG-GO/DDEMgostres24.RDS")
 
 DDEMp24 <- gostplot(DDEMgostres24, capped = FALSE, interactive = TRUE)
@@ -1318,8 +1290,8 @@ What I will do is take the terms from the tope three KEGG pathways and look at c
 
 ```{r GO DXsprespon$ENTREZID genelist of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
 
-### no enrichment
-# DXspgostres24 <- gost(query = DXsprespon, 
+
+# DXspgostres24 <- gost(query = DXsprespon,
 #                     organism = "hsapiens",
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
@@ -1349,7 +1321,7 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = scales::wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Doxorubicin specific DEGs (n=342) 24 hr GO:BP terms') +
+    ggtitle(paste0("Doxorubicin specific DEGs (n = ",length(DXsprespon),") 24 hr GO:BP terms")) +
    xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -1361,7 +1333,7 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 # 
-# DXsptable24 %>% dplyr::filter(source=="KEGG") %>% 
+# DXsptable24 %>% dplyr::filter(source=="KEGG") %>%
 #     dplyr::select(p_value,term_name,intersection_size) %>%
 #     slice_min(., n= 10 ,order_by=p_value) %>%
 #     mutate(log_val = -log10(p_value)) %>%
@@ -1392,6 +1364,8 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
 
 
 ``` 
+ 
+ 
   As above, I will pull the specific genes and look at logCPM of these genes soon to examine if the change is seen in the other AC genes at 24 hours.
 
 
@@ -1429,7 +1403,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('No response genes(n=4593) 24 hr GO:BP terms') +
+     ggtitle(paste0("No response genes(n = ",length(NoRespDEG),") GO:BP terms")) +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -1441,7 +1415,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
 
-Noresp24table %>% dplyr::filter(source=="GO:BP") %>% 
+Noresp24table %>% dplyr::filter(source=="KEGG") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n= 10 ,order_by=p_value) %>%
     mutate(log_val = -log10(p_value)) %>%
@@ -1450,7 +1424,7 @@ Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
     geom_point(aes(size = intersection_size, col = "red")) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('No response genes(n=4593) 24 hr KEGG terms') +
+    ggtitle(paste0("No response genes(n = ",length(NoRespDEG),") 24 hr KEGG terms")) +
      xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("KEGG term")+
       theme_bw()+
@@ -1502,12 +1476,12 @@ DXsp24deg <- DXsptable24 %>%
     mutate(log_val = -log10(p_value)) %>%
   mutate(order_val=rev(as.numeric(rownames(.))))
 
-EPsp24deg <- EPsptable124 %>% 
-  dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+# EPsp24deg <- EPsptable124 %>%
+#   dplyr::filter(source=="GO:BP") %>%
+#     dplyr::select(p_value,term_name,intersection_size) %>%
+#     slice_min(., n=10 ,order_by=p_value) %>%
+#     mutate(log_val = -log10(p_value)) %>%
+#   mutate(order_val=rev(as.numeric(rownames(.))))
 
 MTsp24deg <-   MTsptable124 %>% 
     dplyr::filter(source=="GO:BP") %>% 
@@ -1548,7 +1522,6 @@ GODEGlong <-list("DAdeg"=DAdeg,
                  "DXdeg"=DXdeg,
                  "DXsp24deg"=DXsp24deg,
                  "EPdeg"=EPdeg,
-                 "EPsp24deg"=EPsp24deg,
                  "MTdeg"=MTdeg,
                  "MTsp24deg"= MTsp24deg,
                  "DDEdeg"=DDEdeg,
@@ -1560,7 +1533,7 @@ GODEGlongtable <- data.table::rbindlist(GODEGlong, idcol = "deg")
 ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
    geom_point(aes(size = intersection_size, col=deg)) +
    scale_y_discrete(labels = wrap_format(40))+
-   scale_color_manual(values=c("#8B006D","#DF707E","#e38893","#F1B72B","#f2c350","#3386DD","#33a1dd","red", "blue", alpha= 0.8))+
+   scale_color_manual(values=c("#8B006D","#DF707E","#e38893","#F1B72B","#3386DD","#33a1dd","red", "blue", alpha= 0.8))+
   facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
                eval(parse(text = paste0('facet_deg', '$`', deg, '`')))
                )))) +
@@ -1582,15 +1555,14 @@ ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) 
  
  
  facet_deg=(
-   c(DAdeg = expression(atop("Daunorubicin 24 hr",~italic("n = 6864"))),
-     DXdeg = expression(atop("Doxorubicin 24 hr",~italic("n = 6516"))),
-     DXsp24deg =expression(atop("Dox-specific 24 hr",~italic("n = 342"))),
-     EPdeg = expression(atop("Epirubicin 24 hr",~italic("n = 6202"))),
-     EPsp24deg=expression(atop("Epi-specific 24 hr",~italic("n = 489"))),
-     MTdeg = expression(atop( "Mitoxantrone 24 hr",~italic("n = 1327"))),
-     MTsp24deg =expression(atop( "Mito-specific 24 hr",~italic("n = 188"))),
-     DDEdeg = expression(atop("Anthracycline 24 hr",~italic("n = 4915,"))),
-     DDEMdeg = expression(atop( "Top2Bi 24 hr",~italic("n = 977")))))
+   c(DAdeg = expression(atop("Daunorubicin 24 hr",~italic("n = 7017"))),
+     DXdeg = expression(atop("Doxorubicin 24 hr",~italic("n = 6645"))),
+     DXsp24deg =expression(atop("Dox-specific 24 hr",~italic("n = 355"))),
+     EPdeg = expression(atop("Epirubicin 24 hr",~italic("n = 6328"))),
+     MTdeg = expression(atop( "Mitoxantrone 24 hr",~italic("n = 1115"))),
+     MTsp24deg =expression(atop( "Mito-specific 24 hr",~italic("n = 122"))),
+     DDEdeg = expression(atop("Anthracycline 24 hr",~italic("n = 4435,"))),
+     DDEMdeg = expression(atop( "Top2i 24 hr",~italic("n = 882")))))
 
 #  title_labeller_function <- function(nuisance_parameter) {
 #   return(facet_degnames() )
@@ -1634,33 +1606,12 @@ library(limma)
 library(corrplot)
 library(pheatmap)
 
-efit2<- readRDS(file ="data/efit2results.RDS")
+efit2<- readRDS(file ="data/efit2_final.RDS")
 
-# saveRDS(efit2, file ="data/efit2results.RDS")
-
-V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
-V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
-V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
-V.MT.top= topTable(efit2, coef=4, adjust="BH", number=Inf, sort.by="p")
-V.TR.top= topTable(efit2, coef=5, adjust="BH", number=Inf, sort.by="p")
-V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf, sort.by="p")
-V.DX24.top= topTable(efit2, coef=7, adjust="BH", number=Inf, sort.by="p")
-V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
-V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
-V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
-
-toplist3hours <-list(V.DA.top[,c(1,3)],
-                              V.DX.top[,c(1,3)],
-                              V.EP.top[,c(1,3)],
-                              V.MT.top[,c(1,3)],
-                              V.TR.top[,c(1,3)])
-names(toplist3hours) <- c("Daunorubicin-3h","Doxorubicin-3h", "Epirubicin-3h","Mitoxantrone-3h", "Trastuzumab-3h")
-library(RColorBrewer)
-#toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
 
 FCmatrix <- subset(efit2$coefficients)
 is.matrix(subset(FCmatrix))
-colnames(FCmatrix) <- c("Daunorubicin-3h","Doxorubicin-3h", "Epirubicin-3h","Mitoxantrone-3h", "Trastuzumab-3h","Daunorubicin-24h","Doxorubicin-24h", "Epirubicin-24h","Mitoxantrone-24h", "Trastuzumab-24h")
+colnames(FCmatrix) <- c("DNR-3h","DOX-3h", "EPI-3h","MTX-3h", "TRZ-3h","DNR-24h","DOX-24h", "EPI-24h","MTX-24h", "TRZ-24h")
 
 
 mat_col <- data.frame(time= c(rep("3 hours",5), rep("24 hours",5)))
@@ -1756,12 +1707,17 @@ plot_grid(g)
 ```
 
 
-```{r kegg 24 hour DEG heat}
+###  KEGG pathway intersection of pairwise DEG sets
+
+
+note:  grey box means these terms were not fount to be enriched in the data set terms.  I will try to change the levels to pull out the pvalue of the term for each (6-30-23)
+
+```{r kegg 24 hour DEG heat, message=FALSE, warning=FALSE}
 # kegglistDEG <- list(DDEdegk,DDEMdegk,DAdegk,DXdegk,EPdegk, MTdegk)
 # names(kegglistDEG) <-c("DDEdegk","DDEMdegk","DAdegk","DXdegk","EPdegk", "MTdegk")
 # saveRDS(kegglistDEG,"data/kegglistDEG.RDS")
-kegglistDEG <- readRDS("data/kegglistDEG.RDS")
-list2env(kegglistDEG, envir=.GlobalEnv)
+# kegglistDEG <- readRDS("data/kegglistDEG.RDS")
+# list2env(kegglistDEG, envir=.GlobalEnv)
 
 
 DDEdegk <- DDEtable24 %>% dplyr::filter(source=="KEGG") %>% 
@@ -1812,7 +1768,7 @@ keggDEGlong <-list("DNR"=DAdegk,
                  "EPI"=EPdegk,
                  "MTX"=MTdegk,
                  "Athracyclines"=DDEdegk,
-                 "TOP2Bi"=DDEMdegk)
+                 "TOP2i"=DDEMdegk)
 
 keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
 kegg_sig_mat <- keggtable %>% 
