@@ -976,7 +976,7 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
 
 
 
-```{r slope correlation, fig.keep='all',eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r slope correlation, fig.keep='all',eval=TRUE, message=FALSE, warning=FALSE, include=FALSE}
   slope_table <- read.csv("data/slope_table.csv",row.names = 1)
 LD50_table <- read.csv("data/ld50_table.csv",row.names = 1)
 
@@ -992,14 +992,14 @@ saveup <- LD50_table %>%
 saveup %>% 
   pivot_wider(id_cols=indv, names_from = rowname, values_from = name) %>% 
   ggplot(., aes(x=DNR,y=DOX))+
-  geom_point(aes(color=indv))+
+  geom_point(aes(color=indv, size=4))+
   geom_smooth(method="lm")+
   theme_bw()+
   # xlab("Average viability of cardiomyocytes/100") +
   # ylab("Average LDH") +
   # ggtitle("Relative viability and relative LDH release at 48 hours")+
   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-  stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+  ggpubr::stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
            color = "red")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
         axis.title = element_text(size = 15, color = "black"),
@@ -1011,14 +1011,14 @@ saveup %>%
 saveup %>% 
   pivot_wider(id_cols=indv, names_from = rowname, values_from = name) %>% 
   ggplot(., aes(x=MTX,y=DOX))+
-  geom_point(aes(color=indv))+
+  geom_point(aes(color=indv, size=4))+
   geom_smooth(method="lm")+
   theme_bw()+
   # xlab("Average viability of cardiomyocytes/100") +
   # ylab("Average LDH") +
   # ggtitle("Relative viability and relative LDH release at 48 hours")+
   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-  stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+  ggpubr::stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
            color = "red")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
         axis.title = element_text(size = 15, color = "black"),
@@ -1030,14 +1030,14 @@ saveup %>%
 saveup %>% 
   pivot_wider(id_cols=indv, names_from = rowname, values_from = name) %>% 
   ggplot(., aes(x=EPI,y=DOX))+
-  geom_point(aes(color=indv))+
+  geom_point(aes(color=indv, size=4))+
   geom_smooth(method="lm")+
   theme_bw()+
   # xlab("Average viability of cardiomyocytes/100") +
   # ylab("Average LDH") +
   # ggtitle("Relative viability and relative LDH release at 48 hours")+
   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-  stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+  ggpubr::stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
            color = "red")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
         axis.title = element_text(size = 15, color = "black"),
@@ -1093,7 +1093,7 @@ graphLD50 <- avgLD50 %>%     mutate(Treatment=case_match(Treatment,"Daun"~"Dauno
   geom_boxplot(position = "identity",aes(fill=Treatment))+
   geom_point(aes(color = indv,
                  size = 5,alpha = 0.5)) +
-  ggtitle(expression("Experimentlly-derived LD"[50]*"s from treated cardiomyocytes"))+
+  ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
   xlab("Treatment")+
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Dark2",
