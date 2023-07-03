@@ -138,7 +138,7 @@ toplist3hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
-  summarize(ARRcount=n())%>% 
+  dplyr::summarize(ARRcount=n())%>% 
     pivot_wider(id_cols = c(id,sigcount), names_from=c(ARR), values_from=ARRcount) %>% 
    mutate(ARRprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=ARRprop)) +
@@ -156,7 +156,7 @@ dataframARR3 <- toplist3hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
-  summarize(ARRcount=n()) %>% 
+  dplyr::summarize(ARRcount=n()) %>% 
   as.data.frame()
 
 dataframARR3 %>% kable(., caption= "Significant (adj. P value of <0.05) and non-sig gene counts in Arrhythmia 3 hour GWAS") %>% 
@@ -178,7 +178,7 @@ chi_funarr <-  toplistall %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
-  summarise(pvalue= chisq.test(ARR, sigcount)$p.value) 
+  dplyr::summarise(pvalue= chisq.test(ARR, sigcount)$p.value) 
 
 
 chi_funarr %>% 
@@ -246,7 +246,7 @@ toplist24hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,HF) %>% 
-  summarize(HFcount=n())%>% 
+  dplyr::summarize(HFcount=n())%>% 
     pivot_wider(id_cols = c(id,sigcount), names_from=c(HF), values_from=HFcount) %>% 
    mutate(HFprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=HFprop)) +
@@ -264,7 +264,7 @@ dataframHF <- toplist24hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,HF) %>% 
-  summarize(HFcount=n()) %>% 
+  dplyr::summarize(HFcount=n()) %>% 
   as.data.frame()
 
 dataframHF %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
@@ -284,7 +284,7 @@ toplist3hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,HF) %>% 
-  summarize(HFcount=n())%>% 
+  dplyr::summarize(HFcount=n())%>% 
     pivot_wider(id_cols = c(id,sigcount), names_from=c(HF), values_from=HFcount) %>% 
    mutate(HFprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=HFprop)) +
@@ -302,7 +302,7 @@ dataframHF3 <- toplist3hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,HF) %>% 
-  summarize(HFcount=n()) %>% 
+  dplyr::summarize(HFcount=n()) %>% 
   as.data.frame()
 
 dataframHF3 %>%
@@ -322,7 +322,7 @@ chi_funhf <-  toplistall %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
-  summarise(pvalue= chisq.test(HF, sigcount)$p.value) 
+  dplyr::summarise(pvalue= chisq.test(HF, sigcount)$p.value) 
 
 chi_funhf %>% 
   kable(., caption= "after performing chi square test between DEgenes, and non DE genes") %>% 
@@ -395,7 +395,7 @@ toplist24hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,CAD) %>% 
-  summarize(CADcount=n())%>% 
+  dplyr::summarize(CADcount=n())%>% 
     pivot_wider(id_cols = c(id,sigcount), names_from=c(CAD), values_from=CADcount) %>% 
    mutate(CADprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=CADprop)) +
@@ -413,7 +413,7 @@ dataframCAD <- toplist24hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,CAD) %>% 
-  summarize(CADcount=n()) %>% 
+  dplyr::summarize(CADcount=n()) %>% 
   as.data.frame()
 
 dataframCAD %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
@@ -432,7 +432,7 @@ toplist3hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,CAD) %>% 
-  summarize(CADcount=n())%>% 
+  dplyr::summarize(CADcount=n())%>% 
     pivot_wider(id_cols = c(id,sigcount), names_from=c(CAD), values_from=CADcount) %>% 
    mutate(CADprop=(y/(y+no)*100)) %>% 
        ggplot(., aes(x=id, y=CADprop)) +
@@ -450,7 +450,7 @@ dataframCAD3 <- toplist3hr %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,CAD) %>% 
-  summarize(CADcount=n()) %>% 
+  dplyr::summarize(CADcount=n()) %>% 
   as.data.frame()
 
 dataframCAD3 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>% 
@@ -470,7 +470,7 @@ chi_funCAD <-  toplistall %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
-  summarise(pvalue= chisq.test(CAD, sigcount)$p.value) 
+  dplyr::summarise(pvalue= chisq.test(CAD, sigcount)$p.value) 
 
 chi_funCAD %>% 
   kable(., caption= "after performing chi square test between DEgenes, and non DE genes") %>% 
@@ -703,7 +703,7 @@ pairwisecrispr <- toplistall %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(crisp = if_else(ENTREZID %in% crisprunique$entrezgene_id, "y", "no")) %>% 
   group_by(time, id) %>%
-  summarise(pvalue= chisq.test(crisp, sigcount, correct=FALSE)$p.value)
+  dplyr::summarise(pvalue= chisq.test(crisp, sigcount, correct=FALSE)$p.value)
  
   
   crisprnumbers <- toplistall %>%
