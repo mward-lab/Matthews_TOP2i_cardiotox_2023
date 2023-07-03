@@ -991,7 +991,7 @@ saveup <- LD50_table %>%
   as.data.frame()
 saveup %>% 
   pivot_wider(id_cols=indv, names_from = rowname, values_from = name) %>% 
-  ggplot(., aes(x=DNR,y=DOX))+
+  ggplot(., aes(x=DOX,y=DNR))+
   geom_point(aes(color=indv, size=4))+
   geom_smooth(method="lm")+
   theme_bw()+
@@ -1010,7 +1010,7 @@ saveup %>%
 
 saveup %>% 
   pivot_wider(id_cols=indv, names_from = rowname, values_from = name) %>% 
-  ggplot(., aes(x=MTX,y=DOX))+
+  ggplot(., aes(x=DOX,y=EPI))+
   geom_point(aes(color=indv, size=4))+
   geom_smooth(method="lm")+
   theme_bw()+
@@ -1029,7 +1029,7 @@ saveup %>%
 
 saveup %>% 
   pivot_wider(id_cols=indv, names_from = rowname, values_from = name) %>% 
-  ggplot(., aes(x=EPI,y=DOX))+
+  ggplot(., aes(x=DOX,y=MTX))+
   geom_point(aes(color=indv, size=4))+
   geom_smooth(method="lm")+
   theme_bw()+
