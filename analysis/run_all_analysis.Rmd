@@ -110,9 +110,9 @@ x_axis_labels=function(labels,every_nth=1,...) {
 design <- read.csv("data/data_outline.txt", row.names = 1)
 mymatrix <- readRDS("data/allmatrix.RDS")
 seq_info <-read.csv("output/sequencing_info.txt")
-##below only done once
-#myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts", pattern ="*.txt")
-#mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
+# below only done once
+# myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts", pattern ="*.txt")
+# mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
 # 
 drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 
@@ -137,6 +137,7 @@ samplenames <- c("MCW_RM_R_11", "MCW_RM_R_12", "MCW_RM_R_13", "MCW_RM_R_14", "MC
  
 anno <- (cbind(samplenames, indv, drug, time, RIN, group))
 anno <- as.data.frame(anno)
+# saveRDS(anno,"data/annotation_data_frame.RDS")
 
 ```
 
@@ -304,16 +305,21 @@ label <- (interaction(substring(drug, 0, 2), indv, time))
 cpm <- cpm(mymatrix)
 lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
 dim(cpm)
+
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
-#write.csv(x$counts, "data/filtered_raw_counts.csv")
+# write.csv(x$counts, "data/filtered_raw_counts.csv")
 # saveRDS(x,"data/filtermatrix_x.RDS")
 
-# lib_size <- (as.data.frame(mymatrix$sample$lib.size))
-# filcpm_matrix <- subset(lcpm, (rowMeans(lcpm)>0))
-# colnames(filcpm_matrix) <- label
+
+       
 filcpm_counts <- cpm(x$counts, log = TRUE)
+
+
+# lib_size <- (as.data.frame(mymatrix$sample$lib.size))
+label <- (interaction(substring(drug, 0, 2), indv, time))
+colnames(filcpm_counts) <- label
 # write.csv(filcpm_counts, "data/filtered_cpm_counts.csv")
 
 hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
@@ -337,7 +343,7 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 
 ```{r individual PCA by drug and time steps, echo=FALSE, message=FALSE, warning=FALSE}
-# readRDS("data/filtermatrix_x.RDS")
+# x <- readRDS("data/filtermatrix_x.RDS")
 
 
 #dat_cpm <- readRDS("data/dat_cpm.RDS")
@@ -349,7 +355,7 @@ normalized_lib_size <- x$samples$lib.size * x$samples$norm.factors
 dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size, log=TRUE)
 
 colnames(dat_cpm) <- label
-saveRDS(dat_cpm,"data/dat_cpm.RDS")
+# saveRDS(dat_cpm,"data/dat_cpm.RDS")
 anno$time <- ordered(time, levels =c("3h", "24h"))
 anno$group <- group
 cpm_per_sample <- cbind(anno, t(dat_cpm)) 
