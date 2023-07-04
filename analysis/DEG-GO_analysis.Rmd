@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 I have created several files from the RNA analysis that contain the significant genes(determined by adj.P.val \< 0.05) from each Time and Condition. The names of the files are in the following format: 'sigV'+Drug(2 letters)+time.
 
-example: 'sigVDA3.txt' means this file contains the significant DE genes from the Daunorubicin 3 hour compared to Vehicle Control 3 hour analysis
+example: 'sigVDA3.txt' means this file contains the significant DE genes from the DNR 3 hour compared to Vehicle Control 3 hour analysis
 
 ```{r Import libraries, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -62,7 +62,7 @@ toplist3hours <-list(V.DA.top[,c(1:3,4,6:7)],
                               V.EP.top[,c(1:3,4,6:7)],
                               V.MT.top[,c(1:3,4,6:7)],
                               V.TR.top[,c(1:3,4,6:7)])
-names(toplist3hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Mitoxantrone", "Trastuzumab")
+names(toplist3hours) <- c("DNR","DOX", "EPI","MTX", "TRZ")
 
 toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
 
@@ -72,7 +72,7 @@ toplist24hours <-list(V.DA24.top[,c(1:3,4,6:7)],
                     V.EP24.top[,c(1:3,4,6:7)],
                     V.MT24.top[,c(1:3,4,6:7)],
                     V.TR24.top[,c(1:3,4,6:7)])
-names(toplist24hours) <- c("Daunorubicin","Doxorubicin", "Epirubicin","Mitoxantrone", "Trastuzumab")
+names(toplist24hours) <- c("DNR","DOX", "EPI","MTX", "TRZ")
 
 toplist24hours <- map_df(toplist24hours, ~as.data.frame(.x), .id="id")
 
@@ -108,12 +108,13 @@ ran final RNA-seq DEG code on 6-30-23 RM
 drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
 
 toplistall %>%
-  mutate(id = as.factor(id)) %>%
+  mutate(id = factor(id,levels = c('DOX','DNR','EPI','MTX','TRZ','VEH'))) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   group_by(time, id) %>% 
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   count(sigcount) %>% 
   pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %>% 
+ 
   mutate(prop = sig/(sig+notsig)*100) %>% 
   mutate(prop=if_else(is.na(prop),0,prop)) %>% 
   ggplot(., aes(x=id, y= prop))+
@@ -141,9 +142,9 @@ toplistall %>%
 
 ```
 Knowels, et al. mentioned a relationship between transcriptional change level indicating cardiotoxicity.  This may be an observation that supports that claim as well.
-## Daunorubicin
+## DNR
 
-This is analysis on the significantly differentially expressed genes for Daunorubicin by 3 and 24 hours.
+This is analysis on the significantly differentially expressed genes for DNR by 3 and 24 hours.
 ```{r intial analysis DA3 and DA24, echo=FALSE, message=FALSE, warning=FALSE}
 # DAgostres3 <- gost(query = siglist$sigVDA3$ENTREZID,
 #                     organism = "hsapiens",
@@ -174,7 +175,7 @@ DAtable3 %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Daunorubicin 3 hour GO:BP terms') +
+    ggtitle('DNR 3 hour GO:BP terms') +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
     theme_bw()+
@@ -191,7 +192,7 @@ DAtable3 %>% mutate_at(.vars = 6, .funs= scientific_format()) %>%
   scroll_box(width = "100%", height = "400px")
 ```
 
-###  Daunorubicin specific genes at 3 hours 
+###  DNR specific genes at 3 hours 
     How they may relate to 24 hour genes using GO analysis
  3 hours specifically (see venn below too):
 
@@ -230,7 +231,7 @@ DAsptable3 <- DAspgostres3$result %>%
 
 ```
 
-###  Daunorubicin specific genes at 24 hours 
+###  DNR specific genes at 24 hours 
 
 ```{r DA24sp }
 ###no enrichment
@@ -262,10 +263,10 @@ DAsptable3 <- DAspgostres3$result %>%
 
 
 
-### All Daun DEGs adj. p value < 0.05
+### All DNR DEGs adj. p value < 0.05
 
 ```{r daun specific Venn genes}
-# 3 hour daun specific genes (venn)
+# 3 hour DNR specific genes (venn)
  
 
 
@@ -281,7 +282,7 @@ DAsptable3 <- DAspgostres3$result %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Daunorubicin specific 3 hour GO:BP \nterms n = 335') +
+    ggtitle('DNR specific 3 hour GO:BP \nterms n = 335') +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -303,7 +304,7 @@ DAsptable3 %>% mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 length(union(Daun3sp,sigVDX3$ENTREZID))
 ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
-              category.names = c("3 hour\n Daun- specific","24 hours\n DEG p < 0.05"),
+              category.names = c("3 hour\n DNR- specific  ","24 hours\n DEG p < 0.05"),
               show_intersect = FALSE,
               set_color = "black",
               label = "count",
@@ -313,13 +314,14 @@ ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
               label_color = "black",
               edge_lty = "solid") +
   scale_x_continuous(expand = expansion(mult = .2))+
+  scale_y_continuous(expand = expansion(mult = .1))+
   scale_fill_gradient(low = "red4", high = "tan1")+
-  labs(title = "3 hour venn with 24 hour Daun", caption = "n = 351 genes")+
+  labs(title = "3 hr DNR-sp with 24 hour DNR", caption = paste("n =", length(union(Daun3sp,sigVDX3$ENTREZID)),"genes"))+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
 
 ```
-Interestingly, Over half of the Daunorubicin specific genes are in the Daunorubicin 24 hour group.
+Interestingly, Over half of the DNR specific genes are in the DNR 24 hour group.
 
 When I look at those  genes, I do not see a significant enrichment in GO:BP terms, only the KEGG pathway connection to Herpes simplex virus
 
@@ -352,9 +354,9 @@ plDA3_24table <- over3_24gost$result%>%
 ```
 
 
-### Daunorubicin 24 sigDEG
+### DNR 24 sigDEG
 
-Looking at the Daunorubicin 24 hour geneset using adj. P value of 0.05, I have enrichment  in the terms cell cycle and chromosome segregation. 
+Looking at the DNR 24 hour geneset using adj. P value of 0.05, I have enrichment  in the terms cell cycle and chromosome segregation. 
 ```{r DA sig deg 24}
 # DAgostres24 <- gost(query = sigVDA24$ENTREZID,
 #                   organism = "hsapiens",
@@ -386,7 +388,7 @@ DAtable124 <- DAgostres24$result %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Daunorubicin 24 hour GO:BP terms') +
+    ggtitle('DNR 24 hour GO:BP terms') +
    xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+ 
@@ -405,26 +407,27 @@ DAtable124 <- DAgostres24$result %>%
   
 ```
   
-###Daunorubicin 3 v 24 intersection
+###DNR 3 v 24 intersection
 
-All `r length(Daun3sp)` 3 hour Daun-specific genes are in the intersection of the daunorubicin sigDEGs for 3 hours and 24 hours. This could support the idea that DNR's more toxic effect is related to earlier impacts on cell function.  Note the enriched go terms for the 304 genes that they share.  I need to see if there is a trend in EP and DX.  I do see in Mito 3 hour (looked a little later).
+All `r length(Daun3sp)` 3 hour DNR-specific genes are in the intersection of the DNR sigDEGs for 3 hours and 24 hours. This could support the idea that DNR's more toxic effect is related to earlier impacts on cell function.  Note the enriched go terms for the 304 genes that they share.  I need to see if there is a trend in EP and DX.  I do see in Mito 3 hour (looked a little later).
 
 ```{r DA 3v24 int, echo=FALSE, message=FALSE, warning=FALSE}
 daun3v24int <- intersect(sigVDA3$ENTREZID,sigVDA24$ENTREZID)
 length(union(sigVDA3$ENTREZID,sigVDA24$ENTREZID))
 ggVennDiagram::ggVennDiagram(list(sigVDA3$ENTREZID, sigVDA24$ENTREZID),
-              category.names = c("3 hour Daunrubicin\nn=532","24 hours Daunorubicin\n   n=7017"),
+              category.names = c("3 hour DNR\nn = 532","24 hour DNR\n   n = 7017"),
               show_intersect = FALSE,
               set_color = "black",
               label = "count",
               label_percent_digit = 1,
-              label_size = 3.5,
+              label_size = 4,
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid") +
   scale_x_continuous(expand = expansion(mult = .2))+
+  scale_y_continuous(expand = expansion(mult = .1))+
   scale_fill_gradient(low = "red4", high = "tan1")+
-  labs(title = "DEG p < 0.05, All daunorubicin 3hour and 24 hours sets", 
+  labs(title = "DEG p < 0.05, All DNR 3hour and 24 hours sets", 
        caption = paste("n =", length(union(sigVDA3$ENTREZID,sigVDA24$ENTREZID)),"genes"))+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
 
@@ -460,7 +463,7 @@ DAtable_int <- DAgostresint$result %>%
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", 
            size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Daunorubicin intersect 3 v 24 hour GO:BP terms') +
+    ggtitle('DNR intersect 3 v 24 hour GO:BP terms') +
      xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
     theme_bw()+
@@ -483,7 +486,7 @@ DAtable_int <- DAgostresint$result %>%
   
 ```
 
-## Doxorubicin 3 hour and 24 hour
+## DOX 3 hour and 24 hour
 ```{r intial analysis DX3 and DX24, echo=FALSE, message=FALSE, warning=FALSE}
 # DXgostres <- gost(query = sigVDX3$ENTREZID,
 #                   organism = "hsapiens",
@@ -515,7 +518,7 @@ DXtable1 <- DXgostres$result %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Doxorubicin 3 hour GO:BP terms') +
+    ggtitle('DOX 3 hour GO:BP terms') +
    xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -564,7 +567,7 @@ DXtable124 <- gostres24$result %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected\n terms"))+
-    ggtitle('Doxorubicin 24 hour GO:BP terms') +
+    ggtitle('DOX 24 hour GO:BP terms') +
    xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -582,7 +585,7 @@ DXtable124 %>%
   scroll_box(width = "100%", height = "400px")
 ```
  
-## Epirubicin  
+## EPI  
 All Epi DEGs adj. p value < 0.05
 
 EPspecific genes set now does not show enrichment in any terms.
@@ -623,7 +626,7 @@ EPtable1 <- EPgostres$result %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Epirubicin 3 hour top ten GO:BP terms') +
+    ggtitle('EPI 3 hour top ten GO:BP terms') +
    xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -671,7 +674,7 @@ EPtable124 %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Epirubicin 24 hour top 10 GO:BP terms') +
+    ggtitle('EPI 24 hour top 10 GO:BP terms') +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -723,7 +726,7 @@ EPspgostres<- readRDS("data/DEG-GO/EPspgostres.RDS")
 #     geom_point(aes(size = intersection_size)) +
 #     scale_y_discrete(labels = wrap_format(30))+
 #     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-#     ggtitle("Epirubicin specific 3 hour top KEGG terms") +
+#     ggtitle("EPI specific 3 hour top KEGG terms") +
 #      xlab(expression(" -"~log[10]~("adj. p-value")))+
 #     ylab("KEGG term")+
 #       theme_bw()+
@@ -769,7 +772,7 @@ MTsptable124%>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle("Mitoxantrone specific 24 hour top GO:BP terms") +
+    ggtitle("MTX specific 24 hour top GO:BP terms") +
      xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -783,11 +786,11 @@ MTsptable124%>%
 
 
 ```
-Mitoxantrone-specific 24 hour genes show an enrichment for DNA DSB repair. (n=188)
+MTX-specific 24 hour genes show an enrichment for DNA DSB repair. (n=188)
 
-## Mitoxantrone DEGs (adj. p value < 0.05)
-  3 hour  = 58
-  24 hour = 1327
+## MTX DEGs (adj. p value < 0.05)
+  3 hour  = `r length(sigVMT3$ENTREZID)`
+  24 hour = `r length(sigVMT24$ENTREZID)`
 
 ```{r intial analysis MT3 and MT24, echo=FALSE, message=FALSE, warning=FALSE}
 # MTgostres <- gost(query = sigVMT3$ENTREZID,
@@ -820,7 +823,7 @@ MTtable1 %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Mitoxantrone 3 hour GO:BP terms') +
+    ggtitle('MTX 3 hour GO:BP terms') +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -867,7 +870,7 @@ MTtable124 %>% dplyr::filter(source=="GO:BP") %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Mitoxantrone 24 hour GO:BP terms') +
+    ggtitle('MTX 24 hour GO:BP terms') +
     xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -904,10 +907,10 @@ in_common24 <-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$E
 
 
 ggVennDiagram::ggVennDiagram(total24,
-              category.names = c("Daunorubicin\n n = 7017   ",
-                                 "Doxorubicin\n n = 6645\n",
-                                 "Epirubicin\n n = 6328\n",
-                                 " Mitoxantrone\n   n = 1115"),
+              category.names = c("DNR\nn = 7017    ",
+                                 "DOX\n n = 6645\n",
+                                 "EPI\n n = 6328\n",
+                                 " MTX\n   n = 1115"),
               show_intersect = FALSE,
               set_color = "black",
               category_size = c(6,6,6,6),
@@ -945,10 +948,10 @@ totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL, sigVEP3$SYMBOL,sigVMT3$SYMBO
 
 
 ggVennDiagram::ggVennDiagram(total3,
-              category.names = c("Daunorubicin\nn = 532   ",
-                                 "Doxorubicin\nn = 19\n",
-                                 "Epirubicin\nn = 210\n",
-                                 "Mitoxantrone\n  n = 75"),
+              category.names = c("DNR\nn = 532   ",
+                                 "DOX\nn = 19\n",
+                                 "EPI\nn = 210\n",
+                                 "MTX\n  n = 75"),
               show_intersect = FALSE,
               set_color = "black",
               category_size = c(6,6,6,6),
@@ -966,7 +969,7 @@ ggVennDiagram::ggVennDiagram(total3,
        caption = paste("n =", length(unique(totalin_common3)),"genes"))+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 ```
-Because the 3 hour DEGs are low (expecially in Doxorubicin),  we have chosen to focus on analyzing the 24 hour DEGs for GO: BP analysis
+Because the 3 hour DEGs are low (expecially in DOX),  we have chosen to focus on analyzing the 24 hour DEGs for GO: BP analysis
 ### Venn 3 and 24 hour sigDEGs by treatment (adj. p value <0.01) similarities
 
 ```{r 3V 24 BY DRUG, echo=FALSE}
@@ -975,9 +978,9 @@ Because the 3 hour DEGs are low (expecially in Doxorubicin),  we have chosen to 
 Dauncomp <- list(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
 in_commonDa <- c(sigVDA24$ENTREZID,sigVDA3$ENTREZID)
 length(unique(in_commonDa))
-# DNRvenn <- 
+# DNRvenn <-
   ggVennDiagram(Dauncomp,
-              category.names = c("Daunorubicin-24","Daunorubicin-3"),
+              category.names = c("DNR-24","DNR-3"),
               show_intersect = FALSE,
               set_color = "black",
               label = "count",
@@ -988,7 +991,7 @@ length(unique(in_commonDa))
               edge_lty = "solid", set_size = )+
   scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
-  labs(title = "Comparison of DNR 3h v 24h", caption = "n = 7237 genes")+
+  labs(title = "Comparison of DNR 3h v 24h", caption = paste("n =", length(unique(in_commonDa)),"genes"))+
   theme(plot.title = element_text(size = rel(1), hjust = 0.5))
 #Davenlist <- intersect(Dauncomp[[1]],Dauncomp[[2]])
 # saveRDS(DNRvenn,"output/DNRvenn.RDS")
@@ -999,7 +1002,7 @@ in_commonDx <- c(sigVDX24$ENTREZID,sigVDX3$ENTREZID)
 length(unique(in_commonDx))
 # DOXvenn <-
   ggVennDiagram(Doxcomp,
-              category.names = c("Doxorubicin-24","Doxorubicin-3"),
+              category.names = c("DOX-24","DOX-3"),
               show_intersect = FALSE,
               set_color = "black",
               label = "count",
@@ -1025,7 +1028,7 @@ length(unique(in_commonEp))
 
 # EPIvenn <-
   ggVennDiagram(Epicomp,
-              category.names = c("Epirubicin-24","Epirubicin-3"),
+              category.names = c("EPI-24","EPI-3"),
               show_intersect = FALSE,
               set_color = "black",
               label = "count",
@@ -1047,7 +1050,7 @@ length(unique(in_commonMt))
 
 # MTXvenn<-
   ggVennDiagram(Mitocomp,
-              category.names = c("Mitoxantrone-24","Mitoxantrone-3"),
+              category.names = c("MTX-24","MTX-3"),
               show_intersect = FALSE,
               set_color = "black",
               label = "count",
@@ -1056,7 +1059,7 @@ length(unique(in_commonMt))
               label_alpha = 0,
               label_color = "black",
               edge_lty = "solid", set_size = )+
-  scale_x_continuous(expand = expansion(mult = .21))+
+  scale_x_continuous(expand = expansion(mult = .2))+
   scale_fill_gradient(low = "light blue", high = "yellow")+
   labs(title = "Comparison of Mito 3h v 24h", 
        caption = paste("n =", length(unique(in_commonMt)),"genes"))+
@@ -1089,7 +1092,7 @@ DDEMresp<- list24totvenn24$..values..[[1]]
 # #5317
 DXsprespon<- list24totvenn24$..values..[[14]]
 ## (342)
-print("Number of Doxorubicin specific DEGs, adj. P value < 0.05") 
+print("Number of DOX specific DEGs, adj. P value < 0.05") 
 length(DXsprespon)
 complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
 complete <- as.data.frame(unique(complete))
@@ -1209,6 +1212,7 @@ and all AC gens plus those which overlapped with Mito (n= `r length(DDEMresp)`, 
 
 
 ## DDEM response of `r length(DDEMresp)`
+
 ```{r GO DDEM list of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
 
 
@@ -1321,7 +1325,7 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = scales::wrap_format(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle(paste0("Doxorubicin specific DEGs (n = ",length(DXsprespon),") 24 hr GO:BP terms")) +
+    ggtitle(paste0("DOX specific DEGs (n = ",length(DXsprespon),") 24 hr GO:BP terms")) +
    xlab(expression(" -"~log[10]~("adj. p-value")))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -1342,7 +1346,7 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
 #     geom_point(aes(size = intersection_size, col = "red")) +
 #     scale_y_discrete(labels = wrap_format(30))+
 #     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-#     ggtitle('Doxorubicin specific DEGs (n=400) 24 hr KEGG terms') +
+#     ggtitle('DOX specific DEGs (n=400) 24 hr KEGG terms') +
 #     xlab(expression(" -"~log[10]~("adj. p-value")))+
 #     ylab("KEGG term")+
 #       theme_bw()+
@@ -1518,9 +1522,9 @@ DXdeg <-  DXtable124 %>% dplyr::filter(source=="GO:BP") %>%
 #filter<- dplyr::filter 
 #select <- dplyr::select
   
-GODEGlong <-list("DAdeg"=DAdeg,
-                 "DXdeg"=DXdeg,
+GODEGlong <-list("DXdeg"=DXdeg,
                  "DXsp24deg"=DXsp24deg,
+                 "DAdeg"=DAdeg,
                  "EPdeg"=EPdeg,
                  "MTdeg"=MTdeg,
                  "MTsp24deg"= MTsp24deg,
@@ -1533,12 +1537,19 @@ GODEGlongtable <- data.table::rbindlist(GODEGlong, idcol = "deg")
 ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
    geom_point(aes(size = intersection_size, col=deg)) +
    scale_y_discrete(labels = wrap_format(40))+
-   scale_color_manual(values=c("#8B006D","#DF707E","#e38893","#F1B72B","#3386DD","#33a1dd","red", "blue", alpha= 0.8))+
+   scale_color_manual(values=c("DXdeg"="#8B006D",
+                 "DXsp24deg"="#b0028a",
+                 "DAdeg"="#DF707E",
+                 "EPdeg"="#F1B72B",
+                 "MTdeg"="#33a1dd",
+                 "MTsp24deg"="#33a1dd",
+                 "DDEdeg"="red",
+                 "DDEMdeg"="blue", alpha= 0.8))+
   facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
                eval(parse(text = paste0('facet_deg', '$`', deg, '`')))
                )))) +
   
-    guides(col=guide_legend(title="DEG Treatment group"), size=guide_legend(title = "# of intersected \n terms"))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Top enriched GO:BP terms for each 24 hour DEG list') +
     xlab("-log 10 (adj. p-value)")+
     
@@ -1555,14 +1566,14 @@ ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) 
  
  
  facet_deg=(
-   c(DAdeg = expression(atop("Daunorubicin 24 hr",~italic("n = 7017"))),
-     DXdeg = expression(atop("Doxorubicin 24 hr",~italic("n = 6645"))),
-     DXsp24deg =expression(atop("Dox-specific 24 hr",~italic("n = 355"))),
-     EPdeg = expression(atop("Epirubicin 24 hr",~italic("n = 6328"))),
-     MTdeg = expression(atop( "Mitoxantrone 24 hr",~italic("n = 1115"))),
-     MTsp24deg =expression(atop( "Mito-specific 24 hr",~italic("n = 122"))),
+   c(DXdeg = expression(atop("DOX 24 hr",~italic("n = 6645"))),
+     DXsp24deg =expression(atop("DOX-specific 24 hr",~italic("n = 355"))),
+     DAdeg = expression(atop("DNR 24 hr",~italic("n = 7017"))),
+     EPdeg = expression(atop("EPI 24 hr",~italic("n = 6328"))),
+     MTdeg = expression(atop( "MTX 24 hr",~italic("n = 1115"))),
+     MTsp24deg =expression(atop( "MTX-specific 24 hr",~italic("n = 122"))),
      DDEdeg = expression(atop("Anthracycline 24 hr",~italic("n = 4435,"))),
-     DDEMdeg = expression(atop( "Top2i 24 hr",~italic("n = 882")))))
+     DDEMdeg = expression(atop( "TOP2i 24 hr",~italic("n = 882")))))
 
 #  title_labeller_function <- function(nuisance_parameter) {
 #   return(facet_degnames() )
@@ -1576,7 +1587,7 @@ ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) 
  
 g <- ggplot_gtable(ggplot_build(p))
 stripr <- which(grepl('strip-r', g$layout$name))
-fills <- c("#8B006D","#DF707E","#e38893","#F1B72B","#f2c350","#3386DD","#33a1dd","red", "blue", alpha= 0.8)
+fills <- c("#8B006D","#b0028a","#DF707E","#F1B72B","#3386DD","#33a1dd","red", "blue", alpha= 0.8)
 k <- 1
 for (i in stripr) {
   j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
@@ -1603,7 +1614,7 @@ grid::grid.draw(g)
 ## Visualization of FC in cormotif sets
 ```{r Correlation of FC values in all values and in DEG}
 library(limma)
-library(corrplot)
+
 library(pheatmap)
 
 efit2<- readRDS(file ="data/efit2_final.RDS")
@@ -1626,7 +1637,13 @@ corrFC <- cor(FCmatrix)
 #          cl.ratio = 0.2, tl.srt = 45, col = COL2('PuOr', 20), col.lim=c(-0.1,1), addrect=3)
 
 
-pheatmap::pheatmap(corrFC, display_numbers = TRUE, number_format = "%.2f",main=("Correlation of FC values across all expressed genes, n=14084"),annotation_col = mat_col, annotation_colors = mat_colors)
+ComplexHeatmap::pheatmap(corrFC, 
+                         display_numbers = TRUE, 
+                         number_format = "%.2f",
+                         main=("Correlation of FC values across all expressed genes, n=14084"),
+                         annotation_col = mat_col,
+                         annotation_colors = mat_colors)
+
 
 
 
@@ -1665,7 +1682,7 @@ MTsp24 <- MTsptable124 %>%
 GODEGposter <-list("MTsp24"=MTsp24,"DDEdeg"=DDEdeg,"DDEMdeg"=DDEMdeg)
 GODEGpostertable <- data.table::rbindlist(GODEGposter, idcol = "deg")
 facet_degp=(
-   c(MTsp24 = expression(atop("Mitoxantrone-specific 24 hours",~italic("n = 126"))),
+   c(MTsp24 = expression(atop("MTX-specific 24 hours",~italic("n = 126"))),
     DDEdeg=expression(atop("Shared Anthracycline genes 24 hours",~italic("n = 4400"))),
      DDEMdeg=expression(atop("Shared Top2"*beta*"i genes 24 hours",~italic("n = 952")))))
 
@@ -1767,7 +1784,7 @@ keggDEGlong <-list("DNR"=DAdegk,
                  "DOX"=DXdegk,
                  "EPI"=EPdegk,
                  "MTX"=MTdegk,
-                 "Athracyclines"=DDEdegk,
+                 "ACs"=DDEdegk,
                  "TOP2i"=DDEMdegk)
 
 keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
