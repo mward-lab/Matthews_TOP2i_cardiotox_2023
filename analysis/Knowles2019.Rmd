@@ -34,7 +34,6 @@ library(ComplexHeatmap)
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
   ##GOI needs to be ENTREZID
   df <- cpmcounts
-  ##order of dataframe should have time,id, ENTREZID,SYMBOL logFC,AveExpr,and adj.P.Val (8 columns)
     df_plot <- df %>% 
       dplyr::filter(rownames(.)==GOI) %>%
       pivot_longer(everything(),
@@ -42,12 +41,13 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       separate(treatment, c("drug","indv","time")) %>%
       mutate(time=factor(time, levels =c("3h", "24h"))) %>%
       mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-      mutate(drug =case_match(drug, "Da"~"Daunorubicin",
-                            "Do"~"Doxorubicin",
-                            "Ep"~"Epirubicin",
-                            "Mi"~"Mitoxantrone",
-                            "Tr"~"Trastuzumab",
-                            "Ve"~"Vehicle", .default = drug))
+      mutate(drug =case_match(drug, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = drug)) %>% 
+      mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH')))
     plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
       geom_boxplot(position="identity",aes(fill=drug))+
       geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -59,12 +59,12 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       ylab(ylab)+
       xlab("")+
       theme(strip.background = element_rect(fill = "white"),
-          plot.title = element_text(size=10,hjust = 0.5),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1),
-          axis.line = element_line(linewidth = 1),
-          axis.text.x = element_text(size = 10, color = "white", angle = 0),
-          strip.text.x = element_text(size = 10, color = "black", face = "bold"))
+          plot.title = element_text(size=18,hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text.x = element_text(size = 12, color = "white", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
     print(plot)
 }
 
@@ -89,24 +89,29 @@ knowles5 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
 knowles4 <- getBM(attributes=my_attributes,filters ='ensembl_gene_id',
                   values =knowfig4, mart = ensembl)
 #524
+notOK <- intersect(knowles4$entrezgene_id,knowles5$entrezgene_id)
+##104
 
 knowles4 <-knowles4 %>% 
-  distinct(entrezgene_id,.keep_all = TRUE)
-  #521
+  distinct(entrezgene_id,.keep_all = TRUE) %>% 
+  filter(., !entrezgene_id%in% notOK)
+  #521 after filtering out overlap-417 genes
 knowles5 <-knowles5 %>% 
-  distinct(entrezgene_id,.keep_all = TRUE) 
-#377
+  distinct(entrezgene_id,.keep_all = TRUE)%>% 
+  filter(., !entrezgene_id%in% notOK) 
+#377 after filtering out 273 overlap-genes
 
-saveRDS(knowles4,"output/knowles4.RDS")
-saveRDS(knowles5,"output/knowles5.RDS")
+# saveRDS(knowles4,"output/knowles4.RDS")
+# saveRDS(knowles5,"output/knowles5.RDS")
   #Creating the Dox me/ re QTL data set:
+
 
 DOXreQTLs <- toplistall %>% 
   dplyr::filter(time =="24_hours") %>% 
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
-   dplyr::filter(id == "Doxorubicin") %>% 
+   dplyr::filter(id == "DOX") %>% 
    dplyr::filter(sigcount=='sig') %>% 
    dplyr::filter(reQTL=="a") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -117,7 +122,7 @@ DOXmeSNPs <- toplistall %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
-   dplyr::filter(id == "Doxorubicin") %>% 
+   dplyr::filter(id == "DOX") %>% 
    dplyr::filter(sigcount=='sig') %>% 
    dplyr::filter(meSNP=="y") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -128,7 +133,7 @@ dplyr::filter(time =="24_hours") %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
-  dplyr::filter(id =="Daunorubicin") %>% 
+  dplyr::filter(id =="DNR") %>% 
   dplyr::filter(sigcount=='sig') %>% 
    dplyr::filter(reQTL=="a") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -138,7 +143,7 @@ dplyr::filter(time =="24_hours") %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
-  dplyr::filter(id =="Daunorubicin") %>% 
+  dplyr::filter(id =="DNR") %>% 
   dplyr::filter(sigcount=='sig') %>% 
    dplyr::filter(meSNP=="y") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -150,7 +155,7 @@ EPIreQTLs <- toplistall %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
-   dplyr::filter(id =="Epirubicin") %>% 
+   dplyr::filter(id =="EPI") %>% 
    dplyr::filter(sigcount=='sig') %>% 
    dplyr::filter(reQTL=="a") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -161,7 +166,7 @@ EPImeSNPs <- toplistall %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
-   dplyr::filter(id =="Epirubicin") %>% 
+   dplyr::filter(id =="EPI") %>% 
    dplyr::filter(sigcount=='sig') %>% 
     dplyr::filter(meSNP=="y") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -175,7 +180,7 @@ MTXreQTLs <- toplistall %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
-   dplyr::filter(id =="Mitoxantrone") %>% 
+   dplyr::filter(id =="MTX") %>% 
    dplyr::filter(sigcount=='sig') %>% 
    dplyr::filter(reQTL=="a") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -186,7 +191,7 @@ MTXmeSNPs <- toplistall %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>%
-   dplyr::filter(id =="Mitoxantrone") %>% 
+   dplyr::filter(id =="MTX") %>% 
    dplyr::filter(sigcount=='sig') %>% 
     dplyr::filter(meSNP=="y") %>% 
    dplyr::select(time, id, ENTREZID,SYMBOL)
@@ -195,6 +200,7 @@ saveRDS(MTXmeSNPs,"output/MTXmeSNPs.RDS")
 
 ```
 ## Enrichment of Pairwise
+A note on Knowles data sets:  the intersection of the Knowles-4 and Knowles-5 sets yielded 104 genes in 
 
 ``` {r loading in data sets}
 
@@ -203,8 +209,8 @@ drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
-drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
-mat_drug <- c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone")
+drug <- rep(c("DNR","DOX","EPI","MTX","TRZ", "Vehicle"),12)
+mat_drug <- c("DNR","DOX","EPI","MTX")
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 labeltop <- (interaction(substring(drug, 0, 2), indv, time))
 level_order2 <- c('75','87','77','79','78','71')
@@ -223,11 +229,24 @@ MTXmeSNPs <- readRDS("output/MTXmeSNPs.RDS")
 MTXreQTLs <- readRDS("output/MTXreQTLs.RDS")
 
 toplist24hr <-   toplistall %>%
-  mutate(id = as.factor(id)) %>%
+  mutate(id =case_match(id, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = id)) %>% 
+      mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time=="24_hours")
 
 toplist3hr <-   toplistall %>%
+  mutate(id =case_match(id, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = id)) %>% 
+      mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time=="3_hours")
@@ -244,11 +263,11 @@ My first question was about transcriptional response at the 24 hour mark with my
 
 Supplementary 4 contains a list of 518 SNPs within 1 Mb of TSS, which had a detectable marginal effect on expression (5% FDR). When converted from ensembl gene id to entrez gene id,  my list of genes for this supplement = `r length(knowles4$entrezgene_id)`.  I will call these meSNPS for marginal effect QTLs.  
 
-Supplementary 5 contains a list of 376 response eQTLs (reQTLs).  These are variants that were associated with modulation of transcriptomic response to doxorubicin treatment. After database name conversion, I have `r length(knowles5$entrezgene_id)` genes.
+Supplementary 5 contains a list of 376 response eQTLs (reQTLs).  These are variants that were associated with modulation of transcriptomic response to DOX treatment. After database name conversion, I have `r length(knowles5$entrezgene_id)` genes.
 ```{r QTL enrichment numbers, message=FALSE, warning=FALSE}
 
 meSNPdf <- toplistall %>% 
-  mutate(id = as.factor(id)) %>%
+   mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP = if_else( ENTREZID %in% knowles4$entrezgene_id, "y" , "no")) %>% 
@@ -266,7 +285,7 @@ meSNPdf %>%
 
 
 reQTLdf <- toplistall %>% 
-  mutate(id = as.factor(id)) %>%
+   mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(reQTL = if_else( ENTREZID %in% knowles5$entrezgene_id, "y" , "no")) %>% 
@@ -283,7 +302,13 @@ reQTLdf %>%
 
 
 dataframK_45 <- toplistall %>%
-  mutate(id = as.factor(id)) %>%
+  mutate(id =case_match(id, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = id)) %>%
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(K4 = if_else(ENTREZID %in% knowles4$entrezgene_id,'y','no'))%>%
   mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,'y','no'))%>%
@@ -304,7 +329,7 @@ kable(., caption= "Summary of meSNPs and reQTLs found in my DEGs") %>%
 ```{r K4K5 proportions, message=FALSE, warning=FALSE}
 
 toplistall %>%
-  mutate(id = as.factor(id)) %>%
+   mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
@@ -321,7 +346,7 @@ toplistall %>%
        facet_wrap(~sigcount)+
        ggtitle("non-significant and significant enrichment proportions of Knowles meSNPs ")
 toplistall %>%
-  mutate(id = as.factor(id)) %>%
+   mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
@@ -339,16 +364,16 @@ toplistall %>%
        ggtitle("non-significant and significant enrichment proportions of Knowles reQTLs ")
 
 chi_squarek4 <- toplistall %>% 
-  mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="Trastuzumab") %>% 
+   mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  dplyr::filter(id!="TRZ") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(meSNP=if_else(ENTREZID %in%knowles4$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
   summarise(pvalue= chisq.test(meSNP, sigcount)$p.value) 
 
 chi_squarek5 <-   toplistall %>% 
-  mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="Trastuzumab") %>% 
+   mutate(id=factor(id,levels =c('DOX','EPI','DNR','MTX','TRZ','VEH')))%>% 
+  dplyr::filter(id!="TRZ") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(reQTL=if_else(ENTREZID %in%knowles5$entrezgene_id,"a","b")) %>% 
   group_by(id,time) %>% 
@@ -376,7 +401,7 @@ So what about enrichment of meSNPs in DE compared to reQTLs in significantly DE 
 
 Knowles_count <- 
   toplistall %>%
-  filter(id!='Trastuzumab') %>% 
+  filter(id!='TRZ') %>% 
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   group_by(time, id) %>%
@@ -388,7 +413,7 @@ Knowles_count <-
   dplyr::select(time,id,K4,K5) %>% rename("K4_y"='K4',"K5_y"='K5') %>% 
   mutate(time = case_match(time, '3_hours'~'3 hrs',
                            '24_hours'~'24 hrs',.default = time)) %>% 
-  mutate(K4_n= 503-K4_y, K5_n=371-K5_y) %>% 
+  mutate(K4_n= 417-K4_y, K5_n=273-K5_y) %>% 
   pivot_longer(!c(time,id), names_to='QTL',values_to="gene_count") %>%
   separate(QTL,into=c("QTL_type",'group'),sep = '_') %>%  
   mutate(QTL_type =case_match(QTL_type, 'K4'~'meQTLs',
@@ -410,31 +435,31 @@ Knowles_count <-
   chi_frame <- Knowles_count %>%
   pivot_wider(id_cols = c(time, id,QTL_type), names_from = group, values_from = gene_count) 
 
-testDNR3chi <- matrix(c(6,14,497, 357), nrow=2, ncol=2, byrow=FALSE,
+testDNR3chi <- matrix(c(4,12,413, 261), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n"))) 
     DNR_3chi <- chisq.test(testDNR3chi,correct=FALSE)$p.value
-testDNR24chi <- matrix(c(208,195,295, 176), nrow=2, ncol=2, byrow=FALSE,
+testDNR24chi <- matrix(c(161,148,256, 125), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n")))  
     DNR_24chi <- chisq.test(testDNR24chi,correct=FALSE)$p.value
 
-testDOX3chi <- matrix(c(0,0,503, 371), nrow=2, ncol=2, byrow=FALSE,
+testDOX3chi <- matrix(c(0,0,417, 273), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n")))  
     DOX_3chi <- chisq.test(testDOX3chi,correct=FALSE)$p.value
-testDOX24chi <- matrix(c(186,186,317, 185), nrow=2, ncol=2, byrow=FALSE,
+testDOX24chi <- matrix(c(142,142,256, 125), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n"))) 
     DOX_24chi <- chisq.test(testDOX24chi,correct=FALSE)$p.value
 
-testEPI3chi <- matrix(c(4,4,499, 367), nrow=2, ncol=2, byrow=FALSE,
+testEPI3chi <- matrix(c(3,3,414, 270), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n"))) 
     EPI_3chi <- chisq.test(testEPI3chi,correct=FALSE)$p.value
-testEPI24chi <- matrix(c(173,176,330, 195), nrow=2, ncol=2, byrow=FALSE,
+testEPI24chi <- matrix(c(128,131,289, 142), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n"))) 
     EPI_24chi <- chisq.test(testEPI24chi,correct=FALSE)$p.value
   
-testMTX3chi <- matrix(c(2,1,501, 370), nrow=2, ncol=2, byrow=FALSE,
+testMTX3chi <- matrix(c(2,1,415, 272), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n"))) 
     MTX_3chi <- chisq.test(testMTX3chi,correct=FALSE)$p.value
-testMTX24chi <- matrix(c(25,36,478, 335), nrow=2, ncol=2, byrow=FALSE,
+testMTX24chi <- matrix(c(16,27,401, 246), nrow=2, ncol=2, byrow=FALSE,
 dimnames=list(c("k4", "k5"),c( "y", "n"))) 
     MTX_24chi <- chisq.test(testMTX24chi,correct=FALSE)$p.value
 K4nK5chi <- data.frame(treatment=c('DNR_3','DNR_24','DOX_3','DOX_24','EPI_3','EPI_24','MTX_3','MTX_24'), chi_p.value=c(DNR_3chi,DNR_24chi,DOX_3chi,DOX_24chi,EPI_3chi,EPI_24chi,MTX_3chi,MTX_24chi))
@@ -449,7 +474,7 @@ K4nK5chi %>%
  
 ```
 
-Here we found that 24 hour reQTLs are significantly enriched in sig-DEgens compared to meQTLS, with Daunorubicin 3 hour treatment also showing significant enrichment.
+Here we found that 24 hour reQTLs are significantly enriched in sig-DEgens compared to meQTLS, with DNR 3 hour treatment also showing significant enrichment.
 
 ```{r abs FC magnitude }
 toplistall %>% 
@@ -480,7 +505,7 @@ toplistall %>%
 
 ## Dox-reQTLs
 
-When I look ot the reQTLs across treatments at 24 hours, I see that dox has a total of 180 reQTLS.  Because this gene set was specifically about doxorubicin response eQTLs, I wanted to see if these reQTLs were only Dox specific, AC specific,  Top2i specific, or show any type of pattern.
+When I look ot the reQTLs across treatments at 24 hours, I see that dox has a total of 180 reQTLS.  Because this gene set was specifically about DOX response eQTLs, I wanted to see if these reQTLs were only Dox specific, AC specific,  Top2i specific, or show any type of pattern.
 
 ```{r Doxreqtl}
 
@@ -493,7 +518,7 @@ length(unique(c(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQT
 print("number of unique genes expressed in pairwise DE set")
 QTLoverlaps <- VennDiagram::get.venn.partitions(reQTLcombine)
 DoxonlyQTL <-  QTLoverlaps$..values..[[14]]
-     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c("DNR-195\nsigDEG","DOX-186 \nsigDEG\n","EPI-176\nsigDEG\n","MTX-36\nsigDEG"),label = "count") +scale_x_continuous(expand = expansion(mult = .2))+scale_y_continuous(expand = expansion(mult = .1))
+     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c("DNR-148\nsigDEG","DOX-142 \nsigDEG\n","EPI-131\nsigDEG\n","MTX-27\nsigDEG"),label = "count") +scale_x_continuous(expand = expansion(mult = .2))+scale_y_continuous(expand = expansion(mult = .1))
 ```
 Here, I found 121 reQTLs that were related to all anthracyclines, with 31 reQTLS related to all Top2i drugs at 24 hours.
 
@@ -517,12 +542,12 @@ DOXeQTL_table%>%
 DOXeQTL_table %>%
   add_row(id=c("Dox-specific DEGs","Dox-specific DEGs"),DOXreQTLs=c("no","y"), sig = c(62,1)) %>% 
   dplyr::filter(DOXreQTLs=="y") %>% 
-  mutate(opp= 180-sig) %>% 
-  filter(id !=c('Trastuzumab','Doxorubicin')) %>% 
+  mutate(opp= 142-sig) %>% 
+  filter(id !=c('TRZ','DOX')) %>% 
   rename("yes"=sig, "no"=opp) %>% 
   mutate(y_percent= paste0(sprintf("%2.1f", yes/(yes+no)*100), "%"),n_percent = paste0(sprintf("%2.1f", no/(yes+no)*100),"%")) %>% 
   pivot_longer(!c(id,DOXreQTLs,y_percent,n_percent), names_to="group", values_to = "count") %>% 
-  mutate(id=factor(id, levels=c("Daunorubicin","Epirubicin", "Mitoxantrone","Dox-specific DEGs"))) %>% 
+  mutate(id=factor(id, levels=c("DNR","EPI", "MTX","Dox-specific DEGs"))) %>% 
 ggplot(., aes(y=id,x=count,fill=group))+
      geom_col(position='fill')+
     theme_classic()+
@@ -619,7 +644,7 @@ print(Dox24_lfc)
 ```{r lcpm of some dox spec genes}
 
 ### making list
-# 
+# # 
 # Doxonly_deg <- getBM(attributes=my_attributes,filters ='entrezgene_id',
 #                   values =DoxonlyDEG, mart = ensembl)
 # write.csv(Doxonly_deg,"output/Doxonly_deg.csv")
@@ -640,12 +665,12 @@ for (g in seq(from=1, to=length(sampset$entrezgene_id))){
 
 ## More investigation  of 24 hour specific genes
 
-### Doxorubicin
+### DOX
 ```{r Dox investigation}
 DOXdeg_sp <- toplist24hr %>% 
   dplyr::filter(ENTREZID %in% DoxonlyDEG) %>%
   dplyr::filter(adj.P.Val<0.01) %>% 
-  filter(id=="Doxorubicin") %>% 
+  filter(id=="DOX") %>% 
   dplyr::select(ENTREZID, SYMBOL)  
 
 DOXdeg_sp %>% 
@@ -655,7 +680,7 @@ DOXdeg_sp %>%
   scroll_box( height = "500px")
 
 intersect(DOXreQTLs$ENTREZID, DOXdeg_sp$ENTREZID)
-
+#still jph3
 ##lfc
 toplist24hr %>% 
   group_by(time,id) %>% 
@@ -718,12 +743,12 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
 ##most convincing of these is ZNF793-AS1 101927720
 
 ```
-### Mitoxantrone
+### MTX
 ```{r mitoonly}
 MTXdeg_sp <- toplist24hr %>% 
    dplyr::filter(ENTREZID %in% MtxonlyDEG) %>%
   dplyr::filter(adj.P.Val<0.01) %>% 
-  filter(id=="Mitoxantrone") %>% 
+  filter(id=="MTX") %>% 
   dplyr::select(ENTREZID, SYMBOL)  
 
 MTXdeg_sp %>% 
@@ -739,12 +764,7 @@ toplist24hr %>%
   group_by(time,id) %>% 
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   mutate(logFC=logFC*(-1)) %>% 
-  mutate(treatment =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX',
-                         'Trastuzumab'~ 'TRX', .default = id)) %>% 
+  mutate("treatment"=id)%>% 
 
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
@@ -807,13 +827,13 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
 ```
 
 
-####  Daunorubicin
+####  DNR
 
 ```{r dnr only}
 DNRdeg_sp <- toplist24hr %>% 
   filter(adj.P.Val<0.01) %>% 
   filter(ENTREZID %in% DnronlyDEG) %>% 
-  filter(id=="Daunorubicin") %>% 
+  filter(id=="DNR") %>% 
   dplyr::select(ENTREZID, SYMBOL)  
 
 ##lfc
@@ -821,15 +841,8 @@ DNRdeg_sp <- toplist24hr %>%
 toplist24hr %>% 
   filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %>% 
   group_by(time,id) %>% 
-  
   mutate(logFC=logFC*(-1)) %>% 
-  mutate(treatment =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX',
-                         'Trastuzumab'~ 'TRX', .default = id)) %>% 
-
+  mutate("treatment" = id) %>% 
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
@@ -878,14 +891,14 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
 ##most convincing of these is 114826 SMYD4
 
 ```
-#### Epirubicin
+#### EPI
 
 ```{r epi only}
 
 EPIdeg_sp <- toplist24hr %>% 
   filter(adj.P.Val<0.01) %>% 
   filter(ENTREZID %in% EpionlyDEG) %>% 
-  filter(id=="Epirubicin") %>% 
+  filter(id=="EPI") %>% 
   dplyr::select(ENTREZID, SYMBOL)  
 
 EPIdeg_sp %>% 
@@ -901,12 +914,7 @@ toplist24hr %>%
   filter(ENTREZID %in% EPIdeg_sp$ENTREZID) %>% 
   group_by(time,id) %>% 
   mutate(logFC=logFC*(-1)) %>% 
-  mutate(treatment =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX',
-                         'Trastuzumab'~ 'TRX', .default = id)) %>% 
+  mutate("treatment" = id) %>% 
 
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
@@ -971,7 +979,7 @@ library(gprofiler2)
 # EPIdeg_sp had NO enrichment
 # MTXdeg_sep had 2, "DNA-templated DNA replication" "nuclear pore localization"     "DNA replication" 
 
-# gostresDOXdeg_sp <- gost(query = c(DOXdeg_sp),
+# gostresMTXdeg_sp <- gost(query = c(MTXdeg_sp),
 #                       organism = "hsapiens",
 #                       ordered_query = FALSE,
 #                       domain_scope = "custom",
@@ -981,15 +989,22 @@ library(gprofiler2)
 #                       correction_method = c("fdr"),
 #                       custom_bg = backGL$ENTREZID,
 #                       sources=c("GO:BP", "KEGG"))
-# 
+# saveRDS(gostresMTXdeg_sp,"data/DEG-GO/gostresMTXdeg_sp.RDS")
 # saveRDS(gostresDOXdeg_sp,"data/DEG-GO/gostresDOXdeg_sp.RDS")
 DX_sp_DEGgostres <- readRDS("data/DEG-GO/gostresDOXdeg_sp.RDS")
+MT_sp_DEGgostres <- readRDS("data/DEG-GO/gostresMTXdeg_sp.RDS")
 DX_spgenes <- gostplot(DX_sp_DEGgostres, capped = FALSE, interactive = TRUE)
 DX_spgenes
+MT_spgenes <- gostplot(MT_sp_DEGgostres, capped = FALSE, interactive = TRUE)
+MT_spgenes
 
 DX_sp_DEGtable <- DX_sp_DEGgostres$result %>%
   dplyr::select(c(source, term_id,term_name,intersection_size, 
                    term_size, p_value))
+MT_sp_DEGtable <- MT_sp_DEGgostres$result %>%
+  dplyr::select(c(source, term_id,term_name,intersection_size, 
+                   term_size, p_value))
+  
   
 DX_sp_DEGtable  %>% 
     dplyr::filter(source=="GO:BP") %>% 
@@ -1014,7 +1029,15 @@ DX_sp_DEGtable  %>%
 
 DX_sp_DEGtable %>% 
   mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(., caption= "Significant (adj. P value of <0.01) Doxorubicin specific genes (n = 68) and top 10 enriched GO terms") %>% 
+  kable(., caption= "Significant (adj. P value of <0.01) DOX specific genes (n = 68) and top 10 enriched GO terms") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+MT_sp_DEGtable %>% 
+ mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(., caption= "Significant (adj. P value of <0.01) DOX specific genes (n = 41) and top 10 enriched GO terms") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
@@ -1033,8 +1056,12 @@ densityDOXsp <- toplist24hr %>%
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
   theme_bw()+
-  ylab("DOX-specific\n n = 68")+
-  guides(fill=FALSE,alpha=FALSE)
+  ylab("DOX-only DEGs\n n = 379")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(
+    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 0))
 
 densityDNRsp <- toplist24hr %>% 
   filter(ENTREZID %in% DnronlyDEG) %>% 
@@ -1042,8 +1069,12 @@ densityDNRsp <- toplist24hr %>%
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
   theme_bw()+
-  ylab("DNR-specific\n n = 112")+
-  guides(fill=FALSE,alpha=FALSE)
+  ylab("DNR-only DEGs\n n = 615")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(
+    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 0))
 
 
 densityEPIsp <- toplist24hr %>% 
@@ -1052,8 +1083,12 @@ densityEPIsp <- toplist24hr %>%
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
   theme_bw()+
-  ylab("EPI-specific\n n = 84")+
-  guides(fill=FALSE,alpha=FALSE)
+  ylab("EPI-only DEGs\n n = 444")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(
+    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 0))
 
 
 
@@ -1063,8 +1098,12 @@ densityMTXsp <- toplist24hr %>%
   geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palNoVeh)+
   theme_bw()+
-  ylab("MTX-specific\n n = 41")+
-  guides(fill=FALSE,alpha=FALSE)
+  ylab("MTX-only DEGs\n n = 122")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(
+    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(size = 8, color = "black", angle = 0))
  
 
 ```
@@ -1077,22 +1116,16 @@ densityMTXsp <- toplist24hr %>%
   group_by(time,id) %>% 
   dplyr::filter(ENTREZID %in% DOXdeg_sp$ENTREZID) %>%
   mutate(logFC=logFC*(-1)) %>% 
-  mutate(treatment =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX',
-                         'Trastuzumab'~ 'TRX', .default = id)) %>% 
-
+  mutate("treatment" = id) %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
+  ylab("DOX specific adj.P.V <0.01\n n = 68")+
   theme_classic()+
   fill_palette(palette = drug_palNoVeh)+
   guides(fill= FALSE)+
   theme(
-    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-    axis.title = element_text(size = 15, color = "black"),
+    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
     axis.ticks = element_line(size = 1.5),
     axis.text = element_text(size = 8, color = "black", angle = 0))
    
@@ -1103,22 +1136,16 @@ DnrBplot <- toplist24hr %>%
   group_by(time,id) %>% 
   dplyr::filter(ENTREZID %in% DNRdeg_sp$ENTREZID) %>% 
   mutate(logFC=logFC*(-1)) %>% 
-  mutate(treatment =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX',
-                         'Trastuzumab'~ 'TRX', .default = id)) %>% 
-
+  mutate("treatment" = id) %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
+  ylab("DNR specific adj.P.V <0.01\n n = 112")+
   theme_classic()+
   guides(fill= FALSE)+
   fill_palette(palette = drug_palNoVeh)+
   theme(
-    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-    axis.title = element_text(size = 15, color = "black"),
+   theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
     axis.ticks = element_line(size = 1.5),
     axis.text = element_text(size = 8, color = "black", angle = 0))
 
@@ -1126,22 +1153,16 @@ EpiBplot <- toplist24hr %>%
   group_by(time,id) %>% 
   filter(ENTREZID %in% EPIdeg_sp$ENTREZID) %>% 
   mutate(logFC=logFC*(-1)) %>% 
-  mutate(treatment =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX',
-                         'Trastuzumab'~ 'TRX', .default = id)) %>% 
-
+  mutate("treatment" = id) %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
+  ylab("EPI specific adj.P.V <0.01\n n = 84")+
   theme_classic()+
   guides(fill= FALSE)+
   fill_palette(palette = drug_palNoVeh)+
   theme(
-    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-    axis.title = element_text(size = 15, color = "black"),
+   theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
     axis.ticks = element_line(size = 1.5),
     axis.text = element_text(size = 8, color = "black", angle = 0))
 
@@ -1150,51 +1171,54 @@ MtxBplot <- toplist24hr %>%
   group_by(time,id) %>% 
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   mutate(logFC=logFC*(-1)) %>% 
-  mutate(treatment =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX',
-                         'Trastuzumab'~ 'TRX', .default = id)) %>% 
-
+  mutate("treatment" = id) %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
+  ylab("DNR specific adj.P.V <0.01\n n = 41")+
   guides(fill= FALSE)+
   theme_classic()+
   fill_palette(palette = drug_palNoVeh)+
   theme(
-    plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-    axis.title = element_text(size = 15, color = "black"),
+    axis.title = element_text(size = 10, color = "black"),
     axis.ticks = element_line(size = 1.5),
     axis.text = element_text(size = 8, color = "black", angle = 0))
 
 Doxgenesp_example <- cpm_boxplot(cpmcounts,GOI=101927720,"Dark2",drug_palc,
-                ylab=bquote(~italic("ZNF793-AS1 ")~log[2]~"cpm "))
+                ylab=bquote(~italic("ZNF793-AS1 ")~log[2]~"cpm "))+ 
+   theme( axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(size = 1.5),     
+          axis.text = element_text(size = 10, color = "black", angle = 0))
 
 Dnrgenesp_example <- cpm_boxplot(cpmcounts,114826 ,"Dark2",drug_palc,
-                ylab=bquote(~italic("SMYD4")~log[2]~"cpm "))
+                ylab=bquote(~italic("SMYD4")~log[2]~"cpm "))+ 
+   theme( axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(size = 1.5),     
+          axis.text = element_text(size = 10, color = "black", angle = 0))
 
 
 Epigenesp_example <- cpm_boxplot(cpmcounts,GOI=220963,"Dark2",drug_palc,
-                ylab=bquote(~italic("SLC16A9")~log[2]~"cpm "))
+                ylab=bquote(~italic("SLC16A9")~log[2]~"cpm "))+ 
+   theme( axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(size = 1.5),     
+          axis.text = element_text(size = 10, color = "black", angle = 0))
 
 
 Mtxgenesp_example <- cpm_boxplot(cpmcounts,GOI=54853,"Dark2",drug_palc,
-                ylab=bquote(~italic("WDR55")~log[2]~"cpm "))
+                ylab=bquote(~italic("WDR55")~log[2]~"cpm "))+ 
+   theme( axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(size = 1.5),     
+          axis.text = element_text(size = 10, color = "black", angle = 0))
+    
 
 
 
-mitopg <- plot_grid(densityMTXsp, MtxBplot, Mtxgenesp_example, nrow = 1) 
+mitopg <- plot_grid(densityMTXsp, MtxBplot, Mtxgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
 
-
-Daunpg <- plot_grid(densityDNRsp, DnrBplot, Dnrgenesp_example, nrow = 1)
-#, rel_heights = c(.8,2,1), rel_widths=c(1,1.5,2),scale=c(1,1,0.8))
-Doxopg <- plot_grid(densityDOXsp, DoxBplot, Doxgenesp_example, nrow = 1)
-#, rel_heights = c(.8,2,1), rel_widths=c(1,1.5,2),scale=c(1,1,0.8))
-Epipg <- plot_grid(densityEPIsp, EpiBplot, Epigenesp_example, nrow = 1)
-#, rel_heights = c(.8,1.5,1), rel_widths=c(1,1.5,2),scale=c(1,1,0.8))
-allfinal <- plot_grid(Doxopg,Daunpg,Epipg,mitopg,nrow=4)
+Daunpg <- plot_grid(densityDNRsp, DnrBplot, Dnrgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+Doxopg <- plot_grid(densityDOXsp, DoxBplot, Doxgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+Epipg <- plot_grid(densityEPIsp, EpiBplot, Epigenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+allfinal <- plot_grid(Doxopg,Epipg,Daunpg,mitopg,nrow=4)
 allfinal
 
 # saveRDS(allfinal,"output/allfinal_sup10.RDS")
