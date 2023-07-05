@@ -1,5 +1,5 @@
 ---
-title: "Figure 9"
+title: "Figure 8"
 author: "ERM"
 date: "`r Sys.Date()`"
 output: html_document
@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 ```
+
 ```{r packages loading}
 library(tidyverse)
 library(BiocGenerics)
@@ -22,9 +23,10 @@ library(RColorBrewer)
 library(broom)
 
 ```
-```{r data loading}
+
+```{r data loading, message=FALSE, warning=FALSE, include=FALSE}
 toplistall <- readRDS("data/toplistall.RDS")
-siglist <- readRDS("data/siglist.RDS")
+siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist, envir = .GlobalEnv)
 cpmcounts <- readRDS("data/cpmcount.RDS")
 
@@ -52,7 +54,12 @@ drug_palspc <- c("#8B006D","#DF707E","#8B006D","#DF707E")
 drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
 #GET nQTL umbers
 nQTLsum <- toplistall %>%
-  mutate(id = as.factor(id)) %>%
+  mutate(id =dplyr::case_match(id, "Daunorubicin"~"DNR",
+                            "Doxorubicin"~"DOX",
+                            "Epirubicin"~"EPI",
+                            "Mitoxantrone"~"MTX",
+                            "Trastuzumab"~"TRZ",
+                            "Vehicle"~"VEH", .default = id)) %>% 
   dplyr::filter(time=="24_hours") %>%
   dplyr::filter(adj.P.Val <0.05) %>%
   mutate(nQTL=if_else(ENTREZID %in% nQTLmy$ENTREZID,'nQTL_y','nQTL_no')) %>% 
@@ -63,7 +70,12 @@ nQTLsum <- toplistall %>%
   dplyr::filter(group=="y")
 #GETx GTEX numbers
 GTExsum <- toplistall %>%
-  mutate(id = as.factor(id)) %>%
+   mutate(id =dplyr::case_match(id, "Daunorubicin"~"DNR",
+                            "Doxorubicin"~"DOX",
+                            "Epirubicin"~"EPI",
+                            "Mitoxantrone"~"MTX",
+                            "Trastuzumab"~"TRZ",
+                            "Vehicle"~"VEH", .default = id)) %>% 
   dplyr::filter(time=="24_hours") %>%
   dplyr::filter(adj.P.Val <0.05) %>%
    mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
@@ -76,13 +88,15 @@ GTExsum <- toplistall %>%
 GTEXcr8z <- GTExsum %>% 
   rbind(., nQTLsum) %>% 
   dplyr::select(id,set, n,total) %>% 
-  pivot_longer(cols=n:total, names_to="group",values_to="total") %>% mutate(group=case_match(group, "n"~"yes","total"~"no",.default = group))  %>% 
-  mutate(Label=if_else(set=="nQTL"&group=="yes", paste0("*"),NA)) 
+  pivot_longer(cols=n:total, names_to="group",values_to="total") %>% mutate(group=case_match(group, "n"~"In set","total"~"Not in set",.default = group))  %>%
+  mutate(group=factor(group,levels = c("Not in set" ,"In set"))) %>% 
+  mutate(Label=if_else(set=="nQTL"&group=="In set", paste0("*"),NA)) 
 ##add significance stars to graph using sig-dataframe
 # GTEX_sig24 <- readRDS("data/GTEX_sig24.RDS")
-# data_text <- data.frame(Label=c("ns","ns","*","*"),id=c("Daunorubcin","Doxorubicin","Epirubicin","Mitoxantrone"))
+# data_text <- data.frame(Label=c("ns","ns","*","*"),id=c("Daunorubcin","DOX","EPI","MTX"))
 
 GTEXcr8z %>% 
+  mutate(id= factor(id, levels =c("DOX","DNR","EPI","MTX", "TRX", "VEH"))) %>% 
   ggplot(., aes(x=set,y=total, fill=group))+
    geom_col(position='fill')+
     facet_wrap(~id,nrow=2,ncol=4)+
@@ -99,7 +113,13 @@ knowles4 <-readRDS("output/knowles4.RDS")
 knowles5 <-readRDS("output/knowles5.RDS")
 Knowles_count <- 
   toplistall %>%
-  filter(id!='Trastuzumab') %>% 
+   mutate(id = dplyr::case_match(id, "Daunorubicin"~"DNR",
+                            "Doxorubicin"~"DOX",
+                            "Epirubicin"~"EPI",
+                            "Mitoxantrone"~"MTX",
+                            "Trastuzumab"~"TRZ",
+                            "Vehicle"~"VEH", .default = id)) %>%
+  filter(id!='TRZ') %>% 
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   group_by(time, id) %>%
@@ -113,13 +133,18 @@ Knowles_count <-
                            '24_hours'~'24 hrs',.default = time)) %>% 
   mutate(K4_n= 503-K4_y, K5_n=371-K5_y) %>% 
   pivot_longer(!c(time,id), names_to='QTL',values_to="gene_count") %>%
-  separate(QTL,into=c("QTL_type",'group'),sep = '_') %>%  
+  separate(QTL,into=c("QTL_type",'group'),sep = '_') %>% 
+  mutate(group=case_match(group, "y"~"In set","n"~"Not in set",.default = group))  %>%
   mutate(QTL_type =case_match(QTL_type, 'K4'~'meQTLs',
                          'K5'~'reQTLs',.default = QTL_type)) %>% 
   mutate(time=factor(time, levels=c("3 hrs","24 hrs"))) %>% 
+  mutate(group=factor(group,levels = c("Not in set" ,"In set"))) %>% 
   group_by(id,time,QTL_type) %>% 
-  mutate(percent=gene_count/sum(gene_count)*100) %>% 
-  filter(time=="24 hrs")
+  mutate(percent=gene_count/sum(gene_count)*100)  %>% 
+  ungroup() %>% 
+  filter(time=="24 hrs") %>% 
+  mutate(id= factor(id, levels =c("DOX","DNR","EPI","MTX", "TRX", "VEH")))
+  
   
   ggplot(Knowles_count, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
     geom_col(position='fill')+
@@ -139,6 +164,12 @@ Knowles_count <-
 ```{r DOXreQTLs across other treatments,fig.height=3}
 DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
 DOXeQTL_table <- toplistall %>% 
+  mutate(id = dplyr::case_match(id, "Daunorubicin"~"DNR",
+                            "Doxorubicin"~"DOX",
+                            "Epirubicin"~"EPI",
+                            "Mitoxantrone"~"MTX",
+                            "Trastuzumab"~"TRZ",
+                            "Vehicle"~"VEH", .default = id)) %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   mutate(DOXreQTLs=if_else(ENTREZID %in%DOXreQTLs$ENTREZID,"y","no")) %>% 
   dplyr::filter(time =="24_hours") %>% 
@@ -149,27 +180,27 @@ DOXeQTL_table <- toplistall %>%
   dplyr::select(id,DOXreQTLs,sig) 
 
 DOXeQTL_table %>%
-  add_row(id=c("Dox-specific DEGs","Dox-specific DEGs"),DOXreQTLs=c("no","y"), sig = c(62,1)) %>% 
+  add_row(id=c("Dox-specific DEGs","Dox-specific\n DEGs"),DOXreQTLs=c("no","y"), sig = c(62,1)) %>% 
   dplyr::filter(DOXreQTLs=="y") %>% 
   mutate(opp= 180-sig) %>% 
-  filter(id !=c('Trastuzumab','Doxorubicin')) %>% 
+  filter(id !=c('TRZ','DOX')) %>% 
   rename("yes"=sig, "no"=opp) %>% 
   mutate(y_percent= paste0(sprintf("%2.1f", yes/(yes+no)*100), "%"),n_percent = paste0(sprintf("%2.1f", no/(yes+no)*100),"%")) %>% 
   pivot_longer(!c(id,DOXreQTLs,y_percent,n_percent), names_to="group", values_to = "count") %>% 
-  mutate(id=factor(id, levels=c("Daunorubicin","Epirubicin", "Mitoxantrone","Dox-specific DEGs"))) %>% 
+  mutate(id=factor(id, levels=c("DNR","EPI", "MTX","Dox-specific\n DEGs"))) %>% 
 ggplot(., aes(y=id,x=count,fill=group))+
      geom_col(position='fill')+
     theme_classic()+
   ylab("")+
   xlab("proportion")+
    scale_color_manual(values=c("red4","navy"))+
-    scale_fill_manual(values=c("#2297E6","red2"))+
+    scale_fill_manual(values=c("#2297E6","red2"), labels=c("not DOXreQTL","DOXreQTL"))+
   ggtitle("DOXreQTLs overlaps")+
   scale_y_discrete(limits=rev)+
   geom_text(aes(y=id,x=1, label = n_percent,hjust=.8))+
 
     theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
+        axis.title = element_text(size = 12, color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.line = element_line(linewidth = 1.0),
         axis.text = element_text(size = 10, color = "black", angle = 0),
@@ -179,7 +210,7 @@ ggplot(., aes(y=id,x=count,fill=group))+
 ```
 
 
-## D. Only 1 DOXreQTL is associated with Dox-specific DEGs 
+## D. Only one DOXreQTL is associated with Dox-specific DEGs 
 
 ```{r DOXreQTLvDOXspeDEG}
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
@@ -192,12 +223,14 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       separate(treatment, c("drug","indv","time")) %>%
       mutate(time=factor(time, levels =c("3h", "24h"))) %>%
       mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-      mutate(drug =case_match(drug, "Da"~"Daunorubicin",
-                            "Do"~"Doxorubicin",
-                            "Ep"~"Epirubicin",
-                            "Mi"~"Mitoxantrone",
-                            "Tr"~"Trastuzumab",
-                            "Ve"~"Vehicle", .default = drug))
+      mutate(drug =case_match(drug, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = drug)) %>% 
+       mutate(drug=factor(drug, levels = c('DOX','DNR','EPI','MTX','TRZ','VEH')))
+
     plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
       geom_boxplot(position="identity",aes(fill=drug))+
       geom_point(aes(col=indv, size=2, alpha=0.5))+
