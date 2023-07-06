@@ -37,7 +37,8 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
     df_plot <- df %>% 
       dplyr::filter(rownames(.)==GOI) %>%
       pivot_longer(everything(),
-                   names_to = "treatment",values_to = "counts") %>%
+                   names_to = "treatment",
+                   values_to = "counts") %>%
       separate(treatment, c("drug","indv","time")) %>%
       mutate(time=factor(time, levels =c("3h", "24h"))) %>%
       mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
@@ -50,7 +51,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH')))
     plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
       geom_boxplot(position="identity",aes(fill=drug))+
-      geom_point(aes(col=indv, size=2, alpha=0.5))+
+      geom_point(aes(col=indv, size=1.5, alpha=0.5))+
       guides(alpha= "none", size= "none")+
       scale_color_brewer(palette = brewer_palette, guide = "none")+
       scale_fill_manual(values=fill_colors)+
@@ -58,13 +59,13 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       theme_bw()+
       ylab(ylab)+
       xlab("")+
-      theme(strip.background = element_rect(fill = "white"),
-          plot.title = element_text(size=18,hjust = 0.5),
-          axis.title = element_text(size = 15, color = "black"),
-          axis.ticks = element_line(linewidth = 1.5),
-          axis.line = element_line(linewidth = 1.5),
-          axis.text.x = element_text(size = 12, color = "white", angle = 0),
-          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          axis.line = element_line(linewidth = 1.0),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "pt"),face = "bold"))
     print(plot)
 }
 
@@ -227,7 +228,7 @@ EPImeSNPs <- readRDS("output/EPImeSNPs.RDS")
 EPIreQTLs <- readRDS("output/EPIreQTLs.RDS")
 MTXmeSNPs <- readRDS("output/MTXmeSNPs.RDS")
 MTXreQTLs <- readRDS("output/MTXreQTLs.RDS")
-
+cpmcounts <- readRDS("data/cpmcount.RDS")
 toplist24hr <-   toplistall %>%
   mutate(id =case_match(id, "Da"~"DNR",
                             "Do"~"DOX",
@@ -429,7 +430,10 @@ Knowles_count <-
     theme_classic()+
    scale_color_manual(values=drug_palNoVeh)+
     scale_fill_manual(values=drug_palNoVeh)+
-       scale_y_continuous(label = scales::percent)
+       scale_y_continuous(label = scales::percent)+
+    theme(strip.text=element_text(size=10, face = "bold"),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "pt")),
+  strip.background = element_rect (linetype=1, linewidth = 0.5))
 
   ###This works
   chi_frame <- Knowles_count %>%
@@ -1025,7 +1029,7 @@ DX_sp_DEGtable  %>%
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 DX_sp_DEGtable %>% 
   mutate_at(.vars = 6, .funs= scientific_format()) %>% 
@@ -1059,9 +1063,10 @@ densityDOXsp <- toplist24hr %>%
   ylab("DOX-only DEGs\n n = 379")+
   guides(fill=FALSE,alpha=FALSE)+
   theme(
-    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
+      axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
 
 densityDNRsp <- toplist24hr %>% 
   filter(ENTREZID %in% DnronlyDEG) %>% 
@@ -1072,10 +1077,10 @@ densityDNRsp <- toplist24hr %>%
   ylab("DNR-only DEGs\n n = 615")+
   guides(fill=FALSE,alpha=FALSE)+
   theme(
-    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
-
+      axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
 
 densityEPIsp <- toplist24hr %>% 
   filter(ENTREZID %in% EpionlyDEG) %>% 
@@ -1085,11 +1090,10 @@ densityEPIsp <- toplist24hr %>%
   theme_bw()+
   ylab("EPI-only DEGs\n n = 444")+
   guides(fill=FALSE,alpha=FALSE)+
-  theme(
-    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
-
+  theme(axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
 
 
 densityMTXsp <- toplist24hr %>% 
@@ -1100,11 +1104,10 @@ densityMTXsp <- toplist24hr %>%
   theme_bw()+
   ylab("MTX-only DEGs\n n = 122")+
   guides(fill=FALSE,alpha=FALSE)+
-  theme(
-    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
- 
+  theme(axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
 
 ```
 
@@ -1125,10 +1128,11 @@ densityMTXsp <- toplist24hr %>%
   fill_palette(palette = drug_palNoVeh)+
   guides(fill= FALSE)+
   theme(
-    theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
-   
+      axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+
+    
 
 
 
@@ -1140,15 +1144,15 @@ DnrBplot <- toplist24hr %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
-  ylab("DNR specific adj.P.V <0.01\n n = 112")+
+  ylab("DNR-spec. adj.P.V <0.01\n n = 112")+
   theme_classic()+
   guides(fill= FALSE)+
   fill_palette(palette = drug_palNoVeh)+
-  theme(
-   theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
-
+ theme(
+      axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
 EpiBplot <- toplist24hr %>% 
   group_by(time,id) %>% 
   filter(ENTREZID %in% EPIdeg_sp$ENTREZID) %>% 
@@ -1157,15 +1161,14 @@ EpiBplot <- toplist24hr %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
-  ylab("EPI specific adj.P.V <0.01\n n = 84")+
+  ylab("EPI-spec.adj.P.V <0.01\n n = 84")+
   theme_classic()+
   guides(fill= FALSE)+
   fill_palette(palette = drug_palNoVeh)+
-  theme(
-   theme(     axis.title = element_text(size = 10, color = "black"),     axis.ticks = element_line(size = 1.5),     axis.text = element_text(size = 10, color = "black", angle = 0))
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
-
+   theme(axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
 
 MtxBplot <- toplist24hr %>% 
   group_by(time,id) %>% 
@@ -1175,45 +1178,41 @@ MtxBplot <- toplist24hr %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
-  ylab("DNR specific adj.P.V <0.01\n n = 41")+
+  ylab("MTX-spec. adj.P.V <0.01\n n = 41")+
   guides(fill= FALSE)+
   theme_classic()+
   fill_palette(palette = drug_palNoVeh)+
-  theme(
-    axis.title = element_text(size = 10, color = "black"),
-    axis.ticks = element_line(size = 1.5),
-    axis.text = element_text(size = 8, color = "black", angle = 0))
+  theme(axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
 
 Doxgenesp_example <- cpm_boxplot(cpmcounts,GOI=101927720,"Dark2",drug_palc,
                 ylab=bquote(~italic("ZNF793-AS1 ")~log[2]~"cpm "))+ 
-   theme( axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(size = 1.5),     
-          axis.text = element_text(size = 10, color = "black", angle = 0))
+  theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
 
 Dnrgenesp_example <- cpm_boxplot(cpmcounts,114826 ,"Dark2",drug_palc,
                 ylab=bquote(~italic("SMYD4")~log[2]~"cpm "))+ 
-   theme( axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(size = 1.5),     
-          axis.text = element_text(size = 10, color = "black", angle = 0))
+   theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
 
 
 Epigenesp_example <- cpm_boxplot(cpmcounts,GOI=220963,"Dark2",drug_palc,
                 ylab=bquote(~italic("SLC16A9")~log[2]~"cpm "))+ 
-   theme( axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(size = 1.5),     
-          axis.text = element_text(size = 10, color = "black", angle = 0))
+   theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
 
 
 Mtxgenesp_example <- cpm_boxplot(cpmcounts,GOI=54853,"Dark2",drug_palc,
                 ylab=bquote(~italic("WDR55")~log[2]~"cpm "))+ 
-   theme( axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(size = 1.5),     
-          axis.text = element_text(size = 10, color = "black", angle = 0))
+   theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
     
 
 
 
-mitopg <- plot_grid(densityMTXsp, MtxBplot, Mtxgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+mitopg <- plot_grid(densityMTXsp, MtxBplot, Mtxgenesp_example, 
+                    nrow = 1, 
+                    rel_heights = c(.8,2,1), 
+                    rel_widths=c(1.2,1,1.5),
+                    scale=c(1,0.8,0.8))
+
 
 Daunpg <- plot_grid(densityDNRsp, DnrBplot, Dnrgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
 Doxopg <- plot_grid(densityDOXsp, DoxBplot, Doxgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
