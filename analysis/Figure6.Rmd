@@ -26,7 +26,7 @@ library(broom)
 ```
 ```{r data loading}
 toplistall <- readRDS("data/toplistall.RDS")
-siglist <- readRDS("data/siglist.RDS")
+siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist, envir = .GlobalEnv)
 cpmcounts <- readRDS("data/cpmcount.RDS")
 cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
@@ -52,7 +52,7 @@ legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4"
 ## B. Pie chart of motifs
 
 ```{r Pie chart of groups}
-Set <- c("Early Response", "Time-Independent Response","Late Response", "No Response")
+Set <- c("Early Acute Response", "Time-Independent Response","Late Response", "No Response")
 gene_num <- c(487,589,5596,7409)
 fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
 
@@ -87,23 +87,31 @@ mean_lfc <- lfc_nums %>%
   mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
   mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
   mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
+  mutate(time=factor(time, levels=c("3_hours","24_hours"),labels=c("3 hours","24 hours"))) %>% 
   group_by(id,time) %>% 
   mutate(absFC=abs(logFC)) %>% 
   dplyr::select(id,time,absFC,ER,TI,LR,NR) %>% 
-  dplyr::summarize(ERm=mean(absFC[ER=="y"]),TIm=mean(absFC[TI=="y"]),LRm=mean(absFC[LR=="y"]),NRm=mean(absFC[NR=="y"])) %>% as.data.frame()
+  dplyr::summarize(ERm=mean(absFC[ER=="y"]),TIm=mean(absFC[TI=="y"]),LRm=mean(absFC[LR=="y"]),NRm=mean(absFC[NR=="y"])) %>%
+  as.data.frame()
 
 
 mean_lfc %>% 
-   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
-  mutate(id=factor(id, levels=c("Daunorubicin" ,"Doxorubicin", "Epirubicin" , "Mitoxantrone" ,"Trastuzumab"))) %>% 
-  pivot_longer(!c(id,time), names_to = "Motif",values_to="meanLFC") %>% 
+  ungroup() %>% 
+  mutate(id=factor(id, 
+                   levels =c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>% 
+  pivot_longer(!c(id,time), names_to = "Motif",
+               values_to="meanLFC") %>%
+  mutate(Set=case_match(Motif,"ERm"~"Early Acute Response",
+                        "TIm"~"Time-Independent Response",
+                        "LRm"~"Late Response",
+                        "NRm"~"No Response",
+                        .default = Motif))%>% 
   ggplot(., aes(x=time,y= meanLFC,col=id,group=id))+
-  geom_point()+
-  geom_line()+
+  geom_point(size=2)+
+  geom_line(size=2)+
   ggpubr::fill_palette(drug_pal_fact)+
   # guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(~Motif)+
+  facet_wrap(~Set)+
   theme_bw()+
   xlab("")+
   scale_color_manual(values=drug_pal_fact)+
