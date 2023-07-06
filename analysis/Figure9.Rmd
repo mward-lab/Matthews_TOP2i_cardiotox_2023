@@ -417,7 +417,7 @@ cpm_boxplot24h(cpmcounts,GOI='283337',"Dark2",drug_pal_fact,
 
 ```
 
-```{r SCL cor data, fig.height=4, fig.width=8}
+```{r ZNF cor data, fig.height=4, fig.width=8}
 
 ZNF_data <- pearson_extract(gene_corr_fig9,283337)
 
