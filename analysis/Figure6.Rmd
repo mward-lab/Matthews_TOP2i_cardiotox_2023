@@ -41,7 +41,7 @@ drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B33
 TOP2i induce a time-dependent gene expression response in cardiomyocytes  
 
 ## A. Cormotif plot unedited
-```{r Cormotif, dev=c("eps","png)}
+```{r Cormotif)}
 myColors <-  rev(c("#FFFFFF", "#E6E6E6" ,"#CCCCCC", "#B3B3B3", "#999999", "#808080", "#666666","#4C4C4C", "#333333", "#191919","#000000"))
                   
   
@@ -55,7 +55,7 @@ legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4"
 ## B. Pie chart of motifs
 
 ```{r Pie chart of groups,fig.width = 5,fig.height =5}
-Set <- c("Early Acute Response", "Time-Independent Response","Late Response", "No Response")
+Set <- c("Early Acute Response", "Early-Sustained Response","Late Response", "No Response")
 gene_num <- c(487,589,5596,7409)
 fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
 
@@ -105,7 +105,7 @@ mean_lfc %>%
   pivot_longer(!c(id,time), names_to = "Motif",
                values_to="meanLFC") %>%
   mutate(Set=case_match(Motif,"ERm"~"Early Acute Response",
-                        "TIm"~"Time-Independent Response",
+                        "TIm"~"Early-Sustained Response",
                         "LRm"~"Late Response",
                         "NRm"~"No Response",
                         .default = Motif))%>% 

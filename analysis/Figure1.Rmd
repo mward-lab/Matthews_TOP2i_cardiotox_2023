@@ -1,5 +1,5 @@
 ---
-title: "Figure1"
+title: "Figure 1"
 author: "ERM"
 date: "`r Sys.Date()`"
 output: html_document
@@ -28,7 +28,7 @@ library(broom)
 
 Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
 
-## A. Project Overview
+## A. Project overview
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # knitr::include_graphics("output/Fig_summary1.png",error=FALSE)
@@ -40,7 +40,7 @@ knitr::include_graphics("code/figurelegeddrc.png",error=FALSE)
 
 things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
 
-## B. Example Dose response curves from 48 hour drug exposure.
+## B. Example dose response curves from 48 hour drug exposure.
 ```{r B drc}
 daplot <- readRDS("output/daplot.RDS")  
 dxplot <- readRDS("output/dxplot.RDS")
@@ -105,7 +105,7 @@ graphLD50 <-
 
 graphLD50
 ```
-## D. Breast Cancer cell line 50% lethal dose plot
+## D. Breast cancer cell line 50% lethal dose plot
 ```{r BCcells ld50}
 graphBC <- BC_cell_lines %>%
     mutate(Cell_line= factor(Cell_line)) %>% 
