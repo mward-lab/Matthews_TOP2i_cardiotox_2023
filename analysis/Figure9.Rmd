@@ -320,11 +320,13 @@ rarg_mat_sig <- RARG_data %>%
   mutate_all(~replace(., is.na(.), 1)) %>% 
   t() %>% 
   as.matrix()
+col_funfinal= circlize::colorRamp2(c(-1,0, 1), c("#b35806","white", "#542788"))
 Heatmap(rarg_mat, name = "correlation value",
         cluster_rows = FALSE, 
         cluster_columns = FALSE,
         column_names_rot = 0,
         column_names_centered = TRUE,
+        col=col_funfinal,
         na_col = "lightgrey",
         cell_fun = function(j, i, x, y, width, height, fill) {
            if(rarg_mat_sig[i, j]<0.05)
@@ -364,6 +366,7 @@ Heatmap(slc_mat, name = "correlation value",
         column_names_rot = 0,
         column_names_centered = TRUE,
         na_col = "lightgrey",
+        col=col_funfinal,
         cell_fun = function(j, i, x, y, width, height, fill) {
            if(slc_mat_sig[i, j]<0.05)
             grid.text("*", x, y, gp = gpar(fontsize = 20))
@@ -400,6 +403,7 @@ Heatmap(tns2_mat, name = "correlation value",
         cluster_columns = FALSE,
         column_names_rot = 0,
         column_names_centered = TRUE,
+        col=col_funfinal,
         na_col = "lightgrey",
         cell_fun = function(j, i, x, y, width, height, fill) {
            if(tns2_mat_sig[i, j]<0.05)
@@ -437,6 +441,7 @@ Heatmap(ZNF_mat, name = "correlation value",
         cluster_columns = FALSE,
         column_names_rot = 0,
         column_names_centered = TRUE,
+        col=col_funfinal,
         na_col = "lightgrey",
         cell_fun = function(j, i, x, y, width, height, fill) {
            if(ZNF_mat_sig[i, j]<0.05)

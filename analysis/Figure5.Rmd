@@ -115,8 +115,7 @@ ComplexHeatmap::pheatmap(corrFC,
                          treeheight_row=25,
                          fontsize_col = 8,
                          treeheight_col = 20)
-ComplexHeatmap::Heatmap(corrFC,)
-compare_pheatmap(corrFC)
+
 
 ```
 
