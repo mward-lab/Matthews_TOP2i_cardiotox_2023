@@ -41,21 +41,21 @@ RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt",row.names = 1)
 
 
 RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c(  "Daunorubicin", 
-                                          "Doxorubicin",
-                                          "Epirubicin",
-                                          "Mitoxantrone",
-                                          "Trastuzumab",
-                                          "Vehicle"))) %>%
+  mutate(Drug = factor(Drug, levels = c(  "DOX",
+                                          "EPI",
+                                          "DNR",
+                                          "MTX",
+                                          "TRZ",
+                                          "VEH"))) %>%
  mutate(indv= factor(indv,levels= level_order2)) %>% 
   ggplot(., aes(x=Drug, y=rldh))+
   geom_boxplot(position = "identity", fill = drug_pal_fact)+
   geom_point(aes(col=indv, size =3,alpha=0.5))+
-  geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
-                                c("Vehicle","Doxorubicin"),
-                                c("Vehicle","Epirubicin"),
-                                c("Vehicle","Mitoxantrone"),
-                                c("Vehicle","Trastuzumab")),
+ geom_signif(comparisons =list(c("VEH","DOX"),
+                                c("VEH","EPI"),
+                                c("VEH","DNR"),
+                                c("VEH","MTX"),
+                                c("VEH","TRZ")),
               test="t.test",
               map_signif_level=TRUE,
               textsize =4,
@@ -84,21 +84,21 @@ RNAnormlist %>%
 
 
 RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c(  "Daunorubicin", 
-                                          "Doxorubicin",
-                                          "Epirubicin",
-                                          "Mitoxantrone",
-                                          "Trastuzumab",
-                                          "Vehicle"))) %>%
+  mutate(Drug = factor(Drug, levels = c(  "DOX",
+                                          "EPI",
+                                          "DNR",
+                                          "MTX",
+                                          "TRZ",
+                                          "VEH"))) %>%
  mutate(indv= factor(indv,levels= level_order2)) %>% 
   ggplot(., aes(x=Drug, y=rldh))+
   geom_boxplot(position = "identity", fill = drug_pal_fact)+
   geom_point(aes(col=indv, size =3,alpha=0.5))+
-  geom_signif(comparisons =list(c("Vehicle","Daunorubicin"),
-                                c("Vehicle","Doxorubicin"),
-                                c("Vehicle","Epirubicin"),
-                                c("Vehicle","Mitoxantrone"),
-                                c("Vehicle","Trastuzumab")),
+  geom_signif(comparisons =list(c("VEH","DOX"),
+                                c("VEH","EPI"),
+                                c("VEH","DNR"),
+                                c("VEH","MTX"),
+                                c("VEH","TRZ")),
               test="t.test",
               map_signif_level=TRUE,
               textsize =4,
