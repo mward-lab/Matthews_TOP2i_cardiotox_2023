@@ -174,7 +174,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
                    names_to = "treatment",
                    values_to = "counts") %>%
       separate(treatment, c("drug","indv","time")) %>%
-      mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+      mutate(time=factor(time, levels =c("3h", "24h"),labels=c("3 hours","24 hours"))) %>%
       mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
       mutate(drug =case_match(drug, "Da"~"DNR",
                             "Do"~"DOX",

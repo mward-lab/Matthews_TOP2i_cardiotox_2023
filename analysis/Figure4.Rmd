@@ -32,7 +32,7 @@ Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
 
 ## A. PCA of log~2~ cpm
 
-```{r PCA}
+```{r PCA, fig.height=6,fig.width=7}
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 level_order2 <- c('75','87','77','79','78','71')
@@ -64,10 +64,16 @@ pca_all <- calc_pca(t(dat_cpm))
 pca_all_anno <- data.frame(anno, pca_all$x)
 
 
-pca_all_anno %>%
+PCA_plot_group <- pca_all_anno %>%
+  mutate(drug =case_match(drug, "Daunorubicin"~"DNR",
+                        "Doxorubicin"~"DOX",
+                        "Epirubicin"~"EPI",
+                        "Mitoxantrone"~"MTX",
+                        "Trastuzumab"~"TRZ",
+                        "Vehicle"~"VEH", .default = drug)) %>%
   ggplot(.,aes(x = PC1, y = PC2, col=drug, shape=time))+
   geom_point(size= 5)+
-  scale_color_manual(values=drug_pal_fact)+
+  scale_color_manual(values=drug_pal_fact, name="treatment")+
    ggrepel::geom_text_repel(label=indv)+
    ggtitle(expression("PCA of log"[2]*"(cpm)"))+
   theme_bw()+
@@ -76,7 +82,7 @@ pca_all_anno %>%
   theme(plot.title=element_text(size= 14,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"))
 
-
+PCA_plot_group
 
 ```
 
@@ -93,46 +99,65 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       separate(treatment, c("drug","indv","time")) %>%
       mutate(time=factor(time, levels =c("3h", "24h"))) %>%
       mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-      mutate(drug =case_match(drug, "Da"~"Daunorubicin",
-                            "Do"~"Doxorubicin",
-                            "Ep"~"Epirubicin",
-                            "Mi"~"Mitoxantrone",
-                            "Tr"~"Trastuzumab",
-                            "Ve"~"Vehicle", .default = drug))
+      mutate(drug =case_match(drug, "Da"~"DNR",
+                          "Do"~"DOX",
+                          "Ep"~"EPI",
+                          "Mi"~"MTX",
+                          "Tr"~"TRZ",
+                          "Ve"~"VEH", .default = drug)) %>%
+  mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH')))
     plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
       geom_boxplot(position="identity",aes(fill=drug))+
       geom_point(aes(col=indv, size=2, alpha=0.5))+
       guides(alpha= "none", size= "none")+
-      scale_color_brewer(palette = brewer_palette, guide = "none")+
-      scale_fill_manual(values=fill_colors)+
+      scale_color_brewer(palette = brewer_palette, name = "Individual")+
+      scale_fill_manual(values=fill_colors, name="treatment")+
       facet_wrap("time", nrow=1, ncol=2)+
       theme_bw()+
       ylab(ylab)+
       xlab("")+
-      theme(strip.background = element_rect(fill = "white"),
-          plot.title = element_text(size=18,hjust = 0.5),
-          axis.title = element_text(size = 15, color = "black"),
-          axis.ticks = element_line(linewidth = 1.5),
-          axis.line = element_line(linewidth = 1.5),
-          axis.text.x = element_text(size = 12, color = "white", angle = 0),
-          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          
+          axis.line = element_line(linewidth = 1.0),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(face = "bold"))
     print(plot)
 }
 ```
 
-```{r top2b}
+```{r top2b, fig.width=6, fig.height=3}
+library(cowplot)
 toplistall <- readRDS("data/toplistall.RDS") 
 cpmcounts <- readRDS("data/cpmcount.RDS")
-cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm "))))
+Top2b <- cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))) 
+legend <- get_legend(Top2b)
+nlTop2b <- Top2b+  theme(legend.position = "none")
+nlTop2b
 
 ```
 
 ## C. *Top2*$\alpha$ expression 
 
-```{r Top2a}
+```{r Top2a,fig.width=6,fig.height=3}
 
-cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_fact,
+Top2a <- cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm "))))
+nlTop2a <- Top2a+  theme(legend.position = "none")
+nlTop2a
 
 ```
+```{r plot together, fig.height=6,fig.width=14}
+plots <- align_plots(nlTop2a,nlTop2b,align='v',axis='l')
+
+top2plots <- plot_grid(plots[[2]],plots[[1]],ncol=1)
+
+PCA_full_Figure <- plot_grid(PCA_plot_group,top2plots,legend, nrow=1,rel_widths = c(7,6,1), rel_heights = c(1,.5,1),scale=c(1,.8,1))
+PCA_full_Figure
+
+ggsave("output/Figures/PCA_full_Figure.eps",width = 14, height =6, units = "in")
+```
+
+

@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-	echo = TRUE,
+	echo = FALSE,
 	message = FALSE,
 	warning = FALSE
 )
@@ -310,13 +310,13 @@ RARG_data <- pearson_extract(gene_corr_fig9,5916)
 
 rarg_mat <- RARG_data %>% 
   column_to_rownames('rowname') %>% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %>% 
+   dplyr::select(rho_tnni,rho_ldh,rho_LD50) %>% 
   t() %>% 
   as.matrix()
 
 rarg_mat_sig <- RARG_data %>% 
   column_to_rownames('rowname') %>% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %>% 
+  dplyr::select(sig_tnni,sig_ldh,sig_LD50) %>% 
   mutate_all(~replace(., is.na(.), 1)) %>% 
   t() %>% 
   as.matrix()
@@ -350,13 +350,13 @@ SLC_data <- pearson_extract(gene_corr_fig9,64078)
 
 slc_mat <- SLC_data %>% 
   column_to_rownames('rowname') %>% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %>% 
+  dplyr::select(rho_tnni,rho_ldh,rho_LD50,) %>% 
   t() %>% 
   as.matrix()
 
 slc_mat_sig <- SLC_data %>% 
   column_to_rownames('rowname') %>% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %>% 
+   dplyr::select(sig_tnni,sig_ldh,sig_LD50,) %>% 
   mutate_all(~replace(., is.na(.), 1)) %>% 
   t() %>% 
   as.matrix()
@@ -388,13 +388,13 @@ TNS2_data <- pearson_extract(gene_corr_fig9,23371)
 
 tns2_mat <- TNS2_data %>% 
   column_to_rownames('rowname') %>% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %>% 
+   dplyr::select(rho_tnni,rho_ldh,rho_LD50) %>% 
   t() %>% 
   as.matrix()
 
 tns2_mat_sig <- TNS2_data %>% 
   column_to_rownames('rowname') %>% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %>% 
+   dplyr::select(sig_tnni,sig_ldh,sig_LD50) %>% 
   mutate_all(~replace(., is.na(.), 1)) %>% 
   t() %>% 
   as.matrix()
@@ -426,13 +426,13 @@ ZNF_data <- pearson_extract(gene_corr_fig9,283337)
 
 ZNF_mat <- ZNF_data %>% 
   column_to_rownames('rowname') %>% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %>% 
+   dplyr::select(rho_tnni,rho_ldh,rho_LD50) %>% 
   t() %>% 
   as.matrix()
 
 ZNF_mat_sig <- ZNF_data %>% 
   column_to_rownames('rowname') %>% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %>% 
+   dplyr::select(sig_tnni,sig_ldh,sig_LD50) %>% 
   mutate_all(~replace(., is.na(.), 1)) %>% 
   t() %>% 
   as.matrix()

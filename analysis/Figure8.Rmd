@@ -124,7 +124,7 @@ GTEXcr8z %>%
         strip.text.x = element_text(size=12,
                                     face = "bold"))#+
   # geom_text(aes(label = Label,   vjust = 1.5, position = position_fill))
-
+ggsave("output/Figures/GTEXenrich.eps",width = 4, height =8, units = "in")
 ```
 
 ## B. 24 hour DEG enrichment in reQTLs
@@ -200,7 +200,7 @@ Knowles_count <-
         strip.text.x = element_text(size=12,
                                     face = "bold"))
 
-
+ggsave("output/Figures/knowlesenrich.eps",width = 4, height =8, units = "in")
 
 ```
 
@@ -260,7 +260,7 @@ DOXeQTL_table %>%
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
-
+ggsave("output/Figures/DOXreqtls.eps",width = 4, height =8, units = "in")
 ```
 
 

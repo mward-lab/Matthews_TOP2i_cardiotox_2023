@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(
 	echo = TRUE,
 	message = FALSE,
-	warning = FALSE
+	warning = FALSE,dpi = 300
 )
 ```
 ```{r packages loading}
@@ -41,17 +41,20 @@ drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B33
 TOP2i induce a time-dependent gene expression response in cardiomyocytes  
 
 ## A. Cormotif plot unedited
-```{r Cormotif}
-plotMotif(cormotif_initial)
+```{r Cormotif, dev=c("eps","png)}
 myColors <-  rev(c("#FFFFFF", "#E6E6E6" ,"#CCCCCC", "#B3B3B3", "#999999", "#808080", "#666666","#4C4C4C", "#333333", "#191919","#000000"))
+                  
+  
+plotMotif(cormotif_initial)
 
 plot.new()
-legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4",  "0.5", "0.6", "0.7", "0.8","0.9", "1")), box.col="white",title = "Probability\nlegend", horiz=FALSE,title.cex=.8)
 
+legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4",  "0.5", "0.6", "0.7", "0.8","0.9", "1")), box.col="white",title = "Probability\nlegend", horiz=FALSE,title.cex=.8)
+ 
 ```
 ## B. Pie chart of motifs
 
-```{r Pie chart of groups}
+```{r Pie chart of groups,fig.width = 5,fig.height =5}
 Set <- c("Early Acute Response", "Time-Independent Response","Late Response", "No Response")
 gene_num <- c(487,589,5596,7409)
 fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
@@ -73,7 +76,7 @@ pie_chartdata %>%
   theme(legend.position="none") +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
   
-
+ggsave("output/Figures/piechart.eps",width = 5, height =5, units = "in")
 ```
 
 ## C. Average absolute value of LFC by motif
@@ -126,7 +129,7 @@ mean_lfc %>%
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 
-
+ggsave("output/Figures/mean_lfc_motif.eps", units = "in")
 
 ```
 

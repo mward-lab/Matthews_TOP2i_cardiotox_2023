@@ -41,7 +41,7 @@ Gene expression responses to AC treatments converge over time
 ## A. Differentially expressed genes by treatment
 
 
-```{r DEG}
+```{r DEG, fig.width=6, fig.height=4}
 drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
 drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
 
@@ -78,8 +78,7 @@ toplistall %>%
         axis.text.x = element_text(size = 8, color = "white", angle = 0),
         axis.text.y = element_text(size = 8, color = "black", angle = 0),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
-
-
+ggsave("output/Figures/Percent_DEG.eps",width = 6, height =4, units = "in")
 ```
 
 
@@ -88,7 +87,7 @@ toplistall %>%
 ## B. Fold change correlation across all expressed genes n=14084
 
 
-```{r corrFC, fig.height=5,fig.width=6}
+```{r corrFC, fig.height=5,fig.width=7}
 efit2 <- readRDS("data/efit2_final.RDS")
 FCmatrix <- subset(efit2$coefficients)
 is.matrix(subset(FCmatrix))
@@ -116,7 +115,7 @@ ComplexHeatmap::pheatmap(corrFC,
                          fontsize_col = 8,
                          treeheight_col = 20)
 
-
+ggsave("output/Figures/FC_cor_plot.eps",width = 7, height =5, units = "in")
 ```
 
 
@@ -154,7 +153,7 @@ ggVennDiagram::ggVennDiagram(total3,
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5, vjust =1),
         plot.caption=element_text(size=12))
 
-
+ggsave("output/Figures/3_hrvenn.eps")
 ```
 
 
@@ -193,7 +192,7 @@ ggVennDiagram::ggVennDiagram(total24,
   
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1),
         plot.caption=element_text(size=12))
-
+ggsave("output/Figures/24_hrvenn.eps")
 
 ```
 
@@ -263,13 +262,13 @@ Heatmap(kegg_mat,
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
   
-
+ggsave("output/Figures/Kegg_path.eps")
 ```
 
 
 ## F. Log~2~ cpm of *CDKN1a*
 
-```{r cdk1a cpm}
+```{r cdk1a cpm, fig.height=3, fig.width=6}
 
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
   ##GOI needs to be ENTREZID
@@ -318,7 +317,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
 
 cpm_boxplot(cpmcounts,GOI='1026',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("CDKN1A")~log[2]~"cpm "))))
-
+ggsave("output/Figures/CDKN1a_cpm.eps",width = 6, height =3, units = "in")
 
 ```
 
