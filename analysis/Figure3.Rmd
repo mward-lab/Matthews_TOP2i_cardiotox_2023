@@ -20,22 +20,19 @@ knitr::opts_chunk$set(
 ```{r packages loading}
 library(car)
 library(tidyverse)
-library(tinytex)
 library(BiocGenerics)
 library(data.table)
-library(drc)
 library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
 
 ```
+
 ```{r loading dataframes}
 
 
-
 level_order2 <- c('75','87','77','79','78','71')
-
 
 drug_palexpand <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","purple3","darkgreen", "darkblue")
 #named colors: dark pink,Red,yellow,blue, dark grey, green(green is always control, may need to move pal around)
@@ -47,11 +44,11 @@ clamp_summary <- readRDS("data/clamp_summary.RDS")
 
 
 
-# Figure 3
+# Figure 2
 
 Calcium dysregulation occurs at sub-lethal concentrations of TOP2i
 
-## A. Representative line graph
+## A. Representative line graph of individual 3
 ```{r function}
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
@@ -125,20 +122,18 @@ Line_plot3<- ggplot(df_77forplot, aes(x=Xaxis, y= Intensity, group=drug))+
     strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
  Line_plot3   
+ nlLine_plot3 <- Line_plot3+theme(legend.position = "none")
 ```
 
 
 ## B. Mean amplitude
 ```{r Mean_amp, fig.width=6, fig.height=4}
 
-
-
 MA_plot <- clamp_summary %>% 
-  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  dplyr::select(Drug,Conc,indv,Mean_Amplitude) %>%
   ggplot(.,aes(Drug,Mean_Amplitude))+
   geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
-  # guides(size = "none",alpha="none",colour = guide_legend(override.aes = list(size=2, alpha= 0.5)))+
   guides(size = "none",alpha="none",colour = "none")+
   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
   geom_signif(comparisons = list(c("VEH","TRZ"),
@@ -149,18 +144,17 @@ MA_plot <- clamp_summary %>%
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
-              textsize = 4)+
-  ylab("a.u.")+
+              textsize = 3)+
+  ylab( "a.u.")+
   xlab(" ")+
   ggtitle("Mean amplitude")+
   theme_classic()+
-  theme(plot.title = element_text(size=14,hjust = 0.5),
-    axis.title = element_text(size = 10, color = "black"),
-    axis.ticks = element_line(linewidth = 1),
-    axis.line = element_line(linewidth = 1),
-    axis.text = element_text(size = 10, color = "black", angle = 0),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"))
-
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 MA_plot
 
 
@@ -171,11 +165,11 @@ MA_plot
 ```{r rising slope, fig.width=6, fig.height=4}
 
 RS_plot <- clamp_summary %>%
-  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  dplyr::select(Drug,Conc,indv,Rise_Slope) %>%
   ggplot(.,aes(Drug,Rise_Slope))+
   geom_boxplot(position = "identity", fill= drug_pal_fact)+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
-  # guides(size = "none",alpha="none",colour = guide_legend(override.aes = list(size=2, alpha= 0.5)))+
   guides(size = "none",alpha="none",colour = "none")+
   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
   geom_signif(comparisons = list(c("VEH","TRZ"),
@@ -186,17 +180,18 @@ RS_plot <- clamp_summary %>%
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
-              textsize = 4)+
+              textsize = 3)+
   ylab("a.u./ sec")+
   xlab(" ")+
   theme_classic()+
   ggtitle("Rising slope")+
- theme(plot.title = element_text(size=14,hjust = 0.5),
-    axis.title = element_text(size = 10, color = "black"),
-    axis.ticks = element_line(linewidth = 1),
-    axis.line = element_line(linewidth = 1),
-    axis.text = element_text(size = 10, color = "black", angle = 0),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+ theme_classic()+
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 RS_plot
 
@@ -206,11 +201,10 @@ RS_plot
 
 ```{r Decay slope, fig.width=6, fig.height=4}
 Decay_plot <- clamp_summary %>%
-  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  dplyr::select(Drug,Conc,indv,Decay_Slope) %>%
   ggplot(.,aes(Drug,Decay_Slope))+
   geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
-  # guides(size = "none",alpha="none",colour = guide_legend(override.aes = list(size=2, alpha= 0.5)))+
   guides(size = "none",alpha="none",colour = "none")+
   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
   geom_signif(comparisons = list(c("VEH","TRZ"),
@@ -221,17 +215,18 @@ Decay_plot <- clamp_summary %>%
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
-              textsize = 4)+
+              textsize = 3)+
   ylab("a.u.")+
   xlab(" ")+
   theme_classic()+
   ggtitle("Decay slope")+
-  theme(plot.title = element_text(size=14,hjust = 0.5),
-    axis.title = element_text(size = 10, color = "black"),
-    axis.ticks = element_line(linewidth = 1),
-    axis.line = element_line(linewidth = 1),
-    axis.text = element_text(size = 10, color = "black", angle = 0),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+  theme_classic()+
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 Decay_plot
 
@@ -242,16 +237,14 @@ Decay_plot
 ## E. Full-width at half-max
 ```{r FWHM, fig.width=6, fig.height=4}
 
-
-
 FWHM_plot <- clamp_summary %>%
-  dplyr::select(Drug,Conc,indv,Mean_Amplitude,FWHM,Rise_Slope,Decay_Slope) %>%
+  dplyr::select(Drug,Conc,indv,FWHM) %>%
   ggplot(.,aes(Drug,FWHM))+
   geom_boxplot(position = "identity", fill= drug_pal_fact)+
- geom_point(aes(col=indv, size=2, alpha=0.5))+
-  # guides(size = "none",alpha="none",colour = guide_legend(override.aes = list(size=2, alpha= 0.5)))+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
   guides(size = "none",alpha="none",colour = "none")+
-  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  scale_color_brewer(palette = "Dark2", name = "Individual", 
+                     label=c("2","3","5"))+
   geom_signif(comparisons = list(c("VEH","TRZ"),
                                  c("VEH","MTX"),
                                  c( "VEH","DNR"),
@@ -260,17 +253,18 @@ FWHM_plot <- clamp_summary %>%
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
-              textsize = 4)+
+              textsize = 3)+
   ylab("a.u.")+
   xlab(" ")+
   theme_classic()+
   ggtitle("Full-width at half-max")+
-  theme(plot.title = element_text(size=14,hjust = 0.5),
-    axis.title = element_text(size = 10, color = "black"),
-    axis.ticks = element_line(linewidth = 1),
-    axis.line = element_line(linewidth = 1),
-    axis.text = element_text(size = 10, color = "black", angle = 0),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+  theme_classic()+
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 
 FWHM_plot
@@ -285,7 +279,7 @@ FWHM_plot
 ```{r  Contract_rate, fig.width=6, fig.height=4}
 
 BR_plot <- calcium_data %>% 
-  dplyr::select(Drug,Conc,indv,Rate) %>%#Peak_variance,Ave_FF0,
+  dplyr::select(Drug,Conc,indv,Rate) %>%
   mutate(indv=substr(indv,1,2)) %>%
   mutate(indv=factor(indv, levels = level_order2)) %>%
   mutate(contrl= 0.383) %>%
@@ -294,7 +288,7 @@ BR_plot <- calcium_data %>%
   ggplot(., aes(x=Drug, y=Rate))+
   geom_boxplot(position = "identity", fill= drug_pal_fact)+
   geom_point(aes(col=indv, size=2, alpha=0.5))+
-  guides(size = "none",alpha="none",colour = guide_legend(override.aes = list(size=5, alpha= 0.5)))+
+  guides(size = "none",alpha="none",colour = guide_legend(override.aes = list(alpha= 0.5)))+
   # guides(size = "none",alpha="none",colour = "none")+
   scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
   geom_signif(comparisons = list(c("VEH","TRZ"),
@@ -305,18 +299,17 @@ BR_plot <- calcium_data %>%
               test = "t.test",
               map_signif_level = TRUE,
               step_increase = 0.1,
-              textsize = 4)+
+              textsize = 3)+
   ylab("avg. beats/sec")+
   xlab(" ")+
   ggtitle("Contraction rate")+
   theme_classic()+
-  theme(plot.title = element_text(size=14,hjust = 0.5),
-    axis.title = element_text(size = 10, color = "black"),
-    axis.ticks = element_line(linewidth = 1),
-    legend.direction = "horizontal", legend.position = "bottom",
-    axis.line = element_line(linewidth = 1),
-    axis.text = element_text(size = 10, color = "black", angle = 0),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12 ,color = "black", face = "bold"))
 
 
 BR_plot
@@ -333,7 +326,7 @@ legend <- get_legend(BR_plot)
 k_means <- read.csv("data/K_cluster_kisthree.csv")
 
 
-k_means %>% mutate(Drug =case_match(Drug_Name,
+PCA_calciumplot <- k_means %>% mutate(Drug =case_match(Drug_Name,
                                     "Dau_0.5"~"DNR",
                                     "Dau_0.5.1" ~"DNR",
                                     "Dau_0.5.2" ~"DNR",
@@ -372,7 +365,9 @@ k_means %>% mutate(Drug =case_match(Drug_Name,
         axis.ticks = element_line(size = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-
+PCA_calciumplot 
+legend2 <- get_legend(PCA_calciumplot)
+PCA2 <- PCA_calciumplot+theme(legend.position = "none")
  ggsave("output/Figures/calciumPCA.eps")
 ```
 
@@ -381,13 +376,13 @@ k_means %>% mutate(Drug =case_match(Drug_Name,
 ```{r making full image, fig.width =16, fig.height=8}
 library(cowplot)
 # align all plots
-plots <- align_plots(Line_plot3, MA_plot, RS_plot,Decay_plot,FWHM_plot,BR_plot2,align='v',axis='l')
+plots <- align_plots(MA_plot, RS_plot,Decay_plot,FWHM_plot,BR_plot2,align='v',axis='l')
 ##make bottom row
- bottom_row <- plot_grid(plots[[4]],plots[[5]],plots[[6]], nrow =1)
+ bottom_row <- plot_grid(plots[[1]],plots[[2]],plots[[3]], plots[[4]],plots[[5]],legend,nrow=1, rel_widths = c(1,1,1,1,1,0.2))
 # put together
-top_row <- plot_grid(plots[[1]],plots[[2]],plots[[3]], nrow =1)
-middle_row <- plot_grid(legend, nrow=1, scale=4)
-test <- plot_grid(top_row, middle_row, bottom_row, ncol=1, rel_heights = c(1,.1,1), scale=c(1,4,1))
+top_row <- plot_grid(nlLine_plot3,legend2,PCA2, rel_widths=c(1,.2,1), nrow=1)
+# middle_row <- plot_grid(legend, nrow=1, scale=4)
+test <- plot_grid(top_row, bottom_row, ncol=1, rel_heights = c(2,1), rel_widths=c(1,1))
 
 test
 
