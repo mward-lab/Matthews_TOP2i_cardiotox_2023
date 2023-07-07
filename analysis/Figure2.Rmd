@@ -31,7 +31,7 @@ library(broom)
 Minimal cellular stress is induced following 24 hours of treatment
 
 ## A. Lactate dehydrogenase release at 24 hours
-```{r LDH,data load}
+```{r LDH,data load, fig.height=4, fig.width=6}
 drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 
 level_order2 <- c('75','87','77','79','78','71')
@@ -75,12 +75,12 @@ RNAnormlist %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-
+ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
 ```
 ## C. Troponin I release
 
 
-```{r troponin_24}
+```{r troponin_24, fig.height=4, fig.width=6}
 
 
 RNAnormlist %>% 
@@ -118,5 +118,5 @@ RNAnormlist %>%
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-
+ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
 ```
