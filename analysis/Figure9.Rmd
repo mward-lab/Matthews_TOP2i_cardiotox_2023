@@ -141,7 +141,6 @@ cpm_boxplot24h <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       theme_bw()+
       ylab(ylab)+
       xlab("")+
-      xlab("")+
       ggtitle("24 hours")+
       theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
           plot.title = element_text(size=12,hjust = 0.5,face="bold"),
