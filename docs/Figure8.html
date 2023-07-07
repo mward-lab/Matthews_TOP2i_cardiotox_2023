@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-06" />
+<meta name="date" content="2023-07-07" />
 
 <title>Figure 8</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Figure 8</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-06</h4>
+<h4 class="date">2023-07-07</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-06
+<strong>Last updated:</strong> 2023-07-07
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee1bb08436520cd80e4083c7ce1bad87999fd8c23targetblanke1bb084a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree5930353189caf135571cb1cc4c869012bdb659b4targetblank5930353a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e1bb08436520cd80e4083c7ce1bad87999fd8c23" target="_blank">e1bb084</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/5930353189caf135571cb1cc4c869012bdb659b4" target="_blank">5930353</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee1bb08436520cd80e4083c7ce1bad87999fd8c23targetblanke1bb084a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree5930353189caf135571cb1cc4c869012bdb659b4targetblank5930353a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e1bb08436520cd80e4083c7ce1bad87999fd8c23" target="_blank">e1bb084</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/5930353189caf135571cb1cc4c869012bdb659b4" target="_blank">5930353</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -611,6 +611,8 @@ Ignored files:
     Ignored:    data/avgLD50.RDS
     Ignored:    data/avg_LD50.RDS
     Ignored:    data/backGL.txt
+    Ignored:    data/calcium_data.RDS
+    Ignored:    data/clamp_summary.RDS
     Ignored:    data/cormotif_3hk1-8.RDS
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
@@ -714,6 +716,7 @@ Untracked files:
     Untracked:  output/DNRvenn.RDS
     Untracked:  output/DOXvenn.RDS
     Untracked:  output/EPIvenn.RDS
+    Untracked:  output/Figures/
     Untracked:  output/MTXvenn.RDS
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
@@ -732,8 +735,6 @@ Untracked files:
 Unstaged changes:
     Modified:   Cardiotoxicity.Rproj
     Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/Figure1.Rmd
-    Modified:   analysis/Figure9.Rmd
     Modified:   analysis/GOI_plots.Rmd
     Modified:   analysis/Supplementary_figures.Rmd
     Modified:   analysis/other_analysis.Rmd
@@ -795,6 +796,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/63d054a344b51dddc68801e0f2bf7a7ba89076b7/analysis/Figure8.Rmd" target="_blank">63d054a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+<td>
+Various changes to graphs. pending Monday-renames
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/fa1dc6877ff25869444bc92a9e3901d228400d00/docs/Figure8.html" target="_blank">fa1dc68</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1013,7 +1048,8 @@ GTEXcr8z %&gt;%
         strip.text.x = element_text(size=12,
                                     face = &quot;bold&quot;))#+</code></pre>
 <p><img src="figure/Figure8.Rmd/GTEx%20enrich-1.png" width="768" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>  # geom_text(aes(label = Label,   vjust = 1.5, position = position_fill))</code></pre>
+<pre class="r"><code>  # geom_text(aes(label = Label,   vjust = 1.5, position = position_fill))
+ggsave(&quot;output/Figures/GTEXenrich.eps&quot;,width = 4, height =8, units = &quot;in&quot;)</code></pre>
 </div>
 <div id="b.-24-hour-deg-enrichment-in-reqtls" class="section level2">
 <h2>B. 24 hour DEG enrichment in reQTLs</h2>
@@ -1087,6 +1123,7 @@ Knowles_count &lt;-
         strip.text.x = element_text(size=12,
                                     face = &quot;bold&quot;))</code></pre>
 <p><img src="figure/Figure8.Rmd/reQTLenrich-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;output/Figures/knowlesenrich.eps&quot;,width = 4, height =8, units = &quot;in&quot;)</code></pre>
 </div>
 <div id="c.-doxreqtls-strongly-overlap-other-ac-drugs"
 class="section level2">
@@ -1144,6 +1181,7 @@ DOXeQTL_table %&gt;%
         axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
         strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
 <p><img src="figure/Figure8.Rmd/DOXreQTLs%20across%20other%20treatments-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;output/Figures/DOXreqtls.eps&quot;,width = 4, height =8, units = &quot;in&quot;)</code></pre>
 </div>
 <div id="d.-only-one-doxreqtl-is-associated-with-dox-specific-degs"
 class="section level2">
@@ -1224,20 +1262,21 @@ other attached packages:
 [16] tidyverse_2.0.0     workflowr_1.7.0    
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.2.0 xfun_0.39        bslib_0.5.0      colorspace_2.1-0
- [5] vctrs_0.6.3      generics_0.1.3   htmltools_0.5.5  yaml_2.3.7      
- [9] utf8_1.2.3       rlang_1.1.1      jquerylib_0.1.4  later_1.3.1     
-[13] pillar_1.9.0     glue_1.6.2       withr_2.5.0      lifecycle_1.0.3 
-[17] munsell_0.5.0    gtable_0.3.3     evaluate_0.21    labeling_0.4.2  
-[21] knitr_1.43       callr_3.7.3      tzdb_0.4.0       fastmap_1.1.1   
-[25] httpuv_1.6.11    ps_1.7.5         fansi_1.0.4      highr_0.10      
-[29] Rcpp_1.0.10      backports_1.4.1  promises_1.2.0.1 scales_1.2.1    
-[33] cachem_1.0.8     jsonlite_1.8.5   farver_2.1.1     fs_1.6.2        
-[37] hms_1.1.3        digest_0.6.31    stringi_1.7.12   processx_3.8.1  
-[41] getPass_0.2-2    rprojroot_2.0.3  grid_4.2.2       cli_3.6.1       
-[45] tools_4.2.2      magrittr_2.0.3   sass_0.4.6       whisker_0.4.1   
-[49] pkgconfig_2.0.3  timechange_0.2.0 rmarkdown_2.22   httr_1.4.6      
-[53] rstudioapi_0.14  R6_2.5.1         git2r_0.32.0     compiler_4.2.2  </code></pre>
+ [1] Rcpp_1.0.10       getPass_0.2-2     ps_1.7.5          rprojroot_2.0.3  
+ [5] digest_0.6.31     utf8_1.2.3        R6_2.5.1          backports_1.4.1  
+ [9] evaluate_0.21     highr_0.10        httr_1.4.6        pillar_1.9.0     
+[13] rlang_1.1.1       rstudioapi_0.14   whisker_0.4.1     callr_3.7.3      
+[17] jquerylib_0.1.4   rmarkdown_2.22    textshaping_0.3.6 labeling_0.4.2   
+[21] munsell_0.5.0     compiler_4.2.2    httpuv_1.6.11     xfun_0.39        
+[25] pkgconfig_2.0.3   systemfonts_1.0.4 htmltools_0.5.5   tidyselect_1.2.0 
+[29] fansi_1.0.4       tzdb_0.4.0        withr_2.5.0       later_1.3.1      
+[33] grid_4.2.2        jsonlite_1.8.5    gtable_0.3.3      lifecycle_1.0.3  
+[37] git2r_0.32.0      magrittr_2.0.3    scales_1.2.1      cli_3.6.1        
+[41] stringi_1.7.12    cachem_1.0.8      farver_2.1.1      fs_1.6.2         
+[45] promises_1.2.0.1  bslib_0.5.0       ragg_1.2.5        generics_0.1.3   
+[49] vctrs_0.6.3       tools_4.2.2       glue_1.6.2        hms_1.1.3        
+[53] processx_3.8.1    fastmap_1.1.1     yaml_2.3.7        timechange_0.2.0 
+[57] colorspace_2.1-0  knitr_1.43        sass_0.4.6       </code></pre>
 </div>
 </div>
 </div>

@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-06" />
+<meta name="date" content="2023-07-07" />
 
 <title>Figure 9</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Figure 9</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-06</h4>
+<h4 class="date">2023-07-07</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-06
+<strong>Last updated:</strong> 2023-07-07
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6a6c9af95e01c820386d7541c19d25b7bb7414e6targetblank6a6c9afa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree5930353189caf135571cb1cc4c869012bdb659b4targetblank5930353a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6a6c9af95e01c820386d7541c19d25b7bb7414e6" target="_blank">6a6c9af</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/5930353189caf135571cb1cc4c869012bdb659b4" target="_blank">5930353</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6a6c9af95e01c820386d7541c19d25b7bb7414e6targetblank6a6c9afa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree5930353189caf135571cb1cc4c869012bdb659b4targetblank5930353a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6a6c9af95e01c820386d7541c19d25b7bb7414e6" target="_blank">6a6c9af</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/5930353189caf135571cb1cc4c869012bdb659b4" target="_blank">5930353</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -611,6 +611,8 @@ Ignored files:
     Ignored:    data/avgLD50.RDS
     Ignored:    data/avg_LD50.RDS
     Ignored:    data/backGL.txt
+    Ignored:    data/calcium_data.RDS
+    Ignored:    data/clamp_summary.RDS
     Ignored:    data/cormotif_3hk1-8.RDS
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
@@ -714,6 +716,7 @@ Untracked files:
     Untracked:  output/DNRvenn.RDS
     Untracked:  output/DOXvenn.RDS
     Untracked:  output/EPIvenn.RDS
+    Untracked:  output/Figures/
     Untracked:  output/MTXvenn.RDS
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
@@ -732,7 +735,6 @@ Untracked files:
 Unstaged changes:
     Modified:   Cardiotoxicity.Rproj
     Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/Figure1.Rmd
     Modified:   analysis/GOI_plots.Rmd
     Modified:   analysis/Supplementary_figures.Rmd
     Modified:   analysis/other_analysis.Rmd
@@ -794,6 +796,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/63d054a344b51dddc68801e0f2bf7a7ba89076b7/analysis/Figure9.Rmd" target="_blank">63d054a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+<td>
+Various changes to graphs. pending Monday-renames
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/0e3d22d4141a70edaccc8f2c4f202eb9ddf36d62/docs/Figure9.html" target="_blank">0e3d22d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -886,304 +922,23 @@ adding heatmaps and plots
 </div>
 </div>
 </div>
-<pre class="r"><code>library(edgeR)
-library(tidyverse)
-library(ggsignif)
-library(RColorBrewer)
-library(cowplot)
-library(ggpubr)
-library(scales)
-library(sjmisc)
-library(kableExtra)
-library(broom)
-library(ComplexHeatmap)</code></pre>
-<pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
-siglist &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
-list2env(siglist, envir = .GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
-<pre class="r"><code>cpmcounts &lt;- readRDS(&quot;data/cpmcount.RDS&quot;)
-backGL &lt;- read.csv(&quot;data/backGL.txt&quot;,     row.names =1)
-
-drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
-drug_pal_fact &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;,&quot;#41B333&quot;)
-
-Arr_geneset &lt;- readRDS(&quot;data/Arr_geneset.RDS&quot;)
-HF_geneset &lt;- readRDS(&quot;data/HF_geneset.RDS&quot;)
-CAD_geneset &lt;- readRDS(&quot;data/CAD_geneset.RDS&quot;)
-col_fun1 = circlize::colorRamp2(c(-1, 3), c(&quot;white&quot;, &quot;purple&quot;))
-col_funFC= circlize::colorRamp2(c(-2,0, 2), c(&quot;darkgreen&quot;,&quot;white&quot;, &quot;darkorange2&quot;))</code></pre>
-<pre class="r"><code>pearson_extract &lt;- function(corr_df,ENTREZID) {
-
-
-  ld50_plot &lt;- corr_df %&gt;%
-    dplyr::filter(entrezgene_id == ENTREZID) %&gt;%
-    ggplot(., aes(x=LD50, y=counts))+
-    geom_point(aes(col=indv))+
-    geom_smooth(method=&quot;lm&quot;)+
-    facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
-    theme_classic()+
-    stat_cor(method=&quot;pearson&quot;,
-             aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
-             color = &quot;red&quot;,
-             label.x.npc = 0,
-             label.y.npc=1,
-             size = 3)
-
-  tnni_plot &lt;-  corr_df %&gt;%
-    dplyr::filter(entrezgene_id == ENTREZID) %&gt;%
-    ggplot(., aes(x=rtnni, y=counts))+
-    geom_point(aes(col=indv))+
-    geom_smooth(method=&quot;lm&quot;)+
-    facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
-    theme_classic()+
-    stat_cor(method=&quot;pearson&quot;,
-             aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
-             color = &quot;red&quot;,
-             label.x.npc = 0,
-             label.y.npc=1,
-             size = 3)
-
-  ldh_plot &lt;-   corr_df %&gt;%
-    dplyr::filter(entrezgene_id == ENTREZID) %&gt;%
-    ggplot(., aes(x=rldh, y=counts))+
-    geom_point(aes(col=indv))+
-    geom_smooth(method=&quot;lm&quot;)+
-    facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
-    theme_classic()+
-    stat_cor(method=&quot;pearson&quot;,
-             aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
-             color = &quot;red&quot;,
-             label.x.npc = 0,
-             label.y.npc=1,
-             size = 3)
-
-  ##ggbuild to get model:
-  ld50_build &lt;- ggplot_build(ld50_plot)
-  ld50_data &lt;- data.frame(&#39;rho_LD50&#39;= c(ld50_build$data[[3]]$r,NA,NA),
-                          &#39;sig_LD50&#39;=c(ld50_build$data[[3]]$p.value,NA,NA),
-                          &#39;rowname&#39;=c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;, &quot;TRZ&quot;, &quot;VEH&quot;))
-
-  tnni_build &lt;- ggplot_build(tnni_plot)
-  tnni_data &lt;- data.frame(&#39;rho_tnni&#39;= c(tnni_build$data[[3]]$r),
-                          &#39;sig_tnni&#39;=c(tnni_build$data[[3]]$p.value),
-                          &#39;rowname&#39;=c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;, &quot;TRZ&quot;, &quot;VEH&quot;))
-  ldh_build &lt;- ggplot_build(ldh_plot)
-  ldh_data &lt;- data.frame(&#39;rho_ldh&#39;= c(ldh_build$data[[3]]$r),
-                         &#39;sig_ldh&#39;=c(ldh_build$data[[3]]$p.value),
-                         &#39;rowname&#39;=c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;, &quot;TRZ&quot;, &quot;VEH&quot;))
-
-  results &lt;- cbind(ldh_data[,c(3,1:2)],tnni_data[,1:2],ld50_data[,1:2])
-
-  return(results)
-
-}
-
-
-cpm_boxplot24h &lt;-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
-  ##GOI needs to be ENTREZID
-  df &lt;- cpmcounts
-  df_plot &lt;- df %&gt;% 
-      dplyr::filter(rownames(.)==GOI) %&gt;%
-      pivot_longer(everything(),
-                   names_to = &quot;treatment&quot;,
-                   values_to = &quot;counts&quot;) %&gt;%
-      separate(treatment, c(&quot;drug&quot;,&quot;indv&quot;,&quot;time&quot;)) %&gt;%
-      mutate(time = case_match(time,&quot;24h&quot;~&quot;24 hours&quot;, &quot;3h&quot;~&quot;3 hours&quot;)) %&gt;% 
-      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %&gt;%
-      mutate(drug =case_match(drug, &quot;Da&quot;~&quot;DNR&quot;,
-                            &quot;Do&quot;~&quot;DOX&quot;,
-                            &quot;Ep&quot;~&quot;EPI&quot;,
-                            &quot;Mi&quot;~&quot;MTX&quot;,
-                            &quot;Tr&quot;~&quot;TRZ&quot;,
-                            &quot;Ve&quot;~&quot;VEH&quot;, .default = drug)) %&gt;% 
-      mutate(drug=factor(drug, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
-      dplyr::filter(time==&quot;24 hours&quot;)
-    plot &lt;- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
-      geom_boxplot(position=&quot;identity&quot;,aes(fill=drug))+
-      geom_point(aes(col=indv, size=2, alpha=0.5))+
-      guides(alpha= &quot;none&quot;, size= &quot;none&quot;)+
-      scale_color_brewer(palette = brewer_palette, guide = &quot;none&quot;)+
-      scale_fill_manual(values=fill_colors)+
-      # facet_wrap(&quot;time&quot;, nrow=1, ncol=2)+
-      theme_bw()+
-      ylab(ylab)+
-      xlab(&quot;&quot;)+
-      ggtitle(&quot;24 hours&quot;)+
-      theme(strip.background = element_rect(fill = &quot;white&quot;,linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face=&quot;bold&quot;),
-          axis.title = element_text(size = 10, color = &quot;black&quot;),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = &quot;black&quot;, size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, &quot;pt&quot;),face = &quot;bold&quot;))
-    print(plot)
-}</code></pre>
 <div id="figure-9" class="section level1">
 <h1>Figure 9</h1>
 <p>Genes in CVD and AC toxicity respond to Top2i</p>
 <div id="a.-gwas-chi-square-results" class="section level2">
 <h2>A. GWAS chi square results</h2>
-<pre class="r"><code>toplist24hr &lt;- toplistall %&gt;% 
-  filter(time==&quot;24_hours&quot;)
-chi_funarr &lt;-  toplist24hr %&gt;% 
-  mutate(id = as.factor(id)) %&gt;%
-  dplyr::filter(id!=&quot;TRZ&quot;) %&gt;% 
-  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
-  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  group_by(id) %&gt;% 
-  summarise(pvalue= chisq.test(ARR, sigcount, correct =FALSE)$p.value) 
-  
-
-chi_funhf &lt;-  toplist24hr %&gt;% 
-  mutate(id = as.factor(id)) %&gt;%
-   dplyr::filter(id!=&quot;TRZ&quot;) %&gt;% 
-  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
-  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  group_by(id) %&gt;% 
-  summarise(pvalue= chisq.test(HF, sigcount, correct =FALSE)$p.value) 
-chi_funCAD &lt;-  toplist24hr %&gt;% 
-  mutate(id = as.factor(id)) %&gt;%
-  dplyr::filter(id!=&quot;TRZ&quot;) %&gt;% 
-  mutate(sigcount = if_else(adj.P.Val &lt;0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
-  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  group_by(id) %&gt;% 
-  summarise(pvalue= chisq.test(CAD, sigcount, correct =FALSE)$p.value) 
-
-HFmat &lt;- chi_funhf %&gt;% ungroup() %&gt;% 
-  mutate(HF= log(pvalue)*(-1)) %&gt;% 
-  dplyr::select(id,HF) %&gt;% 
-  column_to_rownames(&quot;id&quot;)
-
-ARRmat &lt;- chi_funarr %&gt;% ungroup() %&gt;% 
-  mutate(ARR= log(pvalue)*(-1)) %&gt;% 
-  dplyr::select(id,ARR) %&gt;% 
-  column_to_rownames(&quot;id&quot;)
-
-
-CADmat &lt;- chi_funCAD %&gt;% ungroup() %&gt;% 
-  mutate(CAD= -log(pvalue)) %&gt;% 
-  dplyr::select(id,CAD) %&gt;% 
-  column_to_rownames(&quot;id&quot;)
-
-GWASmat &lt;- bind_cols(CADmat$CAD,HFmat$HF,ARRmat$ARR) 
-colnames(GWASmat) &lt;- c(&#39;CAD&#39;,&#39;HF&#39;,&#39;ARR&#39;)
-rownames(GWASmat) &lt;- c(&#39;DNR&#39;,&#39;DOX&#39;,&#39;EPI&#39;,&#39;MTX&#39;)
-
- Heatmap(as.matrix(GWASmat), name = &quot;GWAS chi square\n -log p values&quot;, 
-         cluster_rows = FALSE, 
-         column_title = &#39;This is for GWAS 24 hours -log(chi square pvalue)&#39;, 
-         cluster_columns = FALSE,
-         row_names_side = &#39;left&#39;,
-         column_names_rot = 0, col_fun1,
-         cell_fun = function(j, i, x, y, width, height, fill) {
-        if(GWASmat[i, j] &gt; -log(0.05))
-            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-})</code></pre>
 <p><img src="figure/Figure9.Rmd/GWAS%20enrichment-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="b.-gwas-and-twas-associated-genes" class="section level2">
 <h2>B. GWAS and TWAS associated genes</h2>
-<pre class="r"><code>GWAS_goi &lt;- read.csv(&quot;output/GWAS_goi.csv&quot;,row.names = 1)
-##get the abs FC of all GOI
-GWASabsFCsig &lt;- 
-  toplistall %&gt;% 
-  mutate(id = as.factor(id)) %&gt;%
-  filter(id !=&quot;TRZ&quot;) %&gt;%
-  filter(ENTREZID %in% GWAS_goi$entrezgene_id) %&gt;% 
-   filter(time ==&quot;24_hours&quot;) %&gt;% 
-  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %&gt;%
-  pivot_wider(id_cols=id, 
-              names_from = SYMBOL, 
-              values_from =adj.P.Val)
-  
-gwas_sig_mat &lt;- GWASabsFCsig %&gt;% 
-   column_to_rownames(var=&quot;id&quot;) %&gt;%
-  as.matrix()
- 
-
-GWASabsFC &lt;- toplistall %&gt;% 
-  mutate(id = as.factor(id)) %&gt;%
-  filter(id !=&quot;TRZ&quot;) %&gt;% 
-  filter(time==&quot;24_hours&quot;) %&gt;% 
-  mutate(logFC= logFC*(-1)) %&gt;%
-  filter(ENTREZID %in% GWAS_goi$entrezgene_id) %&gt;% 
-  dplyr::select(SYMBOL ,time, id, logFC) %&gt;% 
-  pivot_wider(id_cols=id, 
-              names_from = SYMBOL, 
-              values_from = logFC) %&gt;% 
-  column_to_rownames(var=&quot;id&quot;) %&gt;%
-  as.matrix()
-# col_study_fun = circlize::colorRamp2(c(0, 5, 10), c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))
-# col_study_motif=circlize::colorRamp2(c(1,2,3,4), c(&quot;#7CAE00&quot;, &quot;#C77CFF&quot;))
- 
-study_anno &lt;- data.frame(Study=c(&quot;GWAS&quot;,&quot;GWAS&quot;,&quot;TWAS&quot;,&quot;TWAS&quot;,&quot;GWAS&quot;,&quot;GWAS&quot;,&quot;GWAS&quot;,&quot;TWAS&quot;),motif=c(rep(&quot;LR&quot;,7),&quot;NR&quot;))
-rownames(study_anno) &lt;- colnames(GWASabsFC)
-ht &lt;- HeatmapAnnotation(df = study_anno,
-              col = list(Study=c(&quot;GWAS&quot;=&quot;darkorange&quot;,&quot;TWAS&quot;= &quot;blueviolet&quot;),motif = c(&quot;LR&quot;=&quot;#7CAE00&quot;,&quot;NR&quot;=&quot;#C77CFF&quot;)))
-
-
-Heatmap(GWASabsFC, name = &quot;Fold change\nvalues&quot;, 
-         cluster_rows = FALSE,
-        cluster_columns = FALSE, 
-        row_names_side = &quot;left&quot;,
-        col = col_funFC,
-        row_order = c(&#39;DOX&#39;,&#39;DNR&#39;,&#39;EPI&#39;, &#39;MTX&#39;),
-        column_title = &quot;Fold change values of GWAS and TWAS genes&quot;, 
-        column_title_side = &quot;top&quot;,
-        column_title_gp = gpar(fontsize = 16, fontface = &quot;bold&quot;),
-        column_order= c(&#39;RARG&#39;,
-                        &#39;TNS2&#39;, 
-                        &#39;ZNF740&#39;,
-                        &#39;SLC28A3&#39;,
-                        &#39;RMI1&#39;,
-                        &#39;EEF1B2&#39;,
-                        &#39;FRS2&#39;, 
-                        &#39;HDDC2&#39;),
-        bottom_annotation = ht,
-        
-        column_names_rot = 0, 
-        column_names_gp = gpar(fontsize = 12,fontface=&quot;italic&quot;),
-        column_names_centered = TRUE,
-         cell_fun = function(j, i, x, y, width, height, fill) {
-        if(gwas_sig_mat[i, j] &lt;0.05)
-            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-})</code></pre>
 <p><img src="figure/Figure9.Rmd/GWAS-TWAS%20FC%20heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="c.-rarg-expression-and-correlation-to-tnni-ld50-and-ldh-values"
 class="section level2">
 <h2>C. RARG expression and correlation to TNNI, LD50, and LDH
 values</h2>
-<pre class="r"><code>cpm_boxplot24h(cpmcounts,GOI=&#39;5916&#39;,&quot;Dark2&quot;,drug_pal_fact,
-  ylab=(expression(atop(&quot; &quot;,italic(&quot;RARG&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
 <p><img src="figure/Figure9.Rmd/rarg%20data-1.png" width="384" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>gene_corr_fig9 &lt;- readRDS(&quot;output/gene_corr_fig9.RDS&quot;)
-RARG_data &lt;- pearson_extract(gene_corr_fig9,5916)
-
-rarg_mat &lt;- RARG_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-
-rarg_mat_sig &lt;- RARG_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %&gt;% 
-  mutate_all(~replace(., is.na(.), 1)) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-col_funfinal= circlize::colorRamp2(c(-1,0, 1), c(&quot;#b35806&quot;,&quot;white&quot;, &quot;#542788&quot;))
-Heatmap(rarg_mat, name = &quot;correlation value&quot;,
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        column_names_rot = 0,
-        column_names_centered = TRUE,
-        col=col_funfinal,
-        na_col = &quot;lightgrey&quot;,
-        cell_fun = function(j, i, x, y, width, height, fill) {
-           if(rarg_mat_sig[i, j]&lt;0.05)
-            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-          })</code></pre>
 <p><img src="figure/Figure9.Rmd/RARG%20corrdata-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div
@@ -1191,68 +946,14 @@ id="d.-slc28a3-expression-and-correlation-to-tnni-ld50-and-ldh-values"
 class="section level2">
 <h2>D. SLC28A3 expression and correlation to TNNI, LD50, and LDH
 values</h2>
-<pre class="r"><code>cpm_boxplot24h(cpmcounts,GOI=&#39;64078&#39;,&quot;Dark2&quot;,drug_pal_fact,
-  ylab=(expression(atop(&quot; &quot;,italic(&quot;SLC28A3&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
-<p><img src="figure/Figure9.Rmd/SLC%20data-1.png" width="384" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>SLC_data &lt;- pearson_extract(gene_corr_fig9,64078)
-
-slc_mat &lt;- SLC_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-
-slc_mat_sig &lt;- SLC_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %&gt;% 
-  mutate_all(~replace(., is.na(.), 1)) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-Heatmap(slc_mat, name = &quot;correlation value&quot;,
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        column_names_rot = 0,
-        column_names_centered = TRUE,
-        na_col = &quot;lightgrey&quot;,
-        col=col_funfinal,
-        cell_fun = function(j, i, x, y, width, height, fill) {
-           if(slc_mat_sig[i, j]&lt;0.05)
-            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-          })</code></pre>
-<p><img src="figure/Figure9.Rmd/SCL%20cor%20data-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Figure9.Rmd/SLC%20data-1.png" width="384" style="display: block; margin: auto;" />
+<img src="figure/Figure9.Rmd/SCL%20cor%20data-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div id="e.-tns2-expression-and-correlation-to-tnni-ld50-and-ldh-values"
 class="section level2">
 <h2>E. TNS2 expression and correlation to TNNI, LD50, and LDH
 values</h2>
-<pre class="r"><code>cpm_boxplot24h(cpmcounts,GOI=&#39;23371&#39;,&quot;Dark2&quot;,drug_pal_fact,
-  ylab=(expression(atop(&quot; &quot;,italic(&quot;TNS2&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
 <p><img src="figure/Figure9.Rmd/TNS2%20data-1.png" width="384" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>TNS2_data &lt;- pearson_extract(gene_corr_fig9,23371)
-
-tns2_mat &lt;- TNS2_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-
-tns2_mat_sig &lt;- TNS2_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %&gt;% 
-  mutate_all(~replace(., is.na(.), 1)) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-Heatmap(tns2_mat, name = &quot;correlation value&quot;,
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        column_names_rot = 0,
-        column_names_centered = TRUE,
-        col=col_funfinal,
-        na_col = &quot;lightgrey&quot;,
-        cell_fun = function(j, i, x, y, width, height, fill) {
-           if(tns2_mat_sig[i, j]&lt;0.05)
-            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-          })</code></pre>
 <p><img src="figure/Figure9.Rmd/TNS2%20cor%20data-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div
@@ -1260,34 +961,7 @@ id="f.-znf740-expression-and-correlation-to-tnni-ld50-and-ldh-values"
 class="section level2">
 <h2>F. ZNF740 expression and correlation to TNNI, LD50, and LDH
 values</h2>
-<pre class="r"><code>cpm_boxplot24h(cpmcounts,GOI=&#39;283337&#39;,&quot;Dark2&quot;,drug_pal_fact,
-  ylab=(expression(atop(&quot; &quot;,italic(&quot;ZNF740&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
 <p><img src="figure/Figure9.Rmd/ZNF740%20data-1.png" width="384" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ZNF_data &lt;- pearson_extract(gene_corr_fig9,283337)
-
-ZNF_mat &lt;- ZNF_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(rho_tnni,rho_ldh,rho_LD50,) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-
-ZNF_mat_sig &lt;- ZNF_data %&gt;% 
-  column_to_rownames(&#39;rowname&#39;) %&gt;% 
-  select(sig_tnni,sig_ldh,sig_LD50,) %&gt;% 
-  mutate_all(~replace(., is.na(.), 1)) %&gt;% 
-  t() %&gt;% 
-  as.matrix()
-Heatmap(ZNF_mat, name = &quot;correlation value&quot;,
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        column_names_rot = 0,
-        column_names_centered = TRUE,
-        col=col_funfinal,
-        na_col = &quot;lightgrey&quot;,
-        cell_fun = function(j, i, x, y, width, height, fill) {
-           if(ZNF_mat_sig[i, j]&lt;0.05)
-            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-          })</code></pre>
 <p><img src="figure/Figure9.Rmd/ZNF%20cor%20data-1.png" width="768" style="display: block; margin: auto;" /></p>
 <br>
 <p>
@@ -1297,7 +971,6 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.2.2 (2022-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
