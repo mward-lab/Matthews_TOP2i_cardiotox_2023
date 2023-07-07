@@ -91,7 +91,7 @@ RNAnormlist %>%
                                           "TRZ",
                                           "VEH"))) %>%
  mutate(indv= factor(indv,levels= level_order2)) %>% 
-  ggplot(., aes(x=Drug, y=rldh))+
+  ggplot(., aes(x=Drug, y=rtnni))+
   geom_boxplot(position = "identity", fill = drug_pal_fact)+
   geom_point(aes(col=indv, size =3,alpha=0.5))+
   geom_signif(comparisons =list(c("VEH","DOX"),
