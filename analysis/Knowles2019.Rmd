@@ -60,7 +60,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       ylab(ylab)+
       xlab("")+
       theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          plot.title = element_text(size=10,hjust = 0.5,face="bold"),
           axis.title = element_text(size = 10, color = "black"),
           axis.ticks = element_line(linewidth = 1.0),
           axis.line = element_line(linewidth = 1.0),
@@ -417,8 +417,8 @@ Knowles_count <-
   mutate(K4_n= 417-K4_y, K5_n=273-K5_y) %>% 
   pivot_longer(!c(time,id), names_to='QTL',values_to="gene_count") %>%
   separate(QTL,into=c("QTL_type",'group'),sep = '_') %>%  
-  mutate(QTL_type =case_match(QTL_type, 'K4'~'meQTLs',
-                         'K5'~'reQTLs',.default = QTL_type)) %>% 
+  mutate(QTL_type =case_match(QTL_type, 'K4'~'base\negenes',
+                         'K5'~'response\negenes',.default = QTL_type)) %>% 
   mutate(time=factor(time, levels=c("3 hrs","24 hrs"))) %>% 
   group_by(id,time,QTL_type) %>% 
   mutate(percent=gene_count/sum(gene_count)*100) %>% 
@@ -538,6 +538,7 @@ Here, I found 121 reQTLs that were related to all anthracyclines, with 31 reQTLS
   tally() %>% as.data.frame() %>% 
   pivot_wider(.,id_cols = c(id,DOXreQTLs),names_from = sigcount,values_from = n) %>% 
   dplyr::select(id,DOXreQTLs,sig) 
+
 DOXeQTL_table%>% 
   kable(., caption= "All 24 hour sigDEGs broken down by drug and DOXreQTL status") %>% 
   kable_paper("striped", full_width = FALSE) %>% 
@@ -603,7 +604,7 @@ EpionlyDEG <- venn_24h$..values..[[12]]
 DnronlyDEG <- venn_24h$..values..[[15]]
 MtxonlyDEG <- venn_24h$..values..[[8]]
   
-
+length(DoxonlyDEG)
 intersect(DoxonlyDEG,DOXreQTLs$ENTREZID)
   
 Dox24_lfc <- toplist24hr %>% 
@@ -633,8 +634,9 @@ Dox24_lfc <- toplist24hr %>%
     fill_palette(palette = drug_palc)
 toplist24hr %>% 
   dplyr::filter(ENTREZID %in% DoxonlyDEG) %>%
+  filter(adj.P.Val<0.5) %>%
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)
 
 print(Dox24_lfc)
@@ -710,7 +712,7 @@ toplist24hr %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
-    # geom_density(aes(fill=id))+
+    # geom_histogram(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all Dox specific DEG adj p. value <0.01")+
     fill_palette(palette = drug_palc)+
@@ -719,7 +721,7 @@ toplist24hr %>%
 toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()
 
@@ -729,7 +731,7 @@ toplist24hr %>%
 densityDOXsp <- toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()
 
@@ -791,7 +793,7 @@ toplist24hr %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
-    # geom_density(aes(fill=id))+
+    # geom_histogram(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all MTX specific DEG adj p. value <0.01")+
     fill_palette(palette = drug_palc)+
@@ -800,7 +802,7 @@ toplist24hr %>%
 toplist24hr %>% 
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()
 
@@ -810,7 +812,7 @@ toplist24hr %>%
 densityMTXsp <- toplist24hr %>% 
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()
 
@@ -869,7 +871,7 @@ toplist24hr %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
-    # geom_density(aes(fill=id))+
+    # geom_histogram(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all DNR specific DEG adj p. value <0.01")+
     fill_palette(palette = drug_palc)+
@@ -878,7 +880,7 @@ toplist24hr %>%
 toplist24hr %>% 
   filter(ENTREZID %in% DnronlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()
 
@@ -943,7 +945,7 @@ toplist24hr %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_histogram(aes(fill=id))+
   geom_vline(xintercept=0.01,linetype=2)+
-    # geom_density(aes(fill=id))+
+    # geom_histogram(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all DNR specific DEG adj p. value <0.01")+
     fill_palette(palette = drug_palc)+
@@ -952,7 +954,7 @@ toplist24hr %>%
 densityEPIsp <- toplist24hr %>% 
   filter(ENTREZID %in% EpionlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()
 
@@ -1052,13 +1054,15 @@ MT_sp_DEGtable %>%
 
 
 ##### Grid for supplement
+
+
 ```{r Agrid plot, eval=TRUE,echo=FALSE}
 
 
 densityDOXsp <- toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("DOX-only DEGs\n n = 379")+
@@ -1072,7 +1076,7 @@ densityDOXsp <- toplist24hr %>%
 densityDNRsp <- toplist24hr %>% 
   filter(ENTREZID %in% DnronlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("DNR-only DEGs\n n = 615")+
@@ -1086,7 +1090,7 @@ densityDNRsp <- toplist24hr %>%
 densityEPIsp <- toplist24hr %>% 
   filter(ENTREZID %in% EpionlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("EPI-only DEGs\n n = 444")+
@@ -1100,7 +1104,7 @@ densityEPIsp <- toplist24hr %>%
 densityMTXsp <- toplist24hr %>% 
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
-  geom_density(aes(fill=id, alpha= 0.8))+
+  geom_histogram(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("MTX-only DEGs\n n = 122")+
@@ -1222,4 +1226,270 @@ allfinal <- plot_grid(Doxopg,Epipg,Daunpg,mitopg,nrow=4)
 allfinal
 
 # saveRDS(allfinal,"output/allfinal_sup10.RDS")
+```
+
+
+#### 3 hour update
+
+```{r 3 hour deg sup 10}
+
+siglist <- readRDS("data/siglist_final.RDS")
+list2env(siglist,.GlobalEnv)
+total3h <-list(sigVDA3$ENTREZID,sigVDX3$ENTREZID,sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+## do venn partition and pull doxspe genes
+venn_3h <- VennDiagram::get.venn.partitions(total3h)
+Dox3onlyDEG <- venn_3h$..values..[[14]]## no genes
+Epi3onlyDEG <- venn_3h$..values..[[12]]## 8 genes
+Dnr3onlyDEG <- venn_3h$..values..[[15]]## 322
+Mtx3onlyDEG <- venn_3h$..values..[[8]] ## 16
+
+DOX3deg_sp <- toplist3hr %>% 
+  dplyr::filter(ENTREZID %in% Dox3onlyDEG) %>%
+  dplyr::filter(adj.P.Val<0.03) %>% 
+  filter(id=="DOX") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+EPI3deg_sp <- toplist3hr %>% 
+  dplyr::filter(ENTREZID %in% Epi3onlyDEG) %>%
+  dplyr::filter(adj.P.Val<0.03) %>% 
+  filter(id=="EPI") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+DNR3deg_sp <- toplist3hr %>% 
+  dplyr::filter(ENTREZID %in% Dnr3onlyDEG) %>%
+  dplyr::filter(adj.P.Val<0.03) %>% 
+  filter(id=="DNR") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+MTX3deg_sp <- toplist3hr %>% 
+  dplyr::filter(ENTREZID %in% Mtx3onlyDEG) %>%
+  dplyr::filter(adj.P.Val<0.03) %>% 
+  filter(id=="MTX") %>% 
+  dplyr::select(ENTREZID, SYMBOL)  
+
+set.seed(12345)
+sampset <- EPI3deg_sp %>% 
+  sample_n(.,2)
+
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+}
+
+set.seed(12345)
+sampset <- DNR3deg_sp %>% 
+  sample_n(.,2)
+
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+}
+set.seed(12345)
+sampset <- MTX3deg_sp %>% 
+  sample_n(.,2)
+
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_boxplot(cpmcounts,GOI=sampset[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+}
+
+```
+
+
+
+
+```{r density plot}
+toplist3hr <- toplistall %>% 
+  filter (time =="3_hours")
+
+densityDOX3sp <-
+  toplist3hr %>% 
+  filter(ENTREZID %in% Dox3onlyDEG) %>% 
+    filter(adj.P.Val<0.5) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(y = ..density.., fill = id, alpha = 0.8), bins = 120)+
+  fill_palette(palette = drug_palc)+
+  theme_bw()+
+  ylab("DOX-only 3 hour DEGs\n n = 0")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(
+      axis.title = element_text(size = 14, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
+
+densityDNR3sp <-
+  toplist3hr %>% 
+  filter(ENTREZID %in% Dnr3onlyDEG) %>% 
+     filter(adj.P.Val<0.5) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(y = ..density.., fill = id, alpha = 0.8), bins = 120)+
+    geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palc)+
+  theme_bw()+
+  ylab("DNR-only 3 hour DEGs\n n = 100")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(
+      axis.title = element_text(size = 14, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
+
+densityEPI3sp <-
+  toplist3hr %>% 
+  filter(ENTREZID %in% Epi3onlyDEG) %>% 
+   filter(adj.P.Val<0.5) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(y = ..density.., fill = id, alpha = 0.8), bins = 120)+
+    geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palc)+
+  theme_bw()+
+  ylab("EPI-only DEGs\n n = 18")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(axis.title = element_text(size = 14, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
+
+
+densityMTX3sp <-
+  toplist3hr %>% 
+  filter(ENTREZID %in% Mtx3onlyDEG) %>% 
+   filter(adj.P.Val<0.5) %>% 
+  ggplot(., aes(x=adj.P.Val))+
+  geom_histogram(aes(y = ..density.., fill = id, alpha = 0.8), bins = 120)+
+    geom_density(aes(fill=id, alpha= 0.8))+
+  fill_palette(palette = drug_palc)+
+  theme_bw()+
+  ylab("MTX-only DEGs\n n = 16")+
+  guides(fill=FALSE,alpha=FALSE)+
+  theme(axis.title = element_text(size = 14, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
+
+
+
+```
+
+
+```{r three hour fc}
+
+Dox3Bplot <- toplist3hr %>% 
+  group_by(time,id) %>% 
+  dplyr::filter(ENTREZID %in% DOX3deg_sp$ENTREZID) %>%
+  mutate(logFC=logFC*(-1)) %>% 
+  mutate("treatment" = id) %>%
+  ggplot(., aes(x= treatment, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  xlab(" ")+
+  ylab("DOX specific adj.P.V <0.03\n n = 0")+
+  theme_classic()+
+  fill_palette(palette = drug_palc)+
+  guides(fill= FALSE)+
+  theme(
+      axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+
+    
+
+
+
+Dnr3Bplot <-
+  toplist3hr %>% 
+  group_by(time,id) %>% 
+  dplyr::filter(ENTREZID %in% DNR3deg_sp$ENTREZID) %>% 
+  mutate(logFC=logFC*(-1)) %>% 
+  mutate("treatment" = id) %>%
+  ggplot(., aes(x= treatment, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  xlab(" ")+
+  ylab("DNR-spec. adj.P.V <0.03\n n = 235")+
+  theme_classic()+
+  guides(fill= FALSE)+
+  fill_palette(palette = drug_palc)+
+ theme(
+      axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
+Epi3Bplot <-
+  toplist3hr %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% EPI3deg_sp$ENTREZID) %>% 
+  mutate(logFC=logFC*(-1)) %>% 
+  mutate("treatment" = id) %>%
+  ggplot(., aes(x= treatment, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  xlab(" ")+
+  ylab("EPI-spec.adj.P.V <0.03\n n = 7")+
+  theme_classic()+
+  guides(fill= FALSE)+
+  fill_palette(palette = drug_palc)+
+   theme(axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+    
+
+Mtx3Bplot <- toplist3hr %>% 
+  group_by(time,id) %>% 
+  filter(ENTREZID %in% MtxonlyDEG) %>% 
+  mutate(logFC=logFC*(-1)) %>% 
+  mutate("treatment" = id) %>%
+  ggplot(., aes(x= treatment, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  xlab(" ")+
+  ylab("MTX-spec. adj.P.V <0.03\n n = 10")+
+  guides(fill= FALSE)+
+  theme_classic()+
+  fill_palette(palette = drug_palc)+
+  theme(axis.title = element_text(size = 10, color = "black"), 
+      axis.ticks = element_line(size = 1.5),    
+      axis.text = element_text(size = 10, color = "black", angle = 0))
+
+
+```
+
+```{r 3hour gene example}
+
+Dox3genesp_example <- "none"#cpm_boxplot(cpmcounts,GOI=101927720,"Dark2",drug_palc,
+  #               ylab=bquote(~italic("ZNF793-AS1 ")~log[2]~"cpm "))+ 
+  # theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
+
+Dnr3genesp_example <- cpm_boxplot(cpmcounts,51557 ,"Dark2",drug_palc,
+                ylab=bquote(~italic("LGSN")~log[2]~"cpm "))+ 
+   theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
+
+
+Epi3genesp_example <- cpm_boxplot(cpmcounts,GOI=79169,"Dark2",drug_palc,
+                ylab=bquote(~italic("C1orf35")~log[2]~"cpm "))+ 
+   theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
+
+
+Mtx3genesp_example <- cpm_boxplot(cpmcounts,GOI=284306,"Dark2",drug_palc,
+                ylab=bquote(~italic("ZNF547")~log[2]~"cpm "))+ 
+   theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
+    
+
+```
+
+#### grid 3 hour
+```{r 3hour grid,eval=TRUE,echo=FALSE, fig.width=14, fig.height=8.5}
+
+
+
+mito3pg <- plot_grid(densityMTX3sp, Mtx3Bplot, Mtx3genesp_example, 
+                    nrow = 1, 
+                    rel_heights = c(.8,2,1), 
+                    rel_widths=c(1.2,1,1.5),
+                    scale=c(1,0.8,0.8))
+
+
+Daun3pg <- plot_grid(densityDNR3sp, Dnr3Bplot, Dnr3genesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+Doxo3pg <- plot_grid(densityDOX3sp, Dox3Bplot, Dox3genesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+Epi3pg <- plot_grid(densityEPI3sp, Epi3Bplot, Epi3genesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+allfinal3hour <- plot_grid(Doxo3pg,Epi3pg,Daun3pg,mito3pg,nrow=4)
+allfinal3hour
+
 ```
