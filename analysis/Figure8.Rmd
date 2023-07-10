@@ -50,7 +50,7 @@ GTEx <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
 ## exclude GTEX and create nQTL set with other expressed genes
 nQTLmy <- my_exp_genes %>%
    dplyr:: filter(!ENTREZID %in%GTEx)
-drug_palspc <- c("#8B006D","#DF707E","#8B006D","#DF707E")
+drug_palspc <- c("darkblue","cornflowerblue","darkblue","cornflowerblue")
 drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
 #GET nQTL umbers
 nQTLsum <- toplistall %>%
@@ -95,11 +95,9 @@ GTEXcr8z <- GTExsum %>%
   pivot_longer(cols=n:total, 
                names_to="group",
                values_to="total") %>%
-  mutate(group=case_match(group,
-                          "n"~"In set",
-                          "total"~"Not in set",
-                          .default = group))  %>%
-  mutate(group=factor(group,levels = c("Not in set" ,"In set"))) #%>% 
+   mutate(group=factor(group,levels = c("total", "n"),labels=c("not DE","DE"))) %>% 
+  mutate(set=factor(set,levels = c("GTEx","nQTL"), labels =c("eGene", "not eGene")))
+
  
 GTEXcr8z %>% 
   ggplot(., aes(x=set,y=total, fill=group))+
@@ -107,7 +105,8 @@ GTEXcr8z %>%
   facet_wrap(~id,nrow=2,ncol=4)+
   theme_classic()+
   scale_fill_manual(values=drug_palspc)+
-  ylab(" ")+
+  ylab("Heart: left ventricle eGenes")+
+  xlab("")+
   scale_y_continuous( expand = expansion(c(0, 0.01))) +
   theme(strip.background = element_rect(fill = "white",
                                         linetype=1, 
@@ -115,7 +114,7 @@ GTEXcr8z %>%
         plot.title = element_text(size=12,
                                   hjust = 0.5,
                                   face="bold"),
-        axis.title = element_text(size = 10, 
+        axis.title = element_text(size = 12, 
                                   color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.text = element_text(color = "black"),
@@ -160,30 +159,25 @@ Knowles_count <-
                names_to='QTL',
                values_to="gene_count") %>%
   separate(QTL,into=c("QTL_type",'group'),sep = '_') %>% 
-  mutate(group=case_match(group,
-                          "y"~"In set",
-                          "n"~"Not in set",
-                          .default = group))  %>%
   mutate(QTL_type =case_match(QTL_type, 
-                              'K4'~'base QTLs',
-                              'K5'~'reQTLs',.default = QTL_type)) %>%
+                              'K4'~'base\neGenes',
+                              'K5'~'response\neGenes',.default = QTL_type)) %>%
   mutate(time=factor(time, levels=c("3 hrs","24 hrs"))) %>% 
-  mutate(group=factor(group,levels = c("Not in set" ,"In set"))) %>% 
   group_by(id,time,QTL_type) %>% 
   mutate(percent=gene_count/sum(gene_count)*100)  %>% 
   ungroup() %>% 
   filter(time=="24 hrs") %>% 
-  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) 
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%  mutate(group=factor(group, levels= c("n","y"), labels=c("not DE","DE")))
   
   
   ggplot(Knowles_count, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
     geom_col(position='fill')+
     facet_wrap(~id,nrow=1,ncol=4)+
     theme_classic()+
-    ylab(" ")+
+    ylab("iPSC-CM DOX eGenes ")+
     xlab(" ")+
-    scale_color_manual(values=drug_pal_fact)+
-    scale_fill_manual(values=drug_pal_fact)+
+    scale_color_manual(values=drug_palspc)+
+    scale_fill_manual(values=drug_palspc)+
     scale_y_continuous( expand = expansion(c(0, 0.01))) +
     theme(strip.background = element_rect(fill = "white",
                                         linetype=1, 
@@ -191,7 +185,7 @@ Knowles_count <-
         plot.title = element_text(size=12,
                                   hjust = 0.5,
                                   face="bold"),
-        axis.title = element_text(size = 10, 
+        axis.title = element_text(size = 12, 
                                   color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.text = element_text(color = "black"),
