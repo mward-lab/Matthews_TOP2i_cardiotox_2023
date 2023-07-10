@@ -206,7 +206,7 @@ A note on Knowles data sets:  the intersection of the Knowles-4 and Knowles-5 se
 ``` {r loading in data sets}
 
 backGL <- read.csv("data/backGL.txt")
-drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+# drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
@@ -421,15 +421,16 @@ Knowles_count <-
                          'K5'~'reQTLs',.default = QTL_type)) %>% 
   mutate(time=factor(time, levels=c("3 hrs","24 hrs"))) %>% 
   group_by(id,time,QTL_type) %>% 
-  mutate(percent=gene_count/sum(gene_count)*100)
+  mutate(percent=gene_count/sum(gene_count)*100) %>% 
+  mutate(group=factor(group, levels= c("n","y"), labels=c("not DE","DE")))
   
   ggplot(Knowles_count, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
     geom_col(position='fill')+
     # guides(fill="none")+
     facet_wrap(time~id,nrow=2,ncol=4)+
     theme_classic()+
-   scale_color_manual(values=drug_palNoVeh)+
-    scale_fill_manual(values=drug_palNoVeh)+
+   scale_color_manual(values=drug_palc)+
+    scale_fill_manual(values=drug_palc)+
        scale_y_continuous(label = scales::percent)+
     theme(strip.text=element_text(size=10, face = "bold"),
           strip.text.x = element_text(margin = margin(2,0,2,0, "pt")),
@@ -487,7 +488,7 @@ toplistall %>%
   mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
   ggplot(., aes(x=id, y=abs(logFC)))+
   geom_boxplot(aes(fill=id))+
-  ggpubr::fill_palette(palette =drug_palNoVeh)+
+  ggpubr::fill_palette(palette =drug_palc)+
   guides(fill=guide_legend(title = "Treatment"))+
   facet_wrap(sigcount~time)+
   theme_bw()+
@@ -613,7 +614,7 @@ Dox24_lfc <- toplist24hr %>%
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   ggtitle("LogFC of Dox specific DEGs")+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
@@ -629,12 +630,12 @@ Dox24_lfc <- toplist24hr %>%
   geom_histogram(aes(fill=id,position="dodge"))+
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
-    fill_palette(palette = drug_palNoVeh)
+    fill_palette(palette = drug_palc)
 toplist24hr %>% 
   dplyr::filter(ENTREZID %in% DoxonlyDEG) %>%
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)
+  fill_palette(palette = drug_palc)
 
 print(Dox24_lfc)
 
@@ -693,7 +694,7 @@ toplist24hr %>%
   ggplot(., aes(x= id, y=logFC))+
   geom_boxplot(aes(fill=id))+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   ggtitle("LogFC of n = 68 Dox specific DEGs")+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
@@ -712,14 +713,14 @@ toplist24hr %>%
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all Dox specific DEG adj p. value <0.01")+
-    fill_palette(palette = drug_palNoVeh)+
+    fill_palette(palette = drug_palc)+
   theme_bw()
 
 toplist24hr %>% 
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()
 
 
@@ -729,7 +730,7 @@ densityDOXsp <- toplist24hr %>%
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()
 
 densityDOXsp
@@ -774,7 +775,7 @@ toplist24hr %>%
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   ggtitle("LogFC of MTX specific DEGs (n = 48)")+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
@@ -793,14 +794,14 @@ toplist24hr %>%
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all MTX specific DEG adj p. value <0.01")+
-    fill_palette(palette = drug_palNoVeh)+
+    fill_palette(palette = drug_palc)+
   theme_bw()
 
 toplist24hr %>% 
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()
 
 
@@ -810,7 +811,7 @@ densityMTXsp <- toplist24hr %>%
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()
 
 densityMTXsp
@@ -851,7 +852,7 @@ toplist24hr %>%
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
    ggtitle("LogFC of DNR specific DEGs (n = 112)")+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
@@ -871,14 +872,14 @@ toplist24hr %>%
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all DNR specific DEG adj p. value <0.01")+
-    fill_palette(palette = drug_palNoVeh)+
+    fill_palette(palette = drug_palc)+
   theme_bw()
 
 toplist24hr %>% 
   filter(ENTREZID %in% DnronlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()
 
 
@@ -924,7 +925,7 @@ toplist24hr %>%
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
  ggtitle("LogFC of EPI specific DEGs (n = 84) ")+
   theme(
     plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
@@ -945,14 +946,14 @@ toplist24hr %>%
     # geom_density(aes(fill=id))+
     facet_wrap(~id)+
   ggtitle("all DNR specific DEG adj p. value <0.01")+
-    fill_palette(palette = drug_palNoVeh)+
+    fill_palette(palette = drug_palc)+
   theme_bw()
 
 densityEPIsp <- toplist24hr %>% 
   filter(ENTREZID %in% EpionlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()
 
 
@@ -1058,7 +1059,7 @@ densityDOXsp <- toplist24hr %>%
   filter(ENTREZID %in% DoxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("DOX-only DEGs\n n = 379")+
   guides(fill=FALSE,alpha=FALSE)+
@@ -1072,7 +1073,7 @@ densityDNRsp <- toplist24hr %>%
   filter(ENTREZID %in% DnronlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("DNR-only DEGs\n n = 615")+
   guides(fill=FALSE,alpha=FALSE)+
@@ -1086,7 +1087,7 @@ densityEPIsp <- toplist24hr %>%
   filter(ENTREZID %in% EpionlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("EPI-only DEGs\n n = 444")+
   guides(fill=FALSE,alpha=FALSE)+
@@ -1100,7 +1101,7 @@ densityMTXsp <- toplist24hr %>%
   filter(ENTREZID %in% MtxonlyDEG) %>% 
   ggplot(., aes(x=adj.P.Val))+
   geom_density(aes(fill=id, alpha= 0.8))+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme_bw()+
   ylab("MTX-only DEGs\n n = 122")+
   guides(fill=FALSE,alpha=FALSE)+
@@ -1125,7 +1126,7 @@ densityMTXsp <- toplist24hr %>%
   xlab(" ")+
   ylab("DOX specific adj.P.V <0.01\n n = 68")+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   guides(fill= FALSE)+
   theme(
       axis.title = element_text(size = 10, color = "black"), 
@@ -1147,7 +1148,7 @@ DnrBplot <- toplist24hr %>%
   ylab("DNR-spec. adj.P.V <0.01\n n = 112")+
   theme_classic()+
   guides(fill= FALSE)+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
  theme(
       axis.title = element_text(size = 10, color = "black"), 
       axis.ticks = element_line(size = 1.5),    
@@ -1164,7 +1165,7 @@ EpiBplot <- toplist24hr %>%
   ylab("EPI-spec.adj.P.V <0.01\n n = 84")+
   theme_classic()+
   guides(fill= FALSE)+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
    theme(axis.title = element_text(size = 10, color = "black"), 
       axis.ticks = element_line(size = 1.5),    
       axis.text = element_text(size = 10, color = "black", angle = 0))
@@ -1181,7 +1182,7 @@ MtxBplot <- toplist24hr %>%
   ylab("MTX-spec. adj.P.V <0.01\n n = 41")+
   guides(fill= FALSE)+
   theme_classic()+
-  fill_palette(palette = drug_palNoVeh)+
+  fill_palette(palette = drug_palc)+
   theme(axis.title = element_text(size = 10, color = "black"), 
       axis.ticks = element_line(size = 1.5),    
       axis.text = element_text(size = 10, color = "black", angle = 0))
