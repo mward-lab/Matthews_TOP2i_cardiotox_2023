@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="ERM" />
 
+<meta name="date" content="2023-07-14" />
 
-<title>Home</title>
+<title>Variance</title>
 
 <script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,6 +31,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -231,6 +236,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -238,6 +306,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -281,7 +359,9 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Home</h1>
+<h1 class="title toc-ignore">Variance</h1>
+<h4 class="author">ERM</h4>
+<h4 class="date">2023-07-14</h4>
 
 </div>
 
@@ -314,7 +394,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span> 0
 </p>
@@ -351,6 +431,90 @@ class="panel-collapse collapse">
 <p>Great! Since the R Markdown file has been committed to the Git
 repository, you know the exact version of the code that produced these
 results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230109code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230109)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230109code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230109)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -634,10 +798,11 @@ have uncommitted changes.
 
 <p>
 These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+made to the R Markdown (<code>analysis/variance_scrip.Rmd</code>) and
+HTML (<code>docs/variance_scrip.html</code>) files. If you’ve configured
+a remote Git repository (see <code>?wflow_git_remote</code>), click on
+the hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -666,7 +831,7 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/fcc68055726b902fbe24a4221a473fc9c162f554/analysis/index.Rmd" target="_blank">fcc6805</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/fcc68055726b902fbe24a4221a473fc9c162f554/analysis/variance_scrip.Rmd" target="_blank">fcc6805</a>
 </td>
 <td>
 reneeisnowhere
@@ -678,907 +843,6 @@ reneeisnowhere
 adding link to variance scrip for Michelle
 </td>
 </tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/8a63b2e946fbd48a6f208a5e4085637d4d71d815/docs/index.html" target="_blank">8a63b2e</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-30
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/eca1c8ef92bbcadedad0399fab9da16a6bbda5b2/analysis/index.Rmd" target="_blank">eca1c8e</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-30
-</td>
-<td>
-update index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/2cf8d347426f596b31383aa0668db74fc3aeb4b4/docs/index.html" target="_blank">2cf8d34</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2dcfd91016f3a7f036e97d32fae67c5628fb78d7/analysis/index.Rmd" target="_blank">2dcfd91</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-23
-</td>
-<td>
-adding supp figure link
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/87453aa2d9653581e4c71da04e4e9eb8094dcf86/docs/index.html" target="_blank">87453aa</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3cc507e78df3867e9b9d3af5325726708100a0c7/analysis/index.Rmd" target="_blank">3cc507e</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-23
-</td>
-<td>
-updating plots
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/554ef92b4cceefc610c38622044c08ffac61108a/docs/index.html" target="_blank">554ef92</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/f7e433b7cc06e4680353c24c29fd118fbfbabc92/docs/index.html" target="_blank">f7e433b</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-16
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3d4ca6458d1a506bfb480498918285e886386178/analysis/index.Rmd" target="_blank">3d4ca64</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-16
-</td>
-<td>
-updates on Friday
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/bd0e45f05268110fedb5d45f08fdd77f653e6a61/docs/index.html" target="_blank">bd0e45f</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-15
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1a1a0341faa5e86d69cf192a3d23d312c118f74c/analysis/index.Rmd" target="_blank">1a1a034</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-15
-</td>
-<td>
-updates galore
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/29234385c175e5e7051952b1d3ee73044bb08cd8/docs/index.html" target="_blank">2923438</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f986dee7eacc8db503c2d035d49eda33ee0e4211/analysis/index.Rmd" target="_blank">f986dee</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-14
-</td>
-<td>
-update index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/8b862b38fa63115d9dffee87653282c42a567109/docs/index.html" target="_blank">8b862b3</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-13
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/5ede15935f292518ef994c371c84b50e976343de/analysis/index.Rmd" target="_blank">5ede159</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-06-13
-</td>
-<td>
-finalized plots and curves for slope and LD50 and index updata
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/4b32b736b25f57869b3f5e48950df9a9e38edd24/docs/index.html" target="_blank">4b32b73</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-05-22
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/fecbbaf5292230801b2280c5390671af911e8c73/analysis/index.Rmd" target="_blank">fecbbaf</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-05-22
-</td>
-<td>
-update list
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/3f2250f9e209ed14718d3cb49d05466387c2cc00/docs/index.html" target="_blank">3f2250f</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-05-17
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/a9e025d2f2a55a837614b2401e32edec73c4ae14/analysis/index.Rmd" target="_blank">a9e025d</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-05-17
-</td>
-<td>
-spelling and format update
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/d0eaef84c0f59bb3993e18850384430d3481e162/docs/index.html" target="_blank">d0eaef8</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-20
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/5e614285a4f5c0ea25fa784aed2a14e0b5a18895/analysis/index.Rmd" target="_blank">5e61428</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-20
-</td>
-<td>
-updating calcium graphs and index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/1639244372e85c2d71b313c39a55f1f599f8c399/docs/index.html" target="_blank">1639244</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-17
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d007af4d24eec696f8ac983c6a2e6b2ba4d1668b/analysis/index.Rmd" target="_blank">d007af4</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-17
-</td>
-<td>
-new links
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7f62d67d51d8e4e10c7c11fc6a5afac47bef4a5c/docs/index.html" target="_blank">7f62d67</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-17
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/363ddad64d7bef69a4c7d200639e600781b4415c/analysis/index.Rmd" target="_blank">363ddad</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-17
-</td>
-<td>
-update with GO links
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/9e374911828f9ab6bb36379d2b4715c61480d801/docs/index.html" target="_blank">9e37491</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-16
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/41bc19ab81884a90c05f6419a30012496d2c6d4f/analysis/index.Rmd" target="_blank">41bc19a</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-16
-</td>
-<td>
-updated Cormotif data
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/b266b76acd8dac6d46d06572cf74173c443a67d8/docs/index.html" target="_blank">b266b76</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-10
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d3f8cf7ecab5d70e7d00b13a0fdd8341a3f0002b/analysis/index.Rmd" target="_blank">d3f8cf7</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-04-10
-</td>
-<td>
-update push of new data
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/84e723b4cbe770adb1593046c56d8f76e84d745b/docs/index.html" target="_blank">84e723b</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-02-10
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/accc2412d4b3a5da3d043dbb62116296492e33e2/analysis/index.Rmd" target="_blank">accc241</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-02-10
-</td>
-<td>
-updates for the week
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/f147cf96a50ffaf5fa1ac430e1f89c6f687a4321/docs/index.html" target="_blank">f147cf9</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-02-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90da9c11365648192c735134866f2ab8e3669726/analysis/index.Rmd" target="_blank">90da9c1</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-31
-</td>
-<td>
-update index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/146a31ad49994710da20673e86f803ac32aefa22/docs/index.html" target="_blank">146a31a</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b7eac762b2cfe321cf328b6f1f339bc3d9ba5caa/analysis/index.Rmd" target="_blank">b7eac76</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-updating GO
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/6c21cf8cca434fdf262799bdc3b685ce23a91ad2/docs/index.html" target="_blank">6c21cf8</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/443a9f393601e6c682c88350ddbe45f4e46f9617/analysis/index.Rmd" target="_blank">443a9f3</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-adding in GO analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/81078864d54d780be8836669affe250e356ae507/docs/index.html" target="_blank">8107886</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-20
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/0950d4f83f9a84344ba8e1f46570f6c960365b29/docs/index.html" target="_blank">0950d4f</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-13
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f03a01329ca6da9b62d99ad32e646564ac69fb79/analysis/index.Rmd" target="_blank">f03a013</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-13
-</td>
-<td>
-update the link
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/cfc3e811a9a1ad6bf5e15e45e7c71366c7ae1a8a/analysis/index.Rmd" target="_blank">cfc3e81</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-13
-</td>
-<td>
-updating readme and index
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7eccdb84d817f81cadf1a04d155d3831b5dbe007/docs/index.html" target="_blank">7eccdb8</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-12
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/93c440954bacc490b38f71f2247daa5f3b1f298e/analysis/index.Rmd" target="_blank">93c4409</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-12
-</td>
-<td>
-try again
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/ae8266e811dcf8952b7e8770b17e97d68c4e0f80/analysis/index.Rmd" target="_blank">ae8266e</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-12
-</td>
-<td>
-updating the rmarkdown
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/df8a8454f7328b5ed81c45547ce5e079514e9024/docs/index.html" target="_blank">df8a845</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-11
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/98fe131fcc1e93a32fd9383a1cb6941a00cf7735/analysis/index.Rmd" target="_blank">98fe131</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-11
-</td>
-<td>
-wflow_publish(c("analysis/license.Rmd", "analysis/index.Rmd"))
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/be977ac06ad7e9eca72d1ac799267ab39c8f7238/analysis/index.Rmd" target="_blank">be977ac</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-10
-</td>
-<td>
-testing interface
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/48a3f6244883d20174ac2138af728f8f19d2e65d/analysis/index.Rmd" target="_blank">48a3f62</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-10
-</td>
-<td>
-attempting again
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/7c3d4401858521ce7153e5ae8f9ab9412fe9f61f/docs/index.html" target="_blank">7c3d440</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-10
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/0d9d25859ec586dc5b696b245dd18183a828846e/docs/index.html" target="_blank">0d9d258</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3aa463144b7390ccda3d157ab77e8a2af539f906/analysis/index.Rmd" target="_blank">3aa4631</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Trial updates
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/9e0f8eedf5121dda158638ef88f99045e749a148/docs/index.html" target="_blank">9e0f8ee</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3b61ad1a684f2cc4b7aadaccb3c73edfb98bbf9b/analysis/index.Rmd" target="_blank">3b61ad1</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-01-09
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1586,92 +850,253 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<p>Welcome to my workflowr Cardiotoxicity research website. I am using
-workflowr to create reproducible code and data analysis.</p>
-<div id="full-data-set-information" class="section level1">
-<h1>Full data set information</h1>
-<div id="full-rna-seq-qc" class="section level3">
-<h3>Full RNA-seq QC</h3>
-<div id="rna-seq-qc-and-pca-some-volcano-plots" class="section level4">
-<h4><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html">RNA-seq
-QC and PCA, some volcano plots</a></h4>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(ggpubr)
+library(ggsignif)</code></pre>
+<div id="initial-calculations-and-data-loading" class="section level2">
+<h2>initial calculations and data loading</h2>
+<div id="by-individual" class="section level3">
+<h3>by individual</h3>
+</div>
+<div id="by-drug" class="section level3">
+<h3>by drug</h3>
+</div>
+<div id="plot-by-indv" class="section level3">
+<h3>plot by indv</h3>
+</div>
+<div id="plot-by-drug" class="section level3">
+<h3>plot by drug</h3>
+<pre class="r"><code>mean_vardrug1 &lt;- read.csv(&quot;data/mean_vardrug1.csv&quot;)
+
+
+drug_frame&lt;- mean_vardrug1 %&gt;% 
+  rownames_to_column(var = &quot;entrezid&quot;) %&gt;% 
+  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = &quot;short&quot;, values_to = &quot;values&quot;) %&gt;% 
+  separate(short, into=c(&quot;calc&quot;,&quot;treatment&quot;,&quot;time&quot;)) %&gt;% 
+  mutate(treatment= factor(treatment, levels = c(&quot;Do&quot;,&quot;Ep&quot;,&quot;Da&quot;,&quot;Mi&quot;,&quot;Tr&quot;,&quot;Ve&quot;),labels = c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;,&quot;TRZ&quot;,&quot;VEH&quot;))) %&gt;% 
+  mutate(time= factor(time, levels = c(&quot;3&quot;,&quot;24&quot;), labels= c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;% 
+  group_by(treatment, time, calc) %&gt;% 
+  as.data.frame
+
+
+
+drug_frame %&gt;% 
+  filter(calc!=&quot;mean&quot;) %&gt;% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot()+
+  geom_signif(comparisons =list(c(&quot;DOX&quot;,&quot;VEH&quot;),
+                                c(&quot;EPI&quot;,&quot;VEH&quot;),
+                                c(&quot;DNR&quot;,&quot;VEH&quot;),
+                                c(&quot;MTX&quot;,&quot;VEH&quot;),
+                                c(&quot;TRZ&quot;,&quot;VEH&quot;)),
+              test= &quot;t.test&quot;,
+              map_signif_level=FALSE,
+              textsize =4,
+              step_increase = 0.1)+
+  facet_wrap(~time)+
+  ggtitle(&quot;var&quot;)+
+  ylim(0,0.5)</code></pre>
+<pre><code>Warning: Removed 23214 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 23214 rows containing non-finite values (`stat_signif()`).</code></pre>
+<pre><code>Warning: Removed 30 rows containing missing values (`geom_signif()`).</code></pre>
+<p><img src="figure/variance_scrip.Rmd/graph%20of%20var%20by%20drug%20indv-1.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>drug_frame %&gt;% 
+  filter(calc!=&quot;mean&quot;) %&gt;% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot()+
+  geom_signif(comparisons =list(c(&quot;DOX&quot;,&quot;VEH&quot;),
+                                c(&quot;EPI&quot;,&quot;VEH&quot;),
+                                c(&quot;DNR&quot;,&quot;VEH&quot;),
+                                c(&quot;MTX&quot;,&quot;VEH&quot;),
+                                c(&quot;TRZ&quot;,&quot;VEH&quot;)),
+              test= &quot;t.test&quot;,
+              map_signif_level=FALSE,
+              textsize =4,
+              step_increase = 0.1)+
+  facet_wrap(~time)+
+  ggtitle(&quot;var&quot;)#+</code></pre>
+<p><img src="figure/variance_scrip.Rmd/graph%20of%20var%20by%20drug%20indv-2.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # ylim(0,0.5)
+
+drug_frame %&gt;% 
+  filter(calc!=&quot;var&quot;) %&gt;% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot()+
+  geom_signif(comparisons =list(c(&quot;TRZ&quot;,&quot;VEH&quot;),
+                                c(&quot;MTX&quot;,&quot;VEH&quot;),
+                                c(&quot;DNR&quot;,&quot;VEH&quot;),
+                                c(&quot;EPI&quot;,&quot;VEH&quot;),
+                                c(&quot;DOX&quot;,&quot;VEH&quot;)),
+              test= &quot;t.test&quot;,
+              map_signif_level=FALSE,
+              textsize =4,
+              step_increase = 0.05)+
+  facet_wrap(.~time)+
+  ggtitle(&quot;Means&quot;)+
+  ylim(0,18)</code></pre>
+<pre><code>Warning: Removed 3297 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 3297 rows containing non-finite values (`stat_signif()`).</code></pre>
+<p><img src="figure/variance_scrip.Rmd/graph%20of%20var%20by%20drug%20indv-3.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="bayesian-gene-analysis" class="section level2">
-<h2>Bayesian gene analysis</h2>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html">Bayesian
-gene analysis</a></p>
+<div id="calculations-without-vehicle" class="section level2">
+<h2>Calculations without Vehicle</h2>
+<div id="by-indvidual-and-drug" class="section level3">
+<h3>by indvidual and drug</h3>
 </div>
-<div id="pairwise-gene-analysis" class="section level2">
-<h2>Pairwise gene analysis</h2>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/DEG-GO_analysis.html">pairwise
-GO</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/GOI_plots.html">genes
-of interest(focus on cpm and LFC boxplots)</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/LDH_analysis.html">LDH
-analysis and Calcium analysis</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/variance_scrip.html">Variance
-means and var</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/DRC_analysis.html">DRC
-analysis</a></p>
-<p>Data set comparisons</p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Knowles2019.html">reQTLS</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/GTEx_genes.html">GTEx
-data</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/other_analysis.html">Other
-data/GWAS/crispr</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Seoane_chrom.html">Seoane
-data</a></p>
-<div id="paper-figures" class="section level3">
-<h3>Paper figures</h3>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure1.html">Figure
-1</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure2.html">Figure
-2</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure3.html">Figure
-3</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure4.html">Figure
-4</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure5.html">Figure
-5</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure6.html">Figure
-6</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure7.html">Figure
-7</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure8.html">Figure
-8</a></p>
-<p><a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Figure9.html">Figure
-9</a><br />
-<a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Supplementary_figures.html">Supplementary
-Figures</a> # Older Analysis Click on this <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/RNAseqanalysis.html">link</a>
-to see my results from the first analysis You can also look at my page
-of GO analysis on both the Bayesian gene analysis and Pairwise gene
-analysis.<br />
-<a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/GO_analysis.html">GO
-enrichment analysis</a></p>
+<div id="plot-by-indv-no-veh" class="section level3">
+<h3>plot by indv no veh</h3>
+</div>
+<div id="plot-by-drug-no-veh" class="section level3">
+<h3>plot by drug no veh</h3>
+<pre class="r"><code>drug_noveh1 &lt;- read.csv(&quot;data/drug_noveh1.csv&quot;,row.names = 1)
+
+drug_frame_nv &lt;- drug_noveh1 %&gt;% 
+  rownames_to_column(var = &quot;entrezid&quot;) %&gt;% 
+  pivot_longer(cols = mean.Da.3:var.Tr.24, names_to = &quot;short&quot;, values_to = &quot;values&quot;) %&gt;% 
+  separate(short, into=c(&quot;calc&quot;,&quot;treatment&quot;,&quot;time&quot;)) %&gt;% 
+  mutate(treatment= factor(treatment, levels = c(&quot;Do&quot;,&quot;Ep&quot;,&quot;Da&quot;,&quot;Mi&quot;,&quot;Tr&quot;,&quot;Ve&quot;),labels = c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;,&quot;TRZ&quot;,&quot;VEH&quot;))) %&gt;% 
+  mutate(time= factor(time, levels = c(&quot;3&quot;,&quot;24&quot;), labels= c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;% 
+  group_by(treatment, time, calc) %&gt;% 
+  as.data.frame
+
+ggplot(drug_frame_nv, aes(x= treatment, y=values))+
+  geom_boxplot()+
+  stat_compare_means(method= &quot;anova&quot;,  label.x =2)+
+  facet_wrap(time~calc, scales = &quot;free_y&quot;)</code></pre>
+<p><img src="figure/variance_scrip.Rmd/graph%20of%20var-no%20veh%20by%20drug%20indv-1.png" width="384" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>mean_vardrug1 &lt;- read.csv(&quot;data/mean_vardrug1.csv&quot;,row.names = 1)
+my_exp_genes &lt;- read.csv(&quot;data/backGL.txt&quot;)
+GTEx_genes &lt;- read.csv(&quot;data/GTEx_gene_list.csv&quot;,row.names = 1)
+GTEx &lt;- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
+knowles5 &lt;-readRDS(&quot;output/knowles5.RDS&quot;)
+
+
+drug_frame2&lt;- mean_vardrug1 %&gt;% 
+  rownames_to_column(var = &quot;entrezid&quot;) %&gt;% 
+  filter(entrezid %in%knowles5$entrezgene_id) %&gt;% 
+  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = &quot;short&quot;, values_to = &quot;values&quot;) %&gt;% 
+  separate(short, into=c(&quot;calc&quot;,&quot;treatment&quot;,&quot;time&quot;)) %&gt;% 
+  mutate(treatment= factor(treatment, levels = c(&quot;Do&quot;,&quot;Ep&quot;,&quot;Da&quot;,&quot;Mi&quot;,&quot;Tr&quot;,&quot;Ve&quot;),labels = c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;,&quot;TRZ&quot;,&quot;VEH&quot;))) %&gt;% 
+  mutate(time= factor(time, levels = c(&quot;3&quot;,&quot;24&quot;), labels= c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;% 
+  group_by(treatment, time, calc) %&gt;% 
+  as.data.frame
+
+ggplot(drug_frame2, aes(x= treatment, y=values))+
+  geom_boxplot()+
+  geom_signif(comparisons =list(c(&quot;DOX&quot;,&quot;VEH&quot;),
+                                c(&quot;EPI&quot;,&quot;VEH&quot;),
+                                c(&quot;DNR&quot;,&quot;VEH&quot;),
+                                c(&quot;MTX&quot;,&quot;VEH&quot;),
+                                c(&quot;TRZ&quot;,&quot;VEH&quot;)),
+              test= &quot;t.test&quot;,
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  # stat_compare_means(method= &quot;anova&quot;, label.y=15, label.x =2)+
+  facet_wrap(time~calc, scales = &quot;free_y&quot;)</code></pre>
+<p><img src="figure/variance_scrip.Rmd/deeper%20down%20the%20var-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  drug_frame2 %&gt;% 
+  filter(calc!=&quot;mean&quot;) %&gt;% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot()+
+  geom_signif(comparisons =list(c(&quot;DOX&quot;,&quot;VEH&quot;),
+                                c(&quot;EPI&quot;,&quot;VEH&quot;),
+                                c(&quot;DNR&quot;,&quot;VEH&quot;),
+                                c(&quot;MTX&quot;,&quot;VEH&quot;),
+                                c(&quot;TRZ&quot;,&quot;VEH&quot;)),
+              test= &quot;t.test&quot;,
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  facet_wrap(~time)+
+  ggtitle(&quot;var using response eGenes&quot;)+
+  ylim(0,1.0)</code></pre>
+<pre><code>Warning: Removed 146 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 146 rows containing non-finite values (`stat_signif()`).</code></pre>
+<pre><code>Warning: Removed 30 rows containing missing values (`geom_signif()`).</code></pre>
+<p><img src="figure/variance_scrip.Rmd/deeper%20down%20the%20var-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>drug_frame2 %&gt;% 
+  filter(calc!=&quot;var&quot;) %&gt;% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot()+
+  geom_signif(comparisons =list(c(&quot;TRZ&quot;,&quot;VEH&quot;),
+                                c(&quot;MTX&quot;,&quot;VEH&quot;),
+                                c(&quot;DNR&quot;,&quot;VEH&quot;),
+                                c(&quot;EPI&quot;,&quot;VEH&quot;),
+                                c(&quot;DOX&quot;,&quot;VEH&quot;)),
+              test= &quot;t.test&quot;,
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.05)+
+  facet_wrap(.~time)+
+  ggtitle(&quot;Means using response eGenes&quot;)+
+  ylim(0,18)</code></pre>
+<pre><code>Warning: Removed 9 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 9 rows containing non-finite values (`stat_signif()`).</code></pre>
+<p><img src="figure/variance_scrip.Rmd/deeper%20down%20the%20var-3.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.1 (2023-06-16 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] ggsignif_0.6.4  ggpubr_0.6.0    lubridate_1.9.2 forcats_1.0.0  
+ [5] stringr_1.5.0   dplyr_1.1.2     purrr_1.0.1     readr_2.1.4    
+ [9] tidyr_1.3.0     tibble_3.2.1    ggplot2_3.4.2   tidyverse_2.0.0
+[13] workflowr_1.7.0
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.3      xfun_0.39         bslib_0.5.0       processx_3.8.1   
+ [5] rstatix_0.7.2     callr_3.7.3       tzdb_0.4.0        vctrs_0.6.3      
+ [9] tools_4.3.1       ps_1.7.5          generics_0.1.3    fansi_1.0.4      
+[13] highr_0.10        pkgconfig_2.0.3   lifecycle_1.0.3   compiler_4.3.1   
+[17] farver_2.1.1      git2r_0.32.0      munsell_0.5.0     getPass_0.2-2    
+[21] carData_3.0-5     httpuv_1.6.11     htmltools_0.5.5   sass_0.4.6       
+[25] yaml_2.3.7        later_1.3.1       pillar_1.9.0      car_3.1-2        
+[29] jquerylib_0.1.4   whisker_0.4.1     cachem_1.0.8      abind_1.4-5      
+[33] tidyselect_1.2.0  digest_0.6.33     stringi_1.7.12    labeling_0.4.2   
+[37] rprojroot_2.0.3   fastmap_1.1.1     grid_4.3.1        colorspace_2.1-0 
+[41] cli_3.6.1         magrittr_2.0.3    utf8_1.2.3        broom_1.0.5      
+[45] withr_2.5.0       scales_1.2.1      promises_1.2.0.1  backports_1.4.1  
+[49] timechange_0.2.0  rmarkdown_2.23    httr_1.4.6        hms_1.1.3        
+[53] evaluate_0.21     knitr_1.43        rlang_1.1.1       Rcpp_1.0.11      
+[57] glue_1.6.2        rstudioapi_0.15.0 jsonlite_1.8.7    R6_2.5.1         
+[61] fs_1.6.2         </code></pre>
 </div>
 </div>
 </div>
@@ -1692,6 +1117,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -1724,6 +1151,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
