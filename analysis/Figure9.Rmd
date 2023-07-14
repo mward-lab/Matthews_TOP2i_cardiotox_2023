@@ -41,6 +41,7 @@ HF_geneset <- readRDS("data/HF_geneset.RDS")
 CAD_geneset <- readRDS("data/CAD_geneset.RDS")
 col_fun1 = circlize::colorRamp2(c(-1, 3), c("white", "purple"))
 col_funFC= circlize::colorRamp2(c(-2,0, 2), c("darkgreen","white", "darkorange2"))
+col_funTOX = circlize::colorRamp2(c(-1,0, 1), c("darkgreen", "white","deeppink3"))
 
 ```
 ```{r function load}
@@ -152,73 +153,39 @@ cpm_boxplot24h <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
     print(plot)
 }
 
+pearson_cardiotox <- function(corr_df,ENTREZID) {
+
+  full_plot <- corr_df %>%
+    dplyr::filter(entrezgene_id == ENTREZID) %>%
+    ggplot(., aes(x=tox_score, y=counts))+
+    geom_point(aes(col=indv))+
+    geom_smooth(method="lm")+
+    facet_wrap(hgnc_symbol~Drug, scales="free")+
+    theme_classic()+
+    stat_cor(method="pearson",
+             aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+             color = "red",
+             label.x.npc = 0,
+             label.y.npc=1,
+             size = 3)
+
+
+  ##ggbuild to get model:
+  tox_build <- ggplot_build(full_plot)
+  tox_data <- data.frame('rowname'=c("DOX","EPI","DNR","MTX", "TRZ", "VEH"),
+                         'tox_val'= c(tox_build$data[[3]]$r,NA,NA),
+                          'sig_tox'=c(tox_build$data[[3]]$p.value,NA,NA)
+                          )
+
+
+    return(tox_data)
+
+}
+
+
 ```
 
 # Figure 9
-
-Genes in CVD and AC toxicity respond to Top2i
-
-## A. GWAS chi square results
-```{r GWAS enrichment}
-toplist24hr <- toplistall %>% 
-  filter(time=="24_hours")
-chi_funarr <-  toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="TRZ") %>% 
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
-  group_by(id) %>% 
-  summarise(pvalue= chisq.test(ARR, sigcount, correct =FALSE)$p.value) 
-  
-
-chi_funhf <-  toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
-   dplyr::filter(id!="TRZ") %>% 
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
-  group_by(id) %>% 
-  summarise(pvalue= chisq.test(HF, sigcount, correct =FALSE)$p.value) 
-chi_funCAD <-  toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="TRZ") %>% 
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
-  group_by(id) %>% 
-  summarise(pvalue= chisq.test(CAD, sigcount, correct =FALSE)$p.value) 
-
-HFmat <- chi_funhf %>% ungroup() %>% 
-  mutate(HF= log(pvalue)*(-1)) %>% 
-  dplyr::select(id,HF) %>% 
-  column_to_rownames("id")
-
-ARRmat <- chi_funarr %>% ungroup() %>% 
-  mutate(ARR= log(pvalue)*(-1)) %>% 
-  dplyr::select(id,ARR) %>% 
-  column_to_rownames("id")
-
-
-CADmat <- chi_funCAD %>% ungroup() %>% 
-  mutate(CAD= -log(pvalue)) %>% 
-  dplyr::select(id,CAD) %>% 
-  column_to_rownames("id")
-
-GWASmat <- bind_cols(CADmat$CAD,HFmat$HF,ARRmat$ARR) 
-colnames(GWASmat) <- c('CAD','HF','ARR')
-rownames(GWASmat) <- c('DNR','DOX','EPI','MTX')
-
- Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", 
-         cluster_rows = FALSE, 
-         column_title = 'This is for GWAS 24 hours -log(chi square pvalue)', 
-         cluster_columns = FALSE,
-         row_names_side = 'left',
-         column_names_rot = 0, col_fun1,
-         cell_fun = function(j, i, x, y, width, height, fill) {
-        if(GWASmat[i, j] > -log(0.05))
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-})
-
-```
-
 
 
 ## B. GWAS and TWAS associated genes 
@@ -227,8 +194,7 @@ GWAS_goi <- read.csv("output/GWAS_goi.csv",row.names = 1)
 ##get the abs FC of all GOI
 GWASabsFCsig <- 
   toplistall %>% 
-  mutate(id = as.factor(id)) %>%
-  filter(id !="TRZ") %>%
+    mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   filter(ENTREZID %in% GWAS_goi$entrezgene_id) %>% 
    filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
@@ -242,8 +208,8 @@ gwas_sig_mat <- GWASabsFCsig %>%
  
 
 GWASabsFC <- toplistall %>% 
-  mutate(id = as.factor(id)) %>%
-  filter(id !="TRZ") %>% 
+  
+  # filter(id !="TRZ") %>% 
   filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
   filter(ENTREZID %in% GWAS_goi$entrezgene_id) %>% 
@@ -267,7 +233,7 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
         cluster_columns = FALSE, 
         row_names_side = "left",
         col = col_funFC,
-        row_order = c('DOX','DNR','EPI', 'MTX'),
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
         column_title = "Fold change values of GWAS and TWAS genes", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
@@ -293,18 +259,274 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
 
 
 
+## New Cardiotoxicity Score
 
 
-## C. RARG expression and correlation to TNNI,  LD50, and LDH values
-```{r  rarg data, fig.width=4, fig.height=3}
+```{r ctxscore, message=FALSE, warning=FALSE, include=FALSE}
 
-cpm_boxplot24h(cpmcounts,GOI='5916',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("RARG")~log[2]~"cpm "))))
+gene_corr_fig9 <- readRDS("output/gene_corr_fig9.RDS")
+toxlist <- data.frame(ENTREZID=c(5916,23371,283337))
+toxtest_2pt<- gene_corr_fig9 %>% 
+  rowwise() %>% 
+   # mutate_all(~replace(., is.na(.), 0)) %>% 
+   mutate(tox_score = mean(c(rldh,rtnni),na.rm = TRUE)) %>% 
+  dplyr::select(entrezgene_id,hgnc_symbol,Drug,indv,time,counts,tox_score) %>% 
+  filter(entrezgene_id %in%toxlist$ENTREZID)
+
+toxtest_3pt<- gene_corr_fig9 %>% 
+   mutate(LD50= (1/LD50)) %>% 
+  rowwise() %>% 
+   # mutate_all(~replace(., is.na(.), 0)) %>% 
+   mutate(tox_score = mean(c(rldh,rtnni,LD50),na.rm = TRUE)) %>% 
+  dplyr::select(entrezgene_id,hgnc_symbol,Drug,indv,time,counts,tox_score) %>% 
+  filter(entrezgene_id %in%toxlist$ENTREZID)%>% 
+  dplyr::filter(Drug !="VEH") %>% 
+   dplyr::filter(Drug != "TRZ")
+
+toxdata2pt <- list()
+
+
+for (hay in 1:3){
+ 
+data <- toxtest_2pt %>%
+    dplyr::filter(entrezgene_id==toxlist$ENTREZID[hay]) 
+
+dataname <- unique(data$hgnc_symbol)
+
+p <- ggplot(data, aes(x=tox_score, y=counts))+
+    geom_point(aes(col=indv))+
+    geom_smooth(method="lm")+
+    facet_wrap(hgnc_symbol~Drug, scales="free")+
+    theme_classic()+
+   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+      ggpubr::stat_cor(method="pearson",
+             aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+             color = "red",
+             label.x.npc = 0,
+             label.y.npc=1,
+             size = 3)
+tox_build <- ggplot_build(p)
+plot(p)
+
+ toxdata2pt[[dataname]] <- list('tox_val'= c(tox_build$data[[3]]$r),
+                          'sig_tox'=c(tox_build$data[[3]]$p.value))
+}
+
+
+toxdata3pt <- list()
+
+for (hay in 1:3){
+ 
+data <- toxtest_3pt %>%
+    dplyr::filter(entrezgene_id==toxlist$ENTREZID[hay]) 
+
+dataname <- unique(data$hgnc_symbol)
+
+p <- ggplot(data, aes(x=tox_score, y=counts))+
+    geom_point(aes(col=indv))+
+    geom_smooth(method="lm")+
+    facet_wrap(hgnc_symbol~Drug, scales="free")+
+    theme_classic()+
+   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+    ggpubr::stat_cor(method="pearson",
+             aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+             color = "red",
+             label.x.npc = 0,
+             label.y.npc=1,
+             size = 3)
+tox_build <- ggplot_build(p)
+plot(p)
+
+ toxdata3pt[[dataname]] <- list('tox_val'= c(tox_build$data[[3]]$r),
+                          'sig_tox'=c(tox_build$data[[3]]$p.value))
+}
+
+```
+
+### extract for heatmap
+
+
+```{r heatmap long RARG}
+# toxdata(RARG)map
+toxdata2ptr <- map_df(toxdata2pt, ~as.data.frame(.x), .id="gene")
+toxdata3ptr <- map_df(toxdata3pt, ~as.data.frame(.x), .id="gene")
+RARG_sig_mat2ptr <- toxdata2ptr %>% 
+  dplyr::filter(gene=="RARG") %>% 
+  dplyr::select(sig_tox) %>% 
+  t() %>% 
+  matrix()
+RARG_mat2ptr <- toxdata2ptr%>% 
+  dplyr::filter(gene=="RARG") %>% 
+  dplyr::select(tox_val) %>% 
+    t() %>% 
+  matrix()
+
+RARG_sig_mat3ptr <- toxdata3ptr %>% 
+  dplyr::filter(gene=="RARG") %>% 
+  dplyr::select(sig_tox) %>% 
+  t() %>% 
+  matrix()
+RARG_mat3ptr <- toxdata3ptr%>% 
+  dplyr::filter(gene=="RARG") %>% 
+  dplyr::select(tox_val) %>% 
+    t() %>% 
+  matrix()
+
+Heatmap(RARG_mat2ptr, name = " RARG 2pt Cardiotox score", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 0, 
+        col= col_funTOX,
+        row_labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"),
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered = TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(RARG_sig_mat2ptr[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+Heatmap(RARG_mat3ptr, name = " RARG 3pt Cardiotox score", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 0, 
+        row_labels = c("DOX","EPI","DNR","MTX"),
+        col= col_funTOX,
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered = TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(RARG_sig_mat3ptr[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+
+
+```
+
+```{r heatmap long TNS2}
+
+TNS2_sig_mat2ptr <- toxdata2ptr %>% 
+  dplyr::filter(gene=="TNS2") %>% 
+  dplyr::select(sig_tox) %>% 
+  t() %>% 
+  matrix()
+TNS2_mat2ptr <- toxdata2ptr%>% 
+  dplyr::filter(gene=="TNS2") %>% 
+  dplyr::select(tox_val) %>% 
+    t() %>% 
+  matrix()
+
+TNS2_sig_mat3ptr <- toxdata3ptr %>% 
+  dplyr::filter(gene=="TNS2") %>% 
+  dplyr::select(sig_tox) %>% 
+  t() %>% 
+  matrix()
+TNS2_mat3ptr <- toxdata3ptr%>% 
+  dplyr::filter(gene=="TNS2") %>% 
+  dplyr::select(tox_val) %>% 
+    t() %>% 
+  matrix()
+
+Heatmap(TNS2_mat2ptr, name = " TNS2 2pt Cardiotox score", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 0, 
+        col= col_funTOX,
+        row_labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"),
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered = TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(TNS2_sig_mat2ptr[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+Heatmap(TNS2_mat3ptr, name = " TNS2 3pt Cardiotox score", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 0, 
+        col= col_funTOX,
+        row_labels = c("DOX","EPI","DNR","MTX"),
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered = TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(TNS2_sig_mat3ptr[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
 
 ```
 
 
-```{r RARG corrdata, fig.height=4,fig.width=8}
+```{r heatmap long ZF740}
+ZNF740_sig_mat2ptr <- toxdata2ptr %>% 
+  dplyr::filter(gene=="ZNF740") %>% 
+  dplyr::select(sig_tox) %>% 
+  t() %>% 
+  matrix()
+ZNF740_mat2ptr <- toxdata2ptr%>% 
+  dplyr::filter(gene=="ZNF740") %>% 
+  dplyr::select(tox_val) %>% 
+    t() %>% 
+  matrix()
+
+ZNF740_sig_mat3ptr <- toxdata3ptr %>% 
+  dplyr::filter(gene=="ZNF740") %>% 
+  dplyr::select(sig_tox) %>% 
+  t() %>% 
+  matrix()
+ZNF740_mat3ptr <- toxdata3ptr%>% 
+  dplyr::filter(gene=="ZNF740") %>% 
+  dplyr::select(tox_val) %>% 
+    t() %>% 
+  matrix()
+
+Heatmap(ZNF740_mat2ptr, name = " ZNF740 2pt Cardiotox score", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 0, 
+        col= col_funTOX,
+        row_labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"),
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered = TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(ZNF740_sig_mat2ptr[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+Heatmap(ZNF740_mat3ptr, name = " ZNF740 3pt Cardiotox score", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 0, 
+        col= col_funTOX,
+        row_labels = c("DOX","EPI","DNR","MTX"),
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered = TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(ZNF740_sig_mat3ptr[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+```
+
+
+
+```{r RARG corrdata, eval=FALSE, fig.height=4, fig.width=8, include=FALSE}
 gene_corr_fig9 <- readRDS("output/gene_corr_fig9.RDS")
 RARG_data <- pearson_extract(gene_corr_fig9,5916)
 
@@ -336,7 +558,7 @@ Heatmap(rarg_mat, name = "correlation value",
 
 
 ## D. SLC28A3 expression and correlation to TNNI, LD50, and LDH values
-```{r  SLC data, fig.width=4, fig.height=3}
+```{r SLC data, eval=FALSE, fig.height=3, fig.width=4, include=FALSE}
 
 
 cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
@@ -344,7 +566,7 @@ cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
 
 
 ```
-```{r SCL cor data, fig.height=4, fig.width=8}
+```{r SCL cor data, eval=FALSE, fig.height=4, fig.width=8, include=FALSE}
 
 SLC_data <- pearson_extract(gene_corr_fig9,64078)
 
@@ -382,7 +604,7 @@ cpm_boxplot24h(cpmcounts,GOI='23371',"Dark2",drug_pal_fact,
 
 ```
 
-```{r TNS2 cor data, fig.height=4, fig.width=8}
+```{r TNS2 cor data, eval=FALSE, fig.height=4, fig.width=8, include=FALSE}
 
 TNS2_data <- pearson_extract(gene_corr_fig9,23371)
 
@@ -420,7 +642,7 @@ cpm_boxplot24h(cpmcounts,GOI='283337',"Dark2",drug_pal_fact,
 
 ```
 
-```{r ZNF cor data, fig.height=4, fig.width=8}
+```{r ZNF cor data, eval=FALSE, fig.height=4, fig.width=8, include=FALSE}
 
 ZNF_data <- pearson_extract(gene_corr_fig9,283337)
 
