@@ -547,7 +547,9 @@ Heatmap(ZNF740_mat2ptr, name = " ZNF740 2pt Cardiotox score",
 
 
 
-```{r ZNF740 data, eval=TRUE, fig.height=3, fig.width=4, include=FALSE}
+
+
+```{r ZNF740 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE}
 
 
 cpm_boxplot24h(cpmcounts,GOI='283337',"Dark2",drug_pal_fact,
@@ -597,7 +599,7 @@ Heatmap(RMI1_mat2ptr, name = " RMI1 2pt Cardiotox score",
 
 
 
-```{r RMI1 data, eval=TRUE, fig.height=3, fig.width=4, include=FALSE}
+```{r RMI1 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE}
 
 
 cpm_boxplot24h(cpmcounts,GOI='80010',"Dark2",drug_pal_fact,
@@ -643,39 +645,9 @@ Heatmap(SLC28A3_mat2ptr, name = " SLC28A3 2pt Cardiotox score",
 ```
 
 
-```{r RARG corrdata, eval=FALSE, fig.height=4, fig.width=8, include=FALSE}
-gene_corr_fig9 <- readRDS("output/gene_corr_fig9.RDS")
-RARG_data <- pearson_extract(gene_corr_fig9,5916)
-
-rarg_mat <- RARG_data %>% 
-  column_to_rownames('rowname') %>% 
-   dplyr::select(rho_tnni,rho_ldh,rho_LD50) %>% 
-  t() %>% 
-  as.matrix()
-
-rarg_mat_sig <- RARG_data %>% 
-  column_to_rownames('rowname') %>% 
-  dplyr::select(sig_tnni,sig_ldh,sig_LD50) %>% 
-  mutate_all(~replace(., is.na(.), 1)) %>% 
-  t() %>% 
-  as.matrix()
-col_funfinal= circlize::colorRamp2(c(-1,0, 1), c("#b35806","white", "#542788"))
-Heatmap(rarg_mat, name = "correlation value",
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        column_names_rot = 0,
-        column_names_centered = TRUE,
-        col=col_funfinal,
-        na_col = "lightgrey",
-        cell_fun = function(j, i, x, y, width, height, fill) {
-           if(rarg_mat_sig[i, j]<0.05)
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-          })
-```
 
 
-
-```{r SLC data, eval=TRUE, fig.height=3, fig.width=4, include=FALSE}
+```{r SLC data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE}
 
 
 cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
