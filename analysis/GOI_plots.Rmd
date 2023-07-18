@@ -14,22 +14,26 @@ knitr::opts_chunk$set(
 ```
 
 ```{r function,echo=TRUE}
+
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
-  ##GOI needs to be ENTREZID
+    ##GOI needs to be ENTREZID
   df <- cpmcounts
-    df_plot <- df %>% 
+  df_plot <- df %>% 
       dplyr::filter(rownames(.)==GOI) %>%
       pivot_longer(everything(),
-                   names_to = "treatment",values_to = "counts") %>%
+                   names_to = "treatment",
+                   values_to = "counts") %>%
       separate(treatment, c("drug","indv","time")) %>%
-      mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+      mutate(time = factor(time,levels= c("3h","24h"), labels = c("3 hours","24 hours"))) %>% 
       mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-      mutate(drug =case_match(drug, "Da"~"Daunorubicin",
-                            "Do"~"Doxorubicin",
-                            "Ep"~"Epirubicin",
-                            "Mi"~"Mitoxantrone",
-                            "Tr"~"Trastuzumab",
-                            "Ve"~"Vehicle", .default = drug))
+      mutate(drug =case_match(drug, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = drug)) %>% 
+      mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) 
+  
     plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
       geom_boxplot(position="identity",aes(fill=drug))+
       geom_point(aes(col=indv, size=2, alpha=0.5))+
@@ -40,16 +44,80 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       theme_bw()+
       ylab(ylab)+
       xlab("")+
-      theme(strip.background = element_rect(fill = "white"),
-          plot.title = element_text(size=18,hjust = 0.5),
-          axis.title = element_text(size = 15, color = "black"),
-          axis.ticks = element_line(linewidth = 1.5),
-          axis.line = element_line(linewidth = 1.5),
-          axis.text.x = element_text(size = 12, color = "white", angle = 0),
-          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+      # ggtitle("24 hours")+
+      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "pt"),face = "bold"))
     print(plot)
 }
 
+pearson_extract <- function(corr_df,ENTREZID) {
+  ld50_plot <- corr_df %>%
+    dplyr::filter(entrezgene_id == ENTREZID) %>%
+    ggplot(., aes(x=LD50, y=counts))+
+    geom_point(aes(col=indv))+
+    geom_smooth(method="lm")+
+    facet_wrap(hgnc_symbol~Drug, scales="free")+
+    theme_classic()+
+    stat_cor(method="pearson",
+             aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+             color = "red",
+             label.x.npc = 0,
+             label.y.npc=1,
+             size = 3)
+
+  tnni_plot <-  corr_df %>%
+    dplyr::filter(entrezgene_id == ENTREZID) %>%
+    ggplot(., aes(x=rtnni, y=counts))+
+    geom_point(aes(col=indv))+
+    geom_smooth(method="lm")+
+    facet_wrap(hgnc_symbol~Drug, scales="free")+
+    theme_classic()+
+    stat_cor(method="pearson",
+             aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+             color = "red",
+             label.x.npc = 0,
+             label.y.npc=1,
+             size = 3)
+
+  ldh_plot <-   corr_df %>%
+    dplyr::filter(entrezgene_id == ENTREZID) %>%
+    ggplot(., aes(x=rldh, y=counts))+
+    geom_point(aes(col=indv))+
+    geom_smooth(method="lm")+
+    facet_wrap(hgnc_symbol~Drug, scales="free")+
+    theme_classic()+
+    stat_cor(method="pearson",
+             aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+             color = "red",
+             label.x.npc = 0,
+             label.y.npc=1,
+             size = 3)
+
+  ##ggbuild to get model:
+  ld50_build <- ggplot_build(ld50_plot)
+  ld50_data <- data.frame('rho_LD50'= c(ld50_build$data[[3]]$r,NA,NA),
+                          'sig_LD50'=c(ld50_build$data[[3]]$p.value,NA,NA),
+                          'rowname'=c("DOX","EPI","DNR","MTX", "TRZ", "VEH"))
+
+  tnni_build <- ggplot_build(tnni_plot)
+  tnni_data <- data.frame('rho_tnni'= c(tnni_build$data[[3]]$r),
+                          'sig_tnni'=c(tnni_build$data[[3]]$p.value),
+                          'rowname'=c("DOX","EPI","DNR","MTX", "TRZ", "VEH"))
+  ldh_build <- ggplot_build(ldh_plot)
+  ldh_data <- data.frame('rho_ldh'= c(ldh_build$data[[3]]$r),
+                         'sig_ldh'=c(ldh_build$data[[3]]$p.value),
+                         'rowname'=c("DOX","EPI","DNR","MTX", "TRZ", "VEH"))
+
+  results <- cbind(ldh_data,tnni_data[,1:2],ld50_data[,1:2])
+
+  return(results)
+
+}
 ```
 
 ```{r library loading, echo=TRUE, message=FALSE, warning=FALSE}
@@ -66,9 +134,10 @@ library(Hmisc)
 library(ggpubr)
 ```
 
+
 ```{r data loading,echo=FALSE, message=FALSE, warning=FALSE}
 
-siglist <- readRDS("data/siglist.RDS")
+siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist,envir=.GlobalEnv)
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 list2env(DEG_cormotif,envir=.GlobalEnv)
@@ -77,33 +146,47 @@ level_order2 <- c('75','87','77','79','78','71')
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 drug_pal_vehend <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
-toplistall <- read.csv("output/toplistall.csv", row.names = 1) 
-
-GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","UTGT1A6","UGT1A10","KDM4B","KAT6B","GNT1"))
-#library(bioMart)
+toplistall <- readRDS("data/toplistall.RDS") 
+# 
+# GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","RMI1","KDM4B","KAT6B","TNS2"))
+# library(biomaRt)
 # ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 # my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-# 
+# #
 # my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 # GOI_genelist<- getBM(attributes=my_attributes,filters ='hgnc_symbol',
 #          values = GOIcorr, mart = ensembl)
 # GOI_genelist <- GOI_genelist %>% distinct(entrezgene_id, .keep_all = TRUE)
 # write.csv(GOI_genelist,"output/GOI_genelist.txt")
 GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
+
 RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt", row.names = 1)
+# GOI_genelist <- GOI_genelist %>%
+# add_row(.,entrezgene_id =23371,ensembl_gene_id ="ENSG00000111077", hgnc_symbol= "TNS2")
 
 ```
 # Genes of Interest log2 cpm
 
 ### TOP2B
 
-```{r GOI-top2b, echo=FALSE, message=FALSE, warning=FALSE}
+```{r GOI-top2b, echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width =6}
 cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_vehend,
   ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm "))))
 ```
+
+### Top2a
+
+```{r GOI-top2a, echo=FALSE,fig.height=3, fig.width =6}
+
+cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_vehend,
+  ylab=(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm "))))
+
+```
+
+
 ### CDKN1a
 
-```{r GOI CDKN1a, echo=FALSE}
+```{r GOI CDKN1a, echo=FALSE,fig.height=3, fig.width =6}
 
 
  cpm_boxplot(cpmcounts,GOI='1026',"Dark2",drug_pal_vehend,
@@ -111,73 +194,51 @@ cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_vehend,
    
 ```
 
-### Top2a
-```{r GOI-top2a, echo=FALSE}
-
-cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_vehend,
-  ylab=(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm "))))
-
-```
 ### ATM
-```{r GOI-atm, echo=FALSE}
+
+```{r GOI-atm, echo=FALSE,fig.height=3, fig.width =6}
 
 cpm_boxplot(cpmcounts,GOI='472',"Dark2",drug_pal_vehend,
   ylab=(expression(atop(" ",italic("ATM")~log[2]~"cpm "))))
 ```
 ### ATR
-```{r GOI-atr, echo=FALSE}
+```{r GOI-atr, echo=FALSE,fig.height=3, fig.width =6}
 
 cpm_boxplot(cpmcounts,GOI='545',"Dark2",drug_pal_vehend,
   ylab=(expression(atop(" ",italic("ATR")~log[2]~"cpm "))))
 ```
 
-### Rictor
-```{r GOI-rictor, echo=FALSE}
-
-cpm_boxplot(cpmcounts,GOI='253260',"Dark2",drug_pal_vehend,
-            ylab=(expression(atop(" ",italic("RICTOR")~log[2]~"cpm "))))
-```
-### mTOR
-```{r GOImtor, echo=FALSE}
-
-cpm_boxplot(cpmcounts,GOI='2475',"Dark2",drug_pal_vehend,
-    ylab=(expression(atop(" ",italic("mTOR")~log[2]~"cpm "))))
-```
 ### RARG
-```{r GOI RARG, echo=FALSE}
+```{r GOI RARG, echo=FALSE, fig.height=3, fig.width =6}
 
-cpm_boxplot(cpmcounts,GOI='5916',"Dark2",drug_pal_vehend,
+cpm_boxplot(cpmcounts,GOI='5916',"Dark2",drug_pal_fact,
             ylab=(expression(atop(" ",italic("RARG")~log[2]~"cpm "))))
 
 ```
 
 ### KAT6b
 
-```{r KAT6b logcpm}
+```{r KAT6b logcpm,fig.height=3, fig.width =6}
 cpm_boxplot(cpmcounts,GOI='23522',"Dark2",drug_pal_vehend,
   ylab=(expression(atop(" ",italic("KAT6B")~log[2]~"cpm "))))
 ```
 
-### KDM5b
-```{r KDM5b logcpm}
-cpm_boxplot(cpmcounts,GOI='10765',"Dark2",drug_pal_vehend,
-            ylab=(expression(atop(" ",italic("KDM5B")~log[2]~"cpm "))))
-
-
-```
-
 ### KDM4b
 
-```{r KDM4b logcpm}
+```{r KDM4b logcpm,fig.height=3, fig.width =6}
 cpm_boxplot(cpmcounts,GOI='23030',"Dark2",drug_pal_vehend,
   ylab=(expression(atop(" ",italic("KDM4B")~log[2]~"cpm "))))
 
 ```
 ## expression correlation:
 
+first, will do expression the following GOIs:
+
+`r print(GOI_genelist$hgnc_symbol)`
+
+
 
 ```{r expression correlation, echo=FALSE}
-
 
 GOIsig <- toplistall %>%
   filter(ENTREZID %in% GOI_genelist$entrezgene_id) %>%
@@ -189,54 +250,66 @@ GOIsig%>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
 # write.csv(GOIsig,"data/GOIsig.csv")
+# saveRDS(avg_LD50,"data/avg_LD50.RDS")
+avg_LD50 <- readRDS("data/avg_LD50.RDS")
+# print(GOI_genelist)
 
-print(GOI_genelist)
-
-GOI_join <- RNAnormlist %>% 
-  mutate(indv=factor(indv,levels = level_order2)) %>% 
+GOI_join <- RNAnormlist %>%
+  mutate(indv=factor(indv,levels = level_order2)) %>%
   mutate(indv=as.numeric(indv)) %>%
-  mutate(indv=factor(indv)) %>% 
-  mutate(Drug = factor(Drug, levels = c("Daunorubicin", 
-                                       "Doxorubicin",
-                                       "Epirubicin",
-                                       "Mitoxantrone",
-                                       "Trastuzumab",
-                                       "Vehicle"))) %>% 
-  dplyr::select(indv, Drug,rldh,rtnni) 
+  mutate(indv=factor(indv)) %>%
+  mutate(Drug = factor(Drug, levels = c(
+                                       "DOX",
+                                       "EPI",
+                                       "DNR",
+                                       "MTX",
+                                       "TRZ",
+                                       "VEH"))) %>%
+  dplyr::select(indv, Drug,rldh,rtnni) %>%
+  mutate(tox = rowMeans(across(rldh:rtnni))) %>% 
+  full_join(.,avg_LD50,by=c("Drug"="sDrug","indv"="indv")) %>%
+  rename("LD50"="name") 
 
-#make a list of GOIs then individual info:
-
-# gene_corr_df <- cpmcounts %>% 
-#   rownames_to_column(var ="entrezgene_id") %>% 
-#   # filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>% ##this works to only fileter
-#   # inner_join(., GOI_genelist,by ="entrezgene_id") %>%  view()## this works to filter and append. just depends on the"when" I want to filter and join dataframes
-#   mutate(entrezgene_id=as.numeric(entrezgene_id)) %>% 
+# 
+# #make a list of GOIs then individual info:
+# 
+# gene_corr_df <- cpmcounts %>%
+#   rownames_to_column(var ="entrezgene_id") %>%
+#   filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>% ##this works to only fileter
+# # #   # inner_join(., GOI_genelist,by ="entrezgene_id") %>%  view()## this works to filter and append. just depends on the"when" I want to filter and join dataframes
+#   mutate(entrezgene_id=as.numeric(entrezgene_id)) %>%
 #   pivot_longer(!entrezgene_id, names_to="treatment", values_to = "counts") %>%
 #   separate(treatment,c("Drug","indv","time")) %>%
 #   filter(time =="24h") %>%
 #   mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-#   mutate(Drug =case_match(Drug, "Da"~"Daunorubicin",
-#                           "Do"~"Doxorubicin",
-#                           "Ep"~"Epirubicin",
-#                           "Mi"~"Mitoxantrone",
-#                           "Tr"~"Trastuzumab",
-#                           "Ve"~"Vehicle", .default = Drug)) 
-# 
-#   
+#   mutate(Drug =case_match(Drug, "Da"~"DNR",
+#                           "Do"~"DOX",
+#                           "Ep"~"EPI",
+#                           "Mi"~"MTX",
+#                           "Tr"~"TRZ",
+#                           "Ve"~"VEH", .default = Drug))
+
+```
+
+#### 24 hour TNNI to cpm
+
+
+```{r correlation of TNNI}
 # # now I have the long dataframe, time to combine with other data snf limit to just the GOIs
-#   gene_corr_frame <- gene_corr_df %>% 
-#     filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>%  
-#     left_join(., GOI_join, by=c("Drug","indv")) %>% 
-#     dplyr::select(indv, Drug,entrezgene_id,counts, rldh,rtnni) %>% 
-#     mutate(Drug=factor(Drug)) %>% 
+# gene_corr_frame <- gene_corr_df %>%
+#     filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>%
+#     left_join(., GOI_join, by=c("Drug","indv")) %>%
+#     dplyr::select(indv, Drug,entrezgene_id,counts, rldh,rtnni,LD50,tox) %>%
+#     mutate(Drug=factor(Drug)) %>%
 #     full_join(.,GOI_genelist, by="entrezgene_id")
-#   
-  # saveRDS(gene_corr_df,"data/gene_corr_df.RDS")
+#
+#   saveRDS(gene_corr_df,"data/gene_corr_df.RDS")
 # saveRDS(gene_corr_frame,"data/gene_corr_frame.RDS")
 gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
    gene_corr_df <- readRDS("data/gene_corr_df.RDS")
    
-  # rcorr(as.matrix(gene_corr_frame[,c(1,4,5,6)]), type = "pearson")
+## remove nas!
+
    
 for (gene in GOI_genelist$entrezgene_id){
     gene_plot <- gene_corr_frame %>% 
@@ -250,7 +323,8 @@ for (gene in GOI_genelist$entrezgene_id){
       ylab("Gene counts in log2 cpm") +
       ggtitle(expression(paste("Correlation between counts and troponin I by drug")))+
       scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      stat_cor(method="pearson",
+     ggpubr:: stat_cor(method="pearson",
+                       cor.coef.name="rho",
                aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
                color = "red",
                label.x.npc = 0.01,
@@ -264,42 +338,14 @@ for (gene in GOI_genelist$entrezgene_id){
    print(gene_plot)
    
   }
-  print(GOI_genelist)
-## ggplot by indiv for tnni
-  
-  
-  
- for (gene in GOI_genelist$entrezgene_id){
-    gene_plot <- gene_corr_frame %>% 
-      dplyr::filter(entrezgene_id == gene) %>%
-      ggplot(., aes(x=rtnni, y=counts))+
-      geom_point(aes(col=Drug))+
-      geom_smooth(method="lm")+
-      facet_wrap(hgnc_symbol~Drug, scales="free")+
-      theme_classic()+
-      xlab("troponin I expression") +
-      ylab("Gene counts in log2 cpm") +
-      ggtitle(expression(paste("Correlation between counts and troponin I by individual")))+
-      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      stat_cor(method="pearson",
-               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-               color = "red",
-               label.x.npc = 0.01,
-               label.y.npc=0.01, 
-               size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 15, color = "black"),
-            axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
-   print(gene_plot)
-   
-  }
+```
 
+#### 24 hour LDH to cpm
 
+```{r LDH 24 hour}
 
 ## ggplot by drug for ldh
- plot_data_ldh <- list() 
+ 
   
   for (gene in GOI_genelist$entrezgene_id){
     gene_plot <- gene_corr_frame %>% 
@@ -314,6 +360,7 @@ for (gene in GOI_genelist$entrezgene_id){
       ggtitle(expression(paste("Correlation between counts and LDH by drug")))+
       scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
       stat_cor(method="pearson",
+               cor.coef.name="rho",
                aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
                color = "red",
                label.x.npc = 0.01,
@@ -325,28 +372,27 @@ for (gene in GOI_genelist$entrezgene_id){
             axis.text = element_text(size = 8, color = "black", angle = 20),
             strip.text.x = element_text(size = 12, color = "black", face = "italic"))
    print(gene_plot)
-   # a <- paste(gene)
-   #    plot_data<- ggplot_build(gene_plot)
-   # plot_data_ldh[paste0(a)]<- cbind(plot_data$data[[3]])
+   
   }
-  print(GOI_genelist)
-## ggplot by indiv for ldh
-  
-  
+```  
 
+#### Toxicity for GOI
+
+```{r toxicity corr}
  for (gene in GOI_genelist$entrezgene_id){
     gene_plot <- gene_corr_frame %>% 
       dplyr::filter(entrezgene_id == gene) %>%
-      ggplot(., aes(x=rldh, y=counts))+
-      geom_point(aes(col=Drug))+
+      ggplot(., aes(x=tox, y=counts))+
+      geom_point(aes(col=indv))+
       geom_smooth(method="lm")+
       facet_wrap(hgnc_symbol~Drug, scales="free")+
       theme_classic()+
-      xlab("troponin I expression") +
+      xlab("Toxicity score") +
       ylab("Gene counts in log2 cpm") +
-      ggtitle(expression(paste("Correlation between counts and LDH by individual")))+
+      ggtitle(expression(paste("Correlation between counts and toxicity by drug")))+
       scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
       stat_cor(method="pearson",
+               cor.coef.name="rho",
                aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
                color = "red",
                label.x.npc = 0.01,
@@ -360,259 +406,50 @@ for (gene in GOI_genelist$entrezgene_id){
    print(gene_plot)
    
  }
-  
 
 ```
 
 
 
-### RARG correlation
-```{r RARG corr}
-ld50_via_RARG <- read.csv("data/LD50_05via.csv",row.names=1)
-ld50_via_RARG <- ld50_via_RARG %>% 
-  mutate(indv=factor(indv))
-test <- RNAnormlist %>% 
+#### Fig9 expression correlation
+
+
+```{r fig9}
+##add in list of ldh,tnni and ld50
+avg_LD50 <- readRDS("data/avg_LD50.RDS")
+
+gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
+   gene_corr_df <- readRDS("data/gene_corr_df.RDS")
+
+
+
+GOI_join <- RNAnormlist %>% 
   mutate(indv=factor(indv,levels = level_order2)) %>% 
   mutate(indv=as.numeric(indv)) %>%
   mutate(indv=factor(indv)) %>% 
-  mutate(Drug = factor(Drug, levels = c("Daunorubicin", 
-                                       "Doxorubicin",
-                                       "Epirubicin",
-                                       "Mitoxantrone",
-                                       "Trastuzumab",
-                                       "Vehicle"))) %>% 
-  dplyr::select(indv, Drug,rldh,rtnni) #%>% 
+  mutate(Drug = factor(Drug, levels = c("DNR", 
+                                       "DOX",
+                                       "EPI",
+                                       "MTX",
+                                       "TRZ",
+                                       "VEH"))) %>% 
+  dplyr::select(indv, Drug,rldh,rtnni) %>% 
+  full_join(.,avg_LD50,by=c("Drug"="sDrug","indv"="indv")) %>% 
+  rename("LD50"="name")
+##now we have the frame, time to limit df of GOI_genelist to fig 9 genes
+Fig9_genes <- GOI_genelist %>% 
+  filter(hgnc_symbol %in% list("RARG", "ZNF740", "TNS2", "SLC28A3","RMI1"))
+##joining to counts
+
+gene_corr_fig9 <- gene_corr_df %>%
+    filter(entrezgene_id %in% Fig9_genes$entrezgene_id) %>%
+    left_join(., GOI_join, by=c("Drug","indv")) %>%
+    mutate(Drug=factor(Drug, levels = c("DOX","EPI","DNR", "MTX", "TRZ", "VEH"))) %>%
+    full_join(.,GOI_genelist, by="entrezgene_id")
   
+  # saveRDS(gene_corr_fig9,"output/gene_corr_fig9.RDS")
 
 
-
-RARG_corr_frame <- gene_corr_df %>% 
-    filter(entrezgene_id ==5916) %>%  
-    left_join(., ld50_via_RARG, by=c("Drug","indv")) %>% 
-    dplyr::select(indv, Drug,sDrug,entrezgene_id,counts, Viability,LD50) %>% 
-    mutate(Drug=factor(Drug)) %>% 
-    full_join(.,GOI_genelist, by="entrezgene_id") %>% 
-  full_join(., test, by=c("Drug","indv" )) %>% as.data.frame()
-
-SL25_corr_frame <- gene_corr_df %>% 
-    filter( entrezgene_id ==64078) %>%  
-    left_join(., ld50_via_RARG, by=c("Drug","indv")) %>% 
-    dplyr::select(indv, Drug,sDrug,entrezgene_id,counts, Viability,LD50) %>% 
-    mutate(Drug=factor(Drug)) %>% 
-    full_join(.,GOI_genelist, by="entrezgene_id") %>% 
-  full_join(., test, by=c("Drug","indv" )) %>% as.data.frame()
-
-
- 
- RARG_plotld50 <- RARG_corr_frame %>%
-      dplyr::filter(entrezgene_id == 5916) %>%
-      ggplot(., aes(x=LD50, y=counts))+
-      geom_point(aes(col=indv))+
-      geom_smooth(method="lm")+
-      facet_wrap(hgnc_symbol~Drug, scales="free")+
-      theme_classic()+
-      xlab(bquote('LD'[50]~'in '*mu*M)) +
-      ylab(bquote("Gene counts in log"[2]~" cpm")) +
-      ggtitle(bquote("Correlation of LD"[50]~" and Log"[2]~"cpm"))+
-      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      stat_cor(method="pearson",
-               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-               color = "red",
-               label.x.npc = 0,
-               label.y.npc=1,
-               size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 15, color = "black"),
-            axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
- print(RARG_plotld50)
-
-RARG_plotrtnni <- RARG_corr_frame %>%
-      dplyr::filter(entrezgene_id == 5916) %>%
-      ggplot(., aes(x=rtnni, y=counts))+
-      geom_point(aes(col=indv))+
-      geom_smooth(method="lm")+
-      facet_wrap(hgnc_symbol~Drug, scales="free")+
-      theme_classic()+
-      xlab(bquote("relative Troponin I release")) +
-      ylab(bquote("Gene counts in log "[2]~" cpm")) +
-      ggtitle(bquote("Correlation of cTNNT at 0.5"*mu*"M and Log"[2]~"cpm"))+
-      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      stat_cor(method="pearson",
-               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-               color = "red",
-               label.x.npc = 0,
-               label.y.npc=1,
-               size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 15, color = "black"),
-            axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
-rarg_plot_data <- ggplot_build(RARG_plotrtnni)
- rarg_dataT <- data.frame('rho_tnni'= rarg_plot_data$data[[3]]$r, 'sig'=c(rarg_plot_data$data[[3]]$p.value))
- row.names(rarg_dataT) <- list("DNR","DOX","EPI","MTX", "TRX", "VEH")
- 
-```
-
-```{r slc28A3}
-
- slc_plotld50 <- SL25_corr_frame %>%
-      dplyr::filter(entrezgene_id == 64078) %>%
-      ggplot(., aes(x=LD50, y=counts))+
-      geom_point(aes(col=indv))+
-      geom_smooth(method="lm")+
-      facet_wrap(hgnc_symbol~Drug, scales="free")+
-      theme_classic()+
-      xlab(bquote('LD'[50]~'in '*mu*M)) +
-      ylab(bquote("Gene counts in log"[2]~" cpm")) +
-      ggtitle(bquote("Correlation of LD"[50]~" and Log"[2]~"cpm"))+
-      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      stat_cor(method="pearson",
-               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-               color = "red",
-               label.x.npc = 0,
-               label.y.npc=1,
-               size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 15, color = "black"),
-            axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
-print (slc_plotld50)
-
-slc_plotvia <- SL25_corr_frame %>%
-      dplyr::filter(entrezgene_id == 64078) %>%
-      ggplot(., aes(x=Viability, y=counts))+
-      geom_point(aes(col=indv))+
-      geom_smooth(method="lm")+
-      facet_wrap(hgnc_symbol~Drug, scales="free")+
-      theme_classic()+
-      xlab(bquote("viability/100")) +
-      ylab(bquote("Gene counts in log "[2]~" cpm")) +
-      ggtitle(bquote("Correlation of viability at 0.5"*mu*"M and Log"[2]~"cpm"))+
-      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      stat_cor(method="pearson",
-               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-               color = "red",
-               label.x.npc = 0,
-               label.y.npc=1,
-               size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 15, color = "black"),
-            axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
-print(slc_plotvia)
-slc_plottnni <- SL25_corr_frame %>%
-      dplyr::filter(entrezgene_id == 64078) %>%
-      ggplot(., aes(x=rtnni, y=counts))+
-      geom_point(aes(col=indv))+
-      geom_smooth(method="lm")+
-      facet_wrap(hgnc_symbol~Drug, scales="free")+
-      theme_classic()+
-      xlab(bquote("relative Troponin I")) +
-      ylab(bquote("Gene counts in log "[2]~" cpm")) +
-      ggtitle(bquote("Correlation Troponin I release and Log"[2]~"cpm"))+
-      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      stat_cor(method="pearson",
-               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-               color = "red",
-               label.x.npc = 0,
-               label.y.npc=1,
-               size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 15, color = "black"),
-            axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
-print(slc_plottnni)
-
-
-
-
-
-```
-
-
-```{r RARGbbuilding heatmap and sig mat}
-
-##RARG info:
-rarg_plot_dataL <- ggplot_build(RARG_plotld50)
- rarg_data <- data.frame('rho_LD50'= c(rarg_plot_dataL$data[[3]]$r,NA,NA), 'sig_LD50'=c(rarg_plot_dataL$data[[3]]$p.value,NA,NA),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
-
- 
-rarg_plot_data <- ggplot_build(RARG_plotrtnni)
- rarg_dataT <- data.frame('rho_tnni'= rarg_plot_data$data[[3]]$r, 'sig_tnni'=c(rarg_plot_data$data[[3]]$p.value),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
- row.names(rarg_dataT) <- list("DNR","DOX","EPI","MTX", "TRX", "VEH")
- 
-rarg_mat <- rarg_data %>% 
-  left_join(.,rarg_dataT,join_by(rowname)) %>% 
-  column_to_rownames('rowname') %>% 
-  select(rho_LD50,rho_tnni) %>% 
-  as.matrix()
-
-rarg_mat_sig <- rarg_data %>% 
-  left_join(.,rarg_dataT,join_by(rowname)) %>% 
-  column_to_rownames('rowname') %>% 
-  select(sig_LD50,sig_tnni) %>% 
-  mutate_all(~replace(., is.na(.), 1)) %>% 
-  as.matrix()
-  
-
-# col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
-
-Heatmap( rarg_mat, name = "correlation value", 
-         column_title = "Correlations of LD50 and troponin release to log2cpm",
-         cluster_rows = FALSE, cluster_columns = FALSE,
-         # col=col_fun1,
-         column_names_rot = 0,na_col = "grey",
-         cell_fun = function(j, i, x, y, width, height, fill) {
-           if(rarg_mat_sig[i, j]<0.05)
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-          })
- 
-```
-
-
-```{r SLC28A3 bbuilding heatmap and sig mat}
-
-##Slc info:
-slc_plot_dataL <- ggplot_build(slc_plotld50)
- slc_data <- data.frame('rho_LD50'= c(slc_plot_dataL$data[[3]]$r,NA,NA), 'sig_LD50'=c(slc_plot_dataL$data[[3]]$p.value,NA,NA),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
-
- 
-slc_plot_data <- ggplot_build(slc_plottnni)
- slc_dataT <- data.frame('rho_tnni'= slc_plot_data$data[[3]]$r, 'sig_tnni'=c(slc_plot_data$data[[3]]$p.value),'rowname'=c("DNR","DOX","EPI","MTX", "TRX", "VEH"))
- # row.names(rarg_dataT) <- list("DNR","DOX","EPI","MTX", "TRX", "VEH")
- 
-slc_mat <- slc_data %>% 
-  left_join(.,slc_dataT,join_by(rowname)) %>% 
-  column_to_rownames('rowname') %>% 
-  dplyr::select(rho_LD50,rho_tnni) %>% 
-  as.matrix()
-
-slc_mat_sig <- slc_data %>% 
-  left_join(.,slc_dataT,join_by(rowname)) %>% 
-  column_to_rownames('rowname') %>% 
-  dplyr::select(sig_LD50,sig_tnni) %>% 
-  mutate_all(~replace(., is.na(.), 1)) %>% 
-  as.matrix()
-  
-
-# col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
-
-Heatmap( slc_mat, name = "correlation value", 
-         column_title = "Correlations of LD50 and troponin release to log2cpm of SCL28A3",
-         cluster_rows = FALSE, cluster_columns = FALSE,
-         # col=col_fun1,
-         column_names_rot = 0,na_col = "grey",
-         cell_fun = function(j, i, x, y, width, height, fill) {
-           if(slc_mat_sig[i, j]<0.05)
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-          })
- 
 ```
 
 
