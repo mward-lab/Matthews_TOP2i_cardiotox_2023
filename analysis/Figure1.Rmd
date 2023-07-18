@@ -41,7 +41,7 @@ knitr::include_graphics("code/figurelegeddrc.png",error=FALSE)
 things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
 
 ## B. Example dose response curves from 48 hour drug exposure.
-```{r B drc}
+```{r B drc, fig.width=8}
 daplot <- readRDS("output/daplot.RDS")  
 dxplot <- readRDS("output/dxplot.RDS")
 epplot<- readRDS("output/epplot.RDS")
@@ -65,7 +65,7 @@ Heatmap_sig <- readRDS("data/Heatmap_sig.RDS")
 col_funld <- circlize::colorRamp2(c(0, 1), c("white", "darkblue"))
 Heatmap(Heatmap_mat,
         column_title = "Pearson correlation of LD50s between treatments",
-        name = "(p value)",
+        name = "rho value",
         cluster_rows = FALSE, 
         cluster_columns = FALSE,
         column_names_rot = 0,
@@ -119,7 +119,9 @@ graphLD50 <-
   xlab("Treatment")+
   geom_signif(comparisons =list(c("DOX","EPI"),
                                 c ("DOX","DNR"),
-                                c("DOX","MTX")),
+                                c ("EPI","MTX"),
+                                c("DOX","MTX"),
+                                c("DNR","MTX")),
              test="t.test",
              map_signif_level=TRUE,
              textsize =4,
