@@ -38,6 +38,55 @@ egenes <- read.csv("output/egenes.csv",row.names = 1)
 
 ```
 
+```{r ggvennoverride function, include=FALSE}
+
+plot_venn <- function (x, show_intersect, set_color, set_size, label, label_geom,
+                       label_alpha, label_color, label_size, label_percent_digit,
+                       label_txtWidth, edge_lty, edge_size, ...)  {
+  venn <- Venn(x)
+  data <- process_data(venn)
+  p <- ggplot() + geom_sf(aes_string(fill = "count"), data = data@region) +
+    geom_sf(aes_string(color = "name"), data = data@setEdge,
+            show.legend = F, lty = edge_lty, size = edge_size, color = set_color) +
+    geom_sf_text(aes_string(label = "name"), data = data@setLabel,
+                 size = set_size, color = set_color) + theme_void()
+  if (label != "none" & show_intersect == FALSE) {
+    region_label <- data@region %>% dplyr::filter(.data$component ==
+                                                    "region") %>% dplyr::mutate(percent = paste(round(.data$count *
+                                                                                                        100/sum(.data$count), digits = label_percent_digit),
+                                                                                                "%", sep = "")) %>% dplyr::mutate(both = paste(.data$count,
+                                                                                                                                               paste0("(", .data$percent, ")"), sep = "\n"))
+    if (label_geom == "label") {
+      p <- p + geom_sf_label(aes_string(label = label),
+                             data = region_label, alpha = label_alpha, color = label_color,
+                             size = label_size, lineheight = 0.85, label.size = NA)
+    }
+    if (label_geom == "text") {
+      p <- p + geom_sf_text(aes_string(label = label),
+                            data = region_label, alpha = label_alpha, color = label_color,
+                            size = label_size, lineheight = 0.85)
+    }
+  }
+  if (show_intersect == TRUE) {
+    items <- data@region %>% dplyr::rowwise() %>% dplyr::mutate(text = stringr::str_wrap(paste0(.data$item,
+                                                                                                collapse = " "), width = label_txtWidth)) %>% sf::st_as_sf()
+    label_coord = sf::st_centroid(items$geometry) %>% sf::st_coordinates()
+    p <- ggplot(items) + geom_sf(aes_string(fill = "count")) +
+      geom_sf_text(aes_string(label = "name"), data = data@setLabel,
+                   inherit.aes = F) + geom_text(aes_string(label = "count",
+                                                           text = "text"), x = label_coord[, 1], y = label_coord[,
+                                                                                                                 2], show.legend = FALSE) + theme_void()
+    ax <- list(showline = FALSE)
+    p <- plotly::ggplotly(p, tooltip = c("text")) %>% plotly::layout(xaxis = ax,
+                                                                     yaxis = ax)
+  }
+  p
+}
+
+```   
+
+
+
 
 # Figure 8
 
@@ -200,7 +249,9 @@ ggsave("output/Figures/knowlesenrich.eps",width = 4, height =8, units = "in")
 
 
 ## C. DOXreQTLS strongly overlap other AC drugs
-```{r DOXreQTLs across other treatments,ffig.height=4, fig.width=8}
+```{r DOXreQTLs across other treatments,fig.height=4, fig.width=8}
+
+r DOXreQTLs de_non de,ffig.height=4, fig.width=8}
 DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
 DOXeQTL_table <- toplistall %>% 
   mutate(id = dplyr::case_match(id, "Daunorubicin"~"DNR",
@@ -217,46 +268,40 @@ DOXeQTL_table <- toplistall %>%
   group_by(id,DOXreQTLs,sigcount) %>% 
   tally() %>% 
   as.data.frame() %>% 
-  pivot_wider(.,id_cols = c(id,DOXreQTLs),
-              names_from = sigcount,
-              values_from = n) %>% 
-  dplyr::select(id,DOXreQTLs,sig) 
+  filter(DOXreQTLs=="y")
 
-DOXeQTL_table %>%
-  add_row(id=c("Dox-specific DEGs","Dox-specific\n DEGs"),
-          DOXreQTLs=c("no","y"), 
-          sig = c(62,1)) %>% 
+DoxeqtlDEnDE <- DOXeQTL_table %>%
+  add_row(id=c("Dox-specific\n DEGs","Dox-specific\n DEGs"),
+          DOXreQTLs=c("y"), 
+          sigcount=c("notsig","sig"),n = c(62,1)) %>% 
   dplyr::filter(DOXreQTLs=="y") %>% 
-  mutate(opp= 142-sig) %>% 
-  filter(id !=c('TRZ','DOX')) %>% 
-  rename("yes"=sig, "no"=opp) %>% 
-  mutate(y_percent= paste0(sprintf("%2.1f", yes/(yes+no)*100), "%"),
-         n_percent = paste0(sprintf("%2.1f", no/(yes+no)*100),"%")) %>% 
-  pivot_longer(!c(id,DOXreQTLs,y_percent,n_percent), 
+  pivot_wider(id, names_from = "sigcount", values_from = "n") %>% 
+  mutate(percent= paste0(sprintf("%2.1f", sig/(sig+notsig)*100), "%")) %>% 
+  pivot_longer(!c(id,percent), 
                names_to="group", 
                values_to = "count") %>% 
-  mutate(id=factor(id, levels=c("EPI","DNR", "MTX","Dox-specific\n DEGs"))) %>%
-  ggplot(., aes(y=id,x=count,fill=group))+
+  mutate(id=factor(id, levels=c("EPI","DNR", "MTX","Dox-specific\n DEGs"))) %>% 
+  dplyr::filter(id != c("DOX","TRZ")) 
+    
+    
+  ggplot(DoxeqtlDEnDE, aes(y=id,x=count,fill=group))+
   geom_col(position='fill')+
   theme_classic()+
   ylab("")+
-  xlab(" ")+
-  scale_fill_manual(values=c("#2297E6","red2"), 
-                    labels=c("not DOXreQTL","DOXreQTL"))+
-  ggtitle("DOXreQTLs found in other reQTLS")+
+  xlab("Proportion of genes")+
+  scale_fill_manual(values=c("cornflowerblue","darkred"), 
+                    labels=c("not DE","DE"))+
+  ggtitle("DOXreQTLs in other treatments")+
   scale_y_discrete(limits=rev)+
   scale_x_continuous(expand = expansion(c(0, 0.05)))+
-  geom_text(aes(y=id,x=1, label = n_percent,hjust =.8))+
+  geom_text(aes(y=id,x=1, label = percent,hjust =.8))+
   theme(plot.title = element_text( hjust = 0.5),
         axis.title = element_text(size = 16, color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.line = element_line(linewidth = 1.0),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
-
-ggsave("output/Figures/DOXreqtls.eps",width = 4, height =8, units = "in")
 ```
-
 
 ## D. Only one DOXreQTL is associated with Dox-specific DEGs 
 

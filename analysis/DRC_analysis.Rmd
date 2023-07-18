@@ -40,7 +40,7 @@ Analysis was done as follows:
 
 Part 2 of the analysis of data begins by entering data from the excel compilation to R. The data is stored as an excel file, which was then stored as an .RDS object for analysis retrieval.
 
-Step one in R is loading the libraries needed for analysis:
+Step 1 in R is loading the libraries needed for analysis:
 
 ```{r Libraries to load, echo=TRUE, message=FALSE, warning=FALSE}
 library(car)
@@ -526,7 +526,7 @@ mtplot <-
     #            size =.5, 
     #            width = .1)+
     stat_smooth(method = "drm", 
-                method.args = list(fct = L.4(c(NA,NA,NA,NA))), se = FALSE)+
+                method.args = list(fct = L.4(c(NA,NA,1,NA))), se = FALSE)+
     ylim(0,1.5)+
     scale_color_brewer(palette = "Dark2")+
   # guides(color=guide_legend(title="Treatment"))+
@@ -1081,6 +1081,10 @@ saveup <- LD50_table %>%
   summarise_at(vars(ld50),list(name = mean)) %>% 
   as.data.frame()
 
+extractframe <- saveup %>% 
+  pivot_wider(id_cols=indv, 
+              names_from = rowname, 
+              values_from = name) %>% as.data.frame
 
 saveup %>% 
   pivot_wider(id_cols=indv, 
@@ -1124,7 +1128,7 @@ saveup %>%
                                     color = "black",
                                     face = "bold"))
 
-saveup %>% 
+ saveup %>% 
   pivot_wider(id_cols=indv, 
               names_from = rowname, 
               values_from = name) %>% 
@@ -1146,6 +1150,55 @@ saveup %>%
                                     color = "black",
                                     face = "bold"))
 
+```
+
+```{r making ld50heatmap}
+
+
+extract_pearson <- function(df, a, b) {
+
+ model <- cor.test(df[[a]],df[[b]],data=df, method="pearson")
+  onion <- broom::tidy(model)
+ return(onion)
+
+}
+
+ldHM <-list()
+
+ldHM$DOX.DOX <- extract_pearson(extractframe,"DOX","DOX")
+ ldHM$DOX.EPI <- extract_pearson(extractframe,"DOX","EPI")
+ ldHM$DOX.DNR <- extract_pearson(extractframe,"DOX","DNR")
+ ldHM$DOX.MTX <- extract_pearson(extractframe,"DOX","MTX")
+ ldHM$EPI.DOX <- extract_pearson(extractframe,"EPI","DOX")
+ ldHM$EPI.EPI <- extract_pearson(extractframe,"EPI","EPI")
+ ldHM$EPI.DNR <- extract_pearson(extractframe,"EPI","DNR")
+ ldHM$EPI.MTX <- extract_pearson(extractframe,"EPI","MTX")
+ ldHM$DNR.DOX <- extract_pearson(extractframe,"DNR","DOX")
+ ldHM$DNR.EPI <- extract_pearson(extractframe,"DNR","EPI")
+ ldHM$DNR.DNR <- extract_pearson(extractframe,"DNR","DNR")
+ ldHM$DNR.MTX <- extract_pearson(extractframe,"DNR","MTX")
+ ldHM$MTX.DOX <- extract_pearson(extractframe,"MTX","DOX")
+ ldHM$MTX.EPI <- extract_pearson(extractframe,"MTX","EPI")
+ ldHM$MTX.DNR <- extract_pearson(extractframe,"MTX","DNR")
+ ldHM$MTX.MTX <- extract_pearson(extractframe,"MTX","MTX")
+ 
+ for_mat <- map_df(ldHM, ~as.data.frame(.x), .id="combo")
+
+Heatmap_mat <- for_mat %>% 
+  dplyr::select(combo, estimate) %>% 
+  separate(combo, into =c("drug1","drug2")) %>% 
+  pivot_wider(id_cols=drug1, names_from = drug2, values_from =estimate) %>% 
+  column_to_rownames("drug1") %>% 
+  as.matrix()
+
+Heatmap_sig <- for_mat %>% 
+  dplyr::select(combo, p.value) %>% 
+  separate(combo, into =c("drug1","drug2")) %>% 
+  pivot_wider(id_cols=drug1, names_from = drug2, values_from =p.value) %>% 
+  column_to_rownames("drug1") %>% 
+  as.matrix()
+# saveRDS(Heatmap_mat,"data/Heatmap_mat.RDS")
+# saveRDS(Heatmap_sig,"data/Heatmap_sig.RDS")
 ```
 
 ##ld50 condensed
@@ -1390,14 +1443,271 @@ for (each in trt){
  } 
 
 ```
+###  Single heatmap (A)
 
-```{r something}
 
-for (each in trt){
- daf <- paste0(each,"_intv")
- 
-print(daf)
+```{r make replicate df}
+
+LD50_table <- read.csv("data/ld50_table.csv",row.names = 1)
+
+
+Via_A_heatmap <- LD50_table %>% 
+  dplyr::select(ind1a,ind2a,ind3a,ind4a,ind5a,ind6a) %>% 
+  rownames_to_column() %>% 
+  as.tibble()%>% 
+  mutate(rowname=case_match(rowname,'1'~'DNR','2'~'DOX','3'~'EPI','4'~'MTX', .default = rowname))%>% 
+  pivot_longer(!rowname,names_to = 'indv', values_to = 'ld50') %>% 
+  mutate(replicate=substr(indv,5,5)) %>% 
+  mutate(indv=str_sub(indv, 4,4)) %>% 
+     # dplyr::filter(replicate=="a") %>% 
+   as.data.frame()
+Via_B_heatmap <- LD50_table %>% 
+  dplyr::select(ind1b,ind2b,ind3b,ind4b,ind5b,ind6b) %>% 
+  rownames_to_column() %>% 
+  as.tibble()%>% 
+  mutate(rowname=case_match(rowname,'1'~'DNR','2'~'DOX','3'~'EPI','4'~'MTX', .default = rowname))%>% 
+  pivot_longer(!rowname,names_to = 'indv', values_to = 'ld50') %>% 
+  mutate(replicate=substr(indv,5,5)) %>% 
+  mutate(indv=str_sub(indv, 4,4)) %>% 
+     # dplyr::filter(replicate=="a") %>% 
+   as.data.frame()
+
+
+extractframea <- Via_A_heatmap  %>% 
+  pivot_wider(id_cols=indv, 
+              names_from = rowname, 
+              values_from = ld50) %>% as.data.frame
+extractframeb <- Via_B_heatmap  %>% 
+  pivot_wider(id_cols=indv, 
+              names_from = rowname, 
+              values_from = ld50) %>% as.data.frame
+
+library(ComplexHeatmap)
+
+```
+```{r extract a and b for separate heatmaps }
+
+
+extract_pearson <- function(df, a, b) {
+
+ model <- cor.test(df[[a]],df[[b]],data=df, method="pearson")
+  onion <- broom::tidy(model)
+ return(onion)
 
 }
 
+ex_aHM <-list()
+
+ ex_aHM$DOX.DOX <- extract_pearson(extractframea,"DOX","DOX")
+ ex_aHM$DOX.EPI <- extract_pearson(extractframea,"DOX","EPI")
+ ex_aHM$DOX.DNR <- extract_pearson(extractframea,"DOX","DNR")
+ ex_aHM$DOX.MTX <- extract_pearson(extractframea,"DOX","MTX")
+ ex_aHM$EPI.DOX <- extract_pearson(extractframea,"EPI","DOX")
+ ex_aHM$EPI.EPI <- extract_pearson(extractframea,"EPI","EPI")
+ ex_aHM$EPI.DNR <- extract_pearson(extractframea,"EPI","DNR")
+ ex_aHM$EPI.MTX <- extract_pearson(extractframea,"EPI","MTX")
+ ex_aHM$DNR.DOX <- extract_pearson(extractframea,"DNR","DOX")
+ ex_aHM$DNR.EPI <- extract_pearson(extractframea,"DNR","EPI")
+ ex_aHM$DNR.DNR <- extract_pearson(extractframea,"DNR","DNR")
+ ex_aHM$DNR.MTX <- extract_pearson(extractframea,"DNR","MTX")
+ ex_aHM$MTX.DOX <- extract_pearson(extractframea,"MTX","DOX")
+ ex_aHM$MTX.EPI <- extract_pearson(extractframea,"MTX","EPI")
+ ex_aHM$MTX.DNR <- extract_pearson(extractframea,"MTX","DNR")
+ ex_aHM$MTX.MTX <- extract_pearson(extractframea,"MTX","MTX")
+ 
+ for_matA <- map_df(ex_aHM, ~as.data.frame(.x), .id="combo")
+
+Heatmap_matA <- for_matA %>% 
+  dplyr::select(combo, estimate) %>% 
+  separate(combo, into =c("drug1","drug2")) %>% 
+  pivot_wider(id_cols=drug1, names_from = drug2, values_from =estimate) %>% 
+  column_to_rownames("drug1") %>% 
+  as.matrix()
+
+Heatmap_sigA <- for_matA %>% 
+  dplyr::select(combo, p.value) %>% 
+  separate(combo, into =c("drug1","drug2")) %>% 
+  pivot_wider(id_cols=drug1, names_from = drug2, values_from =p.value) %>% 
+  column_to_rownames("drug1") %>% 
+  as.matrix()
+   
+col_funld <- circlize::colorRamp2(c(0, 1), c("white", "darkblue"))
+Heatmap(Heatmap_matA,
+        column_title = "Pearson correlation of LD50s between treatment rep 1",
+        name = "rho value",
+        cluster_rows = FALSE, 
+        cluster_columns = FALSE,
+        column_names_rot = 0,
+        column_names_centered = TRUE,
+       col = col_funld,
+        # na_col="lightyellow",
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        grid.text(sprintf("%.2f",Heatmap_matA [i, j]), x, y, gp = gpar(fontsize = 10))
+})
+
+
+
+
 ```
+##### plot B
+```{r B heatmap}
+
+
+ex_bHM <-list()
+
+ex_bHM$DOX.DOX <- extract_pearson(extractframeb,"DOX","DOX")
+ ex_bHM$DOX.EPI <- extract_pearson(extractframeb,"DOX","EPI")
+ ex_bHM$DOX.DNR <- extract_pearson(extractframeb,"DOX","DNR")
+ ex_bHM$DOX.MTX <- extract_pearson(extractframeb,"DOX","MTX")
+ ex_bHM$EPI.DOX <- extract_pearson(extractframeb,"EPI","DOX")
+ ex_bHM$EPI.EPI <- extract_pearson(extractframeb,"EPI","EPI")
+ ex_bHM$EPI.DNR <- extract_pearson(extractframeb,"EPI","DNR")
+ ex_bHM$EPI.MTX <- extract_pearson(extractframeb,"EPI","MTX")
+ ex_bHM$DNR.DOX <- extract_pearson(extractframeb,"DNR","DOX")
+ ex_bHM$DNR.EPI <- extract_pearson(extractframeb,"DNR","EPI")
+ ex_bHM$DNR.DNR <- extract_pearson(extractframeb,"DNR","DNR")
+ ex_bHM$DNR.MTX <- extract_pearson(extractframeb,"DNR","MTX")
+ ex_bHM$MTX.DOX <- extract_pearson(extractframeb,"MTX","DOX")
+ ex_bHM$MTX.EPI <- extract_pearson(extractframeb,"MTX","EPI")
+ ex_bHM$MTX.DNR <- extract_pearson(extractframeb,"MTX","DNR")
+ ex_bHM$MTX.MTX <- extract_pearson(extractframeb,"MTX","MTX")
+ 
+ for_matB <- map_df(ex_bHM, ~as.data.frame(.x), .id="combo")
+
+Heatmap_matB <- for_matB %>% 
+  dplyr::select(combo, estimate) %>% 
+  separate(combo, into =c("drug1","drug2")) %>% 
+  pivot_wider(id_cols=drug1, names_from = drug2, values_from =estimate) %>% 
+  column_to_rownames("drug1") %>% 
+  as.matrix()
+
+Heatmap_sigB <- for_matB %>% 
+  dplyr::select(combo, p.value) %>% 
+  separate(combo, into =c("drug1","drug2")) %>% 
+  pivot_wider(id_cols=drug1, names_from = drug2, values_from =p.value) %>% 
+  column_to_rownames("drug1") %>% 
+  as.matrix()
+   col_funld <- circlize::colorRamp2(c(0, 1), c("white", "darkblue"))
+Heatmap(Heatmap_matB,
+        column_title = "Pearson correlation of LD50s Rep B",
+        name = "rho value",
+        cluster_rows = FALSE, 
+        cluster_columns = FALSE,
+        column_names_rot = 0,
+        column_names_centered = TRUE,
+       col = col_funld,
+        # na_col="lightyellow",
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        grid.text(sprintf("%.2f",Heatmap_matB [i, j]), x, y, gp = gpar(fontsize = 14))
+})
+
+```
+
+
+
+
+
+##  LD50 by avg of viability:
+
+
+ 
+```{r daunavg stuff, message=FALSE, warning=FALSE}
+
+daunls_avg <- list()
+for(k in 1:6){
+thingda <-  dplyr::filter(DA, indv==k)
+  thingda.m <- drm(Viability~Conc, data = thingda, fct=LL.4(c(NA, NA,1, NA),names=c("Slope", "Lower Limit","Upper Limit","ED50")))
+  # dnr_sl[k] <- thingda.m$fit$par[1]
+  daunls_avg[paste0(k)] <- broom::tidy(ED(thingda.m, respLev = 50))
+}
+DNR_50_avg <- map_df(daunls_avg, ~as.data.frame(.x), .id="indv")
+
+```
+
+```{r DOX, message=FALSE, warning=FALSE}
+
+ doxls_avg<-list()
+
+for(k in 1:6){
+thingdx <-  dplyr::filter(DX, indv==k)
+  thingdx.m <- drm(Viability~Conc, data = thingdx, fct=LL.4(c(NA, NA,1, NA),names=c("Slope","Lower Limit","Upper Limit","ED50")))
+   doxls_avg[paste0(k)] <- broom::tidy(ED(thingda.m, respLev = 50))
+}
+
+DOX_50_avg <- map_df(dx_confint, ~as.data.frame(.x), .id="indv")
+
+
+
+```
+
+```{r EPI, message=FALSE, warning=FALSE}
+ ep_confint<-list()
+ for(k in ID){ 
+ thingep <-  filter(EP2, SampleID==k)
+  thingep.m <- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, NA,1, NA),names=c("Slope", "Lower Limit","Upper Limit","ED50")))
+  epi_sl[k] <- thingep.m$fit$par[1]
+  # onione <- ED(thingep.m, c(50), interval = "delta")
+  epils[k] <- thingep.m$fit$par[3]
+  # print(paste0(k, " Epirubicin"))
+  ep_confint[paste0(k)]<-list(predict(thingep.m,interval="confidence"))
+ }
+
+EPI_intv <- map_df(ep_confint, ~as.data.frame(.x), .id="indv")
+EPI_intv$Conc <- EP2$Conc
+```
+
+```{r MTX, message=FALSE, warning=FALSE}
+ mt_confint<-list()
+for(k in ID){
+  thingmt <-  filter(MT2, SampleID==k)
+  thingmt.m <- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA,NA,NA, NA),names=c("Slope","Lower Limit","Upper Limit", "ED50")))
+  mtx_sl[k] <- thingmt.m$fit$par[1]
+  # onionm <- ED(thingmt.m, c(50), interval = "delta")
+  mitols[k] <- thingmt.m$fit$par[3]
+  # print(paste0(k, " Mitoxantrone"))
+  mt_confint[paste0(k)]<-list(predict(thingmt.m,interval="confidence"))
+}
+MTX_intv <- map_df(mt_confint, ~as.data.frame(.x), .id="indv")
+MTX_intv$Conc<- MT2$Conc 
+  
+  
+```
+
+```{r TRZ, message=FALSE, warning=FALSE}
+ tr_confint<-list()
+
+for(k in ID){
+  
+  thingtr <-  filter(TR2, SampleID==k)
+  
+  try(thingtr.m <- drm(Percent~Conc, data = thingtr, 
+                       fct=L.4(c(NA, NA,1,NA),
+                                names=c("Slope","Lower Limit","Upper Limit", "ED50")))) 
+  # trz_sl[k] <- thingtr.m$fit$par[1]
+  
+  # trasls[k] <- thingtr.m$fit$par[3]
+  
+  try(tr_confint[paste0(k)]<-list(predict(thingtr.m,interval="confidence")))
+  
+  
+        }
+ 
+TRZ_intv <- map_df(tr_confint, ~as.data.frame(.x), .id="indv")
+TRZ_intv$Conc <- TR2$Conc
+```
+
+```{r VEH, message=FALSE, warning=FALSE}
+ ve_confint<-list()
+for(k in ID){
+  thingve <-  filter(VE2, SampleID==k)
+  try(thingve.m <- tryCatch(drm(Percent~Conc, data = thingve, fct=L.4(c(0, NA,NA,NA),names=c("Slope","Lower Limit","Upper Limit", "ED50")))))
+  try(veh_sl[k] <- thingve.m$fit$par[1])
+ 
+  try(vehls[k] <- thingve.m$fit$par[3])
+  # print(paste0(k, " Mitoxantrone"))
+  try(ve_confint[paste0(k)]<-list(predict(thingve.m,interval="confidence")))
+}
+VEH_intv <- map_df(ve_confint, ~as.data.frame(.x), .id="indv")
+VEH_intv$Conc <- VE2$Conc
+
+```}
