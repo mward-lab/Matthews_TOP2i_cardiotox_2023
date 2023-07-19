@@ -1265,8 +1265,8 @@ avgLD50 <- readRDS("data/avgLD50.RDS")
 #         axis.text = element_text(size = 12, color = "black", angle = 0),
 #         strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
 
-graphLD50
-avgLD50 %>% dplyr::group_by(Treatment) %>% summarize_at(vars(LD50), list(median = median))
+
+# avgLD50 %>% dplyr::group_by(Treatment) %>% summarize_at(vars(LD50), list(median = median))
 
 
 graphBC <- BC_cell_lines %>%
@@ -1405,7 +1405,7 @@ avg_05via_ld50 <- avg_05_via %>%
 # write.csv(avg_05via_ld50,"data/LD50_05via.csv")
 ```
 
-```{r double plot, echo=false, eval=FALSE}
+```{r double plot, echo=FALSE, eval=FALSE}
 doubl_plot <- data.frame("ind2a", "ind2b", "ind5a", "ind5b")
 trt <- data.frame("DOX","EPI", "DNR", "MTX", "TRZ", "VEH")
 plotloop_list <- list("DOX_intv","EPI_intv","DNR_intv", "MTX_intv","TRZ_intv","VEH_intv")
