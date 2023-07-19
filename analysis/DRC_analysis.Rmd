@@ -633,8 +633,6 @@ veplot
 legend_b <- ggpubr::get_legend(leg)
 
 ggpubr::as_ggplot(legend_b)
-legend_b
-
 # plan1 <- plot_grid(daplot,dxplot,epplot,NULL,mtplot, trplot,veplot,legend_b,ncol =4)
 plan2 <-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,legend_b,ncol =4)
 saveRDS(daplot,"output/daplot.RDS")
@@ -685,7 +683,7 @@ ID <- c("ind1a",
 
 ```
 
-```{r daun stuff, message=FALSE, warning=FALSE}
+```{r daun stuff, message=FALSE, warning=FALSE, include=FALSE}
 da_confint <- list()
 for(k in ID){
 thingda <-  filter(DA2, SampleID==k)
@@ -925,7 +923,7 @@ for (each in 1:6){
     geom_ribbon(data = newdata, aes(x = Conc, y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
               alpha = 0.1, color = "white")+
      stat_smooth(method = "drm",
-                  method.args = list(fct = L.4(c(NA,NA,NA,NA))),
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
                  se = FALSE)+
       ylim(-.4,1.5)+
     guides(color="none", alpha = "none", fill="none")+
@@ -1019,7 +1017,7 @@ for (each in 1:6){
 
 ```{r boxplot of slope}
 library(ggsignif)
-# ld50_table <- bind_rows(daunls,doxols,epils,mitols)
+ld50_table <- bind_rows(daunls,doxols,epils,mitols)
 # write.csv(ld50_table,"data/ld50_table.csv",
 #           row.names =c("DNR","DOX","EPI","MTX"))
 # slope_table <- bind_rows(dnr_sl,dox_sl,epi_sl,mtx_sl)
@@ -1048,9 +1046,10 @@ ggplot(avg_slope, aes(x=rowname, y=name))+
     scale_fill_manual(values=drug_pal_fact)+
     theme_classic() +
     ylab("average slope") +
-    geom_signif(comparisons =list(c("DNR","DOX"),
+  xlab("")+
+    geom_signif(comparisons =list(c("MTX","DOX"),
                                   c("EPI","DOX"),
-                                  c("MTX","DOX")),
+                                  c("DNR","DOX")),
                 test= "t.test",
                 map_signif_level=TRUE,
                 textsize =4,
@@ -1235,36 +1234,36 @@ drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
 avgLD50 <- readRDS("data/avgLD50.RDS")
   
-graphLD50 <- avgLD50 %>%     mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
-                                        "Doxo"~"Doxorubicin",
-                                        "Epi"~"Epirubicin",
-                                        "Mito"~"Mitoxantrone",
-                                        "Tras"~"Trastuzumab",
-                                        "Veh"~ "Vehicle", .default= Treatment)) %>% 
-  mutate(indv= factor(indv)) %>% 
-  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
-  geom_boxplot(position = "identity",aes(fill=Treatment))+
-  geom_point(aes(color = indv,
-                 size = 5,alpha = 0.5)) +
-  ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
-  xlab("Treatment")+
-  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
-  scale_color_brewer(palette = "Dark2",
-                     name = "Individual", 
-                     labels = c("1","2","3","4","5","6"))+
-  ylim(-2,2)+
-  scale_fill_manual(values=drug_palc)+
-  theme_bw() + 
-  theme(plot.title = element_text(hjust =0.5, size = 18))+
-  guides(alpha ="none", size = "none", fill= "none")+
-  #theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = "none",
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
+# graphLD50 <- avgLD50 %>%     mutate(Treatment=case_match(Treatment,"Daun"~"Daunorubicin",
+#                                         "Doxo"~"Doxorubicin",
+#                                         "Epi"~"Epirubicin",
+#                                         "Mito"~"Mitoxantrone",
+#                                         "Tras"~"Trastuzumab",
+#                                         "Veh"~ "Vehicle", .default= Treatment)) %>% 
+#   mutate(indv= factor(indv)) %>% 
+#   ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+#   geom_boxplot(position = "identity",aes(fill=Treatment))+
+#   geom_point(aes(color = indv,
+#                  size = 5,alpha = 0.5)) +
+#   ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
+#   xlab("Treatment")+
+#   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
+#   scale_color_brewer(palette = "Dark2",
+#                      name = "Individual", 
+#                      labels = c("1","2","3","4","5","6"))+
+#   ylim(-2,2)+
+#   scale_fill_manual(values=drug_palc)+
+#   theme_bw() + 
+#   theme(plot.title = element_text(hjust =0.5, size = 18))+
+#   guides(alpha ="none", size = "none", fill= "none")+
+#   #theme(strip.background = element_rect(fill = "transparent")) +
+#   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+#         legend.position = "none",
+#         axis.title = element_text(size = 15, color = "black"),
+#         axis.ticks = element_line(linewidth = 1.5),
+#         axis.line = element_line(linewidth = 1.5),
+#         axis.text = element_text(size = 12, color = "black", angle = 0),
+#         strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
 
 graphLD50
 avgLD50 %>% dplyr::group_by(Treatment) %>% summarize_at(vars(LD50), list(median = median))
@@ -1624,90 +1623,76 @@ DNR_50_avg <- map_df(daunls_avg, ~as.data.frame(.x), .id="indv")
 
 ```
 
-```{r DOX, message=FALSE, warning=FALSE}
+```{r DOXavg, message=FALSE, warning=FALSE, include=FALSE}
 
  doxls_avg<-list()
 
 for(k in 1:6){
 thingdx <-  dplyr::filter(DX, indv==k)
   thingdx.m <- drm(Viability~Conc, data = thingdx, fct=LL.4(c(NA, NA,1, NA),names=c("Slope","Lower Limit","Upper Limit","ED50")))
-   doxls_avg[paste0(k)] <- broom::tidy(ED(thingda.m, respLev = 50))
+   doxls_avg[paste0(k)] <- broom::tidy(ED(thingdx.m, respLev = 50))
 }
 
-DOX_50_avg <- map_df(dx_confint, ~as.data.frame(.x), .id="indv")
+DOX_50_avg<- map_df(doxls_avg, ~as.data.frame(.x), .id="indv")
 
 
 
 ```
 
-```{r EPI, message=FALSE, warning=FALSE}
- ep_confint<-list()
- for(k in ID){ 
- thingep <-  filter(EP2, SampleID==k)
-  thingep.m <- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, NA,1, NA),names=c("Slope", "Lower Limit","Upper Limit","ED50")))
-  epi_sl[k] <- thingep.m$fit$par[1]
-  # onione <- ED(thingep.m, c(50), interval = "delta")
-  epils[k] <- thingep.m$fit$par[3]
-  # print(paste0(k, " Epirubicin"))
-  ep_confint[paste0(k)]<-list(predict(thingep.m,interval="confidence"))
- }
-
-EPI_intv <- map_df(ep_confint, ~as.data.frame(.x), .id="indv")
-EPI_intv$Conc <- EP2$Conc
-```
-
-```{r MTX, message=FALSE, warning=FALSE}
- mt_confint<-list()
-for(k in ID){
-  thingmt <-  filter(MT2, SampleID==k)
-  thingmt.m <- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA,NA,NA, NA),names=c("Slope","Lower Limit","Upper Limit", "ED50")))
-  mtx_sl[k] <- thingmt.m$fit$par[1]
-  # onionm <- ED(thingmt.m, c(50), interval = "delta")
-  mitols[k] <- thingmt.m$fit$par[3]
-  # print(paste0(k, " Mitoxantrone"))
-  mt_confint[paste0(k)]<-list(predict(thingmt.m,interval="confidence"))
+```{r EPIavg, message=FALSE, warning=FALSE, include=FALSE}
+epls_avg<- list()
+ for(k in 1:6){
+thingep <-  dplyr::filter(EP, indv==k)
+  thingep.m <- drm(Viability~Conc, data = thingep, fct=LL.4(c(NA, NA,1, NA),names=c("Slope","Lower Limit","Upper Limit","ED50")))
+   epls_avg[paste0(k)] <- broom::tidy(ED(thingep.m, respLev = 50))
 }
-MTX_intv <- map_df(mt_confint, ~as.data.frame(.x), .id="indv")
-MTX_intv$Conc<- MT2$Conc 
-  
-  
+
+EPI_50_avg <- map_df(epls_avg, ~as.data.frame(.x), .id="indv")
+
 ```
 
-```{r TRZ, message=FALSE, warning=FALSE}
- tr_confint<-list()
-
-for(k in ID){
-  
-  thingtr <-  filter(TR2, SampleID==k)
-  
-  try(thingtr.m <- drm(Percent~Conc, data = thingtr, 
-                       fct=L.4(c(NA, NA,1,NA),
-                                names=c("Slope","Lower Limit","Upper Limit", "ED50")))) 
-  # trz_sl[k] <- thingtr.m$fit$par[1]
-  
-  # trasls[k] <- thingtr.m$fit$par[3]
-  
-  try(tr_confint[paste0(k)]<-list(predict(thingtr.m,interval="confidence")))
-  
-  
-        }
- 
-TRZ_intv <- map_df(tr_confint, ~as.data.frame(.x), .id="indv")
-TRZ_intv$Conc <- TR2$Conc
-```
-
-```{r VEH, message=FALSE, warning=FALSE}
- ve_confint<-list()
-for(k in ID){
-  thingve <-  filter(VE2, SampleID==k)
-  try(thingve.m <- tryCatch(drm(Percent~Conc, data = thingve, fct=L.4(c(0, NA,NA,NA),names=c("Slope","Lower Limit","Upper Limit", "ED50")))))
-  try(veh_sl[k] <- thingve.m$fit$par[1])
- 
-  try(vehls[k] <- thingve.m$fit$par[3])
-  # print(paste0(k, " Mitoxantrone"))
-  try(ve_confint[paste0(k)]<-list(predict(thingve.m,interval="confidence")))
+```{r MTXavg, message=FALSE, warning=FALSE, include=FALSE}
+mtls_avg <- list()
+ for(k in 1:6){
+thingmt <-  dplyr::filter(MT, indv==k)
+  thingmt.m <- drm(Viability~Conc, data = thingmt, fct=LL.4(c(NA, NA,1, NA),names=c("Slope","Lower Limit","Upper Limit","ED50")))
+   mtls_avg[paste0(k)] <- broom::tidy(ED(thingmt.m, respLev = 50))
 }
-VEH_intv <- map_df(ve_confint, ~as.data.frame(.x), .id="indv")
-VEH_intv$Conc <- VE2$Conc
 
-```}
+MTX_50_avg <- map_df(mtls_avg, ~as.data.frame(.x), .id="indv")
+```
+```{r disply new ld50 avg}
+
+coll_avg_ld50 <- list(DOX_50_avg,EPI_50_avg,DNR_50_avg,MTX_50_avg)
+names(coll_avg_ld50) <- c("DOX","EPI","DNR","MTX")
+ new_ld50avg <- map_df(coll_avg_ld50, ~as.data.frame(.x), .id="Treatment")
+ # saveRDS(new_ld50avg, "data/new_ld50avg.RDS")
+# redo_graphLD50 <- 
+  new_ld50avg %>%   
+  mutate(Treatment= factor(Treatment, levels = c("DOX","EPI","DNR","MTX"))) %>% 
+  mutate(indv= factor(indv, levels = c('1','2','3','4','5','6'))) %>% 
+  ggplot(., (aes(x = (Treatment), y = log10(Estimate)))) +
+  geom_boxplot(position = "identity",aes(fill=Treatment))+
+  geom_point(aes(color = indv,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
+  xlab("Treatment")+
+  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
+  scale_color_brewer(palette = "Dark2",
+                     name = "Individual")+
+  ylim(-2,2)+
+  scale_fill_manual(values=drug_palc)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha ="none", size = "none")+
+  #theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        # legend.position = "none",
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
+
+
+```
