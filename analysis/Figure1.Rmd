@@ -23,6 +23,7 @@ library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
+library(ComplexHeatmap)
 ```
 # Figure 1
 
@@ -33,9 +34,6 @@ Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # knitr::include_graphics("output/Fig_summary1.png",error=FALSE)
 knitr::include_graphics("code/fig1plot.png")
-knitr::include_graphics("code/DRC_plotfigure1.png",error=FALSE)
-
-knitr::include_graphics("code/figurelegeddrc.png",error=FALSE)
 ```
 
 things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
@@ -55,10 +53,10 @@ print(plan2)
 Lines are a log-logistic regression of the mean from quadruplicates at 8 separate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
 
 
-## C. 48 hour 50% lethal Pearson correlation heatmap
-```{r heatmap}
-library(ComplexHeatmap)
+```{r heatmap, eval=FALSE, include=FALSE}
 
+
+## C. 48 hour 50% lethal Pearson correlation heatmap
 Heatmap_mat <- readRDS("data/Heatmap_mat.RDS")
 Heatmap_sig <- readRDS("data/Heatmap_sig.RDS")
 
@@ -80,48 +78,25 @@ Heatmap(Heatmap_mat,
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```{r LD50}
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
-LD50_table <- read.csv("data/ld50_table.csv",row.names = 1)
-avgLD50 <- LD50_table %>% 
-  rownames_to_column() %>% 
-  as.tibble()%>% 
-  mutate(rowname=case_match(rowname,'1'~'DNR','2'~'DOX','3'~'EPI','4'~'MTX', .default = rowname))%>% 
-  pivot_longer(!rowname,names_to = 'indv', values_to = 'ld50') %>% 
-  mutate(indv=str_sub(indv, 4,4)) %>% 
-  group_by(rowname,indv) %>% 
-  summarise_at(vars(ld50),list(name = mean)) %>% 
-  as.data.frame()
+LD50_table <- readRDS("data/new_ld50avg.RDS")
+
   
-graphLD50 <- 
-  avgLD50 %>%     
-  mutate(rowname=factor(rowname, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
-  ggplot(., (aes(x = (rowname), y = log10(name)))) +
-  geom_boxplot(position = "identity", aes(fill=rowname))+
+LD50_table %>% 
+  mutate(Treatment=factor(Treatment, 
+                          levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>% 
+  ggplot(., (aes(x = Treatment, y = log10(Estimate)))) +
+  geom_boxplot(position = "identity", aes(fill=Treatment))+
   geom_point(aes(color = indv,
                  size = 5,alpha = 0.5)) +
   ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
   xlab("Treatment")+
-  geom_signif(comparisons =list(c("DOX","EPI"),
+  geom_signif(comparisons =list(c("DNR","MTX"),
+                                c("DOX","EPI"),
                                 c ("DOX","DNR"),
-                                c ("EPI","MTX"),
-                                c("DOX","MTX"),
-                                c("DNR","MTX")),
+                                c("DOX","MTX")),
              test="t.test",
              map_signif_level=TRUE,
              textsize =4,
@@ -129,7 +104,8 @@ graphLD50 <-
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Dark2",
                      name = "Individual")+
-  ylim(-2,2.5)+
+  ylim(-1.5,3)+
+    # scale_y_continuous(expand=expansion(.001))+
   scale_fill_manual(values=drug_palc, name="Treatment")+
   theme_bw() + 
   theme(plot.title = element_text(hjust =0.5, size = 18))+
@@ -140,11 +116,11 @@ graphLD50 <-
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size=0,color = "white"),
+        axis.text.x = element_text(size=0,color = "white"),
         # axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
 
-graphLD50
+
 ```
 ## D. Breast cancer cell line 50% lethal dose plot
 ```{r BCcells ld50}
