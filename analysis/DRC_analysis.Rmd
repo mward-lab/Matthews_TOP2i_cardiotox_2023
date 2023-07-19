@@ -950,7 +950,8 @@ for (each in 1:6){
 for (each in 1:6){
    newdata <- TRZ_intv %>%
     filter(indv==paste0(pull_drc2[[each]],'a')|
-                         indv==paste0(pull_drc2[[each]],'b'))
+                         indv==paste0(pull_drc2[[each]],'b'))%>% 
+    mutate(indv=factor(indv,levels=c(paste0(pull_drc2[[each]],'a'),paste0(pull_drc2[[each]],'b'))))
   
   tr<-TR2 %>% 
     filter(SampleID==paste0(pull_drc2[[each]],'a')|
@@ -985,7 +986,8 @@ for (each in 1:6){
 for (each in 1:6){
   newdata <- VEH_intv %>%
     filter(indv==paste0(pull_drc2[[each]],'a')|
-                         indv==paste0(pull_drc2[[each]],'b'))
+                         indv==paste0(pull_drc2[[each]],'b'))%>% 
+    mutate(indv=factor(indv,levels=c(paste0(pull_drc2[[each]],'a'),paste0(pull_drc2[[each]],'b'))))
   
   ve<-VE2 %>% 
     filter(SampleID==paste0(pull_drc2[[each]],'a')|
