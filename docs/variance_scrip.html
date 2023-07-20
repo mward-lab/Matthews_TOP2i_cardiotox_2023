@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-14" />
+<meta name="date" content="2023-07-20" />
 
 <title>Variance</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Variance</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-14</h4>
+<h4 class="date">2023-07-20</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-14
+<strong>Last updated:</strong> 2023-07-20
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreefcc68055726b902fbe24a4221a473fc9c162f554targetblankfcc6805a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree3ea3f28587bf543aaa365ac5b1f7264511ac4cc5targetblank3ea3f28a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/fcc68055726b902fbe24a4221a473fc9c162f554" target="_blank">fcc6805</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/3ea3f28587bf543aaa365ac5b1f7264511ac4cc5" target="_blank">3ea3f28</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreefcc68055726b902fbe24a4221a473fc9c162f554targetblankfcc6805a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree3ea3f28587bf543aaa365ac5b1f7264511ac4cc5targetblank3ea3f28a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/fcc68055726b902fbe24a4221a473fc9c162f554" target="_blank">fcc6805</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/3ea3f28587bf543aaa365ac5b1f7264511ac4cc5" target="_blank">3ea3f28</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,6 +557,7 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -579,6 +580,7 @@ Ignored files:
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
     Ignored:    data/GTEX_setsimple.csv
@@ -603,6 +605,9 @@ Ignored files:
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
     Ignored:    data/Top2biresp_cluster24h.csv
+    Ignored:    data/Var_test_list.RDS
+    Ignored:    data/Var_test_list24.RDS
+    Ignored:    data/Var_test_list3.RDS
     Ignored:    data/Viabilitylistfull.csv
     Ignored:    data/allexpressedgenes.txt
     Ignored:    data/allgenes.txt
@@ -657,6 +662,8 @@ Ignored files:
     Ignored:    data/individual_LDH48.RDS
     Ignored:    data/indv_noveh1.csv
     Ignored:    data/kegglistDEG.RDS
+    Ignored:    data/kegglistDEG24.RDS
+    Ignored:    data/kegglistDEG3.RDS
     Ignored:    data/knowfig4.csv
     Ignored:    data/knowfig5.csv
     Ignored:    data/label_list.RDS
@@ -664,10 +671,12 @@ Ignored files:
     Ignored:    data/mean_vardrug1.csv
     Ignored:    data/mean_varframe.csv
     Ignored:    data/mymatrix.RDS
+    Ignored:    data/new_ld50avg.RDS
     Ignored:    data/nonresponse_cluster24h.csv
     Ignored:    data/norm_LDH.csv
     Ignored:    data/norm_counts.csv
     Ignored:    data/old_sets/
+    Ignored:    data/organized_drugframe.csv
     Ignored:    data/plan2plot.png
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
@@ -723,6 +732,7 @@ Untracked files:
     Untracked:  code/pearson_tox_extract.R
     Untracked:  code/plot1C.fun.R
     Untracked:  code/spearman_extract_func.R
+    Untracked:  code/venndiagramcolor_control.R
     Untracked:  cormotif_probability_genelist.csv
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
@@ -753,12 +763,9 @@ Untracked files:
 Unstaged changes:
     Modified:   analysis/DEG-GO_analysis.Rmd
     Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/Figure1.Rmd
     Modified:   analysis/Figure2.Rmd
     Modified:   analysis/Figure5.Rmd
-    Modified:   analysis/Figure8.Rmd
     Modified:   analysis/Figure9.Rmd
-    Modified:   analysis/GOI_plots.Rmd
     Modified:   analysis/Knowles2019.Rmd
     Modified:   analysis/Supplementary_figures.Rmd
     Modified:   analysis/other_analysis.Rmd
@@ -831,6 +838,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3ea3f28587bf543aaa365ac5b1f7264511ac4cc5/analysis/variance_scrip.Rmd" target="_blank">3ea3f28</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+<td>
+adding new analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/e48b9f5b52b045f08b55065558504e075b67ee11/docs/variance_scrip.html" target="_blank">e48b9f5</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/fcc68055726b902fbe24a4221a473fc9c162f554/analysis/variance_scrip.Rmd" target="_blank">fcc6805</a>
 </td>
 <td>
@@ -862,7 +903,8 @@ adding link to variance scrip for Michelle
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code>library(ggpubr)
-library(ggsignif)</code></pre>
+library(ggsignif)
+library(gprofiler2)</code></pre>
 <div id="initial-calculations-and-data-loading" class="section level2">
 <h2>initial calculations and data loading</h2>
 <div id="by-individual" class="section level3">
@@ -871,12 +913,9 @@ library(ggsignif)</code></pre>
 <div id="by-drug" class="section level3">
 <h3>by drug</h3>
 </div>
-<div id="plot-by-indv" class="section level3">
-<h3>plot by indv</h3>
-</div>
 <div id="plot-by-drug" class="section level3">
 <h3>plot by drug</h3>
-<pre class="r"><code>mean_vardrug1 &lt;- read.csv(&quot;data/mean_vardrug1.csv&quot;)
+<pre class="r"><code>mean_vardrug1 &lt;- read.csv(&quot;data/mean_vardrug1.csv&quot;, row.names = 1)
 
 
 drug_frame&lt;- mean_vardrug1 %&gt;% 
@@ -947,34 +986,6 @@ drug_frame %&gt;%
 <pre><code>Warning: Removed 3297 rows containing non-finite values (`stat_boxplot()`).</code></pre>
 <pre><code>Warning: Removed 3297 rows containing non-finite values (`stat_signif()`).</code></pre>
 <p><img src="figure/variance_scrip.Rmd/graph%20of%20var%20by%20drug%20indv-3.png" width="480" style="display: block; margin: auto;" /></p>
-</div>
-</div>
-<div id="calculations-without-vehicle" class="section level2">
-<h2>Calculations without Vehicle</h2>
-<div id="by-indvidual-and-drug" class="section level3">
-<h3>by indvidual and drug</h3>
-</div>
-<div id="plot-by-indv-no-veh" class="section level3">
-<h3>plot by indv no veh</h3>
-</div>
-<div id="plot-by-drug-no-veh" class="section level3">
-<h3>plot by drug no veh</h3>
-<pre class="r"><code>drug_noveh1 &lt;- read.csv(&quot;data/drug_noveh1.csv&quot;,row.names = 1)
-
-drug_frame_nv &lt;- drug_noveh1 %&gt;% 
-  rownames_to_column(var = &quot;entrezid&quot;) %&gt;% 
-  pivot_longer(cols = mean.Da.3:var.Tr.24, names_to = &quot;short&quot;, values_to = &quot;values&quot;) %&gt;% 
-  separate(short, into=c(&quot;calc&quot;,&quot;treatment&quot;,&quot;time&quot;)) %&gt;% 
-  mutate(treatment= factor(treatment, levels = c(&quot;Do&quot;,&quot;Ep&quot;,&quot;Da&quot;,&quot;Mi&quot;,&quot;Tr&quot;,&quot;Ve&quot;),labels = c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;,&quot;TRZ&quot;,&quot;VEH&quot;))) %&gt;% 
-  mutate(time= factor(time, levels = c(&quot;3&quot;,&quot;24&quot;), labels= c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;% 
-  group_by(treatment, time, calc) %&gt;% 
-  as.data.frame
-
-ggplot(drug_frame_nv, aes(x= treatment, y=values))+
-  geom_boxplot()+
-  stat_compare_means(method= &quot;anova&quot;,  label.x =2)+
-  facet_wrap(time~calc, scales = &quot;free_y&quot;)</code></pre>
-<p><img src="figure/variance_scrip.Rmd/graph%20of%20var-no%20veh%20by%20drug%20indv-1.png" width="384" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>mean_vardrug1 &lt;- read.csv(&quot;data/mean_vardrug1.csv&quot;,row.names = 1)
 my_exp_genes &lt;- read.csv(&quot;data/backGL.txt&quot;)
 GTEx_genes &lt;- read.csv(&quot;data/GTEx_gene_list.csv&quot;,row.names = 1)
@@ -1005,7 +1016,7 @@ ggplot(drug_frame2, aes(x= treatment, y=values))+
               step_increase = 0.1)+
   # stat_compare_means(method= &quot;anova&quot;, label.y=15, label.x =2)+
   facet_wrap(time~calc, scales = &quot;free_y&quot;)</code></pre>
-<p><img src="figure/variance_scrip.Rmd/deeper%20down%20the%20var-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/variance_scrip.Rmd/evaluate%20eGenes%20in%20var-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>  drug_frame2 %&gt;% 
   filter(calc!=&quot;mean&quot;) %&gt;% 
   ggplot(., aes(x= treatment, y=values))+
@@ -1025,7 +1036,7 @@ ggplot(drug_frame2, aes(x= treatment, y=values))+
 <pre><code>Warning: Removed 146 rows containing non-finite values (`stat_boxplot()`).</code></pre>
 <pre><code>Warning: Removed 146 rows containing non-finite values (`stat_signif()`).</code></pre>
 <pre><code>Warning: Removed 30 rows containing missing values (`geom_signif()`).</code></pre>
-<p><img src="figure/variance_scrip.Rmd/deeper%20down%20the%20var-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/variance_scrip.Rmd/evaluate%20eGenes%20in%20var-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>drug_frame2 %&gt;% 
   filter(calc!=&quot;var&quot;) %&gt;% 
   ggplot(., aes(x= treatment, y=values))+
@@ -1044,7 +1055,190 @@ ggplot(drug_frame2, aes(x= treatment, y=values))+
   ylim(0,18)</code></pre>
 <pre><code>Warning: Removed 9 rows containing non-finite values (`stat_boxplot()`).</code></pre>
 <pre><code>Warning: Removed 9 rows containing non-finite values (`stat_signif()`).</code></pre>
-<p><img src="figure/variance_scrip.Rmd/deeper%20down%20the%20var-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/variance_scrip.Rmd/evaluate%20eGenes%20in%20var-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>organized_drugframe &lt;- read.csv(&quot;data/organized_drugframe.csv&quot;,
+                                row.names = 1)
+
+DNR.VEH.24 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Da&quot;)&amp;ends_with(&quot;24h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;24h&quot;))) %&gt;%
+  rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Da&quot;)),c_across(starts_with(&quot;Ve&quot;))))) 
+DOX.VEH.24 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Do&quot;)&amp;ends_with(&quot;24h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;24h&quot;))) %&gt;%
+ rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Do&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+
+EPI.VEH.24 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Ep&quot;)&amp;ends_with(&quot;24h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;24h&quot;))) %&gt;%
+ rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Ep&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+
+MTX.VEH.24 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Mi&quot;)&amp;ends_with(&quot;24h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;24h&quot;))) %&gt;%
+  rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Mi&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+TRZ.VEH.24 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Tr&quot;)&amp;ends_with(&quot;24h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;24h&quot;))) %&gt;%
+  rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Tr&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+
+DNR.VEH.3 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Da&quot;)&amp;ends_with(&quot;3h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;3h&quot;))) %&gt;%
+  rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Da&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+DOX.VEH.3 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Do&quot;)&amp;ends_with(&quot;3h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;3h&quot;))) %&gt;%
+  rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Do&quot;)),c_across(starts_with(&quot;Ve&quot;))))) 
+EPI.VEH.3 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Ep&quot;)&amp;ends_with(&quot;3h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;3h&quot;))) %&gt;%
+  rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Ep&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+MTX.VEH.3 &lt;- organized_drugframe %&gt;% 
+  select(c(starts_with(&quot;Mi&quot;)&amp;ends_with(&quot;3h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;3h&quot;))) %&gt;%
+  rowwise() %&gt;% 
+  mutate(data=list(var.test(c_across(starts_with(&quot;Mi&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+
+
+TRZ.VEH.3 &lt;- organized_drugframe %&gt;% 
+  rownames_to_column(.id = &quot;gene&quot;) %&gt;% 
+  rowwise() %&gt;% 
+  select(c(starts_with(&quot;Tr&quot;)&amp;ends_with(&quot;3h&quot;)),
+         c(starts_with(&quot;Ve&quot;)&amp;ends_with(&quot;3h&quot;))) %&gt;%
+  mutate(data=list(var.test(c_across(starts_with(&quot;Tr&quot;)),c_across(starts_with(&quot;Ve&quot;)))))
+
+Var_test_list24 &lt;- list(DNR.VEH.24,DOX.VEH.24,EPI.VEH.24,MTX.VEH.24,TRZ.VEH.24)
+                      
+names(Var_test_list24) &lt;- c(&#39;DNR.VEH.24&#39;,&#39;DOX.VEH.24&#39;,&#39;EPI.VEH.24&#39;,&#39;MTX.VEH.24&#39;,&#39;TRZ.VEH.24&#39;)
+                    
+  
+ saveRDS(Var_test_list24,&quot;data/Var_test_list24.RDS&quot;)   
+ 
+ 
+ Var_test_list3 &lt;- list(DNR.VEH.3,DOX.VEH.3,EPI.VEH.3,MTX.VEH.3,TRZ.VEH.3)
+                      
+names(Var_test_list3) &lt;- c(&#39;DNR.VEH.3&#39;,&#39;DOX.VEH.3&#39;,&#39;EPI.VEH.3&#39;,&#39;MTX.VEH.3&#39;,&#39;TRZ.VEH.3&#39;)
+                     saveRDS(Var_test_list3,&quot;data/Var_test_list3.RDS&quot;) </code></pre>
+<pre class="r"><code>organized_drugframe &lt;- read.csv(&quot;data/organized_drugframe.csv&quot;,
+                                row.names = 1)
+Var_test_list3 &lt;- readRDS(&quot;data/Var_test_list3.RDS&quot;)
+set3 &lt;- names(Var_test_list3)
+shorterlist &lt;- Var_test_list3[[1]][[13]]
+names(shorterlist) &lt;- rownames(organized_drugframe)
+
+framefun &lt;- data.frame(ENTREZID=rownames(organized_drugframe))
+for (i in 1:length(set3)){
+  a &lt;- set3[i]
+    s_list&lt;- Var_test_list3[[i]][[13]]
+  names(s_list) &lt;- rownames(organized_drugframe)
+  hold&lt;- map_df(s_list, ~as.data.frame(.x$p.value), .id=&quot;ENTREZID&quot;)
+   framefun[paste0(a)] &lt;- hold$`.x$p.value`
+ 
+}
+Var_test_list24 &lt;- readRDS(&quot;data/Var_test_list24.RDS&quot;)
+set24 &lt;- names(Var_test_list24) 
+
+framefun24 &lt;- data.frame(ENTREZID=rownames(organized_drugframe))
+for (i in 1:length(set24)){
+  a &lt;- set24[i]
+    s_list&lt;- Var_test_list24[[i]][[13]]
+  names(s_list) &lt;- rownames(organized_drugframe)
+  hold&lt;- map_df(s_list, ~as.data.frame(.x$p.value), .id=&quot;ENTREZID&quot;)
+   framefun24[paste0(a)] &lt;- hold$`.x$p.value`
+ 
+}</code></pre>
+<pre class="r"><code>framefun %&gt;% 
+  pivot_longer(col=!ENTREZID,names_to= &quot;combo&quot;, values_to = &quot;p.value&quot;) %&gt;% 
+  separate(combo, into= c(&quot;drug&quot;, NA,&quot;time&quot;)) %&gt;%
+  mutate(drug = factor(drug, levels = c(&quot;DOX&quot;, &quot;EPI&quot;, &quot;DNR&quot;,&quot;MTX&quot;, &quot;TRZ&quot;))) %&gt;% 
+  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
+  geom_histogram()+
+  facet_wrap(~drug)+
+  ggtitle(&quot;3 hour var.test p.value&quot;)</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="figure/variance_scrip.Rmd/plot%20pvalue%20as%20histo-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>framefun24 %&gt;% 
+  pivot_longer(col=!ENTREZID,names_to= &quot;combo&quot;, values_to = &quot;p.value&quot;) %&gt;% 
+  separate(combo, into= c(&quot;drug&quot;, NA,&quot;time&quot;)) %&gt;%
+  mutate(drug = factor(drug, levels = c(&quot;DOX&quot;, &quot;EPI&quot;, &quot;DNR&quot;,&quot;MTX&quot;, &quot;TRZ&quot;))) %&gt;% 
+  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
+  geom_histogram()+
+  facet_wrap(~drug)+
+  ggtitle(&quot;24 hour var.test p.value&quot;)</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="figure/variance_scrip.Rmd/plot%20pvalue%20as%20histo-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>backGL &lt;-read_csv(&quot;data/backGL.txt&quot;, 
+    col_types = cols(...1 = col_skip()))</code></pre>
+<pre><code>Warning: The following named parsers don&#39;t match the column names: ...1</code></pre>
+<pre class="r"><code>var3 &lt;- list &lt;- framefun %&gt;% 
+  pivot_longer(col=!ENTREZID,names_to= &quot;combo&quot;, values_to = &quot;p.value&quot;) %&gt;% 
+  separate(combo, into= c(&quot;drug&quot;, NA,&quot;time&quot;)) %&gt;%
+  mutate(drug = factor(drug, levels = c(&quot;DOX&quot;, &quot;EPI&quot;, &quot;DNR&quot;,&quot;MTX&quot;, &quot;TRZ&quot;))) %&gt;% 
+  filter(p.value&lt;0.05)
+
+var24 &lt;- list &lt;- framefun24 %&gt;% 
+  pivot_longer(col=!ENTREZID,names_to= &quot;combo&quot;, values_to = &quot;p.value&quot;) %&gt;% 
+  separate(combo, into= c(&quot;drug&quot;, NA,&quot;time&quot;)) %&gt;%
+  mutate(drug = factor(drug, levels = c(&quot;DOX&quot;, &quot;EPI&quot;, &quot;DNR&quot;,&quot;MTX&quot;, &quot;TRZ&quot;))) %&gt;% 
+  filter(p.value&lt;0.05)
+
+DOX_24_var &lt;- var24 %&gt;% filter(drug==&quot;DOX&quot;) %&gt;% select(ENTREZID)#1089 
+EPI_24_var &lt;- var24 %&gt;% filter(drug==&quot;EPI&quot;)%&gt;% select(ENTREZID)#2211
+DNR_24_var &lt;- var24 %&gt;% filter(drug==&quot;DNR&quot;)%&gt;% select(ENTREZID)#928
+MTX_24_var &lt;- var24 %&gt;% filter(drug==&quot;MTX&quot;)%&gt;% select(ENTREZID)#269
+TRZ_24_var &lt;- var24 %&gt;% filter(drug==&quot;TRZ&quot;)%&gt;% select(ENTREZID)#157
+
+geneset_24 &lt;- list(DOX_24_var$ENTREZID, EPI_24_var$ENTREZID, DNR_24_var$ENTREZID, MTX_24_var$ENTREZID, TRZ_24_var$ENTREZID)
+names(geneset_24) &lt;- c(&quot;DOX_24_var&quot;,&quot;EPI_24_var&quot;,&quot;DNR_24_var&quot; ,&quot;MTX_24_var&quot;,&quot;TRZ_24_var&quot;)
+
+DOX_3_var &lt;- var3 %&gt;% filter(drug==&quot;DOX&quot;)%&gt;% select(ENTREZID)#346
+EPI_3_var &lt;- var3 %&gt;% filter(drug==&quot;EPI&quot;)%&gt;% select(ENTREZID)#332
+DNR_3_var &lt;- var3 %&gt;% filter(drug==&quot;DNR&quot;)%&gt;% select(ENTREZID)#385
+MTX_3_var &lt;- var3 %&gt;% filter(drug==&quot;MTX&quot;)%&gt;% select(ENTREZID)#277
+TRZ_3_var &lt;- var3 %&gt;% filter(drug==&quot;TRZ&quot;)%&gt;% select(ENTREZID)#262
+
+geneset_3 &lt;- list(DOX_3_var$ENTREZID,EPI_3_var$ENTREZID,DNR_3_var$ENTREZID ,MTX_3_var$ENTREZID,TRZ_3_var$ENTREZID)
+names(geneset_3) &lt;- c(&quot;DOX_3_var&quot;,&quot;EPI_3_var&quot;,&quot;DNR_3_var&quot; ,&quot;MTX_3_var&quot;,&quot;TRZ_3_var&quot;)</code></pre>
+</div>
+<div id="venn" class="section level3">
+<h3>Venn</h3>
+<pre class="r"><code>library(paletteer)
+library(ggVennDiagram)
+
+
+ggVennDiagram::ggVennDiagram(geneset_24,
+              category.names = c(&quot;DOX\nn = 1089 &quot;,
+                                 &quot;EPI\nn = 2211\n&quot;,
+                                 &quot;DNR\nn = 928&quot;,
+                                 &quot;MTX\nn = 269&quot;, 
+                                &quot;TRZ\nn = 157&quot;),
+              show_intersect = FALSE,
+              set_color = &quot;black&quot;,
+              category_size = c(6,6,6,6),
+              label = &quot;count&quot;,
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = &quot;black&quot;,
+              edge_lty = &quot;solid&quot;, set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
+  scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1)+
+  labs(title = &quot;24 hour var genes p. value &lt;0.05&quot;,
+       caption = paste(&quot;n =&quot;, length(unique(var24$ENTREZID)),&quot;genes&quot;))+
+  
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))</code></pre>
+<p><img src="figure/variance_scrip.Rmd/venn%20of%2024%20hours-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1075,28 +1269,35 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] ggsignif_0.6.4  ggpubr_0.6.0    lubridate_1.9.2 forcats_1.0.0  
- [5] stringr_1.5.0   dplyr_1.1.2     purrr_1.0.1     readr_2.1.4    
- [9] tidyr_1.3.0     tibble_3.2.1    ggplot2_3.4.2   tidyverse_2.0.0
-[13] workflowr_1.7.0
+ [1] ggVennDiagram_1.2.2 paletteer_1.5.0     gprofiler2_0.2.2   
+ [4] ggsignif_0.6.4      ggpubr_0.6.0        lubridate_1.9.2    
+ [7] forcats_1.0.0       stringr_1.5.0       dplyr_1.1.2        
+[10] purrr_1.0.1         readr_2.1.4         tidyr_1.3.0        
+[13] tibble_3.2.1        ggplot2_3.4.2       tidyverse_2.0.0    
+[16] workflowr_1.7.0    
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.3      xfun_0.39         bslib_0.5.0       processx_3.8.1   
- [5] rstatix_0.7.2     callr_3.7.3       tzdb_0.4.0        vctrs_0.6.3      
- [9] tools_4.3.1       ps_1.7.5          generics_0.1.3    fansi_1.0.4      
-[13] highr_0.10        pkgconfig_2.0.3   lifecycle_1.0.3   compiler_4.3.1   
-[17] farver_2.1.1      git2r_0.32.0      munsell_0.5.0     getPass_0.2-2    
-[21] carData_3.0-5     httpuv_1.6.11     htmltools_0.5.5   sass_0.4.6       
-[25] yaml_2.3.7        later_1.3.1       pillar_1.9.0      car_3.1-2        
-[29] jquerylib_0.1.4   whisker_0.4.1     cachem_1.0.8      abind_1.4-5      
-[33] tidyselect_1.2.0  digest_0.6.33     stringi_1.7.12    labeling_0.4.2   
-[37] rprojroot_2.0.3   fastmap_1.1.1     grid_4.3.1        colorspace_2.1-0 
-[41] cli_3.6.1         magrittr_2.0.3    utf8_1.2.3        broom_1.0.5      
-[45] withr_2.5.0       scales_1.2.1      promises_1.2.0.1  backports_1.4.1  
-[49] timechange_0.2.0  rmarkdown_2.23    httr_1.4.6        hms_1.1.3        
-[53] evaluate_0.21     knitr_1.43        rlang_1.1.1       Rcpp_1.0.11      
-[57] glue_1.6.2        rstudioapi_0.15.0 jsonlite_1.8.7    R6_2.5.1         
-[61] fs_1.6.2         </code></pre>
+ [1] tidyselect_1.2.0   viridisLite_0.4.2  farver_2.1.1       fastmap_1.1.1     
+ [5] lazyeval_0.2.2     promises_1.2.0.1   digest_0.6.33      timechange_0.2.0  
+ [9] lifecycle_1.0.3    sf_1.0-14          processx_3.8.1     magrittr_2.0.3    
+[13] compiler_4.3.1     rlang_1.1.1        sass_0.4.6         tools_4.3.1       
+[17] utf8_1.2.3         yaml_2.3.7         data.table_1.14.8  knitr_1.43        
+[21] labeling_0.4.2     htmlwidgets_1.6.2  bit_4.0.5          classInt_0.4-9    
+[25] RColorBrewer_1.1-3 KernSmooth_2.23-22 abind_1.4-5        withr_2.5.0       
+[29] grid_4.3.1         fansi_1.0.4        git2r_0.32.0       e1071_1.7-13      
+[33] colorspace_2.1-0   scales_1.2.1       cli_3.6.1          rmarkdown_2.23    
+[37] crayon_1.5.2       generics_0.1.3     rstudioapi_0.15.0  httr_1.4.6        
+[41] tzdb_0.4.0         DBI_1.1.3          cachem_1.0.8       proxy_0.4-27      
+[45] parallel_4.3.1     vctrs_0.6.3        jsonlite_1.8.7     carData_3.0-5     
+[49] car_3.1-2          callr_3.7.3        hms_1.1.3          bit64_4.0.5       
+[53] rstatix_0.7.2      plotly_4.10.2      jquerylib_0.1.4    units_0.8-2       
+[57] glue_1.6.2         rematch2_2.1.2     ps_1.7.5           stringi_1.7.12    
+[61] gtable_0.3.3       RVenn_1.1.0        later_1.3.1        prismatic_1.1.1   
+[65] munsell_0.5.0      pillar_1.9.0       htmltools_0.5.5    R6_2.5.1          
+[69] rprojroot_2.0.3    vroom_1.6.3        evaluate_0.21      highr_0.10        
+[73] backports_1.4.1    broom_1.0.5        httpuv_1.6.11      bslib_0.5.0       
+[77] class_7.3-22       Rcpp_1.0.11        whisker_0.4.1      xfun_0.39         
+[81] fs_1.6.2           getPass_0.2-2      pkgconfig_2.0.3   </code></pre>
 </div>
 </div>
 </div>
