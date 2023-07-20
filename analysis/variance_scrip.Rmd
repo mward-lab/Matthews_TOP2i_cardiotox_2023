@@ -6,7 +6,9 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                message=FALSE, 
+                warning=FALSE)
 ```
 
 ```{r package loading}
@@ -450,9 +452,6 @@ names(geneset_3) <- c("DOX_3_var","EPI_3_var","DNR_3_var" ,"MTX_3_var","TRZ_3_va
 ## Venn
 
 ```{r venn of 24 hours}
-library(paletteer)
-library(ggVennDiagram)
-
 
 ggVennDiagram::ggVennDiagram(geneset_24,
               category.names = c("DOX\nn = 1089 ",
@@ -514,6 +513,7 @@ DOX_var24_table %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
     scale_y_discrete(labels = label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('DOX24 hour top 10 GO:BP terms') +
@@ -570,6 +570,7 @@ EPI_var24_table %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
     scale_y_discrete(labels = label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('EPI24 hour top 10 GO:BP terms') +
@@ -589,6 +590,14 @@ EPI_var24_table %>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
 
+EPI_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG EPI 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
 
 
 ```
@@ -628,6 +637,7 @@ DNR_var24_table %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
     scale_y_discrete(labels = label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('DNR24 hour top 10 GO:BP terms') +
@@ -647,6 +657,14 @@ DNR_var24_table %>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
 
+DNR_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG DNR 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
 
 
 ```
@@ -687,6 +705,7 @@ MTX_var24_table %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
     scale_y_discrete(labels = label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('MTX24 hour top 10 GO:BP terms') +
@@ -706,6 +725,14 @@ MTX_var24_table %>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
 
+MTX_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG MTX 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
 
 
 ```
@@ -746,6 +773,7 @@ TRZ_var24_table %>%
    # slice_max(., n=10,order_by = p_value) %>%
    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
     geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
     scale_y_discrete(labels = label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('TRZ24 hour top 10 GO:BP terms') +
@@ -765,6 +793,782 @@ TRZ_var24_table %>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
 
+TRZ_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG TRZ 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
 
 
 ```
+
+
+
+## 24 hour AC shared
+
+```{r GO analysis of AC_share24}
+venn24part <- VennDiagram::get.venn.partitions(geneset_24)
+AC_share <- venn24part$..values..[[25]]
+# AC_share_var24gost <- gost(query = AC_share,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(AC_share_var24gost,"data/DEG-GO/var/AC_share_var24gost.RDS")
+AC_share_var24gost <- readRDS("data/DEG-GO/var/AC_share_var24gost.RDS")
+
+AC_share_var24p <- gostplot(AC_share_var24gost, capped = FALSE, interactive = TRUE)
+AC_share_var24p
+
+AC_share_var24_table <- AC_share_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+AC_share_var24_table %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('AC_share24 hour top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+  AC_share_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "AC_share 24 enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+AC_share_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG AC_share 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+
+
+
+    
+
+## 24 hour TOP2i shared
+
+
+```{r GO analysis of TOP2i24}
+
+TOP2i <- venn24part$..values..[[17]]
+# TOP2i_var24gost <- gost(query = TOP2i,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(TOP2i_var24gost,"data/DEG-GO/var/TOP2i_var24gost.RDS")
+TOP2i_var24gost <- readRDS("data/DEG-GO/var/TOP2i_var24gost.RDS")
+
+TOP2i_var24p <- gostplot(TOP2i_var24gost, capped = FALSE, interactive = TRUE)
+TOP2i_var24p
+
+TOP2i_var24_table <- TOP2i_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+TOP2i_var24_table %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TOP2i 24 hour top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+  TOP2i_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "TOP2i 24 enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+TOP2i_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG TOP2i 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+
+## using the Alternative hypothesis = "greater"
+
+
+
+```{r alt data wrangling-evalute variance, message=FALSE, warning=FALSE, eval=FALSE}
+
+organized_drugframe <- read.csv("data/organized_drugframe.csv",
+                                row.names = 1)
+
+DNR.VEH.24alt <- organized_drugframe %>% 
+  select(c(starts_with("Da")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Da")),c_across(starts_with("Ve")),alternative = "greater"))) 
+DOX.VEH.24alt <- organized_drugframe %>% 
+  select(c(starts_with("Do")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+ rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Do")),c_across(starts_with("Ve")),alternative = "greater")))
+
+EPI.VEH.24alt <- organized_drugframe %>% 
+  select(c(starts_with("Ep")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+ rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Ep")),c_across(starts_with("Ve")),alternative = "greater")))
+
+MTX.VEH.24alt <- organized_drugframe %>% 
+  select(c(starts_with("Mi")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Mi")),c_across(starts_with("Ve")),alternative = "greater")))
+TRZ.VEH.24alt <- organized_drugframe %>% 
+  select(c(starts_with("Tr")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Tr")),c_across(starts_with("Ve")),alternative = "greater")))
+
+
+Var_test_list24alt <- list(DNR.VEH.24alt,DOX.VEH.24alt,EPI.VEH.24alt,MTX.VEH.24alt,TRZ.VEH.24alt)
+                      
+names(Var_test_list24) <- c('DNR.VEH.24','DOX.VEH.24.alt','EPI.VEH.24.alt','MTX.VEH.24.alt','TRZ.VEH.24.alt')
+                    
+  
+ saveRDS(Var_test_list24,"data/Var_test_list24alt.RDS")   
+ 
+ 
+```     
+
+
+```{r alt extract pvalue list}
+
+                 
+organized_drugframe <- read.csv("data/organized_drugframe.csv",
+                                row.names = 1)
+
+Var_test_list24alt <- readRDS("data/Var_test_list24alt.RDS")
+set24 <- names(Var_test_list24alt) 
+
+framefun24alt <- data.frame(ENTREZID=rownames(organized_drugframe))
+for (i in 1:length(set24)){
+  a <- set24[i]
+    s_list<- Var_test_list24alt[[i]][[13]]
+  names(s_list) <- rownames(organized_drugframe)
+  hold<- map_df(s_list, ~as.data.frame(.x$p.value), .id="ENTREZID")
+   framefun24alt[paste0(a)] <- hold$`.x$p.value`
+ 
+}
+
+```
+
+## alt 24 hour histogram of var
+
+
+```{r plot pvalue as histo alt, echo=TRUE}
+
+framefun24alt %>% 
+  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
+  separate(combo, into= c("drug", NA,"time",NA)) %>%
+  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
+  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
+  geom_histogram()+
+  facet_wrap(~drug)+
+  ggtitle("24 hour var.test p.value alternate hypo= greater")
+  
+```
+
+## Venn 24hr alternative hypo
+```{r gene filteringalt, echo=TRUE}
+backGL <-read_csv("data/backGL.txt", 
+    col_types = cols(...1 = col_skip()))
+
+var24alt<- list <- framefun24alt%>% 
+  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
+  separate(combo, into= c("drug", NA,"time",NA)) %>%
+  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
+  filter(p.value<0.05)
+
+DOX_24_vara <- var24alt %>% filter(drug=="DOX") %>% select(ENTREZID)#1534 
+EPI_24_vara <- var24alt %>% filter(drug=="EPI")%>% select(ENTREZID)#3147
+DNR_24_vara <- var24alt %>% filter(drug=="DNR")%>% select(ENTREZID)#904
+MTX_24_vara <- var24alt %>% filter(drug=="MTX")%>% select(ENTREZID)#196
+TRZ_24_vara <- var24alt %>% filter(drug=="TRZ")%>% select(ENTREZID)#206
+
+geneset_24alt <- list(DOX_24_vara$ENTREZID, EPI_24_vara$ENTREZID, DNR_24_vara$ENTREZID, MTX_24_vara$ENTREZID, TRZ_24_vara$ENTREZID)
+names(geneset_24alt) <- c("DOX_24_var","EPI_24_var","DNR_24_var" ,"MTX_24_var","TRZ_24_var")
+
+ggVennDiagram::ggVennDiagram(geneset_24alt,
+              category.names = c("DOX\nn = 1534 ",
+                                 "EPI\nn = 31471\n",
+                                 "DNR\nn = 904",
+                                 "MTX\nn = 196", 
+                                "TRZ\nn = 206"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(6,6,6,6),
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  scale_fill_distiller(palette="Spectral", direction = -1)+
+  labs(title = "24 hour var,alternative hypo =greater, genes p. value <0.05",
+       caption = paste("n =", length(unique(var24alt$ENTREZID)),"genes"))+
+  
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+```
+
+## ALT 24 hour DOX
+```{r alt GO analysis of DOX24}
+
+# altDOX_var24gost <- gost(query = DOX_24_vara$ENTREZID,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(altDOX_var24gost,"data/DEG-GO/var/altDOX_var24gost.RDS")
+altDOX_var24gost <- readRDS("data/DEG-GO/var/altDOX_var24gost.RDS")
+
+altDOX_var24p <- gostplot(altDOX_var24gost, capped = FALSE, interactive = TRUE)
+altDOX_var24p
+
+altDOX_var24_table <- altDOX_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+altDOX_var24_table %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('DOX24 hour(alt) top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+
+altDOX_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "DOX 24 hour (alt) enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+altDOX_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG DOX 24 hour (alt) enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+
+
+
+## ALT 24 hour EPI
+```{r alt GO analysis of EPI24}
+
+# altEPI_var24gost <- gost(query = EPI_24_vara$ENTREZID,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(altEPI_var24gost,"data/DEG-GO/var/altEPI_var24gost.RDS")
+altEPI_var24gost <- readRDS("data/DEG-GO/var/altEPI_var24gost.RDS")
+
+altEPI_var24p <- gostplot(altEPI_var24gost, capped = FALSE, interactive = TRUE)
+altEPI_var24p
+
+altEPI_var24_table <- altEPI_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+altEPI_var24_table %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('EPI24 hour(alt) top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+
+altEPI_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "EPI 24 hour (alt) enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+altEPI_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG EPI 24 hour (alt) enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+
+
+
+## ALT 24 hour DNR
+```{r alt GO analysis of DNR24}
+
+# altDNR_var24gost <- gost(query = DNR_24_vara$ENTREZID,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(altDNR_var24gost,"data/DEG-GO/var/altDNR_var24gost.RDS")
+altDNR_var24gost <- readRDS("data/DEG-GO/var/altDNR_var24gost.RDS")
+
+altDNR_var24p <- gostplot(altDNR_var24gost, capped = FALSE, interactive = TRUE)
+altDNR_var24p
+
+altDNR_var24_table <- altDNR_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+altDNR_var24_table %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('DNR24 hour(alt) top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+
+altDNR_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "DNR 24 hour (alt) enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+altDNR_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG DNR 24 hour (alt) enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+
+```
+
+
+
+
+## ALT 24 hour MTX
+```{r alt GO analysis of MTX24}
+# 
+# altMTX_var24gost <- gost(query = MTX_24_vara$ENTREZID,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(altMTX_var24gost,"data/DEG-GO/var/altMTX_var24gost.RDS")
+altMTX_var24gost <- readRDS("data/DEG-GO/var/altMTX_var24gost.RDS")
+
+altMTX_var24p <- gostplot(altMTX_var24gost, capped = FALSE, interactive = TRUE)
+altMTX_var24p
+
+altMTX_var24_table <- altMTX_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+altMTX_var24_table %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=5 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('MTX24 hour(alt) top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+
+altMTX_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "MTX 24 hour (alt) enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+altMTX_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG MTX 24 hour (alt) enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+
+```
+
+
+
+
+
+## ALT 24 hour TRZ
+```{r alt GO analysis of TRZ24}
+# 
+# altTRZ_var24gost <- gost(query = TRZ_24_vara$ENTREZID,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(altTRZ_var24gost,"data/DEG-GO/var/altTRZ_var24gost.RDS")
+altTRZ_var24gost <- readRDS("data/DEG-GO/var/altTRZ_var24gost.RDS")
+
+altTRZ_var24p <- gostplot(altTRZ_var24gost, capped = FALSE, interactive = TRUE)
+altTRZ_var24p
+
+altTRZ_var24_table <- altTRZ_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+altTRZ_var24_table %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=3 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TRZ24 hour(alt) top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+
+altTRZ_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "TRZ 24 hour (alt) enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+altTRZ_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG TRZ 24 hour (alt) enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+
+
+
+
+## ALT 24 hour AC shared
+
+```{r GO analysis of altAC_share24}
+venn24partalt <- VennDiagram::get.venn.partitions(geneset_24alt)
+
+
+alt_AC_share <- venn24partalt$..values..[[25]]
+# AC_share_var24gosta <- gost(query = alt_AC_share,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(AC_share_var24gosta,"data/DEG-GO/var/AC_share_var24gosta.RDS")
+AC_share_var24gosta <- readRDS("data/DEG-GO/var/AC_share_var24gost.RDS")
+
+AC_share_var24pa <- gostplot(AC_share_var24gosta, capped = FALSE, interactive = TRUE)
+AC_share_var24pa
+
+AC_share_var24_tablea <- AC_share_var24gosta$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+AC_share_var24_tablea %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('alt AC_share24 hour top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+  AC_share_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = " altAC_share 24 enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+AC_share_var24_table %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "alt KEGG AC_share 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+
+
+
+
+## ALT 24 hour TOP2i shared
+
+
+```{r GO analysis of altTOP2i24}
+
+TOP2i_alt <- venn24partalt$..values..[[17]]
+# TOP2i_var24gosta <- gost(query = TOP2i_alt,
+#                   organism = "hsapiens",
+#                   significant = FALSE,
+#                   ordered_query = TRUE,
+#                   domain_scope = "custom",
+#                   measure_underrepresentation = FALSE,
+#                   evcodes = FALSE,
+#                   numeric_ns="ENTREZGENE",
+#                   user_threshold = 0.05,
+#                   correction_method = "fdr",
+#                   custom_bg = backGL$ENTREZID,
+#                   sources=c("GO:BP","KEGG"))
+# 
+# saveRDS(TOP2i_var24gosta,"data/DEG-GO/var/TOP2i_var24gosta.RDS")
+TOP2i_var24gosta <- readRDS("data/DEG-GO/var/TOP2i_var24gosta.RDS")
+
+TOP2i_var24pa <- gostplot(TOP2i_var24gosta, capped = FALSE, interactive = TRUE)
+TOP2i_var24pa
+
+TOP2i_var24_tablea <- TOP2i_var24gosta$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+
+TOP2i_var24_tablea %>% 
+ dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
+    scale_y_discrete(labels = label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle(' alt TOP2i 24 hour top 10 GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+      theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
+  TOP2i_var24_table %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "alt TOP2i 24 enrichment terms of highly var genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+TOP2i_var24_tablea %>% 
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "alt KEGG TOP2i 24 hour enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+
+
+
+
+
+
+
+
+
