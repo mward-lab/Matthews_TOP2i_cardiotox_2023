@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggpubr)
 library(ggsignif)
+library(gprofiler2)
 
 ```
 
@@ -77,7 +78,7 @@ write.csv(mean_varframe,"data/mean_varframe.csv")
 ### by drug  
 
 ```{r manip mean across indv, eval=FALSE,echo=FALSE }
-
+filcpm_counts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 
 mean_vardrug <- filcpm_counts %>% 
  select(c(starts_with("Da")&ends_with("24h")),
@@ -93,7 +94,8 @@ mean_vardrug <- filcpm_counts %>%
         c(starts_with("Tr")&ends_with("3h")),
         c(starts_with("Ve")&ends_with("3h")))
         
-        
+  rownames(mean_vardrug) <- rownames(filcpm_counts)  
+ write.csv(mean_vardrug, "data/organized_drugframe.csv")
         
         
 mean_vardrug1 <- mean_vardrug %>% 
@@ -125,27 +127,8 @@ rowwise() %>%
          select(mean.Da.3:var.Ve.24)
 rownames(mean_vardrug1) <- rownames(filcpm_counts)
 write.csv(mean_vardrug1,"data/mean_vardrug1.csv")
-```
 
-### plot by indv  
 
-```{r graph of var per indv, eval=FALSE, fig.height=8, fig.width=4, include=FALSE}
-mean_varframe <- read.csv("data/mean_varframe.csv", row.names = 1)
-
-indv_frame<- mean_varframe %>% 
-  rownames_to_column(var = "entrezid") %>% 
-  pivot_longer(cols = mean.1.3:var.6.24, names_to = "short", values_to = "values") %>% 
-  separate(short, into=c("calc","indv","time")) %>% 
-  mutate(indv= factor(indv, levels = c("1","2","3","4","5","6"))) %>% 
-  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
-  group_by(indv, time, calc) %>% 
-  as.data.frame
-
-ggplot(indv_frame, aes(x= indv, y=values))+
-  geom_boxplot()+
-  ggpubr::stat_compare_means(method= "anova", label.y=15, label.x =2)+
-  facet_wrap(time~calc, scales = "free_y")+
-  ggtitle("by individual,  not by drug")
 
 ```
 
@@ -153,7 +136,7 @@ ggplot(indv_frame, aes(x= indv, y=values))+
 ###  plot by drug  
 
 ```{r graph of var by drug indv, fig.height=5, fig.width=5}
-mean_vardrug1 <- read.csv("data/mean_vardrug1.csv")
+mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
 
 
 drug_frame<- mean_vardrug1 %>% 
@@ -220,130 +203,8 @@ drug_frame %>%
 
 ```
 
-## Calculations without Vehicle  
 
-### by indvidual and drug 
-
-```{r ordering without veh, eval=FALSE, include=FALSE}
-
-
-ordered_noveh <- filcpm_counts %>% 
- select(c(starts_with("Da")&ends_with("24h")),
-        c(starts_with("Do")&ends_with("24h")),
-        c(starts_with("Ep")&ends_with("24h")),
-        c(starts_with("Mi")&ends_with("24h")),
-        c(starts_with("Tr")&ends_with("24h")),
-        c(starts_with("Da")&ends_with("3h")),
-        c(starts_with("Do")&ends_with("3h")),
-        c(starts_with("Ep")&ends_with("3h")),
-        c(starts_with("Mi")&ends_with("3h")),
-        c(starts_with("Tr")&ends_with("3h")))
-
-      
-drug_noveh1 <- ordered_noveh %>% 
-rowwise() %>% 
-  mutate(mean.Da.3=mean(c_across(Da.1.3h:Da.6.3h)),
-         var.Da.3=var(c_across(Da.1.3h:Da.6.3h)),
-         mean.Do.3=mean(c_across(Do.1.3h:Do.6.3h)),
-         var.Do.3=var(c_across(Do.1.3h:Do.6.3h)),
-         mean.Ep.3=mean(c_across(Ep.1.3h:Ep.6.3h)),
-         var.Ep.3=var(c_across(Ep.1.3h:Ep.6.3h)),
-         mean.Mi.3=mean(c_across(Mi.1.3h:Mi.6.3h)),
-         var.Mi.3=var(c_across(Mi.1.3h:Mi.6.3h)),
-         mean.Tr.3=mean(c_across(Tr.1.3h:Tr.6.3h)),
-         var.Tr.3=var(c_across(Tr.1.3h:Tr.6.3h)),
-         mean.Da.24=mean(c_across(Da.1.24h:Da.6.24h)),
-         var.Da.24=var(c_across(Da.1.24h:Da.6.24h)),
-         mean.Do.24=mean(c_across(Do.1.24h:Do.6.24h)),
-         var.Do.24=var(c_across(Do.1.24h:Do.6.24h)),
-         mean.Ep.24=mean(c_across(Ep.1.24h:Ep.6.24h)),
-         var.Ep.24=var(c_across(Ep.1.24h:Ep.6.24h)),
-         mean.Mi.24=mean(c_across(Mi.1.24h:Mi.6.24h)),
-         var.Mi.24=var(c_across(Mi.1.24h:Mi.6.24h)),
-         mean.Tr.24=mean(c_across(Tr.1.24h:Tr.6.24h)),
-         var.Tr.24=var(c_across(Tr.1.24h:Tr.6.24h))) %>% 
-         select(mean.Da.3:var.Tr.24)
-write.csv(drug_noveh1,"data/drug_noveh1.csv")
-
-indv_noveh1 <-  mean_vardrug %>% 
-rowwise() %>% 
-   mutate(mean.1.3=mean(c_across(Da.1.3h:Tr.1.3h)),
-         var.1.3=var(c_across(Da.1.3h:Tr.1.3h)),
-         mean.2.3=mean(c_across(Da.2.3h:Tr.2.3h)),
-         var.2.3=var(c_across(Da.2.3h:Tr.2.3h)),
-         mean.3.3=mean(c_across(Da.3.3h:Tr.3.3h)),
-         var.3.3=var(c_across(Da.3.3h:Tr.3.3h)),
-         mean.4.3=mean(c_across(Da.4.3h:Tr.4.3h)),
-         var.4.3=var(c_across(Da.4.3h:Tr.4.3h)),
-         mean.5.3=mean(c_across(Da.5.3h:Tr.5.3h)),
-         var.5.3=var(c_across(Da.5.3h:Tr.5.3h)),
-         mean.6.3=mean(c_across(Da.6.3h:Tr.6.3h)),
-         var.6.3=var(c_across(Da.6.3h:Tr.6.3h)),
-         mean.1.24=mean(c_across(Da.1.24h:Tr.1.24h)),
-         var.1.24=var(c_across(Da.1.24h:Tr.1.24h)),
-         mean.2.24=mean(c_across(Da.2.24h:Tr.2.24h)),
-         var.2.24=var(c_across(Da.2.24h:Tr.2.24h)),
-         mean.3.24=mean(c_across(Da.3.24h:Tr.3.24h)),
-         var.3.24=var(c_across(Da.3.24h:Tr.3.24h)),
-         mean.4.24=mean(c_across(Da.4.24h:Tr.4.24h)),
-         var.4.24=var(c_across(Da.4.24h:Tr.4.24h)),
-         mean.5.24=mean(c_across(Da.5.24h:Tr.5.24h)),
-         var.5.24=var(c_across(Da.5.24h:Tr.5.24h)),
-         mean.6.24=mean(c_across(Da.6.24h:Tr.6.24h)),
-         var.6.24=var(c_across(Da.6.24h:Tr.6.24h))) %>% 
-  select(mean.1.3:var.6.24)
-
-write.csv(indv_noveh1,"data/indv_noveh1.csv")
-```
-        
-### plot by indv no veh  
-
-
-```{r graph  per indv no veh, eval=FALSE, fig.height=8, fig.width=4, include=FALSE}
-indv_noveh1 <- read.csv("data/indv_noveh1.csv", row.names = 1)
-
-indv_frame_nv<- indv_noveh1 %>% 
-  rownames_to_column(var = "entrezid") %>% 
-  pivot_longer(cols = mean.1.3:var.6.24, names_to = "short", values_to = "values") %>% 
-  separate(short, into=c("calc","indv","time")) %>% 
-  mutate(indv= factor(indv, levels = c("1","2","3","4","5","6"))) %>% 
-  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
-  group_by(indv, time, calc) %>% 
-  as.data.frame
-
-ggplot(indv_frame_nv, aes(x= indv, y=values))+
-  geom_boxplot()+
-  stat_compare_means(method= "anova",  label.x =2)+
-  facet_wrap(time~calc, scales = "free_y")
-
-```
-
-
-
-### plot by drug no veh  
-
-
-```{r graph of var-no veh by drug indv, fig.height=8, fig.width=4}
-drug_noveh1 <- read.csv("data/drug_noveh1.csv",row.names = 1)
-
-drug_frame_nv <- drug_noveh1 %>% 
-  rownames_to_column(var = "entrezid") %>% 
-  pivot_longer(cols = mean.Da.3:var.Tr.24, names_to = "short", values_to = "values") %>% 
-  separate(short, into=c("calc","treatment","time")) %>% 
-  mutate(treatment= factor(treatment, levels = c("Do","Ep","Da","Mi","Tr","Ve"),labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>% 
-  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
-  group_by(treatment, time, calc) %>% 
-  as.data.frame
-
-ggplot(drug_frame_nv, aes(x= treatment, y=values))+
-  geom_boxplot()+
-  stat_compare_means(method= "anova",  label.x =2)+
-  facet_wrap(time~calc, scales = "free_y")
-
-
-```
-
-```{r deeper down the var}
+```{r evaluate eGenes in var}
 mean_vardrug1 <- read.csv("data/mean_vardrug1.csv",row.names = 1)
 my_exp_genes <- read.csv("data/backGL.txt")
 GTEx_genes <- read.csv("data/GTEx_gene_list.csv",row.names = 1)
@@ -414,3 +275,213 @@ drug_frame2 %>%
 
 
 
+```{r data wrangling-evalute variance, message=FALSE, warning=FALSE, eval=FALSE}
+
+organized_drugframe <- read.csv("data/organized_drugframe.csv",
+                                row.names = 1)
+
+DNR.VEH.24 <- organized_drugframe %>% 
+  select(c(starts_with("Da")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Da")),c_across(starts_with("Ve"))))) 
+DOX.VEH.24 <- organized_drugframe %>% 
+  select(c(starts_with("Do")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+ rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Do")),c_across(starts_with("Ve")))))
+
+EPI.VEH.24 <- organized_drugframe %>% 
+  select(c(starts_with("Ep")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+ rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Ep")),c_across(starts_with("Ve")))))
+
+MTX.VEH.24 <- organized_drugframe %>% 
+  select(c(starts_with("Mi")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Mi")),c_across(starts_with("Ve")))))
+TRZ.VEH.24 <- organized_drugframe %>% 
+  select(c(starts_with("Tr")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Tr")),c_across(starts_with("Ve")))))
+
+DNR.VEH.3 <- organized_drugframe %>% 
+  select(c(starts_with("Da")&ends_with("3h")),
+         c(starts_with("Ve")&ends_with("3h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Da")),c_across(starts_with("Ve")))))
+DOX.VEH.3 <- organized_drugframe %>% 
+  select(c(starts_with("Do")&ends_with("3h")),
+         c(starts_with("Ve")&ends_with("3h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Do")),c_across(starts_with("Ve"))))) 
+EPI.VEH.3 <- organized_drugframe %>% 
+  select(c(starts_with("Ep")&ends_with("3h")),
+         c(starts_with("Ve")&ends_with("3h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Ep")),c_across(starts_with("Ve")))))
+MTX.VEH.3 <- organized_drugframe %>% 
+  select(c(starts_with("Mi")&ends_with("3h")),
+         c(starts_with("Ve")&ends_with("3h"))) %>%
+  rowwise() %>% 
+  mutate(data=list(var.test(c_across(starts_with("Mi")),c_across(starts_with("Ve")))))
+
+
+TRZ.VEH.3 <- organized_drugframe %>% 
+  rownames_to_column(.id = "gene") %>% 
+  rowwise() %>% 
+  select(c(starts_with("Tr")&ends_with("3h")),
+         c(starts_with("Ve")&ends_with("3h"))) %>%
+  mutate(data=list(var.test(c_across(starts_with("Tr")),c_across(starts_with("Ve")))))
+
+Var_test_list24 <- list(DNR.VEH.24,DOX.VEH.24,EPI.VEH.24,MTX.VEH.24,TRZ.VEH.24)
+                      
+names(Var_test_list24) <- c('DNR.VEH.24','DOX.VEH.24','EPI.VEH.24','MTX.VEH.24','TRZ.VEH.24')
+                    
+  
+ saveRDS(Var_test_list24,"data/Var_test_list24.RDS")   
+ 
+ 
+ Var_test_list3 <- list(DNR.VEH.3,DOX.VEH.3,EPI.VEH.3,MTX.VEH.3,TRZ.VEH.3)
+                      
+names(Var_test_list3) <- c('DNR.VEH.3','DOX.VEH.3','EPI.VEH.3','MTX.VEH.3','TRZ.VEH.3')
+                     saveRDS(Var_test_list3,"data/Var_test_list3.RDS") 
+```       
+
+```{r extract pvalue list}
+
+                 
+organized_drugframe <- read.csv("data/organized_drugframe.csv",
+                                row.names = 1)
+Var_test_list3 <- readRDS("data/Var_test_list3.RDS")
+set3 <- names(Var_test_list3)
+shorterlist <- Var_test_list3[[1]][[13]]
+names(shorterlist) <- rownames(organized_drugframe)
+
+framefun <- data.frame(ENTREZID=rownames(organized_drugframe))
+for (i in 1:length(set3)){
+  a <- set3[i]
+    s_list<- Var_test_list3[[i]][[13]]
+  names(s_list) <- rownames(organized_drugframe)
+  hold<- map_df(s_list, ~as.data.frame(.x$p.value), .id="ENTREZID")
+   framefun[paste0(a)] <- hold$`.x$p.value`
+ 
+}
+Var_test_list24 <- readRDS("data/Var_test_list24.RDS")
+set24 <- names(Var_test_list24) 
+
+framefun24 <- data.frame(ENTREZID=rownames(organized_drugframe))
+for (i in 1:length(set24)){
+  a <- set24[i]
+    s_list<- Var_test_list24[[i]][[13]]
+  names(s_list) <- rownames(organized_drugframe)
+  hold<- map_df(s_list, ~as.data.frame(.x$p.value), .id="ENTREZID")
+   framefun24[paste0(a)] <- hold$`.x$p.value`
+ 
+}
+
+
+
+
+
+```
+
+
+```{r plot pvalue as histo}
+framefun %>% 
+  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
+  separate(combo, into= c("drug", NA,"time")) %>%
+  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
+  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
+  geom_histogram()+
+  facet_wrap(~drug)+
+  ggtitle("3 hour var.test p.value")
+
+
+framefun24 %>% 
+  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
+  separate(combo, into= c("drug", NA,"time")) %>%
+  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
+  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
+  geom_histogram()+
+  facet_wrap(~drug)+
+  ggtitle("24 hour var.test p.value")
+  
+
+
+```
+
+```{r gene filtering}
+backGL <-read_csv("data/backGL.txt", 
+    col_types = cols(...1 = col_skip()))
+var3 <- list <- framefun %>% 
+  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
+  separate(combo, into= c("drug", NA,"time")) %>%
+  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
+  filter(p.value<0.05)
+
+var24 <- list <- framefun24 %>% 
+  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
+  separate(combo, into= c("drug", NA,"time")) %>%
+  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
+  filter(p.value<0.05)
+
+DOX_24_var <- var24 %>% filter(drug=="DOX") %>% select(ENTREZID)#1089 
+EPI_24_var <- var24 %>% filter(drug=="EPI")%>% select(ENTREZID)#2211
+DNR_24_var <- var24 %>% filter(drug=="DNR")%>% select(ENTREZID)#928
+MTX_24_var <- var24 %>% filter(drug=="MTX")%>% select(ENTREZID)#269
+TRZ_24_var <- var24 %>% filter(drug=="TRZ")%>% select(ENTREZID)#157
+
+geneset_24 <- list(DOX_24_var$ENTREZID, EPI_24_var$ENTREZID, DNR_24_var$ENTREZID, MTX_24_var$ENTREZID, TRZ_24_var$ENTREZID)
+names(geneset_24) <- c("DOX_24_var","EPI_24_var","DNR_24_var" ,"MTX_24_var","TRZ_24_var")
+
+DOX_3_var <- var3 %>% filter(drug=="DOX")%>% select(ENTREZID)#346
+EPI_3_var <- var3 %>% filter(drug=="EPI")%>% select(ENTREZID)#332
+DNR_3_var <- var3 %>% filter(drug=="DNR")%>% select(ENTREZID)#385
+MTX_3_var <- var3 %>% filter(drug=="MTX")%>% select(ENTREZID)#277
+TRZ_3_var <- var3 %>% filter(drug=="TRZ")%>% select(ENTREZID)#262
+
+geneset_3 <- list(DOX_3_var$ENTREZID,EPI_3_var$ENTREZID,DNR_3_var$ENTREZID ,MTX_3_var$ENTREZID,TRZ_3_var$ENTREZID)
+names(geneset_3) <- c("DOX_3_var","EPI_3_var","DNR_3_var" ,"MTX_3_var","TRZ_3_var")
+
+
+```
+
+### Venn
+
+
+```{r venn of 24 hours}
+library(paletteer)
+library(ggVennDiagram)
+
+
+ggVennDiagram::ggVennDiagram(geneset_24,
+              category.names = c("DOX\nn = 1089 ",
+                                 "EPI\nn = 2211\n",
+                                 "DNR\nn = 928",
+                                 "MTX\nn = 269", 
+                                "TRZ\nn = 157"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(6,6,6,6),
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  scale_fill_distiller(palette="Spectral", direction = -1)+
+  labs(title = "24 hour var genes p. value <0.05",
+       caption = paste("n =", length(unique(var24$ENTREZID)),"genes"))+
+  
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+
+
+```
