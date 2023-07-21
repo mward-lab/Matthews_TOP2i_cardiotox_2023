@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -13,110 +14,380 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r packages loading, echo=FALSE}
+```{r packages loading}
 library(car)
 library(tidyverse)
-library(tinytex)
 library(BiocGenerics)
 library(data.table)
-library(drc)
 library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
+
 ```
 
+```{r loading dataframes}
 
-# Figure 2 
-Minimal cellular stress is induced following 24 hours of treatment
-
-## A. Lactate dehydrogenase release at 24 hours
-```{r LDH,data load, fig.height=4, fig.width=6}
-drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 
 level_order2 <- c('75','87','77','79','78','71')
+
+drug_palexpand <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","purple3","darkgreen", "darkblue")
+#named colors: dark pink,Red,yellow,blue, dark grey, green(green is always control, may need to move pal around)
+calcium_data <- readRDS("data/calcium_data.RDS")
+clamp_summary <- readRDS("data/clamp_summary.RDS")
+
+```
+
+
+
+
+# Figure 2
+
+Calcium dysregulation occurs at sub-lethal concentrations of TOP2i
+
+## A. Representative line graph of individual 3
+```{r function}
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
-RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt",row.names = 1)
 
+Normalization_And_Set_File <- function(file_path) {
+  # Read in the data from the file
+  CALIMA_obj <- read.csv(file_path)
+  
+  # Normalize the data
+  ROI_cut <- CALIMA_obj[,2:ncol(CALIMA_obj)]
+  ROI_cut_rowmeans <- rowMeans(ROI_cut)
+  Intensity <- (ROI_cut_rowmeans/min(ROI_cut_rowmeans))
+  Final_ROI <- tibble::as_tibble(cbind(CALIMA_obj[,1], Intensity, ROI_cut))
+  Final_ROI$Intensity <- Final_ROI$Intensity -1
+  
+    return(Final_ROI)
+}
 
-RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c(  "DOX",
-                                          "EPI",
-                                          "DNR",
-                                          "MTX",
-                                          "TRZ",
-                                          "VEH"))) %>%
- mutate(indv= factor(indv,levels= level_order2)) %>% 
-  ggplot(., aes(x=Drug, y=rldh))+
-  geom_boxplot(position = "identity", fill = drug_pal_fact)+
-  geom_point(aes(col=indv, size =3,alpha=0.5))+
- geom_signif(comparisons =list(c("VEH","DOX"),
-                                c("VEH","EPI"),
-                                c("VEH","DNR"),
-                                c("VEH","MTX"),
-                                c("VEH","TRZ")),
-              test="t.test",
-              map_signif_level=TRUE,
-              textsize =4,
-              step_increase = 0.1)+
-  theme_classic()+
-  guides(size = "none",alpha="none")+
-  scale_color_brewer(palette = "Dark2", name = "Individual")+
-  xlab("")+
-  ylab("Relative LDH activity ")+
-  ggtitle("Lactate dehydrogenase release at 24 hours")+
-  theme_classic()+
-  theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = "none",
-         axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
+Plot_Line_df <- function(directory) {
+  holder <- list()
+  # List CSV files in the folder that is output from CALIMA 
+  file_list <- list.files(directory, pattern = "*.csv", full.names = TRUE)
+  file_list <- file_list %>% as.tibble() %>% 
+  mutate(filenames=value) %>% 
+  separate(filenames, c(NA,NA,NA,"file"), sep="/") %>% 
+   separate(file, c("Drug","indv"))
+  
+    # Loop over all files in directory
+  for (i in 1:length(file_list$value)) {
+    normalized_data <- data.frame("indv"=file_list$indv[i], "drug"=file_list$Drug[i])
+    # Normalize the data from the file
+    
+    norm_out <- Normalization_And_Set_File(file_list$value[i])
+    holder[[file_list$Drug[i]]] <- cbind(normalized_data,norm_out[,1:2])
+    
+  # Return the plot
+  
+  }
+  return(holder)
+}
 ```
-## C. Troponin I release
 
+```{r lineplot, fig.width=6, fig.height=4}
+plot_77 <-  Plot_Line_df("data/CALIMA_Data/77-1/")
 
-```{r troponin_24, fig.height=4, fig.width=6}
-
-
-RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c(  "DOX",
-                                          "EPI",
-                                          "DNR",
+df_77forplot <- plot_77 %>% 
+  bind_rows() %>% 
+   mutate(drug=factor(drug, levels = c(  "DOX", 
+                                        "EPI",
+                                         "DNR",
                                           "MTX",
                                           "TRZ",
                                           "VEH"))) %>%
- mutate(indv= factor(indv,levels= level_order2)) %>% 
-  ggplot(., aes(x=Drug, y=rtnni))+
-  geom_boxplot(position = "identity", fill = drug_pal_fact)+
-  geom_point(aes(col=indv, size =3,alpha=0.5))+
-  geom_signif(comparisons =list(c("VEH","DOX"),
-                                c("VEH","EPI"),
-                                c("VEH","DNR"),
-                                c("VEH","MTX"),
-                                c("VEH","TRZ")),
-              test="t.test",
-              map_signif_level=TRUE,
-              textsize =4,
-              step_increase = 0.1)+
-  theme_classic()+
-  guides(size = "none",alpha="none")+
-  scale_color_brewer(palette = "Dark2", name = "Individual")+
+  rename("Xaxis"=`CALIMA_obj[, 1]`) 
+
+    
+Line_plot3<-
+ggplot(df_77forplot, aes(x=Xaxis, y= Intensity, group=drug))+
+  geom_line(size=1.5,aes(color=drug))+
+  # stat_smooth(method = "lm")
   xlab("")+
-  ylab("Relative Troponin I levels ")+
-  ggtitle("Troponin I release at 24 hours")+
+  theme_bw()+
+  guides(color=guide_legend(override.aes = list(size=1)))+
+  ggtitle("Individual 3")+
+  scale_x_continuous(expand = c(0, 0))+
+  scale_color_manual(values=drug_pal_fact,name=" ")+
+  theme(plot.title = element_text(size=14,hjust = 0.5),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1),
+    legend.position="right", 
+    axis.line = element_line(linewidth = 1),
+    axis.text = element_text(size = 12, color = "black", angle = 0),
+    strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+ Line_plot3   
+ nlLine_plot3 <- Line_plot3+theme(legend.position = "none")
+```
+
+
+## B. Mean amplitude
+```{r Mean_amp, fig.width=6, fig.height=4}
+
+MA_plot <- clamp_summary %>% 
+  dplyr::select(Drug,Conc,indv,Mean_Amplitude) %>%
+  ggplot(.,aes(Drug,Mean_Amplitude))+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(size = "none",alpha="none",colour = "none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("VEH","TRZ"),
+                                 c("VEH","MTX"),
+                                 c( "VEH","DNR"),
+                                 c("VEH","EPI"),
+                                 c( "VEH","DOX")),
+              test = "t.test",
+              map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05,"ns"=1),
+              step_increase = 0.08,
+              textsize = 4)+
+  ylab( "a.u.")+
+  xlab(" ")+
+  ggtitle("Mean amplitude")+
   theme_classic()+
-  theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = "none",
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+MA_plot
+
+
+```
+
+
+
+
+## C. Rising slope
+```{r rising slope, fig.width=6, fig.height=4}
+
+RS_plot <- clamp_summary %>%
+  dplyr::select(Drug,Conc,indv,Rise_Slope) %>%
+  ggplot(.,aes(Drug,Rise_Slope))+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(size = "none",alpha="none",colour = "none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("VEH","TRZ"),
+                                 c("VEH","MTX"),
+                                 c( "VEH","DNR"),
+                                 c("VEH","EPI"),
+                                 c( "VEH","DOX")),
+              test = "t.test",
+              map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05,"ns"=1),
+              step_increase = 0.08,
+              textsize = 4)+
+  ylab("a.u./ sec")+
+  xlab(" ")+
+  theme_classic()+
+  ggtitle("Rising slope")+
+ theme_classic()+
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+RS_plot
+
+```
+
+## D. Decay slope
+
+```{r Decay slope, fig.width=6, fig.height=4}
+Decay_plot <- clamp_summary %>%
+  dplyr::select(Drug,Conc,indv,Decay_Slope) %>%
+  ggplot(.,aes(Drug,Decay_Slope))+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(size = "none",alpha="none",colour = "none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("VEH","TRZ"),
+                                 c("VEH","MTX"),
+                                 c( "VEH","DNR"),
+                                 c("VEH","EPI"),
+                                 c( "VEH","DOX")),
+              test = "t.test",
+              map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05,"ns"=1),
+              step_increase = 0.08,
+              textsize = 4)+
+  ylab("a.u.")+
+  xlab(" ")+
+  theme_classic()+
+  ggtitle("Decay slope")+
+  theme_classic()+
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+Decay_plot
+
+```
+
+
+
+## E. Full-width at half-max
+```{r FWHM, fig.width=6, fig.height=4}
+
+FWHM_plot <- clamp_summary %>%
+  dplyr::select(Drug,Conc,indv,FWHM) %>%
+  ggplot(.,aes(Drug,FWHM))+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(size = "none",alpha="none",colour = "none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual", 
+                     label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("VEH","TRZ"),
+                                 c("VEH","MTX"),
+                                 c( "VEH","DNR"),
+                                 c("VEH","EPI"),
+                                 c( "VEH","DOX")),
+              test = "t.test",
+              map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05,"ns"=1),
+              step_increase = 0.08,
+              textsize = 4)+
+  ylab("a.u.")+
+  xlab(" ")+
+  theme_classic()+
+  ggtitle("Full-width at half-max")+
+  theme_classic()+
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+FWHM_plot
+
+
+
+```
+
+
+
+## F. Contraction rate
+```{r  Contract_rate, fig.width=6, fig.height=4}
+
+BR_plot <- calcium_data %>% 
+  dplyr::select(Drug,Conc,indv,Rate) %>%
+  mutate(indv=substr(indv,1,2)) %>%
+  mutate(indv=factor(indv, levels = level_order2)) %>%
+  mutate(contrl= 0.383) %>%
+  mutate(norm_rate=Rate/contrl) %>%
+  filter(Conc==0| Conc==0.5) %>%
+  ggplot(., aes(x=Drug, y=Rate))+
+  geom_boxplot(position = "identity", fill= drug_pal_fact)+
+  geom_point(aes(col=indv, size=2, alpha=0.5))+
+  guides(size = "none",alpha="none",colour = guide_legend(override.aes = list(alpha= 0.5)))+
+  # guides(size = "none",alpha="none",colour = "none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual",label=c("2","3","5"))+
+  geom_signif(comparisons = list(c("VEH","TRZ"),
+                                 c("VEH","MTX"),
+                                 c( "VEH","DNR"),
+                                 c("VEH","EPI"),
+                                 c( "VEH","DOX")),
+              test = "t.test",
+              map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05,"ns"=1),
+              step_increase = 0.08,
+              textsize = 4)+
+  ylab("avg. beats/sec")+
+  xlab(" ")+
+  ggtitle("Contraction rate")+
+  theme_classic()+
+  theme(plot.title = element_text(siz=12,hjust = 0.5),
+        axis.title = element_text(size = 12, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12 ,color = "black", face = "bold"))
+
+
+BR_plot
+BR_plot2 <- BR_plot+theme(legend.position = "none")
+legend <- get_legend(BR_plot)
+
+```
+
+
+## G. PCA of Calcium data
+
+```{r PCA_G}
+
+k_means <- read.csv("data/K_cluster_kisthree.csv")
+
+
+PCA_calciumplot <- k_means %>% mutate(Drug =case_match(Drug_Name,
+                                    "Dau_0.5"~"DNR",
+                                    "Dau_0.5.1" ~"DNR",
+                                    "Dau_0.5.2" ~"DNR",
+                                    "Dox_0.5"~"DOX",  
+                                    "Dox_0.5.1" ~"DOX",
+                                    "Dox_0.5.2" ~"DOX",
+                                    "Epi_0.5"~"EPI",
+                                    "Epi_0.5.1"~"EPI",
+                                    "Epi_0.5.2"~"EPI",
+                                    "Mito_0.5"~"MTX",
+                                    "Mito_0.5.1"~"MTX",
+                                    "Mito_0.5.2"~"MTX",
+                                    "Tras_0.5"~"TRZ", 
+                                    "Tras_0.5.1"~"TRZ", 
+                                    "Tras_0.5.2"~"TRZ",
+                                    "Control.1"~"VEH",
+                                    "Control.2"~"VEH",
+                                    "Control"~"VEH",.default = Drug_Name)) %>%
+  mutate(Class= case_match(Drug,"DOX"~"TOP2i","DNR"~"TOP2i","EPI" ~"TOP2i","MTX" ~"TOP2i", "TRZ"~"not-TOP2i","VEH"~"not-TOP2i",.default = Drug)) %>% 
+  mutate(Drug=factor(Drug, levels = c(  "DOX", 
+                                        "EPI",
+                                        "DNR",
+                                          "MTX",
+                                          "TRZ",
+                                          "VEH"))) %>%
+  
+  ggplot(., aes(x=PC1, y=PC2, col= Drug,shape = factor(Class)))+
+  geom_point(size = 8)+
+  scale_shape_manual(values=c(19, 17,15), name= "Class")+
+  scale_color_manual(values=drug_pal_fact)+
+  ggtitle(expression("PCA of Ca"^"2+"~"data"))+
+  theme_bw()+
+  labs(x = "PC 1 (54 %)",y = "PC 2 (34%)")+
+  theme(plot.title=element_text(size= 14,hjust = 0.5),
+        axis.title = element_text(size = 10, color = "black"),
+        axis.ticks = element_line(size = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
+PCA_calciumplot 
+legend2 <- get_legend(PCA_calciumplot)
+PCA2 <- PCA_calciumplot+theme(legend.position = "none")
+ ggsave("output/Figures/calciumPCA.eps")
+```
+
+
+
+```{r making full image, fig.width =16, fig.height=9}
+library(cowplot)
+# align all plots
+plots <- align_plots(MA_plot, RS_plot,Decay_plot,FWHM_plot,BR_plot2,align='v',axis='l')
+##make bottom row
+ bottom_row <- plot_grid(plots[[1]],plots[[2]],plots[[3]], plots[[4]],plots[[5]],legend,nrow=1, rel_widths = c(1,1,1,1,1,0.2))
+# put together
+top_row <- plot_grid(nlLine_plot3,legend2,PCA2, rel_widths=c(1,.2,1), nrow=1)
+# middle_row <- plot_grid(legend, nrow=1, scale=4)
+test <- plot_grid(top_row, bottom_row, ncol=1, rel_heights = c(2,1.1), rel_widths=c(1,1))
+
+test
+
+ggsave("output/Figures/Calciumgroup.eps",width = 8, height =16, units = "in")
+
+
 ```
