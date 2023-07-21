@@ -19,12 +19,12 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
     ##GOI needs to be ENTREZID
   df <- cpmcounts
   df_plot <- df %>% 
-      dplyr::filter(rownames(.)==GOI) %>%
+      dplyr::filter(rownames(.)== GOI) %>%
       pivot_longer(everything(),
                    names_to = "treatment",
                    values_to = "counts") %>%
       separate(treatment, c("drug","indv","time")) %>%
-      mutate(time = factor(time,levels= c("3h","24h"), labels = c("3 hours","24 hours"))) %>% 
+      mutate(time = factor(time, levels= c("3h","24h"), labels = c("3 hours","24 hours"))) %>% 
       mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
       mutate(drug =case_match(drug, "Da"~"DNR",
                             "Do"~"DOX",
@@ -40,7 +40,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       guides(alpha= "none", size= "none")+
       scale_color_brewer(palette = brewer_palette, guide = "none")+
       scale_fill_manual(values=fill_colors)+
-      facet_wrap("time", nrow=1, ncol=2)+
+      # facet_wrap(~time, nrow=1, ncol=2)+
       theme_bw()+
       ylab(ylab)+
       xlab("")+
@@ -456,7 +456,31 @@ gene_corr_fig9 <- gene_corr_df %>%
 
 
 
+## GOI from variance
 
+```{r GOIvar}
+Vargenes <- readRDS("data/geneset_24.RDS")
+expressedgenes <- read.csv("data/backGL.txt")
+top_genes <- sapply(Vargenes,head,4)
+top_genes_df<-  top_genes %>% as.data.frame() %>% 
+pivot_longer(everything(),names_to="combo",values_to = "ENTREZID") %>% 
+  separate(combo, into = c("drug",NA,NA)) %>% 
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  inner_join(., expressedgenes, by="ENTREZID") %>% as.data.frame()
+
+
+for (g in seq(1:20)){
+  a <- top_genes_df$SYMBOL[g]
+  b <- top_genes_df$drug[g]
+  cpm_boxplot(cpmcounts,GOI=top_genes_df[g,2],
+              "Dark2",
+              drug_pal_fact,
+              ylab=bquote(~italic(.(a))~log[2]~"cpm "))+
+    ggtitle(expression(paste0("Top 10 in ",b," var genes")))
+}
+
+
+```
 
 
 
