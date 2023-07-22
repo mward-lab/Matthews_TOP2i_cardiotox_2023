@@ -1,0 +1,253 @@
+---
+title: "Highly variable genes"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    fig_height: 6
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+Goals for this page:
+
+
+  I will examine the AC-shared variable genes withing AC-shared response genes 
+
+```{r packages loading}
+library(tidyverse)
+library(VennDiagram)
+library(paletteer)
+library(ggVennDiagram)
+library(gridtext)
+library(scales)
+library(kableExtra)
+library(ComplexHeatmap)
+library(data.table)
+```
+
+
+```{r data set loading}
+
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+Vargenes <- readRDS("data/geneset_24.RDS")
+expressedgenes <- read.csv("data/backGL.txt")
+venn24part <- VennDiagram::get.venn.partitions(Vargenes)
+
+
+
+toplistall <- readRDS("data/toplistall.RDS")
+  #get sig files made with 0.05 data this way(data created on run)
+siglist <- readRDS("data/siglist_final.RDS")
+
+
+siglist24 <- siglist[6:9]
+test <- siglist24[1]["ENTREZID"]
+sig_24_ENTREZID <- sapply(siglist24,"[[",1)
+sig_24_venn<- VennDiagram::get.venn.partitions(sig_24_ENTREZID)
+
+
+
+
+```
+
+
+
+## AC shared
+```{r enrichment checks}
+
+AC_share_var <- venn24part$..values..[[25]] #203
+not_AC_shared <- setdiff(expressedgenes$ENTREZID,AC_share_var)
+AC_shared_sig <- sig_24_venn$..values..[[9]] ##4435
+length(intersect(AC_share_var,AC_shared_sig))  #(88 overlap)
+length(intersect(not_AC_shared,AC_shared_sig)) #4347
+# 
+# stored <-
+  expressedgenes %>% 
+  mutate(var_AC= if_else(ENTREZID %in% AC_share_var, "y","no")) %>% 
+  mutate(not_AC=if_else(ENTREZID %in% not_AC_shared,"y","no")) %>% 
+  mutate(AC_shared_sig=if_else(ENTREZID %in% AC_shared_sig,"y","no")) %>% 
+  # group_by(AC_shared_sig,not_AC)  %>% 
+    summarise("var_share-n" = sum(not_AC=="no"&AC_shared_sig=="no"), "var_share-y"=sum(not_AC=="no"&AC_shared_sig=="y"),"not_var-n"=sum(not_AC=="y"&AC_shared_sig=="no"), "not_var-y"=sum(not_AC=="y"&AC_shared_sig=="y")) %>% 
+    pivot_longer(everything(), names_to = "set", values_to = "count") %>% 
+    separate(set, into = c("set", "color"),sep="-" ) %>% 
+    mutate(color, factor(color, levels = c("y","no"))) %>% 
+    mutate(set=case_match(set,"not_var"~"not AC shared\nvar. gene","var_share"~"AC shared\nvar. gene")) %>% 
+   ggplot( ., aes(x=set, y=count, group=color,fill=color))+
+     geom_col(position='fill')+
+      theme_classic()+
+   scale_color_manual(values=drug_palc)+
+     scale_fill_manual(values=c("y"="cornflowerblue","n"="darkblue"), 
+                    labels=c("not an AC-sp gene","shared with\nAC sp"))+
+       scale_y_continuous(expand=expansion(0.001))+
+    theme(strip.text=element_text(size=10, face = "bold"),
+          axis.text.x = element_text(margin = margin(2,0,2,0, "pt"), size=12),
+  strip.background = element_rect (linetype=1, linewidth = 0.5))
+ 
+
+testmat <- matrix(c(88,4347,115,9534),nrow = 2,byrow = TRUE)
+
+chisq.test(testmat)#$p.value
+  
+
+```
+
+
+
+## Top2i shared
+
+
+```{r enrichment top2bi checks}
+
+TOP2i_share_var <- venn24part$..values..[[17]] # 32
+not_T2_shared <- setdiff(expressedgenes$ENTREZID,TOP2i_share_var)#14052
+TOP2i_shared_sig <- sig_24_venn$..values..[[1]] ##882
+length(intersect(TOP2i_share_var,TOP2i_shared_sig))  #(3 overlap)
+length(intersect(not_T2_shared,TOP2i_shared_sig)) #879
+
+# stored <-
+  expressedgenes %>% 
+  mutate(var_t2= if_else(ENTREZID %in% TOP2i_share_var, "y","no")) %>% 
+  mutate(not_t2= if_else(ENTREZID %in% not_T2_shared,"y","no")) %>% 
+  mutate(T2_shared_sig=if_else(ENTREZID %in% TOP2i_shared_sig,"y","no")) %>% 
+  # group_by(AC_shared_sig,not_t2)  %>%
+    summarise("var_share-n" = sum(not_t2=="no"&T2_shared_sig=="no"), "var_share-y"=sum(not_t2=="no"&T2_shared_sig=="y"),"not_var-n"=sum(not_t2=="y"&T2_shared_sig=="no"), "not_var-y"=sum(not_t2=="y"&T2_shared_sig=="y"))%>% 
+    pivot_longer(everything(), names_to = "set", values_to = "count") %>% 
+    separate(set, into = c("set", "color"),sep="-" ) %>% 
+    mutate(color, factor(color, levels = c("y","no"))) %>% 
+    mutate(set=case_match(set,"not_var"~"not TOP2i shared\nvar. gene","var_share"~"TOP2i shared\nvar. gene")) %>% 
+   ggplot( ., aes(x=set, y=count, group=color,fill=color))+
+     geom_col(position='fill')+
+      theme_classic()+
+    xlab(" ")+
+    ggtitle("TOP2i variable genes in TOP2i specific n= 4435")+
+   scale_color_manual(values=drug_palc)+
+     scale_fill_manual(values=c("y"="cornflowerblue","n"="darkblue"), 
+                    labels=c("not a TOP2i-sp gene","shared with\nTOP2i-sp"))+
+       scale_y_continuous(expand=expansion(0.001))+
+    theme(strip.text=element_text(size=10, face = "bold"),
+          axis.text.x = element_text(margin = margin(2,0,2,0, "pt"), size=12),
+  strip.background = element_rect (linetype=1, linewidth = 0.5))
+ 
+
+testmatTOP <- matrix(c(3,879,29,13173),nrow = 2,byrow = TRUE)
+
+chisq.test(testmatTOP)#$p.value
+  
+
+```
+
+
+## GO heatmaps  
+
+
+```{r heatmap for  shared GO}
+
+DOX_var24gost <- readRDS("data/DEG-GO/var/DOX_var24gost.RDS")
+DOX_table <- DOX_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+EPI_var24gost <- readRDS("data/DEG-GO/var/EPI_var24gost.RDS")
+EPI_table <- EPI_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+DNR_var24gost <- readRDS("data/DEG-GO/var/DNR_var24gost.RDS")
+DNR_table <- DNR_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+MTX_var24gost <- readRDS("data/DEG-GO/var/MTX_var24gost.RDS")
+MTX_table <- MTX_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+TRZ_var24gost <- readRDS("data/DEG-GO/var/TRZ_var24gost.RDS")
+TRZ_table <- TRZ_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+AC_share_var24gost <- readRDS("data/DEG-GO/var/AC_share_var24gost.RDS")
+AC_share_var24_table <- AC_share_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+TOP2i_var24gost <- readRDS("data/DEG-GO/var/TOP2i_var24gost.RDS")
+TOP2i_var24_table <- TOP2i_var24gost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
+terms <- list()
+terms[1] <- DOX_table %>% filter(source=="GO:BP") %>% slice_min(.,p_value, n=3) %>% list()
+terms[2] <- EPI_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[3] <- DNR_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[4] <- MTX_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[5] <- TRZ_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[6] <- AC_share_var24_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[7] <- TOP2i_var24_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+names(terms) <- c("DOX", "EPI","DNR", "MTX", "TRZ", "AC_shared", "TOP2i_shared")
+termlist <- rbindlist(terms)
+termlistid <- c("GO:0010867","GO:0043508","GO:0070932")
+```
+
+
+
+
+
+```{r actual heatmap}
+P_valueterm <- list()
+P_valueterm[1] <- DOX_table %>% dplyr::filter(term_id %in% termlistid) %>% list()
+P_valueterm[2] <- EPI_table %>% dplyr::filter(term_id %in% termlistid) %>% list()
+P_valueterm[3] <- DNR_table %>% dplyr::filter(term_id %in% termlistid) %>% list()
+P_valueterm[4] <- MTX_table %>% dplyr::filter(term_id %in% termlistid) %>% list()
+P_valueterm[5] <- TRZ_table %>% dplyr::filter(term_id %in% termlistid) %>% list()
+P_valueterm[6] <- AC_share_var24_table %>% dplyr::filter(term_id %in% termlistid) %>% list()
+P_valueterm[7] <- TOP2i_var24_table %>% dplyr::filter(term_id %in% termlistid) %>% list()
+
+names(P_valueterm) <- c("DOX", "EPI","DNR", "MTX", "TRZ", "AC_shared", "TOP2i_shared")
+
+GO_heatmapdata <- rbindlist(P_valueterm,idcol= "deg")
+col_funkegg= circlize::colorRamp2(c(0, 5), c("white", "darkred"))
+
+
+GO_sig_mat <- GO_heatmapdata %>% 
+  dplyr::select(deg,p_value,term_name) %>%
+# mutate(term_name= case_match(term_name,"Cell cycle"~"Cell\ncycle","p53 signaling pathway"~"p53\nsig.\npath.","Base excision repair"~"Base\nexcision\nrepair",	
+# "DNA replication"~"DNA\nrep.",.default = term_name)) %>% 
+  pivot_wider(id_cols = everything(),
+              names_from="term_name",
+              values_from="p_value",
+              values_fill = list(p_value = 1)) %>% 
+  column_to_rownames('deg') %>% 
+  as.matrix()# 
+
+GO_mat<- GO_heatmapdata%>%
+  mutate(log_val= (-log10(p_value))) %>% 
+  dplyr::select(deg,log_val,term_name) %>%
+  mutate(term_name= case_match(term_name,"histone H3 deacetylation"~"histone H3\n deacetylation","negative regulation of JUN kinase activity
+"~"neg. reg. of\nJUN kinase\nactivity","positive regulation of triglyceride biosynthetic process"~"pos. reg.\nof triglyceride\nbiosynthetic\nprocess",.default = term_name)) %>%
+  pivot_wider(id_cols = everything(),
+              names_from="term_name",values_from="log_val") %>% 
+  column_to_rownames('deg') %>% 
+  as.matrix()# 
+
+Heatmap(GO_mat,
+        column_title = "GO -log10 p values",
+        name = "-log10 (p value)",
+        cluster_rows = FALSE, 
+        cluster_columns = FALSE,
+        column_names_rot = 0,
+        column_dend_side = "bottom",
+        
+        column_names_max_height = unit(12,"cm"),
+        column_names_centered = TRUE,
+        row_names_max_width = max_text_width(
+        rownames(GO_mat), 
+        gp = gpar(fontsize = 10)),
+        col = col_funkegg,
+        na_col="lightyellow",
+        column_labels = paste0(c("histone H3\n deacetylation",
+                                    "neg. reg. of\nJUN kinase\nactivity",
+                                    "pos. reg.of\ntriglyceride\nbiosynthetic\nprocess")),
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(GO_sig_mat[i, j]< 0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+  
+
+```
+
+
