@@ -145,7 +145,7 @@ The next step is to wrangle the data so that I can test the difference between t
 ```{r still going}
 nQTLsum <- toplistall %>%
   mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"),labels =c("3 hours","24 hours"))) %>%
   dplyr::filter(adj.P.Val <0.05) %>%
   mutate(nQTL=if_else(ENTREZID %in% nQTLmy$ENTREZID,'nQTL_y','nQTL_no')) %>% 
   group_by(id,time,nQTL) %>% 
@@ -156,7 +156,7 @@ nQTLsum <- toplistall %>%
 
 GTExsum <- toplistall %>%
   mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"), labels =c("3 hours","24 hours"))) %>%
   dplyr::filter(adj.P.Val <0.05) %>%
    mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
   group_by(id,time,GTEx) %>% 
@@ -180,15 +180,8 @@ GTEXcr8z %>% #filter(time=="24_hours") %>%
       
 GTExsum %>% 
   rbind(., nQTLsum) %>% 
-  dplyr::select(id,time,set, n, total) %>% 
-   mutate(time = case_match(time, '3_hours'~'3 hrs',
-                           '24_hours'~'24 hrs',.default = time)) %>% 
-  mutate(id =case_match( id, 
-                         'Daunorubicin'~'DNR',   
-                         'Doxorubicin'~'DOX' ,
-                         'Epirubicin'~'EPI' , 
-                         'Mitoxantrone' ~ 'MTX', .default = id)) #%>% 
-  
+  dplyr::select(id,time,set, n, total) #%>% 
+   
 
 ```
 
