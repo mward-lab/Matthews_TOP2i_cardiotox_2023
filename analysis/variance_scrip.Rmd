@@ -22,6 +22,8 @@ library(ggVennDiagram)
 library(gridtext)
 library(scales)
 library(kableExtra)
+library(qvalue)
+
 
 ```
 
@@ -137,7 +139,7 @@ write.csv(mean_vardrug1,"data/mean_vardrug1.csv")
 
 ###  plot by drug  
 
-```{r graph of var by drug indv, fig.height=5, fig.width=5}
+```{r graph of var by drug indv, fig.height=5, fig.width=6}
 mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
 
 
@@ -150,57 +152,86 @@ drug_frame<- mean_vardrug1 %>%
   group_by(treatment, time, calc) %>% 
   as.data.frame
 
-
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 drug_frame %>% 
   filter(calc!="mean") %>% 
-  ggplot(., aes(x= treatment, y=values))+
-  geom_boxplot()+
+  ggplot(., aes(x= treatment, y=values, fill=treatment))+
+  geom_boxplot(outlier.shape=NA)+
   geom_signif(comparisons =list(c("DOX","VEH"),
                                 c("EPI","VEH"),
                                 c("DNR","VEH"),
                                 c("MTX","VEH"),
                                 c("TRZ","VEH")),
               test= "t.test",
+              tip_length = 0.01,
               map_signif_level=FALSE,
               textsize =4,
+              y_position=0.85,
               step_increase = 0.1)+
   facet_wrap(~time)+
-  ggtitle("var")+
-  ylim(0,0.5)
-drug_frame %>% 
-  filter(calc!="mean") %>% 
-  ggplot(., aes(x= treatment, y=values))+
-  geom_boxplot()+
-  geom_signif(comparisons =list(c("DOX","VEH"),
-                                c("EPI","VEH"),
-                                c("DNR","VEH"),
-                                c("MTX","VEH"),
-                                c("TRZ","VEH")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =4,
-              step_increase = 0.1)+
-  facet_wrap(~time)+
-  ggtitle("var")#+
-  # ylim(0,0.5)
+  ggtitle("Variance")+
+  coord_cartesian(ylim = c(0,1))+
+  # ylim(0,2)+
+scale_fill_manual(values=drug_pal_fact)+
+  theme_bw()+
+  xlab(" ")+
+  ylab(expression("variance of log "[2]~" cpm "))+
+  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+
+# drug_frame %>% 
+#   filter(calc!="mean") %>% 
+#   ggplot(., aes(x= treatment, y=values))+
+#   geom_boxplot(outlier.shape=NA)+
+#   geom_signif(comparisons =list(c("DOX","VEH"),
+#                                 c("EPI","VEH"),
+#                                 c("DNR","VEH"),
+#                                 c("MTX","VEH"),
+#                                 c("TRZ","VEH")),
+#               test= "t.test",
+#               map_signif_level=FALSE,
+#               textsize =4,
+#                y_position=(.5),
+#               step_increase = 0.1)+
+#   facet_wrap(~time)+
+#   ggtitle("var")#+
+#   # ylim(0,0.5)
 
 drug_frame %>% 
   filter(calc!="var") %>% 
-  ggplot(., aes(x= treatment, y=values))+
-  geom_boxplot()+
+  ggplot(., aes(x= treatment, y=values,fill=treatment))+
+  geom_boxplot(outlier.shape=NA)+
   geom_signif(comparisons =list(c("TRZ","VEH"),
                                 c("MTX","VEH"),
                                 c("DNR","VEH"),
                                 c("EPI","VEH"),
                                 c("DOX","VEH")),
               test= "t.test",
+              tip_length = 0.01,
               map_signif_level=FALSE,
               textsize =4,
+              y_position=11,
               step_increase = 0.05)+
   facet_wrap(.~time)+
   ggtitle("Means")+
-  ylim(0,18)
+  ylim(0,15)+
+ scale_fill_manual(values=drug_pal_fact)+
+  theme_bw()+
+  xlab(" ")+
+  ylab(expression("counts log"[2]~"cpm "))+
+  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
 
 
 ```
@@ -287,6 +318,7 @@ DNR.VEH.24 <- organized_drugframe %>%
          c(starts_with("Ve")&ends_with("24h"))) %>%
   rowwise() %>% 
   mutate(data=list(var.test(c_across(starts_with("Da")),c_across(starts_with("Ve"))))) 
+  
 DOX.VEH.24 <- organized_drugframe %>% 
   select(c(starts_with("Do")&ends_with("24h")),
          c(starts_with("Ve")&ends_with("24h"))) %>%
@@ -353,12 +385,18 @@ names(Var_test_list3) <- c('DNR.VEH.3','DOX.VEH.3','EPI.VEH.3','MTX.VEH.3','TRZ.
                      saveRDS(Var_test_list3,"data/Var_test_list3.RDS") 
 ```       
 
+
+
+  Watch for the caption to tell which data set is plotted!
 ```{r extract pvalue list}
 
                  
 organized_drugframe <- read.csv("data/organized_drugframe.csv",
                                 row.names = 1)
 Var_test_list3 <- readRDS("data/Var_test_list3.RDS")
+#Is the data normally distributed?
+
+
 set3 <- names(Var_test_list3)
 shorterlist <- Var_test_list3[[1]][[13]]
 names(shorterlist) <- rownames(organized_drugframe)
@@ -372,6 +410,19 @@ for (i in 1:length(set3)){
    framefun[paste0(a)] <- hold$`.x$p.value`
  
 }
+est3pDNR <- qvalue(p=framefun$DNR.VEH.3)
+est3pDOX <- qvalue(p=framefun$DOX.VEH.3)
+est3pEPI <- qvalue(p=framefun$EPI.VEH.3)
+est3pMTX <- qvalue(p=framefun$MTX.VEH.3)
+est3pTRZ <- qvalue(p=framefun$TRZ.VEH.3)
+
+summary(est3pDNR)
+summary(est3pDOX)
+summary(est3pEPI)
+summary(est3pMTX)
+summary(est3pTRZ)
+
+
 Var_test_list24 <- readRDS("data/Var_test_list24.RDS")
 set24 <- names(Var_test_list24) 
 
@@ -384,6 +435,20 @@ for (i in 1:length(set24)){
    framefun24[paste0(a)] <- hold$`.x$p.value`
  
 }
+est24pDNR <- qvalue(p=framefun24$DNR.VEH.24)
+est24pDOX <- qvalue(p=framefun24$DOX.VEH.24)
+est24pEPI <- qvalue(p=framefun24$EPI.VEH.24)
+est24pMTX <- qvalue(p=framefun24$MTX.VEH.24)
+est24pTRZ <- qvalue(p=framefun24$TRZ.VEH.24)
+
+summary(est24pDNR)
+summary(est24pDOX)
+summary(est24pEPI)
+summary(est24pMTX)
+summary(est24pTRZ)
+
+
+
 
 ```
 
@@ -396,7 +461,18 @@ framefun %>%
   ggplot(.,aes(x=p.value,col=drug,fill=drug))+
   geom_histogram()+
   facet_wrap(~drug)+
-  ggtitle("3 hour var.test p.value")
+  ggtitle("3 hour var.test un-adjusted p.value ")
+hist(est3pDNR)+labs(caption= "DNR 3")
+hist(est3pDOX)+labs(caption= "DOX 3")
+hist(est3pEPI)+labs(caption= "EPI 3")
+hist(est3pMTX)+labs(caption= "MTX 3")
+hist(est3pTRZ)+labs(caption= "TRZ 3")
+
+plot(est3pDNR)
+plot(est3pDOX)
+plot(est3pEPI)
+plot(est3pMTX)
+plot(est3pTRZ)
 
 
 framefun24 %>% 
@@ -406,8 +482,20 @@ framefun24 %>%
   ggplot(.,aes(x=p.value,col=drug,fill=drug))+
   geom_histogram()+
   facet_wrap(~drug)+
-  ggtitle("24 hour var.test p.value")
+  ggtitle("24 hour var.test un-adjusted p.value")
   
+hist(est24pDNR)+labs(caption= "DNR 24")
+hist(est24pDOX)+labs(caption= "DOX 24")
+hist(est24pEPI)+labs(caption= "EPI 24")
+hist(est24pMTX)+labs(caption= "MTX 24")
+hist(est24pTRZ)+labs(caption= "TRZ 24")
+
+
+plot(est24pDNR)
+plot(est24pDOX)
+plot(est24pEPI)
+plot(est24pMTX)
+plot(est24pTRZ)
 
 
 ```
@@ -445,7 +533,7 @@ TRZ_3_var <- var3 %>% filter(drug=="TRZ")%>% select(ENTREZID)#262
 geneset_3 <- list(DOX_3_var$ENTREZID,EPI_3_var$ENTREZID,DNR_3_var$ENTREZID ,MTX_3_var$ENTREZID,TRZ_3_var$ENTREZID)
 names(geneset_3) <- c("DOX_3_var","EPI_3_var","DNR_3_var" ,"MTX_3_var","TRZ_3_var")
 
-
+# saveRDS(geneset_24,"data/geneset_24.RDS")
 ```
 
 
