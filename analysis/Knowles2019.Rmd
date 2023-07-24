@@ -28,6 +28,7 @@ library(sjmisc)
 library(kableExtra)
 library(broom)
 library(ComplexHeatmap)
+library(ggVennDiagram)
 ``` 
 ## function load
 ```{r cpmboxplot function, echo= FALSE}
@@ -559,33 +560,40 @@ list2env(trtonly_24h_genes,.GlobalEnv)
 
 siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist,.GlobalEnv)
-reQTLcombine=list(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)
+reQTLcombine=list(DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,DNRreQTLs$ENTREZID,MTXreQTLs$ENTREZID)
 
 length(unique(c(DNRreQTLs$ENTREZID,DOXreQTLs$ENTREZID,EPIreQTLs$ENTREZID,MTXreQTLs$ENTREZID)))
 
 print("number of unique genes expressed in pairwise DE set")
 QTLoverlaps <- VennDiagram::get.venn.partitions(reQTLcombine)
 DoxonlyQTL <-  QTLoverlaps$..values..[[14]]
-     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c("DNR-148\nsigDEG","DOX-142 \nsigDEG\n","EPI-131\nsigDEG\n","MTX-27\nsigDEG"),label = "count") +scale_x_continuous(expand = expansion(mult = .2))+scale_y_continuous(expand = expansion(mult = .1))
+     ggVennDiagram::ggVennDiagram(reQTLcombine, category.names = c("DOX-142 \nsigDEG\n","EPI-131\nsigDEG\n","DNR-148\nsigDEG","MTX-27\nsigDEG"),label = "count") +scale_x_continuous(expand = expansion(mult = .2))+scale_y_continuous(expand = expansion(mult = .1))+scale_fill_distiller(palette="RdYlGn", direction = -1)
 ```
 Here, I found 90 reQTLs that were related to only anthracyclines, with 23 reQTLS related to all Top2i drugs at 24 hours.
-```{r DoxreQTl over lap sigDEGS}
-library(paletteer)
-reQTL_overlapDE24 <- list(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID, DoxonlyDEG)
-re_incommon <- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID, DoxonlyDEG)
 
-names(reQTL_overlapDE24) <- c("Dox_reQTLS", "DNR DEGs","EPI DEGs","MTX DEGs", "DoxonlyDEG")
+
+
+### Venn of DOX egenes and all TOP2i DEGs
+```{r DoxreQTl overlap sigDEGS}
+library(paletteer)
+assignInNamespace(x="plot_venn", value=plot_venn, ns="ggVennDiagram") 
+
+reQTL_overlapDE24 <- list(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+re_incommon <- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+
+names(reQTL_overlapDE24) <- c("Dox_reQTLS", "DNR DEGs","EPI DEGs","MTX DEGs")
 
 ggVennDiagram::ggVennDiagram(reQTL_overlapDE24,
                              category.names = c("DOX\negenes",
                                  "DNR DEGs",
                                  "EPI DEGs",
-                                 "MTX DEGs",
-                                 "DOX-specific\n DEGs"),
+                                 "MTX DEGs"),
               show_intersect = FALSE,
               set_color = "black",
               category_size = c(6,6,6,6),
               label = "count",
+              color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
+          
               label_percent_digit = 1,
               label_size = 4,
               label_alpha = 0,
@@ -593,11 +601,39 @@ ggVennDiagram::ggVennDiagram(reQTL_overlapDE24,
               edge_lty = "solid", set_size = 4.5)+
   scale_x_continuous(expand = expansion(mult = .3))+
   scale_y_continuous(expand = expansion(mult = .2))+
-  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
-  scale_fill_distiller(palette="Spectral", direction = -1)+
-  labs(title = "24 hour DOX egenes in other DEG sets\n and DOX-specific DEGs",
+  # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = "colorbar", limits=c(0, 100)) +
+  scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)+
+  # scale_fill_manual(values = cbp1)+
+  labs(title = "24 hour DOX egenes in other DEG sets",
        caption = paste("n =", length(unique(re_incommon)),"genes"))+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+DEG_incommon <-c(sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+uniqueDEGs_incommon <- unique(DEG_incommon)
+two_venn <- list( DOXreQTLs$ENTREZID,uniqueDEGs_incommon)
+
+ggVennDiagram::ggVennDiagram(two_venn,
+                             category.names = c("DOX egenes\nn = 142","union of TOP2i DEGs\n     n = 7838"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(6,6),
+              label = "count",
+              # color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
+              # 
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .1))+
+   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)#+
+# labs(title = "24 hour DOX egenes in other DEG sets",
+#        caption = paste("n =", length(unique(re_incommon)),"genes"))+
+#   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 
 ```
 
@@ -672,7 +708,7 @@ total24 <-list(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$EN
 ## do venn partition and pull doxspe genes
 # total24 <- list(sigVDA24$SYMBOL,sigVDX24$SYMBOL,sigVEP24$SYMBOL,sigVMT24$SYMBOL)
 trtonly_24h_genes <- readRDS("data/trtonly_24h_genes.RDS")
-list2env(trtonly_24h_genes)
+list2env(trtonly_24h_genes, envir = .GlobalEnv)
 # venn_24h <- VennDiagram::get.venn.partitions(total24)
 # DoxonlyDEG <- venn_24h$..values..[[14]]# 355
 # EpionlyDEG <- venn_24h$..values..[[12]] #444
@@ -724,11 +760,14 @@ print(Dox24_lfc)
 ```
 
 
+
+
+
 ## Plots of some genes:
 
 
 ```{r lcpm of some dox spec genes}
-
+Dox_eGene_sp <- intersect(DoxonlyDEG,DOXreQTLs$ENTREZID)
 ### making list
 # # 
 # Doxonly_deg <- getBM(attributes=my_attributes,filters ='entrezgene_id',
@@ -745,6 +784,18 @@ for (g in seq(from=1, to=length(sampset$entrezgene_id))){
                 ylab=bquote(~italic(.(a))~log[2]~"cpm "))
 
 }
+
+doxsponly <- Doxonly_deg %>% 
+  distinct(entrezgene_id,.keep_all = TRUE) %>% 
+ dplyr::filter(entrezgene_id %in%Dox_eGene_sp)
+
+for (g in seq(from=1, to=length(doxsponly$entrezgene_id))){
+  a <- doxsponly$hgnc_symbol[g]
+  cpm_boxplot(cpmcounts,GOI=doxsponly[g,1],"Dark2",drug_palc,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+
+}
+
 ```
 
 
@@ -1197,7 +1248,7 @@ densityMTXsp <- toplist24hr %>%
 
 
 
-```{r Bgrid plot, eval=TRUE,echo=FALSE, fig.width=14, fig.height=8.5}
+```{r Bgrid plot, eval=TRUE,echo=FALSE, fig.width=12, fig.height=8.5}
 
  DoxBplot <- toplist24hr %>% 
   group_by(time,id) %>% 
@@ -1270,21 +1321,20 @@ MtxBplot <- toplist24hr %>%
       axis.ticks = element_line(size = 1.5),    
       axis.text = element_text(size = 10, color = "black", angle = 0))
 
-Doxgenesp_example <- cpm_boxplot(cpmcounts,GOI=101927720,"Dark2",drug_palc,
-                ylab=bquote(~italic("ZNF793-AS1 ")~log[2]~"cpm "))+ 
+Doxgenesp_example <- cpm_boxplot_time(cpmcounts,"24h",GOI=101927720,"Dark2",drug_palc,  ylab=bquote(~italic("ZNF793-AS1 ")~log[2]~"cpm "))+ 
   theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
 
-Dnrgenesp_example <- cpm_boxplot(cpmcounts,114826 ,"Dark2",drug_palc,
+Dnrgenesp_example <- cpm_boxplot_time(cpmcounts,"24h",114826 ,"Dark2",drug_palc,
                 ylab=bquote(~italic("SMYD4")~log[2]~"cpm "))+ 
    theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
 
 
-Epigenesp_example <- cpm_boxplot(cpmcounts,GOI=220963,"Dark2",drug_palc,
+Epigenesp_example <- cpm_boxplot_time(cpmcounts,"24h",GOI=220963,"Dark2",drug_palc,
                 ylab=bquote(~italic("SLC16A9")~log[2]~"cpm "))+ 
    theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
 
 
-Mtxgenesp_example <- cpm_boxplot(cpmcounts,GOI=54853,"Dark2",drug_palc,
+Mtxgenesp_example <- cpm_boxplot_time(cpmcounts,"24h",GOI=54853,"Dark2",drug_palc,
                 ylab=bquote(~italic("WDR55")~log[2]~"cpm "))+ 
    theme(axis.title = element_text(size = 10, color = "black"), axis.text = element_text(size = 10, color = "black", angle = 0))
     
