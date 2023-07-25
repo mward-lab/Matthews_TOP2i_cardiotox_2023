@@ -23,6 +23,7 @@ library(gridtext)
 library(scales)
 library(kableExtra)
 library(qvalue)
+library(data.table)
 
 
 ```
@@ -452,8 +453,121 @@ summary(est24pTRZ)
 
 ```
 
-## 3 and 24 hour histogram of var
+### BH correction
+
+I tried doing by hand
+   using i= p.value rank
+        m= 14084 (number of tests)
+        FDR= 0.05
+        I first ranked the list, divided the rank by 14084, then took the highest pvalue that was less than 0.05 of the calculated crit. pvalue(i/m)
+        I then ran the pvalue numbers through `p.adjust(data, method = "BH")` and found the easier way to calculate the adj.p.value.  (I mean, the hard way is fun, but I did it incorrectly somehow)  The way I tried to do it was commented out in the code.  The table contains the values after `p.adjust` was run.
+        
+        
+```{r BH correction on framefun}
+library(shiny)
+library(DT)
+rank3 <- framefun %>% 
+  # mutate(DNR_rank=dense_rank(DNR.VEH.3),
+  #        DOX_rank=dense_rank(DOX.VEH.3),
+  #        EPI_rank=dense_rank(EPI.VEH.3),
+  #        MTX_rank=dense_rank(MTX.VEH.3),
+  #        TRZ_rank=dense_rank(TRZ.VEH.3)) %>% 
+  # mutate(DNR_BH=DNR_rank/14084,
+  #        DOX_BH=DOX_rank/14084,
+  #        EPI_BH=EPI_rank/14084,
+  #        MTX_BH=MTX_rank/14084,
+  #        TRZ_BH=TRZ_rank/14084) %>% 
+  # mutate(sigDNR=if_else(DNR.VEH.3<DNR_BH&DNR_BH<=0.05,"sig","ns"),
+  #        sigDOX=if_else(DOX.VEH.3<DOX_BH&DOX_BH<=0.05,"sig","ns"),
+  #        sigEPI=if_else(EPI.VEH.3<EPI_BH&EPI_BH<=0.05,"sig","ns"),
+  #        sigMTX=if_else(MTX.VEH.3<MTX_BH&MTX_BH<=0.05,"sig","ns"),
+  #        sigTRZ=if_else(TRZ.VEH.3<TRZ_BH&TRZ_BH<=0.05,"sig","ns")) %>% 
+  mutate(p.adjustDOX= p.adjust(DOX.VEH.3, method= "BH"),
+         p.adjustEPI= p.adjust(EPI.VEH.3, method= "BH"),
+         p.adjustDNR= p.adjust(DNR.VEH.3, method= "BH"),
+         p.adjustMTX= p.adjust(MTX.VEH.3, method= "BH"),
+         p.adjustTRZ= p.adjust(TRZ.VEH.3, method= "BH")) %>% 
+  dplyr::select(ENTREZID,c(starts_with("DOX")|ends_with("DOX")),
+                c(starts_with("EPI")|ends_with("EPI")),
+                c(starts_with("DNR")|ends_with("DNR")),
+                c(starts_with("MTX")|ends_with("MTX")),
+                c(starts_with("TRZ")|ends_with("TRZ")))
+
+ DT::renderDataTable(rank3, options = list(
+  order = list(list(2, 'desc'), list(3, 'desc')))
+)
+
+rank24 <-  framefun24 %>% 
+  # mutate(DNR_rank=dense_rank(DNR.VEH.24),
+  #        DOX_rank=dense_rank(DOX.VEH.24),
+  #        EPI_rank=dense_rank(EPI.VEH.24),
+  #        MTX_rank=dense_rank(MTX.VEH.24),
+  #        TRZ_rank=dense_rank(TRZ.VEH.24)) %>% 
+  # mutate(DNR_BH=DNR_rank/14084,
+  #        DOX_BH=DOX_rank/14084,
+  #        EPI_BH=EPI_rank/14084,
+  #        MTX_BH=MTX_rank/14084,
+  #        TRZ_BH=TRZ_rank/14084) %>% 
+  # mutate(sigDNR=if_else(DNR.VEH.24<DNR_BH&DNR_BH<=0.05,"sig","ns"),
+  #        sigDOX=if_else(DOX.VEH.24<DOX_BH&DOX_BH<=0.05,"sig","ns"),
+  #        sigEPI=if_else(EPI.VEH.24<EPI_BH&EPI_BH<=0.05,"sig","ns"),
+  #        sigMTX=if_else(MTX.VEH.24<MTX_BH&MTX_BH<=0.05,"sig","ns"),
+  #        sigTRZ=if_else(TRZ.VEH.24<TRZ_BH&TRZ_BH<=0.05,"sig","ns")) %>% 
+  mutate(p.adjustDOX= round(p.adjust(DOX.VEH.24, method= "BH"),3),
+         p.adjustEPI=round(p.adjust(EPI.VEH.24, method= "BH"),3),
+         p.adjustDNR=round(p.adjust(DNR.VEH.24, method= "BH"),3),
+         p.adjustMTX=round(p.adjust(MTX.VEH.24, method= "BH"),3),
+         p.adjustTRZ=round(p.adjust(TRZ.VEH.24, method= "BH"),3))
+DT::renderDataTable(rank24, options = list(
+  order = list(list(2, 'desc'), list(3, 'desc')))
+)
+```
+
+```{r new gene list plots}
+# bhDOX_24_var <- sigvar_24h %>% filter(set=="DOX24") %>% select(ENTREZID)#1089 
+# bhEPI_24_var <- sigvar_24h %>% filter(set=="EPI24")%>% select(ENTREZID)#2211
+# bhDNR_24_var <- sigvar_24h %>% filter(set=="DNR24")%>% select(ENTREZID)#928
+# bhMTX_24_var <- sigvar_24h %>% filter(set=="MTX24")%>% select(ENTREZID)#269
+# bhTRZ_24_var <- sigvar_24h %>% filter(set=="TRZ24")%>% select(ENTREZID)#157
+# 
+# bhgeneset_24 <- list(bhDOX_24_var$ENTREZID, bhEPI_24_var$ENTREZID, bhDNR_24_var$ENTREZID)
+# names(bhgeneset_24) <- c("DOX_24_var","EPI_24_var","DNR_24_var")
+# ggVennDiagram::ggVennDiagram(bhgeneset_24,
+#               category.names = c("DOX ",
+#                                  "EPI",
+#                                  "DNR"),
+#                                  
+#                                 
+#               show_intersect = FALSE,
+#               set_color = "black",
+#               category_size = c(6,6,6,6),
+#               label = "count",
+#               label_percent_digit = 1,
+#               label_size = 4,
+#               label_alpha = 0,
+#               label_color = "black",
+#               edge_lty = "solid", set_size = 4.5)+
+#   scale_x_continuous(expand = expansion(mult = .3))+
+#   scale_y_continuous(expand = expansion(mult = .2))+
+#   scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+#   scale_fill_distiller(palette="Spectral", direction = -1)+
+#   # labs(title = "24 hour var genes p. value <0.05",
+#   #      caption = paste("n =", length(unique(var24$ENTREZID)),"genes"))+
+#   # 
+#   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+
+```
+## 3 and 24 hour histogram of var using un-adjusted and adjust p.values
 ```{r plot pvalue as histo}
+framefun %>% 
+  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
+  separate(combo, into= c("drug", NA,"time")) %>%
+  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
+  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
+  geom_histogram()+
+  facet_wrap(~drug)+
+  ggtitle("3 hour var.test un-adjusted p.value ")
 framefun %>% 
   pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
   separate(combo, into= c("drug", NA,"time")) %>%
@@ -1034,7 +1148,8 @@ TOP2i_var24_table %>%
 
 ```
 
-## using the Alternative hypothesis = "greater"
+## using the Alternative hypothesis = "greater", 
+(data not included currently)
 
 
 
@@ -1083,7 +1198,7 @@ names(Var_test_list24) <- c('DNR.VEH.24','DOX.VEH.24.alt','EPI.VEH.24.alt','MTX.
 ```     
 
 
-```{r alt extract pvalue list}
+```{r alt extract pvalue list, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
                  
 organized_drugframe <- read.csv("data/organized_drugframe.csv",
@@ -1107,7 +1222,7 @@ for (i in 1:length(set24)){
 ## alt 24 hour histogram of var
 
 
-```{r plot pvalue as histo alt, echo=TRUE}
+```{r plot pvalue as histo alt, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 framefun24alt %>% 
   pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
@@ -1120,8 +1235,8 @@ framefun24alt %>%
   
 ```
 
-## Venn 24hr alternative hypo
-```{r gene filteringalt, echo=TRUE}
+## Venn 24hr alternative hypo 
+```{r gene filteringalt, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 backGL <-read_csv("data/backGL.txt", 
     col_types = cols(...1 = col_skip()))
 
@@ -1167,7 +1282,7 @@ ggVennDiagram::ggVennDiagram(geneset_24alt,
 ```
 
 ## ALT 24 hour DOX
-```{r alt GO analysis of DOX24}
+```{r alt GO analysis of DOX24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # altDOX_var24gost <- gost(query = DOX_24_vara$ENTREZID,
 #                   organism = "hsapiens",
@@ -1235,7 +1350,7 @@ altDOX_var24_table %>%
 
 
 ## ALT 24 hour EPI
-```{r alt GO analysis of EPI24}
+```{r alt GO analysis of EPI24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # altEPI_var24gost <- gost(query = EPI_24_vara$ENTREZID,
 #                   organism = "hsapiens",
@@ -1303,7 +1418,7 @@ altEPI_var24_table %>%
 
 
 ## ALT 24 hour DNR
-```{r alt GO analysis of DNR24}
+```{r alt GO analysis of DNR24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # altDNR_var24gost <- gost(query = DNR_24_vara$ENTREZID,
 #                   organism = "hsapiens",
@@ -1373,7 +1488,7 @@ altDNR_var24_table %>%
 
 
 ## ALT 24 hour MTX
-```{r alt GO analysis of MTX24}
+```{r alt GO analysis of MTX24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 # 
 # altMTX_var24gost <- gost(query = MTX_24_vara$ENTREZID,
 #                   organism = "hsapiens",
@@ -1444,7 +1559,7 @@ altMTX_var24_table %>%
 
 
 ## ALT 24 hour TRZ
-```{r alt GO analysis of TRZ24}
+```{r alt GO analysis of TRZ24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 # 
 # altTRZ_var24gost <- gost(query = TRZ_24_vara$ENTREZID,
 #                   organism = "hsapiens",
@@ -1514,7 +1629,7 @@ altTRZ_var24_table %>%
 
 ## ALT 24 hour AC shared
 
-```{r GO analysis of altAC_share24}
+```{r GO analysis of altAC_share24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 venn24partalt <- VennDiagram::get.venn.partitions(geneset_24alt)
 
 
@@ -1587,7 +1702,7 @@ AC_share_var24_table %>%
 ## ALT 24 hour TOP2i shared
 
 
-```{r GO analysis of altTOP2i24}
+```{r GO analysis of altTOP2i24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 TOP2i_alt <- venn24partalt$..values..[[17]]
 # TOP2i_var24gosta <- gost(query = TOP2i_alt,
