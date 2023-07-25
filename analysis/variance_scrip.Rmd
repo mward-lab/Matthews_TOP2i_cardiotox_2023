@@ -2,7 +2,10 @@
 title: "Variance"
 author: "ERM"
 date: "`r Sys.Date()`"
-output: html_document
+runtime: shiny
+output: 
+  html_document: 
+    toc_depth: 4
 ---
 
 ```{r setup, include=FALSE}
@@ -28,8 +31,7 @@ library(data.table)
 
 ```
 
-## initial calculations and data loading  
-
+## initial calculations and data loading
 
 ```{r data loading, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 filcpm_counts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
@@ -81,7 +83,7 @@ write.csv(mean_varframe,"data/mean_varframe.csv")
 
 ```
 
-### by drug  
+### by drug
 
 ```{r manip mean across indv, eval=FALSE,echo=FALSE }
 filcpm_counts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
@@ -138,7 +140,7 @@ write.csv(mean_vardrug1,"data/mean_vardrug1.csv")
 
 ```
 
-###  plot by drug  
+### plot by drug
 
 ```{r graph of var by drug indv, fig.height=5, fig.width=6}
 mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
@@ -237,7 +239,6 @@ drug_frame %>%
 
 ```
 
-
 ```{r evaluate eGenes in var}
 mean_vardrug1 <- read.csv("data/mean_vardrug1.csv",row.names = 1)
 my_exp_genes <- read.csv("data/backGL.txt")
@@ -306,8 +307,6 @@ drug_frame2 %>%
 
   
 ```
-
-
 
 ```{r data wrangling-evalute variance, message=FALSE, warning=FALSE, eval=FALSE}
 
@@ -384,11 +383,10 @@ names(Var_test_list24) <- c('DNR.VEH.24','DOX.VEH.24','EPI.VEH.24','MTX.VEH.24',
                       
 names(Var_test_list3) <- c('DNR.VEH.3','DOX.VEH.3','EPI.VEH.3','MTX.VEH.3','TRZ.VEH.3')
                      saveRDS(Var_test_list3,"data/Var_test_list3.RDS") 
-```       
+```
 
+Watch for the caption to tell which data set is plotted!
 
-
-  Watch for the caption to tell which data set is plotted!
 ```{r extract pvalue list}
 
                  
@@ -455,14 +453,8 @@ summary(est24pTRZ)
 
 ### BH correction
 
-I tried doing by hand
-   using i= p.value rank
-        m= 14084 (number of tests)
-        FDR= 0.05
-        I first ranked the list, divided the rank by 14084, then took the highest pvalue that was less than 0.05 of the calculated crit. pvalue(i/m)
-        I then ran the pvalue numbers through `p.adjust(data, method = "BH")` and found the easier way to calculate the adj.p.value.  (I mean, the hard way is fun, but I did it incorrectly somehow)  The way I tried to do it was commented out in the code.  The table contains the values after `p.adjust` was run.
-        
-        
+I tried doing by hand using i= p.value rank m= 14084 (number of tests) FDR= 0.05 I first ranked the list, divided the rank by 14084, then took the highest pvalue that was less than 0.05 of the calculated crit. pvalue(i/m) I then ran the pvalue numbers through `p.adjust(data, method = "BH")` and found the easier way to calculate the adj.p.value. (I mean, the hard way is fun, but I did it incorrectly somehow) The way I tried to do it was commented out in the code. The table contains the values after `p.adjust` was run.
+
 ```{r BH correction on framefun}
 library(shiny)
 library(DT)
@@ -482,20 +474,29 @@ rank3 <- framefun %>%
   #        sigEPI=if_else(EPI.VEH.3<EPI_BH&EPI_BH<=0.05,"sig","ns"),
   #        sigMTX=if_else(MTX.VEH.3<MTX_BH&MTX_BH<=0.05,"sig","ns"),
   #        sigTRZ=if_else(TRZ.VEH.3<TRZ_BH&TRZ_BH<=0.05,"sig","ns")) %>% 
-  mutate(p.adjustDOX= p.adjust(DOX.VEH.3, method= "BH"),
-         p.adjustEPI= p.adjust(EPI.VEH.3, method= "BH"),
-         p.adjustDNR= p.adjust(DNR.VEH.3, method= "BH"),
-         p.adjustMTX= p.adjust(MTX.VEH.3, method= "BH"),
-         p.adjustTRZ= p.adjust(TRZ.VEH.3, method= "BH")) %>% 
+  mutate(p.adjustDOX= round(p.adjust(DOX.VEH.3, method= "BH"),3),
+         p.adjustEPI= round(p.adjust(EPI.VEH.3, method= "BH"),3),
+         p.adjustDNR= round(p.adjust(DNR.VEH.3, method= "BH"),3),
+         p.adjustMTX= round(p.adjust(MTX.VEH.3, method= "BH"),3),
+         p.adjustTRZ= round(p.adjust(TRZ.VEH.3, method= "BH"),3)) %>% 
   dplyr::select(ENTREZID,c(starts_with("DOX")|ends_with("DOX")),
                 c(starts_with("EPI")|ends_with("EPI")),
                 c(starts_with("DNR")|ends_with("DNR")),
                 c(starts_with("MTX")|ends_with("MTX")),
                 c(starts_with("TRZ")|ends_with("TRZ")))
 
- DT::renderDataTable(rank3, options = list(
-  order = list(list(2, 'desc'), list(3, 'desc')))
-)
+# renderDataTable({datatable(rank3, options = list(
+#   order = list(list(2, 'desc'), list(3, 'desc')))
+# )})
+rank3 %>% 
+  mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = " 3 hour highly var genes and pvalues") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = TRUE,bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+
 
 rank24 <-  framefun24 %>% 
   # mutate(DNR_rank=dense_rank(DNR.VEH.24),
@@ -517,10 +518,21 @@ rank24 <-  framefun24 %>%
          p.adjustEPI=round(p.adjust(EPI.VEH.24, method= "BH"),3),
          p.adjustDNR=round(p.adjust(DNR.VEH.24, method= "BH"),3),
          p.adjustMTX=round(p.adjust(MTX.VEH.24, method= "BH"),3),
-         p.adjustTRZ=round(p.adjust(TRZ.VEH.24, method= "BH"),3))
-DT::renderDataTable(rank24, options = list(
-  order = list(list(2, 'desc'), list(3, 'desc')))
-)
+         p.adjustTRZ=round(p.adjust(TRZ.VEH.24, method= "BH"),3)) %>% 
+  dplyr::select(ENTREZID,c(starts_with("DOX")|ends_with("DOX")),
+                c(starts_with("EPI")|ends_with("EPI")),
+                c(starts_with("DNR")|ends_with("DNR")),
+                c(starts_with("MTX")|ends_with("MTX")),
+                c(starts_with("TRZ")|ends_with("TRZ")))
+# renderDataTable({datatable(rank24, options = list(
+#   order = list(list(2, 'desc'), list(3, 'desc')))
+# )})
+rank24 %>% 
+  mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = " 24 hour highly var genes and pvalues") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = TRUE,bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
 ```
 
 ```{r new gene list plots}
@@ -558,7 +570,9 @@ DT::renderDataTable(rank24, options = list(
 
 
 ```
+
 ## 3 and 24 hour histogram of var using un-adjusted and adjust p.values
+
 ```{r plot pvalue as histo}
 framefun %>% 
   pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
@@ -568,14 +582,8 @@ framefun %>%
   geom_histogram()+
   facet_wrap(~drug)+
   ggtitle("3 hour var.test un-adjusted p.value ")
-framefun %>% 
-  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
-  separate(combo, into= c("drug", NA,"time")) %>%
-  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
-  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
-  geom_histogram()+
-  facet_wrap(~drug)+
-  ggtitle("3 hour var.test un-adjusted p.value ")
+
+
 hist(est3pDNR)+labs(caption= "DNR 3")
 hist(est3pDOX)+labs(caption= "DOX 3")
 hist(est3pEPI)+labs(caption= "EPI 3")
@@ -649,7 +657,6 @@ names(geneset_3) <- c("DOX_3_var","EPI_3_var","DNR_3_var" ,"MTX_3_var","TRZ_3_va
 
 # saveRDS(geneset_24,"data/geneset_24.RDS")
 ```
-
 
 ## Venn
 
@@ -738,6 +745,7 @@ DOX_var24_table %>%
 
 
 ```
+
 ## 24 hour EPI
 
 ```{r GO analysis of EPI24}
@@ -803,7 +811,6 @@ EPI_var24_table %>%
 
 
 ```
-
 
 ## 24 hour DNR
 
@@ -871,8 +878,6 @@ DNR_var24_table %>%
 
 ```
 
-
-
 ## 24 hour MTX
 
 ```{r GO analysis of MTX24}
@@ -939,8 +944,6 @@ MTX_var24_table %>%
 
 ```
 
-
-
 ## 24 hour TRZ
 
 ```{r GO analysis of TRZ24}
@@ -1006,8 +1009,6 @@ TRZ_var24_table %>%
 
 
 ```
-
-
 
 ## 24 hour AC shared
 
@@ -1076,12 +1077,7 @@ AC_share_var24_table %>%
 
 ```
 
-
-
-    
-
 ## 24 hour TOP2i shared
-
 
 ```{r GO analysis of TOP2i24}
 
@@ -1148,10 +1144,9 @@ TOP2i_var24_table %>%
 
 ```
 
-## using the Alternative hypothesis = "greater", 
+## using the Alternative hypothesis = "greater",
+
 (data not included currently)
-
-
 
 ```{r alt data wrangling-evalute variance, message=FALSE, warning=FALSE, eval=FALSE}
 
@@ -1195,8 +1190,7 @@ names(Var_test_list24) <- c('DNR.VEH.24','DOX.VEH.24.alt','EPI.VEH.24.alt','MTX.
  saveRDS(Var_test_list24,"data/Var_test_list24alt.RDS")   
  
  
-```     
-
+```
 
 ```{r alt extract pvalue list, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
@@ -1221,7 +1215,6 @@ for (i in 1:length(set24)){
 
 ## alt 24 hour histogram of var
 
-
 ```{r plot pvalue as histo alt, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 framefun24alt %>% 
@@ -1235,7 +1228,8 @@ framefun24alt %>%
   
 ```
 
-## Venn 24hr alternative hypo 
+## Venn 24hr alternative hypo
+
 ```{r gene filteringalt, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 backGL <-read_csv("data/backGL.txt", 
     col_types = cols(...1 = col_skip()))
@@ -1282,6 +1276,7 @@ ggVennDiagram::ggVennDiagram(geneset_24alt,
 ```
 
 ## ALT 24 hour DOX
+
 ```{r alt GO analysis of DOX24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # altDOX_var24gost <- gost(query = DOX_24_vara$ENTREZID,
@@ -1347,9 +1342,8 @@ altDOX_var24_table %>%
 
 ```
 
-
-
 ## ALT 24 hour EPI
+
 ```{r alt GO analysis of EPI24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # altEPI_var24gost <- gost(query = EPI_24_vara$ENTREZID,
@@ -1415,9 +1409,8 @@ altEPI_var24_table %>%
 
 ```
 
-
-
 ## ALT 24 hour DNR
+
 ```{r alt GO analysis of DNR24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # altDNR_var24gost <- gost(query = DNR_24_vara$ENTREZID,
@@ -1484,10 +1477,8 @@ altDNR_var24_table %>%
 
 ```
 
-
-
-
 ## ALT 24 hour MTX
+
 ```{r alt GO analysis of MTX24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 # 
 # altMTX_var24gost <- gost(query = MTX_24_vara$ENTREZID,
@@ -1554,11 +1545,8 @@ altMTX_var24_table %>%
 
 ```
 
-
-
-
-
 ## ALT 24 hour TRZ
+
 ```{r alt GO analysis of TRZ24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 # 
 # altTRZ_var24gost <- gost(query = TRZ_24_vara$ENTREZID,
@@ -1623,9 +1611,6 @@ altTRZ_var24_table %>%
 
 
 ```
-
-
-
 
 ## ALT 24 hour AC shared
 
@@ -1696,11 +1681,7 @@ AC_share_var24_table %>%
 
 ```
 
-
-
-
 ## ALT 24 hour TOP2i shared
-
 
 ```{r GO analysis of altTOP2i24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
@@ -1766,12 +1747,3 @@ TOP2i_var24_tablea %>%
 
 
 ```
-
-
-
-
-
-
-
-
-
