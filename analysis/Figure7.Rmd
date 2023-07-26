@@ -187,7 +187,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       geom_boxplot(position="identity",aes(fill=drug))+
       geom_point(aes(col=indv, size=1.5, alpha=0.5))+
       guides(alpha= "none", size= "none")+
-      scale_color_brewer(palette = brewer_palette, guide = "none")+
+      scale_color_brewer(palette = brewer_palette)+
       scale_fill_manual(values=fill_colors)+
       facet_wrap(~time, nrow=1, ncol=2)+
       theme_bw()+

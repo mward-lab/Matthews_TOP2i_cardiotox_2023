@@ -146,6 +146,8 @@ nlTop2b
 
 ```
 
+
+## B. *Top2*$\alpha$ expression
 ```{r Top2a,fig.width=6,fig.height=3}
 
 Top2a <- cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_fact,

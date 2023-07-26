@@ -2,134 +2,232 @@
 title: "Figure 6"
 author: "ERM"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_document: 
+    code_folding: show
+    theme: flatly
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	echo = TRUE,
 	message = FALSE,
-	warning = FALSE,dpi = 300
-)
+	warning = FALSE,
+	class.source = "foldable")
 ```
+
 ```{r packages loading}
-library(car)
+
 library(tidyverse)
 library(tinytex)
 library(BiocGenerics)
-library(data.table)
-library(Cormotif)
 library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
+library(ComplexHeatmap)
 ```
-```{r data loading}
+
+```{r data loading, message=FALSE, warning=FALSE}
 toplistall <- readRDS("data/toplistall.RDS")
 siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist, envir = .GlobalEnv)
 cpmcounts <- readRDS("data/cpmcount.RDS")
-cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 list2env(DEG_cormotif,envir=.GlobalEnv)
 drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
+col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
+## supplement 1
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+chrom_genes <- (unique(Seoane_2019$ENTREZID))
+
+# supplement 4
+Sup4seoane <- read.csv("output/Sup4seoane.csv", row.names = 1)
+Sup4genes <- Sup4seoane  %>% 
+  filter(pval.expAnth<0.05) %>% 
+  distinct(entrez, .keep_all = TRUE) %>% 
+  dplyr::select(entrez)
 
 ```
 
-
-# Figure 6
-TOP2i induce a time-dependent gene expression response in cardiomyocytes  
-
-## A. Cormotif plot unedited
-```{r Cormotif)}
-myColors <-  rev(c("#FFFFFF", "#E6E6E6" ,"#CCCCCC", "#B3B3B3", "#999999", "#808080", "#666666","#4C4C4C", "#333333", "#191919","#000000"))
-                  
-  
-plotMotif(cormotif_initial)
-
-plot.new()
-
-legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4",  "0.5", "0.6", "0.7", "0.8","0.9", "1")), box.col="white",title = "Probability\nlegend", horiz=FALSE,title.cex=.8)
- 
-```
-## B. Pie chart of motifs
-
-```{r Pie chart of groups,fig.width = 5,fig.height =5}
-Set <- c("Early Acute Response", "Early-Sustained Response","Late Response", "No Response")
-gene_num <- c(487,589,5596,7409)
-fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
-
-pie_chartdata <- data.frame(Set, gene_num, fills)
-pie_chartdata <- pie_chartdata %>% 
-   mutate(prop = gene_num / sum(pie_chartdata$gene_num) *100) %>%
-  mutate(ypos = (prop)+ 0.5*prop )
+# Figure 7
+Chromatin regulators that mediate breast cancer sensitivity to ACs are enriched amongst early TOP2i response genes  
 
 
-pie_chartdata %>% 
-  ggplot(.,aes(x="",y=gene_num, fill=Set))+
-  geom_col(width =1) +
-  coord_polar("y", pi/2)+
-  theme_void()+
-  ggtitle("Distribution of genes in each motif")+
-  geom_text(aes(label = paste0(Set," (",gene_num,")")),
-                position = position_stack(vjust =.55)) +
-  theme(legend.position="none") +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-  
-ggsave("output/Figures/piechart.eps",width = 5, height =5, units = "in")
-```
+## A. Heatmap of Chromatin regulator gene sets
 
-## C. Average absolute value of LFC by motif
+n= 408 is the Supplemental of curated Chromatin regulators
 
-```{r average LFC}
+n= 54 were designated Dox response chromatin regulators according to Seoane analysis
 
-lfc_nums <- readRDS("data/toplistall.RDS")
-mean_lfc <- lfc_nums %>% 
+
+```{r Chrom reg heatmap}
+
+toplist24hr <- toplistall  %>% 
+  filter(time =="24_hours")
+ motifSeoanesummary1 <- toplist24hr %>% 
+  distinct(ENTREZID) %>% 
   mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
   mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
   mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
   mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"),labels=c("3 hours","24 hours"))) %>% 
-  group_by(id,time) %>% 
-  mutate(absFC=abs(logFC)) %>% 
-  dplyr::select(id,time,absFC,ER,TI,LR,NR) %>% 
-  dplyr::summarize(ERm=mean(absFC[ER=="y"]),TIm=mean(absFC[TI=="y"]),LRm=mean(absFC[LR=="y"]),NRm=mean(absFC[NR=="y"])) %>%
-  as.data.frame()
+  mutate(chrom = if_else(ENTREZID %in% chrom_genes, "y", "no")) %>% 
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
+
+chi_list1 <- toplist24hr %>% 
+  distinct(ENTREZID) %>% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+  mutate(chrom=if_else(ENTREZID %in% chrom_genes,"y","no")) %>% 
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
+
+chisup1LR <- chisq.test(chi_list1[,c('NR','LR')])
+
+chisup1ER <- chisq.test(chi_list1[,c('NR','ER')])
+
+chisup1TI <- chisq.test(chi_list1[,c('NR','TI')])
 
 
-mean_lfc %>% 
-  ungroup() %>% 
-  mutate(id=factor(id, 
-                   levels =c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>% 
-  pivot_longer(!c(id,time), names_to = "Motif",
-               values_to="meanLFC") %>%
-  mutate(Set=case_match(Motif,"ERm"~"Early Acute Response",
-                        "TIm"~"Early-Sustained Response",
-                        "LRm"~"Late Response",
-                        "NRm"~"No Response",
-                        .default = Motif))%>% 
-  ggplot(., aes(x=time,y= meanLFC,col=id,group=id))+
-  geom_point(size=2)+
-  geom_line(size=2)+
-  ggpubr::fill_palette(drug_pal_fact)+
-  # guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(~Set)+
-  theme_bw()+
-  xlab("")+
-  scale_color_manual(values=drug_pal_fact)+
-  ylab("|Log Fold Change|")+
-  theme_bw()+
-  ggtitle(" average |Log Fold| for genes across treatment each motif")+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text = element_text(size = 8, color = "black", angle = 0),   
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+motifSeoanesummary4 <- toplist24hr %>% 
+  distinct(ENTREZID) %>% 
+  mutate(ER=if_else(ENTREZID %in% motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in% motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in% motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in% motif_NR,"y","no")) %>%
+  mutate(chrom = if_else(ENTREZID %in% Sup4genes$entrez, "y", "no")) %>% 
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
+
+chi_list4 <- toplist24hr %>% 
+  distinct(ENTREZID) %>% 
+  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
+  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
+  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
+  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no")) %>% 
+  group_by(chrom,ER,TI,LR,NR) %>% 
+  dplyr::summarize(n=n()) %>% 
+  as.tibble  %>% 
+  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
+  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
+
+chisup4LR <- chisq.test(chi_list4[,c('NR','LR')])
+
+chisup4ER <- chisq.test(chi_list4[,c('NR','ER')])
+
+chisup4TI <- chisq.test(chi_list4[,c('NR','TI')])
+
+supp45X <- NULL
+motif <- c('EAR','ESR','LR')
+pval1=c(chisup1ER$p.value,chisup1TI$p.value,chisup1LR$p.value)
+pval4=c(chisup4ER$p.value ,chisup4TI$p.value ,chisup4LR$p.value)
+supp45X <- tibble("motif"=motif,"pval1"=pval1,"pval4"=pval4)
+supp45Xmat <- supp45X %>% 
+  mutate(pval1=(-1*log10(pval1))) %>% 
+  mutate(pval4=(-1*log10(pval4))) %>% 
+  column_to_rownames('motif') %>% 
+  rename(c("All chromatin regulators\nn = 408"= pval1, "AC sensitivity chromatin regulators\nn = 54"=pval4)) %>% 
+  as.matrix()
+ht_opt$DIMNAME_PADDING= unit(5,"mm")
+ht_map=Heatmap(supp45Xmat,
+         column_title="Chromatin regulator enrichment p values", 
+         name = "-log 10\n(p value)", 
+         cluster_rows = FALSE, 
+         cluster_columns = FALSE, 
+        column_names_centered = TRUE,
+         column_names_rot = 0,
+        column_names_gp = gpar(lineheight = 1),
+         col = col_fun5,
+        heatmap_width= unit(6,"in"),
+        heatmap_height = unit(3,"in"),
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(supp45Xmat[i, j] > -log10(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+draw(ht_map, heatmap_legend_side="left")
+
+# ht_opt(RESET = TRUE)
+```
 
 
-ggsave("output/Figures/mean_lfc_motif.eps", units = "in")
+
+## B.  Log~2~ cpm of *KAT6B*
+
+
+```{r logcpm kat6b, fig.width=6, fig.height=3}
+cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
+  ##GOI needs to be ENTREZID
+  df <- cpmcounts
+    df_plot <- df %>% 
+      dplyr::filter(rownames(.)==GOI) %>%
+      pivot_longer(everything(),
+                   names_to = "treatment",
+                   values_to = "counts") %>%
+      separate(treatment, c("drug","indv","time")) %>%
+      mutate(time=factor(time, levels =c("3h", "24h"),labels=c("3 hours","24 hours"))) %>%
+      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+      mutate(drug =case_match(drug, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = drug)) %>% 
+      mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH')))
+    plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
+      geom_boxplot(position="identity",aes(fill=drug))+
+      geom_point(aes(col=indv, size=1.5, alpha=0.5))+
+      guides(alpha= "none", size= "none")+
+      scale_color_brewer(palette = brewer_palette, name="individual")+
+      scale_fill_manual(values=fill_colors, name = "treatment")+
+      facet_wrap(~time, nrow=1, ncol=2)+
+      theme_bw()+
+      ylab(ylab)+
+      xlab("")+
+      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          
+          axis.line = element_line(linewidth = 1.0),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(face = "bold"))
+    print(plot)
+}
+
+Kat6save<- cpm_boxplot(cpmcounts,GOI='23522',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("KAT6B")~log[2]~"cpm "))))
+Katnl <- Kat6save+theme(legend.position = "NULL")
+top_bot_legend <- get_legend(Kat6save)
+
+```
+
+
+## C.  Log~2~ cpm of *KDM4B*
+
+
+```{r logcpm kdm4b,fig.width=7, fig.height=6}
+
+KDM4B_save <- cpm_boxplot(cpmcounts,GOI='23030',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("KDM4B")~log[2]~"cpm "))))
+KDMnl <- KDM4B_save + theme(legend.position = "NULL")
+KDMnl
+
+leftside<- plot_grid(Katnl,KDMnl, nrow=2)
+plot_grid(leftside,top_bot_legend,nrow=1, rel_widths = c(1,.2))
 
 ```
 

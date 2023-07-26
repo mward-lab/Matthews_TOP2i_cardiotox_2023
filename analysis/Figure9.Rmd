@@ -47,8 +47,6 @@ col_funTOX = circlize::colorRamp2(c(-1,0, 1), c("darkviolet", "white","firebrick
 ```{r function load}
 
 pearson_extract <- function(corr_df,ENTREZID) {
-
-
   ld50_plot <- corr_df %>%
     dplyr::filter(entrezgene_id == ENTREZID) %>%
     ggplot(., aes(x=LD50, y=counts))+
@@ -361,17 +359,6 @@ RARG_mat2ptr <- toxdata2ptr%>%
     t() %>% 
   matrix()
 
-# RARG_sig_mat3ptr <- toxdata3ptr %>% 
-#   dplyr::filter(gene=="RARG") %>% 
-#   dplyr::select(sig_tox) %>% 
-#   t() %>% 
-#   matrix()
-# RARG_mat3ptr <- toxdata3ptr%>% 
-#   dplyr::filter(gene=="RARG") %>% 
-#   dplyr::select(tox_val) %>% 
-#     t() %>% 
-#   matrix()
-
 Heatmap(RARG_mat2ptr, name = " RARG 2pt Cardiotox score", 
          cluster_rows = FALSE,
         cluster_columns = FALSE, 
@@ -388,22 +375,6 @@ Heatmap(RARG_mat2ptr, name = " RARG 2pt Cardiotox score",
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
 
-# Heatmap(RARG_mat3ptr, name = " RARG 3pt Cardiotox score", 
-#          cluster_rows = FALSE,
-#         cluster_columns = FALSE, 
-#         row_names_side = "left",
-#         column_title_side = "top",
-#         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
-#         column_names_rot = 0, 
-#         row_labels = c("DOX","EPI","DNR","MTX"),
-#         col= col_funTOX,
-#         column_names_gp = gpar(fontsize = 12,fontface="italic"),
-#         column_names_centered = TRUE,
-#          cell_fun = function(j, i, x, y, width, height, fill) {
-#         if(RARG_sig_mat3ptr[i, j] <0.05)
-#             grid.text("*", x, y, gp = gpar(fontsize = 20))
-# })
-# 
 
 ```
 
@@ -654,5 +625,98 @@ cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("SLC28A3")~log[2]~"cpm "))))
 
 
+```
+
+
+
+```{r LDH,data load, fig.height=4, fig.width=6}
+drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+
+level_order2 <- c('75','87','77','79','78','71')
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt",row.names = 1)
+
+RNAnormlist %>% 
+  mutate(Drug = factor(Drug, levels = c(  "DOX",
+                                          "EPI",
+                                          "DNR",
+                                          "MTX",
+                                          "TRZ",
+                                          "VEH"))) %>%
+ mutate(indv= factor(indv,levels= level_order2)) %>% 
+  ggplot(., aes(x=Drug, y=rldh))+
+  geom_boxplot(position = "identity", fill = drug_pal_fact)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+ geom_signif(comparisons =list(c("VEH","DOX"),
+                                c("VEH","EPI"),
+                                c("VEH","DNR"),
+                                c("VEH","MTX"),
+                                c("VEH","TRZ")),
+              test="t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual")+
+  xlab("")+
+  ylab("Relative LDH activity ")+
+  ggtitle("Lactate dehydrogenase release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
+
+```
+
+ Troponin I release
+
+
+```{r troponin_24, fig.height=4, fig.width=6}
+
+
+RNAnormlist %>% 
+  mutate(Drug = factor(Drug, levels = c(  "DOX",
+                                          "EPI",
+                                          "DNR",
+                                          "MTX",
+                                          "TRZ",
+                                          "VEH"))) %>%
+ mutate(indv= factor(indv,levels= level_order2)) %>% 
+  ggplot(., aes(x=Drug, y=rtnni))+
+  geom_boxplot(position = "identity", fill = drug_pal_fact)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c("VEH","DOX"),
+                                c("VEH","EPI"),
+                                c("VEH","DNR"),
+                                c("VEH","MTX"),
+                                c("VEH","TRZ")),
+              test="t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual")+
+  xlab("")+
+  ylab("Relative Troponin I levels ")+
+  ggtitle("Troponin I release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
 ```
 

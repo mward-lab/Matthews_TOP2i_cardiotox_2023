@@ -21,7 +21,8 @@ library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
-
+library(ggVennDiagram)
+library(paletteer)
 ```
 
 ```{r data loading, message=FALSE, warning=FALSE, include=FALSE}
@@ -93,7 +94,7 @@ plot_venn <- function (x, show_intersect, set_color, set_size, label, label_geom
 Dox respose eQTLS are enriched in ACi response genes
 
 ## A. 24 hour DEG enrichment in GTEx genes
-```{r  GTEx enrich, fig.height=4, fig.width=8}
+```{r  GTEx enrich, fig.height=3, fig.width=8}
 ## create GTEx data set from my data
 GTEx <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
 ## exclude GTEX and create nQTL set with other expressed genes
@@ -176,7 +177,7 @@ ggsave("output/Figures/GTEXenrich.eps",width = 4, height =8, units = "in")
 ```
 
 ## B. 24 hour DEG enrichment in reQTLs
-```{r reQTLenrich,fig.height=4, fig.width=8}
+```{r reQTLenrich,fig.height=3, fig.width=8}
 
 knowles4 <-readRDS("output/knowles4.RDS")
 knowles5 <-readRDS("output/knowles5.RDS")
@@ -249,61 +250,67 @@ ggsave("output/Figures/knowlesenrich.eps",width = 4, height =8, units = "in")
 
 
 ## C. DOXreQTLS strongly overlap other AC drugs
-```{r DOXreQTLs across other treatments,fig.height=4, fig.width=8}
+```{r DOXreQTLs across other treatments,fig.height=4, fig.width=8, eval=FALSE, include=FALSE}
 
-r DOXreQTLs de_non de,ffig.height=4, fig.width=8}
-DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
-DOXeQTL_table <- toplistall %>% 
-  mutate(id = dplyr::case_match(id, "Daunorubicin"~"DNR",
-                                "Doxorubicin"~"DOX",
-                                "Epirubicin"~"EPI",
-                                "Mitoxantrone"~"MTX",
-                                "Trastuzumab"~"TRZ",
-                                "Vehicle"~"VEH", 
-                                .default = id)) %>%
-  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
-  mutate(DOXreQTLs=if_else(ENTREZID %in%DOXreQTLs$ENTREZID,"y","no")) %>% 
-  dplyr::filter(time =="24_hours") %>% 
-  dplyr::select(ENTREZID,id,DOXreQTLs,sigcount) %>%
-  group_by(id,DOXreQTLs,sigcount) %>% 
-  tally() %>% 
-  as.data.frame() %>% 
-  filter(DOXreQTLs=="y")
 
-DoxeqtlDEnDE <- DOXeQTL_table %>%
-  add_row(id=c("Dox-specific\n DEGs","Dox-specific\n DEGs"),
-          DOXreQTLs=c("y"), 
-          sigcount=c("notsig","sig"),n = c(62,1)) %>% 
-  dplyr::filter(DOXreQTLs=="y") %>% 
-  pivot_wider(id, names_from = "sigcount", values_from = "n") %>% 
-  mutate(percent= paste0(sprintf("%2.1f", sig/(sig+notsig)*100), "%")) %>% 
-  pivot_longer(!c(id,percent), 
-               names_to="group", 
-               values_to = "count") %>% 
-  mutate(id=factor(id, levels=c("EPI","DNR", "MTX","Dox-specific\n DEGs"))) %>% 
-  dplyr::filter(id != c("DOX","TRZ")) 
-    
-    
-  ggplot(DoxeqtlDEnDE, aes(y=id,x=count,fill=group))+
-  geom_col(position='fill')+
-  theme_classic()+
-  ylab("")+
-  xlab("Proportion of genes")+
-  scale_fill_manual(values=c("cornflowerblue","darkred"), 
-                    labels=c("not DE","DE"))+
-  ggtitle("DOXreQTLs in other treatments")+
-  scale_y_discrete(limits=rev)+
-  scale_x_continuous(expand = expansion(c(0, 0.05)))+
-  geom_text(aes(y=id,x=1, label = percent,hjust =.8))+
-  theme(plot.title = element_text( hjust = 0.5),
-        axis.title = element_text(size = 16, color = "black"),
-        axis.ticks = element_line(linewidth = 1.0),
-        axis.line = element_line(linewidth = 1.0),
-        axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+assignInNamespace(x="plot_venn", value=plot_venn, ns="ggVennDiagram") 
+
+reQTL_overlapDE24 <- list(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+re_incommon <- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+
+names(reQTL_overlapDE24) <- c("Dox_reQTLS", "DNR DEGs","EPI DEGs","MTX DEGs")
+
+# ggVennDiagram::ggVennDiagram(reQTL_overlapDE24,
+#                              category.names = c("DOX\negenes",
+#                                  "DNR DEGs",
+#                                  "EPI DEGs",
+#                                  "MTX DEGs"),
+#               show_intersect = FALSE,
+#               set_color = "black",
+#               category_size = c(6,6,6,6),
+#               label = "count",
+#               color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
+#           
+#               label_percent_digit = 1,
+#               label_size = 4,
+#               label_alpha = 0,
+#               label_color = "black",
+#               edge_lty = "solid", set_size = 4.5)+
+#   scale_x_continuous(expand = expansion(mult = .3))+
+#   scale_y_continuous(expand = expansion(mult = .2))+
+#   # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+#   # scale_colour_gradientn(colours = cols, 
+#   #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+#   #                      guide = "colorbar", limits=c(0, 100)) +
+#   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)+
+#   # scale_fill_manual(values = cbp1)+
+#   labs(title = "24 hour DOX egenes in other DEG sets",
+#        caption = paste("n =", length(unique(re_incommon)),"genes"))+
+#   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+DEG_incommon <-c(sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+uniqueDEGs_incommon <- unique(DEG_incommon)
+two_venn <- list( DOXreQTLs$ENTREZID,uniqueDEGs_incommon)
+
+ggVennDiagram::ggVennDiagram(two_venn,
+                             category.names = c("DOX egenes\nn = 142","union of TOP2i DEGs\n     n = 7838"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(6,6),
+              label = "count",
+              # color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
+              # 
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .1))+
+   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)#+
 ```
 
-## D. Only one DOXreQTL is associated with Dox-specific DEGs 
+## D. 
 
 ```{r DOXreQTLvDOXspeDEG, fig.height=4, fig.width=8}
 cpm_boxplot24h <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
@@ -338,7 +345,7 @@ cpm_boxplot24h <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
       ggtitle("24 hours")+
       theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
           plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
+          axis.title = element_text(size = 15, color = "black",face="bold"),
           axis.ticks = element_line(linewidth = 1.0),
           panel.background = element_rect(colour = "black", size=1),
           axis.text.x = element_blank(),
