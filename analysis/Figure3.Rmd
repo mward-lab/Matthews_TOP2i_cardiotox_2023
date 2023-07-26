@@ -86,9 +86,9 @@ PCA_plot_group <- pca_all_anno %>%
   labs(y = "PC 2 (15.76%)", x ="PC 1 (29.06%)")+
   theme(plot.title=element_text(size= 14,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"))
-
+legendtop <- get_legend(PCA_plot_group)
+PCA_plot_groupnl <- PCA_plot_group+theme(legend.position = "none")
 PCA_plot_group
-
 ```
 
 
@@ -140,7 +140,7 @@ toplistall <- readRDS("data/toplistall.RDS")
 cpmcounts <- readRDS("data/cpmcount.RDS")
 Top2b <- cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))) 
-legend <- get_legend(Top2b)
+legendbot <- get_legend(Top2b + guides(fill="none"))
 nlTop2b <- Top2b+  theme(legend.position = "none")
 nlTop2b
 
@@ -150,7 +150,7 @@ nlTop2b
 
 Top2a <- cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm "))))
-nlTop2a <- Top2a+  theme(legend.position = "none")
+nlTop2a <- Top2a +  theme(legend.position = "none")
 nlTop2a
 
 ```
@@ -160,8 +160,9 @@ nlTop2a
 plots <- align_plots(nlTop2a,nlTop2b,align='v',axis='l')
 
 top2plots <- plot_grid(plots[[2]],plots[[1]],ncol=1)
-
-PCA_full_Figure <- plot_grid(PCA_plot_group,top2plots,legend, nrow=1,rel_widths = c(7,6,1), rel_heights = c(1,.5,1.1),scale=c(1,.8,1))
+legend <- plot_grid(legendtop,legendbot,ncol=1)
+legend
+PCA_full_Figure <- plot_grid(PCA_plot_groupnl,legend,top2plots,nrow=1,rel_widths = c(7,1,6), rel_heights = c(1,1.1,.5),scale=c(1,.8,.9))
 PCA_full_Figure
 
 ggsave("output/Figures/PCA_full_Figure.eps",width = 14, height =6, units = "in")

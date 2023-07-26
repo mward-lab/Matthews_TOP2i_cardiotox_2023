@@ -39,15 +39,17 @@ knitr::include_graphics("code/fig1plot.png")
 things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
 
 ## B. Example dose response curves from 48 hour drug exposure.
-```{r B drc, fig.width=8}
+```{r B drc, fig.width=12, fig.height=3}
 daplot <- readRDS("output/daplot.RDS")  
 dxplot <- readRDS("output/dxplot.RDS")
 epplot<- readRDS("output/epplot.RDS")
 mtplot<- readRDS("output/mtplot.RDS")
 trplot<- readRDS("output/trplot.RDS")
 veplot<- readRDS("output/veplot.RDS")
+veplot <- veplot+xlab(NULL)
+trplot <- trplot+xlab(NULL)
 legend_b <- readRDS("output/legend_b.RDS")
-plan2 <-  cowplot::plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot, legend_b,ncol =4)
+plan2 <-  cowplot::plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot, legend_b,ncol =7, rel_widths = c(1,1,1,1,1,1,.5))
 print(plan2)
 ```
 Lines are a log-logistic regression of the mean from quadruplicates at 8 separate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
@@ -84,15 +86,15 @@ BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
 LD50_table <- readRDS("data/new_ld50avg.RDS")
 
   
-LD50_table %>% 
+graphLD50<- LD50_table %>% 
   mutate(Treatment=factor(Treatment, 
                           levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>% 
   ggplot(., (aes(x = Treatment, y = log10(Estimate)))) +
   geom_boxplot(position = "identity", aes(fill=Treatment))+
   geom_point(aes(color = indv,
                  size = 5,alpha = 0.5)) +
-  ggtitle(expression("Experimentally-derived LD"[50]*"s from treated cardiomyocytes"))+
-  xlab("Treatment")+
+  ggtitle(expression("Experimentally-derived LD"[50]*"s\n from treated cardiomyocytes"))+
+  xlab("")+
   geom_signif(comparisons =list(c("DNR","MTX"),
                                 c("DOX","EPI"),
                                 c ("DOX","DNR"),
@@ -104,26 +106,25 @@ LD50_table %>%
   ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
   scale_color_brewer(palette = "Dark2",
                      name = "Individual")+
-  ylim(-1.5,3)+
+  ylim(-2,3)+
     # scale_y_continuous(expand=expansion(.001))+
   scale_fill_manual(values=drug_palc, name="Treatment")+
   theme_bw() + 
-  theme(plot.title = element_text(hjust =0.5, size = 18))+
         guides(alpha ="none", size = "none")+
   #theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        # legend.position = "none",
+          # legend.position = "none",
+  theme(plot.title = element_text(hjust =0.5, size = 12),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size=0,color = "white"),
         # axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
-
+# graphLD50
 
 ```
 ## D. Breast cancer cell line 50% lethal dose plot
-```{r BCcells ld50}
+```{r BCcells ld50,fig.width=12, fig.height=5}
 
 graphBC <-
   BC_cell_lines %>%
@@ -157,19 +158,20 @@ graphBC <-
   scale_color_brewer(palette = "Spectral",
                      name = "Cell lines")+
           scale_fill_manual(values=drug_palc)+
- ylim(-2,2.5)+
+ ylim(-2,3)+
   theme_bw() + 
-  theme(plot.title = element_text(hjust =0.5, size = 18))+
-  guides(alpha ="none", size = "none", fill= "none")+
+        guides(alpha ="none", size = "none", fill="none")+
   #theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        # legend.position = "none",
+          # legend.position = "none",
+  theme(plot.title = element_text(hjust =0.5, size = 12),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text.x = element_text(size=0,color = "white"),
-        axis.text.y = element_text(size = 12, color = "black", angle = 0),
+        # axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-  graphBC
+  # graphBC
+  plan50ld <-  cowplot::plot_grid(graphLD50,NULL,graphBC, rel_widths = c(1,.2,1),nrow = 1)
+print(plan50ld)
   
 ```
