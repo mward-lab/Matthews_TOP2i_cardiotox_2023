@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 Goals for this page:
 
 
-  I will examine the AC-shared variable genes withing AC-shared response genes 
+  I will examine the AC-shared variable genes within AC-shared response genes 
 
 ```{r packages loading}
 library(tidyverse)
@@ -249,5 +249,168 @@ Heatmap(GO_mat,
   
 
 ```
+
+###  Seoane data investigation of variability
+ 
+ I will examine the Seoane gene sets and overlap with variable data 
+
+```{r Seoane overlap1}
+list2env(Vargenes, envir = .GlobalEnv)
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+Sup1seoane <- (unique(Seoane_2019$ENTREZID))
+Sup4genes <- read.csv("output/Sup4seoane.csv", row.names = 1)
+Sup4seoane <- Sup4genes  %>% 
+  filter(pval.expAnth<0.05) %>% 
+  distinct(entrez, .keep_all = TRUE) %>% 
+  dplyr::select(entrez) %>% 
+  rename("ENTREZID"='entrez')
+
+```
+```{r venn seoane}
+
+intersect(Sup1seoane,AC_share_var)
+# 
+intersect(Sup4seoane$ENTREZID,as.numeric(AC_share_var))
+intersect(Sup4seoane$ENTREZID,as.numeric(not_AC_shared))
+# Vargenes[[length(Vargenes)+1]] <- list(Sup4seoane$ENTREZID)
+
+library(paletteer)
+assignInNamespace(x="plot_venn", value=plot_venn, ns="ggVennDiagram")
+
+sup1overlap <- list(as.numeric(DOX_24_var),as.numeric(EPI_24_var),as.numeric(DNR_24_var),as.numeric(MTX_24_var), Sup1seoane)
+# re_incommon <- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+# 
+# names(reQTL_overlapDE24) <- c("Dox_reQTLS", "DNR DEGs","EPI DEGs","MTX DEGs")
+
+ggVennDiagram::ggVennDiagram(sup1overlap,
+                             category.names = c("DOX var",
+                                     "EPI var",
+                                      "DNR var",
+                                 "MTX var",
+                                 "Seoane S1"),
+              show_intersect = FALSE,
+              set_color = "black",
+              # category_size = c(6,6,6,6),
+              label = "count",
+              # color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
+          
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = "colorbar", limits=c(0, 100)) +
+  scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)#+
+  # scale_fill_manual(values = cbp1)+
+  labs(title = "24 hour DOX egenes in other DEG sets",
+       caption = paste("n =", length(unique(re_incommon)),"genes"))+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+
+
+
+```
+
+
+```{r supp4}
+
+
+sup4overlap <- list(as.numeric(DOX_24_var),as.numeric(EPI_24_var),as.numeric(DNR_24_var),as.numeric(MTX_24_var), as.numeric(Sup4seoane$ENTREZID))
+ggVennDiagram::ggVennDiagram(sup4overlap,
+                             category.names = c("DOX var",
+                                     "EPI var",
+                                      "DNR var",
+                                 "MTX var",
+                                 "Seoane S4"),
+              show_intersect = FALSE,
+              set_color = "black",
+              # category_size = c(6,6,6,6),
+              label = "count",
+              # color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
+          
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = "colorbar", limits=c(0, 100)) +
+  scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)#+
+  # scale_fill_manual(values = cbp1)+
+  labs(title = "24 hour DOX egenes in other DEG sets",
+       caption = paste("n =", length(unique(re_incommon)),"genes"))+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
+```
+
+```{r   overlap with degs}
+
+DEG <- Vargenes
+siglist24 <- siglist[6:9]
+test <- siglist24[1]["ENTREZID"]
+sig_24_ENTREZID <- sapply(siglist24,"[[",1)
+all_unique_DEG <- unique(rbindlist(lapply(sig_24_ENTREZID, as.data.table))) ##8188
+all_unique_var <- unique(rbindlist((lapply(Vargenes, as.data.table))))
+
+length(intersect(all_unique_DEG$V1,all_unique_var$V1))##2190
+DEG_var <- intersect(all_unique_DEG$V1,all_unique_var$V1)
+non_DEG_var <- setdiff(expressedgenes$ENTREZID,DEG_var)
+
+ggVennDiagram::ggVennDiagram(list(all_unique_var$V1, all_unique_DEG$V1),
+                             category.names = c("all var genes", "all DEGs"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = "colorbar", limits=c(0, 100)) +
+  scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1000,8000),oob=scales::squish)#+
+holdlist <-  list(DEG_var, as.numeric(non_DEG_var), Sup1seoane)
+ggVennDiagram::ggVennDiagram(list( as.numeric(DEG_var), as.numeric(non_DEG_var), Sup1seoane),
+                             category.names = c("DEG var", "non DEG var","Seoane supp 1"),
+              show_intersect = FALSE,
+              set_color = "black",
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = "colorbar", limits=c(0, 100)) +
+  scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1000,8000),oob=scales::squish)#+
+
+
+testS1 <- matrix(c(59,271,2131,11623),nrow = 2,byrow = TRUE)
+
+chisq.test(testS1)
+
+
+
+
+
+```
+
 
 

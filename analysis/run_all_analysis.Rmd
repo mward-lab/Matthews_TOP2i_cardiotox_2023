@@ -125,7 +125,8 @@ mymatrix$samples$time <- time
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) 
 mymatrix$samples$indv <- indv
 
-group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
+group <-(rep(c("1","2","3","4","5","6","7","8","9","10","11","12"),6)) 
+group <- factor(group,levels = c( 1,2,3,4,5,6,7,8,9,10,11,12))
 
 drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
 mymatrix$samples$drug <- drug

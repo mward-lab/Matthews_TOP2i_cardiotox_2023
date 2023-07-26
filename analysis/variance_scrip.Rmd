@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE,
                 warning=FALSE)
 ```
 
-```{r package loading}
+```{r package loading, message=FALSE, warning=FALSE}
 
 library(tidyverse)
 library(ggpubr)
@@ -453,7 +453,7 @@ summary(est24pTRZ)
 
 ### BH correction
 
-I tried doing by hand using i= p.value rank m= 14084 (number of tests) FDR= 0.05 I first ranked the list, divided the rank by 14084, then took the highest pvalue that was less than 0.05 of the calculated crit. pvalue(i/m) I then ran the pvalue numbers through `p.adjust(data, method = "BH")` and found the easier way to calculate the adj.p.value. (I mean, the hard way is fun, but I did it incorrectly somehow) The way I tried to do it was commented out in the code. The table contains the values after `p.adjust` was run.
+I tried doing by hand using i= p.value rank m= 14084 (number of tests) FDR= 0.05 I first ranked the list, divided the rank by 14084, then took the highest pvalue that was less than 0.05 of the calculated crit. pvalue(i/m). I then ran the pvalue numbers through `p.adjust(data, method = "BH")` and found the easier way to calculate the adj.p.value. (I mean, the hard way is fun, but I did it incorrectly somehow). The way I tried to do it was commented out in the code. The table contains the values after `p.adjust` was run.
 
 ```{r BH correction on framefun}
 library(shiny)

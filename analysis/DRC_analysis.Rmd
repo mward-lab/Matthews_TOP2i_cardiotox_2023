@@ -1019,7 +1019,7 @@ for (each in 1:6){
 
 ```{r boxplot of slope}
 library(ggsignif)
-ld50_table <- bind_rows(daunls,doxols,epils,mitols)
+# ld50_table <- bind_rows(daunls,doxols,epils,mitols)
 # write.csv(ld50_table,"data/ld50_table.csv",
 #           row.names =c("DNR","DOX","EPI","MTX"))
 # slope_table <- bind_rows(dnr_sl,dox_sl,epi_sl,mtx_sl)
@@ -1218,9 +1218,9 @@ drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 #   pivot_longer(everything(),names_to = 'indv', values_to = "Epi")
 # mitols <- plyr::quickdf(mitols)%>%
 #   pivot_longer(everything(), names_to = 'indv', values_to = "Mito")
-# 
+# # 
 # LDfull <- right_join(daunls,doxols,by = 'indv') %>% right_join(.,epils,by = 'indv') %>% right_join(., mitols, by= 'indv')
-# #
+# #write.csv(LDfull, "data/Full_LD_rep.csv")
 # meanLDfull <- LDfull %>% mutate(indv = c('1','1','2','2','3','3','4','4','5','5','6','6')) %>%
 # pivot_longer(.,col=!indv,names_to = 'Treatment',values_to = 'LD50')
 # 
@@ -1450,7 +1450,6 @@ for (each in trt){
 ```{r make replicate df}
 
 LD50_table <- read.csv("data/ld50_table.csv",row.names = 1)
-
 
 Via_A_heatmap <- LD50_table %>% 
   dplyr::select(ind1a,ind2a,ind3a,ind4a,ind5a,ind6a) %>% 

@@ -36,10 +36,7 @@ ArrGWAS
 HFGWAS  
 CADGWAS  
   
-Seaone 2019  
-  Supplemental 1 (408 genes)  
-  Supplemental 4 (54 genes)  
-  
+
 Crispr sets
   
 
@@ -48,7 +45,7 @@ Crispr sets
 ```{r loading data files, echo=FALSE,eval=TRUE}
 # toplistall <- read.csv("output/toplistall.csv", row.names = 1)
 
-backGL <- read.csv("data/backGL.txt",     row.names =1)
+backGL <- read.csv("data/backGL.txt", row.names =1)
  drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
@@ -63,12 +60,10 @@ level_order2 <- c('75','87','77','79','78','71')
 toplistall <- readRDS("data/toplistall.RDS")
 
 toplist24hr <-   toplistall %>%
-  mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time=="24_hours")
 
 toplist3hr <-   toplistall %>%
-  mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   filter(time=="3_hours")
 
@@ -94,8 +89,7 @@ Arr_geneset <- readRDS("data/Arr_geneset.RDS")
 # saveRDS(Arr_geneset,"data/Arr_geneset.RDS")
 #Apply sorting
 toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
-  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
   dplyr::summarize(ARRcount=n())%>% 
@@ -112,7 +106,6 @@ toplist24hr %>%
 
 
 dataframARR <- toplist24hr %>% 
-  mutate(id = as.factor(id)) %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
@@ -127,6 +120,7 @@ dataframARR %>%
 
 
 
+
 ```
 #### 3 hour data set
 
@@ -134,7 +128,6 @@ dataframARR %>%
 
 #Apply sorting
 toplist3hr %>% 
-  mutate(id = as.factor(id)) %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
@@ -152,7 +145,6 @@ toplist3hr %>%
 
 
 dataframARR3 <- toplist3hr %>% 
-  mutate(id = as.factor(id)) %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,sigcount,ARR) %>% 
@@ -173,8 +165,7 @@ dataframARR3 %>% kable(., caption= "Significant (adj. P value of <0.05) and non-
 
 
 chi_funarr <-  toplistall %>% 
-  mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="Trastuzumab") %>% 
+  dplyr::filter(id!="TRZ") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
@@ -191,8 +182,9 @@ chi_funarr %>%
 ```
 ```{r ARR heatmap,echo=FALSE}
 
-ARRmat <- chi_funarr %>% ungroup() %>% 
-  mutate(ARR= log(pvalue)*(-1)) %>% 
+ARRmat <- chi_funarr %>% 
+  ungroup() %>% 
+  mutate(ARR= -log(pvalue)) %>% 
   filter(time=="24_hours") %>% 
   mutate(id =case_match( id, 'Daunorubicin'~'DNR',
                          'Doxorubicin'~'DOX',
@@ -533,6 +525,74 @@ print('This is for  GWAS 24 hours -log(chi square pvalue)')
 The star represents chi square p.value < 0.05.
 
 ### GWAS heatmap
+
+
+
+
+Genes in CVD and AC toxicity respond to Top2i
+
+## A. GWAS chi square results
+```{r GWAS enrichment}
+toplist24hr <- toplistall %>% 
+  filter(time=="24_hours")
+chi_funarr <-  toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="TRZ") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(ARR=if_else(ENTREZID %in%Arr_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id) %>% 
+  summarise(pvalue= chisq.test(ARR, sigcount, correct =FALSE)$p.value) 
+  
+
+chi_funhf <-  toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+   dplyr::filter(id!="TRZ") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id) %>% 
+  summarise(pvalue= chisq.test(HF, sigcount, correct =FALSE)$p.value) 
+chi_funCAD <-  toplist24hr %>% 
+  mutate(id = as.factor(id)) %>%
+  dplyr::filter(id!="TRZ") %>% 
+  mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
+  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
+  group_by(id) %>% 
+  summarise(pvalue= chisq.test(CAD, sigcount, correct =FALSE)$p.value) 
+
+HFmat <- chi_funhf %>% ungroup() %>% 
+  mutate(HF= log(pvalue)*(-1)) %>% 
+  dplyr::select(id,HF) %>% 
+  column_to_rownames("id")
+
+ARRmat <- chi_funarr %>% ungroup() %>% 
+  mutate(ARR= log(pvalue)*(-1)) %>% 
+  dplyr::select(id,ARR) %>% 
+  column_to_rownames("id")
+
+
+CADmat <- chi_funCAD %>% ungroup() %>% 
+  mutate(CAD= -log(pvalue)) %>% 
+  dplyr::select(id,CAD) %>% 
+  column_to_rownames("id")
+
+GWASmat <- bind_cols(CADmat$CAD,HFmat$HF,ARRmat$ARR) 
+colnames(GWASmat) <- c('CAD','HF','ARR')
+rownames(GWASmat) <- c('DNR','DOX','EPI','MTX')
+
+ Heatmap(as.matrix(GWASmat), name = "GWAS chi square\n -log p values", 
+         cluster_rows = FALSE, 
+         column_title = 'This is for GWAS 24 hours -log(chi square pvalue)', 
+         cluster_columns = FALSE,
+         row_names_side = 'left',
+         column_names_rot = 0, col_fun1,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(GWASmat[i, j] > -log(0.05))
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+```
+
+
 ```{r GWAS genes of interest, echo=TRUE, message=FALSE, warning=FALSE}
 # GWAS_goi <- c('RARG', 'ITGB7', 'TNS2','ZNF740','SLC28A3','RMI1',
 # 'FEDORA' ,'GDF5','FRS2','HDDC2','EEF1B2')
