@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-21" />
+<meta name="date" content="2023-07-26" />
 
 <title>Figure 4</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Figure 4</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-21</h4>
+<h4 class="date">2023-07-26</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-21
+<strong>Last updated:</strong> 2023-07-26
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree613004a1d7fa2af7602b47c79ce1013c634e6005targetblank613004aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7a6a0dff4d6412a6ff2662f971cd27668612fcb5targetblank7a6a0dfa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/613004a1d7fa2af7602b47c79ce1013c634e6005" target="_blank">613004a</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7a6a0dff4d6412a6ff2662f971cd27668612fcb5" target="_blank">7a6a0df</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree613004a1d7fa2af7602b47c79ce1013c634e6005targetblank613004aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree7a6a0dff4d6412a6ff2662f971cd27668612fcb5targetblank7a6a0dfa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/613004a1d7fa2af7602b47c79ce1013c634e6005" target="_blank">613004a</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/7a6a0dff4d6412a6ff2662f971cd27668612fcb5" target="_blank">7a6a0df</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,7 +557,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -757,6 +756,8 @@ Untracked files:
     Untracked:  output/motif_NRrep.RDS
     Untracked:  output/motif_TI_rep.RDS
     Untracked:  output/output-old/
+    Untracked:  output/rank24genes.csv
+    Untracked:  output/rank3genes.csv
     Untracked:  output/supplementary_motif_list_GO.RDS
     Untracked:  output/toptablebydrug.RDS
     Untracked:  output/x_counts.RDS
@@ -765,11 +766,12 @@ Untracked files:
 Unstaged changes:
     Modified:   analysis/DEG-GO_analysis.Rmd
     Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/Figure3.Rmd
     Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/Figure6.Rmd
+    Modified:   analysis/Figure8.Rmd
     Modified:   analysis/Figure9.Rmd
-    Modified:   analysis/Knowles2019.Rmd
     Modified:   analysis/Supplementary_figures.Rmd
+    Modified:   analysis/Var_genes.Rmd
     Modified:   analysis/other_analysis.Rmd
     Modified:   analysis/run_all_analysis.Rmd
     Modified:   analysis/variance_scrip.Rmd
@@ -836,6 +838,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/7a6a0dff4d6412a6ff2662f971cd27668612fcb5/analysis/Figure4.Rmd" target="_blank">7a6a0df</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+<td>
+updates in figures
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/4533d4a75c78824a312ec6c38847a6c956a9142e/docs/Figure4.html" target="_blank">4533d4a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -940,7 +976,8 @@ library(limma)
 library(corrplot)
 library(ggVennDiagram)
 library(ComplexHeatmap)
-library(gridtext)</code></pre>
+library(gridtext)
+library(paletteer)</code></pre>
 <pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
 siglist &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
 list2env(siglist, envir = .GlobalEnv)</code></pre>
@@ -949,51 +986,9 @@ list2env(siglist, envir = .GlobalEnv)</code></pre>
 <div id="figure-4" class="section level1">
 <h1>Figure 4</h1>
 <p>Gene expression responses to AC treatments converge over time</p>
-<div id="a.-differentially-expressed-genes-by-treatment"
+<div id="a.-correlation-of-all-expressed-fc-values"
 class="section level2">
-<h2>A. Differentially expressed genes by treatment</h2>
-<pre class="r"><code>drug_palNoVeh &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;)
-drug_pal_fact &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;,&quot;#41B333&quot;)
-
-toplistall %&gt;%
-    mutate(id=factor(id, levels = c(&#39;DOX&#39;, &#39;EPI&#39;, &#39;DNR&#39;, &#39;MTX&#39;, &#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
-  mutate(time= factor(time,
-     levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;),
-              label=c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;%
-  group_by(time, id) %&gt;% 
-  mutate(sigcount = if_else(adj.P.Val &lt; 0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
-  count(sigcount) %&gt;% 
-  pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %&gt;% 
-  mutate(prop = sig/(sig+notsig)*100) %&gt;% 
-  mutate(prop=if_else(is.na(prop),0,prop)) %&gt;% 
-  ggplot(., aes(x=id, y= prop))+
-  geom_col(aes(fill=id))+
-  geom_text(aes(label = sprintf(&quot;%.2f&quot;,prop)),
-            position=position_dodge(0.9),vjust=-.2 )+
-  scale_fill_manual(values =drug_pal_fact)+
-  guides(fill=guide_legend(title = &quot;Treatment&quot;))+
-  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
-  theme_bw()+
-  xlab(&quot;&quot;)+
-  ylab(&quot;Percentage of expressed genes&quot;)+
-  theme_bw()+
-  facet_wrap(~time)+
-  ggtitle(&quot;Percent DEGs (adj. P value &lt;0.05)&quot;)+
-  scale_y_continuous(expand=expansion(c(0.02,.2)))+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = &quot;black&quot;),
-        # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = &quot;transparent&quot;),
-        axis.text.x = element_text(size = 8, color = &quot;white&quot;, angle = 0),
-        axis.text.y = element_text(size = 8, color = &quot;black&quot;, angle = 0),
-        strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Figure4.Rmd/DEG-1.png" width="576" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggsave(&quot;output/Figures/Percent_DEG.eps&quot;,width = 6, height =4, units = &quot;in&quot;)</code></pre>
-</div>
-<div id="b.-fold-change-correlation-across-all-expressed-genes-n14084"
-class="section level2">
-<h2>B. Fold change correlation across all expressed genes n=14084</h2>
+<h2>A. Correlation of all expressed FC values</h2>
 <pre class="r"><code>efit2 &lt;- readRDS(&quot;data/efit2_final.RDS&quot;)
 FCmatrix &lt;- subset(efit2$coefficients)
 is.matrix(subset(FCmatrix))</code></pre>
@@ -1001,16 +996,15 @@ is.matrix(subset(FCmatrix))</code></pre>
 <pre class="r"><code>colnames(FCmatrix) &lt;- c(&quot;DNR\n3h&quot;,&quot;DOX\n3h&quot;, &quot;EPI\n3h&quot;,&quot;MTX\n3h&quot;, &quot;TRZ\n3h&quot;,&quot;DNR\n24h&quot;,&quot;DOX\n24h&quot;, &quot;EPI\n24h&quot;,&quot;MTX\n24h&quot;, &quot;TRZ\n24h&quot;)
 
 
-mat_col &lt;- data.frame(time= c(rep(&quot;3 hours&quot;,5), rep(&quot;24 hours&quot;,5)), class= (c(&quot;AC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;nAC&quot;,&quot;nAC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;nAC&quot;,&quot;nAC&quot;)),Top2i=c(rep(&quot;yes&quot;,4), &quot;no&quot;, rep(&quot;yes&quot;,4),&quot;no&quot;))
+mat_col &lt;- data.frame(time= c(rep(&quot;3 hours&quot;,5), rep(&quot;24 hours&quot;,5)), class= (c(&quot;AC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;nAC&quot;,&quot;nAC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;nAC&quot;,&quot;nAC&quot;)),TOP2i=c(rep(&quot;yes&quot;,4), &quot;no&quot;, rep(&quot;yes&quot;,4),&quot;no&quot;))
 rownames(mat_col) &lt;- colnames(FCmatrix)
 # list(group=c(&quot;#C25757&quot;, &quot;#A77E69&quot;)
 # names(mat_colors$group) &lt;-c(&quot;3 hours&quot;, &quot;24 hours&quot;)
-mat_colors &lt;- list(time=c(&quot;pink&quot;, &quot;chocolate4&quot;),class=c(&quot;yellow1&quot;,&quot;lightgreen&quot;), Top2i =c(&quot;darkgreen&quot;,&quot;goldenrod&quot;))
+mat_colors &lt;- list(time=c(&quot;pink&quot;, &quot;chocolate4&quot;),class=c(&quot;yellow1&quot;,&quot;lightgreen&quot;), TOP2i =c(&quot;darkgreen&quot;,&quot;goldenrod&quot;))
 names(mat_colors$time) &lt;- unique(mat_col$time)
 names(mat_colors$class) &lt;- unique(mat_col$class)
-names(mat_colors$Top2i) &lt;- unique(mat_col$Top2i)
+names(mat_colors$TOP2i) &lt;- unique(mat_col$TOP2i)
 corrFC &lt;- cor(FCmatrix)
-
 ComplexHeatmap::pheatmap(corrFC, 
                          display_numbers = TRUE,
                          number_format = &quot;%.2f&quot;,
@@ -1024,16 +1018,27 @@ ComplexHeatmap::pheatmap(corrFC,
                          fontsize_col = 8,
                          treeheight_col = 20)</code></pre>
 <p><img src="figure/Figure4.Rmd/corrFC-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggsave(&quot;output/Figures/FC_cor_plot.eps&quot;,width = 7, height =5, units = &quot;in&quot;)</code></pre>
+<pre class="r"><code>HMcorr &lt;- ComplexHeatmap::pheatmap(corrFC, 
+                         display_numbers = TRUE,
+                         number_format = &quot;%.2f&quot;,
+                         annotation_col = mat_col,
+                         annotation_colors = mat_colors,
+                         fontsize=10,
+                         fontsize_row = 8,
+                         angle_col=&quot;0&quot;,
+                         treeheight_row=25,
+                         fontsize_col = 8,
+                         treeheight_col = 20)
+# HMcorr
+ggsave(&quot;output/Figures/FC_cor_plot.eps&quot;,width = 7, height =5, units = &quot;in&quot;)</code></pre>
 </div>
 <div id="c.-venn-diagram-of-3-hour-degs" class="section level2">
 <h2>C. Venn Diagram of 3 hour DEGs</h2>
-<pre class="r"><code>library(paletteer)
-total3 &lt;- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID, sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+<pre class="r"><code>total3 &lt;- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID, sigVEP3$ENTREZID,sigVMT3$ENTREZID)
 totalin_common3 &lt;- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL, sigVEP3$SYMBOL,sigVMT3$SYMBOL)
 
 
-ggVennDiagram::ggVennDiagram(total3,
+fig3hrvenn &lt;- ggVennDiagram::ggVennDiagram(total3,
               category.names = c(&quot;DNR    \nn = 532\n&quot;,
                                  &quot;DOX\n  n = 19\n&quot;,
                                  &quot;EPI\n   n = 210\n&quot;,
@@ -1052,11 +1057,12 @@ ggVennDiagram::ggVennDiagram(total3,
   scale_y_continuous(expand = expansion(mult = .2))+
   scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
   scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1, limits=c(0,4500))+
-  labs(title = &quot;3 hour comparison of DE genes p.adj. &lt;0.05&quot;,
+  labs(title = &quot;3 hour&quot;,
        caption = paste(&quot;n =&quot;, length(unique(totalin_common3)),&quot;genes\n &quot;))+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5, vjust =1),
-        plot.caption=element_text(size=12))</code></pre>
-<p><img src="figure/Figure4.Rmd/3_hr_venn-1.png" width="672" style="display: block; margin: auto;" /></p>
+        plot.caption=element_text(size=12))
+fig3hrvenn </code></pre>
+<p><img src="figure/Figure4.Rmd/3_hr_venn-1.png" width="576" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggsave(&quot;output/Figures/3_hrvenn.eps&quot;)</code></pre>
 </div>
 <div id="d.-venn-diagram-of-24-hour-degs" class="section level2">
@@ -1065,7 +1071,7 @@ ggVennDiagram::ggVennDiagram(total3,
 in_common24 &lt;-c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID)
 
 
-ggVennDiagram::ggVennDiagram(total24,
+fig24hrvenn &lt;- ggVennDiagram::ggVennDiagram(total24,
               category.names = c(&quot;DNR \nn = 7017  \n &quot;,
                                  &quot;DOX\n n = 6645\n&quot;,
                                  &quot;EPI\n n = 6328\n&quot;,
@@ -1083,12 +1089,13 @@ ggVennDiagram::ggVennDiagram(total24,
   scale_y_continuous(expand = expansion(mult = .2))+
   scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
   scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1)+
-  labs(title = &quot;24 hour comparison of DE genes p.adj. &lt;0.05&quot;,
+  labs(title = &quot;24 hour&quot;,
        caption = paste(&quot;n =&quot;, length(unique(in_common24)),&quot;genes\n &quot;))+
   
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1),
-        plot.caption=element_text(size=12))</code></pre>
-<p><img src="figure/Figure4.Rmd/24_hr_venn-1.png" width="672" style="display: block; margin: auto;" /></p>
+        plot.caption=element_text(size=12))
+fig24hrvenn</code></pre>
+<p><img src="figure/Figure4.Rmd/24_hr_venn-1.png" width="576" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggsave(&quot;output/Figures/24_hrvenn.eps&quot;)</code></pre>
 </div>
 <div id="e.-24-kegg-pathway-analysis" class="section level2">
@@ -1096,7 +1103,7 @@ ggVennDiagram::ggVennDiagram(total24,
 <pre class="r"><code># kegglistDEG &lt;- list(DDEdegk,DDEMdegk,DAdegk,DXdegk,EPdegk, MTdegk)
 # names(kegglistDEG) &lt;-c(&quot;DDEdegk&quot;,&quot;DDEMdegk&quot;,&quot;DAdegk&quot;,&quot;DXdegk&quot;,&quot;EPdegk&quot;, &quot;MTdegk&quot;)
 # saveRDS(kegglistDEG,&quot;data/kegglistDEG.RDS&quot;)
-
+library(grid)
 kegglistDEG24 &lt;- readRDS(&quot;data/kegglistDEG24.RDS&quot;)
 list2env(kegglistDEG24, envir=.GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
@@ -1198,7 +1205,7 @@ kegg_mat3&lt;- keggtable3%&gt;%
   column_to_rownames(&#39;deg&#39;) %&gt;% 
   as.matrix()# 
 
-Heatmap(kegg_mat3,
+draw(Heatmap(kegg_mat3,
         column_title = &quot;KEGG Pathway -log 10(p value)&quot;,
         name =&quot;-log10 (p value)&quot;,
         cluster_rows = FALSE, 
@@ -1215,9 +1222,8 @@ Heatmap(kegg_mat3,
         cell_fun = function(j, i, x, y, width, height, fill) {
         if(kegg_sig_mat3[i, j]&lt; 0.05)
             grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-})</code></pre>
-<p><img src="figure/Figure4.Rmd/KEGG3-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggsave(&quot;output/Figures/3Kegg_path.eps&quot;)</code></pre>
+}))</code></pre>
+<p><img src="figure/Figure4.Rmd/KEGG3-1.png" width="576" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1266,31 +1272,31 @@ loaded via a namespace (and not attached):
 [10] compiler_4.3.1      getPass_0.2-2       png_0.1-8          
 [13] systemfonts_1.0.4   callr_3.7.3         vctrs_0.6.3        
 [16] pkgconfig_2.0.3     shape_1.4.6         crayon_1.5.2       
-[19] fastmap_1.1.1       backports_1.4.1     labeling_0.4.2     
-[22] utf8_1.2.3          promises_1.2.0.1    rmarkdown_2.23     
-[25] markdown_1.7        tzdb_0.4.0          ps_1.7.5           
-[28] ragg_1.2.5          xfun_0.39           cachem_1.0.8       
-[31] jsonlite_1.8.7      RVenn_1.1.0         highr_0.10         
-[34] later_1.3.1         parallel_4.3.1      cluster_2.1.4      
-[37] R6_2.5.1            bslib_0.5.0         stringi_1.7.12     
-[40] jquerylib_0.1.4     Rcpp_1.0.11         iterators_1.0.14   
-[43] knitr_1.43          IRanges_2.34.1      httpuv_1.6.11      
-[46] timechange_0.2.0    tidyselect_1.2.0    rstudioapi_0.15.0  
-[49] abind_1.4-5         yaml_2.3.7          doParallel_1.0.17  
-[52] codetools_0.2-19    processx_3.8.1      withr_2.5.0        
-[55] evaluate_0.21       sf_1.0-14           units_0.8-2        
-[58] proxy_0.4-27        xml2_1.3.5          circlize_0.4.15    
-[61] pillar_1.9.0        KernSmooth_2.23-22  whisker_0.4.1      
-[64] foreach_1.5.2       stats4_4.3.1        generics_0.1.3     
-[67] rprojroot_2.0.3     S4Vectors_0.38.1    hms_1.1.3          
-[70] commonmark_1.9.0    munsell_0.5.0       scales_1.2.1       
-[73] class_7.3-22        glue_1.6.2          tools_4.3.1        
-[76] fs_1.6.2            colorspace_2.1-0    cli_3.6.1          
-[79] textshaping_0.3.6   fansi_1.0.4         gtable_0.3.3       
-[82] sass_0.4.6          digest_0.6.33       prismatic_1.1.1    
-[85] classInt_0.4-9      rjson_0.2.21        farver_2.1.1       
-[88] htmltools_0.5.5     lifecycle_1.0.3     httr_1.4.6         
-[91] GlobalOptions_0.1.2</code></pre>
+[19] fastmap_1.1.1       backports_1.4.1     magick_2.7.4       
+[22] labeling_0.4.2      utf8_1.2.3          promises_1.2.0.1   
+[25] rmarkdown_2.23      markdown_1.7        tzdb_0.4.0         
+[28] ps_1.7.5            ragg_1.2.5          xfun_0.39          
+[31] cachem_1.0.8        jsonlite_1.8.7      RVenn_1.1.0        
+[34] highr_0.10          later_1.3.1         parallel_4.3.1     
+[37] cluster_2.1.4       R6_2.5.1            bslib_0.5.0        
+[40] stringi_1.7.12      jquerylib_0.1.4     Rcpp_1.0.11        
+[43] iterators_1.0.14    knitr_1.43          IRanges_2.34.1     
+[46] httpuv_1.6.11       timechange_0.2.0    tidyselect_1.2.0   
+[49] rstudioapi_0.15.0   abind_1.4-5         yaml_2.3.7         
+[52] doParallel_1.0.17   codetools_0.2-19    processx_3.8.2     
+[55] withr_2.5.0         evaluate_0.21       sf_1.0-14          
+[58] units_0.8-2         proxy_0.4-27        xml2_1.3.5         
+[61] circlize_0.4.15     pillar_1.9.0        KernSmooth_2.23-22 
+[64] whisker_0.4.1       foreach_1.5.2       stats4_4.3.1       
+[67] generics_0.1.3      rprojroot_2.0.3     S4Vectors_0.38.1   
+[70] hms_1.1.3           commonmark_1.9.0    munsell_0.5.0      
+[73] scales_1.2.1        class_7.3-22        glue_1.6.2         
+[76] tools_4.3.1         fs_1.6.3            colorspace_2.1-0   
+[79] cli_3.6.1           textshaping_0.3.6   fansi_1.0.4        
+[82] gtable_0.3.3        sass_0.4.7          digest_0.6.33      
+[85] prismatic_1.1.1     classInt_0.4-9      farver_2.1.1       
+[88] rjson_0.2.21        htmltools_0.5.5     lifecycle_1.0.3    
+[91] httr_1.4.6          GlobalOptions_0.1.2</code></pre>
 </div>
 </div>
 </div>
