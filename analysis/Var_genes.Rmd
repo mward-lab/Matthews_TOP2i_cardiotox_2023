@@ -414,3 +414,35 @@ chisq.test(testS1)
 
 
 
+## Burridge data 
+```{r burrgenes}
+DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
+burr_genes <-  readRDS("data/BurridgeDOXTOX.RDS")
+# BurridgeDOXTOX <-  getBM(attributes=my_attributes,filters ='hgnc_symbol',
+#          values = burr_genes, mart = ensembl)
+# BurridgeDOXTOX <- BurridgeDOXTOX %>% distinct(entrezgene_id, .keep_all = TRUE)
+# saveRDS(BurridgeDOXTOX, "data/BurridgeDOXTOX.RDS") 
+
+
+storeEPI <- readRDS("data/qvalueEPItemp.RDS")
+VennDiagram::get.venn.partitions(list(storeEPI$ENTREZID, DOXreQTLs$ENTREZID))
+intersect(DOX_reqtls, burr_genes$entrezgene_id)
+# DOX_reqtls <-$ENTREZID %>% as.integer()
+  DOXreQTLs %>% filter(ENTREZID %in% storeEPI$ENTREZID) %>%  tally( )
+ burr_genes %>% 
+   filter(entrezgene_id%in% backGL$ENTREZID) %>% 
+   filter(entrezgene_id %in% storeEPI$ENTREZID)
+
+
+
+### now for burr genes and epi508
+VennDiagram::get.venn.partitions(list(storeEPI$ENTREZID, burr_genes$entrezgene_id))
+### looking at the overlap of egenes and  EPI 508 var
+
+storeEPI %>% 
+  filter (ENTREZID %in% DOXreQTLs$ENTREZID) %>% 
+  left_join(., backGL, by=c("ENTREZID"))
+
+
+
+```

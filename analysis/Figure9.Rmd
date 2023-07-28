@@ -2,18 +2,18 @@
 title: "Figure 9"
 author: "ERM"
 date: "`r Sys.Date()`"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(
+knitr::opts_chunk$set(dev = c('svg','png'),
 	echo = FALSE,
 	message = FALSE,
 	warning = FALSE
 )
 ```
 
-```{r packages loading}
+```{r packages loading,echo=FALSE}
 library(edgeR)
 library(tidyverse)
 library(ggsignif)
@@ -26,7 +26,7 @@ library(kableExtra)
 library(broom)
 library(ComplexHeatmap)
 ```
-```{r data loading}
+```{r data loading,echo=FALSE}
 toplistall <- readRDS("data/toplistall.RDS")
 siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist, envir = .GlobalEnv)
@@ -44,7 +44,7 @@ col_funFC= circlize::colorRamp2(c(-2,0, 2), c("darkgreen","white", "darkorange2"
 col_funTOX = circlize::colorRamp2(c(-1,0, 1), c("darkviolet", "white","firebrick4"))
 
 ```
-```{r function load}
+```{r function load,echo=FALSE}
 
 pearson_extract <- function(corr_df,ENTREZID) {
   ld50_plot <- corr_df %>%
@@ -187,7 +187,7 @@ pearson_cardiotox <- function(corr_df,ENTREZID) {
 
 
 ## B. GWAS and TWAS associated genes 
-```{r  GWAS-TWAS FC heatmap}
+```{r  GWAS-TWAS FC heatmap,echo=FALSE}
 GWAS_goi <- read.csv("output/GWAS_goi.csv",row.names = 1)
 ##get the abs FC of all GOI
 GWASabsFCsig <- 
@@ -260,7 +260,7 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
 ## New Cardiotoxicity Score
 
 
-```{r ctxscore, message=FALSE, warning=FALSE, include=FALSE}
+```{r ctxscore, message=FALSE, warning=FALSE, include=FALSE,echo=FALSE}
 
 gene_corr_fig9 <- readRDS("output/gene_corr_fig9.RDS")
 toxlist <- data.frame(ENTREZID=c(5916,23371,283337,64078,80010))
@@ -344,7 +344,7 @@ plot(p)
 ### extract for heatmap
 
 #### RARG
-```{r heatmap long RARG}
+```{r heatmap long RARG,echo=FALSE}
 # toxdata(RARG)map
 toxdata2ptr <- map_df(toxdata2pt, ~as.data.frame(.x), .id="gene")
 # toxdata3ptr <- map_df(toxdata3pt, ~as.data.frame(.x), .id="gene")
@@ -380,7 +380,7 @@ Heatmap(RARG_mat2ptr, name = " RARG 2pt Cardiotox score",
 
 
 
-```{r  RARG data,fig.width=4, fig.height=3}
+```{r  RARG data,fig.width=4, fig.height=3,echo=FALSE}
 
 cpm_boxplot24h(cpmcounts,GOI='5916',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("RARG")~log[2]~"cpm "))))
@@ -389,7 +389,7 @@ cpm_boxplot24h(cpmcounts,GOI='5916',"Dark2",drug_pal_fact,
 
 
 #### TNS2
-```{r heatmap long TNS2}
+```{r heatmap long TNS2,echo=FALSE}
 
 TNS2_sig_mat2ptr <- toxdata2ptr %>% 
   dplyr::filter(gene=="TNS2") %>% 
@@ -449,7 +449,7 @@ Heatmap(TNS2_mat2ptr, name = " TNS2 2pt Cardiotox score",
 
 
 
-```{r  TNS2 data,fig.width=4, fig.height=3}
+```{r  TNS2 data,fig.width=4, fig.height=3,echo=FALSE}
 
 cpm_boxplot24h(cpmcounts,GOI='23371',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("TNS2")~log[2]~"cpm "))))
@@ -459,7 +459,7 @@ cpm_boxplot24h(cpmcounts,GOI='23371',"Dark2",drug_pal_fact,
 
 
 #### ZNF740
-```{r heatmap long ZF740}
+```{r heatmap long ZF740,echo=FALSE}
 ZNF740_sig_mat2ptr <- toxdata2ptr %>% 
   dplyr::filter(gene=="ZNF740") %>% 
   dplyr::select(sig_tox) %>% 
@@ -520,7 +520,7 @@ Heatmap(ZNF740_mat2ptr, name = " ZNF740 2pt Cardiotox score",
 
 
 
-```{r ZNF740 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE}
+```{r ZNF740 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=FALSE}
 
 
 cpm_boxplot24h(cpmcounts,GOI='283337',"Dark2",drug_pal_fact,
@@ -533,7 +533,7 @@ cpm_boxplot24h(cpmcounts,GOI='283337',"Dark2",drug_pal_fact,
 
 #### RMI1
 
-```{r RMI1}
+```{r RMI1,echo=FALSE}
 toxdata2ptr <- map_df(toxdata2pt, ~as.data.frame(.x), .id="gene")
 
 RMI1_sig_mat2ptr <- toxdata2ptr %>% 
@@ -570,7 +570,7 @@ Heatmap(RMI1_mat2ptr, name = " RMI1 2pt Cardiotox score",
 
 
 
-```{r RMI1 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE}
+```{r RMI1 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=FALSE}
 
 
 cpm_boxplot24h(cpmcounts,GOI='80010',"Dark2",drug_pal_fact,
@@ -581,7 +581,7 @@ cpm_boxplot24h(cpmcounts,GOI='80010',"Dark2",drug_pal_fact,
 
 #### SLC28A3
 
-```{r SLC28A3}
+```{r SLC28A3,echo=FALSE}
 toxdata2ptr <- map_df(toxdata2pt, ~as.data.frame(.x), .id="gene")
 
 SLC28A3_sig_mat2ptr <- toxdata2ptr %>% 
@@ -618,7 +618,7 @@ Heatmap(SLC28A3_mat2ptr, name = " SLC28A3 2pt Cardiotox score",
 
 
 
-```{r SLC data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE}
+```{r SLC data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=FALSE}
 
 
 cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
@@ -629,7 +629,7 @@ cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
 
 
 
-```{r LDH,data load, fig.height=4, fig.width=6}
+```{r LDH,data load, fig.height=4, fig.width=6,echo=FALSE}
 drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 
 level_order2 <- c('75','87','77','79','78','71')
@@ -679,7 +679,7 @@ ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
  Troponin I release
 
 
-```{r troponin_24, fig.height=4, fig.width=6}
+```{r troponin_24, fig.height=4, fig.width=6,echo=FALSE}
 
 
 RNAnormlist %>% 

@@ -390,6 +390,9 @@ EP2 <- updated_list %>% filter(sDrug =="EPI")
 MT2 <- updated_list %>% filter(sDrug =="MTX")
 TR2 <- updated_list %>% filter(sDrug =="TRZ")
 VE2 <- updated_list%>% filter(sDrug =="VEH")
+# plot_list_DRC <- list('DA2'=DA2,'DX2'=DX2,'EP2' =EP2 ,'MT2'=MT2,'TR2'=TR2,'VE2'=VE2)
+# 
+# saveRDS(plot_list_DRC,"data/plot_list_DRC.RDS")
 ```
 
 ```{r sample plot code, echo = TRUE, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
@@ -736,7 +739,7 @@ EPI_intv$Conc <- EP2$Conc
  mt_confint<-list()
 for(k in ID){
   thingmt <-  filter(MT2, SampleID==k)
-  thingmt.m <- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA,NA,NA, NA),names=c("Slope","Lower Limit","Upper Limit", "ED50")))
+  thingmt.m <- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA,NA,1, NA),names=c("Slope","Lower Limit","Upper Limit", "ED50")))
   mtx_sl[k] <- thingmt.m$fit$par[1]
   # onionm <- ED(thingmt.m, c(50), interval = "delta")
   mitols[k] <- thingmt.m$fit$par[3]
@@ -794,7 +797,9 @@ VEH_intv$Conc <- VE2$Conc
 pull_drc <- data.frame(individual=c('ind1','ind2','ind3','ind4','ind5','ind6'))
 pull_drc2 <- data.frame("ind1", "ind2","ind3","ind4","ind5","ind6")
 doubl_plot <- data.frame("ind2a", "ind2b", "ind5a", "ind5b")
-
+# plot_intv_list <- list('DNR_intv'=DNR_intv,'DOX_intv'=DOX_intv,'EPI_intv' =EPI_intv ,'MTX_intv'=MTX_intv,'TRZ_intv'=TRZ_intv,'VEH_intv'=VEH_intv)
+# # 
+# saveRDS(plot_intv_list,"data/plot_intv_list.RDS")
 for (each in 1:6){
   newdata <- DNR_intv %>% 
    filter(indv==paste0(pull_drc2[[each]],'a')|

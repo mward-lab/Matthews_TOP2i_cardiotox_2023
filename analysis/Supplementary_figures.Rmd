@@ -9,8 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE,
-                      dev = c("svg","png","pdf"),
-                      dpi = 300)
+                      dev = c('svg','png'))
 ```
 
 ```{r packages, message=FALSE, warning=FALSE}
@@ -27,7 +26,9 @@ library(cowplot)
 
 ```
 ### Fig. S1
-```{r Fig S1}
+
+
+```{r Fig S1 troponinT}
 
 ctnnt <- read.csv("data/ctnnt_results.txt", row.names = 1)
 ctnnt %>% 
@@ -65,26 +66,64 @@ coord_cartesian(ylim = c(0,105))+ ##set those limits
 
 ### Fig. S2
 
+```{r Fig. S2 DRC reps}
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+conf_int <- readRDS("data/plot_intv_list.RDS")
+DRC_list <- readRDS("data/plot_list_DRC.RDS")
+pull_drc2 <- data.frame("ind1", "ind2","ind3","ind4","ind5","ind6")
+doubl_plot <- data.frame("ind2a", "ind2b", "ind5a", "ind5b")
+lvl_order <- c('1','2','3','4','5','6')
 
-```{r Fig S2}
+# brewer.pal(n=6,"Dark2")
+# [1] "#1B9E77" "#D95F02" "#7570B3" "#E7298A" "#66A61E" "#E6AB02"
+# > display.brewer.pal(n=6,"Dark2")
+for (each in 1:6){
+  sub_intv <- conf_int[[each]]
+  
+  
+  newdata <- sub_intv %>% 
+   filter(indv %in% doubl_plot) %>% 
+    mutate(sub_ind=substr(indv,4,4)) %>% 
+    mutate(sub_ind=factor(indv,levels=lvl_order,drop))
+     f <- DA2 %>% filter(SampleID==paste0(pull_drc2[[each]],'a')|
+                         SampleID==paste0(pull_drc2[[each]],'b')) %>% 
+   ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+  guides(color="none", alpha = "none")+
+      geom_ribbon(data = newdata, aes(x = Conc, y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
+              alpha = 0.1, color = "white")+
+     stat_smooth(method = "drm",
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                 se = FALSE)+
+      ylim(-.4,1.5)+
+      scale_color_brewer(palette = "Dark2")+
+       scale_fill_brewer(palette = "Dark2")+
+       scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+        # scale_y_continuous( expand = expansion(mult = .1)) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
+      ggtitle(paste0("Daunorubicin individual ",each))+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = "bold"),
+            panel.grid.major = element_line(colour = 'lightgrey'),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = "white", colour = NA))
+  print(f)
+} 
 
-
-ld50_table <- read.csv("data/ld50_table.csv",row.names = 1)
-ld_corr <- cor(ld50_table)
-col_fun1 = circlize::colorRamp2(c(-1, 1), c("white", "purple"))
-
-Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, col = col_fun1,column_title = expression("LD "[50]*" correlation"),row_title=" ",row_split = factor(rep(c("1","2","3","4","5","6"),each=2)), column_split = 
-    factor(rep(c("1","2","3","4","5","6"),each=2)))
-
-Heatmap(ld_corr, cluster_rows = FALSE,cluster_columns = FALSE, column_title = expression("LD "[50]*" correlation"),row_title=" ",row_split = factor(rep(c("1","2","3","4","5","6"),each=2)), column_split = 
-    factor(rep(c("1","2","3","4","5","6"),each=2)))
 
 ```
-### Fig. S3
+
+
+
+
+### Fig. S3  
 
 
 ```{r Fig S3}
-drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
 viability <- readRDS("data/viability.RDS")
 norm_LDH48 <- readRDS("data/supp_normLDH48.RDS")
 viability %>% 
@@ -96,7 +135,7 @@ viability %>%
   theme_bw()+
   xlab("Average viability of cardiomyocytes/100") +
   ylab("Average LDH") +
-  ggtitle("Relative viability and relative LDH release at 48 hours")+
+  ggtitle("Cell stress and viability correlation")+
   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
   stat_cor(method="pearson",aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
            color = "red")+
@@ -112,19 +151,21 @@ viability %>%
 ### Fig. S4 
 
 ```{r Fig S4}
+
+
 viabilitytable <- readRDS("data/averageviabilitytable.RDS")
 viabilitytable %>% 
   ungroup() %>% 
     mutate(indv=substr(SampleID,4,4)) %>% 
-    mutate(indv=factor(as.numeric(indv))) %>%
-    filter(Conc <5) %>% 
-    mutate(Conc= factor(as.numeric(Conc))) %>% 
-    group_by(indv,Drug,Conc,sDrug) %>% 
+     mutate(indv=factor(indv, levels= c('1','2','3','4','5','6'))) %>% 
+    filter(Conc ==0.5) %>%
+    # mutate(Conc= factor(as.numeric(Conc))) %>% 
+    group_by(indv,sDrug,Conc) %>% 
     dplyr::summarize(Viability=mean(Mean)) %>%
     ungroup() %>% 
     ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
     geom_boxplot(position="dodge", outlier.colour = "transparent",
-                 aes(fill=Drug))+
+                 aes(fill=sDrug))+
     geom_point(aes(color=indv))+
     guides(alpha = "none")+
     ylim(0,150.5)+
@@ -132,16 +173,51 @@ viabilitytable %>%
                        guide="legend",
                        name ="Individual", 
                        labels(c(1,2,3,4,5,6)))+
-    scale_fill_manual(values=drug_pal_fact)+
+    scale_fill_manual(values=drug_pal_fact, name ="Treatment")+
     theme_classic() +
+  xlab("")+
     # geom_hline(yintercept = 1,lty = 4)+
-    ylab("Viability") +
-  xlab("Treatment")+
+    ylab("% Viability") +
     facet_wrap(~Conc)+ 
-    ggtitle("Viablity across concentrations at 48 hours")+
+    ggtitle(expression(paste("Viablity across treatment at 0.5", mu, "M at 48 hours")))+
     theme(axis.title=element_text(size=10),
           axis.ticks=element_line(size =2),
-          axis.text=element_text(size=9, face = "bold"),
+          axis.text.y=element_text(size=9, face = "bold"),
+          axis.text.x=element_blank(),
+          panel.grid.major = element_line(colour = 'darkgrey'),
+          panel.border=element_rect(fill = NA, size = 2),
+          plot.title = element_text(hjust = 0.5, size =15, face = "bold"))
+
+viabilitytable %>% 
+  ungroup() %>% 
+    mutate(indv=substr(SampleID,4,4)) %>% 
+     mutate(indv=factor(indv, levels= c('1','2','3','4','5','6'))) %>% 
+    filter(Conc <5) %>%
+    mutate(Conc= factor(as.numeric(Conc))) %>%
+    group_by(indv,sDrug,Conc) %>% 
+    dplyr::summarize(Viability=mean(Mean)) %>%
+    ungroup() %>% 
+    ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
+    geom_boxplot(position="dodge", outlier.colour = "transparent",
+                 aes(fill=sDrug))+
+    geom_point(aes(color=indv))+
+    guides(alpha = "none")+
+    ylim(0,150.5)+
+    scale_color_brewer(palette = "Dark2",
+                       guide="legend",
+                       name ="individual", 
+                       labels(c(1,2,3,4,5,6)))+
+    scale_fill_manual(values=drug_pal_fact, name ="treatment")+
+    theme_classic() +
+  xlab("")+
+    # geom_hline(yintercept = 1,lty = 4)+
+    ylab("% Viability") +
+    facet_wrap(~Conc)+ 
+    # ggtitle(expression(paste("Viablity across treatment at 0.5", mu, "M at 48 hours")))+
+    theme(axis.title=element_text(size=10),
+          axis.ticks=element_line(size =2),
+          axis.text.y=element_text(size=9, face = "bold"),
+          axis.text.x=element_blank(),
           panel.grid.major = element_line(colour = 'darkgrey'),
           panel.border=element_rect(fill = NA, size = 2),
           plot.title = element_text(hjust = 0.5, size =15, face = "bold"))

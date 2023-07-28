@@ -148,7 +148,7 @@ drug_pal_vehend <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333
 
 toplistall <- readRDS("data/toplistall.RDS") 
 # 
-# GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","RMI1","KDM4B","KAT6B","TNS2"))
+GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","RMI1","KDM4B","KAT6B","TNS2", "EEF1B2"))
 # library(biomaRt)
 # ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
 # my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
@@ -497,20 +497,69 @@ for (g in seq(1:4)){
   
 }
 ```
-
-
-### DNR examples
-```{r DNR example}
-for (g in seq(1:4)){
-  datafilter <- top_genes_df %>% filter(drug =="DNR")
-  a <- datafilter[g,3]
-  # b <- datafilter[g,1]
-  cpm_boxplot(cpmcounts,GOI=datafilter[g,2],
-              "Dark2",
-              drug_pal_fact,
-              ylab=bquote(~italic(.(a))~log[2]~"cpm "))
-  
+### qvalue EPI
+```{r EPI qvalues example}
+cpm_boxplot_time <-function(cpmcounts,timex, GOI,brewer_palette, fill_colors, ylab) {
+  ##GOI needs to be ENTREZID
+  df <- cpmcounts
+    df_plot <- df %>% 
+      dplyr::filter(rownames(.)==GOI) %>%
+      pivot_longer(everything(),
+                   names_to = "treatment",
+                   values_to = "counts") %>%
+      separate(treatment, c("drug","indv","time")) %>%
+      dplyr::filter(time == paste(timex)) %>% 
+      mutate(time=factor(time, levels =c("3h", "24h"), labels=c("3 hours", "24 hours"))) %>%
+      
+      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+      mutate(drug =case_match(drug, "Da"~"DNR",
+                            "Do"~"DOX",
+                            "Ep"~"EPI",
+                            "Mi"~"MTX",
+                            "Tr"~"TRZ",
+                            "Ve"~"VEH", .default = drug)) %>% 
+      mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH')))
+    plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
+      geom_boxplot(position="identity",aes(fill=drug))+
+      geom_point(aes(col=indv, size=1.5, alpha=0.5))+
+      guides(alpha= "none", size= "none")+
+      scale_color_brewer(palette = brewer_palette, guide = "none")+
+      scale_fill_manual(values=fill_colors)+
+      # try(facet_wrap("time", nrow=1, ncol=2))+
+      theme_bw()+
+      ylab(ylab)+
+      xlab("")+
+      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=10,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          axis.line = element_line(linewidth = 1.0),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "pt"),face = "bold"))
+    print(plot)
 }
+
+storeEPI <- readRDS("data/qvalueEPItemp.RDS")
+EPIgoi <- getBM(attributes=my_attributes,filters ='entrezgene_id',
+         values = storeEPI$ENTREZID, mart = ensembl)
+
+
+set.seed(12345)
+
+sampset <- EPIgoi %>% 
+   sample_n(.,4)
+for (g in seq(from=1, to=length(sampset$entrezgene_id))){
+  a <- sampset$hgnc_symbol[g]
+  cpm_boxplot_time(cpmcounts,'24h',GOI=sampset[g,1],"Dark2",drug_pal_fact,
+                ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+
+}
+
+
+
+
+
+
 ```
 
 

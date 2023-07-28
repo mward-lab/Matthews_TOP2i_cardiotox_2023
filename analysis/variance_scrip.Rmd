@@ -27,7 +27,7 @@ library(scales)
 library(kableExtra)
 library(qvalue)
 library(data.table)
-
+library(ComplexHeatmap)
 
 ```
 
@@ -308,6 +308,10 @@ drug_frame2 %>%
   
 ```
 
+
+
+
+
 ```{r data wrangling-evalute variance, message=FALSE, warning=FALSE, eval=FALSE}
 
 organized_drugframe <- read.csv("data/organized_drugframe.csv",
@@ -445,10 +449,37 @@ summary(est24pDOX)
 summary(est24pEPI)
 summary(est24pMTX)
 summary(est24pTRZ)
+EPIq <- data.table(pvalues=est24pEPI$pvalues,qvalues=est24pEPI$qvalues)
+EPI24_genelist <- framefun24 %>% dplyr::select(ENTREZID,EPI.VEH.24)
+storeEPI <- EPI24_genelist %>%
+  full_join(.,EPIq, by=c("EPI.VEH.24"="pvalues")) %>% 
+  dplyr::filter(qvalues<.1) %>% 
+  mutate(ENTREZID=as.integer(ENTREZID))
+# saveRDS(storeEPI,"data/qvalueEPItemp.RDS")
+DNRq <- data.table(pvalues=est24pDNR$pvalues,qvalues=est24pDNR$qvalues)
+DNR24_genelist <- framefun24 %>% dplyr::select(ENTREZID,DNR.VEH.24)
+DNR24_genelist %>%
+  full_join(.,DNRq, by=c("DNR.VEH.24"="pvalues")) %>% 
+  dplyr::filter(qvalues<.2)  
+  
+DOXq <- data.table(pvalues=est24pDOX$pvalues,qvalues=est24pDOX$qvalues)
+DOX24_genelist <- framefun24 %>% dplyr::select(ENTREZID,DOX.VEH.24)
+DOX24_genelist %>%
+  full_join(.,DOXq, by=c("DOX.VEH.24"="pvalues")) %>% 
+  dplyr::filter(qvalues<.2)
 
+MTXq <- data.table(pvalues=est24pMTX$pvalues,qvalues=est24pMTX$qvalues)
+MTX24_genelist <- framefun24 %>% dplyr::select(ENTREZID,MTX.VEH.24)
+MTX24_genelist %>%
+  full_join(.,MTXq, by=c("MTX.VEH.24"="pvalues")) %>% 
+  dplyr::filter(qvalues<.2)
 
-
-
+TRZq <- data.table(pvalues=est24pTRZ$pvalues,qvalues=est24pTRZ$qvalues)
+TRZ24_genelist <- framefun24 %>% dplyr::select(ENTREZID,TRZ.VEH.24)
+TRZ24_genelist %>%
+  full_join(.,TRZq, by=c("TRZ.VEH.24"="pvalues")) %>% 
+  dplyr::filter(qvalues<.2)
+ 
 ```
 
 ### BH correction
@@ -456,8 +487,7 @@ summary(est24pTRZ)
 I tried doing by hand using i= p.value rank m= 14084 (number of tests) FDR= 0.05 I first ranked the list, divided the rank by 14084, then took the highest pvalue that was less than 0.05 of the calculated crit. pvalue(i/m). I then ran the pvalue numbers through `p.adjust(data, method = "BH")` and found the easier way to calculate the adj.p.value. (I mean, the hard way is fun, but I did it incorrectly somehow). The way I tried to do it was commented out in the code. The table contains the values after `p.adjust` was run.
 
 ```{r BH correction on framefun}
-library(shiny)
-library(DT)
+
 rank3 <- framefun %>% 
   # mutate(DNR_rank=dense_rank(DNR.VEH.3),
   #        DOX_rank=dense_rank(DOX.VEH.3),
@@ -598,6 +628,7 @@ plot(est3pTRZ)
 
 
 framefun24 %>% 
+  dplyr::filter(ENTREZID %in% storeEPI$ENTREZID) %>% 
   pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
   separate(combo, into= c("drug", NA,"time")) %>%
   mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
@@ -1143,6 +1174,223 @@ TOP2i_var24_table %>%
 
 
 ```
+
+## EPI var GO info
+```{r Epi-go-qvalue}
+
+
+
+# EPIvargost <- gost(query = EPIgoi$entrezgene_id,
+#                     organism = "hsapiens", significant = FALSE,
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg =expressedgenes$ENTREZID,
+#                     sources=c("GO:BP","KEGG"))
+# saveRDS(EPIvargost,"data/DEG-GO/EPIvargost.RDS")
+EPIvargostt <- readRDS("data/DEG-GO/EPIvargost.RDS")
+EPIvar<- gostplot(EPIvargost, capped = FALSE, interactive = TRUE)
+EPIvar
+
+EPI_table_var <- EPIvargost$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
+ 
+ EPI_table_var  %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=5 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), 
+                  col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)))+
+    scale_y_discrete(labels = scales::label_wrap(30))+
+    guides(col="none", 
+           size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('EPI highly var genes GO:BP terms') +
+     xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text = element_text(size = 10, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  EPI_table_var  %>% 
+    dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=5 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), 
+                  col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)))+
+    scale_y_discrete(labels = scales::label_wrap(30))+
+    guides(col="none", 
+           size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('EPI highly var genes KEGG terms') +
+     xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text = element_text(size = 10, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+ 
+ 
+ 
+  EPI_table_var %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+    kable(.,) %>% 
+    kable(.,caption = "KEGG GO:BP var enrichment terms ") %>% 
+    kable_paper("striped", full_width = FALSE) %>%
+    kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>%
+    scroll_box(width = "100%", height = "400px") 
+  
+  
+ EPI_table_var %>%  
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG EPI var enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+  
+  
+```
+
+### EPI 508 var genes 
+
+```{r epivarvar}
+
+mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
+
+
+drug_frameepivar<- mean_vardrug1 %>% 
+  rownames_to_column(var = "entrezid") %>% 
+  dplyr::filter(entrezid %in% storeEPI$ENTREZID) %>% 
+  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = "short", values_to = "values") %>% 
+  separate(short, into=c("calc","treatment","time")) %>% 
+  mutate(treatment= factor(treatment, levels = c("Do","Ep","Da","Mi","Tr","Ve"),labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>% 
+  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
+  group_by(treatment, time, calc) %>% 
+  mutate(entrezid=as.integer(entrezid)) %>% 
+  as.data.frame
+
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+drug_frameepivar %>% 
+  filter(calc!="mean") %>% 
+  ggplot(., aes(x= treatment, y=values, fill=treatment))+
+  geom_boxplot(outlier.shape=NA)+
+  geom_signif(comparisons =list(c("DOX","VEH"),
+                                c("EPI","VEH"),
+                                c("DNR","VEH"),
+                                c("MTX","VEH"),
+                                c("TRZ","VEH")),
+              test= "t.test",
+              tip_length = 0.01,
+              map_signif_level=FALSE,
+              textsize =4,
+              y_position=0.85,
+              step_increase = 0.1)+
+  facet_wrap(~time)+
+  ggtitle("Variance")+
+  # coord_cartesian(ylim = c(0,1))+
+  # ylim(0,2)+
+scale_fill_manual(values=drug_pal_fact)+
+  theme_bw()+
+  xlab(" ")+
+  ylab(expression("variance of log "[2]~" cpm "))+
+  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+
+
+drug_frameepivar %>% 
+  filter(calc!="var") %>% 
+  ggplot(., aes(x= treatment, y=values,fill=treatment))+
+  geom_boxplot(outlier.shape=NA)+
+  geom_signif(comparisons =list(c("TRZ","VEH"),
+                                c("MTX","VEH"),
+                                c("DNR","VEH"),
+                                c("EPI","VEH"),
+                                c("DOX","VEH")),
+              test= "t.test",
+              tip_length = 0.01,
+              map_signif_level=FALSE,
+              textsize =4,
+              y_position=11,
+              step_increase = 0.05)+
+  facet_wrap(.~time)+
+  ggtitle("Means")+
+  ylim(0,15)+
+ scale_fill_manual(values=drug_pal_fact)+
+  theme_bw()+
+  xlab(" ")+
+  ylab(expression("counts log"[2]~"cpm "))+
+  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+
+
+```
+
+
+
+``` {r epi 508 corr}
+
+var508only <-  mean_vardrug1 %>% 
+  rownames_to_column(var = "entrezid") %>% 
+  mutate(entrezid=as.integer(entrezid)) %>% 
+  dplyr::filter(entrezid %in% storeEPI$ENTREZID) %>% 
+  column_to_rownames("entrezid") %>% 
+  dplyr::select(starts_with("var"))
+var_corr <- cor(var508only)
+
+Heatmap(var_corr)
+
+var50824only <-  var508only %>% 
+   dplyr::select(starts_with("var")&contains(".24"))
+  
+ 
+var_24corr <- cor(var50824only)
+Heatmap(var_24corr)
+
+var_all <- mean_vardrug1 %>% 
+   dplyr::select(starts_with("var"))
+
+var_24all <- mean_vardrug1 %>% 
+    dplyr::select(starts_with("var")&contains(".24"))
+
+var_allcorr <- cor(var_all)
+
+Heatmap(var_allcorr)
+
+var_24allcorr <- cor(var_24all)
+
+Heatmap(var_24allcorr)
+
+
+```
+
 
 ## using the Alternative hypothesis = "greater",
 
