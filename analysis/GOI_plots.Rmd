@@ -275,8 +275,8 @@ GOI_join <- RNAnormlist %>%
 # 
 # gene_corr_df <- cpmcounts %>%
 #   rownames_to_column(var ="entrezgene_id") %>%
-#   filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>% ##this works to only fileter
-# # #   # inner_join(., GOI_genelist,by ="entrezgene_id") %>%  view()## this works to filter and append. just depends on the"when" I want to filter and join dataframes
+#   dplyr::filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>% ##this works to only fileter
+#   # inner_join(., GOI_genelist,by ="entrezgene_id") %>%  view()## this works to filter and append. just depends on the"when" I want to filter and join dataframes
 #   mutate(entrezgene_id=as.numeric(entrezgene_id)) %>%
 #   pivot_longer(!entrezgene_id, names_to="treatment", values_to = "counts") %>%
 #   separate(treatment,c("Drug","indv","time")) %>%
@@ -300,10 +300,10 @@ GOI_join <- RNAnormlist %>%
 #     filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>%
 #     left_join(., GOI_join, by=c("Drug","indv")) %>%
 #     dplyr::select(indv, Drug,entrezgene_id,counts, rldh,rtnni,LD50,tox) %>%
-#     mutate(Drug=factor(Drug)) %>%
+#     mutate(Drug=factor(Drug, levels=c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>%
 #     full_join(.,GOI_genelist, by="entrezgene_id")
-#
-#   saveRDS(gene_corr_df,"data/gene_corr_df.RDS")
+# # #
+# #   saveRDS(gene_corr_df,"data/gene_corr_df.RDS")
 # saveRDS(gene_corr_frame,"data/gene_corr_frame.RDS")
 gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
    gene_corr_df <- readRDS("data/gene_corr_df.RDS")
@@ -540,15 +540,16 @@ cpm_boxplot_time <-function(cpmcounts,timex, GOI,brewer_palette, fill_colors, yl
 }
 
 storeEPI <- readRDS("data/qvalueEPItemp.RDS")
-EPIgoi <- getBM(attributes=my_attributes,filters ='entrezgene_id',
-         values = storeEPI$ENTREZID, mart = ensembl)
+# EPIgoi <- getBM(attributes=my_attributes,filters ='entrezgene_id',
+#          values = storeEPI$ENTREZID, mart = ensembl)
 
 
 set.seed(12345)
 
-sampset <- EPIgoi %>% 
+sampset <- storeEPI %>% 
+  dplyr::select(ENTREZID) %>% 
    sample_n(.,4)
-for (g in seq(from=1, to=length(sampset$entrezgene_id))){
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
   a <- sampset$hgnc_symbol[g]
   cpm_boxplot_time(cpmcounts,'24h',GOI=sampset[g,1],"Dark2",drug_pal_fact,
                 ylab=bquote(~italic(.(a))~log[2]~"cpm "))
