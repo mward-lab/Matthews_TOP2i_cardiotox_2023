@@ -9,9 +9,11 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                message=FALSE, 
-                warning=FALSE)
+knitr::opts_chunk$set(dev = c('svg','png'),
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
 ```{r package loading, message=FALSE, warning=FALSE}
@@ -1191,7 +1193,7 @@ TOP2i_var24_table %>%
 #                     custom_bg =expressedgenes$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
 # saveRDS(EPIvargost,"data/DEG-GO/EPIvargost.RDS")
-EPIvargostt <- readRDS("data/DEG-GO/EPIvargost.RDS")
+EPIvargost <- readRDS("data/DEG-GO/EPIvargost.RDS")
 EPIvar<- gostplot(EPIvargost, capped = FALSE, interactive = TRUE)
 EPIvar
 
@@ -1387,6 +1389,14 @@ Heatmap(var_allcorr)
 var_24allcorr <- cor(var_24all)
 
 Heatmap(var_24allcorr)
+
+DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
+
+storeEPI %>% 
+  filter (ENTREZID %in% DOXreQTLs$ENTREZID) %>% 
+  left_join(., backGL, by=c("ENTREZID"))
+
+ggVennDiagram::ggVennDiagram(list(storeEPI$ENTREZID,as.integer(DOXreQTLs$ENTREZID)),category.names = c("EPI var\nn = 508","DOXreQTLs\nn = 142"))
 
 
 ```
