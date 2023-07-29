@@ -44,7 +44,7 @@ indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
 group <- as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6))
-drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+drug <- rep(c("DNR","DOX","EPI","MTX","TRZ", "VEH"),12)
 group1 <- interaction(drug,time)
 label <- (interaction(substring(drug, 0, 2), indv, time))
 colnames(x_counts) <- label
@@ -180,7 +180,7 @@ length(setdiff(backGL$ENTREZID,(union(clust1,union(clust2,union(clust3,clust4)))
 
 ```{r piechart and lollipop  }
 #make data frame
-Set <- c("Early Response", "Time-Independent Response","Late Response", "No Response")
+Set <- c("EAR", "ESR","LR", "NR")
 gene_num <- c(487,589,5596,7409)
 fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
 
@@ -207,7 +207,7 @@ pie_chartdata %>%
   theme_void()+
   ggtitle("Distribution of genes for each set")+
   geom_text(aes(label = paste0(Set," (",gene_num,")")),
-                position = position_stack(vjust =.55)) +
+                position = position_stack(vjust =.45)) +
   theme(legend.position="none") +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
   
@@ -365,7 +365,7 @@ tabletop2Bi_LR%>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = scales::label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Late Response enriched GO:BP terms') +
+    ggtitle('Late response enriched GO:BP terms') +
     xlab(expression("-log"[10]~"(p-value)"))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -387,7 +387,7 @@ tabletop2Bi_LR%>%
     geom_point(aes(size = intersection_size, col="red")) +
    scale_y_discrete(labels = scales::label_wrap(30))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Late Response enriched KEGG terms') +
+    ggtitle('Late response enriched KEGG terms') +
    xlab(expression("-log"[10]~"(p-value)"))+
     ylab("KEGG term")+
       theme_bw()+
@@ -433,8 +433,8 @@ gostresTop2bi_ER$result %>%
  
 tabletop2Bi_ER <- gostresTop2bi_ER$result %>%
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
-write.csv(tabletop2Bi_ER,"output/tabletop2Bi_ER.csv")
-#%>% 
+# write.csv(tabletop2Bi_ER,"output/tabletop2Bi_ER.csv")
+# %>%
   # mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
   # kable(.,) %>% 
   # kable_paper("striped", full_width = FALSE) %>%  
@@ -456,7 +456,7 @@ tabletop2Bi_ER %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = scales::label_wrap(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Early Response enriched GO:BP terms') +
+    ggtitle('Early acute response enriched GO:BP terms') +
     xlab(expression("-log"[10]~"(p-value)"))+
     ylab("GO: BP term")+
       theme_bw()+
@@ -478,7 +478,7 @@ tabletop2Bi_ER %>%
   scale_y_discrete(labels = scales::label_wrap(35))+
   guides(col="none", 
          size=guide_legend(title ="# of intersected \n terms"))+
-  ggtitle('Early Response enriched KEGG terms') +
+  ggtitle('Early acute response enriched KEGG terms') +
  xlab(expression("-log"[10]~"(p-value)"))+
   ylab("KEGG term")+
   theme_bw()+
@@ -518,7 +518,7 @@ cormotifrespTop2bi_TI
 
 tabletop2Bi_TI <- gostresTop2bi_TI$result %>%
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
-write.csv(tabletop2Bi_TI,"output/tabletop2Bi_TI.csv")
+# write.csv(tabletop2Bi_TI,"output/tabletop2Bi_TI.csv")
 
 tabletop2Bi_TI %>% 
   mutate_at(.cols = 6, .funs= scales::label_scientific(digits=4)) %>% 
@@ -529,8 +529,6 @@ tabletop2Bi_TI %>%
 
 
 
-  
-  
   tabletop2Bi_TI %>% 
     dplyr::filter(source =="GO:BP") %>%
     dplyr::select(p_value,term_name,intersection_size) %>%
@@ -541,7 +539,7 @@ tabletop2Bi_TI %>%
     geom_point(aes(size = intersection_size)) +
     scale_y_discrete(labels = scales::label_wrap(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Time independent response enriched GO:BP terms') +
+    ggtitle('Early sustained response enriched GO:BP terms') +
     xlab(expression("-log"[10]~"(p-value)"))+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("GO: BP term")+
@@ -565,7 +563,7 @@ tabletop2Bi_TI %>%
     geom_point(aes(size = intersection_size, col="red")) +
   scale_y_discrete(labels = scales::label_wrap(35))+
     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Time independent response enriched KEGG terms') +
+    ggtitle('Early sustained response KEGG terms') +
    xlab(expression("-log"[10]~"(p-value)"))+
     #scale_x_continuous(expand = expansion(mult = .2))+
     ylab("KEGG term")+
@@ -583,7 +581,7 @@ tabletop2Bi_TI %>%
 ### long <GO:BP> frame
 
 ```{r all go in one loooooong frame, echo=FALSE, fig.height=16, fig.width=8, message=FALSE, warning=FALSE}
-
+motifcol <- c("#F8766D", "#00BFC4","#7CAE00",  "#C77CFF")
 NR1f <- tableNR %>% dplyr::filter(source=="GO:BP") %>% 
     dplyr::select(p_value,term_name,intersection_size) %>%
     slice_min(., n=10 ,order_by=p_value) %>%
@@ -610,14 +608,15 @@ ER3f <- tabletop2Bi_ER %>%
 # names(motif_list_GO) <- c("ER3f","TI3f","LR3f","NR1f")
 # saveRDS(motif_list_GO,"output/supplementary_motif_list_GO.RDS")
 
-GOmotiflong <-list("Early Response"=ER3f,"Late Response"=LR3f,"Time-Independent\nResponse"=TI3f, "No Response"=NR1f)
+GOmotiflong <-list("EAR"=ER3f,"ESR"=TI3f,"LR"=LR3f, "NR"=NR1f)
 GOBPlong <- data.table::rbindlist(GOmotiflong, idcol = "motif")
-p <- GOBPlong %>% mutate(motif=fct_inorder(motif)) %>% 
+p <- GOBPlong %>% mutate(motif=factor(motif,levels=c("EAR","ESR","LR","NR"))) %>% 
   
 ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=FALSE),col=motif)) +
     geom_point(aes(size = intersection_size, col=motif)) +
   scale_y_discrete(labels = scales::label_wrap(40))+
   facet_grid(motif~., scales = "free_y")+
+  scale_color_discrete(type=motifcol)+
   
     guides(col=guide_legend(title="Motif group"), size=guide_legend(title = "# of intersected \n terms"))+
     ggtitle('Top 10 enriched GO:BP terms for each motif') +
@@ -636,7 +635,7 @@ ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=FALSE),col=motif
 #https://stackoverflow.com/questions/41631806/change-facet-label-text-and-background-colour/60046113#60046113
 g <- ggplot_gtable(ggplot_build(p))
 stripr <- which(grepl('strip-r', g$layout$name))
-fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
+fills <- c("#F8766D", "#00BFC4","#7CAE00",  "#C77CFF")
 k <- 1
 for (i in stripr) {
   j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
@@ -706,10 +705,10 @@ ggplot(., aes(x = log_val, y =reorder(term_name,p_value,desc=FALSE),col=motif)) 
 ```{r clust1NR gene,echo=FALSE, message=FALSE, warning=FALSE}
 time <- rep((rep(c("3h", "24h"), c(6,6))), 6)
 time <- ordered(time, levels =c("3h", "24h"))
-drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+drug <- rep(c("DNR","DOX","EPI","MTX","TRZ", "VEH"),12)
 indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))
 labeltop <- (interaction(substring(drug, 0, 2), indv, time))
-FCtoplistall <- read.csv("output/toplistall.csv", row.names = 1)
+# FCtoplistall <- read.csv("output/toplistall.csv", row.names = 1)
 library(limma)
 library(tidyverse)
 library(biomaRt)
@@ -726,28 +725,29 @@ list2env(DEG_cormotif,envir=.GlobalEnv)
 set.seed(12345)
 #geneexpressionsets <- c(sample(motif_NR,1),sample(motif_TI,1),sample(motif_LR,1),sample(motif_ER,1))
 #[1] "27102"  "92312"  "10360"  "388558"  "newest sample set as of 04192023
-#geneexpressionsets <- c( "27102" , "92312" , "10360",  "388558")
-geneexpressionsets=c("2650","92312","27245","55588")# first number set (also in the previous example)
+geneexpressionsets <- c( "27102" , "92312" , "10360",  "388558")
+# geneexpressionsets=c("2650","92312","27245","55588")# first number set (also in the previous example)
 
-ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
-my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
+# ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+# my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each database
 #attributes <- listAttributes((ensembl))
-my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 
 
-Motif_expr<- getBM(attributes=my_attributes,filters ='entrezgene_id',
-         values = geneexpressionsets, mart = ensembl)
+# Motif_expr<- getBM(attributes=my_attributes,filters ='entrezgene_id',
+         # values = geneexpressionsets, mart = ensembl)
 # toplistall %>% dplyr::filter(ENTREZID==Motif_expr[1,1])
 
 #namelist <- c("1026"="CDKN1A","23411"= "SIRT1","27113"= "BBC3","4193"= "MDM2")
-cpmcounts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
-length(cpmcounts)
-colnames(cpmcounts) <- label
+cpmcounts <- readRDS("data/cpmcount.RDS")
+# length(cpmcounts)
+# colnames(cpmcounts) <- label
 # saveRDS(cpmcounts,"data/cpmcount.RDS")
-# motif_NRrep <- 
+# motif_NRrep <-
   cpmcounts %>% dplyr::filter(rownames(.)==geneexpressionsets[1]) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
-  mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
+  mutate(drug=rep(c("DNR","DOX","EPI","MTX","TRZ", "VEH"),12)) %>%
+    mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
   mutate(time=factor(time, levels =c("3h", "24h"))) %>%
   mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
@@ -781,7 +781,7 @@ lfc_nums <- readRDS("data/toplistall.RDS")
 lfc_nums %>% 
   dplyr::filter(ENTREZID %in% motif_NR) %>% 
   mutate(absFC=abs(logFC)) %>% 
-  mutate(id = as.factor(id)) %>%
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
@@ -805,13 +805,17 @@ lfc_nums %>%
 
 ## Motif_TI
 
-```{r clustTI,echo=FALSE, message=FALSE, warning=FALSE}
+```{r clustESR,echo=FALSE, message=FALSE, warning=FALSE}
 # 
 # motif_TI_rep <-
   cpmcounts %>% dplyr::filter(rownames(.)==92312) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
-  mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
-  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>% mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(drug=rep(c("DNR","DOX","EPI","MTX","TRZ", "VEH"),12)) %>%
+  mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>% 
+  mutate(time=factor(time, 
+                     levels=c("3h","24h"),
+                     labels=c("3 hours","24 hours"))) %>%
   mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
@@ -821,7 +825,7 @@ lfc_nums %>%
   scale_fill_manual(values=drug_pal_fact)+
   facet_wrap("time", nrow=1, ncol=2)+
   theme_bw()+
-  ylab(expression(atop("Time-Independent set",italic("MEX3A")~log[2]~"cpm ")))+
+  ylab(expression(atop("Early sustained response",italic("MEX3A")~log[2]~"cpm ")))+
   xlab("")+
   theme(strip.background = element_rect(fill = "#00BFC4"),
         plot.title = element_text(size=18,hjust = 0.5),
@@ -835,12 +839,14 @@ lfc_nums %>%
 
 #### Log-Fold Change of TI response
 
-```{r TI Foldchange}
+```{r esr Foldchange}
 lfc_nums %>% 
   dplyr::filter(ENTREZID %in% motif_TI) %>% 
   mutate(absFC=abs(logFC)) %>% 
-  mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  mutate(time=factor(time, 
+                     levels=c("3_hours","24_hours"),
+                     labels=c("3 hours","24 hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
   scale_fill_manual(values=drug_pal_fact)+
@@ -850,7 +856,7 @@ lfc_nums %>%
   xlab("")+
   ylab("|Log Fold Change|")+
   theme_bw()+
-  ggtitle("|Log Fold| for genes in TI response set")+
+  ggtitle("|Log Fold| for genes in ESR")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
@@ -863,12 +869,13 @@ lfc_nums %>%
 
 ```{r motif_LR, echo=FALSE, message=FALSE, warning=FALSE}
 
-# motif_LRrep <- 
+# motif_LRrep <-
   cpmcounts %>% dplyr::filter(rownames(.)==55588) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
-  mutate(drug=rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
+  mutate(drug=rep(c("DNR","DOX","EPI","MTX","TRZ", "VEH"),12)) %>%
+  mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
   mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
-  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+ mutate(time=factor(time, levels =c("3h", "24h"), labels=c("3 hours","24 hours"))) %>%
   mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
@@ -878,7 +885,7 @@ lfc_nums %>%
   scale_fill_manual(values=drug_pal_fact)+
   facet_wrap("time",  nrow=1, ncol=2)+
   theme_bw()+
-  ylab(expression(atop("Late Response set",italic("MED29")~log[2]~"cpm ")))+
+  ylab(expression(atop("Late response ",italic("MED29")~log[2]~"cpm ")))+
   xlab("")+
   xlab("")+
   theme(strip.background = element_rect(fill = "#7CAE00"),
@@ -899,7 +906,7 @@ lfc_nums %>%
   dplyr::filter(ENTREZID %in% motif_LR) %>% 
   mutate(absFC=abs(logFC)) %>% 
   mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  mutate(time=factor(time, levels =c("3_hours", "24_hours"), labels=c("3 hours","24 hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
   scale_fill_manual(values=drug_pal_fact)+
@@ -925,12 +932,12 @@ lfc_nums %>%
 ## Motif_ER
 
 ```{r motif ER, echo=FALSE, message=FALSE, warning=FALSE}
-# motif_ERrep <- 
+# motif_ERrep <-
   cpmcounts %>% dplyr::filter(rownames(.)==27245) %>%
   pivot_longer(everything(), names_to = "treatment",values_to = "counts") %>%
-  mutate(drug = rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)) %>%
+  mutate(drug = rep(c("DNR","DOX","EPI","MTX","TRZ", "VEH"),12)) %>%
   mutate(time = rep((rep(c("3h", "24h"), c(6,6))), 6)) %>%
-  mutate(time=factor(time, levels =c("3h", "24h"))) %>%
+  mutate(time=factor(time, levels =c("3h", "24h"), labels=c("3 hours","24 hours"))) %>%
   mutate(indv=factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12)))) %>%
   ggplot(., aes(x=drug, y=counts))+
   geom_boxplot(position="identity",aes(fill=drug))+
@@ -940,7 +947,7 @@ lfc_nums %>%
   scale_fill_manual(values=drug_pal_fact)+
   facet_wrap("time",nrow=1, ncol=2)+
   theme_bw()+
-  ylab(expression(atop("Early Response set",italic("AHDC1")~log[2]~"cpm ")))+
+  ylab(expression(atop("Early acute response",italic("AHDC1")~log[2]~"cpm ")))+
   xlab("")+
   xlab("")+
   theme(strip.background = element_rect(fill = "#F8766D"),
@@ -951,7 +958,7 @@ lfc_nums %>%
         axis.text.x = element_text(size = 12, color = "white", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
-# saveRDS(motif_ERrep,"output/motif_ERrep.RDS") 
+# saveRDS(motif_ERrep,"output/motif_ERrep.RDS")
 ```
 
 #### Log-Fold Change of Early Response
@@ -960,7 +967,9 @@ lfc_nums %>%
 lfc_nums %>% 
   dplyr::filter(ENTREZID %in% motif_ER) %>% 
   mutate(absFC=abs(logFC)) %>% 
-  mutate(id = as.factor(id)) %>%
+  # mutate(id = as.factor(id)) %>%
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   ggplot(., aes(x=id,y=absFC))+
   geom_boxplot(aes(fill=id))+
@@ -971,7 +980,7 @@ lfc_nums %>%
   xlab("")+
   ylab("|Log Fold Change|")+
   theme_bw()+
-  ggtitle("|Log Fold| for genes in ER set")+
+  ggtitle("|Log Fold| for genes in EAR set")+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.line = element_line(linewidth = 1.5),
@@ -999,8 +1008,10 @@ mean_lfc <- lfc_nums %>%
 
 
 mean_lfc %>% 
-   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
-  mutate(id=factor(id, levels=c("Daunorubicin" ,"Doxorubicin", "Epirubicin" , "Mitoxantrone" ,"Trastuzumab"))) %>% 
+    mutate(time=factor(time, 
+                     levels=c("3_hours","24_hours"),
+                     labels=c("3 hours","24 hours"))) %>% 
+  mutate(id=factor(id, levels=c("DNR" ,"DOX", "EPI" , "MTX" ,"TRZ"))) %>% 
   pivot_longer(!c(id,time), names_to = "Motif",values_to="meanLFC") %>% 
   ggplot(., aes(x=time,y= meanLFC,col=id,group=id))+
   geom_point()+
