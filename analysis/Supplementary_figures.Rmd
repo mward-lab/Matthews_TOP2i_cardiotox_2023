@@ -19,10 +19,11 @@ library(rstatix)
 library(zoo)
 library(ggsignif)
 library(RColorBrewer)
-library(kableExtra)
+
 library(ComplexHeatmap)
 library(gridExtra)
 library(cowplot)
+library(drc)
 
 ```
 ### Fig. S1
@@ -56,11 +57,12 @@ coord_cartesian(ylim = c(0,105))+ ##set those limits
        panel.grid.major = element_line(colour = 'grey'),
        panel.border=element_rect(fill = NA, size = 3),
        plot.subtitle=element_text(size=18, hjust=0.5, face="italic", color="black")) 
-(summary(ctnnt)) %>% 
-  kable(., caption= "Stats summary of cTNNT+ FACs readings") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE,font_size = 18) #%>% 
-  # scroll_box(width = "60%", height = "400px")
+# ctnnt %>%
+#   summary() %>% 
+#   kable(., caption= "Stats summary of cTNNT+ FACs readings") %>% 
+#   kable_paper("striped", full_width = FALSE) %>%  
+#   kable_styling(full_width = FALSE,font_size = 18) #%>% 
+#   # scroll_box(width = "60%", height = "400px")
 
 ```
 
@@ -68,48 +70,70 @@ coord_cartesian(ylim = c(0,105))+ ##set those limits
 
 ```{r Fig. S2 DRC reps}
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+library(data.table)
 conf_int <- readRDS("data/plot_intv_list.RDS")
 DRC_list <- readRDS("data/plot_list_DRC.RDS")
 pull_drc2 <- data.frame("ind1", "ind2","ind3","ind4","ind5","ind6")
-doubl_plot <- data.frame("ind2a", "ind2b", "ind5a", "ind5b")
+doubl_plot <- data.frame("ind3a", "ind3b", "ind5a", "ind5b")
 lvl_order <- c('1','2','3','4','5','6')
-
+intervals <- rbindlist(conf_int,idcol="trt")
+drug_list <- c("DNR","DOX","EPI","MTX", "TRZ", "VEH")
+GeomRibbon$handle_na <- function(data, params) {  data }
+intervals %>% 
+  separate("trt", into=c("sDrug",NA))
 # brewer.pal(n=6,"Dark2")
 # [1] "#1B9E77" "#D95F02" "#7570B3" "#E7298A" "#66A61E" "#E6AB02"
 # > display.brewer.pal(n=6,"Dark2")
 for (each in 1:6){
-  sub_intv <- conf_int[[each]]
+  newdata <- intervals %>% 
+    separate("trt", into=c("sDrug",NA)) %>% 
+    dplyr::filter(sDrug ==drug_list[each]) %>% 
+    mutate(SampleID=indv) %>% 
+    mutate(indv=substr(indv,4,4)) %>% 
+    mutate(indv=factor(indv, levels=lvl_order)) %>% 
+    dplyr::filter(SampleID %in% doubl_plot)
+    
   
-  
-  newdata <- sub_intv %>% 
-   filter(indv %in% doubl_plot) %>% 
-    mutate(sub_ind=substr(indv,4,4)) %>% 
-    mutate(sub_ind=factor(indv,levels=lvl_order,drop))
-     f <- DA2 %>% filter(SampleID==paste0(pull_drc2[[each]],'a')|
-                         SampleID==paste0(pull_drc2[[each]],'b')) %>% 
-   ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
-  guides(color="none", alpha = "none")+
-      geom_ribbon(data = newdata, aes(x = Conc, y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
-              alpha = 0.1, color = "white")+
-     stat_smooth(method = "drm",
-                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
-                 se = FALSE)+
-      ylim(-.4,1.5)+
-      scale_color_brewer(palette = "Dark2")+
-       scale_fill_brewer(palette = "Dark2")+
-       scale_x_log10() +  # Change the x-axis scale to log 10 scale
-      theme_classic() +
-      xlab(NULL)+
-      ylab(NULL) +
-        # scale_y_continuous( expand = expansion(mult = .1)) +
-      theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"))+
-      ggtitle(paste0("Daunorubicin individual ",each))+
-      theme(axis.title=element_text(size=10),
+  # newdata <- sub_intv %>% 
+  #  filter(indv %in% doubl_plot) %>% 
+  #   mutate(sub_ind=substr(indv,4,4)) %>% 
+  #   mutate(sub_ind=factor(sub_ind,levels=lvl_order))
+  drug_plot <- DRC_list[[each]]
+     f <-
+       drug_plot %>% 
+         filter(SampleID %in% doubl_plot) %>% 
+         ggplot(., aes(x=Conc, y= Percent, group=SampleID,linetype=SampleID, color= indv,alpha =0.6 )) +
+         guides(color="none", alpha = "none")+
+         stat_smooth(method = "drm",
+                     method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                     se = FALSE)+
+         geom_ribbon(data = newdata, 
+                     aes(x = Conc, y = Prediction, 
+                         ymin = Lower, 
+                         ymax = Upper, 
+                         fill=indv),
+                         alpha = 0.1, 
+                         color = "transparent")+
+         ylim(-.4,1.5)+
+         scale_linetype_manual(values = c("dotted","solid","dotted","solid"),
+                               name="replicate",
+                               labels=c("Rep 1", "Rep 2","Rep 1", "Rep 2"))+
+         scale_color_brewer(palette = "Dark2")+
+         scale_fill_brewer(palette = "Dark2")+
+         scale_x_log10() +  # Change the x-axis scale to log 10 scale
+         theme_classic() +
+         xlab(NULL)+
+         ylab(NULL)+
+        # scale_y_continuous(oob=scales::rescale_max, limits = -.4, 1.5)+
+        ggtitle(drug_list[each])+
+      theme(plot.title = element_text(hjust = 0.5, size =15, face ="bold"),
+            axis.title=element_text(size=10),
             axis.ticks=element_line(linewidth = 2),
             axis.text=element_text(size=10, face = "bold"),
             panel.grid.major = element_line(colour = 'lightgrey'),
             panel.border=element_rect(fill = NA, linewidth = 2),
             plot.background = element_rect(fill = "white", colour = NA))
+       
   print(f)
 } 
 
@@ -231,8 +255,20 @@ viabilitytable %>%
 library(limma)
 library(edgeR)
 library(cowplot)
+filcpm_matrix <- readRDS("data/filcpm_counts.RDS")
+colnames(filcpm_matrix)
+
 x <- readRDS("data/filtermatrix_x.RDS")
-ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
+x$samples %>% 
+  mutate(drug=case_match(drug, "Daunorubicin"~"DNR",
+                        "Doxorubicin"~"DOX",
+                        "Epirubicin"~"EPI",
+                        "Mitoxantrone"~"MTX",
+                        "Trastuzumab"~"TRZ",
+                        "Vehicle"~"VEH", .default = drug)) %>%
+   mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  mutate(time=factor(time, labels= c("3 hours","24 hours"))) %>% 
+ ggplot(., aes(x = as.factor(time), y = RIN)) +
   geom_boxplot(aes(fill=as.factor(time)))+ 
   theme_bw()+
   ylim(c(0,10))+
@@ -250,8 +286,16 @@ ggplot(x$samples, aes(x = as.factor(time), y = RIN)) +
 
 seq_info <-read.csv("output/sequencing_info.txt", row.names = 1)
 seq_info %>% 
+   
   filter(type=="Total_reads") %>% 
-  ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
+  mutate(drug=case_match(drug, "Daunorubicin"~"DNR",
+                        "Doxorubicin"~"DOX",
+                        "Epirubicin"~"EPI",
+                        "Mitoxantrone"~"MTX",
+                        "Trastuzumab"~"TRZ",
+                        "Vehicle"~"VEH", .default = drug)) %>%
+   mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+    ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
   geom_boxplot()+
   scale_fill_manual(values=drug_pal_fact)+
   ggtitle(expression("Total number of reads by treatment"))+
@@ -268,10 +312,18 @@ seq_info %>%
         strip.text.y = element_text(color = "white"))
 
 seq_info %>% 
-  separate(samplenames, into=c(NA,NA,NA,"samplenames")) %>% 
-  mutate(shortnames = paste("Sample",str_trim(samplenames))) %>% 
+  mutate(drug=case_match(drug, "Daunorubicin"~"DNR",
+                        "Doxorubicin"~"DOX",
+                        "Epirubicin"~"EPI",
+                        "Mitoxantrone"~"MTX",
+                        "Trastuzumab"~"TRZ",
+                        "Vehicle"~"VEH", .default = drug)) %>%
+   mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  # separate(samplenames, into=c(NA,NA,NA,"samplenames")) %>% 
+  # mutate(shortnames = paste("Sample",str_trim(samplenames))) %>% 
   filter(type=="Total_reads") %>% 
-  ggplot(., aes (x =shortnames, y=Total.Sequences, fill = drug, group_by=indv))+
+  mutate(sampleID=colnames(filcpm_matrix)) %>% 
+  ggplot(., aes (x =sampleID, y=Total.Sequences, fill = drug, group_by=indv))+
   geom_col()+
  geom_hline(aes(yintercept=20000000))+
  scale_fill_manual(values=drug_pal_fact)+
@@ -293,14 +345,41 @@ seq_info %>%
 ### Fig. S6
 
 
-```{r Fig S6}
+```{r Fig S6, fig.width=10, fig.height=10}
 filcpm_matrix <- readRDS("data/filcpm_counts.RDS")
 
 mcor <- cor(filcpm_matrix) 
-# pheatmap::pheatmap(mcor)
-Heatmap(mcor)
+
+filmat_groupmat_col <- data.frame(timeset = colnames(filcpm_matrix))
+counts_corr_mat<- filmat_groupmat_col %>% 
+  separate(timeset, into= c("drug","indv","time")) %>% 
+  mutate(class = if_else(drug=="Da","AC", if_else(drug=="Do","AC", if_else(drug=="Ep","AC","nAC")))) %>% 
+  mutate(TOP2i = if_else(drug=="Da","yes", if_else(drug=="Do","yes", if_else(drug=="Ep","yes",if_else(drug=="Mi","yes","no"))))) 
+                         
+ mat_colors <- list( 
+   drug= c("#F1B72B","#8B006D","#DF707E","#3386DD","#707031","#41B333"),
+   indv=c("#1B9E77", "#D95F02" ,"#7570B3", "#E7298A" ,"#66A61E", "#E6AB02"),
+   time=c("pink", "chocolate4"),
+   class=c("yellow1","lightgreen"), 
+   TOP2i =c("darkgreen","goldenrod"))                        
+                         
+names(mat_colors$drug)   <- unique(counts_corr_mat$drug)                      
+names(mat_colors$indv) <- unique(counts_corr_mat$indv)
+names(mat_colors$time) <- unique(counts_corr_mat$time)
+names(mat_colors$class) <- unique(counts_corr_mat$class)
+names(mat_colors$TOP2i) <- unique(counts_corr_mat$TOP2i)
 
 
+ComplexHeatmap::pheatmap(mcor,
+                         # column_title=(paste0("RNA-seq log"[2]~"cpm correlation")),
+        annotation_col = counts_corr_mat,
+        annotation_colors = mat_colors,
+                         fontsize=10,
+                         fontsize_row = 8,
+                         angle_col="90",
+                         treeheight_row=25,
+                         fontsize_col = 8,
+                         treeheight_col = 20)
 ```
 heatmap is pending a few changes!  just not my focus today.
 
@@ -363,16 +442,18 @@ Volcanoplots
 toplistall <- readRDS("data/toplistall.RDS")
 toplistall %>% 
   group_by(time, id) %>% 
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>% 
-  # mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  mutate(id=factor(id, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ','VEH'))) %>% 
+  mutate(time= factor(time,
+     levels=c("3_hours","24_hours"),
+              label=c("3 hours","24 hours"))) %>%
   ggplot(., aes(x=id, y=logFC))+
   geom_boxplot(aes(fill=id))+
   ggpubr::fill_palette(palette =drug_pal_fact)+
   guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(sigcount~time)+
+  # facet_wrap(sigcount~time)+
   theme_bw()+
   xlab("")+
-  ylab("Log Fold Change")+
+  ylab(expression("Log"[2]*" fold change"))+
   theme_bw()+
   facet_wrap(~time)+
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
@@ -380,20 +461,179 @@ toplistall %>%
         # axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = "transparent"),
-        axis.text.x = element_text(size = 8, color = "white", angle = 0),
+        axis.text.x = element_blank(),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
+# drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
 
+
+toplistall %>%
+    mutate(id=factor(id, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ','VEH'))) %>% 
+  mutate(time= factor(time,
+     levels=c("3_hours","24_hours"),
+              label=c("3 hours","24 hours"))) %>%
+  group_by(time, id) %>% 
+  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
+  count(sigcount) %>% 
+  pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %>% 
+  mutate(prop = sig/(sig+notsig)*100) %>% 
+  mutate(prop=if_else(is.na(prop),0,prop)) %>% 
+  ggplot(., aes(x=id, y= prop))+
+  geom_col(aes(fill=id))+
+  geom_text(aes(label = sprintf("%.2f",prop)),
+            position=position_dodge(0.9),vjust=-.2 )+
+  scale_fill_manual(values =drug_pal_fact)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
+  theme_bw()+
+  xlab("")+
+  ylab("Percentage of expressed genes")+
+  theme_bw()+
+  ggtitle("Percent DEGs (adj. P value <0.05)")+
+  scale_y_continuous(expand=expansion(c(0.02,.2)))+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text.x = element_text(size = 8, color = "white", angle = 0),
+        axis.text.y = element_text(size = 8, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+ggsave("output/Figures/Percent_DEG.eps",width = 6, height =4, units = "in")
 ```
+
 ### Fig. S10
 ```{r Fig S10 Drug-specific genes and pathways,fig.width=14, fig.height=8.5}
 
 
-allfinal <- readRDS("output/allfinal_sup10.RDS")
+allfinal <- readRDS("output/allfinal_sup10.RDS") 
 allfinal
+allfinal3hour <- readRDS("data/allfinal3hour.RDS")
+allfinal3hour
+```
+### Fig S10 Drug Specific Pathways
+
+
+```{r FigS12 3h- drug spec path}
+gostres3Dnrdeg_sp <- readRDS("data/DEG-GO/gostres3Dnrdeg_sp.RDS")
+
+Dnr3_sp_DEGtable <- gostres3Dnrdeg_sp$result %>%
+  dplyr::select(c(source, term_id,term_name,intersection_size, 
+                   term_size, p_value))
+
+
+Dnr3_sp_DEGtable  %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels =scales::label_wrap(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('DNR 3 hour specific(stringent)\n gene set GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+gostres3Mtxdeg_sp <- readRDS("data/DEG-GO/gostres3Mtxdeg_sp.RDS")
+Mtx3_sp_DEGtable <- gostres3Mtxdeg_sp$result %>%
+  dplyr::select(c(source, term_id,term_name,intersection_size, 
+                   term_size, p_value))
+Mtx3_sp_DEGtable  %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=5,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::label_wrap(30))+
+  geom_vline(xintercept = (-log10(0.05)))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('MTX 3 hour specific(stringent)\n gene set GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 ```
-### Fig. S11
+```{r FigS12 24h- drug spec path}
+
+DX_sp_DEGgostres <- readRDS("data/DEG-GO/gostresDOXdeg_sp.RDS")
+MT_sp_DEGgostres <- readRDS("data/DEG-GO/gostresMTXdeg_sp.RDS")
+
+DX_sp_DEGtable <- DX_sp_DEGgostres$result %>%
+  dplyr::select(c(source, term_id,term_name,intersection_size, 
+                   term_size, p_value))
+MT_sp_DEGtable <- MT_sp_DEGgostres$result %>%
+  dplyr::select(c(source, term_id,term_name,intersection_size, 
+                   term_size, p_value))
+  
+  
+DX_sp_DEGtable  %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('DOX specific 24 hour gene set GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+
+MT_sp_DEGtable  %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=10 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+   # slice_max(., n=10,order_by = p_value) %>%
+   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::wrap_format(30))+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('MTX specific 24 hour gene set GO:BP terms') +
+    xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+
+
+
+```
+
+### Fig. S12
 
 ```{r Fig venntimepoints}
 DNRvenn<- readRDS ("output/DNRvenn.RDS")
@@ -411,64 +651,104 @@ cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
 Cormotif::plotIC(cormotif_initial)
 ```
 
-```{r Fig S12 Cormotif genes, fig.height=10, fig.width=8,out.width ="80%"}
+```{r Fig S12 Cormotif genes, fig.height=10, fig.width=6,out.width ="80%"}
 motif_NRrep <-  readRDS("output/motif_NRrep.RDS")
 motif_ERrep <-  readRDS("output/motif_ERrep.RDS")
 motif_TIrep <-  readRDS("output/motif_TI_rep.RDS")
 motif_LRrep <-  readRDS("output/motif_LRrep.RDS")
-# motif_NRrep <- motif_NRrep+theme(axis.title.y = element_text(size=1))
+motif_NRrep <- motif_NRrep +
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.1))+
+  theme(legend.position = "NULL", axis.title.y =element_text(size =12))
 
-plot_grid(motif_ERrep,motif_LRrep,motif_TIrep,motif_NRrep,nrow = 4,ncol = 1)
-motif_NRrep 
-motif_ERrep 
-motif_TIrep
-motif_LRrep
+motif_ERrep <- motif_ERrep+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.1))+
+  theme(legend.position = "NULL", axis.title.y =element_text(size =12))
+
+motif_TIrep <- motif_TIrep+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.1))+ 
+  theme(legend.position = "NULL", axis.title.y =element_text(size =12))
+
+motif_LRrep <- motif_LRrep+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.1))+
+  theme(legend.position = "NULL", axis.title.y =element_text(size =12))
+plot_grid(motif_ERrep,motif_TIrep,motif_LRrep,motif_NRrep,nrow = 4,ncol = 1)
+
 
 ```
 
 ```{r Fig S12 GO Cormotif, echo=FALSE, fig.height=15, fig.width=8, out.height="80%"}
 motif_list_GO <- readRDS("output/supplementary_motif_list_GO.RDS")
 list2env(motif_list_GO,envir=.GlobalEnv)
-
-GOmotiflong <-list("Early Response"=ER3f,"Late Response"=LR3f,"Time-Independent\nResponse"=TI3f, "No Response"=NR1f)
+motifcol <-  c("#F8766D", "#00BFC4","#7CAE00",  "#C77CFF")
+GOmotiflong <-list("EAR"=ER3f,"ESR"=TI3f,"LR"=LR3f, "NR"=NR1f)
 GOBPlong <- data.table::rbindlist(GOmotiflong, idcol = "motif")
-
-
-
-p <- GOBPlong %>% 
-  mutate(motif=fct_inorder(motif)) %>% 
-  ggplot(., aes(x = log_val, y= reorder(term_name, order_val, desc=FALSE),col=motif)) +
-  geom_point(aes(size = intersection_size, col=motif)) +
-  scale_y_discrete(labels = scales::wrap_format(40))+
+p <- GOBPlong %>% mutate(motif=factor(motif,levels =c("EAR","ESR","LR","NR"))) %>% 
+  
+ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=FALSE),col=motif)) +
+    geom_point(aes(size = intersection_size, col=motif)) +
+  scale_y_discrete(labels = scales::label_wrap(40))+
   facet_grid(motif~., scales = "free_y")+
-  guides(col=guide_legend(title="Motif group"), 
-         size=guide_legend(title = "# of intersected \n terms"))+
-  ggtitle('Top 10 enriched GO:BP terms for each motif') +
-  xlab(expression("-log"[10]~"(p-value)"))+
-  ylab("GO:BP term")+
-  theme_bw()+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+  scale_color_discrete(type=motifcol)+
+    guides(col=guide_legend(title="Motif"), 
+           size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('Top 10 enriched GO:BP terms for each motif') +
+     xlab(expression("-log"[10]~"(p-value)"))+
+      ylab("GO:BP term")+
+      theme_bw()+
+ theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = "black"),
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 8, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 
-#https://stackoverflow.com/questions/41631806/change-facet-label-text-and-background-colour/60046113#60046113
-
-
 g <- ggplot_gtable(ggplot_build(p))
 stripr <- which(grepl('strip-r', g$layout$name))
-fills <- c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF")
+fills <- c("#F8766D", "#00BFC4","#7CAE00",  "#C77CFF")
 k <- 1
 for (i in stripr) {
   j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
-# print(grid::grid.draw(g))
+
 grid.draw(g)
 
 ```
 
+### Fig. S15
+```{r S15}
+gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
+GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 
+for (gene in GOI_genelist$entrezgene_id){
+    gene_plot <- gene_corr_frame %>% 
+      dplyr::filter(entrezgene_id == gene) %>%
+      ggplot(., aes(x=tox, y=counts))+
+      geom_point(aes(col=indv))+
+      geom_smooth(method="lm")+
+      facet_wrap(hgnc_symbol~Drug, scales="free")+
+      theme_classic()+
+      xlab("Toxicity score") +
+      ylab(expression("counts in log"[2]*" cpm")) +
+      ggtitle(expression(paste("Correlation between counts and toxicity by drug")))+
+      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
+      scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
+      stat_cor(method="pearson",
+               cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01, 
+               size = 3)+
+      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
+            axis.title = element_text(size = 15, color = "black"),
+            axis.ticks = element_line(size = 1.5),
+            axis.text = element_text(size = 8, color = "black", angle = 20),
+            strip.text.x = element_text(size = 10, color = "black", face = "italic"))
+   print(gene_plot)
+   
+ }
+
+
+```
