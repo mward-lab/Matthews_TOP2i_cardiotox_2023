@@ -79,8 +79,7 @@ lvl_order <- c('1','2','3','4','5','6')
 intervals <- rbindlist(conf_int,idcol="trt")
 drug_list <- c("DNR","DOX","EPI","MTX", "TRZ", "VEH")
 GeomRibbon$handle_na <- function(data, params) {  data }
-intervals %>% 
-  separate("trt", into=c("sDrug",NA))
+
 # brewer.pal(n=6,"Dark2")
 # [1] "#1B9E77" "#D95F02" "#7570B3" "#E7298A" "#66A61E" "#E6AB02"
 # > display.brewer.pal(n=6,"Dark2")
