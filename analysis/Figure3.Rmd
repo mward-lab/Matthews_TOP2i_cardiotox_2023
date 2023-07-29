@@ -10,8 +10,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-	echo = TRUE,
+knitr::opts_chunk$set(dev = c('svg','png'),
+	echo = FALSE,
 	message = FALSE,
 	warning = FALSE
 )
