@@ -48,45 +48,6 @@ Gene expression responses to AC treatments converge over time
 ## A. Correlation of all expressed FC values
 
 
-```{r DEG, eval=FALSE, fig.height=4, fig.width=6, include=FALSE}
-drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
-drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
-
-toplistall %>%
-    mutate(id=factor(id, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ','VEH'))) %>% 
-  mutate(time= factor(time,
-     levels=c("3_hours","24_hours"),
-              label=c("3 hours","24 hours"))) %>%
-  group_by(time, id) %>% 
-  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
-  count(sigcount) %>% 
-  pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %>% 
-  mutate(prop = sig/(sig+notsig)*100) %>% 
-  mutate(prop=if_else(is.na(prop),0,prop)) %>% 
-  ggplot(., aes(x=id, y= prop))+
-  geom_col(aes(fill=id))+
-  geom_text(aes(label = sprintf("%.2f",prop)),
-            position=position_dodge(0.9),vjust=-.2 )+
-  scale_fill_manual(values =drug_pal_fact)+
-  guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
-  theme_bw()+
-  xlab("")+
-  ylab("Percentage of expressed genes")+
-  theme_bw()+
-  facet_wrap(~time)+
-  ggtitle("Percent DEGs (adj. P value <0.05)")+
-  scale_y_continuous(expand=expansion(c(0.02,.2)))+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text.x = element_text(size = 8, color = "white", angle = 0),
-        axis.text.y = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
-ggsave("output/Figures/Percent_DEG.eps",width = 6, height =4, units = "in")
-```
 
 
 ```{r corrFC, fig.height=5,fig.width=7}
