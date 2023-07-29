@@ -1641,7 +1641,7 @@ densityDOX3sp <-
    geom_density(aes(fill=id, alpha= 0.8))+
   fill_palette(palette = drug_palc)+
   theme_bw()+
-  ylab("DOX-only 3 hour DEGs\n n = 0")+
+  ylab("DOX\n n = 0")+
   guides(fill=FALSE,alpha=FALSE)+
   theme(
       axis.title = element_text(size = 14, color = "black"), 
@@ -1715,7 +1715,7 @@ Dox3Bplot <- toplist3hr %>%
   ggplot(., aes(x= treatment, y=logFC))+
   geom_boxplot(aes(fill=id))+
   xlab(" ")+
-  ylab("DOX specific adj.P.V <0.01\n n = 0")+
+  ylab("DOX n = 0")+
   theme_classic()+
   fill_palette(palette = drug_palc)+
  guides(fill= "none")+
@@ -1809,7 +1809,7 @@ Mtx3genesp_example <- cpm_boxplot_time(cpmcounts, "3h",GOI=284306,"Dark2",drug_p
 ```
 
 #### grid 3 hour
-```{r 3hour grid,eval=TRUE,echo=FALSE, fig.width=14, fig.height=8.5}
+```{r 3hour grid,eval=TRUE,echo=FALSE, fig.width=12, fig.height=8.5}
 
 
 
@@ -1825,5 +1825,5 @@ Doxo3pg <- plot_grid(densityDOX3sp, Dox3Bplot, Dox3genesp_example, nrow = 1, rel
 Epi3pg <- plot_grid(densityEPI3sp, Epi3Bplot, Epi3genesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
 allfinal3hour <- plot_grid(Doxo3pg,Epi3pg,Daun3pg,mito3pg,nrow=4, rel_heights = c(0.5,1,1,1))
 allfinal3hour
-
+saveRDS(allfinal3hour,"data/allfinal3hour.RDS")
 ```
