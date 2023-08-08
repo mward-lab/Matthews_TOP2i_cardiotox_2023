@@ -3,14 +3,17 @@ title: "Supplementary figures"
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
-  html_document: 
-    df_print: default
+  pdf_document: default
   keep_md: yes
+  html_document:
+    df_print: default
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE,
-                      dev = c('gridSVG','png'))
+                      dev = c('png','svglite'))
+options(knitr.svg.object = TRUE)
 ```
 
 ```{r packages, message=FALSE, warning=FALSE, error=TRUE}
@@ -26,7 +29,7 @@ library(ComplexHeatmap)
 library(gridExtra)
 library(cowplot)
 library(drc)
-library(sjmisc)
+
 library(kableExtra)
 library(broom)
 library(ggVennDiagram)
@@ -521,11 +524,13 @@ toplistall %>%
         axis.text.x = element_text(size = 8, color = "white", angle = 0),
         axis.text.y = element_text(size = 8, color = "black", angle = 0),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
 ggsave("output/Figures/Percent_DEG-2.eps",width = 6, height =4, units = "in")
 ```
 
 ### Fig. S10
-```{r Fig S10 Drug specific genes, fig.height=8.5, fig.width=12, message=FALSE, warning=FALSE}
+```{r Fig S10 Drug specific genes, eval=FALSE, fig.height=8.5, fig.width=12, message=FALSE, warning=FALSE, include=FALSE}
 
 supp10_24hlist <- readRDS("data/supp10_24hlist.RDS")
 list2env(supp10_24hlist, envir = .GlobalEnv)
@@ -697,7 +702,7 @@ plot_grid(DNRvenn,DOXvenn,EPIvenn,MTXvenn,nrow=2, ncol = 2)
 ```
 
 ### Fig. S12
-```{r Fig S12 Cormotif}
+```{r Fig S12 Cormotif, eval=FALSE, include=FALSE}
 
 cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
 Cormotif::plotIC(cormotif_initial)
@@ -728,7 +733,7 @@ plot_grid(motif_ERrep,motif_TIrep,motif_LRrep,motif_NRrep,nrow = 4,ncol = 1)
 
 ```
 
-```{r Fig S12 GO Cormotif, echo=FALSE, fig.height=14, fig.width=8, out.height="80%"}
+```{r Fig S13 GO Cormotif, echo=FALSE, fig.height=14, fig.width=8, out.height="80%"}
 motif_list_GO <- readRDS("output/supplementary_motif_list_GO.RDS")
 list2env(motif_list_GO,envir=.GlobalEnv)
 motifcol <-  c("#F8766D", "#00BFC4","#7CAE00",  "#C77CFF")
@@ -769,7 +774,7 @@ grid.draw(g)
 ```
 
 ### Fig. S15
-```{r S15}
+```{r Fig S15,fig.height=3, fig.width=14}
 gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
 GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 
@@ -779,26 +784,27 @@ for (gene in GOI_genelist$entrezgene_id){
       ggplot(., aes(x=tox, y=counts))+
       geom_point(aes(col=indv))+
       geom_smooth(method="lm")+
-      facet_wrap(hgnc_symbol~Drug, scales="free")+
+      # scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
+      facet_wrap(hgnc_symbol~Drug, scales="free", nrow = 1)+
       theme_classic()+
       xlab("Toxicity score") +
-      ylab(expression("counts in log"[2]*" cpm")) +
-      ggtitle(expression(paste("Correlation between counts and toxicity by drug")))+
-      scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
-      stat_cor(method="pearson",
+      ylab(expression("counts in log "[2]*" cpm")) +
+      # ggtitle(expression(paste("Correlation between counts and toxicity by drug")))+
+      scale_color_brewer(palette = "Dark2")+#,name = "Individual", label = c("1","2","3","4","5","6"))+
+      guides(color="none")+
+      ggpubr::stat_cor(method="pearson",
                cor.coef.name="rho",
                aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
                color = "red",
                label.x.npc = 0.01,
                label.y.npc=0.01, 
                size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 15, color = "black"),
+      theme(plot.title = element_text(hjust = 0.5,face = "bold"),
+            axis.title = element_text(size = 12, color = "black"),
             axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle = 20),
-            strip.text.x = element_text(size = 10, color = "black", face = "italic"))
-   print(gene_plot)
+            axis.text = element_text(size = 8, color = "black", angle =0),
+            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
+   plot(gene_plot)
    
  }
 
