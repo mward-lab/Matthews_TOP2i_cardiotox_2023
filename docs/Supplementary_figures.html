@@ -11,7 +11,7 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-28" />
+<meta name="date" content="2023-08-08" />
 
 <title>Supplementary figures</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Supplementary figures</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-28</h4>
+<h4 class="date">2023-08-08</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-28
+<strong>Last updated:</strong> 2023-08-08
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeb2ef59a34a9946b525a05c75e40be37101473870targetblankb2ef59aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree04026cea6afd636419951f1510b0fcca4d60df34targetblank04026cea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/b2ef59a34a9946b525a05c75e40be37101473870" target="_blank">b2ef59a</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/04026cea6afd636419951f1510b0fcca4d60df34" target="_blank">04026ce</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeb2ef59a34a9946b525a05c75e40be37101473870targetblankb2ef59aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree04026cea6afd636419951f1510b0fcca4d60df34targetblank04026cea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/b2ef59a34a9946b525a05c75e40be37101473870" target="_blank">b2ef59a</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/04026cea6afd636419951f1510b0fcca4d60df34" target="_blank">04026ce</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -684,6 +684,8 @@ Ignored files:
     Ignored:    data/plan2plot.png
     Ignored:    data/plot_intv_list.RDS
     Ignored:    data/plot_list_DRC.RDS
+    Ignored:    data/qval24hr.RDS
+    Ignored:    data/qval3hr.RDS
     Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
@@ -701,6 +703,8 @@ Ignored files:
     Ignored:    data/siglist_final.RDS
     Ignored:    data/siglist_old.RDS
     Ignored:    data/slope_table.csv
+    Ignored:    data/supp10_24hlist.RDS
+    Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
     Ignored:    data/table3a.omar
@@ -770,6 +774,7 @@ Untracked files:
     Untracked:  reneebasecode.R
 
 Unstaged changes:
+    Modified:   analysis/Knowles2019.Rmd
     Modified:   output/TNNI_LDH_RNAnormlist.txt
     Modified:   output/daplot.RDS
     Modified:   output/dxplot.RDS
@@ -824,6 +829,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/04026cea6afd636419951f1510b0fcca4d60df34/analysis/Supplementary_figures.Rmd" target="_blank">04026ce</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-08-08
+</td>
+<td>
+adding svglite
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b0c1fb85df3c903a9d7d0a124e758ef642c1726d/analysis/Supplementary_figures.Rmd" target="_blank">b0c1fb8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-08-01
+</td>
+<td>
+updated code but not published yet
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/fa4c610dc54bb403987e8af13f1573f060f25e51/docs/Supplementary_figures.html" target="_blank">fa4c610</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1024,11 +1080,61 @@ library(rstatix)
 library(zoo)
 library(ggsignif)
 library(RColorBrewer)
-
+library(grid)
+library(scales)
 library(ComplexHeatmap)
 library(gridExtra)
 library(cowplot)
-library(drc)</code></pre>
+library(drc)
+
+library(kableExtra)</code></pre>
+<pre><code>Error: package or namespace load failed for &#39;kableExtra&#39;:
+ .onLoad failed in loadNamespace() for &#39;kableExtra&#39;, details:
+  call: !is.null(rmarkdown::metadata$output) &amp;&amp; rmarkdown::metadata$output %in% 
+  error: &#39;length = 3&#39; in coercion to &#39;logical(1)&#39;</code></pre>
+<pre class="r"><code>library(broom)
+library(ggVennDiagram)</code></pre>
+<pre class="r"><code>cpm_boxplot_time &lt;-function(cpmcounts,timex, GOI,brewer_palette, fill_colors, ylab) {
+  ##GOI needs to be ENTREZID
+  
+  
+  df &lt;- cpmcounts
+    df_plot &lt;- df %&gt;% 
+      dplyr::filter(rownames(.)==GOI) %&gt;%
+      pivot_longer(everything(),
+                   names_to = &quot;treatment&quot;,
+                   values_to = &quot;counts&quot;) %&gt;%
+      separate(treatment, c(&quot;drug&quot;,&quot;indv&quot;,&quot;time&quot;)) %&gt;%
+      dplyr::filter(time == paste(timex)) %&gt;% 
+      mutate(time=factor(time, levels =c(&quot;3h&quot;, &quot;24h&quot;), labels=c(&quot;3 hours&quot;, &quot;24 hours&quot;))) %&gt;%
+      
+      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %&gt;%
+      mutate(drug =case_match(drug, &quot;Da&quot;~&quot;DNR&quot;,
+                            &quot;Do&quot;~&quot;DOX&quot;,
+                            &quot;Ep&quot;~&quot;EPI&quot;,
+                            &quot;Mi&quot;~&quot;MTX&quot;,
+                            &quot;Tr&quot;~&quot;TRZ&quot;,
+                            &quot;Ve&quot;~&quot;VEH&quot;, .default = drug)) %&gt;% 
+      mutate(drug=factor(drug, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;)))
+    plot &lt;- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
+      geom_boxplot(position=&quot;identity&quot;,aes(fill=drug))+
+      geom_point(aes(col=indv, size=1.5, alpha=0.5))+
+      guides(alpha= &quot;none&quot;, size= &quot;none&quot;)+
+      scale_color_brewer(palette = brewer_palette, guide = &quot;none&quot;)+
+      scale_fill_manual(values=fill_colors)+
+      # try(facet_wrap(&quot;time&quot;, nrow=1, ncol=2))+
+      theme_bw()+
+      ylab(ylab)+
+      xlab(&quot;&quot;)+
+      theme(strip.background = element_rect(fill = &quot;white&quot;,linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=10,hjust = 0.5,face=&quot;bold&quot;),
+          axis.title = element_text(size = 10, color = &quot;black&quot;),
+          axis.ticks = element_line(linewidth = 1.0),
+          axis.line = element_line(linewidth = 1.0),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, &quot;pt&quot;),face = &quot;bold&quot;))
+    print(plot)
+}</code></pre>
 <div id="fig.-s1" class="section level3">
 <h3>Fig. S1</h3>
 <pre class="r"><code>ctnnt &lt;- read.csv(&quot;data/ctnnt_results.txt&quot;, row.names = 1)
@@ -1057,12 +1163,12 @@ coord_cartesian(ylim = c(0,105))+ ##set those limits
        panel.grid.major = element_line(colour = &#39;grey&#39;),
        panel.border=element_rect(fill = NA, size = 3),
        plot.subtitle=element_text(size=18, hjust=0.5, face=&quot;italic&quot;, color=&quot;black&quot;)) </code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S1%20troponinT-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S1%20troponinT-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># ctnnt %&gt;%
-#   summary() %&gt;% 
-#   kable(., caption= &quot;Stats summary of cTNNT+ FACs readings&quot;) %&gt;% 
-#   kable_paper(&quot;striped&quot;, full_width = FALSE) %&gt;%  
-#   kable_styling(full_width = FALSE,font_size = 18) #%&gt;% 
+#   summary() %&gt;%
+#   kable(., caption= &quot;Stats summary of cTNNT+ FACs readings&quot;) %&gt;%
+#   kable_paper(&quot;striped&quot;, full_width = FALSE) #%&gt;%
+#   kable_styling(full_width = FALSE,font_size = 18) #%&gt;%
 #   # scroll_box(width = &quot;60%&quot;, height = &quot;400px&quot;)</code></pre>
 </div>
 <div id="fig.-s2" class="section level3">
@@ -1076,7 +1182,7 @@ doubl_plot &lt;- data.frame(&quot;ind3a&quot;, &quot;ind3b&quot;, &quot;ind5a&qu
 lvl_order &lt;- c(&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;)
 intervals &lt;- rbindlist(conf_int,idcol=&quot;trt&quot;)
 drug_list &lt;- c(&quot;DNR&quot;,&quot;DOX&quot;,&quot;EPI&quot;,&quot;MTX&quot;, &quot;TRZ&quot;, &quot;VEH&quot;)
-GeomRibbon$handle_na &lt;- function(data, params) {  data }
+# GeomRibbon$handle_na &lt;- function(data, params) {  data }
 
 # brewer.pal(n=6,&quot;Dark2&quot;)
 # [1] &quot;#1B9E77&quot; &quot;#D95F02&quot; &quot;#7570B3&quot; &quot;#E7298A&quot; &quot;#66A61E&quot; &quot;#E6AB02&quot;
@@ -1111,7 +1217,8 @@ for (each in 1:6){
                          fill=indv),
                          alpha = 0.1, 
                          color = &quot;transparent&quot;)+
-         ylim(-.4,1.5)+
+         # ylim(-.2,1.5)+
+        coord_cartesian(ylim = c(-0.1, 1.5)) +
          scale_linetype_manual(values = c(&quot;dotted&quot;,&quot;solid&quot;,&quot;dotted&quot;,&quot;solid&quot;),
                                name=&quot;replicate&quot;,
                                labels=c(&quot;Rep 1&quot;, &quot;Rep 2&quot;,&quot;Rep 1&quot;, &quot;Rep 2&quot;))+
@@ -1126,111 +1233,78 @@ for (each in 1:6){
       theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;),
             axis.title=element_text(size=10),
             axis.ticks=element_line(linewidth = 2),
-            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            axis.text=element_text(size=10, face = &quot;bold&quot;, color=&quot;black&quot;),
             panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
             panel.border=element_rect(fill = NA, linewidth = 2),
             plot.background = element_rect(fill = &quot;white&quot;, colour = NA))
        
   print(f)
 } </code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig.%20S2%20DRC%20reps-1.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig.%20S2%20DRC%20reps-2.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig.%20S2%20DRC%20reps-3.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig.%20S2%20DRC%20reps-4.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig.%20S2%20DRC%20reps-5.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig.%20S2%20DRC%20reps-6.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S2%20DRC%20reps-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S2%20DRC%20reps-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S2%20DRC%20reps-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S2%20DRC%20reps-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S2%20DRC%20reps-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S2%20DRC%20reps-6.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s3" class="section level3">
 <h3>Fig. S3</h3>
 <pre class="r"><code>viability &lt;- readRDS(&quot;data/viability.RDS&quot;)
 norm_LDH48 &lt;- readRDS(&quot;data/supp_normLDH48.RDS&quot;)
 viability %&gt;% 
-  full_join(., norm_LDH48,by = c(&quot;indv&quot;,&quot;Drug&quot;,&quot;Conc&quot;)) %&gt;% 
+ 
+  left_join(., norm_LDH48,by = c(&quot;indv&quot;,&quot;Drug&quot;,&quot;Conc&quot;)) %&gt;% 
   ggplot(., aes(x=per.live, y=ldh))+
   geom_point(aes(col=indv))+
   geom_smooth(method=&quot;lm&quot;)+
-  facet_wrap(&quot;Drug&quot;)+
+  facet_wrap(~Drug)+
   theme_bw()+
   xlab(&quot;Average viability of cardiomyocytes/100&quot;) +
   ylab(&quot;Average LDH&quot;) +
   ggtitle(&quot;Cell stress and viability correlation&quot;)+
   scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
-  stat_cor(method=&quot;pearson&quot;,aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+  ggpubr::stat_cor(method=&quot;pearson&quot;,
+                   aes(label = paste(..r.label.., ..p.label.., sep = &quot;*`,`~&quot;)),
            color = &quot;red&quot;)+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
-        axis.title = element_text(size = 15, color = &quot;black&quot;),
+  
+  theme(plot.title = element_text(size = rel(1), hjust = 0.5,face = &quot;bold&quot;),
+        axis.title = element_text(size = 12, color = &quot;black&quot;),
         axis.ticks = element_line(size = 1.5),
-        axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
-        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
-        strip.background = element_rect(fill = &quot;white&quot;)) </code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S3-1.svg" width="672" style="display: block; margin: auto;" /></p>
+        axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.background = element_rect(fill = &quot;transparent&quot;)) </code></pre>
 </div>
 <div id="fig.-s4" class="section level3">
 <h3>Fig. S4</h3>
 <pre class="r"><code>viabilitytable &lt;- readRDS(&quot;data/averageviabilitytable.RDS&quot;)
+
+
 viabilitytable %&gt;% 
   ungroup() %&gt;% 
-    mutate(indv=substr(SampleID,4,4)) %&gt;% 
-     mutate(indv=factor(indv, levels= c(&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;))) %&gt;% 
-    filter(Conc ==0.5) %&gt;%
-    # mutate(Conc= factor(as.numeric(Conc))) %&gt;% 
-    group_by(indv,sDrug,Conc) %&gt;% 
-    dplyr::summarize(Viability=mean(Mean)) %&gt;%
-    ungroup() %&gt;% 
-    ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
-    geom_boxplot(position=&quot;dodge&quot;, outlier.colour = &quot;transparent&quot;,
+  mutate(indv=substr(SampleID,4,4)) %&gt;% 
+  mutate(indv=factor(indv, levels= c(&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;))) %&gt;% 
+  dplyr::filter(Conc &lt;5) %&gt;%
+  mutate(Conc= factor(as.numeric(Conc))) %&gt;%
+  group_by(indv,sDrug,Conc) %&gt;% 
+  dplyr::summarize(Viability=mean(Mean)) %&gt;%
+  ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
+  geom_boxplot(position=&quot;dodge&quot;, 
                  aes(fill=sDrug))+
-    geom_point(aes(color=indv))+
-    guides(alpha = &quot;none&quot;)+
-    ylim(0,150.5)+
-    scale_color_brewer(palette = &quot;Dark2&quot;,
-                       guide=&quot;legend&quot;,
-                       name =&quot;Individual&quot;, 
-                       labels(c(1,2,3,4,5,6)))+
-    scale_fill_manual(values=drug_pal_fact, name =&quot;Treatment&quot;)+
-    theme_classic() +
-  xlab(&quot;&quot;)+
-    # geom_hline(yintercept = 1,lty = 4)+
-    ylab(&quot;% Viability&quot;) +
-    facet_wrap(~Conc)+ 
-    ggtitle(expression(paste(&quot;Viablity across treatment at 0.5&quot;, mu, &quot;M at 48 hours&quot;)))+
-    theme(axis.title=element_text(size=10),
-          axis.ticks=element_line(size =2),
-          axis.text.y=element_text(size=9, face = &quot;bold&quot;),
-          axis.text.x=element_blank(),
-          panel.grid.major = element_line(colour = &#39;darkgrey&#39;),
-          panel.border=element_rect(fill = NA, size = 2),
-          plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S4-1.svg" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>viabilitytable %&gt;% 
-  ungroup() %&gt;% 
-    mutate(indv=substr(SampleID,4,4)) %&gt;% 
-     mutate(indv=factor(indv, levels= c(&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;))) %&gt;% 
-    filter(Conc &lt;5) %&gt;%
-    mutate(Conc= factor(as.numeric(Conc))) %&gt;%
-    group_by(indv,sDrug,Conc) %&gt;% 
-    dplyr::summarize(Viability=mean(Mean)) %&gt;%
-    ungroup() %&gt;% 
-    ggplot(.,  aes(x=sDrug, y= Viability*100 )) +
-    geom_boxplot(position=&quot;dodge&quot;, outlier.colour = &quot;transparent&quot;,
-                 aes(fill=sDrug))+
-    geom_point(aes(color=indv))+
-    guides(alpha = &quot;none&quot;)+
-    ylim(0,150.5)+
-    scale_color_brewer(palette = &quot;Dark2&quot;,
+  geom_point(aes(color=indv))+
+  guides(alpha = &quot;none&quot;)+
+  ylim(0,150.5)+
+  scale_color_brewer(palette = &quot;Dark2&quot;,
                        guide=&quot;legend&quot;,
                        name =&quot;individual&quot;, 
                        labels(c(1,2,3,4,5,6)))+
-    scale_fill_manual(values=drug_pal_fact, name =&quot;treatment&quot;)+
-    theme_classic() +
+  scale_fill_manual(values=drug_pal_fact, name =&quot;treatment&quot;)+
+  theme_classic() +
   xlab(&quot;&quot;)+
-    # geom_hline(yintercept = 1,lty = 4)+
-    ylab(&quot;% Viability&quot;) +
-    facet_wrap(~Conc)+ 
-    # ggtitle(expression(paste(&quot;Viablity across treatment at 0.5&quot;, mu, &quot;M at 48 hours&quot;)))+
-    theme(axis.title=element_text(size=10),
-          axis.ticks=element_line(size =2),
-          axis.text.y=element_text(size=9, face = &quot;bold&quot;),
-          axis.text.x=element_blank(),
-          panel.grid.major = element_line(colour = &#39;darkgrey&#39;),
-          panel.border=element_rect(fill = NA, size = 2),
-          plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S4-2.svg" width="672" style="display: block; margin: auto;" /></p>
+  ylab(&quot;% Viability&quot;) +
+  facet_wrap(~Conc)+ 
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(size =2),
+        axis.text.y=element_text(size=9, face = &quot;bold&quot;),
+        axis.text.x=element_blank(),
+        panel.grid.major = element_line(colour = &#39;darkgrey&#39;),
+        panel.border=element_rect(fill = NA, size = 2),
+        plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S4-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s5" class="section level3">
 <h3>Fig. S5</h3>
@@ -1238,20 +1312,9 @@ viabilitytable %&gt;%
 library(edgeR)
 library(cowplot)
 filcpm_matrix &lt;- readRDS(&quot;data/filcpm_counts.RDS&quot;)
-colnames(filcpm_matrix)</code></pre>
-<pre><code> [1] &quot;Da.1.3h&quot;  &quot;Do.1.3h&quot;  &quot;Ep.1.3h&quot;  &quot;Mi.1.3h&quot;  &quot;Tr.1.3h&quot;  &quot;Ve.1.3h&quot; 
- [7] &quot;Da.1.24h&quot; &quot;Do.1.24h&quot; &quot;Ep.1.24h&quot; &quot;Mi.1.24h&quot; &quot;Tr.1.24h&quot; &quot;Ve.1.24h&quot;
-[13] &quot;Da.2.3h&quot;  &quot;Do.2.3h&quot;  &quot;Ep.2.3h&quot;  &quot;Mi.2.3h&quot;  &quot;Tr.2.3h&quot;  &quot;Ve.2.3h&quot; 
-[19] &quot;Da.2.24h&quot; &quot;Do.2.24h&quot; &quot;Ep.2.24h&quot; &quot;Mi.2.24h&quot; &quot;Tr.2.24h&quot; &quot;Ve.2.24h&quot;
-[25] &quot;Da.3.3h&quot;  &quot;Do.3.3h&quot;  &quot;Ep.3.3h&quot;  &quot;Mi.3.3h&quot;  &quot;Tr.3.3h&quot;  &quot;Ve.3.3h&quot; 
-[31] &quot;Da.3.24h&quot; &quot;Do.3.24h&quot; &quot;Ep.3.24h&quot; &quot;Mi.3.24h&quot; &quot;Tr.3.24h&quot; &quot;Ve.3.24h&quot;
-[37] &quot;Da.4.3h&quot;  &quot;Do.4.3h&quot;  &quot;Ep.4.3h&quot;  &quot;Mi.4.3h&quot;  &quot;Tr.4.3h&quot;  &quot;Ve.4.3h&quot; 
-[43] &quot;Da.4.24h&quot; &quot;Do.4.24h&quot; &quot;Ep.4.24h&quot; &quot;Mi.4.24h&quot; &quot;Tr.4.24h&quot; &quot;Ve.4.24h&quot;
-[49] &quot;Da.5.3h&quot;  &quot;Do.5.3h&quot;  &quot;Ep.5.3h&quot;  &quot;Mi.5.3h&quot;  &quot;Tr.5.3h&quot;  &quot;Ve.5.3h&quot; 
-[55] &quot;Da.5.24h&quot; &quot;Do.5.24h&quot; &quot;Ep.5.24h&quot; &quot;Mi.5.24h&quot; &quot;Tr.5.24h&quot; &quot;Ve.5.24h&quot;
-[61] &quot;Da.6.3h&quot;  &quot;Do.6.3h&quot;  &quot;Ep.6.3h&quot;  &quot;Mi.6.3h&quot;  &quot;Tr.6.3h&quot;  &quot;Ve.6.3h&quot; 
-[67] &quot;Da.6.24h&quot; &quot;Do.6.24h&quot; &quot;Ep.6.24h&quot; &quot;Mi.6.24h&quot; &quot;Tr.6.24h&quot; &quot;Ve.6.24h&quot;</code></pre>
-<pre class="r"><code>x &lt;- readRDS(&quot;data/filtermatrix_x.RDS&quot;)
+
+
+x &lt;- readRDS(&quot;data/filtermatrix_x.RDS&quot;)
 x$samples %&gt;% 
   mutate(drug=case_match(drug, &quot;Daunorubicin&quot;~&quot;DNR&quot;,
                         &quot;Doxorubicin&quot;~&quot;DOX&quot;,
@@ -1274,7 +1337,7 @@ x$samples %&gt;%
         axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 1, vjust = 0.2),
         strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
         strip.background = element_rect(fill = &quot;white&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>seq_info &lt;-read.csv(&quot;output/sequencing_info.txt&quot;, row.names = 1)
 seq_info %&gt;% 
    
@@ -1301,7 +1364,7 @@ seq_info %&gt;%
         axis.text.x = element_text(size =10, color = &quot;white&quot;),
         #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
         strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-2.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>seq_info %&gt;% 
   mutate(drug=case_match(drug, &quot;Daunorubicin&quot;~&quot;DNR&quot;,
                         &quot;Doxorubicin&quot;~&quot;DOX&quot;,
@@ -1330,7 +1393,7 @@ seq_info %&gt;%
         axis.text.x = element_text(size =6, color = &quot;black&quot;, angle = 90, hjust = 1, vjust = 0.2),
         #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
         strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-3.svg" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S5-3.png" width="672" style="display: block; margin: auto;" />
 ### Fig. S6</p>
 <pre class="r"><code>filcpm_matrix &lt;- readRDS(&quot;data/filcpm_counts.RDS&quot;)
 
@@ -1366,8 +1429,7 @@ ComplexHeatmap::pheatmap(mcor,
                          treeheight_row=25,
                          fontsize_col = 8,
                          treeheight_col = 20)</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S6-1.svg" width="960" style="display: block; margin: auto;" />
-heatmap is pending a few changes! just not my focus today.</p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S6-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s7" class="section level3">
 <h3>Fig. S7</h3>
@@ -1410,13 +1472,13 @@ for (f in facs) {
   f_v_pc2 &lt;- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)+theme_bw())
   grid.arrange(f_v_pc1, f_v_pc2, ncol = 2, top = names(facs)[which(facs == f)])
 }</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S7-1.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-2.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-3.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S7-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S7-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s8" class="section level3">
 <h3>Fig. S8</h3>
 <pre class="r"><code>Volcanoplots &lt;- readRDS(&quot;output/Volcanoplot_10.RDS&quot;)
 Volcanoplots</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S8%20volcano-1.svg" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S8%20volcano-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s9" class="section level3">
 <h3>Fig. S9</h3>
@@ -1426,7 +1488,7 @@ toplistall %&gt;%
   mutate(id=factor(id, levels = c(&#39;DOX&#39;, &#39;EPI&#39;, &#39;DNR&#39;, &#39;MTX&#39;, &#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
   mutate(time= factor(time,
      levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;),
-              label=c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;%
+              labels=c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;%
   ggplot(., aes(x=id, y=logFC))+
   geom_boxplot(aes(fill=id))+
   ggpubr::fill_palette(palette =drug_pal_fact)+
@@ -1440,19 +1502,19 @@ toplistall %&gt;%
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = &quot;black&quot;),
         # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = &quot;transparent&quot;),
         axis.text.x = element_blank(),
         strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S9-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># drug_palNoVeh &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;)
 
-
+ggsave(&quot;output/Figures/Percent_DEG-1.eps&quot;,width = 6, height =4, units = &quot;in&quot;)
 toplistall %&gt;%
     mutate(id=factor(id, levels = c(&#39;DOX&#39;, &#39;EPI&#39;, &#39;DNR&#39;, &#39;MTX&#39;, &#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
   mutate(time= factor(time,
      levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;),
-              label=c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;%
+              labels=c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;%
   group_by(time, id) %&gt;% 
   mutate(sigcount = if_else(adj.P.Val &lt; 0.05,&#39;sig&#39;,&#39;notsig&#39;))%&gt;%
   count(sigcount) %&gt;% 
@@ -1465,7 +1527,7 @@ toplistall %&gt;%
             position=position_dodge(0.9),vjust=-.2 )+
   scale_fill_manual(values =drug_pal_fact)+
   guides(fill=guide_legend(title = &quot;Treatment&quot;))+
-  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
+  facet_wrap(~time)+#labeller = (time = facettimelabel) )+
   theme_bw()+
   xlab(&quot;&quot;)+
   ylab(&quot;Percentage of expressed genes&quot;)+
@@ -1475,23 +1537,19 @@ toplistall %&gt;%
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
         axis.title = element_text(size = 15, color = &quot;black&quot;),
         # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
         strip.background = element_rect(fill = &quot;transparent&quot;),
         axis.text.x = element_text(size = 8, color = &quot;white&quot;, angle = 0),
         axis.text.y = element_text(size = 8, color = &quot;black&quot;, angle = 0),
         strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S9-2.svg" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggsave(&quot;output/Figures/Percent_DEG.eps&quot;,width = 6, height =4, units = &quot;in&quot;)</code></pre>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;output/Figures/Percent_DEG-2.eps&quot;,width = 6, height =4, units = &quot;in&quot;)</code></pre>
 </div>
 <div id="fig.-s10" class="section level3">
 <h3>Fig. S10</h3>
-<pre class="r"><code>allfinal &lt;- readRDS(&quot;output/allfinal_sup10.RDS&quot;) 
-allfinal</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S10%20Drug-specific%20genes%20and%20pathways-1.svg" width="1344" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>allfinal3hour &lt;- readRDS(&quot;data/allfinal3hour.RDS&quot;)
-allfinal3hour</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S10%20Drug-specific%20genes%20and%20pathways-2.svg" width="1344" style="display: block; margin: auto;" />
-### Fig S10 Drug Specific Pathways</p>
+</div>
+<div id="fig-s10-drug-specific-pathways" class="section level3">
+<h3>Fig S10 Drug Specific Pathways</h3>
 <pre class="r"><code>gostres3Dnrdeg_sp &lt;- readRDS(&quot;data/DEG-GO/gostres3Dnrdeg_sp.RDS&quot;)
 
 Dnr3_sp_DEGtable &lt;- gostres3Dnrdeg_sp$result %&gt;%
@@ -1519,7 +1577,7 @@ Dnr3_sp_DEGtable  %&gt;%
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 10, color = &quot;black&quot;, angle = 0),
         strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/FigS12%203h-%20drug%20spec%20path-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S10%203h%20drug%20spec%20path-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>gostres3Mtxdeg_sp &lt;- readRDS(&quot;data/DEG-GO/gostres3Mtxdeg_sp.RDS&quot;)
 Mtx3_sp_DEGtable &lt;- gostres3Mtxdeg_sp$result %&gt;%
   dplyr::select(c(source, term_id,term_name,intersection_size, 
@@ -1545,7 +1603,7 @@ Mtx3_sp_DEGtable  %&gt;%
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 10, color = &quot;black&quot;, angle = 0),
         strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/FigS12%203h-%20drug%20spec%20path-2.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S10%203h%20drug%20spec%20path-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>DX_sp_DEGgostres &lt;- readRDS(&quot;data/DEG-GO/gostresDOXdeg_sp.RDS&quot;)
 MT_sp_DEGgostres &lt;- readRDS(&quot;data/DEG-GO/gostresMTXdeg_sp.RDS&quot;)
 
@@ -1577,7 +1635,7 @@ DX_sp_DEGtable  %&gt;%
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 10, color = &quot;black&quot;, angle = 0),
         strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/FigS12%2024h-%20drug%20spec%20path-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/FigS12%2024h-%20drug%20spec%20path-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>MT_sp_DEGtable  %&gt;% 
     dplyr::filter(source==&quot;GO:BP&quot;) %&gt;% 
     dplyr::select(p_value,term_name,intersection_size) %&gt;%
@@ -1598,7 +1656,7 @@ DX_sp_DEGtable  %&gt;%
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size = 10, color = &quot;black&quot;, angle = 0),
         strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/FigS12%2024h-%20drug%20spec%20path-2.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/FigS12%2024h-%20drug%20spec%20path-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s12" class="section level3">
 <h3>Fig. S12</h3>
@@ -1608,13 +1666,10 @@ EPIvenn&lt;- readRDS (&quot;output/EPIvenn.RDS&quot;)
 MTXvenn&lt;- readRDS (&quot;output/MTXvenn.RDS&quot;)
 
 plot_grid(DNRvenn,DOXvenn,EPIvenn,MTXvenn,nrow=2, ncol = 2)</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20venntimepoints-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20venntimepoints-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s12-1" class="section level3">
 <h3>Fig. S12</h3>
-<pre class="r"><code>cormotif_initial &lt;- readRDS(&quot;data/cormotif_initialall.RDS&quot;)
-Cormotif::plotIC(cormotif_initial)</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif-1.svg" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>motif_NRrep &lt;-  readRDS(&quot;output/motif_NRrep.RDS&quot;)
 motif_ERrep &lt;-  readRDS(&quot;output/motif_ERrep.RDS&quot;)
 motif_TIrep &lt;-  readRDS(&quot;output/motif_TI_rep.RDS&quot;)
@@ -1635,9 +1690,9 @@ motif_LRrep &lt;- motif_LRrep+
   scale_y_continuous(labels = scales::number_format(accuracy = 0.1))+
   theme(legend.position = &quot;NULL&quot;, axis.title.y =element_text(size =12))
 plot_grid(motif_ERrep,motif_TIrep,motif_LRrep,motif_NRrep,nrow = 4,ncol = 1)</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif%20genes-1.svg" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20Cormotif%20genes-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/Fig%20S12%20GO%20Cormotif-1.svg" width="768" height="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S13%20GO%20Cormotif-1.png" width="768" height="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="fig.-s15" class="section level3">
 <h3>Fig. S15</h3>
@@ -1650,29 +1705,30 @@ for (gene in GOI_genelist$entrezgene_id){
       ggplot(., aes(x=tox, y=counts))+
       geom_point(aes(col=indv))+
       geom_smooth(method=&quot;lm&quot;)+
-      facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;)+
+      # scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
+      facet_wrap(hgnc_symbol~Drug, scales=&quot;free&quot;, nrow = 1)+
       theme_classic()+
       xlab(&quot;Toxicity score&quot;) +
-      ylab(expression(&quot;counts in log&quot;[2]*&quot; cpm&quot;)) +
-      ggtitle(expression(paste(&quot;Correlation between counts and toxicity by drug&quot;)))+
-      scale_color_brewer(palette = &quot;Dark2&quot;,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
-      scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
-      stat_cor(method=&quot;pearson&quot;,
+      ylab(expression(&quot;counts in log &quot;[2]*&quot; cpm&quot;)) +
+      # ggtitle(expression(paste(&quot;Correlation between counts and toxicity by drug&quot;)))+
+      scale_color_brewer(palette = &quot;Dark2&quot;)+#,name = &quot;Individual&quot;, label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+      guides(color=&quot;none&quot;)+
+      ggpubr::stat_cor(method=&quot;pearson&quot;,
                cor.coef.name=&quot;rho&quot;,
                aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
                color = &quot;red&quot;,
                label.x.npc = 0.01,
                label.y.npc=0.01, 
                size = 3)+
-      theme(plot.title = element_text(size = rel(1.5), hjust = 0.5,face = &quot;bold&quot;),
-            axis.title = element_text(size = 15, color = &quot;black&quot;),
+      theme(plot.title = element_text(hjust = 0.5,face = &quot;bold&quot;),
+            axis.title = element_text(size = 12, color = &quot;black&quot;),
             axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = &quot;black&quot;, angle = 20),
-            strip.text.x = element_text(size = 10, color = &quot;black&quot;, face = &quot;italic&quot;))
-   print(gene_plot)
+            axis.text = element_text(size = 8, color = &quot;black&quot;, angle =0),
+            strip.text.x = element_text(size = 12, color = &quot;black&quot;, face = &quot;italic&quot;))
+   plot(gene_plot)
    
  }</code></pre>
-<p><img src="figure/Supplementary_figures.Rmd/S15-1.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-2.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-3.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-4.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-5.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-6.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-7.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-8.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-9.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-10.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/S15-11.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/Supplementary_figures.Rmd/Fig%20S15-1.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-2.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-3.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-4.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-5.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-6.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-7.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-8.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-9.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-10.png" width="1344" style="display: block; margin: auto;" /><img src="figure/Supplementary_figures.Rmd/Fig%20S15-11.png" width="1344" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1705,53 +1761,52 @@ attached base packages:
 
 other attached packages:
  [1] edgeR_3.42.4          limma_3.56.2          data.table_1.14.8    
- [4] drc_3.0-1             MASS_7.3-60           cowplot_1.1.1        
- [7] gridExtra_2.3         ComplexHeatmap_2.16.0 RColorBrewer_1.1-3   
-[10] ggsignif_0.6.4        zoo_1.8-12            rstatix_0.7.2        
-[13] ggpubr_0.6.0          lubridate_1.9.2       forcats_1.0.0        
-[16] stringr_1.5.0         dplyr_1.1.2           purrr_1.0.1          
-[19] readr_2.1.4           tidyr_1.3.0           tibble_3.2.1         
-[22] ggplot2_3.4.2         tidyverse_2.0.0       workflowr_1.7.0      
+ [4] ggVennDiagram_1.2.2   broom_1.0.5           drc_3.0-1            
+ [7] MASS_7.3-60           cowplot_1.1.1         gridExtra_2.3        
+[10] ComplexHeatmap_2.16.0 scales_1.2.1          RColorBrewer_1.1-3   
+[13] ggsignif_0.6.4        zoo_1.8-12            rstatix_0.7.2        
+[16] ggpubr_0.6.0          lubridate_1.9.2       forcats_1.0.0        
+[19] stringr_1.5.0         dplyr_1.1.2           purrr_1.0.1          
+[22] readr_2.1.4           tidyr_1.3.0           tibble_3.2.1         
+[25] ggplot2_3.4.2         tidyverse_2.0.0       workflowr_1.7.0      
 
 loaded via a namespace (and not attached):
-  [1] rstudioapi_0.15.0     jsonlite_1.8.7        shape_1.4.6          
-  [4] magrittr_2.0.3        TH.data_1.1-2         magick_2.7.4         
-  [7] farver_2.1.1          rmarkdown_2.23        zlibbioc_1.46.0      
- [10] GlobalOptions_0.1.2   fs_1.6.3              ragg_1.2.5           
- [13] vctrs_0.6.3           htmltools_0.5.5       plotrix_3.8-2        
- [16] broom_1.0.5           sass_0.4.7            KernSmooth_2.23-22   
- [19] bslib_0.5.0           sandwich_3.0-2        cachem_1.0.8         
- [22] whisker_0.4.1         lifecycle_1.0.3       iterators_1.0.14     
- [25] pkgconfig_2.0.3       Matrix_1.6-0          R6_2.5.1             
- [28] fastmap_1.1.1         clue_0.3-64           digest_0.6.33        
- [31] colorspace_2.1-0      S4Vectors_0.38.1      ps_1.7.5             
- [34] rprojroot_2.0.3       textshaping_0.3.6     labeling_0.4.2       
- [37] fansi_1.0.4           timechange_0.2.0      httr_1.4.6           
- [40] abind_1.4-5           mgcv_1.9-0            compiler_4.3.1       
- [43] proxy_0.4-27          withr_2.5.0           doParallel_1.0.17    
- [46] backports_1.4.1       carData_3.0-5         DBI_1.1.3            
- [49] highr_0.10            rjson_0.2.21          classInt_0.4-9       
- [52] gtools_3.9.4          tools_4.3.1           units_0.8-2          
- [55] httpuv_1.6.11         Cormotif_1.46.0       glue_1.6.2           
- [58] callr_3.7.3           nlme_3.1-162          promises_1.2.0.1     
- [61] sf_1.0-14             getPass_0.2-2         cluster_2.1.4        
- [64] generics_0.1.3        gtable_0.3.3          tzdb_0.4.0           
- [67] preprocessCore_1.62.1 class_7.3-22          hms_1.1.3            
- [70] ggVennDiagram_1.2.2   car_3.1-2             utf8_1.2.3           
- [73] BiocGenerics_0.46.0   foreach_1.5.2         pillar_1.9.0         
- [76] later_1.3.1           circlize_0.4.15       splines_4.3.1        
- [79] lattice_0.21-8        survival_3.5-5        tidyselect_1.2.0     
- [82] locfit_1.5-9.8        knitr_1.43            git2r_0.32.0         
- [85] IRanges_2.34.1        stats4_4.3.1          xfun_0.39            
- [88] Biobase_2.60.0        matrixStats_1.0.0     stringi_1.7.12       
- [91] yaml_2.3.7            evaluate_0.21         codetools_0.2-19     
- [94] BiocManager_1.30.21.1 RVenn_1.1.0           affyio_1.70.0        
- [97] cli_3.6.1             systemfonts_1.0.4     munsell_0.5.0        
-[100] processx_3.8.2        jquerylib_0.1.4       Rcpp_1.0.11          
-[103] png_0.1-8             parallel_4.3.1        viridisLite_0.4.2    
-[106] mvtnorm_1.2-2         affy_1.78.2           scales_1.2.1         
-[109] e1071_1.7-13          crayon_1.5.2          GetoptLong_1.0.5     
-[112] rlang_1.1.1           multcomp_1.4-25      </code></pre>
+  [1] rstudioapi_0.15.0   jsonlite_1.8.7      shape_1.4.6        
+  [4] magrittr_2.0.3      TH.data_1.1-2       magick_2.7.4       
+  [7] farver_2.1.1        rmarkdown_2.23      GlobalOptions_0.1.2
+ [10] fs_1.6.3            ragg_1.2.5          vctrs_0.6.3        
+ [13] webshot_0.5.5       htmltools_0.5.5     plotrix_3.8-2      
+ [16] sass_0.4.7          KernSmooth_2.23-22  bslib_0.5.0        
+ [19] sandwich_3.0-2      cachem_1.0.8        whisker_0.4.1      
+ [22] lifecycle_1.0.3     iterators_1.0.14    pkgconfig_2.0.3    
+ [25] Matrix_1.6-0        R6_2.5.1            fastmap_1.1.1      
+ [28] clue_0.3-64         digest_0.6.33       colorspace_2.1-0   
+ [31] S4Vectors_0.38.1    ps_1.7.5            rprojroot_2.0.3    
+ [34] textshaping_0.3.6   labeling_0.4.2      fansi_1.0.4        
+ [37] timechange_0.2.0    httr_1.4.6          abind_1.4-5        
+ [40] mgcv_1.9-0          compiler_4.3.1      proxy_0.4-27       
+ [43] withr_2.5.0         doParallel_1.0.17   backports_1.4.1    
+ [46] carData_3.0-5       DBI_1.1.3           highr_0.10         
+ [49] rjson_0.2.21        classInt_0.4-9      gtools_3.9.4       
+ [52] units_0.8-2         tools_4.3.1         httpuv_1.6.11      
+ [55] glue_1.6.2          callr_3.7.3         nlme_3.1-162       
+ [58] promises_1.2.0.1    sf_1.0-14           getPass_0.2-2      
+ [61] cluster_2.1.4       generics_0.1.3      gtable_0.3.3       
+ [64] tzdb_0.4.0          class_7.3-22        hms_1.1.3          
+ [67] xml2_1.3.5          car_3.1-2           utf8_1.2.3         
+ [70] BiocGenerics_0.46.0 foreach_1.5.2       pillar_1.9.0       
+ [73] later_1.3.1         circlize_0.4.15     splines_4.3.1      
+ [76] lattice_0.21-8      survival_3.5-5      tidyselect_1.2.0   
+ [79] locfit_1.5-9.8      knitr_1.43          git2r_0.32.0       
+ [82] IRanges_2.34.1      svglite_2.1.1       stats4_4.3.1       
+ [85] xfun_0.39           matrixStats_1.0.0   stringi_1.7.12     
+ [88] yaml_2.3.7          evaluate_0.21       codetools_0.2-19   
+ [91] RVenn_1.1.0         cli_3.6.1           systemfonts_1.0.4  
+ [94] munsell_0.5.0       processx_3.8.2      jquerylib_0.1.4    
+ [97] Rcpp_1.0.11         png_0.1-8           parallel_4.3.1     
+[100] viridisLite_0.4.2   mvtnorm_1.2-2       e1071_1.7-13       
+[103] crayon_1.5.2        GetoptLong_1.0.5    rlang_1.1.1        
+[106] rvest_1.0.3         multcomp_1.4-25    </code></pre>
 </div>
 </div>
 
