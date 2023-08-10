@@ -204,12 +204,11 @@ for (each in 1:6){
 ### Fig. S3  
 
 
-```{r Fig S3, message=FALSE, warning=FALSE, eval=FALSE,echo=TRUE}
+```{r Fig S3, message=FALSE, warning=FALSE, eval=TRUE,echo=TRUE}
 
 viability <- readRDS("data/viability.RDS")
 norm_LDH48 <- readRDS("data/supp_normLDH48.RDS")
 viability %>% 
- 
   left_join(., norm_LDH48,by = c("indv","Drug","Conc")) %>% 
   ggplot(., aes(x=per.live, y=ldh))+
   geom_point(aes(col=indv))+
