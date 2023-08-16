@@ -7,7 +7,7 @@ output: html_document
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svg','png'),
+knitr::opts_chunk$set(dev = c('svglite','png'),
 	echo = FALSE,
 	message = FALSE,
 	warning = FALSE
