@@ -21,6 +21,16 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
 This starts the documentation of the RNA-seq cardiotoxicity analysis for my cardiotoxicity data.
 ```{r library loading, warning=FALSE, echo=TRUE, message=FALSE}
 
