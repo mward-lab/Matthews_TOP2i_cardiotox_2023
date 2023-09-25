@@ -13,9 +13,9 @@
 
 <meta name="date" content="2023-04-14" />
 
-<title>Run_all_analysis</title>
+<title>Inital RNA-seq analysis, Pairwise</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -31,14 +31,14 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -359,7 +359,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Run_all_analysis</h1>
+<h1 class="title toc-ignore">Inital RNA-seq analysis, Pairwise</h1>
 <h4 class="author">ERM</h4>
 <h4 class="date">20230414</h4>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-05-26
+<strong>Last updated:</strong> 2023-09-25
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -408,7 +408,7 @@ title="This is the local directory in which the code in this file was executed."
 This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
 analysis was created with <a
   href="https://github.com/workflowr/workflowr">workflowr</a> (version
-1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
 that were applied when the results were created. The <em>Past
 versions</em> tab lists the development history.
 </p>
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreef99a75375f5a69dd9d9bc49373a2b909daa77f35targetblankf99a753a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee93b23cd452a0ac25dee0f8291ee55deb33f4c48targetblanke93b23ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/f99a75375f5a69dd9d9bc49373a2b909daa77f35" target="_blank">f99a753</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e93b23cd452a0ac25dee0f8291ee55deb33f4c48" target="_blank">e93b23c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreef99a75375f5a69dd9d9bc49373a2b909daa77f35targetblankf99a753a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee93b23cd452a0ac25dee0f8291ee55deb33f4c48targetblanke93b23ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/f99a75375f5a69dd9d9bc49373a2b909daa77f35" target="_blank">f99a753</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e93b23cd452a0ac25dee0f8291ee55deb33f4c48" target="_blank">e93b23c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,10 +559,15 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
+    Ignored:    data/Arr_geneset.RDS
     Ignored:    data/BC_cell_lines.csv
+    Ignored:    data/BurridgeDOXTOX.RDS
     Ignored:    data/CADGWASgene_table.csv
+    Ignored:    data/CAD_geneset.RDS
+    Ignored:    data/CALIMA_Data/
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/Counts_RNA_ERMatthews.txt
     Ignored:    data/DAgostres24.RDS
     Ignored:    data/DAtable1.csv
     Ignored:    data/DDEMresp_list.csv
@@ -571,51 +576,90 @@ Ignored files:
     Ignored:    data/DEG-GO/
     Ignored:    data/DEG_cormotif.RDS
     Ignored:    data/DF_Plate_Peak.csv
+    Ignored:    data/DRC48hoursdata.csv
     Ignored:    data/Da24counts.txt
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/Full_LD_rep.csv
+    Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
     Ignored:    data/GTEX_setsimple.csv
+    Ignored:    data/GTEX_sig24.RDS
+    Ignored:    data/GTEx_gene_list.csv
     Ignored:    data/HFGWASgene_table.csv
+    Ignored:    data/HF_geneset.RDS
     Ignored:    data/Heart_Left_Ventricle.v8.egenes.txt
+    Ignored:    data/Heatmap_mat.RDS
+    Ignored:    data/Heatmap_sig.RDS
     Ignored:    data/Hf_GWAS.txt
     Ignored:    data/K_cluster
     Ignored:    data/K_cluster_kisthree.csv
     Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/LD50_05via.csv
     Ignored:    data/LDH48hoursdata.csv
     Ignored:    data/Mt24counts.txt
+    Ignored:    data/NoRespDEG_final.csv
     Ignored:    data/RINsamplelist.txt
     Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
+    Ignored:    data/TableS10.csv
+    Ignored:    data/TableS11.csv
+    Ignored:    data/TableS9.csv
     Ignored:    data/Top2biresp_cluster24h.csv
+    Ignored:    data/Var_test_list.RDS
+    Ignored:    data/Var_test_list24.RDS
+    Ignored:    data/Var_test_list24alt.RDS
+    Ignored:    data/Var_test_list3.RDS
+    Ignored:    data/Vargenes.RDS
     Ignored:    data/Viabilitylistfull.csv
     Ignored:    data/allexpressedgenes.txt
+    Ignored:    data/allfinal3hour.RDS
     Ignored:    data/allgenes.txt
     Ignored:    data/allmatrix.RDS
+    Ignored:    data/allmymatrix.RDS
+    Ignored:    data/annotation_data_frame.RDS
+    Ignored:    data/averageviabilitytable.RDS
     Ignored:    data/avgLD50.RDS
+    Ignored:    data/avg_LD50.RDS
     Ignored:    data/backGL.txt
+    Ignored:    data/burr_genes.RDS
+    Ignored:    data/calcium_data.RDS
+    Ignored:    data/clamp_summary.RDS
     Ignored:    data/cormotif_3hk1-8.RDS
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
     Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/cormotifprobs.csv
     Ignored:    data/counts24hours.RDS
+    Ignored:    data/cpmcount.RDS
     Ignored:    data/cpmnorm_counts.csv
+    Ignored:    data/crispr_genes.csv
+    Ignored:    data/ctnnt_results.txt
     Ignored:    data/cvd_GWAS.txt
     Ignored:    data/dat_cpm.RDS
     Ignored:    data/data_outline.txt
+    Ignored:    data/drug_noveh1.csv
     Ignored:    data/efit2.RDS
+    Ignored:    data/efit2_final.RDS
     Ignored:    data/efit2results.RDS
     Ignored:    data/ensembl_backup.RDS
     Ignored:    data/ensgtotal.txt
+    Ignored:    data/filcpm_counts.RDS
     Ignored:    data/filenameonly.txt
     Ignored:    data/filtered_cpm_counts.csv
     Ignored:    data/filtered_raw_counts.csv
     Ignored:    data/filtermatrix_x.RDS
     Ignored:    data/folder_05top/
+    Ignored:    data/geneDoxonlyQTL.csv
+    Ignored:    data/gene_corr_df.RDS
+    Ignored:    data/gene_corr_frame.RDS
     Ignored:    data/gene_prob_tran3h.RDS
     Ignored:    data/gene_probabilityk5.RDS
+    Ignored:    data/geneset_24.RDS
     Ignored:    data/gostresTop2bi_ER.RDS
     Ignored:    data/gostresTop2bi_LR
     Ignored:    data/gostresTop2bi_LR.RDS
@@ -623,18 +667,33 @@ Ignored files:
     Ignored:    data/gostrescoNR
     Ignored:    data/gtex/
     Ignored:    data/heartgenes.csv
+    Ignored:    data/hsa_kegg_anno.RDS
     Ignored:    data/individualDRCfile.RDS
+    Ignored:    data/individual_DRC48.RDS
     Ignored:    data/individual_LDH48.RDS
+    Ignored:    data/indv_noveh1.csv
+    Ignored:    data/kegglistDEG.RDS
+    Ignored:    data/kegglistDEG24.RDS
+    Ignored:    data/kegglistDEG3.RDS
     Ignored:    data/knowfig4.csv
     Ignored:    data/knowfig5.csv
-    Ignored:    data/knowles56.GMT
-    Ignored:    data/knowlesGMT.GMT
+    Ignored:    data/label_list.RDS
+    Ignored:    data/ld50_table.csv
+    Ignored:    data/mean_vardrug1.csv
+    Ignored:    data/mean_varframe.csv
     Ignored:    data/mymatrix.RDS
+    Ignored:    data/new_ld50avg.RDS
     Ignored:    data/nonresponse_cluster24h.csv
     Ignored:    data/norm_LDH.csv
     Ignored:    data/norm_counts.csv
     Ignored:    data/old_sets/
+    Ignored:    data/organized_drugframe.csv
     Ignored:    data/plan2plot.png
+    Ignored:    data/plot_intv_list.RDS
+    Ignored:    data/plot_list_DRC.RDS
+    Ignored:    data/qval24hr.RDS
+    Ignored:    data/qval3hr.RDS
+    Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
     Ignored:    data/sigVDA24.txt
@@ -648,33 +707,108 @@ Ignored files:
     Ignored:    data/sigVTR24.txt
     Ignored:    data/sigVTR3.txt
     Ignored:    data/siglist.RDS
+    Ignored:    data/siglist_final.RDS
+    Ignored:    data/siglist_old.RDS
+    Ignored:    data/slope_table.csv
+    Ignored:    data/supp10_24hlist.RDS
+    Ignored:    data/supp10_3hlist.RDS
+    Ignored:    data/supp_normLDH48.RDS
+    Ignored:    data/supp_pca_all_anno.RDS
     Ignored:    data/table3a.omar
+    Ignored:    data/testlist.txt
     Ignored:    data/toplistall.RDS
+    Ignored:    data/trtonly_24h_genes.RDS
+    Ignored:    data/trtonly_3h_genes.RDS
     Ignored:    data/tvl24hour.txt
     Ignored:    data/tvl24hourw.txt
     Ignored:    data/venn_code.R
+    Ignored:    data/viability.RDS
 
 Untracked files:
     Untracked:  .RDataTmp
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
+    Untracked:  3hr all.pdf
+    Untracked:  Code_files_list.csv
+    Untracked:  Data_files_list.csv
+    Untracked:  Doxorubicin_vehicle_3_24.csv
+    Untracked:  Doxtoplist.csv
+    Untracked:  EPIqvalue_analysis.Rmd
+    Untracked:  GWAS_list_of_interest.xlsx
+    Untracked:  KEGGpathwaylist.R
+    Untracked:  OmicNavigator_learn.R
+    Untracked:  SigDoxtoplist.csv
+    Untracked:  analysis/ciFIT.R
+    Untracked:  analysis/export_to_excel.R
+    Untracked:  cleanupfiles_script.R
+    Untracked:  code/biomart_gene_names.R
+    Untracked:  code/constantcode.R
+    Untracked:  code/cpm_boxplot.R
+    Untracked:  code/extracting_ggplot_data.R
+    Untracked:  code/movingfilesto_ppl.R
+    Untracked:  code/pearson_extract_func.R
+    Untracked:  code/pearson_tox_extract.R
+    Untracked:  code/plot1C.fun.R
+    Untracked:  code/spearman_extract_func.R
+    Untracked:  code/venndiagramcolor_control.R
+    Untracked:  cormotif_p.post.list_4.csv
     Untracked:  cormotif_probability_genelist.csv
+    Untracked:  figS1024h.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
-    Untracked:  output/figure_1.Rmd
+    Untracked:  output/DNR_DEGlist.csv
+    Untracked:  output/DNRvenn.RDS
+    Untracked:  output/DOX_DEGlist.csv
+    Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EPI_DEGlist.csv
+    Untracked:  output/EPIvenn.RDS
+    Untracked:  output/Figures/
+    Untracked:  output/MTX_DEGlist.csv
+    Untracked:  output/MTXvenn.RDS
+    Untracked:  output/TRZ_DEGlist.csv
+    Untracked:  output/TableS8.csv
+    Untracked:  output/Volcanoplot_10
+    Untracked:  output/Volcanoplot_10.RDS
+    Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/endocytosisgenes.csv
+    Untracked:  output/gene_corr_fig9.RDS
+    Untracked:  output/legend_b.RDS
+    Untracked:  output/motif_ERrep.RDS
+    Untracked:  output/motif_LRrep.RDS
+    Untracked:  output/motif_NRrep.RDS
+    Untracked:  output/motif_TI_rep.RDS
     Untracked:  output/output-old/
-    Untracked:  output/plan2plot.png
-    Untracked:  output/plan48ldh.png
+    Untracked:  output/rank24genes.csv
+    Untracked:  output/rank3genes.csv
+    Untracked:  output/reneem@ls6.tacc.utexas.edu
+    Untracked:  output/sequencinginformationforsupp.csv
+    Untracked:  output/sequencinginformationforsupp.prn
+    Untracked:  output/supplementary_motif_list_GO.RDS
+    Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/DEG-GO_analysis.Rmd
-    Modified:   code/Compare_tnni_ldh.R
-    Modified:   code/sequencing_info_collection.R
+    Deleted:    analysis/Cardiotoxicity.Rproj
+    Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/GOI_plots.Rmd
+    Modified:   analysis/Knowles2019.Rmd
+    Modified:   analysis/Supplementary_figures.Rmd
+    Modified:   analysis/variance_scrip.Rmd
+    Modified:   output/TNNI_LDH_RNAnormlist.txt
+    Modified:   output/daplot.RDS
+    Modified:   output/dxplot.RDS
+    Modified:   output/epplot.RDS
+    Modified:   output/mtplot.RDS
+    Modified:   output/plan2plot.png
+    Modified:   output/sequencing_info.txt
+    Modified:   output/toplistall.csv
+    Modified:   output/trplot.RDS
+    Modified:   output/veplot.RDS
 
 </code></pre>
 <p>
@@ -720,6 +854,142 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/e93b23cd452a0ac25dee0f8291ee55deb33f4c48/analysis/run_all_analysis.Rmd" target="_blank">e93b23c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+<td>
+updated code, try to add css
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/27e6962628a35506f1325e14de27d4207546cb6c/analysis/run_all_analysis.Rmd" target="_blank">27e6962</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+<td>
+updated code, took out unneeded comments, turned on
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/06800c9a0d5bf629ca2c406711ee7d699ca02279/analysis/run_all_analysis.Rmd" target="_blank">06800c9</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+<td>
+Commits to small changes and edits
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/4eac3d29b049e601b0bc674f85f093092868ddd1/analysis/run_all_analysis.Rmd" target="_blank">4eac3d2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+<td>
+rearraged some lines, no changes
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f4bd5e1825a070e966a3bf7fb79eb10a09545fa3/analysis/run_all_analysis.Rmd" target="_blank">f4bd5e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-27
+</td>
+<td>
+checking code changes overtime
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/326973b992676c5472009461e3ed414fd7ebe981/analysis/run_all_analysis.Rmd" target="_blank">326973b</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-26
+</td>
+<td>
+updates on Volcano plot grid
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3257e1cdae5d92585bb7b8a46bd97c0b6cf960ea/analysis/run_all_analysis.Rmd" target="_blank">3257e1c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-26
+</td>
+<td>
+Updating savefile for efit2
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/8daa38a24ec90d2dec390c845f1ba5c84a708e01/docs/run_all_analysis.html" target="_blank">8daa38a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1220,84 +1490,1342 @@ final run analysis
 </div>
 </div>
 </div>
+<style type="text/css">
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+</style>
 <p>This starts the documentation of the RNA-seq cardiotoxicity analysis
-for my manuscript</p>
+for my cardiotoxicity data.</p>
 <pre class="r"><code>library(edgeR)#
 library(limma)#
 library(RColorBrewer)
-library(mixOmics)
 library(gridExtra)#
 library(reshape2)#
 library(data.table)
-library(AnnotationHub)
 library(tidyverse)
 library(scales)
 library(biomaRt)#
-library(Homo.sapiens)
 library(cowplot)#
 library(ggrepel)#
 library(corrplot)
 library(Hmisc)
 library(ggpubr)</code></pre>
-<pre class="r"><code> ###now we add genenames to the geneid###
- 
-geneid &lt;- rownames(mymatrix) ### pulls the names we have in the counts file
-genes &lt;- select(Homo.sapiens, keys=geneid, columns=c(&quot;SYMBOL&quot;),
-  keytype=&quot;ENTREZID&quot;)
-genes &lt;- genes[!duplicated(genes$ENTREZID),]
-mymatrix$genes &lt;- genes
-#saveRDS(mymatrix, &quot;data/allmatrix.RDS&quot;)
-##note-not filtered!</code></pre>
+<pre class="r"><code>pca_plot &lt;-
+  function(df,
+           col_var = NULL,
+           shape_var = NULL,
+           title = &quot;&quot;) {
+    ggplot(df) + geom_point(aes_string(
+      x = &quot;PC1&quot;,
+      y = &quot;PC2&quot;,
+      color = col_var,
+      shape = shape_var
+    ),
+    size = 5) +
+      labs(title = title, x = &quot;PC 1&quot;, y = &quot;PC2&quot;) +
+      scale_color_manual(values = c(
+        &quot;#8B006D&quot;,
+        &quot;#DF707E&quot;,
+        &quot;#F1B72B&quot;,
+        &quot;#3386DD&quot;,
+        &quot;#707031&quot;,
+        &quot;#41B333&quot;
+      ))
+  }
+
+pca_var_plot &lt;- function(pca) {
+  # x: class == prcomp
+  pca.var &lt;- pca$sdev ^ 2
+  pca.prop &lt;- pca.var / sum(pca.var)
+  var.plot &lt;-
+    qplot(PC, prop, data = data.frame(PC = 1:length(pca.prop),
+                                      prop = pca.prop)) +
+    labs(title = &#39;Variance contributed by each PC&#39;,
+         x = &#39;PC&#39;, y = &#39;Proportion of variance&#39;)
+}
+
+calc_pca &lt;- function(x) {
+  # Performs principal components analysis with prcomp
+  # x: a sample-by-gene numeric matrix
+  prcomp(x, scale. = TRUE, retx = TRUE)
+}
+
+get_regr_pval &lt;- function(mod) {
+  # Returns the p-value for the Fstatistic of a linear model
+  # mod: class lm
+  stopifnot(class(mod) == &quot;lm&quot;)
+  fstat &lt;- summary(mod)$fstatistic
+  pval &lt;- 1 - pf(fstat[1], fstat[2], fstat[3])
+  return(pval)
+}
+
+plot_versus_pc &lt;- function(df, pc_num, fac) {
+  # df: data.frame
+  # pc_num: numeric, specific PC for plotting
+  # fac: column name of df for plotting against PC
+  pc_char &lt;- paste0(&quot;PC&quot;, pc_num)
+  # Calculate F-statistic p-value for linear model
+  pval &lt;- get_regr_pval(lm(df[, pc_char] ~ df[, fac]))
+  if (is.numeric(df[, f])) {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_point() +
+      geom_smooth(method = &quot;lm&quot;) + labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
+  } else {
+    ggplot(df, aes_string(x = f, y = pc_char)) + geom_boxplot() +
+      labs(title = sprintf(&quot;p-val: %.2f&quot;, pval))
+  }
+}
+x_axis_labels = function(labels, every_nth = 1, ...) {
+  axis(side = 1,
+       at = seq_along(labels),
+       labels = F)
+  text(
+    x = (seq_along(labels))[seq_len(every_nth) == 1],
+    y = par(&quot;usr&quot;)[3] - 0.075 * (par(&quot;usr&quot;)[4] - par(&quot;usr&quot;)[3]),
+    labels = labels[seq_len(every_nth) == 1],
+    xpd = TRUE,
+    ...
+  )
+}</code></pre>
 <div id="initial-rna-seq-quality-checks" class="section level1">
 <h1>Initial RNA-seq quality checks</h1>
-<p><img src="figure/run_all_analysis.Rmd/seq%20quals-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/seq%20quals-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/run_all_analysis.Rmd/seq%20quals-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-1">
+Past versions of "seq quals-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-seq-quals-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-1.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/seq quals-1.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/seq%20quals-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-2">
+Past versions of "seq quals-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-seq-quals-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-2.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/seq quals-2.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/seq%20quals-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-3">
+Past versions of "seq quals-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-seq-quals-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-3.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/seq quals-3.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/seq%20quals-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-4">
+Past versions of "seq quals-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-seq-quals-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-4.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/seq quals-4.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/seq%20quals-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-5">
+Past versions of "seq quals-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-seq-quals-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-5.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/seq quals-5.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/seq%20quals-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-6">
+Past versions of "seq quals-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-seq-quals-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-6.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="initial-histograms-from-count-matrix" class="section level2">
 <h2>Initial histograms from count matrix</h2>
 <pre><code>[1] 28395    72</code></pre>
 <pre><code>[1] 14084    72</code></pre>
-<p><img src="figure/run_all_analysis.Rmd/readinfo-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/readinfo-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/run_all_analysis.Rmd/readinfo-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-1">
+Past versions of readinfo-1.png
+</button>
+</p>
+<div id="fig-readinfo-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bdbf1c271bd0d8f878d87347451fb8e1f39d8111/docs/figure/run_all_analysis.Rmd/readinfo-1.png" target="_blank">bdbf1c2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/readinfo-1.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/readinfo-1.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/readinfo-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-2">
+Past versions of readinfo-2.png
+</button>
+</p>
+<div id="fig-readinfo-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bdbf1c271bd0d8f878d87347451fb8e1f39d8111/docs/figure/run_all_analysis.Rmd/readinfo-2.png" target="_blank">bdbf1c2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/readinfo-2.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/readinfo-2.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/readinfo-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-3">
+Past versions of readinfo-3.png
+</button>
+</p>
+<div id="fig-readinfo-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/readinfo-3.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/readinfo-3.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/readinfo-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-4">
+Past versions of readinfo-4.png
+</button>
+</p>
+<div id="fig-readinfo-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/readinfo-4.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/readinfo-4.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="pca-by-treatment-and-as-a-whole" class="section level2">
 <h2>PCA by treatment and as a whole</h2>
 <pre><code>
 
-###  Vehicle </code></pre>
+###  VEH </code></pre>
 <p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-1">
+Past versions of "individual PCA by drug and time steps-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-1.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-1.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 
-###  Daunorubicin </code></pre>
+###  DNR </code></pre>
 <p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-2">
+Past versions of "individual PCA by drug and time steps-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-2"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-2.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-2.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 
-###  Doxorubicin </code></pre>
+###  DOX </code></pre>
 <p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-3">
+Past versions of "individual PCA by drug and time steps-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-3"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-3.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-3.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 
-###  Epirubicin </code></pre>
+###  EPI </code></pre>
 <p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-4">
+Past versions of "individual PCA by drug and time steps-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-4"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-4.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-4.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 
-###  Mitoxantrone </code></pre>
+###  MTX </code></pre>
 <p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-5">
+Past versions of "individual PCA by drug and time steps-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-5"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-5.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-5.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 
-###  Trastuzumab </code></pre>
-<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-7.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>        samplenames indv         drug time RIN group       PC1      PC2
-Da.1.3h MCW_RM_R_11    1 Daunorubicin   3h 9.3     1 -18.33154 61.71013
-Do.1.3h MCW_RM_R_12    1  Doxorubicin   3h 9.8     2 -12.36280 73.97678
-Ep.1.3h MCW_RM_R_13    1   Epirubicin   3h 9.8     3 -11.16205 66.48794
-Mi.1.3h MCW_RM_R_14    1 Mitoxantrone   3h  10     4 -10.19948 73.48343
-Tr.1.3h MCW_RM_R_15    1  Trastuzumab   3h 9.6     5 -12.17619 80.01454
-Ve.1.3h MCW_RM_R_16    1      Vehicle   3h 9.9     6 -14.98226 76.62199
-              PC3        PC4        PC5       PC6
-Da.1.3h 44.039139  -4.547031  24.642107 -35.03245
-Do.1.3h 24.576395  -8.626528 -19.908580 -18.97447
-Ep.1.3h 33.025628  -9.349549  18.083569 -43.06551
-Mi.1.3h 19.016766 -14.639651  -9.065324 -24.29908
-Tr.1.3h  2.640624 -17.019296 -34.253925 -11.77881
-Ve.1.3h 12.706808  -4.173412 -39.846595 -17.16213</code></pre>
-<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-9.png" width="672" style="display: block; margin: auto;" /></p>
+###  TRZ </code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-6">
+Past versions of "individual PCA by drug and time steps-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-6"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-6.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-6.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-7">
+Past versions of "individual PCA by drug and time steps-7.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-7"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-7.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-7.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>         samplenames indv drug time RIN group       PC1      PC2       PC3
+DNR.1.3h MCW_RM_R_11    1  DNR   3h 9.3     1 -18.33154 61.71013 44.039139
+DOX.1.3h MCW_RM_R_12    1  DOX   3h 9.8     2 -12.36280 73.97678 24.576395
+EPI.1.3h MCW_RM_R_13    1  EPI   3h 9.8     3 -11.16205 66.48794 33.025628
+MTX.1.3h MCW_RM_R_14    1  MTX   3h  10     4 -10.19948 73.48343 19.016766
+TRZ.1.3h MCW_RM_R_15    1  TRZ   3h 9.6     5 -12.17619 80.01454  2.640624
+VEH.1.3h MCW_RM_R_16    1  VEH   3h 9.9     6 -14.98226 76.62199 12.706808
+                PC4        PC5       PC6
+DNR.1.3h  -4.547031  24.642107 -35.03245
+DOX.1.3h  -8.626528 -19.908580 -18.97447
+EPI.1.3h  -9.349549  18.083569 -43.06551
+MTX.1.3h -14.639651  -9.065324 -24.29908
+TRZ.1.3h -17.019296 -34.253925 -11.77881
+VEH.1.3h  -4.173412 -39.846595 -17.16213</code></pre>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-8">
+Past versions of "individual PCA by drug and time steps-8.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-8"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8daa38a24ec90d2dec390c845f1ba5c84a708e01/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">8daa38a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-26
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bdbf1c271bd0d8f878d87347451fb8e1f39d8111/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">bdbf1c2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/5ef62c944eb2c4c178e9f70512871dc3e5c85393/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">5ef62c9</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/7f62d67d51d8e4e10c7c11fc6a5afac47bef4a5c/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">7f62d67</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/21fd94542ce3a3af7d17a9c13b88df6bf45b6840/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">21fd945</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8d08bd233d078f431ecc293e3ff642d4c3bc0181/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">8d08bd2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/4cd8ac4a07466bdf159970d0502a5edf602cacc8/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">4cd8ac4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/08936e73a08d8db556009edcce82d976cc4a3e2b/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">08936e7</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/85526c530073e51f8a1887b4682a80266bb7cfe7/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">85526c5</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b266b76acd8dac6d46d06572cf74173c443a67d8/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">b266b76</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/run_all_analysis.Rmd/individual%20PCA%20by%20drug%20and%20time%20steps-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-individual-PCA-by-drug-and-time-steps-9">
+Past versions of "individual PCA by drug and time steps-9.png"
+</button>
+</p>
+<div id="fig-no-spaces-individual-PCA-by-drug-and-time-steps-9"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8daa38a24ec90d2dec390c845f1ba5c84a708e01/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">8daa38a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-26
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bdbf1c271bd0d8f878d87347451fb8e1f39d8111/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">bdbf1c2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">1f4237c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/5ef62c944eb2c4c178e9f70512871dc3e5c85393/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">5ef62c9</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/7f62d67d51d8e4e10c7c11fc6a5afac47bef4a5c/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">7f62d67</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/21fd94542ce3a3af7d17a9c13b88df6bf45b6840/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">21fd945</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8d08bd233d078f431ecc293e3ff642d4c3bc0181/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">8d08bd2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/4cd8ac4a07466bdf159970d0502a5edf602cacc8/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">4cd8ac4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/08936e73a08d8db556009edcce82d976cc4a3e2b/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">08936e7</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/85526c530073e51f8a1887b4682a80266bb7cfe7/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">85526c5</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b266b76acd8dac6d46d06572cf74173c443a67d8/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">b266b76</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/f0a75e110e3d2b1efc7ce936134b1eea7eda38fc/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">f0a75e1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>                            PC1      PC2      PC3      PC4      PC5      PC6
 Standard deviation     63.98853 47.11608 34.21502 32.58775 28.22245 23.90977
 Proportion of Variance  0.29072  0.15762  0.08312  0.07540  0.05655  0.04059
@@ -1310,13 +2838,187 @@ Cumulative Proportion   0.73702</code></pre>
 <div id="typical-genes-expressed-in-ipsc-cms" class="section level2">
 <h2>Typical genes expressed in iPSC-CMS</h2>
 <p><img src="figure/run_all_analysis.Rmd/typical%20gene%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-typical-gene-expression-1">
+Past versions of "typical gene expression-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-typical-gene-expression-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/typical gene expression-1.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b266b76acd8dac6d46d06572cf74173c443a67d8/docs/figure/run_all_analysis.Rmd/typical gene expression-1.png" target="_blank">b266b76</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="correlation-heatmap-of-counts-matrix" class="section level2">
 <h2>correlation heatmap of counts matrix</h2>
 <p><img src="figure/run_all_analysis.Rmd/pheatmap%20clustering%20of%20gene%20counts-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pheatmap-clustering-of-gene-counts-1">
+Past versions of "pheatmap clustering of gene counts-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-pheatmap-clustering-of-gene-counts-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/pheatmap clustering of gene counts-1.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/85526c530073e51f8a1887b4682a80266bb7cfe7/docs/figure/run_all_analysis.Rmd/pheatmap clustering of gene counts-1.png" target="_blank">85526c5</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="now-to-get-the-counts-set-for-deg" class="section level3">
 <h3>now to get the counts set for DEG!!</h3>
+<pre class="r"><code>group1 &lt;- interaction(drug,time)
+mm &lt;- model.matrix(~0 + group1)
+colnames(mm) &lt;- c(&quot;A3&quot;, &quot;X3&quot;, &quot;E3&quot;,&quot;M3&quot;,&quot;T3&quot;, &quot;V3&quot;,&quot;A24&quot;, &quot;X24&quot;, &quot;E24&quot;,&quot;M24&quot;,&quot;T24&quot;, &quot;V24&quot;)
+y &lt;- voom(x, mm,plot =TRUE)</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/counts%20to%20DEG%20set%20up-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-counts-to-DEG-set-up-1">
+Past versions of "counts to DEG set up-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-counts-to-DEG-set-up-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/counts to DEG set up-1.png" target="_blank">8221ec3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/08936e73a08d8db556009edcce82d976cc4a3e2b/docs/figure/run_all_analysis.Rmd/counts to DEG set up-1.png" target="_blank">08936e7</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>corfit &lt;- duplicateCorrelation(y, mm, block = indv)
+
+v &lt;- voom(x, mm, block = indv, correlation = corfit$consensus)
+
+fit &lt;- lmFit(v, mm, block = indv, correlation = corfit$consensus)
+
+cm &lt;- makeContrasts(
+  V.DA = V3 - A3,
+  V.DX = V3 - X3,
+  V.EP = V3 - E3,
+  V.MT = V3 - M3,
+  V.TR = V3 - T3,
+  V.DA24 = V24-A24,
+  V.DX24= V24-X24,
+  V.EP24= V24-E24,
+  V.MT24= V24-M24,
+  V.TR24= V24-T24,
+  levels = mm)
+
+vfit &lt;- lmFit(y, mm)
+
+vfit&lt;- contrasts.fit(vfit, contrasts=cm)
+
+efit2 &lt;- eBayes(vfit)
+# saveRDS(efit2,&quot;data/efit2_final.RDS&quot;)</code></pre>
 </div>
 </div>
 </div>
@@ -1325,39 +3027,96 @@ Cumulative Proportion   0.73702</code></pre>
 <div id="summary" class="section level2">
 <h2>summary</h2>
 <pre><code>        V.DA  V.DX  V.EP  V.MT  V.TR V.DA24 V.DX24 V.EP24 V.MT24 V.TR24
-Down      89     4    23    19     0   3722   3386   2953    849      0
-NotSig 13529 14068 13864 14026 14084   7220   7568   7882  12757  14084
-Up       466    12   197    39     0   3142   3130   3249    478      0</code></pre>
-<div id="cormotif-analysis-more-in-depth" class="section level3">
-<h3>cormotif analysis <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html">More
-In-depth</a></h3>
-<p>written summary so far: Response sets look similar to previous
-results. This data is based on the filtered count matrix (using
-rowmeans&gt;0 of cpm(log=true)). Classification of patterns appear to
-be:</p>
-<p>motif 1- No Response set: 7504 (gene list made by filtering
-likelihood of gene belonging to cluster 1 &lt;0.5)</p>
-<p>motif 2- Time-independent Top2<span
-class="math inline">\(\beta\)</span>i response cluster: 528 (gene list
-made by filtering likelihood of gene belonging to cluster 2 &lt;0.5)</p>
-<p>motif 3- Early Top2<span class="math inline">\(\beta\)</span>i
-response cluster: 444 (gene list made by filtering likelihood of gene
-belonging to cluster 3 &lt;0.5)</p>
-<p>motif 4- Late Top2<span class="math inline">\(\beta\)</span>i
-response cluster: 5545 (gene list made by filtering likelihood of gene
-belonging to cluster 4 &lt;0.5)</p>
-<p>NOTE: these are based on the most recent counts (motif numbers have
-changed a little)</p>
-<p>More analysis on corMotif (aka Baysian gene anaylsis can be found on
-this page:) <a
-href="https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html">CorMotif</a></p>
-</div>
+Down     109     3    30    24     0   3540   3336   3105    428      0
+NotSig 13552 14065 13874 14009 14084   7067   7439   7756  12969  14084
+Up       423    16   180    51     0   3477   3309   3223    687      0</code></pre>
 </div>
 <div id="volcano-plots-from-pairwise-gene-analysis"
 class="section level2">
 <h2>Volcano plots from pairwise gene analysis</h2>
-<p><img src="figure/run_all_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/run_all_analysis.Rmd/Volcanoplots-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(cowplot)
+siglist_final &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
+list2env(siglist_final,envir = .GlobalEnv)</code></pre>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<pre class="r"><code>volcanosig &lt;- function(df, psig.lvl,topg) {
+    df &lt;- df %&gt;% 
+    mutate(threshold = ifelse(adj.P.Val &gt; psig.lvl, &quot;A&quot;, ifelse(adj.P.Val &lt;= psig.lvl &amp; logFC&lt;=0,&quot;B&quot;,&quot;C&quot;)))
+    
+  ggplot(df, aes(x=logFC, y=-log10(adj.P.Val))) + 
+    geom_point(aes(color=threshold))+
+    xlab(expression(&quot;Log&quot;[2]*&quot; FC&quot;))+
+    ylim(0,30)+
+    ylab(expression(&quot;-log&quot;[10]*&quot;P Value&quot;))+
+    scale_color_manual(values = c(&quot;black&quot;, &quot;red&quot;,&quot;blue&quot;))+
+    theme_cowplot()+
+    theme(legend.position = &quot;none&quot;,
+          plot.title = element_text(size = rel(0.8), hjust = 0.5),
+          axis.title = element_text(size = rel(0.8))) 
+}
+
+v1 &lt;- volcanosig(V.DA.top, 0.01,0)+ ggtitle(&quot;Daunorubicin\n 3 hour&quot;)
+v2 &lt;- volcanosig(V.DA24.top, 0.01,0)+ ggtitle(&quot;Daunorubicin\n 24 hour&quot;)
+v3 &lt;- volcanosig(V.DX.top, 0.01,0)+ ggtitle(&quot;Doxorubicin\n 3 hour&quot;)+ylab(&quot;&quot;)
+v4 &lt;- volcanosig(V.DX24.top, 0.01,0)+ ggtitle(&quot;Doxorubicin\n 24 hour&quot;)+ylab(&quot;&quot;)
+v5 &lt;- volcanosig(V.EP.top, 0.01,0)+ ggtitle(&quot;Epirubicin\n 3 hour&quot;)+ylab(&quot;&quot;)
+v6 &lt;- volcanosig(V.EP24.top, 0.01,0)+ ggtitle(&quot;Epirubicin\n 24 hour&quot;)+ylab(&quot;&quot;)
+v7 &lt;- volcanosig(V.MT.top, 0.01,0)+ ggtitle(&quot;Mitoxatrone\n 3 hour&quot;)+ylab(&quot;&quot;)
+v8 &lt;- volcanosig(V.MT24.top, 0.01,0)+ ggtitle(&quot;Mitoxatrone\n 24 hour&quot;)+ylab(&quot;&quot;)
+v9 &lt;- volcanosig(V.TR.top, 0.01,0)+ ggtitle(&quot;Trastuzumab\n 3 hour&quot;)+ylab(&quot;&quot;)
+v10 &lt;- volcanosig(V.TR24.top, 0.01,0)+ ggtitle(&quot;Trastuzumab\n 24 hour&quot;)+ylab(&quot;&quot;)
+
+Volcanoplots &lt;- plot_grid(v1,v3,v5,v7,v9,v2,v4,v6,v8,v10, nrow = 2, ncol = 5)
+Volcanoplots</code></pre>
+<p><img src="figure/run_all_analysis.Rmd/Volcanoplots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Volcanoplots-1">
+Past versions of Volcanoplots-1.png
+</button>
+</p>
+<div id="fig-Volcanoplots-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8daa38a24ec90d2dec390c845f1ba5c84a708e01/docs/figure/run_all_analysis.Rmd/Volcanoplots-1.png" target="_blank">8daa38a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-26
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/21fd94542ce3a3af7d17a9c13b88df6bf45b6840/docs/figure/run_all_analysis.Rmd/Volcanoplots-1.png" target="_blank">21fd945</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code># saveRDS(Volcanoplots,&quot;output/Volcanoplot_10.RDS&quot;)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1366,11 +3125,12 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+<pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
 
 Matrix products: default
+
 
 locale:
 [1] LC_COLLATE=English_United States.utf8 
@@ -1379,122 +3139,56 @@ locale:
 [4] LC_NUMERIC=C                          
 [5] LC_TIME=English_United States.utf8    
 
+time zone: America/Chicago
+tzcode source: internal
+
 attached base packages:
-[1] stats4    stats     graphics  grDevices utils     datasets  methods  
-[8] base     
+[1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] ggpubr_0.6.0                           
- [2] Hmisc_4.8-0                            
- [3] Formula_1.2-5                          
- [4] survival_3.5-3                         
- [5] corrplot_0.92                          
- [6] ggrepel_0.9.3                          
- [7] cowplot_1.1.1                          
- [8] Homo.sapiens_1.3.1                     
- [9] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
-[10] org.Hs.eg.db_3.15.0                    
-[11] GO.db_3.15.0                           
-[12] OrganismDbi_1.38.1                     
-[13] GenomicFeatures_1.48.4                 
-[14] GenomicRanges_1.48.0                   
-[15] GenomeInfoDb_1.32.4                    
-[16] AnnotationDbi_1.58.0                   
-[17] IRanges_2.30.1                         
-[18] S4Vectors_0.34.0                       
-[19] Biobase_2.56.0                         
-[20] biomaRt_2.52.0                         
-[21] scales_1.2.1                           
-[22] lubridate_1.9.2                        
-[23] forcats_1.0.0                          
-[24] stringr_1.5.0                          
-[25] dplyr_1.1.0                            
-[26] purrr_1.0.1                            
-[27] readr_2.1.4                            
-[28] tidyr_1.3.0                            
-[29] tibble_3.1.8                           
-[30] tidyverse_2.0.0                        
-[31] AnnotationHub_3.4.0                    
-[32] BiocFileCache_2.4.0                    
-[33] dbplyr_2.3.1                           
-[34] BiocGenerics_0.42.0                    
-[35] data.table_1.14.8                      
-[36] reshape2_1.4.4                         
-[37] gridExtra_2.3                          
-[38] mixOmics_6.20.0                        
-[39] ggplot2_3.4.1                          
-[40] lattice_0.20-45                        
-[41] MASS_7.3-58.2                          
-[42] RColorBrewer_1.1-3                     
-[43] edgeR_3.38.4                           
-[44] limma_3.52.4                           
-[45] workflowr_1.7.0                        
+ [1] ggpubr_0.6.0       Hmisc_5.1-1        corrplot_0.92      ggrepel_0.9.3     
+ [5] cowplot_1.1.1      biomaRt_2.56.1     scales_1.2.1       lubridate_1.9.2   
+ [9] forcats_1.0.0      stringr_1.5.0      dplyr_1.1.3        purrr_1.0.2       
+[13] readr_2.1.4        tidyr_1.3.0        tibble_3.2.1       ggplot2_3.4.3     
+[17] tidyverse_2.0.0    data.table_1.14.8  reshape2_1.4.4     gridExtra_2.3     
+[21] RColorBrewer_1.1-3 edgeR_3.42.4       limma_3.56.2       workflowr_1.7.1   
 
 loaded via a namespace (and not attached):
-  [1] utf8_1.2.3                    tidyselect_1.2.0             
-  [3] RSQLite_2.3.0                 htmlwidgets_1.6.1            
-  [5] grid_4.2.2                    BiocParallel_1.30.4          
-  [7] munsell_0.5.0                 codetools_0.2-19             
-  [9] statmod_1.5.0                 interp_1.1-3                 
- [11] withr_2.5.0                   colorspace_2.1-0             
- [13] filelock_1.0.2                highr_0.10                   
- [15] knitr_1.42                    rstudioapi_0.14              
- [17] ggsignif_0.6.4                MatrixGenerics_1.8.1         
- [19] labeling_0.4.2                git2r_0.31.0                 
- [21] GenomeInfoDbData_1.2.8        pheatmap_1.0.12              
- [23] farver_2.1.1                  bit64_4.0.5                  
- [25] rprojroot_2.0.3               vctrs_0.5.2                  
- [27] generics_0.1.3                xfun_0.37                    
- [29] timechange_0.2.0              R6_2.5.1                     
- [31] locfit_1.5-9.7                bitops_1.0-7                 
- [33] cachem_1.0.7                  DelayedArray_0.22.0          
- [35] promises_1.2.0.1              BiocIO_1.6.0                 
- [37] nnet_7.3-18                   gtable_0.3.1                 
- [39] processx_3.8.0                rlang_1.0.6                  
- [41] splines_4.2.2                 rtracklayer_1.56.1           
- [43] rstatix_0.7.2                 broom_1.0.3                  
- [45] checkmate_2.1.0               BiocManager_1.30.20          
- [47] yaml_2.3.7                    abind_1.4-5                  
- [49] backports_1.4.1               httpuv_1.6.9                 
- [51] RBGL_1.72.0                   tools_4.2.2                  
- [53] ellipsis_0.3.2                jquerylib_0.1.4              
- [55] Rcpp_1.0.10                   plyr_1.8.8                   
- [57] base64enc_0.1-3               progress_1.2.2               
- [59] zlibbioc_1.42.0               RCurl_1.98-1.10              
- [61] ps_1.7.2                      prettyunits_1.1.1            
- [63] rpart_4.1.19                  deldir_1.0-6                 
- [65] SummarizedExperiment_1.26.1   cluster_2.1.4                
- [67] fs_1.6.1                      magrittr_2.0.3               
- [69] RSpectra_0.16-1               whisker_0.4.1                
- [71] matrixStats_0.63.0            hms_1.1.2                    
- [73] mime_0.12                     evaluate_0.20                
- [75] xtable_1.8-4                  XML_3.99-0.13                
- [77] jpeg_0.1-10                   compiler_4.2.2               
- [79] ellipse_0.4.3                 crayon_1.5.2                 
- [81] htmltools_0.5.4               corpcor_1.6.10               
- [83] later_1.3.0                   tzdb_0.3.0                   
- [85] DBI_1.1.3                     rappdirs_0.3.3               
- [87] Matrix_1.5-3                  car_3.1-1                    
- [89] cli_3.6.0                     parallel_4.2.2               
- [91] igraph_1.4.1                  pkgconfig_2.0.3              
- [93] getPass_0.2-2                 GenomicAlignments_1.32.1     
- [95] foreign_0.8-84                xml2_1.3.3                   
- [97] rARPACK_0.11-0                bslib_0.4.2                  
- [99] XVector_0.36.0                callr_3.7.3                  
-[101] digest_0.6.31                 graph_1.74.0                 
-[103] Biostrings_2.64.1             rmarkdown_2.20               
-[105] htmlTable_2.4.1               restfulr_0.0.15              
-[107] curl_5.0.0                    shiny_1.7.4                  
-[109] Rsamtools_2.12.0              rjson_0.2.21                 
-[111] lifecycle_1.0.3               jsonlite_1.8.4               
-[113] carData_3.0-5                 fansi_1.0.4                  
-[115] pillar_1.8.1                  KEGGREST_1.36.3              
-[117] fastmap_1.1.1                 httr_1.4.5                   
-[119] interactiveDisplayBase_1.34.0 glue_1.6.2                   
-[121] png_0.1-8                     BiocVersion_3.15.2           
-[123] bit_4.0.5                     stringi_1.7.12               
-[125] sass_0.4.5                    blob_1.2.3                   
-[127] latticeExtra_0.6-30           memoise_2.0.1                </code></pre>
+  [1] DBI_1.1.3               bitops_1.0-7            rlang_1.1.1            
+  [4] magrittr_2.0.3          git2r_0.32.0            compiler_4.3.1         
+  [7] RSQLite_2.3.1           getPass_0.2-2           png_0.1-8              
+ [10] callr_3.7.3             vctrs_0.6.3             pkgconfig_2.0.3        
+ [13] crayon_1.5.2            fastmap_1.1.1           backports_1.4.1        
+ [16] dbplyr_2.3.3            XVector_0.40.0          labeling_0.4.3         
+ [19] utf8_1.2.3              promises_1.2.1          rmarkdown_2.24         
+ [22] tzdb_0.4.0              ps_1.7.5                bit_4.0.5              
+ [25] xfun_0.40               zlibbioc_1.46.0         cachem_1.0.8           
+ [28] GenomeInfoDb_1.36.1     jsonlite_1.8.7          progress_1.2.2         
+ [31] blob_1.2.4              later_1.3.1             broom_1.0.5            
+ [34] cluster_2.1.4           prettyunits_1.1.1       R6_2.5.1               
+ [37] bslib_0.5.1             stringi_1.7.12          car_3.1-2              
+ [40] rpart_4.1.19            jquerylib_0.1.4         Rcpp_1.0.11            
+ [43] knitr_1.44              base64enc_0.1-3         IRanges_2.34.1         
+ [46] nnet_7.3-19             httpuv_1.6.11           timechange_0.2.0       
+ [49] tidyselect_1.2.0        abind_1.4-5             rstudioapi_0.15.0      
+ [52] yaml_2.3.7              curl_5.0.2              processx_3.8.2         
+ [55] lattice_0.21-8          plyr_1.8.8              Biobase_2.60.0         
+ [58] withr_2.5.0             KEGGREST_1.40.0         evaluate_0.21          
+ [61] foreign_0.8-85          BiocFileCache_2.8.0     xml2_1.3.5             
+ [64] Biostrings_2.68.1       pillar_1.9.0            filelock_1.0.2         
+ [67] carData_3.0-5           whisker_0.4.1           checkmate_2.2.0        
+ [70] stats4_4.3.1            generics_0.1.3          rprojroot_2.0.3        
+ [73] RCurl_1.98-1.12         S4Vectors_0.38.1        hms_1.1.3              
+ [76] munsell_0.5.0           glue_1.6.2              pheatmap_1.0.12        
+ [79] tools_4.3.1             ggsignif_0.6.4          locfit_1.5-9.8         
+ [82] fs_1.6.3                XML_3.99-0.14           grid_4.3.1             
+ [85] AnnotationDbi_1.62.2    colorspace_2.1-0        GenomeInfoDbData_1.2.10
+ [88] htmlTable_2.4.1         Formula_1.2-5           cli_3.6.1              
+ [91] rappdirs_0.3.3          fansi_1.0.4             gtable_0.3.4           
+ [94] rstatix_0.7.2           sass_0.4.7              digest_0.6.33          
+ [97] BiocGenerics_0.46.0     farver_2.1.1            htmlwidgets_1.6.2      
+[100] memoise_2.0.1           htmltools_0.5.6         lifecycle_1.0.3        
+[103] httr_1.4.7              statmod_1.5.0           bit64_4.0.5            </code></pre>
 </div>
 </div>
 </div>
