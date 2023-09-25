@@ -1,11 +1,12 @@
 ---
-title: "Run_all_analysis"
+title: "Inital RNA-seq analysis, Pairwise"
 author: "ERM"
 date: "20230414"
 output: 
   html_document: 
     toc: yes
     theme: flatly
+    df_print: kable
 editor_options: 
   markdown: 
     wrap: 72
@@ -20,47 +21,57 @@ knitr::opts_chunk$set(
 )
 ```
 
-This starts the documentation of the RNA-seq cardiotoxicity analysis for my manuscript
+This starts the documentation of the RNA-seq cardiotoxicity analysis for my cardiotoxicity data.
 ```{r library loading, warning=FALSE, echo=TRUE, message=FALSE}
 
 library(edgeR)#
 library(limma)#
 library(RColorBrewer)
-library(mixOmics)
 library(gridExtra)#
 library(reshape2)#
 library(data.table)
-library(AnnotationHub)
 library(tidyverse)
 library(scales)
 library(biomaRt)#
-library(Homo.sapiens)
 library(cowplot)#
 library(ggrepel)#
 library(corrplot)
 library(Hmisc)
 library(ggpubr)
-
-
-
 ```
 
 
-```{r functions for graphs, warning=FALSE, echo=FALSE, message=FALSE}
-
-pca_plot <- function(df, col_var = NULL, shape_var = NULL, title = "") {
-  ggplot(df) + geom_point(aes_string(x = "PC1", y = "PC2", color = col_var,
-                                     shape = shape_var), size = 5) +
-    labs(title = title, x = "PC 1", y = "PC2")+
-  scale_color_manual(values = c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333"))
-}
+```{r functions for graphs, warning=FALSE, echo=TRUE, message=FALSE}
+pca_plot <-
+  function(df,
+           col_var = NULL,
+           shape_var = NULL,
+           title = "") {
+    ggplot(df) + geom_point(aes_string(
+      x = "PC1",
+      y = "PC2",
+      color = col_var,
+      shape = shape_var
+    ),
+    size = 5) +
+      labs(title = title, x = "PC 1", y = "PC2") +
+      scale_color_manual(values = c(
+        "#8B006D",
+        "#DF707E",
+        "#F1B72B",
+        "#3386DD",
+        "#707031",
+        "#41B333"
+      ))
+  }
 
 pca_var_plot <- function(pca) {
   # x: class == prcomp
-  pca.var <- pca$sdev^2
+  pca.var <- pca$sdev ^ 2
   pca.prop <- pca.var / sum(pca.var)
-  var.plot <- qplot(PC, prop, data = data.frame(PC = 1:length(pca.prop),
-                                                prop = pca.prop)) +
+  var.plot <-
+    qplot(PC, prop, data = data.frame(PC = 1:length(pca.prop),
+                                      prop = pca.prop)) +
     labs(title = 'Variance contributed by each PC',
          x = 'PC', y = 'Proportion of variance')
 }
@@ -95,11 +106,17 @@ plot_versus_pc <- function(df, pc_num, fac) {
       labs(title = sprintf("p-val: %.2f", pval))
   }
 }
-x_axis_labels=function(labels,every_nth=1,...) {
-    axis(side=1,at=seq_along(labels),labels=F)
-    text(x=(seq_along(labels))[seq_len(every_nth)==1],
-        y=par("usr")[3]-0.075*(par("usr")[4]-par("usr")[3]),
-        labels=labels[seq_len(every_nth)==1],xpd=TRUE,...)
+x_axis_labels = function(labels, every_nth = 1, ...) {
+  axis(side = 1,
+       at = seq_along(labels),
+       labels = F)
+  text(
+    x = (seq_along(labels))[seq_len(every_nth) == 1],
+    y = par("usr")[3] - 0.075 * (par("usr")[4] - par("usr")[3]),
+    labels = labels[seq_len(every_nth) == 1],
+    xpd = TRUE,
+    ...
+  )
 }
 ```
 
@@ -109,40 +126,202 @@ x_axis_labels=function(labels,every_nth=1,...) {
 
 design <- read.csv("data/data_outline.txt", row.names = 1)
 mymatrix <- readRDS("data/allmatrix.RDS")
-seq_info <-read.csv("output/sequencing_info.txt")
-# below only done once
-# myfiles <- list.files(path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts", pattern ="*.txt")
-# mymatrix <- readDGE(files = myfiles, path = "~/Ward Lab/Cardiotoxicity/Data/counts/counts/", group =as.factor(rep((c("1","2","3","4","5","6","7","8","9","10","11","12")),6)))
-# 
-drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+seq_info <-read.csv("output/sequencing_info.txt", row.names=1)
 
-drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_palc <-
+  c("#8B006D",
+    "#DF707E",
+    "#F1B72B",
+    "#3386DD",
+    "#707031",
+    "#41B333")
 
-time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
-time <- ordered(time, levels =c("3h", "24h"))
+time <- rep((rep(c("3h", "24h"), c(6, 6))), 6)
+time <- ordered(time, levels = c("3h", "24h"))
 mymatrix$samples$time <- time
 
-indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) 
+indv <- as.factor(rep(c(1, 2, 3, 4, 5, 6), c(12, 12, 12, 12, 12, 12)))
 mymatrix$samples$indv <- indv
 
-group <-(rep(c("1","2","3","4","5","6","7","8","9","10","11","12"),6)) 
-group <- factor(group,levels = c( 1,2,3,4,5,6,7,8,9,10,11,12))
+group <-
+  (rep(c(
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
+  ), 6))
+group <- factor(group, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
-drug <- rep(c("Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab", "Vehicle"),12)
+drug <-
+  rep(
+    c(
+      "DNR",
+      "DOX",
+      "EPI",
+      "MTX",
+      "TRZ",
+      "VEH"
+    ),
+    12
+  )
 mymatrix$samples$drug <- drug
 
-RIN <- c(9.3,9.8,  9.8, 10.0,  9.6,  9.9,  7.8,  8.7,  8.6,  9.1,  9.4,  9.3,  9.4,  9.6,  9.9,  9.4,  9.9,  9.8,9.5,  9.9,  9.6,  9.9,  8.8,  9.5,  9.3, 10.0,  9.3,  9.6,  9.7,  9.4,  8.9,  7.5,  8.6,  8.5,  8.6,  9.3,9.6,  9.6,  9.4,  9.7,  9.9, 10.0,  9.4,  9.6,  9.4,  9.5,  9.8,  9.5,  9.6,  9.7,  9.6,  9.9,  9.6, 10.0,8.3, 8.4,9.4,9.7, 10.0, 10.0,  9.6,  9.6,  9.7,  9.5,  9.8,  9.5,  9.8,  8.6,  8.9,  9.1,  9.3,9.6)
+RIN <-
+  c(9.3,
+    9.8,
+    9.8,
+    10.0,
+    9.6,
+    9.9,  
+    7.8,
+    8.7,
+    8.6,
+    9.1,
+    9.4,
+    9.3,
+    9.4,
+    9.6,
+    9.9,
+    9.4,
+    9.9,
+    9.8,
+    9.5,
+    9.9,
+    9.6,
+    9.9,
+    8.8,
+    9.5,
+    9.3,
+    10.0,
+    9.3,
+    9.6,
+    9.7,
+    9.4,
+    8.9,
+    7.5,
+    8.6,
+    8.5,
+    8.6,
+    9.3,
+    9.6,
+    9.6,
+    9.4,
+    9.7,
+    9.9,
+    10.0,
+    9.4,
+    9.6,
+    9.4,
+    9.5,
+    9.8,
+    9.5,
+    9.6,
+    9.7,
+    9.6,
+    9.9,
+    9.6,
+    10.0,
+    8.3,
+    8.4,
+    9.4,
+    9.7,
+    10.0,
+    10.0,
+    9.6,
+    9.6,
+    9.7,
+    9.5,
+    9.8,
+    9.5,
+    9.8,
+    8.6,
+    8.9,
+    9.1,
+    9.3,
+    9.6
+  )
 mymatrix$samples$RIN <- RIN
 
-samplenames <- c("MCW_RM_R_11", "MCW_RM_R_12", "MCW_RM_R_13", "MCW_RM_R_14", "MCW_RM_R_15","MCW_RM_R_16", "MCW_RM_R_17", "MCW_RM_R_18", "MCW_RM_R_19", "MCW_RM_R_20","MCW_RM_R_21", "MCW_RM_R_22", "MCW_RM_R_23", "MCW_RM_R_24", "MCW_RM_R_25","MCW_RM_R_26", "MCW_RM_R_27", "MCW_RM_R_28", "MCW_RM_R_29", "MCW_RM_R_30","MCW_RM_R_31", "MCW_RM_R_32", "MCW_RM_R_33", "MCW_RM_R_34", "MCW_RM_R_35","MCW_RM_R_36", "MCW_RM_R_37", "MCW_RM_R_38", "MCW_RM_R_39", "MCW_RM_R_40","MCW_RM_R_41", "MCW_RM_R_42", "MCW_RM_R_43", "MCW_RM_R_44","MCW_RM_R_45","MCW_RM_R_46","MCW_RM_R_47","MCW_RM_R_48", "MCW_RM_R_49", "MCW_RM_R_50","MCW_RM_R_51", "MCW_RM_R_52", "MCW_RM_R_53", "MCW_RM_R_54", "MCW_RM_R_55","MCW_RM_R_56","MCW_RM_R_57", "MCW_RM_R_58", "MCW_RM_R_59", "MCW_RM_R_60","MCW_RM_R_61", "MCW_RM_R_62", "MCW_RM_R_63", "MCW_RM_R_64", "MCW_RM_R_65","MCW_RM_R_66", "MCW_RM_R_67", "MCW_RM_R_68", "MCW_RM_R_69", "MCW_RM_R_70","MCW_RM_R_71","MCW_RM_R_72", "MCW_RM_R_73", "MCW_RM_R_74", "MCW_RM_R_75","MCW_RM_R_76", "MCW_RM_R_77", "MCW_RM_R_78", "MCW_RM_R_79", "MCW_RM_R_80","MCW_RM_R_81","MCW_RM_R_82")
- 
+samplenames <-
+  c(
+    "MCW_RM_R_11",
+    "MCW_RM_R_12",
+    "MCW_RM_R_13",
+    "MCW_RM_R_14",
+    "MCW_RM_R_15",
+    "MCW_RM_R_16",
+    "MCW_RM_R_17",
+    "MCW_RM_R_18",
+    "MCW_RM_R_19",
+    "MCW_RM_R_20",
+    "MCW_RM_R_21",
+    "MCW_RM_R_22",
+    "MCW_RM_R_23",
+    "MCW_RM_R_24",
+    "MCW_RM_R_25",
+    "MCW_RM_R_26",
+    "MCW_RM_R_27",
+    "MCW_RM_R_28",
+    "MCW_RM_R_29",
+    "MCW_RM_R_30",
+    "MCW_RM_R_31",
+    "MCW_RM_R_32",
+    "MCW_RM_R_33",
+    "MCW_RM_R_34",
+    "MCW_RM_R_35",
+    "MCW_RM_R_36",
+    "MCW_RM_R_37",
+    "MCW_RM_R_38",
+    "MCW_RM_R_39",
+    "MCW_RM_R_40",
+    "MCW_RM_R_41",
+    "MCW_RM_R_42",
+    "MCW_RM_R_43",
+    "MCW_RM_R_44",
+    "MCW_RM_R_45",
+    "MCW_RM_R_46",
+    "MCW_RM_R_47",
+    "MCW_RM_R_48",
+    "MCW_RM_R_49",
+    "MCW_RM_R_50",
+    "MCW_RM_R_51",
+    "MCW_RM_R_52",
+    "MCW_RM_R_53",
+    "MCW_RM_R_54",
+    "MCW_RM_R_55",
+    "MCW_RM_R_56",
+    "MCW_RM_R_57",
+    "MCW_RM_R_58",
+    "MCW_RM_R_59",
+    "MCW_RM_R_60",
+    "MCW_RM_R_61",
+    "MCW_RM_R_62",
+    "MCW_RM_R_63",
+    "MCW_RM_R_64",
+    "MCW_RM_R_65",
+    "MCW_RM_R_66",
+    "MCW_RM_R_67",
+    "MCW_RM_R_68",
+    "MCW_RM_R_69",
+    "MCW_RM_R_70",
+    "MCW_RM_R_71",
+    "MCW_RM_R_72",
+    "MCW_RM_R_73",
+    "MCW_RM_R_74",
+    "MCW_RM_R_75",
+    "MCW_RM_R_76",
+    "MCW_RM_R_77",
+    "MCW_RM_R_78",
+    "MCW_RM_R_79",
+    "MCW_RM_R_80",
+    "MCW_RM_R_81",
+    "MCW_RM_R_82"
+  )
+
 anno <- (cbind(samplenames, indv, drug, time, RIN, group))
 anno <- as.data.frame(anno)
 # saveRDS(anno,"data/annotation_data_frame.RDS")
 
 ```
 
-```{r gene id infromation, echo=TRUE, message=FALSE, warning=FALSE}
+```{r gene id infromation, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
  
  ###now we add genenames to the geneid###
  
@@ -151,9 +330,6 @@ genes <- select(Homo.sapiens, keys=geneid, columns=c("SYMBOL"),
   keytype="ENTREZID")
 genes <- genes[!duplicated(genes$ENTREZID),]
 mymatrix$genes <- genes
-# saveRDS(mymatrix, "data/allmatrix.RDS")
-##note-not filtered!
-
 
 ```
 # Initial RNA-seq quality checks
@@ -163,7 +339,7 @@ mymatrix$genes <- genes
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 seq_info %>% 
   filter(type=="Total_reads") %>% 
-  ggplot(., aes (x =samplenames, y=Total.Sequences, fill = drug, group_by=indv))+
+  ggplot(., aes (x =samplenames, y=count, fill = drug, group_by=indv))+
   geom_col()+
  geom_hline(aes(yintercept=20000000))+
  scale_fill_manual(values=drug_palc)+
@@ -182,7 +358,7 @@ seq_info %>%
 
 seq_info %>% 
   filter(type=="Total_reads") %>% 
-  ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
+  ggplot(., aes (x =drug, y=count, fill = drug))+
   geom_boxplot()+
  scale_fill_manual(values=drug_palc)+
   ggtitle(expression("Total number of reads by treatment"))+
@@ -200,7 +376,7 @@ seq_info %>%
         strip.text.y = element_text(color = "white"))
 seq_info %>% 
   filter(type=="Total_reads") %>% 
-  ggplot(., aes (x =as.factor(indv), y=Total.Sequences))+
+  ggplot(., aes (x =as.factor(indv), y=count))+
   geom_boxplot(aes(fill=as.factor(indv)))+
  scale_fill_brewer(palette = "Dark2", name = "Individual")+
   ggtitle(expression("Total number of reads by individual"))+
@@ -219,7 +395,7 @@ seq_info %>%
 
 seq_info %>% 
   filter(type=="Mapped_reads") %>% 
-  ggplot(., aes (x =samplenames, y=Total.Sequences, fill = drug, group_by=indv))+
+  ggplot(., aes (x =samplenames, y=count, fill = drug, group_by=indv))+
   geom_col()+
   geom_hline(aes(yintercept=20000000))+
  scale_fill_manual(values=drug_palc)+
@@ -237,29 +413,9 @@ seq_info %>%
         strip.text.y = element_text(color = "white"))
 
 
-
 seq_info %>% 
   filter(type=="Mapped_reads") %>% 
-  ggplot(., aes (x =as.factor(indv), y=read_num))+
-  geom_boxplot(aes(fill=as.factor(indv)))+
- scale_fill_brewer(palette = "Dark2", name = "Individual")+
-  ggtitle(expression("Total mapped reads by individual"))+
-  xlab("")+
-  ylab(expression("Number of reads"))+
-  theme_bw()+
-
-  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
-        axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 0.5),
-        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
-        strip.text.y = element_text(color = "white"))
-
-seq_info %>% 
-  filter(type=="Mapped_reads") %>% 
-  ggplot(., aes (x =as.factor(indv), y=read_num))+
+  ggplot(., aes (x =as.factor(indv), y=count))+
   geom_boxplot(aes(fill=as.factor(indv)))+
  scale_fill_brewer(palette = "Dark2", name = "Individual")+
   ggtitle(expression("Total mapped reads by individual"))+
@@ -279,7 +435,7 @@ seq_info %>%
 
 seq_info %>% 
   filter(type=="Mapped_reads") %>% 
-  ggplot(., aes (x =drug, y=read_num))+
+  ggplot(., aes (x =drug, y=count))+
   geom_boxplot(aes(fill=drug))+
  scale_fill_manual(values=drug_palc)+
   ggtitle(expression("Total mapped reads by treatment"))+
@@ -319,7 +475,7 @@ filcpm_counts <- cpm(x$counts, log = TRUE)
 
 
 # lib_size <- (as.data.frame(mymatrix$sample$lib.size))
-label <- (interaction(substring(drug, 0, 2), indv, time))
+label <- (interaction(drug, indv, time))
 colnames(filcpm_counts) <- label
 # write.csv(filcpm_counts, "data/filtered_cpm_counts.csv")
 
@@ -331,10 +487,10 @@ hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMe
 
 
 boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
-x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
+x_axis_labels(labels = label, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 boxplot(filcpm_counts, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
-x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
+x_axis_labels(labels = label, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 
 
@@ -344,13 +500,9 @@ x_axis_labels(labels = samplenames, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 
 ```{r individual PCA by drug and time steps, echo=FALSE, message=FALSE, warning=FALSE}
-# x <- readRDS("data/filtermatrix_x.RDS")
 
-
-#dat_cpm <- readRDS("data/dat_cpm.RDS")
-
-label <- (interaction(substring(drug, 0, 2), indv, time))
-smlabel <- (interaction(substring(drug, 0, 2), time))
+label <- (interaction(drug, indv, time))
+smlabel <- (interaction(drug, time))
 x <- calcNormFactors(x, method = "TMM")
 normalized_lib_size <- x$samples$lib.size * x$samples$norm.factors
 dat_cpm <- cpm(x$counts, lib.size = normalized_lib_size, log=TRUE)
@@ -360,7 +512,7 @@ colnames(dat_cpm) <- label
 anno$time <- ordered(time, levels =c("3h", "24h"))
 anno$group <- group
 cpm_per_sample <- cbind(anno, t(dat_cpm)) 
-treattype <-c("Vehicle","Daunorubicin","Doxorubicin","Epirubicin","Mitoxantrone","Trastuzumab")
+treattype <-c("VEH","DNR","DOX","EPI","MTX","TRZ")
 
 for (b in treattype) { 
   dat <- dat_cpm[,anno$drug %in% c("none", b)] 
@@ -440,6 +592,7 @@ genecardiccheck <- c("MYH7", "TNNT2","MYH6","ACTN2","BMP3","TNNI3","RYR2","CACNA
                 # values = genecardiccheck, mart = ensembl)
 #write.csv(heartgenes, "data/heartgenes.csv")
 heartgenes <-read.csv("data/heartgenes.csv")
+
 fungraph <- as.data.frame(filcpm_counts[rownames(filcpm_counts) %in% heartgenes$entrezgene_id,])
 
 
@@ -461,11 +614,7 @@ fungraph %>%
         axis.ticks = element_line(linewidth = 1.5),
         axis.line = element_line(linewidth = 1.5),
         axis.text = element_text(size =10, color = "black", angle = 0),
-        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
         strip.text.y = element_text(color = "white"))
-
-
-
 ```
 
 
@@ -482,7 +631,7 @@ pheatmap::pheatmap(mcort , cluster_rows = TRUE, cluster_cols = TRUE)
 
 ### now to get the counts set for DEG!!
 
-```{r counts to DEG set up, echo= FALSE}
+```{r counts to DEG set up, echo= TRUE}
 group1 <- interaction(drug,time)
 mm <- model.matrix(~0 + group1)
 colnames(mm) <- c("A3", "X3", "E3","M3","T3", "V3","A24", "X24", "E24","M24","T24", "V24")
@@ -518,19 +667,18 @@ efit2 <- eBayes(vfit)
 ```
 
 ```{r Differential expression, echo=FALSE}
-# efit2 <- readRDS("data/efit2.RDS")
-# countstotal <- efit2$
-# colnames(countstotal) <- smlabel
-V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
-V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
-V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
-V.MT.top= topTable(efit2, coef=4, adjust="BH", number=Inf, sort.by="p")
-V.TR.top= topTable(efit2, coef=5, adjust="BH", number=Inf, sort.by="p")
-V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf, sort.by="p")
-V.DX24.top= topTable(efit2, coef=7, adjust="BH", number=Inf, sort.by="p")
-V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
-V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
-V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
+efit2 <- readRDS("data/efit2_final.RDS")
+
+V.DA.top= topTable(efit2, coef=1, adjust.method="BH", number=Inf, sort.by="p")
+V.DX.top= topTable(efit2, coef=2, adjust.method="BH", number=Inf, sort.by="p")
+V.EP.top= topTable(efit2, coef=3, adjust.method="BH", number=Inf, sort.by="p")
+V.MT.top= topTable(efit2, coef=4, adjust.method="BH", number=Inf, sort.by="p")
+V.TR.top= topTable(efit2, coef=5, adjust.method="BH", number=Inf, sort.by="p")
+V.DA24.top= topTable(efit2, coef=6, adjust.method="BH", number=Inf, sort.by="p")
+V.DX24.top= topTable(efit2, coef=7, adjust.method="BH", number=Inf, sort.by="p")
+V.EP24.top= topTable(efit2, coef=8, adjust.method="BH", number=Inf, sort.by="p")
+V.MT24.top= topTable(efit2, coef=9, adjust.method="BH", number=Inf, sort.by="p")
+V.TR24.top= topTable(efit2, coef=10, adjust.method="BH", number=Inf, sort.by="p")
 
 sigVDA3 = V.DA.top[V.DA.top$adj.P.Val < 0.05 , ]
 sigVDX3 = V.DX.top[V.DX.top$adj.P.Val < 0.05 , ]
@@ -594,44 +742,19 @@ sum
 ```
 
 
-### cormotif analysis [More In-depth](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
-
-written summary so far: 
-Response sets look similar to previous results.  This data is based on the filtered count matrix (using rowmeans>0 of cpm(log=true)).
-Classification of patterns appear to be:
-
-motif 1-  No Response set: 7504 (gene list made by filtering likelihood of gene belonging to cluster 1 <0.5) 
-
-motif 2-  Time-independent Top2$\beta$i response cluster: 528 (gene list made by filtering likelihood of gene belonging to cluster 2 <0.5) 
-
-motif 3- Early Top2$\beta$i response cluster: 444 (gene list made by filtering likelihood of gene belonging to cluster 3 <0.5) 
-
-motif 4-  Late Top2$\beta$i response cluster: 5545 (gene list made by filtering likelihood of gene belonging to cluster 4 <0.5) 
-
-  NOTE: these are based on the most recent counts (motif numbers have changed a little)
-
-More analysis on corMotif (aka Baysian gene anaylsis can be found on this page:) [CorMotif](https://reneeisnowhere.github.io/Cardiotoxicity/Cormotifcluster_analysis.html)
-
-
-
 ## Volcano plots from pairwise gene analysis 
 
 
-```{r Volcanoplots, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Volcanoplots, echo=TRUE, message=FALSE, warning=FALSE}
 library(cowplot)
-
-
+siglist_final <- readRDS("data/siglist_final.RDS")
+list2env(siglist_final,envir = .GlobalEnv)
 volcanosig <- function(df, psig.lvl,topg) {
     df <- df %>% 
     mutate(threshold = ifelse(adj.P.Val > psig.lvl, "A", ifelse(adj.P.Val <= psig.lvl & logFC<=0,"B","C")))
-    # df <- df %>% mutate(genelabels = "")
-    # df$genelabels[1:topg] <- df$SYMBOL[1:topg]
-    # 
-  ggplot(df, aes(x=logFC, y=-log10(P.Value))) + 
+    
+  ggplot(df, aes(x=logFC, y=-log10(adj.P.Val))) + 
     geom_point(aes(color=threshold))+
-    # geom_text_repel(aes(label = genelabels), segment.curvature = -1e-20,force = 1,size=2.5,
-    # arrow = arrow(length = unit(0.015, "npc")), max.overlaps = Inf) +
-    #geom_hline(yintercept = -log10(psig.lvl))+
     xlab(expression("Log"[2]*" FC"))+
     ylim(0,30)+
     ylab(expression("-log"[10]*"P Value"))+
@@ -641,7 +764,7 @@ volcanosig <- function(df, psig.lvl,topg) {
           plot.title = element_text(size = rel(0.8), hjust = 0.5),
           axis.title = element_text(size = rel(0.8))) 
 }
-#v1<- volcanosig(V.DA24.top, 0.01,0)
+
 v1 <- volcanosig(V.DA.top, 0.01,0)+ ggtitle("Daunorubicin\n 3 hour")
 v2 <- volcanosig(V.DA24.top, 0.01,0)+ ggtitle("Daunorubicin\n 24 hour")
 v3 <- volcanosig(V.DX.top, 0.01,0)+ ggtitle("Doxorubicin\n 3 hour")+ylab("")
@@ -652,17 +775,7 @@ v7 <- volcanosig(V.MT.top, 0.01,0)+ ggtitle("Mitoxatrone\n 3 hour")+ylab("")
 v8 <- volcanosig(V.MT24.top, 0.01,0)+ ggtitle("Mitoxatrone\n 24 hour")+ylab("")
 v9 <- volcanosig(V.TR.top, 0.01,0)+ ggtitle("Trastuzumab\n 3 hour")+ylab("")
 v10 <- volcanosig(V.TR24.top, 0.01,0)+ ggtitle("Trastuzumab\n 24 hour")+ylab("")
-# volcanoplot(efit2,coef = 10,style = "p-value",
-#                           highlight = 8,
-#                           names = efit2$genes$SYMBOL,
-#                           hl.col = "red",xlab = "Log2 Fold Change",
-#                           ylab = NULL,pch = 16,cex = 0.35,
-#                           main = "Using Trastuzuman 24 hour data and volcanoplot function")
-# plot_grid(v1,v2,  rel_widths =c(.8,1))
-# plot_grid(v3,v4,  rel_widths =c(.8,1))
-# plot_grid(v5,v6,  rel_widths =c(.8,1))
-# plot_grid(v7,v8,  rel_widths =c(.8,1))
-# plot_grid(v9,v10,  rel_widths =c(.8,1))
+
 Volcanoplots <- plot_grid(v1,v3,v5,v7,v9,v2,v4,v6,v8,v10, nrow = 2, ncol = 5)
 Volcanoplots
 # saveRDS(Volcanoplots,"output/Volcanoplot_10.RDS")
