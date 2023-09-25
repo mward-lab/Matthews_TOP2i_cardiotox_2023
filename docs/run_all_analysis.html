@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee93b23cd452a0ac25dee0f8291ee55deb33f4c48targetblanke93b23ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree5be5b86c2df2d27a2894e04eca0689bf5a5803a5targetblank5be5b86a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e93b23cd452a0ac25dee0f8291ee55deb33f4c48" target="_blank">e93b23c</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/5be5b86c2df2d27a2894e04eca0689bf5a5803a5" target="_blank">5be5b86</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreee93b23cd452a0ac25dee0f8291ee55deb33f4c48targetblanke93b23ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree5be5b86c2df2d27a2894e04eca0689bf5a5803a5targetblank5be5b86a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/e93b23cd452a0ac25dee0f8291ee55deb33f4c48" target="_blank">e93b23c</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/5be5b86c2df2d27a2894e04eca0689bf5a5803a5" target="_blank">5be5b86</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -854,6 +854,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/5be5b86c2df2d27a2894e04eca0689bf5a5803a5/analysis/run_all_analysis.Rmd" target="_blank">5be5b86</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+<td>
+added tracked files and css
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/run_all_analysis.html" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1594,6 +1628,25 @@ x_axis_labels = function(labels, every_nth = 1, ...) {
 }</code></pre>
 <div id="initial-rna-seq-quality-checks" class="section level1">
 <h1>Initial RNA-seq quality checks</h1>
+<pre class="r"><code>drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+seq_info %&gt;% 
+  filter(type==&quot;Total_reads&quot;) %&gt;% 
+  ggplot(., aes (x =samplenames, y=count, fill = drug, group_by=indv))+
+  geom_col()+
+ geom_hline(aes(yintercept=20000000))+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression(&quot;Total number of reads by sample&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/seq%20quals-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-1">
@@ -1617,6 +1670,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/seq quals-1.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-1.png" target="_blank">1f4237c</a>
@@ -1643,6 +1707,24 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>seq_info %&gt;% 
+  filter(type==&quot;Total_reads&quot;) %&gt;% 
+  ggplot(., aes (x =drug, y=count, fill = drug))+
+  geom_boxplot()+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression(&quot;Total number of reads by treatment&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+  
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/seq%20quals-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-2">
@@ -1666,6 +1748,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/seq quals-2.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-2.png" target="_blank">1f4237c</a>
@@ -1692,6 +1785,24 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>seq_info %&gt;% 
+  filter(type==&quot;Total_reads&quot;) %&gt;% 
+  ggplot(., aes (x =as.factor(indv), y=count))+
+  geom_boxplot(aes(fill=as.factor(indv)))+
+ scale_fill_brewer(palette = &quot;Dark2&quot;, name = &quot;Individual&quot;)+
+  ggtitle(expression(&quot;Total number of reads by individual&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 1),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/seq%20quals-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-3">
@@ -1741,6 +1852,24 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>seq_info %&gt;% 
+  filter(type==&quot;Mapped_reads&quot;) %&gt;% 
+  ggplot(., aes (x =samplenames, y=count, fill = drug, group_by=indv))+
+  geom_col()+
+  geom_hline(aes(yintercept=20000000))+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression(&quot;Total number of mapped reads by sample&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;RNA -sequencing reads&quot;))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 90, hjust = 1, vjust = 0.2),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/seq%20quals-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-4">
@@ -1764,6 +1893,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/seq quals-4.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-4.png" target="_blank">1f4237c</a>
@@ -1790,6 +1930,24 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>seq_info %&gt;% 
+  filter(type==&quot;Mapped_reads&quot;) %&gt;% 
+  ggplot(., aes (x =as.factor(indv), y=count))+
+  geom_boxplot(aes(fill=as.factor(indv)))+
+ scale_fill_brewer(palette = &quot;Dark2&quot;, name = &quot;Individual&quot;)+
+  ggtitle(expression(&quot;Total mapped reads by individual&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;Number of reads&quot;))+
+  theme_bw()+
+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.5),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/seq%20quals-5.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-5">
@@ -1813,6 +1971,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/seq quals-5.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-5.png" target="_blank">1f4237c</a>
@@ -1839,6 +2008,24 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>seq_info %&gt;% 
+  filter(type==&quot;Mapped_reads&quot;) %&gt;% 
+  ggplot(., aes (x =drug, y=count))+
+  geom_boxplot(aes(fill=drug))+
+ scale_fill_manual(values=drug_palc)+
+  ggtitle(expression(&quot;Total mapped reads by treatment&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;Number of reads&quot;))+
+  theme_bw()+
+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text.y = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.8, vjust = 0.5),
+        axis.text.x = element_text(size =10, color = &quot;black&quot;, angle = 0, hjust = 0.5),
+        #strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/seq%20quals-6.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-seq-quals-6">
@@ -1864,6 +2051,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/seq quals-6.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1f4237c56fa32930b8053270ca797aa7f515395b/docs/figure/run_all_analysis.Rmd/seq quals-6.png" target="_blank">1f4237c</a>
 </td>
 <td>
@@ -1879,8 +2077,22 @@ reneeisnowhere
 </div>
 <div id="initial-histograms-from-count-matrix" class="section level2">
 <h2>Initial histograms from count matrix</h2>
+<pre class="r"><code>cpm &lt;- cpm(mymatrix)
+lcpm &lt;- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
+dim(cpm)</code></pre>
 <pre><code>[1] 28395    72</code></pre>
+<pre class="r"><code>row_means &lt;- rowMeans(lcpm)
+x &lt;- mymatrix[row_means &gt; 0,]
+dim(x)</code></pre>
 <pre><code>[1] 14084    72</code></pre>
+<pre class="r"><code>filcpm_counts &lt;- cpm(x$counts, log = TRUE)
+
+
+label &lt;- (interaction(drug, indv, time))
+colnames(filcpm_counts) &lt;- label
+
+hist(lcpm,  main = &quot;Histogram of total counts (unfiltered)&quot;, 
+     xlab =expression(&quot;Log&quot;[2]*&quot; counts-per-million&quot;), col =4 )</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/readinfo-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-1">
@@ -1941,6 +2153,8 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>hist(cpm(x$counts, log = TRUE), main = &quot;Histogram of filtered counts using rowMeans &gt; 0 method&quot;, 
+     xlab =expression(&quot;Log&quot;[2]*&quot; counts-per-million&quot;), col =2 ) </code></pre>
 <p><img src="figure/run_all_analysis.Rmd/readinfo-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-2">
@@ -2001,6 +2215,8 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>boxplot(lcpm, main = &quot;Boxplots of log cpm per sample&quot;,xaxt = &quot;n&quot;, xlab= &quot;&quot;)
+x_axis_labels(labels = label, every_nth = 1, adj=0.7, srt =90, cex =0.4)</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/readinfo-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-3">
@@ -2024,6 +2240,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/readinfo-3.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/readinfo-3.png" target="_blank">8221ec3</a>
@@ -2050,6 +2277,8 @@ reneeisnowhere
 </table>
 </div>
 </div>
+<pre class="r"><code>boxplot(filcpm_counts, main =&quot;boxplots of log cpm per sample filtered&quot;,xaxt = &quot;n&quot;, xlab=&quot;&quot;)
+x_axis_labels(labels = label, every_nth = 1, adj=0.7, srt =90, cex =0.4)</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/readinfo-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-readinfo-4">
@@ -2073,6 +2302,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/readinfo-4.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/readinfo-4.png" target="_blank">8221ec3</a>
@@ -2131,6 +2371,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-1.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-1.png" target="_blank">8221ec3</a>
 </td>
 <td>
@@ -2182,6 +2433,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-2.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-2.png" target="_blank">8221ec3</a>
@@ -2237,6 +2499,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-3.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-3.png" target="_blank">8221ec3</a>
 </td>
 <td>
@@ -2288,6 +2561,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-4.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-4.png" target="_blank">8221ec3</a>
@@ -2343,6 +2627,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-5.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-5.png" target="_blank">8221ec3</a>
 </td>
 <td>
@@ -2394,6 +2689,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-6.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-6.png" target="_blank">8221ec3</a>
@@ -2508,6 +2814,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8daa38a24ec90d2dec390c845f1ba5c84a708e01/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-8.png" target="_blank">8daa38a</a>
@@ -2681,6 +2998,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8daa38a24ec90d2dec390c845f1ba5c84a708e01/docs/figure/run_all_analysis.Rmd/individual PCA by drug and time steps-9.png" target="_blank">8daa38a</a>
 </td>
 <td>
@@ -2837,6 +3165,41 @@ Cumulative Proportion   0.73702</code></pre>
 </div>
 <div id="typical-genes-expressed-in-ipsc-cms" class="section level2">
 <h2>Typical genes expressed in iPSC-CMS</h2>
+<pre class="r"><code>genecardiccheck &lt;- c(&quot;MYH7&quot;, &quot;TNNT2&quot;,&quot;MYH6&quot;,&quot;ACTN2&quot;,&quot;BMP3&quot;,&quot;TNNI3&quot;,&quot;RYR2&quot;,&quot;CACNA1C&quot;,&quot;KCNQ1&quot;, &quot;HCN1&quot;, &quot;ADRB1&quot;, &quot;ADRB2&quot;)
+#ensembl &lt;- useMart(&quot;ensembl&quot;, dataset=&quot;hsapiens_gene_ensembl&quot;)
+#saveRDS(ensembl, &quot;data/ensembl_backup.RDS&quot;)
+#ensemble &lt;- readRDS(&quot;data/ensembl_backup.RDS&quot;)
+#my_chr &lt;- c(1:22, &#39;M&#39;, &#39;X&#39;, &#39;Y&#39;)  ## creates a filter for each database
+
+#my_attributes &lt;- c(&#39;entrezgene_id&#39;, &#39;ensembl_gene_id&#39;, &#39;hgnc_symbol&#39;)
+
+#heartgenes &lt;- getBM(attributes=my_attributes,filters =&#39;hgnc_symbol&#39;,
+                # values = genecardiccheck, mart = ensembl)
+#write.csv(heartgenes, &quot;data/heartgenes.csv&quot;)
+heartgenes &lt;-read.csv(&quot;data/heartgenes.csv&quot;)
+
+fungraph &lt;- as.data.frame(filcpm_counts[rownames(filcpm_counts) %in% heartgenes$entrezgene_id,])
+
+
+fungraph %&gt;% 
+  rownames_to_column(&quot;entrezgene_id&quot;) %&gt;% 
+  pivot_longer(-entrezgene_id, names_to = &quot;samples&quot;,values_to = &quot;counts&quot;) %&gt;% 
+  mutate(gene = case_match(entrezgene_id,&quot;88&quot;~&quot;ACTN2&quot;,&quot;153&quot;~&quot;ADRB1&quot;,
+  &quot;154&quot;~&quot;ADRB2&quot;,&quot;651&quot;~&quot;BMP3&quot;,&quot;775&quot;~&quot;CACNA1C&quot;, &quot;100874369&quot;~&quot;CACNA1C&quot;,&quot;348980&quot;~&quot;HCN1&quot;,
+                           &quot;3784&quot;~&quot;KCNQ1&quot;, &quot;4624&quot;~&quot;MYH6&quot;,&quot;4625&quot;~&quot;MYH7&quot;,&quot;6262&quot;~&quot;RYR2&quot;,
+                           &quot;7137&quot;~&quot;TNNI3&quot;,&quot;7139&quot;~&quot;TNNT2&quot;,.default = entrezgene_id)) %&gt;% 
+  ggplot(., aes(x=reorder(gene,counts,decreasing=TRUE), y=counts))+
+  geom_boxplot()+
+  ggtitle(expression(&quot;Expression of typical cardiac tissue genes&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(expression(&quot;log&quot;[2]~&quot;cpm&quot;))+
+  theme_bw()+
+  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size =10, color = &quot;black&quot;, angle = 0),
+        strip.text.y = element_text(color = &quot;white&quot;))</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/typical%20gene%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-typical-gene-expression-1">
@@ -2860,6 +3223,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/typical gene expression-1.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/typical gene expression-1.png" target="_blank">8221ec3</a>
@@ -2889,6 +3263,10 @@ reneeisnowhere
 </div>
 <div id="correlation-heatmap-of-counts-matrix" class="section level2">
 <h2>correlation heatmap of counts matrix</h2>
+<pre class="r"><code>colnames(filcpm_counts) &lt;- label
+# saveRDS(filcpm_counts,&quot;data/filcpm_counts.RDS&quot;)
+mcort &lt;- cor(filcpm_counts)
+pheatmap::pheatmap(mcort , cluster_rows = TRUE, cluster_cols = TRUE)</code></pre>
 <p><img src="figure/run_all_analysis.Rmd/pheatmap%20clustering%20of%20gene%20counts-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pheatmap-clustering-of-gene-counts-1">
@@ -2913,6 +3291,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/pheatmap clustering of gene counts-1.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8221ec34ab3768ad8c1185e329ed9b44233f21a9/docs/figure/run_all_analysis.Rmd/pheatmap clustering of gene counts-1.png" target="_blank">8221ec3</a>
@@ -3026,6 +3415,10 @@ efit2 &lt;- eBayes(vfit)
 <h1>DEG analysis</h1>
 <div id="summary" class="section level2">
 <h2>summary</h2>
+<pre class="r"><code>efit2 &lt;- readRDS(&quot;data/efit2_final.RDS&quot;)
+sum &lt;- summary(decideTests(efit2))
+
+sum</code></pre>
 <pre><code>        V.DA  V.DX  V.EP  V.MT  V.TR V.DA24 V.DX24 V.EP24 V.MT24 V.TR24
 Down     109     3    30    24     0   3540   3336   3105    428      0
 NotSig 13552 14065 13874 14009 14084   7067   7439   7756  12969  14084
@@ -3092,6 +3485,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/aeeade4fd9dac4e5174ab2aae14efab8b5343ea3/docs/figure/run_all_analysis.Rmd/Volcanoplots-1.png" target="_blank">aeeade4</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8daa38a24ec90d2dec390c845f1ba5c84a708e01/docs/figure/run_all_analysis.Rmd/Volcanoplots-1.png" target="_blank">8daa38a</a>
 </td>
 <td>
@@ -3125,6 +3529,7 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
