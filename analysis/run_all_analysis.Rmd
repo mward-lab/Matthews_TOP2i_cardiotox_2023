@@ -15,7 +15,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-	echo = FALSE,
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
@@ -344,7 +344,7 @@ mymatrix$genes <- genes
 ```
 # Initial RNA-seq quality checks
 
-```{r seq quals, echo=FALSE, message=FALSE, warning=FALSE}
+```{r seq quals, echo=TRUE, message=FALSE, warning=FALSE}
 
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 seq_info %>% 
@@ -466,8 +466,7 @@ seq_info %>%
 
 ## Initial histograms from count matrix
 
-```{r readinfo,echo=FALSE, message=FALSE, warning=FALSE}
-label <- (interaction(substring(drug, 0, 2), indv, time))
+```{r readinfo,echo=TRUE, message=FALSE, warning=FALSE}
 
 cpm <- cpm(mymatrix)
 lcpm <- cpm(mymatrix, log=TRUE)  ### for determining the basic cutoffs
@@ -476,18 +475,12 @@ dim(cpm)
 row_means <- rowMeans(lcpm)
 x <- mymatrix[row_means > 0,]
 dim(x)
-# write.csv(x$counts, "data/filtered_raw_counts.csv")
-# saveRDS(x,"data/filtermatrix_x.RDS")
 
-
-       
 filcpm_counts <- cpm(x$counts, log = TRUE)
 
 
-# lib_size <- (as.data.frame(mymatrix$sample$lib.size))
 label <- (interaction(drug, indv, time))
 colnames(filcpm_counts) <- label
-# write.csv(filcpm_counts, "data/filtered_cpm_counts.csv")
 
 hist(lcpm,  main = "Histogram of total counts (unfiltered)", 
      xlab =expression("Log"[2]*" counts-per-million"), col =4 )
@@ -496,7 +489,7 @@ hist(cpm(x$counts, log = TRUE), main = "Histogram of filtered counts using rowMe
      xlab =expression("Log"[2]*" counts-per-million"), col =2 ) 
 
 
-boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")#, xlab=mymatrix$samples, srt =85,  adj=1, cex = 0.5)
+boxplot(lcpm, main = "Boxplots of log cpm per sample",xaxt = "n", xlab= "")
 x_axis_labels(labels = label, every_nth = 1, adj=0.7, srt =90, cex =0.4)
 
 boxplot(filcpm_counts, main ="boxplots of log cpm per sample filtered",xaxt = "n", xlab="")
@@ -569,7 +562,6 @@ pca_all_anno %>%
   geom_point(size= 5)+
   scale_color_manual(values=drug_palc)+
   ggrepel::geom_text_repel(label=indv)+
-  #scale_shape_manual(name = "Time",values= c("3h"=0,"24h"=1))+
   ggtitle(expression("PCA of log"[2]*"(cpm)"))+
   theme_bw()+
   guides( size =4)+
@@ -588,7 +580,7 @@ head(storepca$importance[,1:7])
 ## Typical genes expressed in iPSC-CMS
 
 
-```{r typical gene expression, echo=FALSE, message=FALSE, warning=FALSE}
+```{r typical gene expression, echo=TRUE, message=FALSE, warning=FALSE}
 
 genecardiccheck <- c("MYH7", "TNNT2","MYH6","ACTN2","BMP3","TNNI3","RYR2","CACNA1C","KCNQ1", "HCN1", "ADRB1", "ADRB2")
 #ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
@@ -629,7 +621,7 @@ fungraph %>%
 
 
 ## correlation heatmap of counts matrix
-```{R pheatmap clustering of gene counts}
+```{R pheatmap clustering of gene counts, echo=TRUE}
 
 colnames(filcpm_counts) <- label
 # saveRDS(filcpm_counts,"data/filcpm_counts.RDS")
