@@ -11,11 +11,11 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-19" />
+<meta name="date" content="2023-09-26" />
 
-<title>Renee_DRC_Code</title>
+<title>Dose-Response analysis</title>
 
-<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -37,8 +37,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -359,9 +359,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Renee_DRC_Code</h1>
+<h1 class="title toc-ignore">Dose-Response analysis</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-19</h4>
+<h4 class="date">2023-09-26</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-19
+<strong>Last updated:</strong> 2023-09-26
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -408,7 +408,7 @@ title="This is the local directory in which the code in this file was executed."
 This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
 analysis was created with <a
   href="https://github.com/workflowr/workflowr">workflowr</a> (version
-1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
 that were applied when the results were created. The <em>Past
 versions</em> tab lists the development history.
 </p>
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree8d042adde4d1325530b4a90654a6fd0d9d8c48e7targetblank8d042ada">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6fefb5ae39bdfebb49680fc6a4ed578b391584c6targetblank6fefb5aa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/8d042adde4d1325530b4a90654a6fd0d9d8c48e7" target="_blank">8d042ad</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6fefb5ae39bdfebb49680fc6a4ed578b391584c6" target="_blank">6fefb5a</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree8d042adde4d1325530b4a90654a6fd0d9d8c48e7targetblank8d042ada"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree6fefb5ae39bdfebb49680fc6a4ed578b391584c6targetblank6fefb5aa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/8d042adde4d1325530b4a90654a6fd0d9d8c48e7" target="_blank">8d042ad</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/6fefb5ae39bdfebb49680fc6a4ed578b391584c6" target="_blank">6fefb5a</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -561,11 +561,13 @@ Ignored files:
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
     Ignored:    data/BC_cell_lines.csv
+    Ignored:    data/BurridgeDOXTOX.RDS
     Ignored:    data/CADGWASgene_table.csv
     Ignored:    data/CAD_geneset.RDS
     Ignored:    data/CALIMA_Data/
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/Counts_RNA_ERMatthews.txt
     Ignored:    data/DAgostres24.RDS
     Ignored:    data/DAtable1.csv
     Ignored:    data/DDEMresp_list.csv
@@ -578,7 +580,9 @@ Ignored files:
     Ignored:    data/Da24counts.txt
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
     Ignored:    data/GTEX_setsimple.csv
@@ -602,9 +606,18 @@ Ignored files:
     Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
+    Ignored:    data/TableS10.csv
+    Ignored:    data/TableS11.csv
+    Ignored:    data/TableS9.csv
     Ignored:    data/Top2biresp_cluster24h.csv
+    Ignored:    data/Var_test_list.RDS
+    Ignored:    data/Var_test_list24.RDS
+    Ignored:    data/Var_test_list24alt.RDS
+    Ignored:    data/Var_test_list3.RDS
+    Ignored:    data/Vargenes.RDS
     Ignored:    data/Viabilitylistfull.csv
     Ignored:    data/allexpressedgenes.txt
+    Ignored:    data/allfinal3hour.RDS
     Ignored:    data/allgenes.txt
     Ignored:    data/allmatrix.RDS
     Ignored:    data/allmymatrix.RDS
@@ -613,12 +626,14 @@ Ignored files:
     Ignored:    data/avgLD50.RDS
     Ignored:    data/avg_LD50.RDS
     Ignored:    data/backGL.txt
+    Ignored:    data/burr_genes.RDS
     Ignored:    data/calcium_data.RDS
     Ignored:    data/clamp_summary.RDS
     Ignored:    data/cormotif_3hk1-8.RDS
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
     Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/cormotifprobs.csv
     Ignored:    data/counts24hours.RDS
     Ignored:    data/cpmcount.RDS
     Ignored:    data/cpmnorm_counts.csv
@@ -644,6 +659,7 @@ Ignored files:
     Ignored:    data/gene_corr_frame.RDS
     Ignored:    data/gene_prob_tran3h.RDS
     Ignored:    data/gene_probabilityk5.RDS
+    Ignored:    data/geneset_24.RDS
     Ignored:    data/gostresTop2bi_ER.RDS
     Ignored:    data/gostresTop2bi_LR
     Ignored:    data/gostresTop2bi_LR.RDS
@@ -671,7 +687,13 @@ Ignored files:
     Ignored:    data/norm_LDH.csv
     Ignored:    data/norm_counts.csv
     Ignored:    data/old_sets/
+    Ignored:    data/organized_drugframe.csv
     Ignored:    data/plan2plot.png
+    Ignored:    data/plot_intv_list.RDS
+    Ignored:    data/plot_list_DRC.RDS
+    Ignored:    data/qval24hr.RDS
+    Ignored:    data/qval3hr.RDS
+    Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
     Ignored:    data/sigVDA24.txt
@@ -688,6 +710,8 @@ Ignored files:
     Ignored:    data/siglist_final.RDS
     Ignored:    data/siglist_old.RDS
     Ignored:    data/slope_table.csv
+    Ignored:    data/supp10_24hlist.RDS
+    Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
     Ignored:    data/table3a.omar
@@ -704,44 +728,55 @@ Untracked files:
     Untracked:  .RDataTmp
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
+    Untracked:  .RDataTmp3
+    Untracked:  3hr all.pdf
+    Untracked:  Code_files_list.csv
+    Untracked:  Data_files_list.csv
     Untracked:  Doxorubicin_vehicle_3_24.csv
     Untracked:  Doxtoplist.csv
+    Untracked:  EPIqvalue_analysis.Rmd
     Untracked:  GWAS_list_of_interest.xlsx
     Untracked:  KEGGpathwaylist.R
     Untracked:  OmicNavigator_learn.R
     Untracked:  SigDoxtoplist.csv
-    Untracked:  analysis/DRC_analysist.Rmd
     Untracked:  analysis/ciFIT.R
-    Untracked:  analysis/enricher.Rmd
     Untracked:  analysis/export_to_excel.R
-    Untracked:  analysis/untitled1.R
-    Untracked:  code/DRC_plotfigure1.png
+    Untracked:  cleanupfiles_script.R
+    Untracked:  code/biomart_gene_names.R
     Untracked:  code/constantcode.R
+    Untracked:  code/corMotifcustom.R
     Untracked:  code/cpm_boxplot.R
     Untracked:  code/extracting_ggplot_data.R
-    Untracked:  code/fig1plot.png
-    Untracked:  code/figurelegeddrc.png
     Untracked:  code/movingfilesto_ppl.R
     Untracked:  code/pearson_extract_func.R
     Untracked:  code/pearson_tox_extract.R
     Untracked:  code/plot1C.fun.R
     Untracked:  code/spearman_extract_func.R
     Untracked:  code/venndiagramcolor_control.R
-    Untracked:  cormotif_probability_genelist.csv
+    Untracked:  cormotif_p.post.list_4.csv
+    Untracked:  figS1024h.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/DNR_DEGlist.csv
     Untracked:  output/DNRvenn.RDS
+    Untracked:  output/DOX_DEGlist.csv
     Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EPI_DEGlist.csv
     Untracked:  output/EPIvenn.RDS
     Untracked:  output/Figures/
+    Untracked:  output/MTX_DEGlist.csv
     Untracked:  output/MTXvenn.RDS
+    Untracked:  output/TRZ_DEGlist.csv
+    Untracked:  output/TableS8.csv
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
     Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/cormotif_probability_genelist.csv
+    Untracked:  output/endocytosisgenes.csv
     Untracked:  output/gene_corr_fig9.RDS
     Untracked:  output/legend_b.RDS
     Untracked:  output/motif_ERrep.RDS
@@ -749,35 +784,42 @@ Untracked files:
     Untracked:  output/motif_NRrep.RDS
     Untracked:  output/motif_TI_rep.RDS
     Untracked:  output/output-old/
+    Untracked:  output/rank24genes.csv
+    Untracked:  output/rank3genes.csv
+    Untracked:  output/reneem@ls6.tacc.utexas.edu
+    Untracked:  output/sequencinginformationforsupp.csv
+    Untracked:  output/sequencinginformationforsupp.prn
+    Untracked:  output/sigVDA24.txt
+    Untracked:  output/sigVDA3.txt
+    Untracked:  output/sigVDX24.txt
+    Untracked:  output/sigVDX3.txt
+    Untracked:  output/sigVEP24.txt
+    Untracked:  output/sigVEP3.txt
+    Untracked:  output/sigVMT24.txt
+    Untracked:  output/sigVMT3.txt
+    Untracked:  output/sigVTR24.txt
+    Untracked:  output/sigVTR3.txt
     Untracked:  output/supplementary_motif_list_GO.RDS
     Untracked:  output/toptablebydrug.RDS
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/DEG-GO_analysis.Rmd
-    Modified:   analysis/Figure2.Rmd
+    Deleted:    analysis/Cardiotoxicity.Rproj
     Modified:   analysis/Figure5.Rmd
-    Modified:   analysis/Figure9.Rmd
+    Modified:   analysis/GOI_plots.Rmd
     Modified:   analysis/Knowles2019.Rmd
     Modified:   analysis/Supplementary_figures.Rmd
-    Modified:   analysis/other_analysis.Rmd
-    Modified:   analysis/run_all_analysis.Rmd
-    Modified:   output/DNRmeSNPs.RDS
-    Modified:   output/DNRreQTLs.RDS
-    Modified:   output/DOXmeSNPs.RDS
-    Modified:   output/DOXreQTLs.RDS
-    Modified:   output/EPImeSNPs.RDS
-    Modified:   output/EPIreQTLs.RDS
-    Modified:   output/GOI_genelist.txt
-    Modified:   output/MTXmeSNPs.RDS
-    Modified:   output/MTXreQTLs.RDS
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/variance_scrip.Rmd
+    Deleted:    corMotifcustom.R
     Modified:   output/TNNI_LDH_RNAnormlist.txt
     Modified:   output/daplot.RDS
     Modified:   output/dxplot.RDS
     Modified:   output/epplot.RDS
     Modified:   output/mtplot.RDS
     Modified:   output/plan2plot.png
+    Modified:   output/sequencing_info.txt
     Modified:   output/toplistall.csv
     Modified:   output/trplot.RDS
     Modified:   output/veplot.RDS
@@ -826,6 +868,74 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/6fefb5ae39bdfebb49680fc6a4ed578b391584c6/analysis/DRC_analysis.Rmd" target="_blank">6fefb5a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-26
+</td>
+<td>
+wflow_publish("analysis/DRC_analysis.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/62286c39df588d70d06650c1569865a76958bc09/analysis/DRC_analysis.Rmd" target="_blank">62286c3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+<td>
+Updateing figure code
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/06800c9a0d5bf629ca2c406711ee7d699ca02279/analysis/DRC_analysis.Rmd" target="_blank">06800c9</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+<td>
+Commits to small changes and edits
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/ae4d18d4cedb481123098153ff6b304471369e94/docs/DRC_analysis.html" target="_blank">ae4d18d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1632,14 +1742,31 @@ update with corrMotif
 </div>
 </div>
 </div>
-<p>This is my Dose Response Curve Code and data with summaries.<br />
+<style type="text/css">
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+</style>
+<p>This is my Dose-Response curve analysis and data with
+summaries.<br />
 I hope to explain what and how I did things for future analysis, so that
 the code and data are reproducible. All data was created by treating
-cardiomyocytes at ~day 26 of diff with 0.01-50 <span
-class="math inline">\(\mu\)</span>M concentrations of the drugs:
-Daunorubicin (DNR) Doxorubicin (DOX) Epirubicin (EPI) Mitoxantrone (MTX)
-Trastuzumab (TRZ) [ note: TRZ could only be used at concentrations of 10
-<span class="math inline">\(\mu\)</span>M and lower] Vehicle (VEH)</p>
+cardiomyocytes at ~day 27 of diff with 0.01-50 <span
+class="math inline">\(\mu\)</span>M concentrations of the following
+drugs:<br />
+Daunorubicin (DNR)<br />
+Doxorubicin (DOX)<br />
+Epirubicin (EPI)<br />
+Mitoxantrone (MTX)<br />
+Trastuzumab (TRZ)<br />
+[ note: TRZ could only be used at concentrations of 10 <span
+class="math inline">\(\mu\)</span>M and lower]<br />
+Vehicle (VEH)</p>
 <p>VEH is effectively the same media, however water is added in volumes
 equivalent to the volume used to dilute the drugs in a 10 mM stock
 concentration. This is why it has values at different concentrations and
@@ -1649,15 +1776,16 @@ manufacturer’s protocols.<br />
 90 uL of Galactose media + 10 uL of Presto Blue reagent were added to
 each well of the 96 well DRC plate for one hour. The cell media was then
 extracted to a black, clear bottom plate and wrapped in foil and stored
-at 4 degrees overnight (to allow bubbles to go away). A plate reader was
-used to measure florescence and the RFLU values were exported to an
+at 4 degrees overnight. A plate reader was used to measure florescence
+intensity and the relative fluorescent (RFLU) values were exported to an
 excel file.</p>
 <p>Analysis was done as follows:</p>
 <ol style="list-style-type: decimal">
-<li><p>The background wells were averaged and the average value was
-subtracted from every well on the plate. Because the wells on the plate
-were randomized, matching the treatment with the wells is critical and
-was done inefficiently in an excel file for each experiment.</p></li>
+<li><p>The background wells containing media + reagent only were
+averaged and the average value was subtracted from every well on the
+plate. Because the wells on the plate were randomized, matching the
+treatment with the wells is critical and was done inefficiently in an
+excel file for each experiment.</p></li>
 <li><p>Percent Viability was calculated by averaging the RFLU from the
 vehicle at each concentration, and dividing each drug’s RFLU at that
 concentration by the Vehicle control average RFLU to give a ratio. All
@@ -1669,18 +1797,17 @@ incorrectly in my computer)</p></li>
 “Empty_Blank” well RFLU2 values from each plate within an experiment
 were averaged.<br />
 eg:</p>
-<ol style="list-style-type: decimal">
-<li><p>plate 1= empty average RFLU2 = 29000,</p></li>
-<li><p>plate 2 empty average RFLU2 =31000 normalized ratio plate 1/plate
-2 or 29000/31000 =0.9355</p></li>
-<li><p>this normalization ratio then was divided into every RFLU2 value
-on plate 1. Plate 2 would be divided by 1 to keep the formulas
+<p>Step 1. plate 1= empty average RFLU2 = 29000,</p>
+<p>Step 2. plate 2 empty average RFLU2 =31000 normalized ratio plate
+1/plate 2 or 29000/31000 =0.9355</p>
+<p>Step 3. This normalization ratio then was divided into every RFLU2
+value on plate 1. Plate 2 would be divided by 1 to keep the formulas
 consistent (31000/31000 or plate2/plate2) to create a column that
-contained the adjusted RFLU2 values, called “adj”</p></li>
-</ol></li>
+contained the adjusted RFLU2 values, called “adj”.</p></li>
 <li><p>Calculations then proceed as described originally. The first
 viability value is called “Percent”. The adjusted value for intra-plate
-differences is called “Padj” although this use was deprecated.</p></li>
+differences is called “Padj” although this use was later
+deprecated.</p></li>
 </ol>
 <p>Part 2 of the analysis of data begins by entering data from the excel
 compilation to R. The data is stored as an excel file, which was then
@@ -1724,33 +1851,34 @@ subtracted.</p></li>
 <li><p>Individual 5 is 78-1 (D01_78_1, D03_78_1)</p></li>
 <li><p>Individual 6 is 71-1 (D02_71_1, DJAG_71_1)</p>
 <ul>
-<li>As of 6-2-22 I am implementing a new naming for R handles:<br />
-ind1a, ind1b etc, to make sure I process out the “empty_blanks”</li>
+<li><p>As of 6-2-22 I am implementing a new naming for R handles:<br />
+ind1a, ind1b etc, to make sure I process out the “empty_blanks”</p>
+<p>I am also converting ‘Conc’ column to numeric</p></li>
 </ul></li>
 </ul>
-<p>I am also converting Conc column to numeric</p>
 <p>Step 4: File cleanup first subsets each file imported by taking out
 the ‘Empty’ samples in the Drug column and then renaming the file to
 individual names and DRC a and b</p>
-<p>I then convert the concentrations to numeric and select the 5 columns
-that I really need for analysis, followed by dropping any wells that
-were NA in the Percent column.<br />
-The next part of the code makes analysis files and groups and things for
-the iterations.</p>
-<p>Adata-frame called individuals is complied from each of the
-dataframes wrangled above and will be the “final” R object stored in the
-project folder.</p>
+<p>A data-frame called DRC48hoursdata.csv is complied from each of the
+experiments above and is the “final” table stored in the data
+folder.</p>
 <div id="loading-the-data-into-r" class="section level2">
 <h2>Loading the data into R</h2>
+<pre class="r"><code>drug_pal_fact &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+full_list &lt;- read.csv(&quot;data/DRC48hoursdata.csv&quot;, row.names = 1)</code></pre>
 <p>Once they are all in a data frame, a few thing need to be defined for
 other function like ggplot.</p>
+<pre class="r"><code>daunls &lt;- list() ###daunorubicin list
+doxols &lt;- list() ### doxorubicin list
+epils &lt;- list() ###epirubicin list
+mitols &lt;- list() ###mitoxantrone list
+trasls &lt;- list() ###trastuzmab list
+vehls &lt;- list() ###vehicle list
+# name &lt;- c( &quot;Veh&quot;,&quot;Daun&quot;, &quot;Doxo&quot;,&quot;Epi&quot;, &quot;Mito&quot;, &quot;Tras&quot;)### text list of drugs</code></pre>
 </div>
 <div id="viability" class="section level2">
 <h2>Viability</h2>
 <pre class="r"><code>### to extract parameters for mapping
-drug_pal_fact &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
-full_list &lt;- read.csv(&quot;data/DRC48hoursdata.csv&quot;, row.names = 1)
- 
 
 averageFL &lt;-   full_list %&gt;%
   na.omit()%&gt;% 
@@ -1798,6 +1926,65 @@ averageFL &lt;-   full_list %&gt;%
           panel.border=element_rect(fill = NA, size = 2),
           plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
 <p><img src="figure/DRC_analysis.Rmd/Viability%20data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Viability-data-1">
+Past versions of "Viability data-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Viability-data-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/Viability data-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/Viability data-1.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bea5c804d2bf93deca830472892bea21e1f91714/docs/figure/DRC_analysis.Rmd/Viability data-1.png" target="_blank">bea5c80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>averageFL %&gt;% 
   ungroup() %&gt;% 
   mutate(indv=substr(SampleID,4,4)) %&gt;%
@@ -1825,10 +2012,116 @@ averageFL &lt;-   full_list %&gt;%
         panel.border=element_rect(fill = NA, size = 2),
         plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))</code></pre>
 <p><img src="figure/DRC_analysis.Rmd/viablity%20by%20drug-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-viablity-by-drug-1">
+Past versions of "viablity by drug-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-viablity-by-drug-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/viablity by drug-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/viablity by drug-1.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bea5c804d2bf93deca830472892bea21e1f91714/docs/figure/DRC_analysis.Rmd/viablity by drug-1.png" target="_blank">bea5c80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The above codes can be altered to include ALL concentrations.</p>
 </div>
 <div id="ploting-the-drc" class="section level2">
 <h2>Ploting the DRC</h2>
+<p>Making the Dose-response curve involved averaging the quadruplicates
+at each concentration for each curve analyzed.</p>
+<p>I broke up the full list into treatments and replicates. DA, DX, EP,
+MT, TR, and VE objects stored the mean viability tables, and<br />
+</p>
+<p>DA2, DX2, EP2, MT2, TR2, and VE2 contain all the data points for
+generation of the confidence intervals later in the analysis.</p>
+<pre class="r"><code>avg_via &lt;- averageFL %&gt;%
+    ungroup() %&gt;% 
+    mutate(indv=substr(SampleID,4,4)) %&gt;%
+    mutate(indv=factor(indv, levels= c(&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;))) %&gt;% 
+    group_by(indv,sDrug,Conc) %&gt;% 
+    dplyr::summarize(Viability=mean(Mean))
+
+updated_list &lt;- full_list %&gt;%
+  na.omit()%&gt;% 
+  mutate(sDrug=Drug) %&gt;% 
+  mutate(sDrug=case_match(Drug,&quot;Daun&quot;~&quot;DNR&quot;,
+                            &quot;Doxo&quot;~&quot;DOX&quot;,
+                            &quot;Epi&quot;~&quot;EPI&quot;,
+                            &quot;Mito&quot;~&quot;MTX&quot;,
+                            &quot;Tras&quot;~&quot;TRZ&quot;,
+                            &quot;Veh&quot;~ &quot;VEH&quot;, .default= Drug)) %&gt;%
+    group_by(SampleID, sDrug,Conc) %&gt;%
+    mutate(indv=substr(SampleID,4,4)) %&gt;%
+    mutate(indv=factor(as.numeric(indv))) %&gt;% 
+    mutate(sDrug=factor(sDrug, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) 
+
+
+
+DA &lt;- avg_via %&gt;% filter(sDrug == &quot;DNR&quot;)
+DX &lt;- avg_via %&gt;% filter(sDrug ==&quot;DOX&quot;)
+EP &lt;- avg_via %&gt;% filter(sDrug ==&quot;EPI&quot;)
+MT &lt;- avg_via %&gt;% filter(sDrug ==&quot;MTX&quot;)
+TR &lt;- avg_via %&gt;% filter(sDrug ==&quot;TRZ&quot;)
+VE &lt;- avg_via%&gt;% filter(sDrug ==&quot;VEH&quot;)
+
+DA2 &lt;- updated_list %&gt;% filter(sDrug == &quot;DNR&quot;)
+DX2 &lt;- updated_list %&gt;% filter(sDrug ==&quot;DOX&quot;)
+EP2 &lt;- updated_list %&gt;% filter(sDrug ==&quot;EPI&quot;)
+MT2 &lt;- updated_list %&gt;% filter(sDrug ==&quot;MTX&quot;)
+TR2 &lt;- updated_list %&gt;% filter(sDrug ==&quot;TRZ&quot;)
+VE2 &lt;- updated_list%&gt;% filter(sDrug ==&quot;VEH&quot;)</code></pre>
+<p>The code below is an explanation of the ggplot code I used to plot
+the DRC by individual. This uses the two mean viability values from DRC1
+and biological replicate DRC2, as input to generate the Dose-response
+curve for each treatment/individual combination.</p>
 <pre class="r"><code>ggplot(DA, 
        aes(x=Conc, y= Viability, color =indv,alpha =0.4)) +
   guides(color=&quot;none&quot;, alpha = &quot;none&quot;)+  #guides turned off for group plotting
@@ -1848,23 +2141,236 @@ averageFL &lt;-   full_list %&gt;%
         panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
         panel.border=element_rect(fill = NA, linewidth = 2),
         plot.background = element_rect(fill = &quot;white&quot;, colour = NA))</code></pre>
-<p>The code above is used multiple times and stored into an R object, so
-I can later combine the group into one full plot. This keeps the graphs
-in the same proportion to each other. I do alter each individual graph
-to either add axis titles or remove repetition.</p>
-<p><img src="figure/DRC_analysis.Rmd/daunplot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/doxplot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/epiplot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/Mitoplot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/trasplot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/control%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The code above is used multiple times and output values are stored
+into an R object, so I can later combine the group into one full
+plot.</p>
+<pre class="r"><code>daplot &lt;-
+  ggplot(DA,aes(x=Conc, y= Viability, 
+                 color = indv)) +
+  stat_smooth(method = &quot;drm&quot;, 
+                method.args = list(fct = L.4(c(NA,NA,1,NA))), 
+              se = FALSE)+
+  ylim(0,1.5)+
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  guides(color=&quot;none&quot;)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+#expression(paste(&quot;Concentration [&quot;, mu, &quot;M]&quot;)))+
+    ylab(NULL) +
+    ggtitle(&quot;DNR&quot;)+
+    theme(plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;),
+          axis.title=element_text(size=10),
+          axis.ticks=element_line(linewidth =2),
+          axis.text=element_text(size=10, face = &quot;bold&quot;),
+          panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+          panel.border=element_rect(fill = NA, linewidth = 2),
+          plot.background = element_rect(fill = &quot;white&quot;, colour = NA))</code></pre>
+<pre class="r"><code>dxplot &lt;-
+  ggplot(DX,aes(x=Conc, y= Viability, 
+                 color = indv)) +
+  stat_smooth(method = &quot;drm&quot;, 
+                method.args = list(fct = L.4(c(NA,NA,1,NA))), 
+              se = FALSE)+
+  ylim(0,1.5)+
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  guides(color=guide_legend(title=&quot;Treatment&quot;))+
+  guides(color=&quot;none&quot;)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+      ggtitle(&quot;DOX&quot;)+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = &quot;white&quot;, colour = NA))</code></pre>
+<pre class="r"><code>epplot &lt;- 
+  ggplot(EP, 
+         aes(x=Conc, y= Viability, color = indv)) +
+  stat_smooth(method = &quot;drm&quot;,
+              method.args = list(fct = L.4(c(NA,NA,1,NA))), se = FALSE)+
+  ylim(0,1.5)+
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  guides(color=&quot;none&quot;)+
+  scale_x_log10() +  
+  theme_classic() +
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  xlab(NULL)+
+  ylab(NULL) +
+  theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+  ggtitle(&quot;EPI&quot;)+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(linewidth = 2),
+        axis.text=element_text(size=10, face = &quot;bold&quot;),
+        panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+        panel.border=element_rect(fill = NA, linewidth = 2),
+        plot.background = element_rect(fill = &quot;white&quot;, colour = NA))</code></pre>
+<pre class="r"><code>mtplot &lt;- 
+  ggplot(MT, 
+         aes(x=Conc, y= Viability, color = indv)) +
+  stat_smooth(method = &quot;drm&quot;,
+              method.args = list(fct = L.4(c(NA,NA,1,NA))), se = FALSE)+
+  ylim(0,1.5)+
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  guides(color=&quot;none&quot;)+
+  scale_x_log10() +
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  theme_classic() +
+  xlab(NULL)+
+  ylab(NULL) +
+  theme(plot.title = element_text(hjust = 0.5, size =15, face=&quot;bold&quot;))+
+  ggtitle(&quot;MTX&quot;)+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(linewidth = 2),
+        axis.text=element_text(size=10, face = &quot;bold&quot;),
+        panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+        panel.border=element_rect(fill = NA, linewidth =  2),
+        plot.background = element_rect(fill = &quot;white&quot;, colour = NA))</code></pre>
+<pre class="r"><code>##creating legend for full plot
+
+leg &lt;- ggplot(TR, aes(x=Conc, y= Viability, color = indv, alpha = 0.6)) +
+          geom_line( size=2)+
+          theme_classic() +
+  guides(alpha = &quot;none&quot;)+
+      scale_color_brewer(palette = &quot;Dark2&quot;,labels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+        labs(color = &quot;Individual&quot;, linewidth=3)
+    
+trplot &lt;-
+  ggplot(TR, 
+        aes(x=Conc, y= Viability, color = indv)) +
+  stat_smooth(method = &quot;drm&quot;, 
+              method.args = list(fct = L.4(c(NA,1,NA,NA))), se = FALSE)+
+  ylim(0,1.5)+
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  guides(color=&quot;none&quot;)+
+  scale_x_log10() + 
+  theme_classic() +
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  xlab(expression(paste(&quot;Concentration &quot;, mu, &quot;M&quot;)))+
+  ylab(NULL) +
+  theme(plot.title = element_text(hjust = 0.5, size =15, face = &quot;bold&quot;))+
+  ggtitle(&quot;TRZ&quot;)+
+  theme(axis.title=element_text(size=10),
+        axis.ticks=element_line(size =2),
+        axis.text=element_text(size=10, face = &quot;bold&quot;),
+        panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+        panel.border=element_rect(fill = NA, size = 2),
+        plot.background = element_rect(fill = &quot;white&quot;, colour = NA))</code></pre>
+<pre class="r"><code>veplot &lt;- 
+  ggplot(VE,
+         aes(x=Conc, y= Viability, color = indv)) +
+  stat_smooth(method = &quot;drm&quot;, 
+              method.args = list(fct = L.4(c(NA,NA,NA,NA))), se = FALSE)+
+  ylim(0,1.5)+
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  guides(color=&quot;none&quot;)+
+  scale_x_log10() +  
+  theme_classic() +
+  xlab(expression(paste(&quot;Concentration &quot;, mu, &quot;M&quot;))) +
+  ylab(NULL) +
+  ggtitle(&quot;VEH&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, size = 15, face = &quot;bold&quot;))+
+  theme(axis.title = element_text(size = 10),
+        axis.ticks = element_line(linewidth =  2),
+        axis.text = element_text(size = 10, face = &quot;bold&quot;),
+        panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+        panel.border = element_rect(fill = NA, linewidth = 2),
+        panel.background = element_rect(fill = &quot;white&quot;),
+        plot.background = element_rect(fill = &quot;white&quot;, colour = NA))</code></pre>
 <div id="plot-all-together" class="section level3">
 <h3>plot all together!</h3>
-<p><img src="figure/DRC_analysis.Rmd/plot%20together-1.png" width="960" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/plot%20together-2.png" width="960" style="display: block; margin: auto;" /></p>
-<p>Now to extract all the data from drm.</p>
+<pre class="r"><code>## take a legend from a plot
+legend_b &lt;- ggpubr::get_legend(leg)
+
+ggpubr::as_ggplot(legend_b)</code></pre>
+<p><img src="figure/DRC_analysis.Rmd/plot%20together-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-plot-together-1">
+Past versions of "plot together-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-plot-together-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/plot together-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="ld50-and-slope-extract" class="section level3">
-<h3>LD50 and slope extract</h3>
+</div>
+<pre class="r"><code>plan2 &lt;-  plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot,legend_b,ncol =4)
+
+plan2</code></pre>
+<p><img src="figure/DRC_analysis.Rmd/plot%20together-2.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-plot-together-2">
+Past versions of "plot together-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-plot-together-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/plot together-2.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="ld50-and-slope-extraction-first-try" class="section level3">
+<h3>LD50 and slope extraction (First try)</h3>
+<p>Now I want to extract from the model, the slope and LD50 calculated
+by the dose-response model. I make several lists to store the info
+into.</p>
 <pre class="r"><code>daunls &lt;- list() ###daunorubicin list
 dnr_sl &lt;- list() ##slope
 doxols &lt;- list() ### doxorubicin list
@@ -1889,65 +2395,1967 @@ ID &lt;- c(&quot;ind1a&quot;,
         &quot;ind5b&quot;,
         &quot;ind6a&quot;,
         &quot;ind6b&quot;)</code></pre>
+<p>Then I run the complete samples without averaging, to get the LD50s
+from each replicate and individual. The values are stored in several
+files. Slope values are in the *_sl dataframes, LD50 are in the *ls
+dataframes and confidence intervals are in the *_intv dataframes.</p>
+<pre class="r"><code>da_confint &lt;- list()
+for(k in ID){
+thingda &lt;-  filter(DA2, SampleID==k)
+  thingda.m &lt;- drm(Percent~Conc, data = thingda, fct=LL.4(c(NA, NA,1, NA),names=c(&quot;Slope&quot;, &quot;Lower Limit&quot;,&quot;Upper Limit&quot;,&quot;ED50&quot;)))
+  dnr_sl[k] &lt;- thingda.m$fit$par[1]
+  daunls[k] &lt;- thingda.m$fit$par[3]
+  da_confint[paste0(k)]&lt;-list(predict(thingda.m, interval=&quot;confidence&quot;))
+}
+DNR_intv &lt;- map_df(da_confint, ~as.data.frame(.x), .id=&quot;indv&quot;)
+DNR_intv$Conc &lt;- DA2$Conc</code></pre>
+<pre class="r"><code> dx_confint&lt;-list()
+
+for(k in ID){  
+thingdx &lt;-  filter(DX2, SampleID==k)
+  thingdx.m &lt;- drm(Percent~Conc, data = thingdx, fct=LL.4(c(NA, NA,1, NA),names=c(&quot;Slope&quot;,&quot;Lower Limit&quot;,&quot;Upper Limit&quot;,&quot;ED50&quot;)))
+  dox_sl[k] &lt;- thingdx.m$fit$par[1]
+  doxols[k] &lt;-thingdx.m$fit$par[3]
+  dx_confint[paste0(k)]&lt;-list(predict(thingdx.m,interval=&quot;confidence&quot;))
+}
+
+DOX_intv &lt;- map_df(dx_confint, ~as.data.frame(.x), .id=&quot;indv&quot;)
+DOX_intv$Conc &lt;- DX2$Conc</code></pre>
+<pre class="r"><code> ep_confint&lt;-list()
+ for(k in ID){ 
+ thingep &lt;-  filter(EP2, SampleID==k)
+  thingep.m &lt;- drm(Percent~Conc, data = thingep, fct=LL.4(c(NA, NA,1, NA),names=c(&quot;Slope&quot;, &quot;Lower Limit&quot;,&quot;Upper Limit&quot;,&quot;ED50&quot;)))
+  epi_sl[k] &lt;- thingep.m$fit$par[1]
+  # onione &lt;- ED(thingep.m, c(50), interval = &quot;delta&quot;)
+  epils[k] &lt;- thingep.m$fit$par[3]
+  # print(paste0(k, &quot; Epirubicin&quot;))
+  ep_confint[paste0(k)]&lt;-list(predict(thingep.m,interval=&quot;confidence&quot;))
+ }
+
+EPI_intv &lt;- map_df(ep_confint, ~as.data.frame(.x), .id=&quot;indv&quot;)
+EPI_intv$Conc &lt;- EP2$Conc</code></pre>
+<pre class="r"><code> mt_confint&lt;-list()
+for(k in ID){
+  thingmt &lt;-  filter(MT2, SampleID==k)
+  thingmt.m &lt;- drm(Percent~Conc, data = thingmt, fct=LL.4(c(NA,NA,1, NA),names=c(&quot;Slope&quot;,&quot;Lower Limit&quot;,&quot;Upper Limit&quot;, &quot;ED50&quot;)))
+  mtx_sl[k] &lt;- thingmt.m$fit$par[1]
+  # onionm &lt;- ED(thingmt.m, c(50), interval = &quot;delta&quot;)
+  mitols[k] &lt;- thingmt.m$fit$par[3]
+  # print(paste0(k, &quot; Mitoxantrone&quot;))
+  mt_confint[paste0(k)]&lt;-list(predict(thingmt.m,interval=&quot;confidence&quot;))
+}
+MTX_intv &lt;- map_df(mt_confint, ~as.data.frame(.x), .id=&quot;indv&quot;)
+MTX_intv$Conc&lt;- MT2$Conc </code></pre>
+<p>Note: Could not get numbers to plot for TRZ and VEH</p>
+<pre class="r"><code> tr_confint&lt;-list()
+for(k in ID){
+  thingtr &lt;-  filter(TR2, SampleID==k)
+  try(thingtr.m &lt;- drm(Percent~Conc, 
+                       data = thingtr, fct=L.4(c(NA, NA,1,NA), names=c(&quot;Slope&quot;,&quot;Lower Limit&quot;,&quot;Upper Limit&quot;, &quot;ED50&quot;)))) 
+  try(trz_sl[k] &lt;- thingtr.m$fit$par[1])
+  try(trasls[k] &lt;- thingtr.m$fit$par[3])
+  try(tr_confint[paste0(k)]&lt;-list(predict(thingtr.m,interval=&quot;confidence&quot;)))
+         }
+ 
+TRZ_intv &lt;- map_df(tr_confint, ~as.data.frame(.x), .id=&quot;indv&quot;)
+TRZ_intv$Conc &lt;- TR2$Conc</code></pre>
+<pre class="r"><code> ve_confint&lt;-list()
+for(k in ID){
+  thingve &lt;-  filter(VE2, SampleID==k)
+  try(thingve.m &lt;- tryCatch(drm(Percent~Conc, data = thingve, fct=L.4(c(0, NA,NA,NA),names=c(&quot;Slope&quot;,&quot;Lower Limit&quot;,&quot;Upper Limit&quot;, &quot;ED50&quot;)))))
+  try(veh_sl[k] &lt;- thingve.m$fit$par[1])
+  try(vehls[k] &lt;- thingve.m$fit$par[3])
+  try(ve_confint[paste0(k)]&lt;-list(predict(thingve.m,interval=&quot;confidence&quot;)))
+}
+VEH_intv &lt;- map_df(ve_confint, ~as.data.frame(.x), .id=&quot;indv&quot;)
+VEH_intv$Conc &lt;- VE2$Conc</code></pre>
 </div>
 </div>
 <div id="drc-replicates" class="section level2">
 <h2>DRC replicates</h2>
-<p><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/DXpulls-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/DXpulls-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/DXpulls-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/DXpulls-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/DXpulls-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/DXpulls-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/epi%20plots-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/epi%20plots-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/epi%20plots-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/epi%20plots-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/epi%20plots-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/epi%20plots-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/mtrep-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/mtrep-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/mtrep-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/mtrep-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/mtrep-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/mtrep-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/tras%20rep-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/tras%20rep-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/tras%20rep-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/tras%20rep-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/tras%20rep-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/tras%20rep-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/veh%20rep-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/veh%20rep-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/veh%20rep-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/veh%20rep-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/veh%20rep-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/veh%20rep-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p><img src="figure/DRC_analysis.Rmd/boxplot%20of%20slope-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>How reproducible are each of the DRCs? here I plot several to see how
+the overlap is working. Each replicate for each Treatment set is
+ploted</p>
+<pre class="r"><code>pull_drc &lt;- data.frame(individual=c(&#39;ind1&#39;,&#39;ind2&#39;,&#39;ind3&#39;,&#39;ind4&#39;,&#39;ind5&#39;,&#39;ind6&#39;))
+pull_drc2 &lt;- data.frame(&quot;ind1&quot;, &quot;ind2&quot;,&quot;ind3&quot;,&quot;ind4&quot;,&quot;ind5&quot;,&quot;ind6&quot;)
+doubl_plot &lt;- data.frame(&quot;ind3a&quot;, &quot;ind3b&quot;, &quot;ind5a&quot;, &quot;ind5b&quot;)
+
+for (each in 1:6){
+  newdata &lt;- DNR_intv %&gt;% 
+   filter(indv==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         indv==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    mutate(indv=factor(indv,levels=c(paste0(pull_drc2[[each]],&#39;a&#39;),paste0(pull_drc2[[each]],&#39;b&#39;))))
+     f &lt;- DA2 %&gt;% filter(SampleID==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         SampleID==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+   ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+  guides(color=&quot;none&quot;, alpha = &quot;none&quot;)+
+      geom_ribbon(data = newdata, aes(x = Conc, y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
+              alpha = 0.1, color = &quot;white&quot;)+
+     stat_smooth(method = &quot;drm&quot;,
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                 se = FALSE)+
+      ylim(-.4,1.5)+
+      scale_color_brewer(palette = &quot;Dark2&quot;)+
+       scale_fill_brewer(palette = &quot;Dark2&quot;)+
+       scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+        # scale_y_continuous( expand = expansion(mult = .1)) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+      ggtitle(paste0(&quot;Daunorubicin individual &quot;,each))+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = &quot;white&quot;, colour = NA))
+  print(f)
+} </code></pre>
+<p><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pulldrc-individuals-1">
+Past versions of "pulldrc individuals-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-pulldrc-individuals-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/pulldrc individuals-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/pulldrc individuals-1.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="ld50-correlation-to-heatmap" class="section level2">
-<h2>LD50 correlation to heatmap</h2>
-<p>##ld50 condensed</p>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pulldrc-individuals-2">
+Past versions of "pulldrc individuals-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-pulldrc-individuals-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/pulldrc individuals-2.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/pulldrc individuals-2.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pulldrc-individuals-3">
+Past versions of "pulldrc individuals-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-pulldrc-individuals-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/pulldrc individuals-3.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/pulldrc individuals-3.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pulldrc-individuals-4">
+Past versions of "pulldrc individuals-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-pulldrc-individuals-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/pulldrc individuals-4.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/pulldrc individuals-4.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pulldrc-individuals-5">
+Past versions of "pulldrc individuals-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-pulldrc-individuals-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/pulldrc individuals-5.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/pulldrc individuals-5.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/pulldrc%20individuals-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pulldrc-individuals-6">
+Past versions of "pulldrc individuals-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-pulldrc-individuals-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/pulldrc individuals-6.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/pulldrc individuals-6.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/DXpulls-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-DXpulls-1">
+Past versions of DXpulls-1.png
+</button>
+</p>
+<div id="fig-DXpulls-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/DXpulls-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/DXpulls-1.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/DXpulls-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-DXpulls-2">
+Past versions of DXpulls-2.png
+</button>
+</p>
+<div id="fig-DXpulls-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/DXpulls-2.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/DXpulls-2.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/DXpulls-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-DXpulls-3">
+Past versions of DXpulls-3.png
+</button>
+</p>
+<div id="fig-DXpulls-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/DXpulls-3.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/DXpulls-3.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/DXpulls-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-DXpulls-4">
+Past versions of DXpulls-4.png
+</button>
+</p>
+<div id="fig-DXpulls-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/DXpulls-4.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/DXpulls-4.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/DXpulls-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-DXpulls-5">
+Past versions of DXpulls-5.png
+</button>
+</p>
+<div id="fig-DXpulls-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/DXpulls-5.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/DXpulls-5.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/DXpulls-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-DXpulls-6">
+Past versions of DXpulls-6.png
+</button>
+</p>
+<div id="fig-DXpulls-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/DXpulls-6.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/8b862b38fa63115d9dffee87653282c42a567109/docs/figure/DRC_analysis.Rmd/DXpulls-6.png" target="_blank">8b862b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>for (each in 1:6){
+  
+  newdata &lt;- EPI_intv %&gt;%
+    filter(indv==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         indv==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    mutate(indv=factor(indv,levels=c(paste0(pull_drc2[[each]],&#39;a&#39;),paste0(pull_drc2[[each]],&#39;b&#39;))))
+  
+  ep&lt;- EP2 %&gt;% 
+    filter(SampleID==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         SampleID==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+    geom_ribbon(data = newdata, aes(x = Conc, y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
+              alpha = 0.1, color = &quot;white&quot;)+
+     stat_smooth(method = &quot;drm&quot;,
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                 se = FALSE)+
+      ylim(-.4,1.5)+
+    guides(color=&quot;none&quot;, alpha = &quot;none&quot;, fill=&quot;none&quot;)+
+      scale_color_brewer(palette = &quot;Dark2&quot;)+
+     scale_fill_brewer(palette = &quot;Dark2&quot;)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+      ggtitle(paste0(&quot;Epirubicin individual &quot;,each))+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = &quot;white&quot;, colour = NA))
+  print(ep)
+} </code></pre>
+<p><img src="figure/DRC_analysis.Rmd/epi%20plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-epi-plots-1">
+Past versions of "epi plots-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-epi-plots-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/epi plots-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/epi%20plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-epi-plots-2">
+Past versions of "epi plots-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-epi-plots-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/epi plots-2.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/epi%20plots-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-epi-plots-3">
+Past versions of "epi plots-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-epi-plots-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/epi plots-3.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/epi%20plots-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-epi-plots-4">
+Past versions of "epi plots-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-epi-plots-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/epi plots-4.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/epi%20plots-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-epi-plots-5">
+Past versions of "epi plots-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-epi-plots-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/epi plots-5.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/epi%20plots-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-epi-plots-6">
+Past versions of "epi plots-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-epi-plots-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/epi plots-6.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>for (each in 1:6){
+  
+  newdata &lt;- MTX_intv %&gt;%
+    filter(indv==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         indv==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    mutate(indv=factor(indv,levels=c(paste0(pull_drc2[[each]],&#39;a&#39;),paste0(pull_drc2[[each]],&#39;b&#39;))))
+  
+  mt&lt;-MT2 %&gt;% 
+    filter(SampleID==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         SampleID==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+    geom_ribbon(data = newdata, aes(x = Conc, y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
+              alpha = 0.1, color = &quot;white&quot;)+
+     stat_smooth(method = &quot;drm&quot;,
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                 se = FALSE)+
+      ylim(-.4,1.5)+
+    guides(color=&quot;none&quot;, alpha = &quot;none&quot;, fill=&quot;none&quot;)+
+      scale_color_brewer(palette = &quot;Dark2&quot;)+
+     scale_fill_brewer(palette = &quot;Dark2&quot;)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+      ggtitle(paste0(&quot;Mitoxantrone individual &quot;,each))+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = &quot;white&quot;, colour = NA))
+  print(mt)
+} </code></pre>
+<p><img src="figure/DRC_analysis.Rmd/mtrep-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mtrep-1">
+Past versions of mtrep-1.png
+</button>
+</p>
+<div id="fig-mtrep-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/mtrep-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/mtrep-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mtrep-2">
+Past versions of mtrep-2.png
+</button>
+</p>
+<div id="fig-mtrep-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/mtrep-2.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/mtrep-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mtrep-3">
+Past versions of mtrep-3.png
+</button>
+</p>
+<div id="fig-mtrep-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/mtrep-3.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/mtrep-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mtrep-4">
+Past versions of mtrep-4.png
+</button>
+</p>
+<div id="fig-mtrep-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/mtrep-4.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/mtrep-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mtrep-5">
+Past versions of mtrep-5.png
+</button>
+</p>
+<div id="fig-mtrep-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/mtrep-5.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/mtrep-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mtrep-6">
+Past versions of mtrep-6.png
+</button>
+</p>
+<div id="fig-mtrep-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/mtrep-6.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>for (each in 1:6){
+   newdata &lt;- TRZ_intv %&gt;%
+    filter(indv==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         indv==paste0(pull_drc2[[each]],&#39;b&#39;))%&gt;% 
+    mutate(indv=factor(indv,levels=c(paste0(pull_drc2[[each]],&#39;a&#39;),paste0(pull_drc2[[each]],&#39;b&#39;))))
+  
+  tr&lt;-TR2 %&gt;% 
+    filter(SampleID==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         SampleID==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+    geom_ribbon(data = newdata, aes( y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
+              alpha = 0.1, color = &quot;white&quot;)+
+     stat_smooth(method = &quot;drm&quot;,
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                 se = FALSE)+
+      ylim(-.4,1.5)+
+    guides(color=&quot;none&quot;, alpha = &quot;none&quot;, fill=&quot;none&quot;)+
+      scale_color_brewer(palette = &quot;Dark2&quot;)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+      ggtitle(paste0(&quot;Trastuzumab individual &quot;,each))+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = &quot;white&quot;, colour = NA))
+  print(tr)
+} </code></pre>
+<p><img src="figure/DRC_analysis.Rmd/tras%20rep-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-tras-rep-1">
+Past versions of "tras rep-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-tras-rep-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/tras rep-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/tras%20rep-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-tras-rep-2">
+Past versions of "tras rep-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-tras-rep-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/tras rep-2.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/tras%20rep-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-tras-rep-3">
+Past versions of "tras rep-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-tras-rep-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/tras rep-3.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/tras%20rep-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-tras-rep-4">
+Past versions of "tras rep-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-tras-rep-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/tras rep-4.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/tras%20rep-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-tras-rep-5">
+Past versions of "tras rep-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-tras-rep-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/tras rep-5.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/tras%20rep-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-tras-rep-6">
+Past versions of "tras rep-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-tras-rep-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/tras rep-6.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>for (each in 1:6){
+  newdata &lt;- VEH_intv %&gt;%
+    filter(indv==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         indv==paste0(pull_drc2[[each]],&#39;b&#39;))%&gt;% 
+    mutate(indv=factor(indv,levels=c(paste0(pull_drc2[[each]],&#39;a&#39;),paste0(pull_drc2[[each]],&#39;b&#39;))))
+  
+  ve&lt;-VE2 %&gt;% 
+    filter(SampleID==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         SampleID==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+    geom_ribbon(data = newdata, aes( y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
+              alpha = 0.1, color = &quot;white&quot;)+
+     stat_smooth(method = &quot;drm&quot;,
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                 se = FALSE)+
+      ylim(-.4,1.5)+
+    guides(color=&quot;none&quot;, alpha = &quot;none&quot;, fill=&quot;none&quot;)+
+      scale_color_brewer(palette = &quot;Dark2&quot;)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+      ggtitle(paste0(&quot;Vehicle individual &quot;,each))+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = &quot;white&quot;, colour = NA))
+  print(ve)
+ } </code></pre>
+<p><img src="figure/DRC_analysis.Rmd/veh%20rep-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-veh-rep-1">
+Past versions of "veh rep-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-veh-rep-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/veh rep-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/veh%20rep-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-veh-rep-2">
+Past versions of "veh rep-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-veh-rep-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/veh rep-2.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/veh%20rep-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-veh-rep-3">
+Past versions of "veh rep-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-veh-rep-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/veh rep-3.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/veh%20rep-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-veh-rep-4">
+Past versions of "veh rep-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-veh-rep-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/veh rep-4.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/veh%20rep-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-veh-rep-5">
+Past versions of "veh rep-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-veh-rep-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/veh rep-5.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/DRC_analysis.Rmd/veh%20rep-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-veh-rep-6">
+Past versions of "veh rep-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-veh-rep-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/veh rep-6.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="ld50-correlation" class="section level2">
+<h2>LD50 correlation</h2>
+<p>##EC50 of breast cancer cell lines</p>
+<pre class="r"><code>###combining all values into a larger dataframe
+
+library(RColorBrewer)
+drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+
+BC_cell_lines &lt;- read.csv(&quot;data/BC_cell_lines.csv&quot;,row.names = 1)
+
+  
+graphBC &lt;- BC_cell_lines %&gt;%
+    mutate(Cell_line= factor(Cell_line)) %&gt;% 
+  pivot_longer(.,col=!Cell_line,names_to = &#39;Treatment&#39;,values_to = &#39;LD50&#39;) %&gt;% 
+  ggplot(., (aes(x = (Treatment), y = log10(LD50)))) +
+  geom_boxplot(position = &quot;identity&quot;,aes(fill=Treatment))+
+  geom_point(aes(color = Cell_line,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression(&quot;Breast cancer cell line reported  LD&quot;[50]*&quot;s&quot;))+
+  xlab(&quot;&quot;)+
+  ylab(bquote(&#39;Log&#39;[10]~ &#39;LD&#39;[50]~&#39;in &#39;*mu*M))+
+  scale_color_brewer(palette = &quot;Spectral&quot;,
+                     name = &quot;Cell lines&quot;)+
+          scale_fill_manual(values=drug_palc)+
+  ylim(-2,2)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha =&quot;none&quot;, size = &quot;none&quot;, fill= &quot;none&quot;)+
+  #theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = &quot;none&quot;,
+         axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))   
+  graphBC</code></pre>
 <p><img src="figure/DRC_analysis.Rmd/combine%20LD50%20values-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div id="looking-a-ld50-by-individual" class="section level3">
-<h3>Looking a LD50 by individual</h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-combine-LD50-values-1">
+Past versions of "combine LD50 values-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-combine-LD50-values-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/combine LD50 values-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/9a6ec64acd2bb4528bc948f180e514e1943773f1/docs/figure/DRC_analysis.Rmd/combine LD50 values-1.png" target="_blank">9a6ec64</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bea5c804d2bf93deca830472892bea21e1f91714/docs/figure/DRC_analysis.Rmd/combine LD50 values-1.png" target="_blank">bea5c80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="single-heatmap-a" class="section level3">
-<h3>Single heatmap (A)</h3>
-<p><img src="figure/DRC_analysis.Rmd/extract%20a%20and%20b%20for%20separate%20heatmaps-1.png" width="672" style="display: block; margin: auto;" />
-##### plot B
-<img src="figure/DRC_analysis.Rmd/B%20heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="ld50-by-avg-of-viability" class="section level2">
 <h2>LD50 by avg of viability:</h2>
-<pre><code>
-Estimated effective doses
+<p>This is calculating the avg viability for each replicate first, then
+using those two points to model the dose-response curve on for the final
+values.</p>
+<pre class="r"><code>coll_avg_ld50 &lt;- list(DOX_50_avg,EPI_50_avg,DNR_50_avg,MTX_50_avg)
+names(coll_avg_ld50) &lt;- c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;)
+ new_ld50avg &lt;- map_df(coll_avg_ld50, ~as.data.frame(.x), .id=&quot;Treatment&quot;)
+  # saveRDS(new_ld50avg, &quot;data/new_ld50avg.RDS&quot;)
 
-       Estimate Std. Error
-e:1:50  0.95084    0.57842
-
-Estimated effective doses
-
-       Estimate Std. Error
-e:1:50  1.83407    0.57203
-
-Estimated effective doses
-
-       Estimate Std. Error
-e:1:50  0.60552    0.13003
-
-Estimated effective doses
-
-       Estimate Std. Error
-e:1:50 0.469785   0.059054
-
-Estimated effective doses
-
-       Estimate Std. Error
-e:1:50  0.86278    0.45637
-
-Estimated effective doses
-
-       Estimate Std. Error
-e:1:50  1.13255    0.50949</code></pre>
+  new_ld50avg %&gt;%   
+  mutate(Treatment= factor(Treatment, levels = c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;))) %&gt;% 
+  mutate(indv= factor(indv, levels = c(&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;))) %&gt;% 
+  ggplot(., (aes(x = (Treatment), y = log10(Estimate)))) +
+  geom_boxplot(position = &quot;identity&quot;,aes(fill=Treatment))+
+  geom_point(aes(color = indv,
+                 size = 5,alpha = 0.5)) +
+  ggtitle(expression(&quot;Experimentally-derived LD&quot;[50]*&quot;s from treated cardiomyocytes&quot;))+
+  xlab(&quot;Treatment&quot;)+
+  ylab(bquote(&#39;Log&#39;[10]~ &#39;LD&#39;[50]~&#39;in &#39;*mu*M))+
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;)+
+  ylim(-2,2)+
+  scale_fill_manual(values=drug_pal_fact)+
+  theme_bw() + 
+  theme(plot.title = element_text(hjust =0.5, size = 18))+
+  guides(alpha =&quot;none&quot;, size = &quot;none&quot;)+
+  #theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        # legend.position = &quot;none&quot;,
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))   </code></pre>
 <p><img src="figure/DRC_analysis.Rmd/disply%20new%20ld50%20avg-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-disply-new-ld50-avg-1">
+Past versions of "disply new ld50 avg-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-disply-new-ld50-avg-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d404b2cfbc4dc80dd091c6c0313fbb91d0444ac2/docs/figure/DRC_analysis.Rmd/disply new ld50 avg-1.png" target="_blank">d404b2c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="replication-of-drc-in-two-individuals" class="section level2">
+<h2>Replication of DRC in two individuals</h2>
+<p>This code is to test plotting two individuals on one plot with VE2
+code (tried to loop but did not get to work yet)</p>
+<pre class="r"><code>doubl_plot &lt;- data.frame(&quot;ind3a&quot;, &quot;ind3b&quot;, &quot;ind5a&quot;, &quot;ind5b&quot;)
+trt &lt;- data.frame(&quot;DOX&quot;,&quot;EPI&quot;, &quot;DNR&quot;, &quot;MTX&quot;, &quot;TRZ&quot;, &quot;VEH&quot;)
+plotloop_list &lt;- list(&quot;DOX_intv&quot;,&quot;EPI_intv&quot;,&quot;DNR_intv&quot;, &quot;MTX_intv&quot;,&quot;TRZ_intv&quot;,&quot;VEH_intv&quot;)
+
+for (each in 1:6){
+  newdata &lt;- VEH_intv %&gt;%
+    filter(indv%in% doubl_plot)
+  
+  ve&lt;-VE2 %&gt;% 
+    filter(SampleID==paste0(pull_drc2[[each]],&#39;a&#39;)|
+                         SampleID==paste0(pull_drc2[[each]],&#39;b&#39;)) %&gt;% 
+    ggplot(., aes(x=Conc, y= Percent, color = SampleID,alpha =0.6)) +
+    geom_ribbon(data = newdata, aes( y = Prediction, ymin = Lower, ymax = Upper, fill=indv),
+              alpha = 0.1, color = &quot;white&quot;)+
+     stat_smooth(method = &quot;drm&quot;,
+                  method.args = list(fct = L.4(c(NA,NA,1,NA))),
+                 se = FALSE)+
+      ylim(-.4,1.5)+
+    guides(color=&quot;none&quot;, alpha = &quot;none&quot;, fill=&quot;none&quot;)+
+      scale_color_brewer(palette = &quot;Dark2&quot;)+
+      scale_x_log10() +  # Change the x-axis scale to log 10 scale
+      theme_classic() +
+      xlab(NULL)+
+      ylab(NULL) +
+      theme(plot.title = element_text(hjust = 0.5, size =15, face =&quot;bold&quot;))+
+      ggtitle(paste0(&quot;Vehicle individual &quot;,each))+
+      theme(axis.title=element_text(size=10),
+            axis.ticks=element_line(linewidth = 2),
+            axis.text=element_text(size=10, face = &quot;bold&quot;),
+            panel.grid.major = element_line(colour = &#39;lightgrey&#39;),
+            panel.border=element_rect(fill = NA, linewidth = 2),
+            plot.background = element_rect(fill = &quot;white&quot;, colour = NA))
+  print(ve)
+ } </code></pre>
+<p><img src="figure/DRC_analysis.Rmd/double%20plot-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/double%20plot-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/double%20plot-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/double%20plot-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/double%20plot-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/DRC_analysis.Rmd/double%20plot-6.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1956,6 +4364,7 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
@@ -1978,49 +4387,37 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] ComplexHeatmap_2.16.0 broom_1.0.5           RColorBrewer_1.1-3   
- [4] ggsignif_0.6.4        cowplot_1.1.1         Hmisc_5.1-0          
- [7] drc_3.0-1             MASS_7.3-60           data.table_1.14.8    
-[10] BiocGenerics_0.46.0   tinytex_0.45          lubridate_1.9.2      
-[13] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.2          
-[16] purrr_1.0.1           readr_2.1.4           tidyr_1.3.0          
-[19] tibble_3.2.1          ggplot2_3.4.2         tidyverse_2.0.0      
-[22] car_3.1-2             carData_3.0-5         workflowr_1.7.0      
+ [1] broom_1.0.5         RColorBrewer_1.1-3  ggsignif_0.6.4     
+ [4] cowplot_1.1.1       Hmisc_5.1-1         drc_3.0-1          
+ [7] MASS_7.3-60         data.table_1.14.8   BiocGenerics_0.46.0
+[10] tinytex_0.46        lubridate_1.9.2     forcats_1.0.0      
+[13] stringr_1.5.0       dplyr_1.1.3         purrr_1.0.2        
+[16] readr_2.1.4         tidyr_1.3.0         tibble_3.2.1       
+[19] ggplot2_3.4.3       tidyverse_2.0.0     car_3.1-2          
+[22] carData_3.0-5       workflowr_1.7.1    
 
 loaded via a namespace (and not attached):
- [1] gridExtra_2.3       sandwich_3.0-2      rlang_1.1.1        
- [4] magrittr_2.0.3      clue_0.3-64         GetoptLong_1.0.5   
- [7] git2r_0.32.0        multcomp_1.4-25     matrixStats_1.0.0  
-[10] compiler_4.3.1      getPass_0.2-2       mgcv_1.9-0         
-[13] png_0.1-8           callr_3.7.3         vctrs_0.6.3        
-[16] shape_1.4.6         crayon_1.5.2        pkgconfig_2.0.3    
-[19] fastmap_1.1.1       backports_1.4.1     labeling_0.4.2     
-[22] utf8_1.2.3          promises_1.2.0.1    rmarkdown_2.23     
-[25] tzdb_0.4.0          ps_1.7.5            xfun_0.39          
-[28] cachem_1.0.8        jsonlite_1.8.7      highr_0.10         
-[31] later_1.3.1         parallel_4.3.1      cluster_2.1.4      
-[34] R6_2.5.1            bslib_0.5.0         stringi_1.7.12     
-[37] rpart_4.1.19        jquerylib_0.1.4     Rcpp_1.0.11        
-[40] iterators_1.0.14    knitr_1.43          zoo_1.8-12         
-[43] base64enc_0.1-3     IRanges_2.34.1      httpuv_1.6.11      
-[46] Matrix_1.6-0        splines_4.3.1       nnet_7.3-19        
-[49] timechange_0.2.0    tidyselect_1.2.0    rstudioapi_0.15.0  
-[52] abind_1.4-5         yaml_2.3.7          doParallel_1.0.17  
-[55] codetools_0.2-19    processx_3.8.1      lattice_0.21-8     
-[58] withr_2.5.0         evaluate_0.21       foreign_0.8-84     
-[61] survival_3.5-5      circlize_0.4.15     pillar_1.9.0       
-[64] ggpubr_0.6.0        whisker_0.4.1       stats4_4.3.1       
-[67] checkmate_2.2.0     foreach_1.5.2       generics_0.1.3     
-[70] rprojroot_2.0.3     S4Vectors_0.38.1    hms_1.1.3          
-[73] munsell_0.5.0       scales_1.2.1        gtools_3.9.4       
-[76] glue_1.6.2          tools_4.3.1         fs_1.6.2           
-[79] mvtnorm_1.2-2       plotrix_3.8-2       colorspace_2.1-0   
-[82] nlme_3.1-162        htmlTable_2.4.1     Formula_1.2-5      
-[85] cli_3.6.1           fansi_1.0.4         gtable_0.3.3       
-[88] rstatix_0.7.2       sass_0.4.6          digest_0.6.33      
-[91] TH.data_1.1-2       rjson_0.2.21        htmlwidgets_1.6.2  
-[94] farver_2.1.1        htmltools_0.5.5     lifecycle_1.0.3    
-[97] httr_1.4.6          GlobalOptions_0.1.2</code></pre>
+ [1] tidyselect_1.2.0  farver_2.1.1      fastmap_1.1.1     TH.data_1.1-2    
+ [5] promises_1.2.1    digest_0.6.33     rpart_4.1.19      timechange_0.2.0 
+ [9] lifecycle_1.0.3   cluster_2.1.4     survival_3.5-7    processx_3.8.2   
+[13] magrittr_2.0.3    compiler_4.3.1    rlang_1.1.1       sass_0.4.7       
+[17] tools_4.3.1       plotrix_3.8-2     utf8_1.2.3        yaml_2.3.7       
+[21] knitr_1.44        labeling_0.4.3    htmlwidgets_1.6.2 multcomp_1.4-25  
+[25] abind_1.4-5       withr_2.5.0       foreign_0.8-85    nnet_7.3-19      
+[29] fansi_1.0.4       ggpubr_0.6.0      git2r_0.32.0      colorspace_2.1-0 
+[33] scales_1.2.1      gtools_3.9.4      cli_3.6.1         mvtnorm_1.2-3    
+[37] rmarkdown_2.24    generics_0.1.3    rstudioapi_0.15.0 httr_1.4.7       
+[41] tzdb_0.4.0        cachem_1.0.8      splines_4.3.1     base64enc_0.1-3  
+[45] vctrs_0.6.3       Matrix_1.6-1      sandwich_3.0-2    jsonlite_1.8.7   
+[49] callr_3.7.3       hms_1.1.3         rstatix_0.7.2     Formula_1.2-5    
+[53] htmlTable_2.4.1   jquerylib_0.1.4   glue_1.6.2        codetools_0.2-19 
+[57] ps_1.7.5          stringi_1.7.12    gtable_0.3.4      later_1.3.1      
+[61] munsell_0.5.0     pillar_1.9.0      htmltools_0.5.6   R6_2.5.1         
+[65] rprojroot_2.0.3   evaluate_0.21     lattice_0.21-8    backports_1.4.1  
+[69] httpuv_1.6.11     bslib_0.5.1       Rcpp_1.0.11       nlme_3.1-163     
+[73] gridExtra_2.3     checkmate_2.2.0   mgcv_1.9-0        whisker_0.4.1    
+[77] xfun_0.40         fs_1.6.3          zoo_1.8-12        getPass_0.2-2    
+[81] pkgconfig_2.0.3  </code></pre>
 </div>
 </div>
 
