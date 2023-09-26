@@ -11,11 +11,11 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-07" />
+<meta name="date" content="2023-09-26" />
 
-<title>LDH_analysis</title>
+<title>Lactate dehydrogenase, troponin I, and calcium analysis</title>
 
-<script src="site_libs/header-attrs-2.22/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -37,8 +37,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -359,9 +359,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">LDH_analysis</h1>
+<h1 class="title toc-ignore">Lactate dehydrogenase, troponin I, and
+calcium analysis</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-07</h4>
+<h4 class="date">2023-09-26</h4>
 
 </div>
 
@@ -390,7 +391,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-07
+<strong>Last updated:</strong> 2023-09-26
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -408,7 +409,7 @@ title="This is the local directory in which the code in this file was executed."
 This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
 analysis was created with <a
   href="https://github.com/workflowr/workflowr">workflowr</a> (version
-1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
 that were applied when the results were created. The <em>Past
 versions</em> tab lists the development history.
 </p>
@@ -521,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree090c643857efd32ca9f9253768276495dc63d399targetblank090c643a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree36663b379c9ab60494bf3f2033342a87582fe0ectargetblank36663b3a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/090c643857efd32ca9f9253768276495dc63d399" target="_blank">090c643</a>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/36663b379c9ab60494bf3f2033342a87582fe0ec" target="_blank">36663b3</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree090c643857efd32ca9f9253768276495dc63d399targetblank090c643a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree36663b379c9ab60494bf3f2033342a87582fe0ectargetblank36663b3a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/090c643857efd32ca9f9253768276495dc63d399" target="_blank">090c643</a>.
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/36663b379c9ab60494bf3f2033342a87582fe0ec" target="_blank">36663b3</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,16 +558,17 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
     Ignored:    data/BC_cell_lines.csv
+    Ignored:    data/BurridgeDOXTOX.RDS
     Ignored:    data/CADGWASgene_table.csv
     Ignored:    data/CAD_geneset.RDS
     Ignored:    data/CALIMA_Data/
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/Counts_RNA_ERMatthews.txt
     Ignored:    data/DAgostres24.RDS
     Ignored:    data/DAtable1.csv
     Ignored:    data/DDEMresp_list.csv
@@ -579,7 +581,9 @@ Ignored files:
     Ignored:    data/Da24counts.txt
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
     Ignored:    data/GTEX_setsimple.csv
@@ -588,6 +592,8 @@ Ignored files:
     Ignored:    data/HFGWASgene_table.csv
     Ignored:    data/HF_geneset.RDS
     Ignored:    data/Heart_Left_Ventricle.v8.egenes.txt
+    Ignored:    data/Heatmap_mat.RDS
+    Ignored:    data/Heatmap_sig.RDS
     Ignored:    data/Hf_GWAS.txt
     Ignored:    data/K_cluster
     Ignored:    data/K_cluster_kisthree.csv
@@ -601,9 +607,18 @@ Ignored files:
     Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
+    Ignored:    data/TableS10.csv
+    Ignored:    data/TableS11.csv
+    Ignored:    data/TableS9.csv
     Ignored:    data/Top2biresp_cluster24h.csv
+    Ignored:    data/Var_test_list.RDS
+    Ignored:    data/Var_test_list24.RDS
+    Ignored:    data/Var_test_list24alt.RDS
+    Ignored:    data/Var_test_list3.RDS
+    Ignored:    data/Vargenes.RDS
     Ignored:    data/Viabilitylistfull.csv
     Ignored:    data/allexpressedgenes.txt
+    Ignored:    data/allfinal3hour.RDS
     Ignored:    data/allgenes.txt
     Ignored:    data/allmatrix.RDS
     Ignored:    data/allmymatrix.RDS
@@ -612,12 +627,14 @@ Ignored files:
     Ignored:    data/avgLD50.RDS
     Ignored:    data/avg_LD50.RDS
     Ignored:    data/backGL.txt
+    Ignored:    data/burr_genes.RDS
     Ignored:    data/calcium_data.RDS
     Ignored:    data/clamp_summary.RDS
     Ignored:    data/cormotif_3hk1-8.RDS
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
     Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/cormotifprobs.csv
     Ignored:    data/counts24hours.RDS
     Ignored:    data/cpmcount.RDS
     Ignored:    data/cpmnorm_counts.csv
@@ -626,6 +643,7 @@ Ignored files:
     Ignored:    data/cvd_GWAS.txt
     Ignored:    data/dat_cpm.RDS
     Ignored:    data/data_outline.txt
+    Ignored:    data/drug_noveh1.csv
     Ignored:    data/efit2.RDS
     Ignored:    data/efit2_final.RDS
     Ignored:    data/efit2results.RDS
@@ -642,6 +660,7 @@ Ignored files:
     Ignored:    data/gene_corr_frame.RDS
     Ignored:    data/gene_prob_tran3h.RDS
     Ignored:    data/gene_probabilityk5.RDS
+    Ignored:    data/geneset_24.RDS
     Ignored:    data/gostresTop2bi_ER.RDS
     Ignored:    data/gostresTop2bi_LR
     Ignored:    data/gostresTop2bi_LR.RDS
@@ -649,20 +668,33 @@ Ignored files:
     Ignored:    data/gostrescoNR
     Ignored:    data/gtex/
     Ignored:    data/heartgenes.csv
+    Ignored:    data/hsa_kegg_anno.RDS
     Ignored:    data/individualDRCfile.RDS
     Ignored:    data/individual_DRC48.RDS
     Ignored:    data/individual_LDH48.RDS
+    Ignored:    data/indv_noveh1.csv
     Ignored:    data/kegglistDEG.RDS
+    Ignored:    data/kegglistDEG24.RDS
+    Ignored:    data/kegglistDEG3.RDS
     Ignored:    data/knowfig4.csv
     Ignored:    data/knowfig5.csv
     Ignored:    data/label_list.RDS
     Ignored:    data/ld50_table.csv
+    Ignored:    data/mean_vardrug1.csv
+    Ignored:    data/mean_varframe.csv
     Ignored:    data/mymatrix.RDS
+    Ignored:    data/new_ld50avg.RDS
     Ignored:    data/nonresponse_cluster24h.csv
     Ignored:    data/norm_LDH.csv
     Ignored:    data/norm_counts.csv
     Ignored:    data/old_sets/
+    Ignored:    data/organized_drugframe.csv
     Ignored:    data/plan2plot.png
+    Ignored:    data/plot_intv_list.RDS
+    Ignored:    data/plot_list_DRC.RDS
+    Ignored:    data/qval24hr.RDS
+    Ignored:    data/qval3hr.RDS
+    Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
     Ignored:    data/sigVDA24.txt
@@ -679,10 +711,15 @@ Ignored files:
     Ignored:    data/siglist_final.RDS
     Ignored:    data/siglist_old.RDS
     Ignored:    data/slope_table.csv
+    Ignored:    data/supp10_24hlist.RDS
+    Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
     Ignored:    data/table3a.omar
+    Ignored:    data/testlist.txt
     Ignored:    data/toplistall.RDS
+    Ignored:    data/trtonly_24h_genes.RDS
+    Ignored:    data/trtonly_3h_genes.RDS
     Ignored:    data/tvl24hour.txt
     Ignored:    data/tvl24hourw.txt
     Ignored:    data/venn_code.R
@@ -692,74 +729,104 @@ Untracked files:
     Untracked:  .RDataTmp
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
+    Untracked:  .RDataTmp3
+    Untracked:  3hr all.pdf
+    Untracked:  Code_files_list.csv
+    Untracked:  Data_files_list.csv
     Untracked:  Doxorubicin_vehicle_3_24.csv
     Untracked:  Doxtoplist.csv
+    Untracked:  EPIqvalue_analysis.Rmd
     Untracked:  GWAS_list_of_interest.xlsx
+    Untracked:  KEGGpathwaylist.R
     Untracked:  OmicNavigator_learn.R
     Untracked:  SigDoxtoplist.csv
+    Untracked:  analysis/ciFIT.R
     Untracked:  analysis/export_to_excel.R
-    Untracked:  code/DRC_plotfigure1.png
+    Untracked:  cleanupfiles_script.R
+    Untracked:  code/biomart_gene_names.R
     Untracked:  code/constantcode.R
+    Untracked:  code/corMotifcustom.R
     Untracked:  code/cpm_boxplot.R
     Untracked:  code/extracting_ggplot_data.R
-    Untracked:  code/fig1plot.png
-    Untracked:  code/figurelegeddrc.png
     Untracked:  code/movingfilesto_ppl.R
     Untracked:  code/pearson_extract_func.R
+    Untracked:  code/pearson_tox_extract.R
+    Untracked:  code/plot1C.fun.R
     Untracked:  code/spearman_extract_func.R
-    Untracked:  cormotif_probability_genelist.csv
+    Untracked:  code/venndiagramcolor_control.R
+    Untracked:  cormotif_p.post.list_4.csv
+    Untracked:  figS1024h.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/DNR_DEGlist.csv
     Untracked:  output/DNRvenn.RDS
+    Untracked:  output/DOX_DEGlist.csv
     Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EPI_DEGlist.csv
     Untracked:  output/EPIvenn.RDS
     Untracked:  output/Figures/
+    Untracked:  output/MTX_DEGlist.csv
     Untracked:  output/MTXvenn.RDS
+    Untracked:  output/TRZ_DEGlist.csv
+    Untracked:  output/TableS8.csv
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
     Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/cormotif_probability_genelist.csv
+    Untracked:  output/endocytosisgenes.csv
     Untracked:  output/gene_corr_fig9.RDS
+    Untracked:  output/legend_b.RDS
     Untracked:  output/motif_ERrep.RDS
     Untracked:  output/motif_LRrep.RDS
     Untracked:  output/motif_NRrep.RDS
     Untracked:  output/motif_TI_rep.RDS
     Untracked:  output/output-old/
+    Untracked:  output/rank24genes.csv
+    Untracked:  output/rank3genes.csv
+    Untracked:  output/reneem@ls6.tacc.utexas.edu
+    Untracked:  output/sequencinginformationforsupp.csv
+    Untracked:  output/sequencinginformationforsupp.prn
+    Untracked:  output/sigVDA24.txt
+    Untracked:  output/sigVDA3.txt
+    Untracked:  output/sigVDX24.txt
+    Untracked:  output/sigVDX3.txt
+    Untracked:  output/sigVEP24.txt
+    Untracked:  output/sigVEP3.txt
+    Untracked:  output/sigVMT24.txt
+    Untracked:  output/sigVMT3.txt
+    Untracked:  output/sigVTR24.txt
+    Untracked:  output/sigVTR3.txt
     Untracked:  output/supplementary_motif_list_GO.RDS
     Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/tvl24hour.txt
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   Cardiotoxicity.Rproj
-    Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/Figure1.Rmd
-    Modified:   analysis/Figure3.Rmd
-    Modified:   analysis/Figure4.Rmd
+    Deleted:    analysis/Cardiotoxicity.Rproj
+    Modified:   analysis/Cormotifcluster_analysis.Rmd
     Modified:   analysis/Figure5.Rmd
-    Modified:   analysis/Figure6.Rmd
-    Modified:   analysis/Figure7.Rmd
-    Modified:   analysis/Figure8.Rmd
-    Modified:   analysis/Figure9.Rmd
     Modified:   analysis/GOI_plots.Rmd
+    Modified:   analysis/Knowles2019.Rmd
     Modified:   analysis/Supplementary_figures.Rmd
-    Modified:   analysis/other_analysis.Rmd
-    Modified:   output/DNRmeSNPs.RDS
-    Modified:   output/DNRreQTLs.RDS
-    Modified:   output/DOXmeSNPs.RDS
-    Modified:   output/DOXreQTLs.RDS
-    Modified:   output/EPImeSNPs.RDS
-    Modified:   output/EPIreQTLs.RDS
-    Modified:   output/GOI_genelist.txt
-    Modified:   output/MTXmeSNPs.RDS
-    Modified:   output/MTXreQTLs.RDS
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/run_all_analysis.Rmd
+    Modified:   analysis/variance_scrip.Rmd
+    Deleted:    corMotifcustom.R
     Modified:   output/TNNI_LDH_RNAnormlist.txt
-    Modified:   output/knowles4.RDS
-    Modified:   output/knowles5.RDS
+    Modified:   output/daplot.RDS
+    Modified:   output/dxplot.RDS
+    Modified:   output/epplot.RDS
+    Modified:   output/mtplot.RDS
+    Modified:   output/plan2plot.png
+    Modified:   output/sequencing_info.txt
     Modified:   output/toplistall.csv
+    Modified:   output/trplot.RDS
+    Modified:   output/veplot.RDS
 
 </code></pre>
 <p>
@@ -805,6 +872,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/36663b379c9ab60494bf3f2033342a87582fe0ec/analysis/LDH_analysis.Rmd" target="_blank">36663b3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-26
+</td>
+<td>
+updates to code for publishing
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/LDH_analysis.html" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1305,15 +1406,218 @@ updates for the week
 </div>
 </div>
 </div>
+<style type="text/css">
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+</style>
 <p>##package loading</p>
-<div id="hour-lactate-dehydrogenase-results" class="section level2">
-<h2>48 hour Lactate Dehydrogenase results</h2>
-<p><img src="figure/LDH_analysis.Rmd/ldh%20input%20at%2048%20hours-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(readxl)
+library(ggpubr)
+library(rstatix)
+library(tidyverse)
+library(zoo)
+library(ggsignif)
+library(RColorBrewer)
+library(stats)
+library(readr)
+library(ggalt)</code></pre>
+<div id="hour-lactate-dehydrogenase-analysis" class="section level1">
+<h1>48 hour Lactate Dehydrogenase analysis</h1>
+<pre class="r"><code>level_order2 &lt;- c(&#39;75&#39;,&#39;87&#39;,&#39;77&#39;,&#39;79&#39;,&#39;78&#39;,&#39;71&#39;)
+drug_pal_fact &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+RINsamplelist &lt;-read_csv(&quot;data/RINsamplelist.txt&quot;,col_names = TRUE)
+norm_LDH &lt;- read.csv(&quot;data/norm_LDH.csv&quot;,row.names = 1)
+clamp_summary &lt;- read.csv(&quot;data/Clamp_Summary.csv&quot;, row.names=1)
+full_list &lt;- read.csv(&quot;data/DRC48hoursdata.csv&quot;, row.names = 1)
+calcium_data &lt;- read_csv(&quot;data/DF_Plate_Peak.csv&quot;, col_types = cols(...1 = col_skip()))
+k_means &lt;- read.csv(&quot;data/K_cluster_kisthree.csv&quot;)
+# drug_palexpand &lt;- c(&quot;#41B333&quot;,&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;purple3&quot;,&quot;darkgreen&quot;, &quot;darkblue&quot;)
+#named colors: dark pink,Red,yellow,blue, dark grey, green(green is always control, may need to move pal around)</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/48%20hours%20viability%20input-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="hour-viability-to-ldh-activity-correlation"
 class="section level3">
 <h3>48 hour viability to LDH activity correlation</h3>
+<p>Pearson correlation of 48 hour 0.5 <span
+class="math inline">\(\mu\)</span>M viability with LDH 48 hours 0.5
+<span class="math inline">\(\mu\)</span>M (supplemental data S4 Fig)</p>
+<pre class="r"><code>  viability %&gt;% 
+  full_join(., norm_LDH48, by = c(&quot;indv&quot;,&quot;Drug&quot;,&quot;Conc&quot;)) %&gt;% 
+  ggplot(., aes(x=per.live, y=ldh))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method=&quot;lm&quot;)+
+  facet_wrap(&quot;Drug&quot;)+
+  theme_bw()+
+  xlab(&quot;Average viability of cardiomyocytes/100&quot;) +
+  ylab(&quot;Average LDH&quot;) +
+  ggtitle(&quot;Relative viability and relative LDH release at 48 hours&quot;)+
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;, 
+                     label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+  ggpubr::stat_cor(method=&quot;pearson&quot;,
+                   aes(label = paste(..r.label.., ..p.label.., sep = &quot;~`,`~&quot;)),
+           color = &quot;red&quot;)+
+  theme(plot.title = element_text(size = rel(1.5), 
+                                  hjust = 0.5,
+                                  face = &quot;bold&quot;),
+        axis.title = element_text(size = 15, 
+                                  color = &quot;black&quot;),
+        axis.ticks = element_line(size = 1.5),
+        axis.text = element_text(size = 8, 
+                                 color = &quot;black&quot;, 
+                                 angle = 20),
+        strip.text.x = element_text(size = 15, 
+                                    color = &quot;black&quot;, 
+                                    face = &quot;bold&quot;)) </code></pre>
 <p><img src="figure/LDH_analysis.Rmd/48hour%20via%20and%20ldh-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>####24h LDH data frame</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-48hour-via-and-ldh-1">
+Past versions of "48hour via and ldh-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-48hour-via-and-ldh-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/48hour via and ldh-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/045545da691c23133c72f1a44dff42c355e11d82/docs/figure/LDH_analysis.Rmd/48hour via and ldh-1.png" target="_blank">045545d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/87453aa2d9653581e4c71da04e4e9eb8094dcf86/docs/figure/LDH_analysis.Rmd/48hour via and ldh-1.png" target="_blank">87453aa</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2c0b9c1767002f91419a8f575f027a097159f3a3/docs/figure/LDH_analysis.Rmd/48hour via and ldh-1.png" target="_blank">2c0b9c1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/c18ee154f830e5c57260e7e75b3396bdfd51d173/docs/figure/LDH_analysis.Rmd/48hour via and ldh-1.png" target="_blank">c18ee15</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2f5d21da8efa2061e23055909b147608240a85fb/docs/figure/LDH_analysis.Rmd/48hour via and ldh-1.png" target="_blank">2f5d21d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d0eaef84c0f59bb3993e18850384430d3481e162/docs/figure/LDH_analysis.Rmd/48hour via and ldh-1.png" target="_blank">d0eaef8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>#24 hour LDH analysis</p>
+<p>Data input</p>
+<pre class="r"><code>DA_24_ldh &lt;- matrix(c(1.188,1.222,1.195,1.030,1.074,1.064,1.298,1.282,1.262,
+                      1.901,1.975,1.970,3.131,3.246,3.080,1.339,1.438,1.367),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c(&#39;87_0.5&#39;,&#39;79_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;71_0.5&#39;)))
+
+DX_24_ldh &lt;-matrix(c(0.981,0.974,0.978,1.253,1.233,1.292,2.098,2.153,
+                     2.114,2.214,2.244,2.239,3.808,3.825,3.735,1.037,1.030,1.030),
+                   ncol =3, nrow =6, byrow =TRUE,
+                   dimnames=list(c(&#39;87_0.5&#39;,&#39;79_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;71_0.5&#39;)))
+
+EP_24_ldh &lt;-  matrix(c(1.504,1.320,1.469,1.536,1.301,1.531,1.562,1.541,1.558,
+                       3.414,3.103,3.236,3.588,3.398,3.611,1.013,0.958,0.991),
+                     ncol =3, nrow =6, byrow =TRUE,
+                     dimnames=list(c(&#39;87_0.5&#39;,&#39;79_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;71_0.5&#39;)))
+
+MT_24_ldh &lt;-  matrix(c(1.508,1.467,1.391,1.493,1.468,1.483,2.010,1.820,1.911,
+                       3.089,2.936,2.921,3.623,3.377,3.560,1.222,1.211,1.215),
+                     ncol =3, nrow =6, byrow =TRUE,
+                     dimnames=list(c(&#39;87_0.5&#39;,&#39;79_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;71_0.5&#39;)))
+
+TR_24_ldh&lt;-  matrix(c(0.941,0.891,0.953,0.743,0.774,0.812,1.514,1.225,1.252,
+                      2.391,1.989,2.172,3.040,2.622,2.613,0.970,0.917,0.895),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c(&#39;87_0.5&#39;,&#39;79_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;71_0.5&#39;)))
+
+VE_24_ldh&lt;-  matrix(c(1.000,1.000,0.977,1.000,1.100,1.096,1.000,0.938,0.951,
+                      1.000,1.027,1.038,1.000,1.058,1.062,1.000,1.011,0.975),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c(&#39;87_0.5&#39;,&#39;79_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;71_0.5&#39;)))
+
+LDH24hstat &lt;- list(&#39;VDA&#39;=t.test(VE_24_ldh,DA_24_ldh),
+                   &#39;VDX&#39;=t.test(VE_24_ldh,DX_24_ldh),
+                   &#39;VEP&#39;=t.test(VE_24_ldh,EP_24_ldh),
+                   &#39;VMT&#39;=t.test(VE_24_ldh,MT_24_ldh),
+                   &#39;VTR&#39;=t.test(VE_24_ldh,TR_24_ldh),
+                   &#39;VVEH&#39;=t.test(VE_24_ldh,VE_24_ldh))
+
+LDH24hstat</code></pre>
 <pre><code>$VDA
 
     Welch Two Sample t-test
@@ -1396,7 +1700,43 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean of x mean of y 
  1.012944  1.012944 </code></pre>
-<p>####24h Tnni data frame</p>
+<p>#24 hour Troponin I analysis</p>
+<pre class="r"><code>DA_24_TNNI &lt;- matrix(c(0.790,0.783,1.855,1.693,1.009,1.071,0.736,0.771,
+                       1.035,1.202,1.228,1.151),
+                    ncol =2, nrow =6, byrow =TRUE,
+                    dimnames=list(c(&#39;87_0.5&#39;,&#39;71_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;79_0.5&#39;)))
+
+DX_24_TNNI &lt;-matrix(c(1.006,1.006,1.295,1.179,1.464,1.493,1.319,1.236,
+                      1.231,1.221,1.342,1.296),
+                   ncol =2, nrow =6, byrow =TRUE,
+                   dimnames=list(c(&#39;87_0.5&#39;,&#39;71_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;79_0.5&#39;)))
+
+EP_24_TNNI &lt;-  matrix(c(0.955,0.822,1.220,1.092,1.459,1.425,1.076,1.222,
+                        1.018,1.269,1.262,1.331),
+                     ncol =2, nrow =6, byrow =TRUE,
+                     dimnames=list(c(&#39;87_0.5&#39;,&#39;71_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;79_0.5&#39;)))
+
+MT_24_TNNI &lt;-  matrix(c(1.529,1.682,1.205,1.138,1.436,1.521,1.694,
+                        1.778,1.115,1.231,1.006,0.957),
+                     ncol =2, nrow =6, byrow =TRUE,
+                     dimnames=list(c(&#39;87_0.5&#39;,&#39;71_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;79_0.5&#39;)))
+
+TR_24_TNNI&lt;-  matrix(c(2.089,1.911,1.245,0.968,1.180,1.168,1.118,
+                       1.014,1.496,1.433,1.388,1.235),
+                    ncol =2, nrow =6, byrow =TRUE,
+                    dimnames=list(c(&#39;87_0.5&#39;,&#39;71_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;79_0.5&#39;)))
+
+VE_24_TNNI&lt;-  matrix(c(1.000,0.783,1.000,1.000,0.917,1.031,1.000,
+                       0.958,1.000,1.000,1.087,1.106),
+                    ncol =3, nrow =6, byrow =TRUE,
+                    dimnames=list(c(&#39;87_0.5&#39;,&#39;71_0.5&#39;,&#39;75_0.5&#39;,&#39;77_0.5&#39;,&#39;78_0.5&#39;,&#39;79_0.5&#39;)))
+tnni24hstat &lt;- list(&#39;VDAT&#39;=t.test(VE_24_TNNI,DA_24_TNNI),
+                   &#39;VDXT&#39;=t.test(VE_24_TNNI,DX_24_TNNI),
+                   &#39;VEPT&#39;=t.test(VE_24_TNNI,EP_24_TNNI),
+                   &#39;VMTT&#39;=t.test(VE_24_TNNI,MT_24_TNNI),
+                   &#39;VTRT&#39;=t.test(VE_24_TNNI,TR_24_TNNI),
+                   &#39;VVEHT&#39;=t.test(VE_24_TNNI,VE_24_TNNI))
+tnni24hstat</code></pre>
 <pre><code>$VDAT
 
     Welch Two Sample t-test
@@ -1479,40 +1819,1336 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean of x mean of y 
    0.9785    0.9785 </code></pre>
-<p>##joint dataframe data</p>
 </div>
+<div id="hour-tnni-and-ldh" class="section level2">
+<h2>24 hour TNNI and LDH</h2>
+<pre class="r"><code>mean24ldh &lt;- as.data.frame(rbind(colMeans(t(DA_24_ldh)),
+                                 colMeans(t(DX_24_ldh)),
+                                 colMeans(t(EP_24_ldh)),
+                                 colMeans(t(MT_24_ldh)),
+                                 colMeans(t(TR_24_ldh)),
+                                 colMeans(t(VE_24_ldh))))
+mean24ldh$Drug &lt;- c( &quot;DNR&quot;, &quot;DOX&quot;, &quot;EPI&quot;, &quot;MTX&quot;, &quot;TRZ&quot;,&quot;VEH&quot;)  ###add drug name then take out the 0.5 thing
+colnames(mean24ldh) &lt;- gsub(&quot;_0.5&quot;,&quot;&quot;,colnames(mean24ldh))
+##now use pivot longer and join the frames
+mean24ldh &lt;-  mean24ldh %&gt;% pivot_longer(.,col=-Drug, names_to = &#39;indv&#39;, values_to = &quot;ldh&quot;)
+
+
+
+mean24tnni &lt;- as.data.frame(rbind(colMeans(t(DA_24_TNNI)),
+                                  colMeans(t(DX_24_TNNI)),
+                                  colMeans(t(EP_24_TNNI)),
+                                  colMeans(t(MT_24_TNNI)),
+                                  colMeans(t(TR_24_TNNI)),
+                                  colMeans(t(VE_24_TNNI))))
+mean24tnni$Drug &lt;- c( &quot;DNR&quot;, &quot;DOX&quot;, &quot;EPI&quot;, &quot;MTX&quot;, &quot;TRZ&quot;,&quot;VEH&quot;)
+
+colnames(mean24tnni) &lt;- gsub(&quot;_0.5&quot;,&quot;&quot;,colnames(mean24tnni))
+mean24tnni &lt;-  pivot_longer(mean24tnni, 
+                            col=-Drug, 
+                            names_to = &#39;indv&#39;, 
+                            values_to = &quot;tnni&quot;)
+
+tvl24hour &lt;- full_join(mean24ldh,mean24tnni, by=c(&quot;Drug&quot;,&quot;indv&quot;))
+
+# write.csv(tvl24hour,&quot;output/tvl24hour.txt&quot;)</code></pre>
+<div id="normalization-of-tnni-and-ldh-to-rna-concentration"
+class="section level3">
+<h3>Normalization of TNNI and LDH to RNA concentration</h3>
+<pre class="r"><code>RNAnormlist &lt;- RINsamplelist %&gt;% 
+  mutate(Drug=case_match(Drug,&quot;daunorubicin&quot;~&quot;DNR&quot;,
+                         &quot;doxorubicin&quot;~&quot;DOX&quot;,
+                         &quot;epirubicin&quot;~&quot;EPI&quot;,
+                         &quot;mitoxantrone&quot;~&quot;MTX&quot;,
+                         &quot;trastuzumab&quot;~&quot;TRZ&quot;,
+                         &quot;vehicle&quot;~&quot;VEH&quot;, .default= Drug)) %&gt;%
+  filter(time ==&quot;24h&quot;) %&gt;%
+  ungroup() %&gt;%
+  dplyr::select(indv,Drug,Conc_ng.ul) %&gt;%
+  mutate(indv= factor(indv,levels= level_order2))
+
+
+RNAnormlist &lt;- RNAnormlist %&gt;%
+  full_join(.,tvl24hour,by= c(&quot;Drug&quot;, &quot;indv&quot;)) %&gt;%
+  mutate(Drug = factor(Drug, levels = c(  &quot;DOX&quot;, 
+                                          &quot;DNR&quot;,
+                                          &quot;EPI&quot;,
+                                          &quot;MTX&quot;,
+                                          &quot;TRZ&quot;,
+                                          &quot;VEH&quot;))) %&gt;%
+  mutate(rldh= ldh/Conc_ng.ul) %&gt;%
+  mutate(rtnni=tnni/Conc_ng.ul)
+
+# write.csv(RNAnormlist,&quot;output/TNNI_LDH_RNAnormlist.txt&quot;)
+
+
+ggplot(RNAnormlist, aes(x=rldh, y=rtnni))+
+  geom_point(aes(col=indv))+
+  geom_smooth(method=&quot;lm&quot;)+
+  ggpubr::stat_cor(label.y.npc=1,
+                   label.x.npc = 0,
+                   method=&quot;pearson&quot;,
+                   aes(label = paste(..r.label.., ..p.label.., 
+                                     sep = &quot;~`,`~&quot;)), color = &quot;darkred&quot;)+
+  facet_wrap(&quot;Drug&quot;, scales=&quot;free&quot;)+
+  scale_color_brewer(palette = &quot;Dark2&quot;)+
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;, 
+                     label = c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;))+
+  ylab(&quot;Troponin I release at 24 hours&quot;)+
+  xlab(&quot;Lactate DH release at 24 hours&quot;)+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = &quot;none&quot;,
+         axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))+
+  ggtitle(&quot;Correlation between Troponin I release and LDH activity&quot;)</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/normalization%20TNNILDH%2024%20hour-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>RNAnormlist %&gt;% 
+  mutate(Drug = factor(Drug, levels = c(  &quot;DOX&quot;, 
+                                          &quot;EPI&quot;,
+                                          &quot;DNR&quot;,
+                                          &quot;MTX&quot;,
+                                          &quot;TRZ&quot;,
+                                          &quot;VEH&quot;))) %&gt;%
+  ggplot(., aes(x=Drug, y=rldh))+
+  geom_boxplot(position = &quot;identity&quot;, fill = drug_pal_fact)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c(&quot;VEH&quot;,&quot;DOX&quot;),
+                                c(&quot;VEH&quot;,&quot;EPI&quot;),
+                                c(&quot;VEH&quot;,&quot;DNR&quot;),
+                                c(&quot;VEH&quot;,&quot;MTX&quot;),
+                                c(&quot;VEH&quot;,&quot;TRZ&quot;)),
+              test=&quot;t.test&quot;,
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = &quot;none&quot;,alpha=&quot;none&quot;)+
+  scale_color_brewer(palette = &quot;Dark2&quot;, name = &quot;Individual&quot;)+
+  xlab(&quot;&quot;)+
+  ylab(&quot;Relative LDH activity &quot;)+
+  ggtitle(&quot;Lactate dehydrogenase release at 24 hours&quot;)+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = &quot;none&quot;,
+         axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/normalization%20TNNILDH%2024%20hour-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>RNAnormlist %&gt;% 
+  mutate(Drug = factor(Drug, levels = c(  &quot;DOX&quot;, 
+                                          &quot;EPI&quot;,
+                                          &quot;DNR&quot;,
+                                          &quot;MTX&quot;,
+                                          &quot;TRZ&quot;,
+                                          &quot;VEH&quot;))) %&gt;%
+  ggplot(., aes(x=Drug, y=rtnni))+
+  geom_boxplot(position = &quot;identity&quot;, fill = drug_pal_fact)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c(&quot;VEH&quot;,&quot;DOX&quot;),
+                                c(&quot;VEH&quot;,&quot;EPI&quot;),
+                                c(&quot;VEH&quot;,&quot;DNR&quot;),
+                                c(&quot;VEH&quot;,&quot;MTX&quot;),
+                                c(&quot;VEH&quot;,&quot;TRZ&quot;)),
+              test=&quot;t.test&quot;,
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = &quot;none&quot;,alpha=&quot;none&quot;)+
+  scale_color_brewer(palette = &quot;Dark2&quot;, name = &quot;Individual&quot;)+
+  xlab(&quot;&quot;)+
+  ylab(&quot;Relative Troponin I levels &quot;)+
+  ggtitle(&quot;Troponin I release at 24 hours&quot;)+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = &quot;transparent&quot;)) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = &quot;none&quot;,
+        axis.title = element_text(size = 15, color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+        strip.text.x = element_text(size = 15, color = &quot;black&quot;, face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/normalization%20TNNILDH%2024%20hour-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="rna-normalized-24-hour-ctnni-ldh" class="section level2">
-<h2>RNA normalized 24 hour cTNNI / LDH</h2>
-<p><img src="figure/LDH_analysis.Rmd/correlation-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/LDH_analysis.Rmd/correlation-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/LDH_analysis.Rmd/correlation-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="calcium-data-at-24-hours" class="section level2">
 <h2>Calcium data at 24 hours</h2>
+<p>The data and code were given from Omar Johnson (except for the
+renaming of everything, that is me!) THANK YOU SIMON, FOR YOUR
+INPUT.</p>
+<pre class="r"><code>calcium_data &lt;- calcium_data %&gt;%
+  rename(&#39;Treatment&#39; = &#39;Condition&#39;, &#39;indv&#39; = &#39;Experiment&#39;) %&gt;%
+  mutate(
+    Drug = case_match(
+      Treatment,
+      &quot;Dau_0.5&quot; ~ &quot;DNR&quot;,
+      &quot;Dau_1&quot; ~ &quot;DNR&quot;,
+      &quot;Dox_0.5&quot; ~ &quot;DOX&quot;,
+      &quot;Dox_1&quot; ~ &quot;DOX&quot;,
+      &quot;Epi_0.5&quot; ~ &quot;EPI&quot;,
+      &quot;Epi_1&quot; ~ &quot;EPI&quot;,
+      &quot;Mito_0.5&quot; ~ &quot;MTX&quot;,
+      &quot;Mito_1&quot; ~ &quot;MTX&quot;,
+      &quot;Tras_0.5&quot; ~ &quot;TRZ&quot;,
+      &quot;Tras_1&quot; ~ &quot;TRZ&quot;,
+      &quot;Control&quot; ~ &quot;VEH&quot;,
+      .default = Treatment
+    )
+  ) %&gt;%
+  mutate(Drug = factor(Drug,
+                       levels = c(&quot;DOX&quot;,
+                                  &quot;EPI&quot;,
+                                  &quot;DNR&quot;,
+                                  &quot;MTX&quot;,
+                                  &quot;TRZ&quot;,
+                                  &quot;VEH&quot;))) %&gt;%
+  mutate(
+    Conc = case_match(
+      Treatment,
+      &quot;Dau_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Dau_1&quot; ~ &quot;1.0&quot;,
+      &quot;Dox_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Dox_1&quot; ~ &quot;1.0&quot;,
+      &quot;Epi_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Epi_1&quot; ~ &quot;1.0&quot;,
+      &quot;Mito_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Mito_1&quot; ~ &quot;1.0&quot;,
+      &quot;Tras_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Tras_1&quot; ~ &quot;1.0&quot;,
+      &#39;Control&#39; ~ &#39;0&#39;,
+      .default = Treatment
+    )
+  )
+
+clamp_summary &lt;- clamp_summary %&gt;%
+  rename(&#39;Treatment&#39; = &#39;Cond&#39;, &#39;indv&#39; = &#39;Exp&#39;) %&gt;%
+  mutate(
+    Drug = case_match(
+      Treatment,
+      &quot;Dau_0.5&quot; ~ &quot;DNR&quot;,
+      &quot;Dau_1&quot; ~ &quot;DNR&quot;,
+      &quot;Dox_0.5&quot; ~ &quot;DOX&quot;,
+      &quot;Dox_1&quot; ~ &quot;DOX&quot;,
+      &quot;Epi_0.5&quot; ~ &quot;EPI&quot;,
+      &quot;Epi_1&quot; ~ &quot;EPI&quot;,
+      &quot;Mito_0.5&quot; ~ &quot;MTX&quot;,
+      &quot;Mito_1&quot; ~ &quot;MTX&quot;,
+      &quot;Tras_0.5&quot; ~ &quot;TRZ&quot;,
+      &quot;Tras_1&quot; ~ &quot;TRZ&quot;,
+      &quot;Control&quot; ~ &quot;VEH&quot; ,
+      .default = Treatment
+    )
+  ) %&gt;%
+  mutate(Drug = factor(Drug,
+                       levels = c(&quot;DOX&quot;,
+                                  &quot;EPI&quot;,
+                                  &quot;DNR&quot;,
+                                  &quot;MTX&quot;,
+                                  &quot;TRZ&quot;,
+                                  &quot;VEH&quot;))) %&gt;%
+  mutate(
+    Conc = case_match(
+      Treatment,
+      &quot;Dau_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Dau_1&quot; ~ &quot;1.0&quot;,
+      &quot;Dox_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Dox_1&quot; ~ &quot;1.0&quot;,
+      &quot;Epi_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Epi_1&quot; ~ &quot;1.0&quot;,
+      &quot;Mito_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Mito_1&quot; ~ &quot;1.0&quot;,
+      &quot;Tras_0.5&quot; ~ &quot;0.5&quot;,
+      &quot;Tras_1&quot; ~ &quot;1.0&quot;,
+      &#39;Control&#39; ~ &#39;0&#39;,
+      .default = Treatment
+    )
+  ) %&gt;%
+  rename(
+    c(
+      &#39;Mean_Amplitude&#39; = &#39;R1S1_Mean..a.u..&#39;,
+      &#39;Rise_Slope&#39; = &#39;R1S1_Rise_Slope..a.u..ms.&#39;,
+      &#39;FWHM&#39; = &#39;R1S1_Half_Width..ms.&#39;,
+      &#39;Decay_Slope&#39; = &#39;R1S1_Decay_Slope..a.u..ms.&#39;,
+      &#39;Decay_Time&#39; = &#39;Decay_Time..ms.&#39;,
+      &#39;Rise_Time&#39; = &#39;R1S1_Rise_Time&#39;
+    )
+  ) %&gt;%
+  mutate(indv = substr(indv, 1, 2)) %&gt;%
+  mutate(indv = factor(indv, levels = level_order2)) %&gt;%
+  filter(Conc == 0 | Conc == 0.5) 
+
+saveRDS(calcium_data,&quot;data/calcium_data.RDS&quot;)
+saveRDS(clamp_summary ,&quot;data/clamp_summary.RDS&quot;)</code></pre>
 <div id="mean-amplitude" class="section level3">
 <h3>Mean amplitude</h3>
+<pre class="r"><code>MA_plot &lt;- clamp_summary %&gt;%
+  dplyr::select(Drug, Conc, indv, Mean_Amplitude) %&gt;%
+  ggplot(., aes(Drug, Mean_Amplitude)) +
+  geom_boxplot(position = &quot;identity&quot;, fill = drug_pal_fact) +
+  geom_point(aes(col = indv, size = 2, alpha = 0.5)) +
+  guides(size = &quot;none&quot;,
+         alpha = &quot;none&quot;,
+         colour = &quot;none&quot;) +
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;,
+                     label = c(&quot;2&quot;, &quot;3&quot;, &quot;5&quot;)) +
+  geom_signif(
+    comparisons = list(
+      c(&quot;VEH&quot;, &quot;TRZ&quot;),
+      c(&quot;VEH&quot;, &quot;MTX&quot;),
+      c(&quot;VEH&quot;, &quot;DNR&quot;),
+      c(&quot;VEH&quot;, &quot;EPI&quot;),
+      c(&quot;VEH&quot;, &quot;DOX&quot;)
+    ),
+    test = &quot;t.test&quot;,
+    map_signif_level = TRUE,
+    step_increase = 0.1,
+    textsize = 4
+  ) +
+  ggtitle(&quot;Mean amplitude&quot;) +
+  ylab(&quot;a.u.&quot;) +
+  xlab(&quot; &quot;) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 15, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )
+MA_plot</code></pre>
 <p><img src="figure/LDH_analysis.Rmd/Mean%20Amplitude-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Mean-Amplitude-1">
+Past versions of "Mean Amplitude-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Mean-Amplitude-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/Mean Amplitude-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/045545da691c23133c72f1a44dff42c355e11d82/docs/figure/LDH_analysis.Rmd/Mean Amplitude-1.png" target="_blank">045545d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/87453aa2d9653581e4c71da04e4e9eb8094dcf86/docs/figure/LDH_analysis.Rmd/Mean Amplitude-1.png" target="_blank">87453aa</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d0eaef84c0f59bb3993e18850384430d3481e162/docs/figure/LDH_analysis.Rmd/Mean Amplitude-1.png" target="_blank">d0eaef8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="rising-slope" class="section level3">
 <h3>Rising Slope</h3>
+<pre class="r"><code>RS_plot &lt;- clamp_summary %&gt;%
+  dplyr::select(Drug, Conc, indv, Rise_Slope) %&gt;%
+  ggplot(., aes(Drug, Rise_Slope)) +
+  geom_boxplot(position = &quot;identity&quot;, fill = drug_pal_fact) +
+  geom_point(aes(col = indv, size = 2, alpha = 0.5)) +
+  guides(size = &quot;none&quot;,
+         alpha = &quot;none&quot;,
+         colour = &quot;none&quot;) +
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;,
+                     label = c(&quot;2&quot;, &quot;3&quot;, &quot;5&quot;)) +
+  geom_signif(
+    comparisons = list(
+      c(&quot;VEH&quot;, &quot;TRZ&quot;),
+      c(&quot;VEH&quot;, &quot;MTX&quot;),
+      c(&quot;VEH&quot;, &quot;DNR&quot;),
+      c(&quot;VEH&quot;, &quot;EPI&quot;),
+      c(&quot;VEH&quot;, &quot;DOX&quot;)
+    ),
+    test = &quot;t.test&quot;,
+    map_signif_level = TRUE,
+    step_increase = 0.1,
+    textsize = 4
+  ) +
+  ggtitle(expression(paste(&quot;Rising slope&quot;))) +
+  labs(y = &quot;a.u./sec&quot;) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 15, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )
+
+
+
+RS_plot</code></pre>
 <p><img src="figure/LDH_analysis.Rmd/rising%20slope-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-rising-slope-1">
+Past versions of "rising slope-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-rising-slope-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/rising slope-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/045545da691c23133c72f1a44dff42c355e11d82/docs/figure/LDH_analysis.Rmd/rising slope-1.png" target="_blank">045545d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/87453aa2d9653581e4c71da04e4e9eb8094dcf86/docs/figure/LDH_analysis.Rmd/rising slope-1.png" target="_blank">87453aa</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d0eaef84c0f59bb3993e18850384430d3481e162/docs/figure/LDH_analysis.Rmd/rising slope-1.png" target="_blank">d0eaef8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="decay-slope" class="section level3">
 <h3>Decay slope</h3>
+<pre class="r"><code>Decay_plot &lt;- clamp_summary %&gt;%
+  dplyr::select(Drug, Conc, indv, Decay_Slope) %&gt;%
+  ggplot(., aes(Drug, Decay_Slope)) +
+  geom_boxplot(position = &quot;identity&quot;, fill = drug_pal_fact) +
+  geom_point(aes(col = indv, size = 2, alpha = 0.5)) +
+  guides(size = &quot;none&quot;,
+         alpha = &quot;none&quot;,
+         colour = &quot;none&quot;) +
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;,
+                     label = c(&quot;2&quot;, &quot;3&quot;, &quot;5&quot;)) +
+  geom_signif(
+    comparisons = list(
+      c(&quot;VEH&quot;, &quot;TRZ&quot;),
+      c(&quot;VEH&quot;, &quot;MTX&quot;),
+      c(&quot;VEH&quot;, &quot;DNR&quot;),
+      c(&quot;VEH&quot;, &quot;EPI&quot;),
+      c(&quot;VEH&quot;, &quot;DOX&quot;)
+    ),
+    test = &quot;t.test&quot;,
+    map_signif_level = TRUE,
+    step_increase = 0.1,
+    textsize = 4
+  ) +
+  ggtitle(expression(paste(&quot;Decay slope &quot;))) +
+  labs(y = &quot;a.u./sec&quot;) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 15, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )
+Decay_plot</code></pre>
 <p><img src="figure/LDH_analysis.Rmd/Decay%20slope-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Decay-slope-1">
+Past versions of "Decay slope-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Decay-slope-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/Decay slope-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/045545da691c23133c72f1a44dff42c355e11d82/docs/figure/LDH_analysis.Rmd/Decay slope-1.png" target="_blank">045545d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/87453aa2d9653581e4c71da04e4e9eb8094dcf86/docs/figure/LDH_analysis.Rmd/Decay slope-1.png" target="_blank">87453aa</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d0eaef84c0f59bb3993e18850384430d3481e162/docs/figure/LDH_analysis.Rmd/Decay slope-1.png" target="_blank">d0eaef8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="full-width-half-max" class="section level3">
 <h3>Full-Width-half max</h3>
-<p><img src="figure/LDH_analysis.Rmd/FWHM-1.png" width="672" style="display: block; margin: auto;" />
-### k means plot
-<img src="figure/LDH_analysis.Rmd/kmeans%20code-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>FWHM_plot &lt;- clamp_summary %&gt;%
+  
+  dplyr::select(Drug, Conc, indv, FWHM) %&gt;%
+  ggplot(., aes(Drug, FWHM)) +
+  geom_boxplot(position = &quot;identity&quot;, fill = drug_pal_fact) +
+  geom_point(aes(col = indv, size = 2, alpha = 0.5)) +
+  guides(size = &quot;none&quot;,
+         alpha = &quot;none&quot;,
+         colour = &quot;none&quot;) +
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;,
+                     label = c(&quot;2&quot;, &quot;3&quot;, &quot;5&quot;)) +
+  geom_signif(
+    comparisons = list(
+      c(&quot;VEH&quot;, &quot;TRZ&quot;),
+      c(&quot;VEH&quot;, &quot;MTX&quot;),
+      c(&quot;VEH&quot;, &quot;DNR&quot;),
+      c(&quot;VEH&quot;, &quot;EPI&quot;),
+      c(&quot;VEH&quot;, &quot;DOX&quot;)
+    ),
+    test = &quot;t.test&quot;,
+    map_signif_level = TRUE,
+    step_increase = 0.1,
+    textsize = 4
+  ) +
+  ylab(&quot;sec&quot;) +
+  xlab(&quot; &quot;) +
+  theme_classic() +
+  ggtitle(&quot;Full-width at half-max&quot;) +
+  theme(
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title = element_text(size = 10, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1),
+    axis.line = element_line(linewidth = 1),
+    axis.text = element_text(
+      size = 10,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )
+
+
+FWHM_plot</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/FWHM-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-FWHM-1">
+Past versions of FWHM-1.png
+</button>
+</p>
+<div id="fig-FWHM-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/FWHM-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/045545da691c23133c72f1a44dff42c355e11d82/docs/figure/LDH_analysis.Rmd/FWHM-1.png" target="_blank">045545d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/87453aa2d9653581e4c71da04e4e9eb8094dcf86/docs/figure/LDH_analysis.Rmd/FWHM-1.png" target="_blank">87453aa</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/01a378119ed46ee8fc3d08f013e1952c956282f9/docs/figure/LDH_analysis.Rmd/FWHM-1.png" target="_blank">01a3781</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/870c13f7756093bc33d750d92535815be1678e22/docs/figure/LDH_analysis.Rmd/FWHM-1.png" target="_blank">870c13f</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-05-17
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d0eaef84c0f59bb3993e18850384430d3481e162/docs/figure/LDH_analysis.Rmd/FWHM-1.png" target="_blank">d0eaef8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="k-means-plot" class="section level3">
+<h3>k means plot</h3>
+<pre class="r"><code>k_means %&gt;% mutate(
+  Drug = case_match(
+    Drug_Name,
+    &quot;Dau_0.5&quot; ~ &quot;DNR&quot;,
+    &quot;Dau_0.5.1&quot; ~ &quot;DNR&quot;,
+    &quot;Dau_0.5.2&quot; ~ &quot;DNR&quot;,
+    &quot;Dox_0.5&quot; ~ &quot;DOX&quot;,
+    &quot;Dox_0.5.1&quot; ~ &quot;DOX&quot;,
+    &quot;Dox_0.5.2&quot; ~ &quot;DOX&quot;,
+    &quot;Epi_0.5&quot; ~ &quot;EPI&quot;,
+    &quot;Epi_0.5.1&quot; ~ &quot;EPI&quot;,
+    &quot;Epi_0.5.2&quot; ~ &quot;EPI&quot;,
+    &quot;Mito_0.5&quot; ~ &quot;MTX&quot;,
+    &quot;Mito_0.5.1&quot; ~ &quot;MTX&quot;,
+    &quot;Mito_0.5.2&quot; ~ &quot;MTX&quot;,
+    &quot;Tras_0.5&quot; ~ &quot;TRZ&quot;,
+    &quot;Tras_0.5.1&quot; ~ &quot;TRZ&quot;,
+    &quot;Tras_0.5.2&quot; ~ &quot;TRZ&quot;,
+    &quot;Control.1&quot; ~ &quot;VEH&quot;,
+    &quot;Control.2&quot; ~ &quot;VEH&quot;,
+    &quot;Control&quot; ~ &quot;VEH&quot;,
+    .default = Drug_Name
+  )
+) %&gt;%
+  mutate(
+    Class = case_match(
+      Drug,
+      &quot;DOX&quot; ~ &quot;TOP2i&quot;,
+      &quot;DNR&quot; ~ &quot;TOP2i&quot;,
+      &quot;EPI&quot; ~ &quot;TOP2i&quot;,
+      &quot;MTX&quot; ~ &quot;TOP2i&quot;,
+      &quot;TRZ&quot; ~ &quot;not-TOP2i&quot;,
+      &quot;VEH&quot; ~ &quot;not-TOP2i&quot;,
+      .default = Drug
+    )
+  ) %&gt;%
+  mutate(Drug = factor(Drug, levels = c(&quot;DOX&quot;,
+                                        &quot;EPI&quot;,
+                                        &quot;DNR&quot;,
+                                        &quot;MTX&quot;,
+                                        &quot;TRZ&quot;,
+                                        &quot;VEH&quot;))) %&gt;%
+  ggplot(., aes(
+    x = PC1,
+    y = PC2,
+    col = Drug,
+    shape = factor(Class)
+  )) +
+  geom_point(size = 8) +
+  scale_shape_manual(values = c(19, 17, 15)) +
+  scale_color_manual(values = drug_pal_fact) +
+  # geom_encircle(aes(group=Cluster))+
+  # annotate(&quot;text&quot;, label = c(&quot;Cluster 1&quot;,&quot;Cluster 2&quot;, &quot;Cluster 3&quot;), x = c(-2,0,1.5),y=c(-0.5,0,0.5))+
+  ggtitle(expression(&quot;PCA of Ca&quot; ^ &quot;2+&quot; ~ &quot;data&quot;)) +
+  theme_bw() +
+  labs(x = &quot;PC 1 (54 %)&quot;, y = &quot;PC 2 (34%)&quot;) +
+  theme(
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title = element_text(size = 10, color = &quot;black&quot;),
+    axis.ticks = element_line(size = 1.5),
+    axis.text = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/kmeans%20code-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-kmeans-code-1">
+Past versions of "kmeans code-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-kmeans-code-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/kmeans code-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/045545da691c23133c72f1a44dff42c355e11d82/docs/figure/LDH_analysis.Rmd/kmeans code-1.png" target="_blank">045545d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/1e97f64cf2e50f00787c569718120133cd142ea7/docs/figure/LDH_analysis.Rmd/kmeans code-1.png" target="_blank">1e97f64</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d0eaef84c0f59bb3993e18850384430d3481e162/docs/figure/LDH_analysis.Rmd/kmeans code-1.png" target="_blank">d0eaef8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="beat-rate" class="section level3">
 <h3>Beat Rate</h3>
+<pre class="r"><code>BR_plot &lt;- calcium_data %&gt;%
+  dplyr::select(Drug, Conc, indv, Rate) %&gt;% #Peak_variance,Ave_FF0,
+  mutate(indv = substr(indv, 1, 2)) %&gt;%
+  mutate(indv = factor(indv, levels = level_order2)) %&gt;%
+  mutate(contrl = 0.383) %&gt;%
+  mutate(norm_rate = Rate / contrl) %&gt;%
+  filter(Conc == 0 | Conc == 0.5) %&gt;%
+  ggplot(., aes(x = Drug, y = Rate)) +
+  geom_boxplot(position = &quot;identity&quot;, fill = drug_pal_fact) +
+  geom_point(aes(col = indv, size = 2, alpha = 0.5)) +
+  guides(alpha = &quot;none&quot;) +
+  geom_signif(
+    comparisons = list(
+      c(&quot;VEH&quot;, &quot;TRZ&quot;),
+      c(&quot;VEH&quot;, &quot;MTX&quot;),
+      c(&quot;VEH&quot;, &quot;DNR&quot;),
+      c(&quot;VEH&quot;, &quot;EPI&quot;),
+      c(&quot;VEH&quot;, &quot;DOX&quot;)
+    ),
+    test = &quot;t.test&quot;,
+    map_signif_level = TRUE,
+    step_increase = 0.1,
+    textsize = 4
+  ) +
+  guides(alpha = &quot;none&quot;, size = &quot;none&quot;) +
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;,
+                     label = c(&quot;2&quot;, &quot;3&quot;, &quot;5&quot;)) +
+  ggtitle(&quot;Contraction rate&quot;) +
+  theme_classic() +
+  guides(size = &quot;none&quot;,
+         colour = guide_legend(override.aes = list(size = 4, alpha = 0.5))) +
+  labs(y = &quot;avg. beats/sec&quot;) +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 14, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 10,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )
+
+BR_plot</code></pre>
 <p><img src="figure/LDH_analysis.Rmd/beat%20%20rate%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-beat--rate-plot-1">
+Past versions of "beat rate plot-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-beat--rate-plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/beat  rate plot-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/045545da691c23133c72f1a44dff42c355e11d82/docs/figure/LDH_analysis.Rmd/beat  rate plot-1.png" target="_blank">045545d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/87453aa2d9653581e4c71da04e4e9eb8094dcf86/docs/figure/LDH_analysis.Rmd/beat  rate plot-1.png" target="_blank">87453aa</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2c0b9c1767002f91419a8f575f027a097159f3a3/docs/figure/LDH_analysis.Rmd/beat  rate plot-1.png" target="_blank">2c0b9c1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d0eaef84c0f59bb3993e18850384430d3481e162/docs/figure/LDH_analysis.Rmd/beat  rate plot-1.png" target="_blank">d0eaef8</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-04-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="line-plots-of-calcium-data" class="section level3">
 <h3>Line Plots of Calcium data</h3>
-<p><img src="figure/LDH_analysis.Rmd/line%20plot%20data-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/LDH_analysis.Rmd/line%20plot%20data-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/LDH_analysis.Rmd/line%20plot%20data-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>myfiles &lt;-
+  list.files(path = &quot;data/CALIMA_Data/78-1/&quot;,
+             pattern = &quot;*.csv&quot;,
+             full.names = TRUE)
+myfiles &lt;- myfiles %&gt;% as.tibble() %&gt;%
+  mutate(filenames = value) %&gt;%
+  separate(filenames, c(NA, NA, NA, &quot;file&quot;), sep = &quot;/&quot;) %&gt;%
+  separate(file, c(&quot;Drug&quot;, &quot;indv&quot;))
+
+Normalization_And_Set_File &lt;- function(file_path) {
+  # Read in the data from the file
+  CALIMA_obj &lt;- read.csv(file_path)
+  
+  # Normalize the data
+  ROI_cut &lt;- CALIMA_obj[, 2:ncol(CALIMA_obj)]
+  ROI_cut_rowmeans &lt;- rowMeans(ROI_cut)
+  Intensity &lt;- (ROI_cut_rowmeans / min(ROI_cut_rowmeans))
+  Final_ROI &lt;-
+    tibble::as_tibble(cbind(CALIMA_obj[, 1], Intensity, ROI_cut))
+  Final_ROI$Intensity &lt;- Final_ROI$Intensity - 1
+  
+  return(Final_ROI)
+}
+
+
+
+Plot_Line_df &lt;- function(directory) {
+  holder &lt;- list()
+  # List CSV files in the folder that is output from CALIMA
+  file_list &lt;-
+    list.files(directory, pattern = &quot;*.csv&quot;, full.names = TRUE)
+  file_list &lt;- file_list %&gt;% as.tibble() %&gt;%
+    mutate(filenames = value) %&gt;%
+    separate(filenames, c(NA, NA, NA, &quot;file&quot;), sep = &quot;/&quot;) %&gt;%
+    separate(file, c(&quot;Drug&quot;, &quot;indv&quot;))
+  
+  # Loop over all files in directory
+  for (i in 1:length(file_list$value)) {
+    normalized_data &lt;-
+      data.frame(&quot;indv&quot; = file_list$indv[i], &quot;drug&quot; = file_list$Drug[i])
+    # Normalize the data from the file
+    
+    norm_out &lt;- Normalization_And_Set_File(file_list$value[i])
+    holder[[file_list$Drug[i]]] &lt;-
+      cbind(normalized_data, norm_out[, 1:2])
+    
+    
+    
+    # Return the plot
+    
+  }
+  return(holder)
+}</code></pre>
+<pre class="r"><code>plot_87 &lt;-  Plot_Line_df(&quot;data/CALIMA_Data/87-1/&quot;)
+
+df_87forplot &lt;- plot_87 %&gt;%
+  bind_rows() %&gt;%
+  rename(&quot;Xaxis&quot; = `CALIMA_obj[, 1]`) %&gt;%
+  mutate(drug = factor(drug, levels = c(&quot;DOX&quot;,
+                                        &quot;EPI&quot;,
+                                        &quot;DNR&quot;,
+                                        &quot;MTX&quot;,
+                                        &quot;TRZ&quot;,
+                                        &quot;VEH&quot;)))
+
+
+
+ggplot(df_87forplot, aes(x = Xaxis, y = Intensity, group = drug)) +
+  geom_line(size = 1.5, aes(color = drug)) +
+  xlab(&quot;&quot;) +
+  theme_bw() +
+  ggtitle(&quot;Individual 2&quot;) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_color_manual(values = drug_pal_fact) +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 14, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 10,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/line%20plot%20data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-line-plot-data-1">
+Past versions of "line plot data-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-line-plot-data-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/line plot data-1.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_78 &lt;-  Plot_Line_df(&quot;data/CALIMA_Data/78-1/&quot;)
+
+df_78forplot &lt;- plot_78 %&gt;%
+  bind_rows() %&gt;%
+  rename(&quot;Xaxis&quot; = `CALIMA_obj[, 1]`) %&gt;%
+  mutate(drug = factor(drug, levels = c(&quot;DOX&quot;,
+                                        &quot;EPI&quot;,
+                                        &quot;DNR&quot;,
+                                        &quot;MTX&quot;,
+                                        &quot;TRZ&quot;,
+                                        &quot;VEH&quot;)))
+
+
+ggplot(df_78forplot, aes(x = Xaxis, y = Intensity, group = as.factor(drug))) +
+  geom_line(size = 1.5, aes(color = drug)) +
+  xlab(&quot;&quot;) +
+  theme_bw() +
+  ggtitle(&quot;Individual 5&quot;) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_color_manual(values = drug_pal_fact) +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 14, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 10,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/line%20plot%20data-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-line-plot-data-2">
+Past versions of "line plot data-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-line-plot-data-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/line plot data-2.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_77 &lt;-  Plot_Line_df(&quot;data/CALIMA_Data/77-1/&quot;)
+
+df_77forplot &lt;- plot_77 %&gt;%
+  bind_rows() %&gt;%
+  rename(&quot;Xaxis&quot; = `CALIMA_obj[, 1]`) %&gt;%
+  mutate(drug = factor(drug, levels = c(&quot;DOX&quot;,
+                                        &quot;EPI&quot;,
+                                        &quot;DNR&quot;,
+                                        &quot;MTX&quot;,
+                                        &quot;TRZ&quot;,
+                                        &quot;VEH&quot;)))
+
+
+ggplot(df_77forplot, aes(x = Xaxis, y = Intensity, group = as.factor(drug))) +
+  geom_line(size = 1.5, aes(color = drug)) +
+  xlab(&quot;&quot;) +
+  theme_bw() +
+  ggtitle(&quot;Individual 3&quot;) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_color_manual(values = drug_pal_fact) +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 14, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 10,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 12,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )</code></pre>
+<p><img src="figure/LDH_analysis.Rmd/line%20plot%20data-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-line-plot-data-3">
+Past versions of "line plot data-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-line-plot-data-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/90253fce95fb261f9e7375dc5120a03b1332e4ce/docs/figure/LDH_analysis.Rmd/line plot data-3.png" target="_blank">90253fc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1521,11 +3157,13 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
 
 Matrix products: default
+
 
 locale:
 [1] LC_COLLATE=English_United States.utf8 
@@ -1534,37 +3172,41 @@ locale:
 [4] LC_NUMERIC=C                          
 [5] LC_TIME=English_United States.utf8    
 
+time zone: America/Chicago
+tzcode source: internal
+
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
  [1] ggalt_0.4.0        RColorBrewer_1.1-3 ggsignif_0.6.4     zoo_1.8-12        
- [5] lubridate_1.9.2    forcats_1.0.0      stringr_1.5.0      dplyr_1.1.2       
- [9] purrr_1.0.1        readr_2.1.4        tidyr_1.3.0        tibble_3.2.1      
-[13] tidyverse_2.0.0    rstatix_0.7.2      ggpubr_0.6.0       ggplot2_3.4.2     
-[17] readxl_1.4.2       workflowr_1.7.0   
+ [5] lubridate_1.9.2    forcats_1.0.0      stringr_1.5.0      dplyr_1.1.3       
+ [9] purrr_1.0.2        readr_2.1.4        tidyr_1.3.0        tibble_3.2.1      
+[13] tidyverse_2.0.0    rstatix_0.7.2      ggpubr_0.6.0       ggplot2_3.4.3     
+[17] readxl_1.4.3       workflowr_1.7.1   
 
 loaded via a namespace (and not attached):
- [1] nlme_3.1-162       fs_1.6.2           bit64_4.0.5        ash_1.0-15        
- [5] httr_1.4.6         rprojroot_2.0.3    tools_4.2.2        backports_1.4.1   
- [9] bslib_0.5.0        utf8_1.2.3         R6_2.5.1           KernSmooth_2.23-21
-[13] mgcv_1.8-42        colorspace_2.1-0   withr_2.5.0        tidyselect_1.2.0  
-[17] processx_3.8.1     bit_4.0.5          compiler_4.2.2     git2r_0.32.0      
-[21] extrafontdb_1.0    cli_3.6.1          labeling_0.4.2     sass_0.4.6        
-[25] scales_1.2.1       proj4_1.0-12       callr_3.7.3        digest_0.6.31     
-[29] rmarkdown_2.22     pkgconfig_2.0.3    htmltools_0.5.5    extrafont_0.19    
-[33] fastmap_1.1.1      highr_0.10         maps_3.4.1         rlang_1.1.1       
-[37] rstudioapi_0.14    jquerylib_0.1.4    generics_0.1.3     farver_2.1.1      
-[41] jsonlite_1.8.5     vroom_1.6.3        car_3.1-2          magrittr_2.0.3    
-[45] Matrix_1.5-4.1     Rcpp_1.0.10        munsell_0.5.0      fansi_1.0.4       
-[49] abind_1.4-5        lifecycle_1.0.3    stringi_1.7.12     whisker_0.4.1     
-[53] yaml_2.3.7         carData_3.0-5      MASS_7.3-60        grid_4.2.2        
-[57] parallel_4.2.2     promises_1.2.0.1   crayon_1.5.2       lattice_0.21-8    
-[61] splines_4.2.2      hms_1.1.3          knitr_1.43         ps_1.7.5          
-[65] pillar_1.9.0       glue_1.6.2         evaluate_0.21      getPass_0.2-2     
-[69] vctrs_0.6.3        tzdb_0.4.0         httpuv_1.6.11      Rttf2pt1_1.3.12   
-[73] cellranger_1.1.0   gtable_0.3.3       cachem_1.0.8       xfun_0.39         
-[77] broom_1.0.5        later_1.3.1        timechange_0.2.0  </code></pre>
+ [1] tidyselect_1.2.0   farver_2.1.1       fastmap_1.1.1      ash_1.0-15        
+ [5] promises_1.2.1     digest_0.6.33      timechange_0.2.0   lifecycle_1.0.3   
+ [9] processx_3.8.2     magrittr_2.0.3     compiler_4.3.1     rlang_1.1.1       
+[13] sass_0.4.7         tools_4.3.1        utf8_1.2.3         yaml_2.3.7        
+[17] knitr_1.44         labeling_0.4.3     bit_4.0.5          abind_1.4-5       
+[21] KernSmooth_2.23-22 withr_2.5.0        grid_4.3.1         proj4_1.0-13      
+[25] fansi_1.0.4        git2r_0.32.0       colorspace_2.1-0   extrafontdb_1.0   
+[29] scales_1.2.1       MASS_7.3-60        cli_3.6.1          rmarkdown_2.24    
+[33] crayon_1.5.2       generics_0.1.3     rstudioapi_0.15.0  httr_1.4.7        
+[37] tzdb_0.4.0         cachem_1.0.8       splines_4.3.1      maps_3.4.1        
+[41] parallel_4.3.1     cellranger_1.1.0   vctrs_0.6.3        Matrix_1.6-1      
+[45] jsonlite_1.8.7     carData_3.0-5      car_3.1-2          callr_3.7.3       
+[49] hms_1.1.3          bit64_4.0.5        jquerylib_0.1.4    glue_1.6.2        
+[53] ps_1.7.5           stringi_1.7.12     gtable_0.3.4       later_1.3.1       
+[57] extrafont_0.19     munsell_0.5.0      pillar_1.9.0       htmltools_0.5.6   
+[61] R6_2.5.1           rprojroot_2.0.3    vroom_1.6.3        evaluate_0.21     
+[65] lattice_0.21-8     backports_1.4.1    broom_1.0.5        httpuv_1.6.11     
+[69] bslib_0.5.1        Rcpp_1.0.11        nlme_3.1-163       Rttf2pt1_1.3.12   
+[73] mgcv_1.9-0         whisker_0.4.1      xfun_0.40          fs_1.6.3          
+[77] getPass_0.2-2      pkgconfig_2.0.3   </code></pre>
+</div>
 </div>
 </div>
 </div>
