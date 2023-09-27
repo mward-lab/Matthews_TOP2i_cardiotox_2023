@@ -12,15 +12,15 @@ Pending Title and citation links:
 
 What's included in this repository:
 
-  •	The **analysis** directory contains R Markdown source files for this workflowr website, including R code used to analyze and generate all figures and tables for the manuscript.  
+  •	The **analysis** directory contains R Markdown source files for this workflowr website, including R code used to analyze and generate all figures and tables for the manuscript.
   
-	•	The **data** directory contains original and processed data files used to generate the tables and figures for the manuscript.  
-	
-	•	The **output** directory stores outputs from data processing and analysis, including R objects used in GO and KEGG pathway analysis.
+  •	The **data** directory contains original and processed data files used to generate the tables and figures for the manuscript.
+  
+  •	The **output** directory stores outputs from data processing and analysis, including R objects used in GO and KEGG pathway analysis.
 	
 
 
-You can access the website [here] created.
+You can access the website [here] created using [workflowr].
 The website contains links to the figures of the paper and the associated code and data used to create each figure, including supplemental figures.
 
 
