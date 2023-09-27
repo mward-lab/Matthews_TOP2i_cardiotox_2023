@@ -1,5 +1,5 @@
 ---
-title: "Figure 1"
+title: "Figure 1: TOP2i drugs affect cardiomyocyte viability in a dose-dependent manner"
 author: "ERM"
 date: "`r Sys.Date()`"
 output: html_document
@@ -12,6 +12,18 @@ knitr::opts_chunk$set(dev = c('svg','png'),
 	warning = FALSE
 )
 ```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
 ```{r packages loading}
 library(car)
 library(tidyverse)
@@ -25,20 +37,15 @@ library(RColorBrewer)
 library(broom)
 library(ComplexHeatmap)
 ```
-# Figure 1
 
-Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
+## Figure 1
 
-## A. Project overview
+Top2i drugs affect cardiomyocyte viability in a dose-dependent manner.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# knitr::include_graphics("output/Fig_summary1.png",error=FALSE)
-knitr::include_graphics("code/fig1plot.png")
-```
+### A. Project overview: Image not given here. Please look at our paper.
 
-things to note about this image so far: Need to import into illustrator. Goal is to have colors changes on Drugs from sick purple and jaundice yellow, to a red tone and a blue tone for non-ACs. I also want to change to add a time line of treatment.
+### B. Dose-response curves from 48 hour drug exposure.
 
-## B. Example dose response curves from 48 hour drug exposure.
 ```{r B drc, fig.width=12, fig.height=3}
 daplot <- readRDS("output/daplot.RDS")  
 dxplot <- readRDS("output/dxplot.RDS")
@@ -52,126 +59,144 @@ legend_b <- readRDS("output/legend_b.RDS")
 plan2 <-  cowplot::plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot, legend_b,ncol =7, rel_widths = c(1,1,1,1,1,1,.5))
 print(plan2)
 ```
-Lines are a log-logistic regression of the mean from quadruplicates at 8 separate concentrations for each condition, except (trastuzmab)TRZ, which is 7 concentrations.
 
+Lines are a 4 point log-logistic regression of the mean from two biological replicates for each individual at 8 concentrations for each condition, except(trastuzmab)TRZ, which is 7 concentrations.
 
-```{r heatmap, eval=FALSE, include=FALSE}
-
-
-## C. 48 hour 50% lethal Pearson correlation heatmap
-Heatmap_mat <- readRDS("data/Heatmap_mat.RDS")
-Heatmap_sig <- readRDS("data/Heatmap_sig.RDS")
-
-col_funld <- circlize::colorRamp2(c(0, 1), c("white", "darkblue"))
-Heatmap(Heatmap_mat,
-        column_title = "Pearson correlation of LD50s between treatments",
-        name = "rho value",
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        column_names_rot = 0,
-        column_names_centered = TRUE,
-       col = col_funld,
-        # na_col="lightyellow",
-        cell_fun = function(j, i, x, y, width, height, fill) {
-        if(Heatmap_sig[i, j]< 0.05)
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-})
-
-```
-
+You can find the link to initial DRC analysis at this[link](fig1b)
 
 ```{r LD50}
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
 LD50_table <- readRDS("data/new_ld50avg.RDS")
 
-  
-graphLD50<- LD50_table %>% 
-  mutate(Treatment=factor(Treatment, 
-                          levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>% 
-  ggplot(., (aes(x = Treatment, y = log10(Estimate)))) +
-  geom_boxplot(position = "identity", aes(fill=Treatment))+
-  geom_point(aes(color = indv,
-                 size = 5,alpha = 0.5)) +
-  ggtitle(expression("Experimentally-derived LD"[50]*"s\n from treated cardiomyocytes"))+
-  xlab("")+
-  geom_signif(comparisons =list(c("DNR","MTX"),
-                                c("DOX","EPI"),
-                                c ("DOX","DNR"),
-                                c("DOX","MTX")),
-             test="t.test",
-             map_signif_level=TRUE,
-             textsize =4,
-             step_increase = 0.15)+
-  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
-  scale_color_brewer(palette = "Dark2",
-                     name = "Individual")+
-  ylim(-2,3)+
-    # scale_y_continuous(expand=expansion(.001))+
-  scale_fill_manual(values=drug_palc, name="Treatment")+
-  theme_bw() + 
-        guides(alpha ="none", size = "none")+
-  #theme(strip.background = element_rect(fill = "transparent")) +
-          # legend.position = "none",
-  theme(plot.title = element_text(hjust =0.5, size = 12),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text.x = element_text(size=0,color = "white"),
-        # axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))   
-# graphLD50
 
+
+graphLD50 <- LD50_table %>%
+  mutate(Treatment = factor(Treatment,
+                            levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+  ggplot(., (aes(x = Treatment, y = log10(Estimate)))) +
+  geom_boxplot(position = "identity", aes(fill = Treatment)) +
+  geom_point(aes(
+    color = indv,
+    size = 5,
+    alpha = 0.5
+  )) +
+  ggtitle(expression("Experimentally-derived LD"[50] * "s\n from treated cardiomyocytes")) +
+  xlab("") +
+  geom_signif(
+    comparisons = list(
+      c("DNR", "MTX"),
+      c("DOX", "EPI"),
+      c ("DOX", "DNR"),
+      c("DOX", "MTX")
+    ),
+    test = "t.test",
+    map_signif_level = TRUE,
+    textsize = 4,
+    step_increase = 0.15
+  ) +
+  ylab(bquote('Log'[10] ~ 'LD'[50] ~ 'in ' * mu * M)) +
+  scale_color_brewer(palette = "Dark2",
+                     name = "Individual") +
+  ylim(-2, 3) +
+  
+  scale_fill_manual(values = drug_palc, name = "Treatment") +
+  theme_bw() +
+  guides(alpha = "none", size = "none") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 0, color = "white"),
+    # axis.text = element_text(size = 12, color = "black", angle = 0),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )   
 ```
-## D. Breast cancer cell line 50% lethal dose plot
+
+You can find the links to DRC and BCC analysis at this[link](fig1c).
+
+### C & D. LD~50~ and EC~50~
+
 ```{r BCcells ld50,fig.width=12, fig.height=5}
 
 graphBC <-
   BC_cell_lines %>%
-    mutate(Cell_line= factor(Cell_line)) %>% 
-  pivot_longer(.,col=!Cell_line,
+  mutate(Cell_line = factor(Cell_line)) %>%
+  pivot_longer(.,
+               col = !Cell_line,
                names_to = 'drug',
-               values_to = 'LD50') %>% 
-  mutate(drug =case_match(drug, "Daunorubicin"~"DNR",
-                        "Doxorubicin"~"DOX",
-                        "Epirubicin"~"EPI",
-                        "Mitoxantrone"~"MTX",
-                        "Trastuzumab"~"TRZ",
-                        "Vehicle"~"VEH", .default = drug)) %>%
-  mutate(drug=factor(drug, 
-                         levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+               values_to = 'LD50') %>%
+  mutate(
+    drug = case_match(
+      drug,
+      "Daunorubicin" ~ "DNR",
+      "Doxorubicin" ~ "DOX",
+      "Epirubicin" ~ "EPI",
+      "Mitoxantrone" ~ "MTX",
+      "Trastuzumab" ~ "TRZ",
+      "Vehicle" ~ "VEH",
+      .default = drug
+    )
+  ) %>%
+  mutate(drug = factor(drug,
+                       levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
   ggplot(., (aes(x = (drug), y = log10(LD50)))) +
-  geom_boxplot(position = "identity",aes(fill=drug))+
-  geom_point(aes(color = Cell_line,
-                 size = 5,alpha = 0.5)) +
-  ggtitle(expression("Breast cancer cell line reported  LD"[50]*"s"))+
-  xlab("")+
-   
-   geom_signif(comparisons =list(c("DOX","EPI"),
-                                c ("DOX","DNR"),
-                                c("DOX","MTX")),
-             test="t.test",
-             map_signif_level=TRUE,
-             textsize =4,
-             step_increase = 0.15)+
-  ylab(bquote('Log'[10]~ 'LD'[50]~'in '*mu*M))+
+  geom_boxplot(position = "identity", aes(fill = drug)) +
+  geom_point(aes(
+    color = Cell_line,
+    size = 5,
+    alpha = 0.5
+  )) +
+  ggtitle(expression("Breast cancer cell line reported  ED"[50] * "s")) +
+  xlab("") +
+  
+  geom_signif(
+    comparisons = list(c("DOX", "EPI"),
+                       c ("DOX", "DNR"),
+                       c("DOX", "MTX")),
+    test = "t.test",
+    map_signif_level = TRUE,
+    textsize = 4,
+    step_increase = 0.15
+  ) +
+  ylab(bquote('Log'[10] ~ 'LD'[50] ~ 'in ' * mu * M)) +
   scale_color_brewer(palette = "Spectral",
-                     name = "Cell lines")+
-          scale_fill_manual(values=drug_palc)+
- ylim(-2,3)+
-  theme_bw() + 
-        guides(alpha ="none", size = "none", fill="none")+
-  #theme(strip.background = element_rect(fill = "transparent")) +
-          # legend.position = "none",
-  theme(plot.title = element_text(hjust =0.5, size = 12),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text.x = element_text(size=0,color = "white"),
-        # axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-  # graphBC
-  plan50ld <-  cowplot::plot_grid(graphLD50,NULL,graphBC, rel_widths = c(1,.2,1),nrow = 1)
+                     name = "Cell lines") +
+  scale_fill_manual(values = drug_palc) +
+  ylim(-2, 3) +
+  theme_bw() +
+  guides(alpha = "none", size = "none", fill = "none") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 0, color = "white"),
+    # axis.text = element_text(size = 12, color = "black", angle = 0),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
+# graphBC
+plan50ld <-
+  cowplot::plot_grid(graphLD50,
+                     NULL,
+                     graphBC,
+                     rel_widths = c(1, .2, 1),
+                     nrow = 1)
 print(plan50ld)
   
 ```
+
+You can find the code to EC50 breast cancer cell lines at this [link](fig1d).
+
+[fig1b]:<https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#Ploting_the_DRC> 
+[fig1c]:<https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#LD50_correlation>
+[fig1d]:<https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#LD50_by_avg_of_viability>
