@@ -8,10 +8,25 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
-# GO Analysis
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
+## Analysis of Pairwise DEGs
 
 I have created several files from the RNA analysis that contain the significant genes(determined by adj.P.val \< 0.05) from each Time and Condition. The names of the files are in the following format: 'sigV'+Drug(2 letters)+time.
 
@@ -31,6 +46,8 @@ library(ggpubr)
 library(rstatix)
 library(zoo)
 library(ggsignif)
+library(limma)
+library(pheatmap)
 ```
 
 ```{r Import data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -42,106 +59,72 @@ list2env(siglist,envir=.GlobalEnv)
 ```
 
 
-```{r creation of toplist, eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
-##creation of the toplistall file:
-efit2 <- readRDS("data/efit2_final.RDS")
-
-##define 3hr and 24 hour toplist
-V.DA.top= topTable(efit2, coef=1, adjust="BH", number=Inf, sort.by="p")
-V.DX.top= topTable(efit2, coef=2, adjust="BH", number=Inf, sort.by="p")
-V.EP.top= topTable(efit2, coef=3, adjust="BH", number=Inf, sort.by="p")
-V.MT.top= topTable(efit2, coef=4, adjust="BH", number=Inf, sort.by="p")
-V.TR.top= topTable(efit2, coef=5, adjust="BH", number=Inf, sort.by="p")
-
-V.DA24.top= topTable(efit2, coef=6, adjust="BH", number=Inf, sort.by="p")
-V.DX24.top= topTable(efit2, coef=7, adjust="BH", number=Inf, sort.by="p")
-V.EP24.top= topTable(efit2, coef=8, adjust="BH", number=Inf, sort.by="p")
-V.MT24.top= topTable(efit2, coef=9, adjust="BH", number=Inf, sort.by="p")
-V.TR24.top= topTable(efit2, coef=10, adjust="BH", number=Inf, sort.by="p")
-
-toplist3hours <-list(V.DA.top[,c(1:3,4,6:7)],
-                              V.DX.top[,c(1:3,4,6:7)],
-                              V.EP.top[,c(1:3,4,6:7)],
-                              V.MT.top[,c(1:3,4,6:7)],
-                              V.TR.top[,c(1:3,4,6:7)])
-names(toplist3hours) <- c("DNR","DOX", "EPI","MTX", "TRZ")
-
-toplist3hours <- map_df(toplist3hours, ~as.data.frame(.x), .id="id")
-
-
-toplist24hours <-list(V.DA24.top[,c(1:3,4,6:7)],
-                    V.DX24.top[,c(1:3,4,6:7)],
-                    V.EP24.top[,c(1:3,4,6:7)],
-                    V.MT24.top[,c(1:3,4,6:7)],
-                    V.TR24.top[,c(1:3,4,6:7)])
-names(toplist24hours) <- c("DNR","DOX", "EPI","MTX", "TRZ")
-
-toplist24hours <- map_df(toplist24hours, ~as.data.frame(.x), .id="id")
-
-###Combine 3 and 24 for toplist all
-
-toplistall <- list(toplist24hours,toplist3hours)
-names(toplistall) <- c("24_hours", "3_hours")
-toplistall <-map_df(toplistall, ~as.data.frame(.x), .id="time")
-saveRDS(toplistall, "data/toplistall.RDS")
-write.csv(toplistall, "output/toplistall.csv")
-
-```
-
-The analysis is based on all genes that passed the rowMeans\>0 from the previous page which are about 14084 genes expressed in my RNA-seq data [link](https://reneeisnowhere.github.io/Cardiotoxicity/run_all_analysis.html)
+The analysis is based on all genes that passed the rowMeans\>0 from the previous page which are about 14084 genes expressed in my RNA-seq data.
 
 ```{r uploading the background genes, echo=FALSE,  message=FALSE, warning=FALSE}
-# backGL <- efit2$genes  # ***making the list
-
-# write.csv(backGL, "data/backGL.txt", row.names = FALSE)
-##read the  .csv then render into txt in the data file!
  backGL <- read_csv("data/backGL.txt", 
     col_types = cols(...1 = col_skip()))
 hsa_kegg_anno <- readRDS("data/hsa_kegg_anno.RDS")
 ```
 
 All analysis is completed with an adjusted p value of 0.05
-This is updated from the 0.1 value I had been using.
-
-2023-04-19 RM
-ran final RNA-seq DEG code on 6-30-23 RM
 
 ```{r tras had no DEGs}
 
-drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
+drug_palNoVeh <-
+  c("#8B006D" , "#DF707E", "#F1B72B" , "#3386DD", "#707031")
 
 toplistall %>%
-  mutate(id = factor(id,levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
-  group_by(time, id) %>% 
-  mutate(sigcount = if_else(adj.P.Val < 0.05,'sig','notsig'))%>%
-  count(sigcount) %>% 
-  pivot_wider(id_cols = c(time,id), names_from=sigcount, values_from=n) %>% 
- 
-  mutate(prop = sig/(sig+notsig)*100) %>% 
-  mutate(prop=if_else(is.na(prop),0,prop)) %>% 
-  ggplot(., aes(x=id, y= prop))+
-  geom_col(aes(fill=id))+
-  geom_text(aes(label = sprintf("%.2f",prop)),
-            position=position_dodge(0.9),vjust=-.2 )+
-  scale_fill_manual(values =drug_palNoVeh)+
-  guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(id~time)+#labeller = (time = facettimelabel) )+
-  theme_bw()+
-  xlab("")+
-  ylab("Percentage of expressed genes")+
-  theme_bw()+
-  facet_wrap(~time)+
-  ggtitle("Percent DEGs (adj. P value <0.05)")+
-  scale_y_continuous(expand= expansion(c(0.02,.1)))+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        # axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text.x = element_text(size = 8, color = "white", angle = 0),
-        axis.text.y = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+  mutate(id = factor(id, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+  mutate(time = factor(time, levels = c("3_hours", "24_hours"))) %>%
+  group_by(time, id) %>%
+  mutate(sigcount = if_else(adj.P.Val < 0.05, 'sig', 'notsig')) %>%
+  count(sigcount) %>%
+  pivot_wider(
+    id_cols = c(time, id),
+    names_from = sigcount,
+    values_from = n
+  ) %>%
+  
+  mutate(prop = sig / (sig + notsig) * 100) %>%
+  mutate(prop = if_else(is.na(prop), 0, prop)) %>%
+  ggplot(., aes(x = id, y = prop)) +
+  geom_col(aes(fill = id)) +
+  geom_text(aes(label = sprintf("%.2f", prop)),
+            position = position_dodge(0.9),
+            vjust = -.2) +
+  scale_fill_manual(values = drug_palNoVeh) +
+  guides(fill = guide_legend(title = "Treatment")) +
+  facet_wrap(id ~ time) + #labeller = (time = facettimelabel) )+
+  theme_bw() +
+  xlab("") +
+  ylab("Percentage of expressed genes") +
+  theme_bw() +
+  facet_wrap( ~ time) +
+  ggtitle("Percent DEGs (adj. P value <0.05)") +
+  scale_y_continuous(expand = expansion(c(0.02, .1))) +
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    # axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    strip.background = element_rect(fill = "transparent"),
+    axis.text.x = element_text(
+      size = 8,
+      color = "white",
+      angle = 0
+    ),
+    axis.text.y = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 12,
+      color = "black",
+      face = "bold"
+    )
+  )
 
 
 ```
@@ -149,7 +132,7 @@ Knowels, et al. mentioned a relationship between transcriptional change level in
 ## DNR
 
 This is analysis on the significantly differentially expressed genes for DNR by 3 and 24 hours.
-```{r intial analysis DA3 and DA24, echo=FALSE, message=FALSE, warning=FALSE}
+```{r intial analysis DA3 and DA24, message=FALSE, warning=FALSE}
 # DAgostres3 <- gost(query = sigVDA3$ENTREZID,
 #                    organism = "hsapiens",
 #                    significant = FALSE,
@@ -164,7 +147,7 @@ This is analysis on the significantly differentially expressed genes for DNR by 
 #                     sources=c("GP:BP","KEGG"))
 # saveRDS(DAgostres3,"data/DEG-GO/DAgostres3.RDS")
 DAgostres3 <- readRDS("data/DEG-GO/DAgostres3.RDS")
-DAp3 <- gostplot(DAgostres3, capped = FALSE, interactive = TRUE)
+# DAp3 <- gostplot(DAgostres3, capped = FALSE, interactive = TRUE)
 # publish_gostplot(DAp3, highlight_terms = c("KEGG:04115", "KEGG:05168", "KEGG:04110", "KEGG:03030", "KEGG:03410"))
 # overlapKEGG <- hsa_kegg_anno %>% 
 #   filter(eg %in%backGL$ENTREZID) #%>% 
@@ -240,8 +223,8 @@ Daun24sp <- list24totvenn24$..values..[[15]]
 # saveRDS(DAspgostres3,"data/DEG-GO/DAspgostres3.RDS")
 DAspgostres3 <- readRDS("data/DEG-GO/DAspgostres3.RDS")
 
-DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
-DAspp3
+# DAspp3 <- gostplot(DAspgostres3, capped = FALSE, interactive = TRUE)
+# DAspp3
 
 DAsptable3 <- DAspgostres3$result %>% 
   dplyr::select(c(source, term_id,
@@ -286,65 +269,86 @@ DAspp24h %>%
 
 ```
 
-
-
-
 ### All DNR specifc genes adj. p value < 0.05
 
 ```{r daun specific Venn genes}
-# 3 hour DNR specific genes (venn)
- 
+
+DAsptable3 <- DAspgostres3$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
+DAsptable3 %>%
+  dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size)) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('DNR specific 3 hour GO:BP \nterms n = 335') +
+  xlab(expression(" -" ~ log[10] ~ ("adj. p-value"))) +
+  ylab("GO: BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 10,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
 
-DAsptable3 <- DAspgostres3$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-  DAsptable3 %>% 
-    dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('DNR specific 3 hour GO:BP \nterms n = 335') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-  
-  
-DAsptable3 %>% mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,) %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+DAsptable3 %>% mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., ) %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
 
-
-
-length(union(Daun3sp,sigVDX3$ENTREZID))
-ggVennDiagram::ggVennDiagram(list(Daun3sp, sigVDA24$ENTREZID),
-              category.names = c("3 hour\n DNR- specific  ","24 hours\n DEG p < 0.05"),
-              show_intersect = FALSE,
-              set_color = "black",
-              label = "count",
-              label_percent_digit = 1,
-              label_size = 5,
-              label_alpha = 0,
-              label_color = "black",
-              edge_lty = "solid") +
-  scale_x_continuous(expand = expansion(mult = .2))+
-  scale_y_continuous(expand = expansion(mult = .1))+
-  scale_fill_gradient(low = "red4", high = "tan1")+
-  labs(title = "3 hr DNR-sp with 24 hour DNR", caption = paste("n =", length(union(Daun3sp,sigVDX3$ENTREZID)),"genes"))+
+# length(union(Daun3sp, sigVDX3$ENTREZID))
+ggVennDiagram::ggVennDiagram(
+  list(Daun3sp, sigVDA24$ENTREZID),
+  category.names = c("3 hour\n DNR- specific  ", "24 hours\n DEG p < 0.05"),
+  show_intersect = FALSE,
+  set_color = "black",
+  label = "count",
+  label_percent_digit = 1,
+  label_size = 5,
+  label_alpha = 0,
+  label_color = "black",
+  edge_lty = "solid"
+) +
+  scale_x_continuous(expand = expansion(mult = .2)) +
+  scale_y_continuous(expand = expansion(mult = .1)) +
+  scale_fill_gradient(low = "red4", high = "tan1") +
+  labs(title = "3 hr DNR-sp with 24 hour DNR", caption = paste("n =", length(union(
+    Daun3sp, sigVDX3$ENTREZID
+  )), "genes")) +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
-
 
 ```
 Interestingly, Over half of the DNR specific genes are in the DNR 24 hour group.
@@ -369,8 +373,8 @@ over3_24daun <- list324venn$..values..[[1]]
 #                   sources=c("GO:BP","KEGG"))
 # saveRDS(over3_24gost, "data/DEG-GO/over3_24gost.RDS")
 over3_24gost <- readRDS("data/DEG-GO/over3_24gost.RDS")
-DA3_24table <- gostplot(over3_24gost, capped = FALSE, interactive = TRUE)
-DA3_24table
+# DA3_24table <- gostplot(over3_24gost, capped = FALSE, interactive = TRUE)
+# DA3_24table
 plDA3_24table <- over3_24gost$result%>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
 
@@ -401,8 +405,8 @@ Looking at the DNR 24 hour geneset using adj. P value of 0.05, I have enrichment
 #                   sources=c("GO:BP","KEGG"))
 # saveRDS(DAgostres24, "data/DAgostres24.RDS")
 DAgostres24 <- readRDS("data/DAgostres24.RDS")
-DAp24 <- gostplot(DAgostres24, capped = FALSE, interactive = TRUE)
-DAp24
+# DAp24 <- gostplot(DAgostres24, capped = FALSE, interactive = TRUE)
+# DAp24
 
 DAtable124 <- DAgostres24$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
@@ -476,8 +480,8 @@ length(intersect(over3_24daun, intersect(sigVDA3$ENTREZID, sigVDA24$ENTREZID)))
 
 # saveRDS(DAgostresint,"data/DEG-GO/DAgostresint.RDS")
 DAgostresint <- readRDS("data/DEG-GO/DAgostresint.RDS")
-DApint <- gostplot(DAgostresint, capped = FALSE, interactive = TRUE)
-DApint
+# DApint <- gostplot(DAgostresint, capped = FALSE, interactive = TRUE)
+# DApint
 
 DAtable_int <- DAgostresint$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
@@ -532,8 +536,8 @@ DAtable_int <- DAgostresint$result %>%
 # saveRDS(DXgostres,"data/DEG-GO/DXgostres.RDS")
 
 DXgostres <- readRDS("data/DEG-GO/DXgostres.RDS")
-DXp <- gostplot(DXgostres, capped = FALSE, interactive = TRUE)
-DXp
+# DXp <- gostplot(DXgostres, capped = FALSE, interactive = TRUE)
+# DXp
 
 DXtable1 <- DXgostres$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
@@ -584,8 +588,8 @@ DXtable1 <- DXgostres$result %>%
 # saveRDS(DXgostres24,"data/DEG-GO/gostres24.RDS")
   DXgostres24 <- readRDS("data/DEG-GO/gostres24.RDS")
 # gostres24 <- readRDS("data/DEG-GO/gostres24.RDS")  
-  p24 <- gostplot(DXgostres24, capped = FALSE, interactive = TRUE)
-p24
+  # p24 <- gostplot(DXgostres24, capped = FALSE, interactive = TRUE)
+# p24
 
 DXtable124 <- DXgostres24$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
@@ -656,8 +660,8 @@ EPspecific genes set now does not show enrichment in any terms.
 
 EPspc3h <- readRDS("data/DEG-GO/EPspgostres.RDS")
 EPgostres <- readRDS("data/DEG-GO/EPgostres.RDS")
-EPp <- gostplot(EPgostres, capped = FALSE, interactive = TRUE)
-EPp 
+# EPp <- gostplot(EPgostres, capped = FALSE, interactive = TRUE)
+# EPp 
 
 EPtable1 <- EPgostres$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
@@ -712,8 +716,8 @@ EPtable1 <- EPgostres$result %>%
 EPgostres24 <- readRDS("data/DEG-GO/EPgostres24.RDS")
   
   
-  EPp24 <- gostplot(EPgostres24, capped = FALSE, interactive = TRUE)
-EPp24
+  # EPp24 <- gostplot(EPgostres24, capped = FALSE, interactive = TRUE)
+# EPp24
 
 EPtable124 <- EPgostres24$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
@@ -862,8 +866,8 @@ MTX-specific 24 hour genes show an enrichment for DNA repair. (n=188)
 # saveRDS(MTgostres,"data/DEG-GO/MTgostre.RDS")
 MTgostres <- readRDS("data/DEG-GO/MTgostre.RDS")
 
-MTp <- gostplot(MTgostres, capped = FALSE, interactive = TRUE)
-MTp
+# MTp <- gostplot(MTgostres, capped = FALSE, interactive = TRUE)
+# MTp
 
 MTtable1 <- MTgostres$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
@@ -913,8 +917,8 @@ MTtable1 %>%
 MTgostres24 <- readRDS("data/DEG-GO/MTgostres24.RDS")
   
   
-  MTp24 <- gostplot(MTgostres24, capped = FALSE, interactive = TRUE)
-MTp24
+  # MTp24 <- gostplot(MTgostres24, capped = FALSE, interactive = TRUE)
+# MTp24
 
 MTtable124 <- MTgostres24$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
@@ -1131,42 +1135,45 @@ length(unique(in_commonMt))
 
 ```{r Making Go lists from SigDE genes, message=FALSE, warning=FALSE, paged.print=TRUE}
 
+
 # > list24totvenn$..count..
 #  [1]  977   15   17   14   58   24   34  188 4178  225  287  489  697  342  616
 # > list24totvenn$..values..[?]
 
 ##pairwise
-DDEresp<- list24totvenn24$..values..[[9]]
-DDEresp3<- list3totvenn3$..values..[[9]]
+DDEresp <- list24totvenn24$..values..[[9]]
+DDEresp3 <- list3totvenn3$..values..[[9]]
 
 #DDEresp1<- read.csv("data/DDEresp_list.csv",row.names = 1)
 # write.csv(DDEresp,"data/DDEresp_list.csv")
-DDEMresp<- list24totvenn24$..values..[[1]]
-DDEMresp3<- list3totvenn3$..values..[[1]]
-# DDEMresp<-read.csv("data/DDEMresp_list.csv", row.names = 1)
-# write.csv(DDEMresp,"data/DDEMresp_list.csv")
-# DDEall <-(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
-# length(intersect(DDEresp,sigVMT24))
-# 
-# print("Number of AC drug DEG genes in common") 
-# length(intersect(sigVEP24$ENTREZID,intersect(sigVDA24$ENTREZID,sigVDX24$ENTREZID)))
-# #5317
-DXsprespon<- list24totvenn24$..values..[[14]]
-## (342)
-print("Number of DOX specific DEGs, adj. P value < 0.05") 
+DDEMresp <- list24totvenn24$..values..[[1]]
+DDEMresp3 <- list3totvenn3$..values..[[1]]
+
+DXsprespon <- list24totvenn24$..values..[[14]]
+
+
 length(DXsprespon)
-complete <- c(sigVDA24$ENTREZID,sigVDX24$ENTREZID,sigVEP24$ENTREZID,sigVMT24$ENTREZID, sigVDA3$ENTREZID, sigVDX3$ENTREZID, sigVEP3$ENTREZID, sigVMT3$ENTREZID)
+complete <-
+  c(
+    sigVDA24$ENTREZID,
+    sigVDX24$ENTREZID,
+    sigVEP24$ENTREZID,
+    sigVMT24$ENTREZID,
+    sigVDA3$ENTREZID,
+    sigVDX3$ENTREZID,
+    sigVEP3$ENTREZID,
+    sigVMT3$ENTREZID
+  )
 complete <- as.data.frame(unique(complete))
 colnames(complete) <- "ENTREZID"  #9047 genes
 print("Number of All genes that respond to some condition in DEG set, adj. P value  < 0.05")
 length(complete$ENTREZID)
 #8368
-      
-NoRespDEG <- setdiff(backGL$ENTREZID ,complete$ENTREZID) #
+
+NoRespDEG <- setdiff(backGL$ENTREZID , complete$ENTREZID) #
 print("Number of No response genes in DEG set, adj. P value  < 0.05")
-length(NoRespDEG) 
-# write.csv(NoRespDEG,"data/NoRespDEG_final.csv")
- #5716
+length(NoRespDEG)
+
 ```
 ## DDE response set
 
@@ -1180,9 +1187,9 @@ AC specific enrichment at 24 hours did not occur.  The next step was Top2 inhibi
 ```{r GO DDEresp 3 hour genelist of SDEGs,  message=FALSE, warning=FALSE, include=FALSE}
 ##No enrichment for DDE only resp!
 
-##overlap of DDEM + AC only gives: 
+##overlap of DDEM + AC only gives:
 
-DDEresp3All <- (union(DDEresp3,DDEMresp3))
+DDEresp3All <- (union(DDEresp3, DDEMresp3))
 # (just the overlap of DDE, i use the dataframe DDEresp3)
 # DDEgostres3only <- gost(query = DDEresp3,
 #                      organism = "hsapiens",
@@ -1195,97 +1202,150 @@ DDEresp3All <- (union(DDEresp3,DDEMresp3))
 #                      correction_method = c("fdr"),
 #                      custom_bg = backGL$ENTREZID,
 #                      sources=c("GO:BP","KEGG"))
-# # 
-# 
+# #
+#
 # saveRDS(DDEgostres3,"data/DEG-GO/DDE_allgostres3.RDS")
 DDEgostres3 <- readRDS("data/DEG-GO/DDE_allgostres3.RDS")
 # saveRDS(DDEgostres3only,"data/DEG-GO/DDEgostres3only.RDS")
-DDEgostres3only <- readRDS("data/DEG-GO/DDEgostres3only.RDS")  
+DDEgostres3only <- readRDS("data/DEG-GO/DDEgostres3only.RDS")
 # saveRDS(DDEgostres24kegg,"data/DEG-GO/DDEgostres24kegg.RDS")
 
-DDEp3 <- gostplot(DDEgostres3, capped = FALSE, interactive = TRUE)
-DDEp3
-DDEp3only <- gostplot(DDEgostres3only, capped = FALSE, interactive = TRUE)
-DDEp3only
+# DDEp3 <- gostplot(DDEgostres3, capped = FALSE, interactive = TRUE)
+# DDEp3
+# DDEp3only <- gostplot(DDEgostres3only, capped = FALSE, interactive = TRUE)
+# DDEp3only
 
-# kegg_term <- c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair")  
-
-
-DDEtable3 <- DDEgostres3$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
-DDEtable3only<- DDEgostres3only$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+# kegg_term <- c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair")
 
 
-DDEtable3only %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    dplyr::slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Anthracycline DEGs 3 hr GO:BP terms (not significantly enriched)') +
-    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DDEtable3 <- DDEgostres3$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
+DDEtable3only <- DDEgostres3only$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
 
-DDEtable3only %>% dplyr::filter(source=="KEGG") %>%
-    dplyr::select(p_value,term_name,intersection_size) %>%
+
+DDEtable3only %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  dplyr::slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size)) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Anthracycline DEGs 3 hr GO:BP terms (not significantly enriched)') +
+  xlab(expression(" -" ~ log[10] ~ "(adj. p-value)")) +
+  ylab("GO: BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
+
+DDEtable3only %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
   
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-     geom_point(aes(size = intersection_size, col = "red")) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Anthracycline DEGs 3 hr KEGG pathway terms ') +
-    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-    ylab("KEGG term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size, col = "red")) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Anthracycline DEGs 3 hr KEGG pathway terms ') +
+  xlab(expression(" -" ~ log[10] ~ "(adj. p-value)")) +
+  ylab("KEGG term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
 
-  
-  DDEtable3 %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption="DDE all overlapped genes (including those that overlapped with MTX),n = 11+ n = 8") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+
+DDEtable3 %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "DDE all overlapped genes (including those that overlapped with MTX),n = 11+ n = 8") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
 
-  DDEtable3only %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption="DDE only the overlapped n= 11") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+DDEtable3only %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "DDE only the overlapped n= 11") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
-  
-``` 
+
+```
 
 
 
-```{r GO DDEresp 24 hour genelist of SDEGs,  message=FALSE, warning=FALSE, include=FALSE}
+```{r GO DDEresp 24 hour genelist of SDEGs,  message = FALSE, warning = FALSE, include =FALSE}
 ##No enrichment for DDE only resp!
 
-##overlap of DDEM + AC only gives: 
+##overlap of DDEM + AC only gives:
 
-DDErespAll <- (union(DDEresp,DDEMresp))## for the "24 hour all version (4435+882)
+DDErespAll <-
+  (union(DDEresp, DDEMresp))## for the "24 hour all version (4435+882)
 # DDEgostres24only <- gost(query = DDEresp,
-#                      organism = "hsapiens", 
+#                      organism = "hsapiens",
 #                      significant = FALSE,
 #                      ordered_query = TRUE,
 #                      domain_scope = "custom",
@@ -1301,70 +1361,122 @@ DDEgostres24all <- readRDS("data/DEG-GO/DDE_allgostres24.RDS")
 DDEgostres24only <- readRDS("data/DEG-GO/DDE_allgostres24.RDS")
 # saveRDS(DDEgostres24kegg,"data/DEG-GO/DDEgostres24kegg.RDS")
 
-DDEp24all <- gostplot(DDEgostres24all, capped = FALSE, interactive = TRUE)
-DDEp24all
-DDEp24only <- gostplot(DDEgostres24only, capped = FALSE, interactive = TRUE)
-DDEp24only
+# DDEp24all <- gostplot(DDEgostres24all, capped = FALSE, interactive = TRUE)
+# DDEp24all
+# DDEp24only <- gostplot(DDEgostres24only, capped = FALSE, interactive = TRUE)
+# DDEp24only
 
 
 
-kegg_term <- c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair")
+kegg_term <-
+  c("p53 signaling pathway",
+    "DNA replication",
+    "Cell cycle" ,
+    "Base excision repair")
 
 
-DDEtable24only <- DDEgostres24only$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
-DDEtable24all<- DDEgostres24all$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+DDEtable24only <- DDEgostres24only$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
+DDEtable24all <- DDEgostres24all$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
 
 
-DDEtable24only %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    dplyr::slice_min(., n= 5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   slice_max(., n=10,order_by = log_val) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Anthracycline DEGs 24 hr GO:BP terms, n = 4435 genes') +
-    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DDEtable24only %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  dplyr::slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  slice_max(., n = 10, order_by = log_val) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size)) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Anthracycline DEGs 24 hr GO:BP terms, n = 4435 genes') +
+  xlab(expression(" -" ~ log[10] ~ "(adj. p-value)")) +
+  ylab("GO: BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
-DDEtable24only %>% dplyr::filter(source=="KEGG") %>%
-    dplyr::select(p_value,term_name,intersection_size) %>%
-  filter(term_name %in% kegg_term) %>% 
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-     geom_point(aes(size = intersection_size, col = "red")) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Anthracycline DEGs 24 hr KEGG pathway terms') +
-    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-    ylab("KEGG term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DDEtable24only %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  filter(term_name %in% kegg_term) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size, col = "red")) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Anthracycline DEGs 24 hr KEGG pathway terms') +
+  xlab(expression(" -" ~ log[10] ~ "(adj. p-value)")) +
+  ylab("KEGG term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
 
-  
-  DDEtable24only %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "24 hour DDE only enrichment values") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+
+DDEtable24only %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "24 hour DDE only enrichment values") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
 
 ``` 
@@ -1387,76 +1499,78 @@ and all AC gens plus those which overlapped with Mito (n= `r length(DDEMresp)`, 
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
-# 
+#
 # saveRDS(DDEMgostres3,"data/DEG-GO/DDEMgostres3.RDS")
 DDEMgostres3 <- readRDS("data/DEG-GO/DDEMgostres3.RDS")
 
-DDEMp3 <- gostplot(DDEMgostres3, capped = FALSE, interactive = TRUE)
-DDEMp3
+# DDEMp3 <- gostplot(DDEMgostres3, capped = FALSE, interactive = TRUE)
+# DDEMp3
 
-DDEMtable3 <- DDEMgostres3$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+DDEMtable3 <- DDEMgostres3$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
 
-DDEMtable3 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Top2i DEGs (n=8) 3 hr GO:BP terms') +
-    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DDEMtable3 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size)) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Top2i DEGs (n=8) 3 hr GO:BP terms') +
+  xlab(expression(" -" ~ log[10] ~ "(adj. p-value)")) +
+  ylab("GO: BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
-# 
-# DDEMtable3 %>% dplyr::filter(source=="KEGG") %>% 
-#     dplyr::select(p_value,term_name,intersection_size) %>%
-#     slice_min(., n= 10 ,order_by=p_value) %>%
-#     mutate(log_val = -log10(p_value)) %>%
-#    # slice_max(., n=10,order_by = p_value) %>%
-#    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-#     geom_point(aes(size = intersection_size, col = "red")) +
-#     scale_y_discrete(labels = label_wrap(30))+
-#     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-#     ggtitle('Top2 inhibitor DEGs (n=8) 3 hr KEGG terms') +
-#     xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-#     ylab("KEGG term")+
-#       theme_bw()+
-#     theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-#         axis.title = element_text(size = 12, color = "black"),
-#         axis.ticks = element_line(linewidth = 1.5),
-#         axis.line = element_line(linewidth = 1.5),
-#         axis.text = element_text(size = 8, color = "black", angle = 0),
-#         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-  
-  DDEMtable3 %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "Top2 inhibitor enrichment list, n=8") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+DDEMtable3 %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "Top2 inhibitor enrichment list, n=8") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
-  
-  
-  
-  
-  
+
 ```
 ## DDEM 24 hour response of `r length(DDEMresp)`
 
-```{r GO DDEM 24 hour list of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
+```{r GO DDEM 24 hour list of SDEGs,message=FALSE, warning=FALSE}
+
 
 
 # DDEMgostres24 <- gost(query = DDEMresp,
-#                     organism = "hsapiens", 
+#                     organism = "hsapiens",
 #                     significant = FALSE,
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
@@ -1466,62 +1580,103 @@ DDEMtable3 %>% dplyr::filter(source=="GO:BP") %>%
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
-# 
+#
 # saveRDS(DDEMgostres24,"data/DEG-GO/DDEMgostres24.RDS")
 DDEMgostres24 <- readRDS("data/DEG-GO/DDEMgostres24.RDS")
 
-DDEMp24 <- gostplot(DDEMgostres24, capped = FALSE, interactive = TRUE)
-DDEMp24
+# DDEMp24 <- gostplot(DDEMgostres24, capped = FALSE, interactive = TRUE)
+# DDEMp24
 
-DDEMtable24 <- DDEMgostres24$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+DDEMtable24 <- DDEMgostres24$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
 
-DDEMtable24 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Top2i DEGs (n=832) 24 hr GO:BP terms') +
-    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DDEMtable24 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size)) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Top2i DEGs (n=832) 24 hr GO:BP terms') +
+  xlab(expression(" -" ~ log[10] ~ "(adj. p-value)")) +
+  ylab("GO: BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
 
-DDEMtable24 %>% dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size, col = "red")) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Top2 inhibitor DEGs (n=832) 24 hr KEGG terms') +
-    xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-    ylab("KEGG term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-  
-  DDEMtable24 %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "Top2 inhibitor enrichment list, n=832") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+DDEMtable24 %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size, col = "red")) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Top2 inhibitor DEGs (n=832) 24 hr KEGG terms') +
+  xlab(expression(" -" ~ log[10] ~ "(adj. p-value)")) +
+  ylab("KEGG term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
+
+DDEMtable24 %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "Top2 inhibitor enrichment list, n=832") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
   
 ```
@@ -1535,6 +1690,7 @@ What I will do is take the terms from the top three KEGG pathways and look at co
 ```{r GO DXsprespon$ENTREZID genelist of SDEGs, echo=FALSE, message=FALSE, warning=FALSE}
 
 
+
 # DXspgostres24 <- gost(query = DXsprespon,
 #                     organism = "hsapiens", significant = FALSE,
 #                     ordered_query = TRUE,
@@ -1545,66 +1701,69 @@ What I will do is take the terms from the top three KEGG pathways and look at co
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
-# 
+#
 # saveRDS(DXspgostres24,"data/DEG-GO/DXspgostres24.RDS")
 DXspgostres24 <- readRDS("data/DEG-GO/DXspgostres24.RDS")
 
 
-DXspp24 <- gostplot(DXspgostres24, capped = FALSE, interactive = TRUE)
-DXspp24
+# DXspp24 <- gostplot(DXspgostres24, capped = FALSE, interactive = TRUE)
+# DXspp24
 
-DXsptable24 <- DXspgostres24$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+DXsptable24 <- DXspgostres24$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
 
-DXsptable24 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = scales::label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle(paste0("DOX specific DEGs (n = ",length(DXsprespon),") 24 hr GO:BP terms")) +
-   xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+DXsptable24 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size)) +
+  scale_y_discrete(labels = scales::label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle(paste0("DOX specific DEGs (n = ", length(DXsprespon), ") 24 hr GO:BP terms")) +
+  xlab(expression(" -" ~ log[10] ~ ("adj. p-value"))) +
+  ylab("GO: BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
-# 
-# DXsptable24 %>% dplyr::filter(source=="KEGG") %>%
-#     dplyr::select(p_value,term_name,intersection_size) %>%
-#     slice_min(., n= 10 ,order_by=p_value) %>%
-#     mutate(log_val = -log10(p_value)) %>%
-#    # slice_max(., n=10,order_by = p_value) %>%
-#    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-#     geom_point(aes(size = intersection_size, col = "red")) +
-#     scale_y_discrete(labels = label_wrap(30))+
-#     guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-#     ggtitle('DOX specific DEGs (n=400) 24 hr KEGG terms') +
-#     xlab(expression(" -"~log[10]~("adj. p-value")))+
-#     ylab("KEGG term")+
-#       theme_bw()+
-#     theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-#         axis.title = element_text(size = 12, color = "black"),
-#         axis.ticks = element_line(linewidth = 1.5),
-#         axis.line = element_line(linewidth = 1.5),
-#         axis.text = element_text(size = 8, color = "black", angle = 0),
-#         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-  
-  DXsptable24 %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,) %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+DXsptable24 %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., ) %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
-  
-
 
 
 ``` 
@@ -1617,8 +1776,8 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
  
 
 ```{r no response cluster, echo=FALSE, message=FALSE, warning=FALSE}
-# 
-# gostresNoResp <- gost(query = NoRespDEG,  
+#
+# gostresNoResp <- gost(query = NoRespDEG,
 #                     organism = "hsapiens", significant = FALSE,
 #                     ordered_query = FALSE,
 #                     domain_scope = "custom",
@@ -1628,97 +1787,136 @@ DXsptable24 %>% dplyr::filter(source=="GO:BP") %>%
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$ENTREZID,
 #                     sources=c("GO:BP","KEGG"))
-# 
+#
 #saveRDS(gostresNoResp,"data/DEG-GO/gostresNoResp.RDS")
 gostresNoResp <- readRDS("data/DEG-GO/gostresNoResp.RDS")
 
-Noresp24 <- gostplot(gostresNoResp, capped = FALSE, interactive = TRUE)
-Noresp24
+# Noresp24 <- gostplot(gostresNoResp, capped = FALSE, interactive = TRUE)
+# Noresp24
 
-Noresp24table <- gostresNoResp$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value)) 
+Noresp24table <- gostresNoResp$result %>%
+  dplyr::select(c(
+    source,
+    term_id,
+    term_name,
+    intersection_size,
+    term_size,
+    p_value
+  ))
 
-Noresp24table %>% dplyr::filter(source=="GO:BP") %>%
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-     ggtitle(paste0("No response genes(n = ",length(NoRespDEG),") GO:BP terms")) +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+Noresp24table %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size)) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle(paste0("No response genes(n = ", length(NoRespDEG), ") GO:BP terms")) +
+  xlab(expression(" -" ~ log[10] ~ ("adj. p-value"))) +
+  ylab("GO: BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
+Noresp24table %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 10 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  # slice_max(., n=10,order_by = p_value) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, p_value),
+    col = intersection_size
+  )) +
+  geom_point(aes(size = intersection_size, col = "red")) +
+  scale_y_discrete(labels = label_wrap(30)) +
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle(paste0("No response genes(n = ", length(NoRespDEG), ") 24 hr KEGG terms")) +
+  xlab(expression(" -" ~ log[10] ~ ("adj. p-value"))) +
+  ylab("KEGG term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.2), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
-Noresp24table %>% dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n= 10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size, col = "red")) +
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle(paste0("No response genes(n = ",length(NoRespDEG),") 24 hr KEGG terms")) +
-     xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("KEGG term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.2), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-  
-  Noresp24table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,) %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+Noresp24table %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., ) %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
   scroll_box(width = "100%", height = "400px")
-  
 
   
 ```
 ##GO:BP full figure 24 DEG analysis
 
 
-```{r GOBP dEGlong, echo=FALSE, fig.height=12, fig.width=8,message=FALSE, warning=FALSE}
+```{r GOBP dEGlong, fig.height=12, fig.width=8,message=FALSE, warning=FALSE}
 
-DDEdeg <- DDEtable24only %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.)))) 
+DDEdeg <- DDEtable24only %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-DDEMdeg <-  DDEMtable24 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DDEMdeg <-  DDEMtable24 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-DAsp3deg <- DAsptable3%>% 
-  dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DAsp3deg <- DAsptable3 %>%
+  dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-DXsp24deg <- DXsptable24 %>% 
-  dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DXsp24deg <- DXsptable24 %>%
+  dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
 # EPsp24deg <- EPsptable124 %>%
 #   dplyr::filter(source=="GO:BP") %>%
@@ -1727,242 +1925,181 @@ DXsp24deg <- DXsptable24 %>%
 #     mutate(log_val = -log10(p_value)) %>%
 #   mutate(order_val=rev(as.numeric(rownames(.))))
 
-MTsp24deg <-   MTsptable124 %>% 
-    dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
-  
+MTsp24deg <-   MTsptable124 %>%
+  dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-DAdeg <-   DAtable124 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
 
-DXdeg <-  DXtable124 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DAdeg <-   DAtable124 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-  EPdeg <-   EPtable124 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    mutate(order_val=rev(as.numeric(rownames(.))))
-  
-  MTdeg <-   MTtable124 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    mutate(order_val=rev(as.numeric(rownames(.))))
+DXdeg <-  DXtable124 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-#filter<- dplyr::filter 
-#select <- dplyr::select
-  
-GODEGlong <-list("DXdeg"=DXdeg,
-                 "DXsp24deg"=DXsp24deg,
-                 "DAdeg"=DAdeg,
-                 "EPdeg"=EPdeg,
-                 "MTdeg"=MTdeg,
-                 "MTsp24deg"= MTsp24deg,
-                 "DDEdeg"=DDEdeg,
-                 "DDEMdeg"=DDEMdeg)
+EPdeg <-   EPtable124 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
+
+MTdeg <-   MTtable124 %>% dplyr::filter(source == "GO:BP") %>%
+  dplyr::select(p_value, term_name, intersection_size) %>%
+  slice_min(., n = 5 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
+
+
+
+GODEGlong <- list(
+  "DXdeg" = DXdeg,
+  "DXsp24deg" = DXsp24deg,
+  "DAdeg" = DAdeg,
+  "EPdeg" = EPdeg,
+  "MTdeg" = MTdeg,
+  "MTsp24deg" = MTsp24deg,
+  "DDEdeg" = DDEdeg,
+  "DDEMdeg" = DDEMdeg
+)
 
 GODEGlongtable <- data.table::rbindlist(GODEGlong, idcol = "deg")
- p <- GODEGlongtable%>% 
-   mutate(deg = fct_inorder(deg)) %>% 
-ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
-   geom_point(aes(size = intersection_size, col=deg)) +
-   scale_y_discrete(labels = label_wrap(40))+
-   scale_color_manual(values=c("DXdeg"="#8B006D",
-                 "DXsp24deg"="#b0028a",
-                 "DAdeg"="#DF707E",
-                 "EPdeg"="#F1B72B",
-                 "MTdeg"="#33a1dd",
-                 "MTsp24deg"="#33a1dd",
-                 "DDEdeg"="red",
-                 "DDEMdeg"="blue", alpha= 0.8))+
-  facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
-               eval(parse(text = paste0('facet_deg', '$`', deg, '`')))
-               )))) +
+p <- GODEGlongtable %>%
+  mutate(deg = fct_inorder(deg)) %>%
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, order_val, desc = TRUE),
+    col = deg
+  )) +
+  geom_point(aes(size = intersection_size, col = deg)) +
+  scale_y_discrete(labels = label_wrap(40)) +
+  scale_color_manual(
+    values = c(
+      "DXdeg" = "#8B006D",
+      "DXsp24deg" = "#b0028a",
+      "DAdeg" = "#DF707E",
+      "EPdeg" = "#F1B72B",
+      "MTdeg" = "#33a1dd",
+      "MTsp24deg" = "#33a1dd",
+      "DDEdeg" = "red",
+      "DDEMdeg" = "blue",
+      alpha = 0.8
+    )
+  ) +
+  facet_grid(deg ~ ., scales = "free_y" , labeller = label_bquote(.(as.expression(eval(
+    parse(text = paste0('facet_deg', '$`', deg, '`'))
+  ))))) +
   
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Top enriched GO:BP terms for each 24 hour DEG list') +
-    xlab("-log 10 (adj. p-value)")+
-    
-    ylab("GO:BP term")+
-      theme_bw()+
- theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
-        strip.text.y = element_text(color = "white"))
+  guides(col = "none",
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Top enriched GO:BP terms for each 24 hour DEG list') +
+  xlab("-log 10 (adj. p-value)") +
+  
+  ylab("GO:BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+    strip.text.y = element_text(color = "white")
+  )
 
- 
- 
- facet_deg=(
-   c(DXdeg = expression(atop("DOX 24 hr",~italic("n = 6645"))),
-     DXsp24deg =expression(atop("DOX-specific 24 hr",~italic("n = 355"))),
-     DAdeg = expression(atop("DNR 24 hr",~italic("n = 7017"))),
-     EPdeg = expression(atop("EPI 24 hr",~italic("n = 6328"))),
-     MTdeg = expression(atop( "MTX 24 hr",~italic("n = 1115"))),
-     MTsp24deg =expression(atop( "MTX-specific 24 hr",~italic("n = 122"))),
-     DDEdeg = expression(atop("AC 24 hr",~italic("n = 4435,"))),
-     DDEMdeg = expression(atop( "TOP2i 24 hr",~italic("n = 882")))))
 
-#  title_labeller_function <- function(nuisance_parameter) {
-#   return(facet_degnames() )
-# }
- 
- 
-#https://stackoverflow.com/questions/41631806/change-facet-label-text-and-background-colour/60046113#60046113
- 
-# drug_palNoVeh <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
- 
- 
+
+facet_deg = (
+  c(
+    DXdeg = expression(atop("DOX 24 hr",  ~ italic("n = 6645"))),
+    DXsp24deg = expression(atop("DOX-specific 24 hr",  ~ italic("n = 355"))),
+    DAdeg = expression(atop("DNR 24 hr",  ~ italic("n = 7017"))),
+    EPdeg = expression(atop("EPI 24 hr",  ~ italic("n = 6328"))),
+    MTdeg = expression(atop("MTX 24 hr",  ~ italic("n = 1115"))),
+    MTsp24deg = expression(atop("MTX-specific 24 hr",  ~ italic("n = 122"))),
+    DDEdeg = expression(atop("AC 24 hr",  ~ italic("n = 4435,"))),
+    DDEMdeg = expression(atop("TOP2i 24 hr",  ~ italic("n = 882")))
+  )
+)
+
+
+
 g <- ggplot_gtable(ggplot_build(p))
 stripr <- which(grepl('strip-r', g$layout$name))
-fills <- c("#8B006D","#b0028a","#DF707E","#F1B72B","#3386DD","#33a1dd","red", "blue", alpha= 0.8)
+fills <-
+  c(
+    "#8B006D",
+    "#b0028a",
+    "#DF707E",
+    "#F1B72B",
+    "#3386DD",
+    "#33a1dd",
+    "red",
+    "blue",
+    alpha = 0.8
+  )
 k <- 1
 for (i in stripr) {
   j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
-  k <- k+1
+  k <- k + 1
 }
 print(grid::grid.draw(g))
 grid::grid.draw(g)
-#hex <- hue_pal()(4)
-
-#hex
-#> hex (red/green/blue/purple default in ggplot)
-#[1] "#F8766D" "#7CAE00" "#00BFC4" "#C77CFF"
-#p
-
 
 
 ```
 
-
-
-## CVRI poster figures not run
-
-## Visualization of FC in cormotif sets
+## Visualization of FC correlation
 ```{r Correlation of FC values in all values and in DEG}
-library(limma)
 
-library(pheatmap)
-
-efit2<- readRDS(file ="data/efit2_final.RDS")
-
+efit2 <- readRDS(file = "data/efit2_final.RDS")
 
 FCmatrix <- subset(efit2$coefficients)
 is.matrix(subset(FCmatrix))
-colnames(FCmatrix) <- c("DNR-3h","DOX-3h", "EPI-3h","MTX-3h", "TRZ-3h","DNR-24h","DOX-24h", "EPI-24h","MTX-24h", "TRZ-24h")
+colnames(FCmatrix) <-
+  c(
+    "DNR-3h",
+    "DOX-3h",
+    "EPI-3h",
+    "MTX-3h",
+    "TRZ-3h",
+    "DNR-24h",
+    "DOX-24h",
+    "EPI-24h",
+    "MTX-24h",
+    "TRZ-24h"
+  )
 
 
-mat_col <- data.frame(time= c(rep("3 hours",5), rep("24 hours",5)))
+mat_col <- data.frame(time = c(rep("3 hours", 5), rep("24 hours", 5)))
 rownames(mat_col) <- colnames(FCmatrix)
-# list(group=c("#C25757", "#A77E69")
-# names(mat_colors$group) <-c("3 hours", "24 hours")
-mat_colors <- list(time=c("#C25757", "#A77E69"))
+
+mat_colors <- list(time = c("#C25757", "#A77E69"))
 names(mat_colors$time) <- unique(mat_col$time)
 corrFC <- cor(FCmatrix)
-# corrplot(corrFC, method = 'square', order = 'AOE', addCoef.col = 'black')
-# corrplot(corrFC,type = 'full', order = 'hclust', tl.col = 'black',
-#          cl.ratio = 0.2, tl.srt = 45, col = COL2('PuOr', 20), col.lim=c(-0.1,1), addrect=3)
 
-
-ComplexHeatmap::pheatmap(corrFC, 
-                         display_numbers = TRUE, 
-                         number_format = "%.2f",
-                         main=("Correlation of FC values across all expressed genes, n=14084"),
-                         annotation_col = mat_col,
-                         annotation_colors = mat_colors)
-
-
-
-
-#making of the side columns for class
-```
-
-
-```{r Poster DEG GOBP, eval=FALSE, include=FALSE}
-DDEdeg <- DDEtable24only %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=6 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.)))) %>% slice_max(., n=10, order_by=order_val)
-
-DDEMdeg <-  DDEMtable24 %>% dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%mutate(order_val=rev(as.numeric(rownames(.))))
-DAsp3deg <- DAsptable3%>% 
-  dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
-MTsp24 <- MTsptable124 %>% 
-  dplyr::filter(source=="GO:BP") %>% 
-  dplyr::select(p_value,term_name,intersection_size) %>%
-  slice_min(., n=10 ,order_by=p_value) %>%
-  mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
-
-
-
-
-
-# GODEGposter <-list("DAsp3deg"=DAsp3deg,"DDEdeg"=DDEdeg,"DDEMdeg"=DDEMdeg)
-GODEGposter <-list("MTsp24"=MTsp24,"DDEdeg"=DDEdeg,"DDEMdeg"=DDEMdeg)
-GODEGpostertable <- data.table::rbindlist(GODEGposter, idcol = "deg")
-facet_degp=(
-   c(MTsp24 = expression(atop("MTX-specific 24 hours",~italic("n = 126"))),
-    DDEdeg=expression(atop("Shared Anthracycline genes 24 hours",~italic("n = 4400"))),
-     DDEMdeg=expression(atop("Shared Top2"*beta*"i genes 24 hours",~italic("n = 952")))))
-
-DEG_posterp <- GODEGpostertable%>% mutate(deg = fct_inorder(deg)) %>% 
-  ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=TRUE),col=deg)) +
-    geom_point(aes(size = intersection_size, col=deg)) +
-  scale_y_discrete(labels = label_wrap(40))+
-   scale_color_manual(values=c("#3386DD","red3", "orange"))+
-   facet_grid(deg ~.,scales="free_y" , labeller=label_bquote(.(as.expression(
-               eval(parse(text = paste0('facet_degp', '$`', deg, '`')))
-               )))) +
-  guides(color= "none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Top 10 enriched GO:BP terms\n in specific overlaping sets') +
-     xlab(expression(" -"~log[10]~"(adj. p-value)"))+
-      ylab("GO:BP term")+
-      theme_bw()+
- theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
-        strip.text.y = element_text(color = "black"))
-
- 
- g <- ggplot_gtable(ggplot_build(DEG_posterp))
-stripr <- which(grepl('strip-r', g$layout$name))
-fills <- c("#3386DD","red3", "orange", alpha= 0.8)
-k <- 1
-for (i in stripr) {
-  j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
-  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
-  k <- k+1
-}
- 
-
-plot_grid(g)
+ComplexHeatmap::pheatmap(
+  corrFC,
+  display_numbers = TRUE,
+  number_format = "%.2f",
+  main = ("Correlation of FC values across all expressed genes, n=14084"),
+  annotation_col = mat_col,
+  annotation_colors = mat_colors
+)
 
 ```
-
 
 ###  KEGG pathway intersection of pairwise DEG sets
 
@@ -1970,183 +2107,209 @@ plot_grid(g)
 note:  grey box means these terms were not found to be enriched in the data set terms.  I will try to change the levels to pull out the pvalue of the term for each (6-30-23)
 
 ```{r kegg 24 hour DEG heat, message=FALSE, warning=FALSE}
-# kegglistDEG <- list(DDEdegk,DDEMdegk,DAdegk,DXdegk,EPdegk, MTdegk)
-# names(kegglistDEG) <-c("DDEdegk","DDEMdegk","DAdegk","DXdegk","EPdegk", "MTdegk")
-# saveRDS(kegglistDEG,"data/kegglistDEG24.RDS")
+
 kegglistDEG <- readRDS("data/kegglistDEG24.RDS")
-list2env(kegglistDEG, envir=.GlobalEnv)
-kegg_term24 <- data.frame(term=c("p53 signaling pathway","DNA replication","Cell cycle" ,"Base excision repair"),termid=c("KEGG:04115","KEGG:03030","KEGG:04110","KEGG:03410"))
+list2env(kegglistDEG, envir = .GlobalEnv)
+kegg_term24 <-
+  data.frame(
+    term = c(
+      "p53 signaling pathway",
+      "DNA replication",
+      "Cell cycle" ,
+      "Base excision repair"
+    ),
+    termid = c("KEGG:04115", "KEGG:03030", "KEGG:04110", "KEGG:03410")
+  )
 
-DDEdegk <- DDEtable24only %>% dplyr::filter(source=="KEGG") %>% 
-  dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term24$termid) %>% 
-    # slice_min(., n=4 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.)))) 
+DDEdegk <- DDEtable24only %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term24$termid) %>%
+  # slice_min(., n=4 ,order_by=p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-DDEMdegk <-  DDEMtable24 %>% dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term24$termid) %>% 
-    # slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DDEMdegk <-  DDEMtable24 %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term24$termid) %>%
+  # slice_min(., n=3 ,order_by=p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-DAdegk <-   DAtable124 %>% dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term24$termid) %>% 
-    slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DAdegk <-   DAtable124 %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term24$termid) %>%
+  slice_min(., n = 3 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
- DXdegk <-  DXtable124 %>%
-   dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term24$termid) %>% 
-    # slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DXdegk <-  DXtable124 %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term24$termid) %>%
+  # slice_min(., n=3 ,order_by=p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-  EPdegk <-   EPtable124 %>% dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term24$termid) %>% 
-    # slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    mutate(order_val=rev(as.numeric(rownames(.))))
-  
-  MTdegk <-   MTtable124 %>%
-    dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term24$termid) %>% 
-    # slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    mutate(order_val=rev(as.numeric(rownames(.))))
+EPdegk <-   EPtable124 %>% dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term24$termid) %>%
+  # slice_min(., n=3 ,order_by=p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
+
+MTdegk <-   MTtable124 %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term24$termid) %>%
+  # slice_min(., n=3 ,order_by=p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 library(ComplexHeatmap)
-  
-keggDEGlong <-list("DOX"=DXdegk,
-                 "EPI"=EPdegk,
-                 "DNR"=DAdegk,
-                 "MTX"=MTdegk,
-                 "ACs"=DDEdegk,
-                 "TOP2i"=DDEMdegk)
+
+keggDEGlong <- list(
+  "DOX" = DXdegk,
+  "EPI" = EPdegk,
+  "DNR" = DAdegk,
+  "MTX" = MTdegk,
+  "ACs" = DDEdegk,
+  "TOP2i" = DDEMdegk
+)
 
 keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
-kegg_sig_mat <- keggtable %>% 
-  dplyr::select(deg,p_value,term_name) %>%
-  pivot_wider(id_cols = everything(),
-              names_from="term_name",
-              values_from="p_value",
-              values_fill = list(p_value = 1)) %>% 
-  column_to_rownames('deg') %>% 
-  as.matrix()# 
+kegg_sig_mat <- keggtable %>%
+  dplyr::select(deg, p_value, term_name) %>%
+  pivot_wider(
+    id_cols = everything(),
+    names_from = "term_name",
+    values_from = "p_value",
+    values_fill = list(p_value = 1)
+  ) %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
 
-kegg_mat<- keggtable%>%
-  dplyr::select(deg,log_val,term_name) %>% 
+kegg_mat <- keggtable %>%
+  dplyr::select(deg, log_val, term_name) %>%
   pivot_wider(id_cols = everything(),
-              names_from="term_name",values_from="log_val") %>% 
-  column_to_rownames('deg') %>% 
-  as.matrix()# 
+              names_from = "term_name",
+              values_from = "log_val") %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
 
-Heatmap(kegg_mat,
-        column_title = "KEGG Pathway -log p values",
-        name = "-log (p value)",
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        cell_fun = function(j, i, x, y, width, height, fill) {
-        if(kegg_sig_mat[i, j]< 0.05)
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-})
-  
+Heatmap(
+  kegg_mat,
+  column_title = "KEGG Pathway -log p values",
+  name = "-log (p value)",
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  cell_fun = function(j, i, x, y, width, height, fill) {
+    if (kegg_sig_mat[i, j] < 0.05)
+      grid.text("*", x, y, gp = gpar(fontsize = 20))
+  }
+)
+
 ```
 
 
 ```{r kegg 3 hour DEG heat, message=FALSE, warning=FALSE}
-# kegglistDEG3 <- list(DDEdeg3k,DDEMdeg3k,DAdeg3k,DXdeg3k,EPdeg3k, MTdeg3k)
-# names(kegglistDEG3) <-c("DDEdeg3k","DDEMdeg3k","DAdeg3k","DXdeg3k","EPdeg3k", "MTdeg3k")
-# saveRDS(kegglistDEG3,"data/kegglistDEG3.RDS")
-# kegglistDEG3 <- readRDS("data/kegglistDEG3.RDS")
-# list2env(kegglistDEG, envir=.GlobalEnv)
-kegg_term3 <- data.frame(term=c("p53 signaling pathway","Herpes simplex virus 1 infection"),termid=c("KEGG:04115","KEGG:05168"))
 
-DDEdeg3k <- DDEtable3only %>% 
-  dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term3$termid) %>% 
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.)))) 
 
-DDEMdeg3k <-  DDEMtable3 %>% 
-  dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term3$termid) %>% 
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+kegg_term3 <-
+  data.frame(
+    term = c("p53 signaling pathway", "Herpes simplex virus 1 infection"),
+    termid = c("KEGG:04115", "KEGG:05168")
+  )
 
-DAdeg3k <-   DAtable3 %>% 
-  dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term3$termid) %>% 
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DDEdeg3k <- DDEtable3only %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term3$termid) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-DXdeg3k <-  DXtable1 %>% 
-  dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term3$termid) %>% 
-    mutate(log_val = -log10(p_value)) %>%
-  mutate(order_val=rev(as.numeric(rownames(.))))
+DDEMdeg3k <-  DDEMtable3 %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term3$termid) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 
-  EPdeg3k <-   EPtable1 %>% 
-    dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term3$termid) %>% 
-    slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    mutate(order_val=rev(as.numeric(rownames(.))))
-  
-  MTdeg3k <-   MTtable1 %>% 
-    dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_id,term_name,intersection_size) %>%
-  filter(term_id %in% kegg_term3$termid) %>% 
-    slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    mutate(order_val=rev(as.numeric(rownames(.))))
+DAdeg3k <-   DAtable3 %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term3$termid) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
+
+DXdeg3k <-  DXtable1 %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term3$termid) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
+
+EPdeg3k <-   EPtable1 %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term3$termid) %>%
+  slice_min(., n = 3 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
+
+MTdeg3k <-   MTtable1 %>%
+  dplyr::filter(source == "KEGG") %>%
+  dplyr::select(p_value, term_id, term_name, intersection_size) %>%
+  filter(term_id %in% kegg_term3$termid) %>%
+  slice_min(., n = 3 , order_by = p_value) %>%
+  mutate(log_val = -log10(p_value)) %>%
+  mutate(order_val = rev(as.numeric(rownames(.))))
 library(ComplexHeatmap)
-  
-keggDEGlong3 <-list("DOX"=DXdeg3k,
-                 "EPI"=EPdeg3k,
-                 "DNR"=DAdeg3k,
-                 "MTX"=MTdeg3k,
-                 "ACs"=DDEdeg3k,
-                 "TOP2i"=DDEMdeg3k)
+
+keggDEGlong3 <- list(
+  "DOX" = DXdeg3k,
+  "EPI" = EPdeg3k,
+  "DNR" = DAdeg3k,
+  "MTX" = MTdeg3k,
+  "ACs" = DDEdeg3k,
+  "TOP2i" = DDEMdeg3k
+)
 
 keggtable3 <- data.table::rbindlist(keggDEGlong3, idcol = "deg")
-kegg_sig_mat3 <- keggtable3 %>% 
-  dplyr::select(deg,p_value,term_name)%>%
-  add_row(deg ="TOP2i", p_value = 1,term_name="Herpes simplex virus 1 infection") %>% 
-  pivot_wider(id_cols = everything(),
-              names_from="term_name",
-              values_from="p_value",
-              values_fill = list(p_value = 1)) %>% 
-  column_to_rownames('deg') %>% 
-  as.matrix()# 
+kegg_sig_mat3 <- keggtable3 %>%
+  dplyr::select(deg, p_value, term_name) %>%
+  add_row(deg = "TOP2i",
+          p_value = 1,
+          term_name = "Herpes simplex virus 1 infection") %>%
+  pivot_wider(
+    id_cols = everything(),
+    names_from = "term_name",
+    values_from = "p_value",
+    values_fill = list(p_value = 1)
+  ) %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
 
-kegg_mat3<- keggtable3%>%
-  dplyr::select(deg,log_val,term_name) %>%
-  add_row(deg ="TOP2i", log_val = NA,term_name="Herpes simplex virus 1 infection") %>% 
+kegg_mat3 <- keggtable3 %>%
+  dplyr::select(deg, log_val, term_name) %>%
+  add_row(deg = "TOP2i",
+          log_val = NA,
+          term_name = "Herpes simplex virus 1 infection") %>%
   pivot_wider(id_cols = everything(),
-              names_from="term_name",values_from="log_val") %>% 
-  column_to_rownames('deg') %>% 
-  as.matrix()# 
+              names_from = "term_name",
+              values_from = "log_val") %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
 
-Heatmap(kegg_mat3,
-        column_title = "KEGG Pathway -log p values",
-        name = "-log (p value)",
-        cluster_rows = FALSE, 
-        cluster_columns = FALSE,
-        na_col="grey",
-        cell_fun = function(j, i, x, y, width, height, fill) {
-        if(kegg_sig_mat3[i, j]< 0.05)
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-})
-  
+Heatmap(
+  kegg_mat3,
+  column_title = "KEGG Pathway -log p values",
+  name = "-log (p value)",
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  na_col = "grey",
+  cell_fun = function(j, i, x, y, width, height, fill) {
+    if (kegg_sig_mat3[i, j] < 0.05)
+      grid.text("*", x, y, gp = gpar(fontsize = 20))
+  }
+)
+
 ```
