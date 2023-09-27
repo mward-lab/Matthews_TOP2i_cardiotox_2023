@@ -1,5 +1,5 @@
 ---
-title: "Figure 5"
+title: "Figure 5: TOP2i induce a time-dependent gene expression response in cardiomyocytes."
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -8,12 +8,24 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svg','png','pdf'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
 ```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
 ```{r packages loading}
 library(car)
 library(tidyverse)
@@ -26,6 +38,7 @@ library(ggsignif)
 library(RColorBrewer)
 library(broom)
 ```
+
 ```{r data loading}
 toplistall <- readRDS("data/toplistall.RDS")
 siglist <- readRDS("data/siglist_final.RDS")
@@ -39,8 +52,7 @@ drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B33
 ```
 
 
-# Figure 6
-TOP2i induce a time-dependent gene expression response in cardiomyocytes  
+# Figure 5: TOP2i induce a time-dependent gene expression response in cardiomyocytes.
 
 ## A. Cormotif plot unedited
 ```{r Cormotif)}
@@ -54,31 +66,36 @@ plot.new()
 legend('bottomleft',fill=myColors, legend =rev(c("0", "0.1", "0.2", "0.3", "0.4",  "0.5", "0.6", "0.7", "0.8","0.9", "1")), box.col="white",title = "Probability\nlegend", horiz=FALSE,title.cex=.8)
  
 ```
+More information about the Cormotif analysis can be found [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Cormotifcluster_analysis.html).
+
 ## B. Pie chart of motifs
 
 ```{r Pie chart of groups,fig.width = 5,fig.height =5}
-Set <- c("Early Acute Response", "Early Sustained Response","Late Response", "No Response")
-gene_num <- c(487,589,5596,7409)
-fills <- c("#F8766D",  "#00BFC4","#7CAE00", "#C77CFF")
+Set <-
+  c("Early Acute Response",
+    "Early Sustained Response",
+    "Late Response",
+    "No Response")
+gene_num <- c(487, 589, 5596, 7409)
+fills <- c("#F8766D",  "#00BFC4", "#7CAE00", "#C77CFF")
 
 pie_chartdata <- data.frame(Set, gene_num, fills)
-pie_chartdata <- pie_chartdata %>% 
-   mutate(prop = gene_num / sum(pie_chartdata$gene_num) *100) %>%
-  mutate(ypos = (prop)+ 0.5*prop )
+pie_chartdata <- pie_chartdata %>%
+  mutate(prop = gene_num / sum(pie_chartdata$gene_num) * 100) %>%
+  mutate(ypos = (prop) + 0.5 * prop)
 
 
-pie_chartdata %>% 
-  ggplot(.,aes(x="",y=gene_num, fill=Set))+
-  geom_col(width =1) +
-  coord_polar("y", pi/2)+
-  theme_void()+
-  ggtitle("Distribution of genes in each motif")+
-  geom_text(aes(label = paste0(Set," (",gene_num,")")),
-                position = position_stack(vjust =.55)) +
-  theme(legend.position="none") +
+pie_chartdata %>%
+  ggplot(., aes(x = "", y = gene_num, fill = Set)) +
+  geom_col(width = 1) +
+  coord_polar("y", pi / 2) +
+  theme_void() +
+  ggtitle("Distribution of genes in each motif") +
+  geom_text(aes(label = paste0(Set, " (", gene_num, ")")),
+            position = position_stack(vjust = .55)) +
+  theme(legend.position = "none") +
   theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))
   
-ggsave("output/Figures/piechart.eps",width = 5, height =5, units = "in")
 ```
 
 ## C. Average absolute value of LFC by motif
@@ -86,52 +103,78 @@ ggsave("output/Figures/piechart.eps",width = 5, height =5, units = "in")
 ```{r average LFC, fig.width=10, fig.height=4}
 
 lfc_nums <- readRDS("data/toplistall.RDS")
-mean_lfc <- lfc_nums %>% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
+mean_lfc <- lfc_nums %>%
+  mutate(ER = if_else(ENTREZID %in% motif_ER, "y", "no")) %>%
+  mutate(LR = if_else(ENTREZID %in% motif_LR, "y", "no")) %>%
+  mutate(TI = if_else(ENTREZID %in% motif_TI, "y", "no")) %>%
+  mutate(NR = if_else(ENTREZID %in% motif_NR, "y", "no")) %>%
   mutate(id = as.factor(id)) %>%
-  mutate(time=factor(time, levels=c("3_hours","24_hours"),labels=c("3","24"))) %>% 
-  group_by(id,time) %>% 
-  mutate(absFC=abs(logFC)) %>% 
-  dplyr::select(id,time,absFC,ER,TI,LR,NR) %>% 
-  dplyr::summarize(ERm=mean(absFC[ER=="y"]),TIm=mean(absFC[TI=="y"]),LRm=mean(absFC[LR=="y"]),NRm=mean(absFC[NR=="y"])) %>%
+  mutate(time = factor(
+    time,
+    levels = c("3_hours", "24_hours"),
+    labels = c("3", "24")
+  )) %>%
+  group_by(id, time) %>%
+  mutate(absFC = abs(logFC)) %>%
+  dplyr::select(id, time, absFC, ER, TI, LR, NR) %>%
+  dplyr::summarize(
+    ERm = mean(absFC[ER == "y"]),
+    TIm = mean(absFC[TI == "y"]),
+    LRm = mean(absFC[LR == "y"]),
+    NRm = mean(absFC[NR == "y"])
+  ) %>%
   as.data.frame()
 
 
-mean_lfc %>% 
-  ungroup() %>% 
-  mutate(id=factor(id, 
-                   levels =c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>% 
-  pivot_longer(!c(id,time), names_to = "Motif",
-               values_to="meanLFC") %>%
-  mutate(Set=case_match(Motif,"ERm"~"Early Acute Response",
-                        "TIm"~"Early Sustained Response",
-                        "LRm"~"Late Response",
-                        "NRm"~"No Response",
-                        .default = Motif))%>% 
-  ggplot(., aes(x=time,y= meanLFC,col=id,group=id))+
-  geom_point(size=2)+
-  geom_line(size=2)+
-  ggpubr::fill_palette(drug_pal_fact)+
+mean_lfc %>%
+  ungroup() %>%
+  mutate(id = factor(id,
+                     levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+  pivot_longer(!c(id, time), names_to = "Motif",
+               values_to = "meanLFC") %>%
+  mutate(
+    Set = case_match(
+      Motif,
+      "ERm" ~ "Early Acute Response",
+      "TIm" ~ "Early Sustained Response",
+      "LRm" ~ "Late Response",
+      "NRm" ~ "No Response",
+      .default = Motif
+    )
+  ) %>%
+  ggplot(., aes(
+    x = time,
+    y = meanLFC,
+    col = id,
+    group = id
+  )) +
+  geom_point(size = 2) +
+  geom_line(size = 2) +
+  ggpubr::fill_palette(drug_pal_fact) +
   # guides(fill=guide_legend(title = "Treatment"))+
-  facet_wrap(~Set, nrow = 1)+
-  theme_bw()+
-  xlab("Time (hours)")+
-  scale_color_manual(values=drug_pal_fact)+
-  ylab(" Avg. |Log Fold Change|")+
-  theme_bw()+
+  facet_wrap( ~ Set, nrow = 1) +
+  theme_bw() +
+  xlab("Time (hours)") +
+  scale_color_manual(values = drug_pal_fact) +
+  ylab(" Avg. |Log Fold Change|") +
+  theme_bw() +
   # ggtitle(" average |Log Fold| for genes across treatment each motif")+
-  theme(plot.title = element_text(size = rel(1.0), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text = element_text(size = 10, color = "black", angle = 0),   
-        strip.text.x = element_text(size = 11, color = "black", face = "bold"))
-
-
-ggsave("output/Figures/mean_lfc_motif.eps", units = "in")
+  theme(
+    plot.title = element_text(size = rel(1.0), hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.line = element_line(linewidth = 1.5),
+    strip.background = element_rect(fill = "transparent"),
+    axis.text = element_text(
+      size = 10,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 11,
+      color = "black",
+      face = "bold"
+    )
+  )
 
 ```
 
