@@ -1,11 +1,27 @@
-# Matthews_TOP2i_cardiotox_2023 project
+## Matthews_TOP2i_cardiotox_2023 project
 
-A [workflowr](https://github.com/workflowr/workflowr) project started by E. Renee Matthews
+A [workflowr] project started by E. Renee Matthews
 =======
 
 
-This is a workflowr project covering the results of testing a panel of chemotherapy drugs that were tested on a set of six geneotyped iPSC-cell lines.  Each cell line was differentiated into cardiomyocytes and exposed to the drugs at a range of concentrations for periods of time ranging from 3 hours to 48 hours.  
-You can access the website [here].
+This repository contains code and data resources to accompany our research paper :
+
+
+Pending Title and citation links:
+
+
+What's included in this repository:
+
+  •	The **analysis** directory contains R Markdown source files for this workflowr website, including R code used to analyze and generate all figures and tables for the manuscript.  
+  
+	•	The **data** directory contains original and processed data files used to generate the tables and figures for the manuscript.  
+	
+	•	The **output** directory stores outputs from data processing and analysis, including R objects used in GO and KEGG pathway analysis.
+	
+
+
+You can access the website [here] created.
+The website contains links to the figures of the paper and the associated code and data used to create each figure, including supplemental figures.
 
 
 
