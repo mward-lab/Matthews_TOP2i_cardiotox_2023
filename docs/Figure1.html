@@ -522,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treee59dc7ee13dcec6f8ea0a9cdc1ae99833b340c77targetblanke59dc7ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree90e0eb2bae2000f2d160f9eea24b80dc383eaa97targetblank90e0eb2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/e59dc7ee13dcec6f8ea0a9cdc1ae99833b340c77" target="_blank">e59dc7e</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/90e0eb2bae2000f2d160f9eea24b80dc383eaa97" target="_blank">90e0eb2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treee59dc7ee13dcec6f8ea0a9cdc1ae99833b340c77targetblanke59dc7ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree90e0eb2bae2000f2d160f9eea24b80dc383eaa97targetblank90e0eb2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -540,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/e59dc7ee13dcec6f8ea0a9cdc1ae99833b340c77" target="_blank">e59dc7e</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/90e0eb2bae2000f2d160f9eea24b80dc383eaa97" target="_blank">90e0eb2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -869,6 +869,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/90e0eb2bae2000f2d160f9eea24b80dc383eaa97/analysis/Figure1.Rmd" target="_blank">90e0eb2</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-27
+</td>
+<td>
+adding new links
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/9eb477465adfa513e34e4ce3f708575ab6026b6e/docs/Figure1.html" target="_blank">9eb4774</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1362,6 +1396,17 @@ pre[class] {
   max-height: 200px;
 }
 </style>
+<pre class="r"><code>library(car)
+library(tidyverse)
+library(tinytex)
+library(BiocGenerics)
+library(data.table)
+library(drc)
+library(cowplot)
+library(ggsignif)
+library(RColorBrewer)
+library(broom)
+library(ComplexHeatmap)</code></pre>
 <div id="figure-1" class="section level2">
 <h2>Figure 1</h2>
 <p>Top2i drugs affect cardiomyocyte viability in a dose-dependent
@@ -1375,10 +1420,21 @@ paper.</h3>
 <div id="b.-dose-response-curves-from-48-hour-drug-exposure."
 class="section level3">
 <h3>B. Dose-response curves from 48 hour drug exposure.</h3>
-<p><img src="figure/Figure1.Rmd/B%20drc-1.svg" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>daplot &lt;- readRDS(&quot;output/daplot.RDS&quot;)  
+dxplot &lt;- readRDS(&quot;output/dxplot.RDS&quot;)
+epplot&lt;- readRDS(&quot;output/epplot.RDS&quot;)
+mtplot&lt;- readRDS(&quot;output/mtplot.RDS&quot;)
+trplot&lt;- readRDS(&quot;output/trplot.RDS&quot;)
+veplot&lt;- readRDS(&quot;output/veplot.RDS&quot;)
+veplot &lt;- veplot+xlab(NULL)
+trplot &lt;- trplot+xlab(NULL)
+legend_b &lt;- readRDS(&quot;output/legend_b.RDS&quot;)
+plan2 &lt;-  cowplot::plot_grid(daplot,dxplot,epplot,mtplot, trplot,veplot, legend_b,ncol =7, rel_widths = c(1,1,1,1,1,1,.5))
+print(plan2)</code></pre>
+<p><img src="figure/Figure1.Rmd/B%20drc-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-B-drc-1">
-Past versions of "B drc-1.svg"
+Past versions of "B drc-1.png"
 </button>
 </p>
 <div id="fig-no-spaces-B-drc-1" class="collapse">
@@ -1400,13 +1456,57 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/figure/Figure1.Rmd/B drc-1.svg" target="_blank">4bb0b80</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/513ca48edad8dca90f3b0bdae523ae0e951177fe/docs/figure/Figure1.Rmd/B drc-1.png" target="_blank">513ca48</a>
 </td>
 <td>
 reneeisnowhere
 </td>
 <td>
-2023-07-28
+2023-07-26
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/05fe9b1437f39f1b872f977886c8aaa8b88c89b1/docs/figure/Figure1.Rmd/B drc-1.png" target="_blank">05fe9b1</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/e3fe0739b9ab4f7356739c40463c03c040fd96f2/docs/figure/Figure1.Rmd/B drc-1.png" target="_blank">e3fe073</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/9dd118a65edaaf0bb6346d06b37280bb3c06b902/docs/figure/Figure1.Rmd/B drc-1.png" target="_blank">9dd118a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/63284220b46b8deaadd4fe869c87a4dc8ad9af96/docs/figure/Figure1.Rmd/B drc-1.png" target="_blank">6328422</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
 </td>
 </tr>
 </tbody>
@@ -1418,15 +1518,134 @@ biological replicates for each individual at 8 concentrations for each
 condition, except(trastuzmab)TRZ, which is 7 concentrations.</p>
 <p>You can find the link to initial DRC analysis at this<a
 href="fig1b">link</a></p>
+<pre class="r"><code>drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+BC_cell_lines &lt;- read.csv(&quot;data/BC_cell_lines.csv&quot;,row.names = 1)
+LD50_table &lt;- readRDS(&quot;data/new_ld50avg.RDS&quot;)
+
+
+
+graphLD50 &lt;- LD50_table %&gt;%
+  mutate(Treatment = factor(Treatment,
+                            levels = c(&#39;DOX&#39;, &#39;EPI&#39;, &#39;DNR&#39;, &#39;MTX&#39;, &#39;TRZ&#39;, &#39;VEH&#39;))) %&gt;%
+  ggplot(., (aes(x = Treatment, y = log10(Estimate)))) +
+  geom_boxplot(position = &quot;identity&quot;, aes(fill = Treatment)) +
+  geom_point(aes(
+    color = indv,
+    size = 5,
+    alpha = 0.5
+  )) +
+  ggtitle(expression(&quot;Experimentally-derived LD&quot;[50] * &quot;s\n from treated cardiomyocytes&quot;)) +
+  xlab(&quot;&quot;) +
+  geom_signif(
+    comparisons = list(
+      c(&quot;DNR&quot;, &quot;MTX&quot;),
+      c(&quot;DOX&quot;, &quot;EPI&quot;),
+      c (&quot;DOX&quot;, &quot;DNR&quot;),
+      c(&quot;DOX&quot;, &quot;MTX&quot;)
+    ),
+    test = &quot;t.test&quot;,
+    map_signif_level = TRUE,
+    textsize = 4,
+    step_increase = 0.15
+  ) +
+  ylab(bquote(&#39;Log&#39;[10] ~ &#39;LD&#39;[50] ~ &#39;in &#39; * mu * M)) +
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Individual&quot;) +
+  ylim(-2, 3) +
+  
+  scale_fill_manual(values = drug_palc, name = &quot;Treatment&quot;) +
+  theme_bw() +
+  guides(alpha = &quot;none&quot;, size = &quot;none&quot;) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 15, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 0, color = &quot;white&quot;),
+    # axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+    strip.text.x = element_text(
+      size = 15,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )   </code></pre>
 <p>You can find the links to DRC and BCC analysis at this<a
 href="fig1c">link</a>.</p>
 </div>
 <div id="c-d.-ld50-and-ec50" class="section level3">
 <h3>C &amp; D. LD<sub>50</sub> and EC<sub>50</sub></h3>
-<p><img src="figure/Figure1.Rmd/BCcells%20ld50-1.svg" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>graphBC &lt;-
+  BC_cell_lines %&gt;%
+  mutate(Cell_line = factor(Cell_line)) %&gt;%
+  pivot_longer(.,
+               col = !Cell_line,
+               names_to = &#39;drug&#39;,
+               values_to = &#39;LD50&#39;) %&gt;%
+  mutate(
+    drug = case_match(
+      drug,
+      &quot;Daunorubicin&quot; ~ &quot;DNR&quot;,
+      &quot;Doxorubicin&quot; ~ &quot;DOX&quot;,
+      &quot;Epirubicin&quot; ~ &quot;EPI&quot;,
+      &quot;Mitoxantrone&quot; ~ &quot;MTX&quot;,
+      &quot;Trastuzumab&quot; ~ &quot;TRZ&quot;,
+      &quot;Vehicle&quot; ~ &quot;VEH&quot;,
+      .default = drug
+    )
+  ) %&gt;%
+  mutate(drug = factor(drug,
+                       levels = c(&#39;DOX&#39;, &#39;EPI&#39;, &#39;DNR&#39;, &#39;MTX&#39;, &#39;TRZ&#39;, &#39;VEH&#39;))) %&gt;%
+  ggplot(., (aes(x = (drug), y = log10(LD50)))) +
+  geom_boxplot(position = &quot;identity&quot;, aes(fill = drug)) +
+  geom_point(aes(
+    color = Cell_line,
+    size = 5,
+    alpha = 0.5
+  )) +
+  ggtitle(expression(&quot;Breast cancer cell line reported  ED&quot;[50] * &quot;s&quot;)) +
+  xlab(&quot;&quot;) +
+  
+  geom_signif(
+    comparisons = list(c(&quot;DOX&quot;, &quot;EPI&quot;),
+                       c (&quot;DOX&quot;, &quot;DNR&quot;),
+                       c(&quot;DOX&quot;, &quot;MTX&quot;)),
+    test = &quot;t.test&quot;,
+    map_signif_level = TRUE,
+    textsize = 4,
+    step_increase = 0.15
+  ) +
+  ylab(bquote(&#39;Log&#39;[10] ~ &#39;LD&#39;[50] ~ &#39;in &#39; * mu * M)) +
+  scale_color_brewer(palette = &quot;Spectral&quot;,
+                     name = &quot;Cell lines&quot;) +
+  scale_fill_manual(values = drug_palc) +
+  ylim(-2, 3) +
+  theme_bw() +
+  guides(alpha = &quot;none&quot;, size = &quot;none&quot;, fill = &quot;none&quot;) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 15, color = &quot;black&quot;),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.x = element_text(size = 0, color = &quot;white&quot;),
+    # axis.text = element_text(size = 12, color = &quot;black&quot;, angle = 0),
+    strip.text.x = element_text(
+      size = 15,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )
+# graphBC
+plan50ld &lt;-
+  cowplot::plot_grid(graphLD50,
+                     NULL,
+                     graphBC,
+                     rel_widths = c(1, .2, 1),
+                     nrow = 1)
+print(plan50ld)</code></pre>
+<p><img src="figure/Figure1.Rmd/BCcells%20ld50-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BCcells-ld50-1">
-Past versions of "BCcells ld50-1.svg"
+Past versions of "BCcells ld50-1.png"
 </button>
 </p>
 <div id="fig-no-spaces-BCcells-ld50-1" class="collapse">
@@ -1448,13 +1667,57 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/figure/Figure1.Rmd/BCcells ld50-1.svg" target="_blank">4bb0b80</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/9eb477465adfa513e34e4ce3f708575ab6026b6e/docs/figure/Figure1.Rmd/BCcells ld50-1.png" target="_blank">9eb4774</a>
 </td>
 <td>
 reneeisnowhere
 </td>
 <td>
-2023-07-28
+2023-09-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/513ca48edad8dca90f3b0bdae523ae0e951177fe/docs/figure/Figure1.Rmd/BCcells ld50-1.png" target="_blank">513ca48</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/9dd118a65edaaf0bb6346d06b37280bb3c06b902/docs/figure/Figure1.Rmd/BCcells ld50-1.png" target="_blank">9dd118a</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/433a442b0c7bedfcfb79ce965d7f32ae24b5f814/docs/figure/Figure1.Rmd/BCcells ld50-1.png" target="_blank">433a442</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/63284220b46b8deaadd4fe869c87a4dc8ad9af96/docs/figure/Figure1.Rmd/BCcells ld50-1.png" target="_blank">6328422</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
 </td>
 </tr>
 </tbody>
@@ -1471,6 +1734,7 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
