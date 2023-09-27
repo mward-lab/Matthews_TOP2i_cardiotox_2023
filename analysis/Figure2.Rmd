@@ -1,17 +1,27 @@
 ---
-title: "Figure2"
+title: "Figure 2:  Calcium dysregulation occurs at sub-lethal concentrations of TOP2i."
 author: "ERM"
 date: "`r Sys.Date()`"
 output: html_document
 ---
 
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svglite','png'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
 ```
 
 ```{r packages loading}
@@ -31,7 +41,8 @@ library(broom)
 
 level_order2 <- c('75','87','77','79','78','71')
 
-drug_palexpand <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","purple3","darkgreen", "darkblue")
+# drug_palexpand <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","purple3","darkgreen", "darkblue")
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 #named colors: dark pink,Red,yellow,blue, dark grey, green(green is always control, may need to move pal around)
 calcium_data <- readRDS("data/calcium_data.RDS")
 clamp_summary <- readRDS("data/clamp_summary.RDS")
@@ -41,91 +52,14 @@ clamp_summary <- readRDS("data/clamp_summary.RDS")
 
 
 
-# Figure 2
+## Figure 2:  Calcium dysregulation occurs at sub-lethal concentrations of TOP2i.
 
 Calcium dysregulation occurs at sub-lethal concentrations of TOP2i
 
-## A. Representative line graph of individual 3
-```{r function}
-drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-
-
-Normalization_And_Set_File <- function(file_path) {
-  # Read in the data from the file
-  CALIMA_obj <- read.csv(file_path)
-  
-  # Normalize the data
-  ROI_cut <- CALIMA_obj[,2:ncol(CALIMA_obj)]
-  ROI_cut_rowmeans <- rowMeans(ROI_cut)
-  Intensity <- (ROI_cut_rowmeans/min(ROI_cut_rowmeans))
-  Final_ROI <- tibble::as_tibble(cbind(CALIMA_obj[,1], Intensity, ROI_cut))
-  Final_ROI$Intensity <- Final_ROI$Intensity -1
-  
-    return(Final_ROI)
-}
-
-Plot_Line_df <- function(directory) {
-  holder <- list()
-  # List CSV files in the folder that is output from CALIMA 
-  file_list <- list.files(directory, pattern = "*.csv", full.names = TRUE)
-  file_list <- file_list %>% as.tibble() %>% 
-  mutate(filenames=value) %>% 
-  separate(filenames, c(NA,NA,NA,"file"), sep="/") %>% 
-   separate(file, c("Drug","indv"))
-  
-    # Loop over all files in directory
-  for (i in 1:length(file_list$value)) {
-    normalized_data <- data.frame("indv"=file_list$indv[i], "drug"=file_list$Drug[i])
-    # Normalize the data from the file
-    
-    norm_out <- Normalization_And_Set_File(file_list$value[i])
-    holder[[file_list$Drug[i]]] <- cbind(normalized_data,norm_out[,1:2])
-    
-  # Return the plot
-  
-  }
-  return(holder)
-}
-```
-
-```{r lineplot, fig.width=6, fig.height=4}
-plot_77 <-  Plot_Line_df("data/CALIMA_Data/77-1/")
-
-df_77forplot <- plot_77 %>% 
-  bind_rows() %>% 
-   mutate(drug=factor(drug, levels = c(  "DOX", 
-                                        "EPI",
-                                         "DNR",
-                                          "MTX",
-                                          "TRZ",
-                                          "VEH"))) %>%
-  rename("Xaxis"=`CALIMA_obj[, 1]`) 
-
-    
-Line_plot3<-
-ggplot(df_77forplot, aes(x=Xaxis, y= Intensity, group=drug))+
-  geom_line(size=1.5,aes(color=drug))+
-  # stat_smooth(method = "lm")
-  xlab("")+
-  theme_bw()+
-  guides(color=guide_legend(override.aes = list(size=1)))+
-  ggtitle("Individual 3")+
-  scale_x_continuous(expand = c(0, 0))+
-  scale_color_manual(values=drug_pal_fact,name=" ")+
-  theme(plot.title = element_text(size=14,hjust = 0.5),
-    axis.title = element_text(size = 10, color = "black"),
-    axis.ticks = element_line(linewidth = 1),
-    legend.position="right", 
-    axis.line = element_line(linewidth = 1),
-    axis.text = element_text(size = 12, color = "black", angle = 0),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"))
-
- Line_plot3   
- nlLine_plot3 <- Line_plot3+theme(legend.position = "none")
-```
-
-
-## B. Mean amplitude
+### A. Calcium handling features  
+(pending link)
+The analysis of Calcium hadling was done by Omar Johnson.  You can find the original analysis [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/LDH_analysis.html#Mean_amplitude)
+### B. Mean amplitude
 ```{r Mean_amp, fig.width=6, fig.height=4}
 
 MA_plot <- clamp_summary %>% 
@@ -148,7 +82,7 @@ MA_plot <- clamp_summary %>%
   xlab(" ")+
   ggtitle("Mean amplitude")+
   theme_classic()+
-  theme(plot.title = element_text(siz=12,hjust = 0.5),
+  theme(plot.title = element_text(size=12,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.line = element_line(linewidth = 1.0),
@@ -159,10 +93,7 @@ MA_plot
 
 ```
 
-
-
-
-## C. Rising slope
+### C. Rising slope
 ```{r rising slope, fig.width=6, fig.height=4}
 
 RS_plot <- clamp_summary %>%
@@ -187,7 +118,7 @@ RS_plot <- clamp_summary %>%
   theme_classic()+
   ggtitle("Rising slope")+
  theme_classic()+
-  theme(plot.title = element_text(siz=12,hjust = 0.5),
+  theme(plot.title = element_text(size=12,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.line = element_line(linewidth = 1.0),
@@ -198,7 +129,7 @@ RS_plot
 
 ```
 
-## D. Decay slope
+### D. Decay slope
 
 ```{r Decay slope, fig.width=6, fig.height=4}
 Decay_plot <- clamp_summary %>%
@@ -217,12 +148,12 @@ Decay_plot <- clamp_summary %>%
               map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05,"ns"=1),
               step_increase = 0.08,
               textsize = 4)+
-  ylab("a.u.")+
+  ylab("a.u./sec")+
   xlab(" ")+
   theme_classic()+
   ggtitle("Decay slope")+
   theme_classic()+
-  theme(plot.title = element_text(siz=12,hjust = 0.5),
+  theme(plot.title = element_text(size=12,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.line = element_line(linewidth = 1.0),
@@ -235,7 +166,7 @@ Decay_plot
 
 
 
-## E. Full-width at half-max
+### E. Full-width at half-max
 ```{r FWHM, fig.width=6, fig.height=4}
 
 FWHM_plot <- clamp_summary %>%
@@ -255,12 +186,12 @@ FWHM_plot <- clamp_summary %>%
               map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05,"ns"=1),
               step_increase = 0.08,
               textsize = 4)+
-  ylab("a.u.")+
+  ylab("sec")+
   xlab(" ")+
   theme_classic()+
   ggtitle("Full-width at half-max")+
   theme_classic()+
-  theme(plot.title = element_text(siz=12,hjust = 0.5),
+  theme(plot.title = element_text(size=12,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.line = element_line(linewidth = 1.0),
@@ -270,13 +201,10 @@ FWHM_plot <- clamp_summary %>%
 
 FWHM_plot
 
-
-
 ```
 
 
-
-## F. Contraction rate
+### F. Contraction rate
 ```{r  Contract_rate, fig.width=6, fig.height=4}
 
 BR_plot <- calcium_data %>% 
@@ -305,7 +233,7 @@ BR_plot <- calcium_data %>%
   xlab(" ")+
   ggtitle("Contraction rate")+
   theme_classic()+
-  theme(plot.title = element_text(siz=12,hjust = 0.5),
+  theme(plot.title = element_text(size=12,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"),
         axis.ticks = element_line(linewidth = 1.0),
         axis.line = element_line(linewidth = 1.0),
@@ -314,13 +242,13 @@ BR_plot <- calcium_data %>%
 
 
 BR_plot
-BR_plot2 <- BR_plot+theme(legend.position = "none")
-legend <- get_legend(BR_plot)
+# BR_plot2 <- BR_plot+theme(legend.position = "none")
+# legend <- get_legend(BR_plot)
 
 ```
 
 
-## G. PCA of Calcium data
+### G. PCA of Calcium data
 
 ```{r PCA_G}
 
@@ -358,36 +286,17 @@ PCA_calciumplot <- k_means %>% mutate(Drug =case_match(Drug_Name,
   geom_point(size = 8)+
   scale_shape_manual(values=c(19, 17,15), name= "Class")+
   scale_color_manual(values=drug_pal_fact)+
-  ggtitle(expression("PCA of Ca"^"2+"~"data"))+
+  ggtitle(expression("Summary of calcium handling features"))+
   theme_bw()+
   labs(x = "PC 1 (54 %)",y = "PC 2 (34%)")+
-  theme(plot.title=element_text(size= 14,hjust = 0.5),
+  theme(plot.title=element_text(size = 14,hjust = 0.5),
         axis.title = element_text(size = 10, color = "black"),
         axis.ticks = element_line(size = 1.5),
         axis.text = element_text(size = 12, color = "black", angle = 0),
         strip.text.x = element_text(size = 15, color = "black", face = "bold"))
 PCA_calciumplot 
-legend2 <- get_legend(PCA_calciumplot)
-PCA2 <- PCA_calciumplot+theme(legend.position = "none")
- ggsave("output/Figures/calciumPCA.eps")
+# legend2 <- get_legend(PCA_calciumplot)
+# PCA2 <- PCA_calciumplot+theme(legend.position = "none")
 ```
 
 
-
-```{r making full image, fig.width =16, fig.height=9}
-library(cowplot)
-# align all plots
-plots <- align_plots(MA_plot, RS_plot,Decay_plot,FWHM_plot,BR_plot2,align='v',axis='l')
-##make bottom row
- bottom_row <- plot_grid(plots[[1]],plots[[2]],plots[[3]], plots[[4]],plots[[5]],legend,nrow=1, rel_widths = c(1,1,1,1,1,0.2))
-# put together
-top_row <- plot_grid(nlLine_plot3,legend2,PCA2, rel_widths=c(1,.2,1), nrow=1)
-# middle_row <- plot_grid(legend, nrow=1, scale=4)
-test <- plot_grid(top_row, bottom_row, ncol=1, rel_heights = c(2,1.1), rel_widths=c(1,1))
-
-test
-
-ggsave("output/Figures/Calciumgroup.eps",width = 8, height =16, units = "in")
-
-
-```

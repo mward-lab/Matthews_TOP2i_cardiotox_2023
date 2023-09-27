@@ -1,5 +1,5 @@
 ---
-title: "Figure 3"
+title: "Figure 3:  TOP2i induce global gene expression changes over 24 hours."
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -10,11 +10,22 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svg','png'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
 ```
 
 ```{r packages loading}
@@ -31,13 +42,11 @@ library(edgeR)
 
 ```
 
-# Figure 3
-
-Top2i drugs affect cardiomyocyte viability in a dose dependent manner.
+## Figure 3:  TOP2i induce global gene expression changes over 24 hours.
 
 ## A. PCA of log~2~ cpm
 
-```{r PCA, fig.height=6,fig.width=7}
+```{r PCA, fig.height=6, fig.width=7}
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
 level_order2 <- c('75','87','77','79','78','71')
@@ -86,11 +95,9 @@ PCA_plot_group <- pca_all_anno %>%
   labs(y = "PC 2 (15.76%)", x ="PC 1 (29.06%)")+
   theme(plot.title=element_text(size= 14,hjust = 0.5),
         axis.title = element_text(size = 12, color = "black"))
-legendtop <- get_legend(PCA_plot_group)
-PCA_plot_groupnl <- PCA_plot_group+theme(legend.position = "none")
 PCA_plot_group
 ```
-
+More information on overall RNA-seq analysis can be found [at this link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html#PCA_by_treatment_and_as_a_whole)
 
 ## B. *Top2*$\beta$ expression
 
@@ -115,7 +122,7 @@ cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
     plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
       geom_boxplot(position="identity",aes(fill=drug))+
       geom_point(aes(col=indv, size=2, alpha=0.5))+
-      guides(alpha= "none", size= "none")+
+      guides(alpha= "none", size= "none", fill = "none")+
       scale_color_brewer(palette = brewer_palette, name = "Individual")+
       scale_fill_manual(values=fill_colors, name="treatment")+
       facet_wrap("time", nrow=1, ncol=2)+
@@ -140,9 +147,9 @@ toplistall <- readRDS("data/toplistall.RDS")
 cpmcounts <- readRDS("data/cpmcount.RDS")
 Top2b <- cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))) 
-legendbot <- get_legend(Top2b + guides(fill="none"))
-nlTop2b <- Top2b+  theme(legend.position = "none")
-nlTop2b
+# legendbot <- get_legend(Top2b + guides(fill="none"))
+# nlTop2b <- Top2b+  theme(legend.position = "none")
+
 
 ```
 
@@ -152,22 +159,11 @@ nlTop2b
 
 Top2a <- cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm "))))
-nlTop2a <- Top2a +  theme(legend.position = "none")
-nlTop2a
+# nlTop2a <- Top2a +  theme(legend.position = "none")
+# nlTop2a
 
 ```
 
 
-```{r plot together, fig.height=6,fig.width=14}
-plots <- align_plots(nlTop2a,nlTop2b,align='v',axis='l')
-
-top2plots <- plot_grid(plots[[2]],plots[[1]],ncol=1)
-legend <- plot_grid(legendtop,legendbot,ncol=1)
-legend
-PCA_full_Figure <- plot_grid(PCA_plot_groupnl,legend,top2plots,nrow=1,rel_widths = c(7,1,6), rel_heights = c(1,1.1,.5),scale=c(1,.8,.9))
-PCA_full_Figure
-
-ggsave("output/Figures/PCA_full_Figure.eps",width = 14, height =6, units = "in")
-```
 
 
