@@ -11,11 +11,11 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-30" />
+<meta name="date" content="2023-09-27" />
 
-<title>Figure 5</title>
+<title>Figure 5: TOP2i induce a time-dependent gene expression response in cardiomyocytes.</title>
 
-<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -37,8 +37,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -359,9 +359,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 5</h1>
+<h1 class="title toc-ignore">Figure 5: TOP2i induce a time-dependent
+gene expression response in cardiomyocytes.</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-30</h4>
+<h4 class="date">2023-09-27</h4>
 
 </div>
 
@@ -390,7 +391,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-30
+<strong>Last updated:</strong> 2023-09-27
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -408,7 +409,7 @@ title="This is the local directory in which the code in this file was executed."
 This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
 analysis was created with <a
   href="https://github.com/workflowr/workflowr">workflowr</a> (version
-1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
 that were applied when the results were created. The <em>Past
 versions</em> tab lists the development history.
 </p>
@@ -521,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2c9b724fb34af28233a8d7947302b1d2b208ca4etargetblank2c9b724a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree6b789174ae2002f9a79e5dcf2549211cfab02abftargetblank6b78917a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2c9b724fb34af28233a8d7947302b1d2b208ca4e" target="_blank">2c9b724</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/6b789174ae2002f9a79e5dcf2549211cfab02abf" target="_blank">6b78917</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytree2c9b724fb34af28233a8d7947302b1d2b208ca4etargetblank2c9b724a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree6b789174ae2002f9a79e5dcf2549211cfab02abftargetblank6b78917a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/2c9b724fb34af28233a8d7947302b1d2b208ca4e" target="_blank">2c9b724</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/6b789174ae2002f9a79e5dcf2549211cfab02abf" target="_blank">6b78917</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -567,6 +568,7 @@ Ignored files:
     Ignored:    data/CALIMA_Data/
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/Counts_RNA_ERMatthews.txt
     Ignored:    data/DAgostres24.RDS
     Ignored:    data/DAtable1.csv
     Ignored:    data/DDEMresp_list.csv
@@ -579,6 +581,7 @@ Ignored files:
     Ignored:    data/Da24counts.txt
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
     Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
@@ -604,11 +607,15 @@ Ignored files:
     Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
+    Ignored:    data/TableS10.csv
+    Ignored:    data/TableS11.csv
+    Ignored:    data/TableS9.csv
     Ignored:    data/Top2biresp_cluster24h.csv
     Ignored:    data/Var_test_list.RDS
     Ignored:    data/Var_test_list24.RDS
     Ignored:    data/Var_test_list24alt.RDS
     Ignored:    data/Var_test_list3.RDS
+    Ignored:    data/Vargenes.RDS
     Ignored:    data/Viabilitylistfull.csv
     Ignored:    data/allexpressedgenes.txt
     Ignored:    data/allfinal3hour.RDS
@@ -627,6 +634,7 @@ Ignored files:
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
     Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/cormotifprobs.csv
     Ignored:    data/counts24hours.RDS
     Ignored:    data/cpmcount.RDS
     Ignored:    data/cpmnorm_counts.csv
@@ -684,6 +692,8 @@ Ignored files:
     Ignored:    data/plan2plot.png
     Ignored:    data/plot_intv_list.RDS
     Ignored:    data/plot_list_DRC.RDS
+    Ignored:    data/qval24hr.RDS
+    Ignored:    data/qval3hr.RDS
     Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
@@ -701,6 +711,8 @@ Ignored files:
     Ignored:    data/siglist_final.RDS
     Ignored:    data/siglist_old.RDS
     Ignored:    data/slope_table.csv
+    Ignored:    data/supp10_24hlist.RDS
+    Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
     Ignored:    data/table3a.omar
@@ -717,44 +729,55 @@ Untracked files:
     Untracked:  .RDataTmp
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
+    Untracked:  .RDataTmp3
+    Untracked:  3hr all.pdf
+    Untracked:  Code_files_list.csv
+    Untracked:  Data_files_list.csv
     Untracked:  Doxorubicin_vehicle_3_24.csv
     Untracked:  Doxtoplist.csv
+    Untracked:  EPIqvalue_analysis.Rmd
     Untracked:  GWAS_list_of_interest.xlsx
     Untracked:  KEGGpathwaylist.R
     Untracked:  OmicNavigator_learn.R
     Untracked:  SigDoxtoplist.csv
-    Untracked:  analysis/DRC_analysist.Rmd
     Untracked:  analysis/ciFIT.R
-    Untracked:  analysis/enricher.Rmd
     Untracked:  analysis/export_to_excel.R
-    Untracked:  analysis/untitled1.R
-    Untracked:  code/DRC_plotfigure1.png
+    Untracked:  cleanupfiles_script.R
+    Untracked:  code/biomart_gene_names.R
     Untracked:  code/constantcode.R
+    Untracked:  code/corMotifcustom.R
     Untracked:  code/cpm_boxplot.R
     Untracked:  code/extracting_ggplot_data.R
-    Untracked:  code/fig1plot.png
-    Untracked:  code/figurelegeddrc.png
     Untracked:  code/movingfilesto_ppl.R
     Untracked:  code/pearson_extract_func.R
     Untracked:  code/pearson_tox_extract.R
     Untracked:  code/plot1C.fun.R
     Untracked:  code/spearman_extract_func.R
     Untracked:  code/venndiagramcolor_control.R
-    Untracked:  cormotif_probability_genelist.csv
+    Untracked:  cormotif_p.post.list_4.csv
+    Untracked:  figS1024h.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/DNR_DEGlist.csv
     Untracked:  output/DNRvenn.RDS
+    Untracked:  output/DOX_DEGlist.csv
     Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EPI_DEGlist.csv
     Untracked:  output/EPIvenn.RDS
     Untracked:  output/Figures/
+    Untracked:  output/MTX_DEGlist.csv
     Untracked:  output/MTXvenn.RDS
+    Untracked:  output/TRZ_DEGlist.csv
+    Untracked:  output/TableS8.csv
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
     Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/cormotif_probability_genelist.csv
+    Untracked:  output/endocytosisgenes.csv
     Untracked:  output/gene_corr_fig9.RDS
     Untracked:  output/legend_b.RDS
     Untracked:  output/motif_ERrep.RDS
@@ -764,18 +787,39 @@ Untracked files:
     Untracked:  output/output-old/
     Untracked:  output/rank24genes.csv
     Untracked:  output/rank3genes.csv
+    Untracked:  output/reneem@ls6.tacc.utexas.edu
+    Untracked:  output/sequencinginformationforsupp.csv
+    Untracked:  output/sequencinginformationforsupp.prn
+    Untracked:  output/sigVDA24.txt
+    Untracked:  output/sigVDA3.txt
+    Untracked:  output/sigVDX24.txt
+    Untracked:  output/sigVDX3.txt
+    Untracked:  output/sigVEP24.txt
+    Untracked:  output/sigVEP3.txt
+    Untracked:  output/sigVMT24.txt
+    Untracked:  output/sigVMT3.txt
+    Untracked:  output/sigVTR24.txt
+    Untracked:  output/sigVTR3.txt
     Untracked:  output/supplementary_motif_list_GO.RDS
     Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/tvl24hour.txt
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
+    Modified:   analysis/Cormotifcluster_analysis.Rmd
+    Modified:   analysis/GOI_plots.Rmd
+    Modified:   analysis/Knowles2019.Rmd
+    Modified:   analysis/Supplementary_figures.Rmd
+    Modified:   analysis/run_all_analysis.Rmd
+    Modified:   analysis/variance_scrip.Rmd
     Modified:   output/TNNI_LDH_RNAnormlist.txt
     Modified:   output/daplot.RDS
     Modified:   output/dxplot.RDS
     Modified:   output/epplot.RDS
     Modified:   output/mtplot.RDS
     Modified:   output/plan2plot.png
+    Modified:   output/sequencing_info.txt
     Modified:   output/toplistall.csv
     Modified:   output/trplot.RDS
     Modified:   output/veplot.RDS
@@ -829,7 +873,41 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/2c9b724fb34af28233a8d7947302b1d2b208ca4e/analysis/Figure5.Rmd" target="_blank">2c9b724</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/6b789174ae2002f9a79e5dcf2549211cfab02abf/analysis/Figure5.Rmd" target="_blank">6b78917</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-27
+</td>
+<td>
+updates and adding code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/1e11a44b168d1908a29c4e0bcbddf83429416284/docs/Figure5.html" target="_blank">1e11a44</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/2c9b724fb34af28233a8d7947302b1d2b208ca4e/analysis/Figure5.Rmd" target="_blank">2c9b724</a>
 </td>
 <td>
 reneeisnowhere
@@ -846,7 +924,7 @@ test
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/Figure5.html" target="_blank">4bb0b80</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/Figure5.html" target="_blank">4bb0b80</a>
 </td>
 <td>
 reneeisnowhere
@@ -863,7 +941,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/974fcded9b3de2b7c10dc498a750dc1db112b7e2/analysis/Figure5.Rmd" target="_blank">974fcde</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/974fcded9b3de2b7c10dc498a750dc1db112b7e2/analysis/Figure5.Rmd" target="_blank">974fcde</a>
 </td>
 <td>
 reneeisnowhere
@@ -880,7 +958,7 @@ new figures update
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/c40acedc05ec91d8a51949f526029e724151c0b5/docs/Figure5.html" target="_blank">c40aced</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/c40acedc05ec91d8a51949f526029e724151c0b5/docs/Figure5.html" target="_blank">c40aced</a>
 </td>
 <td>
 reneeisnowhere
@@ -897,7 +975,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/58c7965d3817c5e9423d1fe94bbb1e87aa186302/analysis/Figure5.Rmd" target="_blank">58c7965</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/58c7965d3817c5e9423d1fe94bbb1e87aa186302/analysis/Figure5.Rmd" target="_blank">58c7965</a>
 </td>
 <td>
 reneeisnowhere
@@ -914,7 +992,7 @@ updating figures
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/ed18a48b2f89247da196d697d017eb73591027e6/docs/Figure5.html" target="_blank">ed18a48</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/ed18a48b2f89247da196d697d017eb73591027e6/docs/Figure5.html" target="_blank">ed18a48</a>
 </td>
 <td>
 reneeisnowhere
@@ -931,7 +1009,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/63d054a344b51dddc68801e0f2bf7a7ba89076b7/analysis/Figure5.Rmd" target="_blank">63d054a</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/63d054a344b51dddc68801e0f2bf7a7ba89076b7/analysis/Figure5.Rmd" target="_blank">63d054a</a>
 </td>
 <td>
 reneeisnowhere
@@ -948,7 +1026,7 @@ Various changes to graphs. pending Monday-renames
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/0e3d22d4141a70edaccc8f2c4f202eb9ddf36d62/docs/Figure5.html" target="_blank">0e3d22d</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/0e3d22d4141a70edaccc8f2c4f202eb9ddf36d62/docs/Figure5.html" target="_blank">0e3d22d</a>
 </td>
 <td>
 reneeisnowhere
@@ -965,7 +1043,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/6a6c9af95e01c820386d7541c19d25b7bb7414e6/analysis/Figure5.Rmd" target="_blank">6a6c9af</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/6a6c9af95e01c820386d7541c19d25b7bb7414e6/analysis/Figure5.Rmd" target="_blank">6a6c9af</a>
 </td>
 <td>
 reneeisnowhere
@@ -982,7 +1060,7 @@ adding fig 5 and changing fig9 heatmap
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/a95c83ed3c556a11f386af375fa1270865d407a2/analysis/Figure5.Rmd" target="_blank">a95c83e</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/a95c83ed3c556a11f386af375fa1270865d407a2/analysis/Figure5.Rmd" target="_blank">a95c83e</a>
 </td>
 <td>
 reneeisnowhere
@@ -999,7 +1077,7 @@ update code
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/8f66a2dda2b881b7a051bd5dbb25266d5fc8dc93/docs/Figure5.html" target="_blank">8f66a2d</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/8f66a2dda2b881b7a051bd5dbb25266d5fc8dc93/docs/Figure5.html" target="_blank">8f66a2d</a>
 </td>
 <td>
 reneeisnowhere
@@ -1016,7 +1094,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/060305df0fe5e349dc8c94711564d5331e7d5e93/analysis/Figure5.Rmd" target="_blank">060305d</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/060305df0fe5e349dc8c94711564d5331e7d5e93/analysis/Figure5.Rmd" target="_blank">060305d</a>
 </td>
 <td>
 reneeisnowhere
@@ -1033,7 +1111,7 @@ update in data
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/f77112b121790a74443bfd2354f9ca76ea3eeafe/docs/Figure5.html" target="_blank">f77112b</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/f77112b121790a74443bfd2354f9ca76ea3eeafe/docs/Figure5.html" target="_blank">f77112b</a>
 </td>
 <td>
 reneeisnowhere
@@ -1050,7 +1128,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/ceea93e05a75971f464990aa6df53a56d9ffe2cd/analysis/Figure5.Rmd" target="_blank">ceea93e</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ceea93e05a75971f464990aa6df53a56d9ffe2cd/analysis/Figure5.Rmd" target="_blank">ceea93e</a>
 </td>
 <td>
 reneeisnowhere
@@ -1069,22 +1147,352 @@ adding fig 5
 </div>
 </div>
 </div>
+<style type="text/css">
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+</style>
+<pre class="r"><code>library(car)
+library(tidyverse)
+library(tinytex)
+library(BiocGenerics)
+library(data.table)
+library(Cormotif)
+library(cowplot)
+library(ggsignif)
+library(RColorBrewer)
+library(broom)</code></pre>
+<pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
+siglist &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
+list2env(siglist, envir = .GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<pre class="r"><code>cpmcounts &lt;- readRDS(&quot;data/cpmcount.RDS&quot;)
+cormotif_initial &lt;- readRDS(&quot;data/cormotif_initialall.RDS&quot;)
+DEG_cormotif &lt;- readRDS(&quot;data/DEG_cormotif.RDS&quot;)
+list2env(DEG_cormotif,envir=.GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
-<div id="figure-6" class="section level1">
-<h1>Figure 6</h1>
-<p>TOP2i induce a time-dependent gene expression response in
-cardiomyocytes</p>
+<pre class="r"><code>drug_pal_fact &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;,&quot;#41B333&quot;)</code></pre>
+<div
+id="figure-5-top2i-induce-a-time-dependent-gene-expression-response-in-cardiomyocytes."
+class="section level1">
+<h1>Figure 5: TOP2i induce a time-dependent gene expression response in
+cardiomyocytes.</h1>
 <div id="a.-cormotif-plot-unedited" class="section level2">
 <h2>A. Cormotif plot unedited</h2>
-<p><img src="figure/Figure5.Rmd/Cormotif)-1.svg" width="672" style="display: block; margin: auto;" /><img src="figure/Figure5.Rmd/Cormotif)-2.svg" width="672" style="display: block; margin: auto;" />
-## B. Pie chart of motifs</p>
-<p><img src="figure/Figure5.Rmd/Pie%20chart%20of%20groups-1.svg" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>myColors &lt;-  rev(c(&quot;#FFFFFF&quot;, &quot;#E6E6E6&quot; ,&quot;#CCCCCC&quot;, &quot;#B3B3B3&quot;, &quot;#999999&quot;, &quot;#808080&quot;, &quot;#666666&quot;,&quot;#4C4C4C&quot;, &quot;#333333&quot;, &quot;#191919&quot;,&quot;#000000&quot;))
+                  
+  
+plotMotif(cormotif_initial)</code></pre>
+<p><img src="figure/Figure5.Rmd/Cormotif)-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Cormotif)-1">
+Past versions of Cormotif)-1.png
+</button>
+</p>
+<div id="fig-Cormotif)-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/figure/Figure5.Rmd/Cormotif)-1.png" target="_blank">4bb0b80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure5.Rmd/Cormotif)-1.png" target="_blank">c40aced</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot.new()
+
+legend(&#39;bottomleft&#39;,fill=myColors, legend =rev(c(&quot;0&quot;, &quot;0.1&quot;, &quot;0.2&quot;, &quot;0.3&quot;, &quot;0.4&quot;,  &quot;0.5&quot;, &quot;0.6&quot;, &quot;0.7&quot;, &quot;0.8&quot;,&quot;0.9&quot;, &quot;1&quot;)), box.col=&quot;white&quot;,title = &quot;Probability\nlegend&quot;, horiz=FALSE,title.cex=.8)</code></pre>
+<p><img src="figure/Figure5.Rmd/Cormotif)-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Cormotif)-2">
+Past versions of Cormotif)-2.png
+</button>
+</p>
+<div id="fig-Cormotif)-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/figure/Figure5.Rmd/Cormotif)-2.png" target="_blank">4bb0b80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure5.Rmd/Cormotif)-2.png" target="_blank">c40aced</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>More information about the Cormotif analysis can be found <a
+href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Cormotifcluster_analysis.html">here</a>.</p>
+</div>
+<div id="b.-pie-chart-of-motifs" class="section level2">
+<h2>B. Pie chart of motifs</h2>
+<pre class="r"><code>Set &lt;-
+  c(&quot;Early Acute Response&quot;,
+    &quot;Early Sustained Response&quot;,
+    &quot;Late Response&quot;,
+    &quot;No Response&quot;)
+gene_num &lt;- c(487, 589, 5596, 7409)
+fills &lt;- c(&quot;#F8766D&quot;,  &quot;#00BFC4&quot;, &quot;#7CAE00&quot;, &quot;#C77CFF&quot;)
+
+pie_chartdata &lt;- data.frame(Set, gene_num, fills)
+pie_chartdata &lt;- pie_chartdata %&gt;%
+  mutate(prop = gene_num / sum(pie_chartdata$gene_num) * 100) %&gt;%
+  mutate(ypos = (prop) + 0.5 * prop)
+
+
+pie_chartdata %&gt;%
+  ggplot(., aes(x = &quot;&quot;, y = gene_num, fill = Set)) +
+  geom_col(width = 1) +
+  coord_polar(&quot;y&quot;, pi / 2) +
+  theme_void() +
+  ggtitle(&quot;Distribution of genes in each motif&quot;) +
+  geom_text(aes(label = paste0(Set, &quot; (&quot;, gene_num, &quot;)&quot;)),
+            position = position_stack(vjust = .55)) +
+  theme(legend.position = &quot;none&quot;) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5))</code></pre>
+<p><img src="figure/Figure5.Rmd/Pie%20chart%20of%20groups-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Pie-chart-of-groups-1">
+Past versions of "Pie chart of groups-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Pie-chart-of-groups-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/figure/Figure5.Rmd/Pie chart of groups-1.png" target="_blank">4bb0b80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure5.Rmd/Pie chart of groups-1.png" target="_blank">c40aced</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="c.-average-absolute-value-of-lfc-by-motif"
 class="section level2">
 <h2>C. Average absolute value of LFC by motif</h2>
-<p><img src="figure/Figure5.Rmd/average%20LFC-1.svg" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>lfc_nums &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
+mean_lfc &lt;- lfc_nums %&gt;%
+  mutate(ER = if_else(ENTREZID %in% motif_ER, &quot;y&quot;, &quot;no&quot;)) %&gt;%
+  mutate(LR = if_else(ENTREZID %in% motif_LR, &quot;y&quot;, &quot;no&quot;)) %&gt;%
+  mutate(TI = if_else(ENTREZID %in% motif_TI, &quot;y&quot;, &quot;no&quot;)) %&gt;%
+  mutate(NR = if_else(ENTREZID %in% motif_NR, &quot;y&quot;, &quot;no&quot;)) %&gt;%
+  mutate(id = as.factor(id)) %&gt;%
+  mutate(time = factor(
+    time,
+    levels = c(&quot;3_hours&quot;, &quot;24_hours&quot;),
+    labels = c(&quot;3&quot;, &quot;24&quot;)
+  )) %&gt;%
+  group_by(id, time) %&gt;%
+  mutate(absFC = abs(logFC)) %&gt;%
+  dplyr::select(id, time, absFC, ER, TI, LR, NR) %&gt;%
+  dplyr::summarize(
+    ERm = mean(absFC[ER == &quot;y&quot;]),
+    TIm = mean(absFC[TI == &quot;y&quot;]),
+    LRm = mean(absFC[LR == &quot;y&quot;]),
+    NRm = mean(absFC[NR == &quot;y&quot;])
+  ) %&gt;%
+  as.data.frame()
+
+
+mean_lfc %&gt;%
+  ungroup() %&gt;%
+  mutate(id = factor(id,
+                     levels = c(&#39;DOX&#39;, &#39;EPI&#39;, &#39;DNR&#39;, &#39;MTX&#39;, &#39;TRZ&#39;, &#39;VEH&#39;))) %&gt;%
+  pivot_longer(!c(id, time), names_to = &quot;Motif&quot;,
+               values_to = &quot;meanLFC&quot;) %&gt;%
+  mutate(
+    Set = case_match(
+      Motif,
+      &quot;ERm&quot; ~ &quot;Early Acute Response&quot;,
+      &quot;TIm&quot; ~ &quot;Early Sustained Response&quot;,
+      &quot;LRm&quot; ~ &quot;Late Response&quot;,
+      &quot;NRm&quot; ~ &quot;No Response&quot;,
+      .default = Motif
+    )
+  ) %&gt;%
+  ggplot(., aes(
+    x = time,
+    y = meanLFC,
+    col = id,
+    group = id
+  )) +
+  geom_point(size = 2) +
+  geom_line(size = 2) +
+  ggpubr::fill_palette(drug_pal_fact) +
+  # guides(fill=guide_legend(title = &quot;Treatment&quot;))+
+  facet_wrap( ~ Set, nrow = 1) +
+  theme_bw() +
+  xlab(&quot;Time (hours)&quot;) +
+  scale_color_manual(values = drug_pal_fact) +
+  ylab(&quot; Avg. |Log Fold Change|&quot;) +
+  theme_bw() +
+  # ggtitle(&quot; average |Log Fold| for genes across treatment each motif&quot;)+
+  theme(
+    plot.title = element_text(size = rel(1.0), hjust = 0.5),
+    axis.title = element_text(size = 15, color = &quot;black&quot;),
+    axis.line = element_line(linewidth = 1.5),
+    strip.background = element_rect(fill = &quot;transparent&quot;),
+    axis.text = element_text(
+      size = 10,
+      color = &quot;black&quot;,
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 11,
+      color = &quot;black&quot;,
+      face = &quot;bold&quot;
+    )
+  )</code></pre>
+<p><img src="figure/Figure5.Rmd/average%20LFC-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-average-LFC-1">
+Past versions of "average LFC-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-average-LFC-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4bb0b80cf46e5fd3e272d32ed200b0811e171b15/docs/figure/Figure5.Rmd/average LFC-1.png" target="_blank">4bb0b80</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure5.Rmd/average LFC-1.png" target="_blank">c40aced</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1093,6 +1501,7 @@ Session information
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19045)
@@ -1117,35 +1526,34 @@ other attached packages:
  [1] broom_1.0.5         RColorBrewer_1.1-3  ggsignif_0.6.4     
  [4] cowplot_1.1.1       Cormotif_1.46.0     limma_3.56.2       
  [7] affy_1.78.2         Biobase_2.60.0      data.table_1.14.8  
-[10] BiocGenerics_0.46.0 tinytex_0.45        lubridate_1.9.2    
-[13] forcats_1.0.0       stringr_1.5.0       dplyr_1.1.2        
-[16] purrr_1.0.1         readr_2.1.4         tidyr_1.3.0        
-[19] tibble_3.2.1        ggplot2_3.4.2       tidyverse_2.0.0    
-[22] car_3.1-2           carData_3.0-5       workflowr_1.7.0    
+[10] BiocGenerics_0.46.0 tinytex_0.46        lubridate_1.9.2    
+[13] forcats_1.0.0       stringr_1.5.0       dplyr_1.1.3        
+[16] purrr_1.0.2         readr_2.1.4         tidyr_1.3.0        
+[19] tibble_3.2.1        ggplot2_3.4.3       tidyverse_2.0.0    
+[22] car_3.1-2           carData_3.0-5       workflowr_1.7.1    
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.3          xfun_0.39             bslib_0.5.0          
+ [1] gtable_0.3.4          xfun_0.40             bslib_0.5.1          
  [4] rstatix_0.7.2         processx_3.8.2        callr_3.7.3          
  [7] tzdb_0.4.0            vctrs_0.6.3           tools_4.3.1          
 [10] ps_1.7.5              generics_0.1.3        fansi_1.0.4          
-[13] highr_0.10            pkgconfig_2.0.3       lifecycle_1.0.3      
-[16] farver_2.1.1          compiler_4.3.1        git2r_0.32.0         
-[19] textshaping_0.3.6     munsell_0.5.0         getPass_0.2-2        
-[22] httpuv_1.6.11         htmltools_0.5.5       sass_0.4.7           
-[25] yaml_2.3.7            preprocessCore_1.62.1 ggpubr_0.6.0         
-[28] later_1.3.1           pillar_1.9.0          jquerylib_0.1.4      
-[31] whisker_0.4.1         cachem_1.0.8          abind_1.4-5          
-[34] tidyselect_1.2.0      digest_0.6.33         stringi_1.7.12       
-[37] labeling_0.4.2        rprojroot_2.0.3       fastmap_1.1.1        
-[40] grid_4.3.1            colorspace_2.1-0      cli_3.6.1            
-[43] magrittr_2.0.3        utf8_1.2.3            withr_2.5.0          
-[46] backports_1.4.1       scales_1.2.1          promises_1.2.0.1     
-[49] timechange_0.2.0      rmarkdown_2.23        httr_1.4.6           
-[52] affyio_1.70.0         ragg_1.2.5            hms_1.1.3            
-[55] evaluate_0.21         knitr_1.43            rlang_1.1.1          
-[58] Rcpp_1.0.11           glue_1.6.2            BiocManager_1.30.21.1
-[61] rstudioapi_0.15.0     jsonlite_1.8.7        R6_2.5.1             
-[64] systemfonts_1.0.4     fs_1.6.3              zlibbioc_1.46.0      </code></pre>
+[13] pkgconfig_2.0.3       lifecycle_1.0.3       farver_2.1.1         
+[16] compiler_4.3.1        git2r_0.32.0          munsell_0.5.0        
+[19] getPass_0.2-2         httpuv_1.6.11         htmltools_0.5.6      
+[22] sass_0.4.7            yaml_2.3.7            preprocessCore_1.62.1
+[25] ggpubr_0.6.0          later_1.3.1           pillar_1.9.0         
+[28] jquerylib_0.1.4       whisker_0.4.1         cachem_1.0.8         
+[31] abind_1.4-5           tidyselect_1.2.0      digest_0.6.33        
+[34] stringi_1.7.12        labeling_0.4.3        rprojroot_2.0.3      
+[37] fastmap_1.1.1         grid_4.3.1            colorspace_2.1-0     
+[40] cli_3.6.1             magrittr_2.0.3        utf8_1.2.3           
+[43] withr_2.5.0           backports_1.4.1       scales_1.2.1         
+[46] promises_1.2.1        timechange_0.2.0      rmarkdown_2.24       
+[49] httr_1.4.7            affyio_1.70.0         hms_1.1.3            
+[52] evaluate_0.21         knitr_1.44            rlang_1.1.1          
+[55] Rcpp_1.0.11           glue_1.6.2            BiocManager_1.30.22  
+[58] rstudioapi_0.15.0     jsonlite_1.8.7        R6_2.5.1             
+[61] fs_1.6.3              zlibbioc_1.46.0      </code></pre>
 </div>
 </div>
 </div>
