@@ -62,7 +62,7 @@ print(plan2)
 
 Lines are a 4 point log-logistic regression of the mean from two biological replicates for each individual at 8 concentrations for each condition, except(trastuzmab)TRZ, which is 7 concentrations.
 
-You can find the link to initial DRC analysis at this[link](fig1b)
+You can find the link to initial DRC analysis at this[link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#Ploting_the_DRC)
 
 ```{r LD50}
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
@@ -118,7 +118,7 @@ graphLD50 <- LD50_table %>%
   )   
 ```
 
-You can find the links to DRC and BCC analysis at this[link](fig1c).
+You can find the links to DRC and BCC analysis at this[link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#LD50_correlation).
 
 ### C & D. LD~50~ and EC~50~
 
@@ -195,8 +195,5 @@ print(plan50ld)
   
 ```
 
-You can find the code to EC50 breast cancer cell lines at this [link](fig1d).
+You can find the code to EC50 breast cancer cell lines at this [link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#LD50_by_avg_of_viability).
 
-[fig1b]:<https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#Ploting_the_DRC> 
-[fig1c]:<https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#LD50_correlation>
-[fig1d]:<https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#LD50_by_avg_of_viability>
