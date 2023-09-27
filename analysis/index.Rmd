@@ -42,7 +42,7 @@ Data set comparisons
 
 [Seoane data](https://reneeisnowhere.github.io/Cardiotoxicity/Seoane_chrom.html)
 
-### Paper figures
+## Paper figure Links
 [Figure 1](https://reneeisnowhere.github.io/Cardiotoxicity/Figure1.html)  
 
 [Figure 2](https://reneeisnowhere.github.io/Cardiotoxicity/Figure2.html)  
