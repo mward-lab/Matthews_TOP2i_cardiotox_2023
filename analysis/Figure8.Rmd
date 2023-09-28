@@ -1,16 +1,27 @@
 ---
-title: "Figure 8"
+title: "Figure 8: DOX response eGenes are enriched amongst TOP2i response genes​."
 author: "ERM"
 date: "`r Sys.Date()`"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svg','png'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
 ```
 
 ```{r packages loading}
@@ -25,7 +36,7 @@ library(ggVennDiagram)
 library(paletteer)
 ```
 
-```{r data loading, message=FALSE, warning=FALSE, include=FALSE}
+```{r data loading, message=FALSE, warning=FALSE, include=TRUE}
 toplistall <- readRDS("data/toplistall.RDS")
 siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist, envir = .GlobalEnv)
@@ -39,7 +50,7 @@ egenes <- read.csv("output/egenes.csv",row.names = 1)
 
 ```
 
-```{r ggvennoverride function, include=FALSE}
+```{r ggvennoverride function, include=TRUE}
 
 plot_venn <- function (x, show_intersect, set_color, set_size, label, label_geom,
                        label_alpha, label_color, label_size, label_percent_digit,
@@ -89,11 +100,11 @@ plot_venn <- function (x, show_intersect, set_color, set_size, label, label_geom
 
 
 
-# Figure 8
+## Figure 8: DOX response eGenes are enriched amongst TOP2i response genes​.
 
-Dox respose eQTLS are enriched in ACi response genes
 
-## A. 24 hour DEG enrichment in GTEx genes
+
+### A. 24 hour DEG enrichment in GTEx genes
 ```{r  GTEx enrich, fig.height=3, fig.width=8}
 ## create GTEx data set from my data
 GTEx <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
@@ -172,11 +183,12 @@ GTEXcr8z %>%
                                         size=1),
         strip.text.x = element_text(size=12,
                                     face = "bold"))#+
-  # geom_text(aes(label = Label,   vjust = 1.5, position = position_fill))
-ggsave("output/Figures/GTEXenrich.eps",width = 4, height =8, units = "in")
+  
 ```
 
-## B. 24 hour DEG enrichment in reQTLs
+Additonal GTEx analysis and code is found [here]()
+
+### B. 24 hour DEG enrichment in DOX-iPSC-DM eGenes
 ```{r reQTLenrich,fig.height=3, fig.width=8}
 
 knowles4 <-readRDS("output/knowles4.RDS")
@@ -243,15 +255,15 @@ Knowles_count <-
                                         size=1),
         strip.text.x = element_text(size=12,
                                     face = "bold"))
-
-ggsave("output/Figures/knowlesenrich.eps",width = 4, height =8, units = "in")
-
 ```
 
 
-## C. DOXreQTLS strongly overlap other AC drugs
-```{r DOXreQTLs across other treatments,fig.height=4, fig.width=8, eval=FALSE, include=FALSE}
+Additonal analysis and code for the Knowles data is found [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2019.html#Dox-reQTLs)
 
+
+### C. DOXreQTLS strongly overlap other TOP2i drugs
+```{r DOXreQTLs across other treatments,fig.height=4, fig.width=8, eval=TRUE, include=TRUE}
+DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
 
 assignInNamespace(x="plot_venn", value=plot_venn, ns="ggVennDiagram") 
 
@@ -259,34 +271,6 @@ reQTL_overlapDE24 <- list(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZI
 re_incommon <- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
 
 names(reQTL_overlapDE24) <- c("Dox_reQTLS", "DNR DEGs","EPI DEGs","MTX DEGs")
-
-# ggVennDiagram::ggVennDiagram(reQTL_overlapDE24,
-#                              category.names = c("DOX\negenes",
-#                                  "DNR DEGs",
-#                                  "EPI DEGs",
-#                                  "MTX DEGs"),
-#               show_intersect = FALSE,
-#               set_color = "black",
-#               category_size = c(6,6,6,6),
-#               label = "count",
-#               color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
-#           
-#               label_percent_digit = 1,
-#               label_size = 4,
-#               label_alpha = 0,
-#               label_color = "black",
-#               edge_lty = "solid", set_size = 4.5)+
-#   scale_x_continuous(expand = expansion(mult = .3))+
-#   scale_y_continuous(expand = expansion(mult = .2))+
-#   # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
-#   # scale_colour_gradientn(colours = cols, 
-#   #                      values = rescale(c(0, 20, 75, 1000, 5000)),
-#   #                      guide = "colorbar", limits=c(0, 100)) +
-#   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)+
-#   # scale_fill_manual(values = cbp1)+
-#   labs(title = "24 hour DOX egenes in other DEG sets",
-#        caption = paste("n =", length(unique(re_incommon)),"genes"))+
-#   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 
 DEG_incommon <-c(sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
 uniqueDEGs_incommon <- unique(DEG_incommon)
@@ -298,8 +282,6 @@ ggVennDiagram::ggVennDiagram(two_venn,
               set_color = "black",
               category_size = c(6,6),
               label = "count",
-              # color =  c("DOX\negenes" = "yellow","DNR DEGs" ="steelblue","EPI DEGs" = 'red', "MTX DEGs" = 'black') ,
-              # 
               label_percent_digit = 1,
               label_size = 4,
               label_alpha = 0,
@@ -307,53 +289,88 @@ ggVennDiagram::ggVennDiagram(two_venn,
               edge_lty = "solid", set_size = 4.5)+
   scale_x_continuous(expand = expansion(mult = .3))+
   scale_y_continuous(expand = expansion(mult = .1))+
-   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)#+
+   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)
 ```
 
-## D. 
+### D. Stringently idetified DOX-only DE genes and DOX egenes only share ~JPH3~
 
 ```{r DOXreQTLvDOXspeDEG, fig.height=4, fig.width=8}
-cpm_boxplot24h <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
-  ##GOI needs to be ENTREZID
-  df <- cpmcounts
-  df_plot <- df %>% 
-      dplyr::filter(rownames(.)==GOI) %>%
+cpm_boxplot24h <-
+  function(cpmcounts,
+           GOI,
+           brewer_palette,
+           fill_colors,
+           ylab) {
+    ##GOI needs to be ENTREZID
+    df <- cpmcounts
+    df_plot <- df %>%
+      dplyr::filter(rownames(.) == GOI) %>%
       pivot_longer(everything(),
                    names_to = "treatment",
                    values_to = "counts") %>%
-      separate(treatment, c("drug","indv","time")) %>%
-      mutate(time = case_match(time,"24h"~"24 hours", "3h"~"3 hours")) %>% 
-      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-      mutate(drug =case_match(drug, "Da"~"DNR",
-                            "Do"~"DOX",
-                            "Ep"~"EPI",
-                            "Mi"~"MTX",
-                            "Tr"~"TRZ",
-                            "Ve"~"VEH", .default = drug)) %>% 
-      mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
-      dplyr::filter(time=="24 hours")
-    plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
-      geom_boxplot(position="identity",aes(fill=drug))+
-      geom_point(aes(col=indv, size=2, alpha=0.5))+
-      guides(alpha= "none", size= "none")+
-      scale_color_brewer(palette = brewer_palette, name = "Individual")+
-      scale_fill_manual(values=fill_colors)+
+      separate(treatment, c("drug", "indv", "time")) %>%
+      mutate(time = case_match(time, "24h" ~ "24 hours", "3h" ~ "3 hours")) %>%
+      mutate(indv = factor(indv, levels = c(1, 2, 3, 4, 5, 6))) %>%
+      mutate(
+        drug = case_match(
+          drug,
+          "Da" ~ "DNR",
+          "Do" ~ "DOX",
+          "Ep" ~ "EPI",
+          "Mi" ~ "MTX",
+          "Tr" ~ "TRZ",
+          "Ve" ~ "VEH",
+          .default = drug
+        )
+      ) %>%
+      mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+      dplyr::filter(time == "24 hours")
+    plot <- ggplot2::ggplot(df_plot, aes(x = drug, y = counts)) +
+      geom_boxplot(position = "identity", aes(fill = drug)) +
+      geom_point(aes(
+        col = indv,
+        size = 2,
+        alpha = 0.5
+      )) +
+      guides(alpha = "none", size = "none") +
+      scale_color_brewer(palette = brewer_palette, name = "Individual") +
+      scale_fill_manual(values = fill_colors) +
       # facet_wrap("time", nrow=1, ncol=2)+
-      theme_bw()+
-      ylab(ylab)+
-      xlab("")+
-      ggtitle("24 hours")+
-      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 15, color = "black",face="bold"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "pt"),face = "bold"))
+      theme_bw() +
+      ylab(ylab) +
+      xlab("") +
+      ggtitle("24 hours") +
+      theme(
+        strip.background = element_rect(
+          fill = "white",
+          linetype = 1,
+          linewidth = 0.5
+        ),
+        plot.title = element_text(
+          size = 12,
+          hjust = 0.5,
+          face = "bold"
+        ),
+        axis.title = element_text(
+          size = 15,
+          color = "black",
+          face = "bold"
+        ),
+        axis.ticks = element_line(linewidth = 1.0),
+        panel.background = element_rect(colour = "black", size = 1),
+        axis.text.x = element_blank(),
+        strip.text.x = element_text(margin = margin(2, 0, 2, 0, "pt"), face = "bold")
+      )
     print(plot)
-}
-cpm_boxplot24h(cpmcounts,GOI='57338',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("JPH3")~log[2]~"cpm "))))
+  }
+cpm_boxplot24h(cpmcounts,
+               GOI = '57338',
+               "Dark2",
+               drug_pal_fact,
+               ylab = (expression(atop(
+                 " ", italic("JPH3") ~ log[2] ~ "cpm "
+               ))))
 
 
 ```
+For additional stringently identified genes, you can visit the supplementary data [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Supplementary_figures.html) or analysis located [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2019.html#More_investigation_of_24_hour_specific_genes).
