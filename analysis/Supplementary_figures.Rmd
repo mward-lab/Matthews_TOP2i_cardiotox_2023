@@ -1,5 +1,5 @@
 ---
-title: "Supplementary figures"
+title: "Appendix 1: Supplementary figures"
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -10,12 +10,23 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-
-knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE,
-                      dev = c('png','svglite'))
-options(knitr.svg.object = TRUE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
 ```{r packages, message=FALSE, warning=FALSE, error=TRUE}
 library(tidyverse)
 library(ggpubr)
@@ -36,14 +47,12 @@ library(ggVennDiagram)
 
 ```
 
-
+#### Function to graph gene expression across treatments
 ```{r functions}
 
 
 cpm_boxplot_time <-function(cpmcounts,timex, GOI,brewer_palette, fill_colors, ylab) {
   ##GOI needs to be ENTREZID
-  
-  
   df <- cpmcounts
     df_plot <- df %>% 
       dplyr::filter(rownames(.)==GOI) %>%
@@ -84,9 +93,13 @@ cpm_boxplot_time <-function(cpmcounts,timex, GOI,brewer_palette, fill_colors, yl
 ```
 
 
-### Fig. S1
+## S1 Fig: Cardiomyocytes can be generated at high purity across six individuals.
+
+### S1 FigA Flow cytometry results 
+Please see the paper for this figure.  It was generated using FloJo.
 
 
+### S1 FigB 
 ```{r Fig S1 troponinT}
 
 ctnnt <- read.csv("data/ctnnt_results.txt", row.names = 1)
@@ -102,7 +115,7 @@ coord_cartesian(ylim = c(0,105))+ ##set those limits
   geom_boxplot(color="black",alpha =0.2, fill=NA, fatten=0, show.legend = FALSE)+
   scale_fill_brewer(palette = "Dark2",name="" )+
   xlab(NULL)+ 
-  ylab("% cTNNT+ ")+
+  ylab("% TNNT2+ ")+
   guides(fill = NULL)+
   theme(plot.title = element_text(hjust = 0.5, size =20, face= "bold"), 
         axis.title.x=element_blank(),
@@ -124,7 +137,7 @@ coord_cartesian(ylim = c(0,105))+ ##set those limits
 
 ```
 
-### Fig. S2
+## S2 Fig: Dose-response curves are reproducible across replicate cardiomyocyte differentiations from the same individual.
 
 ```{r Fig S2 DRC reps}
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
@@ -133,29 +146,20 @@ conf_int <- readRDS("data/plot_intv_list.RDS")
 DRC_list <- readRDS("data/plot_list_DRC.RDS")
 pull_drc2 <- data.frame("ind1", "ind2","ind3","ind4","ind5","ind6")
 doubl_plot <- data.frame("ind3a", "ind3b", "ind5a", "ind5b")
-lvl_order <- c('1','2','3','4','5','6')
+color_order <- c('1','2','5','4','3','6')
 intervals <- rbindlist(conf_int,idcol="trt")
 drug_list <- c("DNR","DOX","EPI","MTX", "TRZ", "VEH")
-# GeomRibbon$handle_na <- function(data, params) {  data }
 
-# brewer.pal(n=6,"Dark2")
-# [1] "#1B9E77" "#D95F02" "#7570B3" "#E7298A" "#66A61E" "#E6AB02"
-# > display.brewer.pal(n=6,"Dark2")
 for (each in 1:6){
   newdata <- intervals %>% 
     separate("trt", into=c("sDrug",NA)) %>% 
     dplyr::filter(sDrug ==drug_list[each]) %>% 
     mutate(SampleID=indv) %>% 
     mutate(indv=substr(indv,4,4)) %>% 
-    mutate(indv=factor(indv, levels=lvl_order)) %>% 
+    mutate(indv=factor(indv, levels=color_order)) %>% 
     dplyr::filter(SampleID %in% doubl_plot)
     
-  
-  # newdata <- sub_intv %>% 
-  #  filter(indv %in% doubl_plot) %>% 
-  #   mutate(sub_ind=substr(indv,4,4)) %>% 
-  #   mutate(sub_ind=factor(sub_ind,levels=lvl_order))
-  drug_plot <- DRC_list[[each]]
+drug_plot <- DRC_list[[each]]
      f <-
        drug_plot %>% 
          filter(SampleID %in% doubl_plot) %>% 
@@ -199,9 +203,8 @@ for (each in 1:6){
 ```
 
 
+## S3 Fig: Cancer drugs that decrease cardiomyocyte viability induce cellular stress.
 
-
-### Fig. S3  
 
 
 ```{r Fig S3, message=FALSE, warning=FALSE, eval=TRUE,echo=TRUE}
@@ -232,7 +235,9 @@ viability %>%
 
 ```
 
-### Fig. S4 
+
+## S4 Fig: Treatment with ACs at a dose of 0.5 $\mu$M for 48 hours induces effects on cardiomyocyte viability.
+
 
 ```{r Fig S4}
 
@@ -274,9 +279,10 @@ viabilitytable %>%
 
 ```
 
-### Fig. S5
+## S5 Fig: RNA-seq sample quality is equivalent across individuals, treatments, and time points.
+### S5 FigA  RIN vs treatment time by drug
 
-```{r Fig S5}
+```{r Fig S5A}
 library(limma)
 library(edgeR)
 library(cowplot)
@@ -284,90 +290,165 @@ filcpm_matrix <- readRDS("data/filcpm_counts.RDS")
 
 
 x <- readRDS("data/filtermatrix_x.RDS")
-x$samples %>% 
-  mutate(drug=case_match(drug, "Daunorubicin"~"DNR",
-                        "Doxorubicin"~"DOX",
-                        "Epirubicin"~"EPI",
-                        "Mitoxantrone"~"MTX",
-                        "Trastuzumab"~"TRZ",
-                        "Vehicle"~"VEH", .default = drug)) %>%
-   mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
-  mutate(time=factor(time, labels= c("3 hours","24 hours"))) %>% 
- ggplot(., aes(x = as.factor(time), y = RIN)) +
-  geom_boxplot(aes(fill=as.factor(time)))+ 
-  theme_bw()+
-  ylim(c(0,10))+
-  labs(x= "", fill ="Time in hours",y ="RNA Integrity Number")+ 
-  ggtitle("Boxplot of RIN by time and drug")+
-  facet_wrap(~drug)+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
-        axis.text.x = element_text(size =10, color = "black", angle = 0, hjust = 1, vjust = 0.2),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"),
-        strip.background = element_rect(fill = "white"))
-
-
-
-seq_info <-read.csv("output/sequencing_info.txt", row.names = 1)
-seq_info %>% 
-   
-  filter(type=="Total_reads") %>% 
-  mutate(drug=case_match(drug, "Daunorubicin"~"DNR",
-                        "Doxorubicin"~"DOX",
-                        "Epirubicin"~"EPI",
-                        "Mitoxantrone"~"MTX",
-                        "Trastuzumab"~"TRZ",
-                        "Vehicle"~"VEH", .default = drug)) %>%
-   mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
-    ggplot(., aes (x =drug, y=Total.Sequences, fill = drug))+
-  geom_boxplot()+
-  scale_fill_manual(values=drug_pal_fact)+
-  ggtitle(expression("Total number of reads by treatment"))+
-  xlab(" ")+
-  ylab(expression("RNA -sequencing reads"))+
-  theme_bw()+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 12, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
-        axis.text.x = element_text(size =10, color = "white"),
-        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
-        strip.text.y = element_text(color = "white"))
-
-seq_info %>% 
-  mutate(drug=case_match(drug, "Daunorubicin"~"DNR",
-                        "Doxorubicin"~"DOX",
-                        "Epirubicin"~"EPI",
-                        "Mitoxantrone"~"MTX",
-                        "Trastuzumab"~"TRZ",
-                        "Vehicle"~"VEH", .default = drug)) %>%
-   mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
-  # separate(samplenames, into=c(NA,NA,NA,"samplenames")) %>% 
-  # mutate(shortnames = paste("Sample",str_trim(samplenames))) %>% 
-  filter(type=="Total_reads") %>% 
-  mutate(sampleID=colnames(filcpm_matrix)) %>% 
-  ggplot(., aes (x =sampleID, y=Total.Sequences, fill = drug, group_by=indv))+
-  geom_col()+
- geom_hline(aes(yintercept=20000000))+
- scale_fill_manual(values=drug_pal_fact)+
-  ggtitle(expression("Total number of reads by sample"))+
-  xlab("")+
-  ylab(expression("RNA -sequencing reads"))+
-  theme_bw()+
-  theme(plot.title = element_text(size = rel(2), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text.y = element_text(size =10, color = "black", angle = 0, hjust = 0.8, vjust = 0.5),
-        axis.text.x = element_text(size =6, color = "black", angle = 90, hjust = 1, vjust = 0.2),
-        #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
-        strip.text.y = element_text(color = "white"))
+x$samples %>%
+  mutate(
+    drug = case_match(
+      drug,
+      "Daunorubicin" ~ "DNR",
+      "Doxorubicin" ~ "DOX",
+      "Epirubicin" ~ "EPI",
+      "Mitoxantrone" ~ "MTX",
+      "Trastuzumab" ~ "TRZ",
+      "Vehicle" ~ "VEH",
+      .default = drug
+    )
+  ) %>%
+  mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+  mutate(time = factor(time, labels = c("3 hours", "24 hours"))) %>%
+  ggplot(., aes(x = as.factor(time), y = RIN)) +
+  geom_boxplot(aes(fill = as.factor(time))) +
+  theme_bw() +
+  ylim(c(0, 10)) +
+  labs(x = "", fill = "Time in hours", y = "RNA Integrity Number") +
+  ggtitle("Boxplot of RIN by time and drug") +
+  facet_wrap( ~ drug) +
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text.y = element_text(
+      size = 10,
+      color = "black",
+      angle = 0,
+      hjust = 0.8,
+      vjust = 0.5
+    ),
+    axis.text.x = element_text(
+      size = 10,
+      color = "black",
+      angle = 0,
+      hjust = 1,
+      vjust = 0.2
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    ),
+    strip.background = element_rect(fill = "white")
+  )
 
 
 ```
-### Fig. S6
+
+### S5 FigB  Total number of reads by treatment
+
+```{r S5B}
+seq_info <- read.csv("output/sequencing_info.txt", row.names = 1)
+seq_info %>%
+  
+  filter(type == "Total_reads") %>%
+  mutate(
+    drug = case_match(
+      drug,
+      "Daunorubicin" ~ "DNR",
+      "Doxorubicin" ~ "DOX",
+      "Epirubicin" ~ "EPI",
+      "Mitoxantrone" ~ "MTX",
+      "Trastuzumab" ~ "TRZ",
+      "Vehicle" ~ "VEH",
+      .default = drug
+    )
+  ) %>%
+  mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+  ggplot(., aes (x = drug, y = count, fill = drug)) +
+  geom_boxplot() +
+  scale_fill_manual(values = drug_pal_fact) +
+  ggtitle(expression("Total number of reads by treatment")) +
+  xlab(" ") +
+  ylab(expression("RNA -sequencing reads")) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5),
+    axis.title = element_text(size = 12, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.y = element_text(
+      size = 10,
+      color = "black",
+      angle = 0,
+      hjust = 0.8,
+      vjust = 0.5
+    ),
+    axis.text.x = element_text(size = 10, color = "white"),
+    #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+    strip.text.y = element_text(color = "white")
+  )
+```
+
+
+### S5 FigC  Total number of reads by sample
+```{r S5C, fig.width=8}
+seq_info %>%
+  mutate(
+    drug = case_match(
+      drug,
+      "Daunorubicin" ~ "DNR",
+      "Doxorubicin" ~ "DOX",
+      "Epirubicin" ~ "EPI",
+      "Mitoxantrone" ~ "MTX",
+      "Trastuzumab" ~ "TRZ",
+      "Vehicle" ~ "VEH",
+      .default = drug
+    )
+  ) %>%
+  mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+  # separate(samplenames, into=c(NA,NA,NA,"samplenames")) %>%
+  # mutate(shortnames = paste("Sample",str_trim(samplenames))) %>%
+  filter(type == "Total_reads") %>%
+  mutate(sampleID = colnames(filcpm_matrix)) %>%
+  ggplot(., aes (
+    x = sampleID,
+    y = count,
+    fill = drug,
+    group_by = indv
+  )) +
+  geom_col() +
+  geom_hline(aes(yintercept = 20000000)) +
+  scale_fill_manual(values = drug_pal_fact) +
+  ggtitle(expression("Total number of reads by sample")) +
+  xlab("") +
+  ylab(expression("RNA -sequencing reads")) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(2), hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text.y = element_text(
+      size = 10,
+      color = "black",
+      angle = 0,
+      hjust = 0.8,
+      vjust = 0.5
+    ),
+    axis.text.x = element_text(
+      size = 6,
+      color = "black",
+      angle = 90,
+      hjust = 1,
+      vjust = 0.2
+    ),
+    #strip.text.x = element_text(size = 15, color = "black", face = "bold"),
+    strip.text.y = element_text(color = "white")
+  )
+
+```
+
+To see more RNA-seq related analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html)
+
+
+
+## S6 Fig: RNA-seq samples cluster by treatment type, timepoint, and individual. Pearson correlation of log2 cpm values across all pairs of samples.
 
 
 ```{r Fig S6, fig.width=10, fig.height=10}
@@ -376,17 +457,21 @@ filcpm_matrix <- readRDS("data/filcpm_counts.RDS")
 mcor <- cor(filcpm_matrix) 
 
 filmat_groupmat_col <- data.frame(timeset = colnames(filcpm_matrix))
-counts_corr_mat<- filmat_groupmat_col %>% 
-  separate(timeset, into= c("drug","indv","time")) %>% 
-  mutate(class = if_else(drug=="Da","AC", if_else(drug=="Do","AC", if_else(drug=="Ep","AC","nAC")))) %>% 
-  mutate(TOP2i = if_else(drug=="Da","yes", if_else(drug=="Do","yes", if_else(drug=="Ep","yes",if_else(drug=="Mi","yes","no"))))) 
+counts_corr_mat <- filmat_groupmat_col %>%
+  separate(timeset, into = c("drug", "indv", "time")) %>%
+  mutate(class = if_else(drug == "DNR", "AC", if_else(
+    drug == "DOX", "AC", if_else(drug == "EPI", "AC", "nAC")
+  ))) %>%
+  mutate(TOP2i = if_else(drug == "DNR", "yes", if_else(
+    drug == "DOX", "yes", if_else(drug == "EPI", "yes", if_else(drug == "MTX", "yes", "no"))
+  ))) 
                          
  mat_colors <- list( 
    drug= c("#F1B72B","#8B006D","#DF707E","#3386DD","#707031","#41B333"),
    indv=c("#1B9E77", "#D95F02" ,"#7570B3", "#E7298A" ,"#66A61E", "#E6AB02"),
    time=c("pink", "chocolate4"),
-   class=c("yellow1","lightgreen"), 
-   TOP2i =c("darkgreen","goldenrod"))                        
+   class=c("yellow1","darkorange1"), 
+   TOP2i =c("darkgreen","lightgreen"))                        
                          
 names(mat_colors$drug)   <- unique(counts_corr_mat$drug)                      
 names(mat_colors$indv) <- unique(counts_corr_mat$indv)
@@ -399,23 +484,33 @@ ComplexHeatmap::pheatmap(mcor,
                          # column_title=(paste0("RNA-seq log"[2]~"cpm correlation")),
         annotation_col = counts_corr_mat,
         annotation_colors = mat_colors,
-                         fontsize=10,
-                         fontsize_row = 8,
-                         angle_col="90",
-                         treeheight_row=25,
-                         fontsize_col = 8,
-                         treeheight_col = 20)
+        heatmap_legend_param = mat_colors,
+        fontsize=10,
+        fontsize_row = 8,
+        angle_col="90",
+        treeheight_row=25,
+        fontsize_col = 8,
+        treeheight_col = 20)
 ```
+To see more RNA-seq related analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html#correlation_heatmap_of_counts_matrix)
 
-### Fig. S7
+## S7 Fig: PC1 associates with drug treatment and treatment time, while PC2 associates with individual.
 
-
-```{r Fig S7}
+```{r Fig S7, message=FALSE, warning=FALSE}
 pca_all_anno <- readRDS("data/supp_pca_all_anno.RDS")
-pca_all_anno <- pca_all_anno %>% 
-  mutate(drug = case_match(drug, "Daunorubicin"~"DNR","Doxorubicin"~"DOX", "Epirubicin"~"EPI","Mitoxantrone"~"MTX","Trastuzumab"~"TRX","Vehicle"~"VEH", .default = drug))
-
-
+pca_all_anno <- pca_all_anno %>%
+  mutate(
+    drug = case_match(
+      drug,
+      "Daunorubicin" ~ "DNR",
+      "Doxorubicin" ~ "DOX",
+      "Epirubicin" ~ "EPI",
+      "Mitoxantrone" ~ "MTX",
+      "Trastuzumab" ~ "TRX",
+      "Vehicle" ~ "VEH",
+      .default = drug
+    )
+  )
 facs <- c("indv", "drug", "time")
 names(facs) <- c("Individual", "Treatment", "Time")
 
@@ -445,52 +540,33 @@ plot_versus_pc <- function(df, pc_num, fac) {
 }
 
 for (f in facs) {
-    # Plot f versus PC1 and PC2
-  f_v_pc1 <- arrangeGrob(plot_versus_pc(pca_all_anno, 1, f)+theme_bw())
-  f_v_pc2 <- arrangeGrob(plot_versus_pc(pca_all_anno, 2, f)+theme_bw())
+  # Plot f versus PC1 and PC2
+  f_v_pc1 <-
+    arrangeGrob(plot_versus_pc(pca_all_anno, 1, f) + theme_bw())
+  f_v_pc2 <-
+    arrangeGrob(plot_versus_pc(pca_all_anno, 2, f) + theme_bw())
   grid.arrange(f_v_pc1, f_v_pc2, ncol = 2, top = names(facs)[which(facs == f)])
 }
 
 ```
+To see more RNA-seq related analysis [click here](9)https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html)
 
-### Fig. S8
+
+## S8 Fig: Thousands of gene expression changes are induced in response to TOP2i treatment over 24 hours.
 ```{r Fig S8 volcano, fig.width=10}
 
 Volcanoplots <- readRDS("output/Volcanoplot_10.RDS")
 Volcanoplots
 ```
+(To see more RNA-seq related analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html#Volcano_plots_from_pairwise_gene_analysis)
 
-### Fig. S9
 
+
+## S9 Fig: ACs affect expression of nearly half of all expressed genes after 24 hours of treatment.
+### S9 FigA  Proportion of genes DE in response to drug treatment
 ```{r Fig S9}
 toplistall <- readRDS("data/toplistall.RDS")
-toplistall %>% 
-  group_by(time, id) %>% 
-  mutate(id=factor(id, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ','VEH'))) %>% 
-  mutate(time= factor(time,
-     levels=c("3_hours","24_hours"),
-              labels=c("3 hours","24 hours"))) %>%
-  ggplot(., aes(x=id, y=logFC))+
-  geom_boxplot(aes(fill=id))+
-  ggpubr::fill_palette(palette =drug_pal_fact)+
-  guides(fill=guide_legend(title = "Treatment"))+
-  # facet_wrap(sigcount~time)+
-  theme_bw()+
-  xlab("")+
-  ylab(expression("Log"[2]*" fold change"))+
-  theme_bw()+
-  facet_wrap(~time)+
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        # axis.ticks = element_line(linewidth = 1.5),
-        # axis.line = element_line(linewidth = 1.5),
-        strip.background = element_rect(fill = "transparent"),
-        axis.text.x = element_blank(),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
-
-# drug_palNoVeh <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031")
-
-ggsave("output/Figures/Percent_DEG-1.eps",width = 6, height =4, units = "in")
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 toplistall %>%
     mutate(id=factor(id, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ','VEH'))) %>% 
   mutate(time= factor(time,
@@ -524,30 +600,43 @@ toplistall %>%
         axis.text.y = element_text(size = 8, color = "black", angle = 0),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
-
-ggsave("output/Figures/Percent_DEG-2.eps",width = 6, height =4, units = "in")
 ```
 
-### Fig. S10
-```{r Fig S10 Drug specific genes, eval=FALSE, fig.height=8.5, fig.width=12, message=FALSE, warning=FALSE, include=FALSE}
+### S9 FigB Magnitude of response to drug treatment
+```{r FIGS9B}
 
-supp10_24hlist <- readRDS("data/supp10_24hlist.RDS")
-list2env(supp10_24hlist, envir = .GlobalEnv)
-mitopg <- plot_grid(densityMTXsp, MtxBplot, Mtxgenesp_example, 
-                    nrow = 1, 
-                    rel_heights = c(.8,2,1), 
-                    rel_widths=c(1.2,1,1.5),
-                    scale=c(1,0.8,0.8))
+toplistall %>% 
+  group_by(time, id) %>% 
+  mutate(id=factor(id, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ','VEH'))) %>% 
+  mutate(time= factor(time,
+     levels=c("3_hours","24_hours"),
+              labels=c("3 hours","24 hours"))) %>%
+  ggplot(., aes(x=id, y=logFC))+
+  geom_boxplot(aes(fill=id))+
+  ggpubr::fill_palette(palette =drug_pal_fact)+
+  guides(fill=guide_legend(title = "Treatment"))+
+  # facet_wrap(sigcount~time)+
+  theme_bw()+
+  xlab("")+
+  ylab(expression("Log"[2]*" fold change"))+
+  theme_bw()+
+  facet_wrap(~time)+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        # axis.ticks = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
+        strip.background = element_rect(fill = "transparent"),
+        axis.text.x = element_blank(),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 
-Daunpg <- plot_grid(densityDNRsp, DnrBplot, Dnrgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
-Doxopg <- plot_grid(densityDOXsp, DoxBplot, Doxgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
-Epipg <- plot_grid(densityEPIsp, EpiBplot, Epigenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
-allfinal <- plot_grid(Doxopg,Epipg,Daunpg,mitopg,nrow=4)
+```
 
+## S10 Fig: A small number of genes respond to a single drug only.
 
-# allfinal <- readRDS("output/allfinal_sup10.RDS") 
-plot(allfinal)
+### 3 hours  
+
+```{r Fig S10 3hr Drug specific genes,  fig.height=8.5, fig.width=12, message=FALSE, warning=FALSE}
 
 supp10_3hlist <- readRDS("data/supp10_3hlist.RDS")
 list2env(supp10_3hlist, envir = .GlobalEnv)
@@ -565,12 +654,39 @@ Epi3pg <- plot_grid(densityEPI3sp, NA, NA, nrow = 1, rel_heights = c(.8,2,1), re
 
 allfinal3hour <- plot_grid(Doxo3pg,Epi3pg,Daun3pg,mito3pg,nrow=4, rel_heights = c(1,1,1,1))
 # allfinal3hour <- readRDS("data/allfinal3hour.RDS")
-plot(allfinal3hour)
+
+allfinal3hour
 ```
-### Fig S10 Drug Specific Pathways
+
+### 24 hours  
+
+```{r Fig S1024hr Drug specific genes,  fig.height=8.5, fig.width=12, message=FALSE, warning=FALSE}
+
+supp10_24hlist <- readRDS("data/supp10_24hlist.RDS")
+list2env(supp10_24hlist, envir = .GlobalEnv)
+mitopg <- plot_grid(densityMTXsp, MtxBplot, Mtxgenesp_example, 
+                    nrow = 1, 
+                    rel_heights = c(.8,2,1), 
+                    rel_widths=c(1.2,1,1.5),
+                    scale=c(1,0.8,0.8))
 
 
-```{r Fig S10 3h drug spec path}
+Daunpg <- plot_grid(densityDNRsp, DnrBplot, Dnrgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+Doxopg <- plot_grid(densityDOXsp, DoxBplot, Doxgenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+Epipg <- plot_grid(densityEPIsp, EpiBplot, Epigenesp_example, nrow = 1, rel_heights = c(.8,2,1), rel_widths=c(1.2,1,1.5),scale=c(1,0.8,0.8))
+allfinal <- plot_grid(Doxopg,Epipg,Daunpg,mitopg,nrow=4, labels = "AUTO")
+
+
+# allfinal <- readRDS("output/allfinal_sup10.RDS") 
+plot(allfinal)
+
+```
+
+## S11 Fig: Stringently-identified drug-specific response genes are enriched in biological processes.
+
+
+### 3 hours
+```{r Fig S11 stringent, echo= TRUE, include=TRUE}
 gostres3Dnrdeg_sp <- readRDS("data/DEG-GO/gostres3Dnrdeg_sp.RDS")
 
 Dnr3_sp_DEGtable <- gostres3Dnrdeg_sp$result %>%
@@ -626,7 +742,9 @@ Mtx3_sp_DEGtable  %>%
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 
 ```
-```{r FigS12 24h- drug spec path}
+
+###24 hours
+```{r FigS11 24h- drug spec path}
 
 DX_sp_DEGgostres <- readRDS("data/DEG-GO/gostresDOXdeg_sp.RDS")
 MT_sp_DEGgostres <- readRDS("data/DEG-GO/gostresMTXdeg_sp.RDS")
@@ -688,8 +806,8 @@ MT_sp_DEGtable  %>%
 
 
 ```
+## S12 Fig: Most genes that are differentially expressed in response to treatment at three hours are also differentially expressed at 24 hours.
 
-### Fig. S12
 
 ```{r Fig venntimepoints}
 DNRvenn<- readRDS ("output/DNRvenn.RDS")
@@ -699,15 +817,19 @@ MTXvenn<- readRDS ("output/MTXvenn.RDS")
 
 plot_grid(DNRvenn,DOXvenn,EPIvenn,MTXvenn,nrow=2, ncol = 2)
 ```
+More on DE gene analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html)
 
-### Fig. S12
-```{r Fig S12 Cormotif, eval=FALSE, include=FALSE}
+## S13 Fig: Four gene expression signatures capture the response to TOP2i over time.
+### S13 FigA
+```{r Fig S13A Cormotif}
 
 cormotif_initial <- readRDS("data/cormotif_initialall.RDS")
 Cormotif::plotIC(cormotif_initial)
 ```
 
-```{r Fig S12 Cormotif genes, fig.height=10, fig.width=6,out.width ="80%"}
+### S13 FigB
+
+```{r Fig S13B Cormotif genes, fig.height=10, fig.width=6,out.width ="80%"}
 motif_NRrep <-  readRDS("output/motif_NRrep.RDS")
 motif_ERrep <-  readRDS("output/motif_ERrep.RDS")
 motif_TIrep <-  readRDS("output/motif_TI_rep.RDS")
@@ -732,48 +854,112 @@ plot_grid(motif_ERrep,motif_TIrep,motif_LRrep,motif_NRrep,nrow = 4,ncol = 1)
 
 ```
 
-```{r Fig S13 GO Cormotif, echo=FALSE, fig.height=14, fig.width=8, out.height="80%"}
+
+### S13 FigC
+
+
+```{r Fig S13C GO Cormotif, echo=TRUE, fig.height=14, fig.width=8, out.height="80%"}
 motif_list_GO <- readRDS("output/supplementary_motif_list_GO.RDS")
-list2env(motif_list_GO,envir=.GlobalEnv)
-motifcol <-  c("#F8766D", "#00BFC4","#7CAE00",  "#C77CFF")
-GOmotiflong <-list("EAR"=ER3f,"ESR"=TI3f,"LR"=LR3f, "NR"=NR1f)
+list2env(motif_list_GO, envir = .GlobalEnv)
+motifcol <-  c("#F8766D", "#00BFC4", "#7CAE00",  "#C77CFF")
+GOmotiflong <- list(
+  "EAR" = ER3f,
+  "ESR" = TI3f,
+  "LR" = LR3f,
+  "NR" = NR1f
+)
 GOBPlong <- data.table::rbindlist(GOmotiflong, idcol = "motif")
-p <- GOBPlong %>% mutate(motif=factor(motif,levels =c("EAR","ESR","LR","NR"))) %>% 
+p <-
+  GOBPlong %>% mutate(motif = factor(motif, levels = c("EAR", "ESR", "LR", "NR"))) %>%
   
-ggplot(., aes(x = log_val, y=reorder(term_name, order_val, desc=FALSE),col=motif)) +
-    geom_point(aes(size = intersection_size, col=motif)) +
-  scale_y_discrete(labels = scales::label_wrap(40))+
-  facet_grid(motif~., scales = "free_y")+
-  scale_color_discrete(type=motifcol)+
-    guides(col=guide_legend(title="Motif"), 
-           size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('Top 10 enriched GO:BP terms for each motif') +
-     xlab(expression("-log"[10]~"(p-value)"))+
-      ylab("GO:BP term")+
-      theme_bw()+
- theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 8, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  ggplot(., aes(
+    x = log_val,
+    y = reorder(term_name, order_val, desc = FALSE),
+    col = motif
+  )) +
+  geom_point(aes(size = intersection_size, col = motif)) +
+  scale_y_discrete(labels = scales::label_wrap(40)) +
+  facet_grid(motif ~ ., scales = "free_y") +
+  scale_color_discrete(type = motifcol) +
+  guides(col = guide_legend(title = "Motif"),
+         size = guide_legend(title = "# of intersected \n terms")) +
+  ggtitle('Top 10 enriched GO:BP terms for each motif') +
+  xlab(expression("-log"[10] ~ "(p-value)")) +
+  ylab("GO:BP term") +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = rel(1.5), hjust = 0.5),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.ticks = element_line(linewidth = 1.5),
+    axis.line = element_line(linewidth = 1.5),
+    axis.text = element_text(
+      size = 8,
+      color = "black",
+      angle = 0
+    ),
+    strip.text.x = element_text(
+      size = 15,
+      color = "black",
+      face = "bold"
+    )
+  )
 
 g <- ggplot_gtable(ggplot_build(p))
 stripr <- which(grepl('strip-r', g$layout$name))
-fills <- c("#F8766D", "#00BFC4","#7CAE00",  "#C77CFF")
+fills <- c("#F8766D", "#00BFC4", "#7CAE00",  "#C77CFF")
 k <- 1
 for (i in stripr) {
   j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
   g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
-  k <- k+1
+  k <- k + 1
 }
 
 grid.draw(g)
 
 ```
 
-### Fig. S15
-```{r Fig S15,fig.height=3, fig.width=14}
+More on Baysian gene analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Cormotifcluster_analysis.html).
+
+
+## S14 Fig: AC treatments induce a small number of gene expression variation changes across individuals.
+```{r qvalue S14}
+library(qvalue)
+ 
+organized_drugframe <- read.csv("data/organized_drugframe.csv",
+                                row.names = 1)
+
+Var_test_list24 <- readRDS("data/Var_test_list24.RDS")
+set24 <- names(Var_test_list24) 
+
+framefun24 <- data.frame(ENTREZID=rownames(organized_drugframe))
+for (i in 1:length(set24)){
+  a <- set24[i]
+    s_list<- Var_test_list24[[i]][[13]]
+  names(s_list) <- rownames(organized_drugframe)
+  hold<- map_df(s_list, ~as.data.frame(.x$p.value), .id="ENTREZID")
+   framefun24[paste0(a)] <- hold$`.x$p.value`
+ 
+}
+
+est24pDNR <- qvalue(p=framefun24$DNR.VEH.24)
+est24pDOX <- qvalue(p=framefun24$DOX.VEH.24)
+est24pEPI <- qvalue(p=framefun24$EPI.VEH.24)
+est24pMTX <- qvalue(p=framefun24$MTX.VEH.24)
+est24pTRZ <- qvalue(p=framefun24$TRZ.VEH.24)
+
+  
+hist(est24pDNR)+labs(caption= "DNR 24")
+hist(est24pDOX)+labs(caption= "DOX 24")
+hist(est24pEPI)+labs(caption= "EPI 24")
+hist(est24pMTX)+labs(caption= "MTX 24")
+hist(est24pTRZ)+labs(caption= "TRZ 24")
+
+```
+
+## S15 Fig: TOP2i treatments induce expression changes in some genes that correlate with cardiotoxicity.
+
+
+```{r Fig S15,fig.height=3, fig.width=12,out.width="80%"}
 gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
 GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 
