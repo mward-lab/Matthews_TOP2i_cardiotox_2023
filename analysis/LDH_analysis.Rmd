@@ -159,7 +159,7 @@ ggplot(norm_LDH48, aes(x = as.factor(Conc), y = ldh, group=as.factor(Conc))) +
 ```
 
 
-#24 hour LDH analysis
+# 24 hour LDH analysis
 
 Data input
 ```{r ldh 24h results, echo=TRUE, message=FALSE, warning=FALSE}

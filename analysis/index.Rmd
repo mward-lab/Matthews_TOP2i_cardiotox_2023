@@ -65,7 +65,3 @@ Data set comparisons
 
 [Seoane data](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Seoane_chrom.html)
 
-# Older Analysis
-Click on this [link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/RNAseqanalysis.html) to see my results from the first analysis 
-You can also look at my page of GO analysis on both the Bayesian gene analysis and Pairwise gene analysis.  
-[GO enrichment analysis](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_analysis.html)
