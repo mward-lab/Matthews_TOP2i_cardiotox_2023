@@ -1,5 +1,5 @@
 ---
-title: "Figure 7"
+title: "Figure 7: AC treatments induce transcriptional variation across individuals over time."
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -7,14 +7,25 @@ output:
     code_folding: 'show'
 ---
 
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svglite','png','pdf'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
 ```
 
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
 ```{r packages loading}
 
 library(tidyverse)
@@ -55,9 +66,11 @@ Sup4genes <- Sup4seoane  %>%
 
 ```
 
-# Figure 7
+## Figure 7: AC treatments induce transcriptional variation across individuals over time.
 
-```{r graph of var by drug indv, fig.height=5, fig.width=6}
+
+### A) Mean gene expression
+```{r meangene expr}
 mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
 
 
@@ -69,6 +82,48 @@ drug_frame<- mean_vardrug1 %>%
   mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
   group_by(treatment, time, calc) %>% 
   as.data.frame
+
+
+
+drug_frame %>% 
+  filter(calc!="var") %>% 
+  ggplot(., aes(x= treatment, y=values,fill=treatment))+
+  geom_boxplot(outlier.shape=NA)+
+  geom_signif(comparisons =list(c("TRZ","VEH"),
+                                c("MTX","VEH"),
+                                c("DNR","VEH"),
+                                c("EPI","VEH"),
+                                c("DOX","VEH")),
+              test= "t.test",
+              tip_length = 0.01,
+              map_signif_level=FALSE,
+              textsize =4,
+              y_position=11,
+              step_increase = 0.05)+
+  facet_wrap(.~time)+
+  ggtitle("Means")+
+  ylim(0,18)+
+ scale_fill_manual(values=drug_pal_fact)+
+  theme_bw()+
+  xlab(" ")+
+  ylab(expression("counts log"[2]~"cpm "))+
+  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+
+
+
+```
+
+
+### B) Variance in gene expression
+
+```{r graph of var by drug indv, fig.height=5, fig.width=6}
+
 
 drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
@@ -120,41 +175,13 @@ drug_frame %>%
   facet_wrap(~time)+
   ggtitle("var")#+
   # ylim(0,0.5)
-drug_frame %>% 
-  filter(calc!="var") %>% 
-  ggplot(., aes(x= treatment, y=values,fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c("TRZ","VEH"),
-                                c("MTX","VEH"),
-                                c("DNR","VEH"),
-                                c("EPI","VEH"),
-                                c("DOX","VEH")),
-              test= "t.test",
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=11,
-              step_increase = 0.05)+
-  facet_wrap(.~time)+
-  ggtitle("Means")+
-  ylim(0,18)+
- scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(" ")+
-  ylab(expression("counts log"[2]~"cpm "))+
-  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
-
 
 
 ```
 
 
+
+### C) Pairwise correlation of drug response variance
 
 ```{r FSTAT corr, fig.height=7, fig.width=7}
 
@@ -225,3 +252,4 @@ ha <- HeatmapAnnotation(df=mat_colF, col=mat_colors)
    
  
 ```
+More analysis of the variablity in gene expression can be found [at this link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/variance_scrip.html).

@@ -1,5 +1,5 @@
 ---
-title: "Inital RNA-seq analysis, Pairwise"
+title: "RNA-seq analysis, Pairwise"
 author: "ERM"
 date: "20230414"
 output: 

@@ -1,5 +1,5 @@
 ---
-title: "Figure 6"
+title: "Figure 6: Chromatin regulators that mediate breast cancer sensitivity to ACs are enriched amongst early TOP2i response genes. "
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -9,11 +9,22 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svglite','png'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
 ```
 
 ```{r packages loading}
@@ -52,11 +63,9 @@ Sup4genes <- Sup4seoane  %>%
 
 ```
 
-# Figure 7
-Chromatin regulators that mediate breast cancer sensitivity to ACs are enriched amongst early TOP2i response genes  
+## Figure 6: Chromatin regulators that mediate breast cancer sensitivity to ACs are enriched amongst early TOP2i response genes. 
 
-
-## A. Heatmap of Chromatin regulator gene sets
+### A. Heatmap of Chromatin regulator gene sets
 
 n= 408 is the Supplemental of curated Chromatin regulators
 
@@ -164,12 +173,12 @@ draw(ht_map, heatmap_legend_side="left")
 # ht_opt(RESET = TRUE)
 ```
 
+More analysis of the Seoane data is at [this link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Seoane_chrom.html)
+
+### B.  Log~2~ cpm of *KAT6B*
 
 
-## B.  Log~2~ cpm of *KAT6B*
-
-
-```{r logcpm kat6b, fig.width=6, fig.height=3}
+```{r logcpm kat6b, fig.width=6, fig.height=4}
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
   ##GOI needs to be ENTREZID
   df <- cpmcounts
@@ -216,15 +225,15 @@ top_bot_legend <- get_legend(Kat6save)
 ```
 
 
-## C.  Log~2~ cpm of *KDM4B*
+### C.  Log~2~ cpm of *KDM4B*
 
 
 ```{r logcpm kdm4b,fig.width=7, fig.height=6}
-
+library(cowplot)
 KDM4B_save <- cpm_boxplot(cpmcounts,GOI='23030',"Dark2",drug_pal_fact,
   ylab=(expression(atop(" ",italic("KDM4B")~log[2]~"cpm "))))
 KDMnl <- KDM4B_save + theme(legend.position = "NULL")
-KDMnl
+# KDMnl
 
 leftside<- plot_grid(Katnl,KDMnl, nrow=2)
 plot_grid(leftside,top_bot_legend,nrow=1, rel_widths = c(1,.2))
