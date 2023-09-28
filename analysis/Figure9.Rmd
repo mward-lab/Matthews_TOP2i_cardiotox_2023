@@ -1,19 +1,31 @@
 ---
-title: "Figure 9"
+title: "Figure 9: Genes in AC toxicity-associated loci respond to TOP2i"
 author: "ERM"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svg','png'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
 ```
 
-```{r packages loading,echo=FALSE}
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
+```{r packages loading,echo=TRUE}
 library(edgeR)
 library(tidyverse)
 library(ggsignif)
@@ -26,7 +38,7 @@ library(kableExtra)
 library(broom)
 library(ComplexHeatmap)
 ```
-```{r data loading,echo=FALSE}
+```{r data loading,echo=TRUE}
 toplistall <- readRDS("data/toplistall.RDS")
 siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist, envir = .GlobalEnv)
@@ -36,15 +48,13 @@ backGL <- read.csv("data/backGL.txt",     row.names =1)
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
 
-Arr_geneset <- readRDS("data/Arr_geneset.RDS")
-HF_geneset <- readRDS("data/HF_geneset.RDS")
-CAD_geneset <- readRDS("data/CAD_geneset.RDS")
+
 col_fun1 = circlize::colorRamp2(c(-1, 3), c("white", "purple"))
 col_funFC= circlize::colorRamp2(c(-2,0, 2), c("darkgreen","white", "darkorange2"))
 col_funTOX = circlize::colorRamp2(c(-1,0, 1), c("darkviolet", "white","firebrick4"))
 
 ```
-```{r function load,echo=FALSE}
+```{r function load,echo=TRUE}
 
 pearson_extract <- function(corr_df,ENTREZID) {
   ld50_plot <- corr_df %>%
@@ -183,11 +193,11 @@ pearson_cardiotox <- function(corr_df,ENTREZID) {
 
 ```
 
-# Figure 9
+## Figure 9: Genes in AC toxicity-associated loci respond to TOP2i
 
 
-## B. GWAS and TWAS associated genes 
-```{r  GWAS-TWAS FC heatmap,echo=FALSE}
+### A. GWAS and TWAS associated genes 
+```{r  GWAS-TWAS FC heatmap,echo=TRUE}
 GWAS_goi <- read.csv("output/GWAS_goi.csv",row.names = 1)
 ##get the abs FC of all GOI
 GWASabsFCsig <- 
@@ -217,9 +227,7 @@ GWASabsFC <- toplistall %>%
               values_from = logFC) %>% 
   column_to_rownames(var="id") %>%
   as.matrix()
-# col_study_fun = circlize::colorRamp2(c(0, 5, 10), c("blue", "white", "red"))
-# col_study_motif=circlize::colorRamp2(c(1,2,3,4), c("#7CAE00", "#C77CFF"))
- 
+
 study_anno <- data.frame(Study=c("GWAS","GWAS","TWAS","TWAS","GWAS","GWAS","GWAS","TWAS"),motif=c(rep("LR",7),"NR"))
 rownames(study_anno) <- colnames(GWASabsFC)
 ht <- HeatmapAnnotation(df = study_anno,
@@ -255,99 +263,166 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
 
 ```
 
+### B. Lactate dehydrogenase release
+```{r LDH assay24hr}
+RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt")
+level_order2 <- c('75','87','77','79','78','71')
+RNAnormlist <- RNAnormlist %>% 
+  mutate(indv= factor(indv,levels= level_order2))
+  
+RNAnormlist %>% 
+  mutate(Drug = factor(Drug, levels = c(  "DOX", 
+                                          "EPI",
+                                          "DNR",
+                                          "MTX",
+                                          "TRZ",
+                                          "VEH"))) %>%
+  ggplot(., aes(x=Drug, y=rldh))+
+  geom_boxplot(position = "identity", fill = drug_pal_fact)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c("VEH","DOX"),
+                                c("VEH","EPI"),
+                                c("VEH","DNR"),
+                                c("VEH","MTX"),
+                                c("VEH","TRZ")),
+              test="t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual")+
+  xlab("")+
+  ylab("Relative LDH activity ")+
+  ggtitle("Lactate dehydrogenase release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+         axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+```
+### C. Troponin I release
+```{r TropI release 24}
+
+RNAnormlist %>% 
+  mutate(Drug = factor(Drug, levels = c(  "DOX", 
+                                          "EPI",
+                                          "DNR",
+                                          "MTX",
+                                          "TRZ",
+                                          "VEH"))) %>%
+  ggplot(., aes(x=Drug, y=rtnni))+
+  geom_boxplot(position = "identity", fill = drug_pal_fact)+
+  geom_point(aes(col=indv, size =3,alpha=0.5))+
+  geom_signif(comparisons =list(c("VEH","DOX"),
+                                c("VEH","EPI"),
+                                c("VEH","DNR"),
+                                c("VEH","MTX"),
+                                c("VEH","TRZ")),
+              test="t.test",
+              map_signif_level=TRUE,
+              textsize =4,
+              step_increase = 0.1)+
+  theme_classic()+
+  guides(size = "none",alpha="none")+
+  scale_color_brewer(palette = "Dark2", name = "Individual")+
+  xlab("")+
+  ylab("Relative Troponin I levels ")+
+  ggtitle("Troponin I release at 24 hours")+
+  theme_classic()+
+  theme(strip.background = element_rect(fill = "transparent")) +
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        legend.position = "none",
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 12, color = "black", angle = 0),
+        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+
+```
+
+For more Troponin I and LDH release analysis, [check this link out](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/LDH_analysis.html#Normalization_of_TNNI_and_LDH_to_RNA_concentration)
 
 
-## New Cardiotoxicity Score
+#### Cardiotoxicity Score code
 
 
-```{r ctxscore, message=FALSE, warning=FALSE, include=FALSE,echo=FALSE}
+```{r ctxscore, message=FALSE, warning=FALSE, include=TRUE,echo=TRUE}
 
 gene_corr_fig9 <- readRDS("output/gene_corr_fig9.RDS")
-toxlist <- data.frame(ENTREZID=c(5916,23371,283337,64078,80010))
-toxtest_2pt<- gene_corr_fig9 %>% 
-  rowwise() %>% 
-   # mutate_all(~replace(., is.na(.), 0)) %>% 
-   mutate(tox_score = mean(c(rldh,rtnni),na.rm = TRUE)) %>% 
-  dplyr::select(entrezgene_id,hgnc_symbol,Drug,indv,time,counts,tox_score) %>% 
-  filter(entrezgene_id %in%toxlist$ENTREZID)
+toxlist <- data.frame(ENTREZID = c(5916, 23371, 283337, 64078, 80010))
+toxtest_2pt <- gene_corr_fig9 %>%
+  rowwise() %>%
+  # mutate_all(~replace(., is.na(.), 0)) %>%
+  mutate(tox_score = mean(c(rldh, rtnni), na.rm = TRUE)) %>%
+  dplyr::select(entrezgene_id, hgnc_symbol, Drug, indv, time, counts, tox_score) %>%
+  filter(entrezgene_id %in% toxlist$ENTREZID)
 
-# toxtest_3pt<- gene_corr_fig9 %>% 
-#    mutate(LD50= (1/LD50)) %>% 
-#   rowwise() %>% 
-#    # mutate_all(~replace(., is.na(.), 0)) %>% 
-#    mutate(tox_score = mean(c(rldh,rtnni,LD50),na.rm = TRUE)) %>% 
-#   dplyr::select(entrezgene_id,hgnc_symbol,Drug,indv,time,counts,tox_score) %>% 
-#   filter(entrezgene_id %in%toxlist$ENTREZID)%>% 
-#   dplyr::filter(Drug !="VEH") %>% 
-#    dplyr::filter(Drug != "TRZ")
 
 toxdata2pt <- list()
 
 
-for (hay in 1:5){
- 
-data <- toxtest_2pt %>%
-    dplyr::filter(entrezgene_id==toxlist$ENTREZID[hay]) 
-
-dataname <- unique(data$hgnc_symbol)
-
-p <- ggplot(data, aes(x=tox_score, y=counts))+
-    geom_point(aes(col=indv))+
-    geom_smooth(method="lm")+
-    facet_wrap(hgnc_symbol~Drug, scales="free")+
-    theme_classic()+
-   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-      ggpubr::stat_cor(method="pearson",
-             aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-             color = "red",
-             label.x.npc = 0,
-             label.y.npc=1,
-             size = 3)
-tox_build <- ggplot_build(p)
-plot(p)
-
- toxdata2pt[[dataname]] <- list('tox_val'= c(tox_build$data[[3]]$r),
-                          'sig_tox'=c(tox_build$data[[3]]$p.value))
+for (hay in 1:5) {
+  data <- toxtest_2pt %>%
+    dplyr::filter(entrezgene_id == toxlist$ENTREZID[hay])
+  
+  dataname <- unique(data$hgnc_symbol)
+  
+  p <- ggplot(data, aes(x = tox_score, y = counts)) +
+    geom_point(aes(col = indv)) +
+    geom_smooth(method = "lm") +
+    facet_wrap(hgnc_symbol ~ Drug, scales = "free") +
+    theme_classic() +
+    scale_color_brewer(
+      palette = "Dark2",
+      name = "Individual",
+      label = c("1", "2", "3", "4", "5", "6")
+    ) +
+    ggpubr::stat_cor(
+      method = "pearson",
+      aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
+      color = "red",
+      label.x.npc = 0,
+      label.y.npc = 1,
+      size = 3
+    )
+  tox_build <- ggplot_build(p)
+  plot(p)
+  
+  toxdata2pt[[dataname]] <- list(
+    'tox_val' = c(tox_build$data[[3]]$r),
+    'sig_tox' = c(tox_build$data[[3]]$p.value)
+  )
 }
-
-
-# toxdata3pt <- list()
-# 
-# for (hay in 1:3){
-#  
-# data <- toxtest_3pt %>%
-#     dplyr::filter(entrezgene_id==toxlist$ENTREZID[hay]) 
-# 
-# dataname <- unique(data$hgnc_symbol)
-# 
-# p <- ggplot(data, aes(x=tox_score, y=counts))+
-#     geom_point(aes(col=indv))+
-#     geom_smooth(method="lm")+
-#     facet_wrap(hgnc_symbol~Drug, scales="free")+
-#     theme_classic()+
-#    scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
-#     ggpubr::stat_cor(method="pearson",
-#              aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-#              color = "red",
-#              label.x.npc = 0,
-#              label.y.npc=1,
-#              size = 3)
-# tox_build <- ggplot_build(p)
-# plot(p)
-
-#  toxdata3pt[[dataname]] <- list('tox_val'= c(tox_build$data[[3]]$r),
-#                           'sig_tox'=c(tox_build$data[[3]]$p.value))
-# }
 
 ```
 
-### extract for heatmap
+extraction code for heatmap below gene expression boxes
+### D. SNP-related gene expression and cardiotoxicity score
+
+
+The extraction code for the horizontal heatmap below gene expression boxplots in the paper is located here.
+
+
 
 #### RARG
-```{r heatmap long RARG,echo=FALSE}
-# toxdata(RARG)map
+
+
+```{r  RARG data,fig.width=4, fig.height=3,echo=TRUE}
+
+cpm_boxplot24h(cpmcounts,GOI='5916',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("RARG")~log[2]~"cpm "))))
+
+```
+
+```{r heatmap long RARG,echo=TRUE}
+
 toxdata2ptr <- map_df(toxdata2pt, ~as.data.frame(.x), .id="gene")
-# toxdata3ptr <- map_df(toxdata3pt, ~as.data.frame(.x), .id="gene")
+
 RARG_sig_mat2ptr <- toxdata2ptr %>% 
   dplyr::filter(gene=="RARG") %>% 
   dplyr::select(sig_tox) %>% 
@@ -380,16 +455,19 @@ Heatmap(RARG_mat2ptr, name = " RARG 2pt Cardiotox score",
 
 
 
-```{r  RARG data,fig.width=4, fig.height=3,echo=FALSE}
 
-cpm_boxplot24h(cpmcounts,GOI='5916',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("RARG")~log[2]~"cpm "))))
+#### TNS2
+
+
+```{r  TNS2 data,fig.width=4, fig.height=3,echo=TRUE}
+
+cpm_boxplot24h(cpmcounts,GOI='23371',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("TNS2")~log[2]~"cpm "))))
 
 ```
 
 
-#### TNS2
-```{r heatmap long TNS2,echo=FALSE}
+```{r heatmap long TNS2,echo=TRUE}
 
 TNS2_sig_mat2ptr <- toxdata2ptr %>% 
   dplyr::filter(gene=="TNS2") %>% 
@@ -401,17 +479,6 @@ TNS2_mat2ptr <- toxdata2ptr%>%
   dplyr::select(tox_val) %>% 
     t() %>% 
   matrix()
-
-# TNS2_sig_mat3ptr <- toxdata3ptr %>% 
-#   dplyr::filter(gene=="TNS2") %>% 
-#   dplyr::select(sig_tox) %>% 
-#   t() %>% 
-#   matrix()
-# TNS2_mat3ptr <- toxdata3ptr%>% 
-#   dplyr::filter(gene=="TNS2") %>% 
-#   dplyr::select(tox_val) %>% 
-#     t() %>% 
-#   matrix()
 
 Heatmap(TNS2_mat2ptr, name = " TNS2 2pt Cardiotox score", 
          cluster_rows = FALSE,
@@ -429,37 +496,24 @@ Heatmap(TNS2_mat2ptr, name = " TNS2 2pt Cardiotox score",
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
 
-# Heatmap(TNS2_mat3ptr, name = " TNS2 3pt Cardiotox score", 
-#          cluster_rows = FALSE,
-#         cluster_columns = FALSE, 
-#         row_names_side = "left",
-#         column_title_side = "top",
-#         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
-#         column_names_rot = 0, 
-#         col= col_funTOX,
-#         row_labels = c("DOX","EPI","DNR","MTX"),
-#         column_names_gp = gpar(fontsize = 12,fontface="italic"),
-#         column_names_centered = TRUE,
-#          cell_fun = function(j, i, x, y, width, height, fill) {
-#         if(TNS2_sig_mat3ptr[i, j] <0.05)
-#             grid.text("*", x, y, gp = gpar(fontsize = 20))
-# })
 
 ```
 
-
-
-```{r  TNS2 data,fig.width=4, fig.height=3,echo=FALSE}
-
-cpm_boxplot24h(cpmcounts,GOI='23371',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("TNS2")~log[2]~"cpm "))))
-
-```
 
 
 
 #### ZNF740
-```{r heatmap long ZF740,echo=FALSE}
+
+
+```{r ZNF740 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=TRUE}
+
+
+cpm_boxplot24h(cpmcounts,GOI='283337',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("ZNF740")~log[2]~"cpm "))))
+
+
+```
+```{r heatmap long ZF740,echo=TRUE}
 ZNF740_sig_mat2ptr <- toxdata2ptr %>% 
   dplyr::filter(gene=="ZNF740") %>% 
   dplyr::select(sig_tox) %>% 
@@ -470,17 +524,6 @@ ZNF740_mat2ptr <- toxdata2ptr%>%
   dplyr::select(tox_val) %>% 
     t() %>% 
   matrix()
-
-# ZNF740_sig_mat3ptr <- toxdata3ptr %>% 
-#   dplyr::filter(gene=="ZNF740") %>% 
-#   dplyr::select(sig_tox) %>% 
-#   t() %>% 
-#   matrix()
-# ZNF740_mat3ptr <- toxdata3ptr%>% 
-#   dplyr::filter(gene=="ZNF740") %>% 
-#   dplyr::select(tox_val) %>% 
-#     t() %>% 
-#   matrix()
 
 Heatmap(ZNF740_mat2ptr, name = " ZNF740 2pt Cardiotox score", 
          cluster_rows = FALSE,
@@ -498,42 +541,29 @@ Heatmap(ZNF740_mat2ptr, name = " ZNF740 2pt Cardiotox score",
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
 
-# Heatmap(ZNF740_mat3ptr, name = " ZNF740 3pt Cardiotox score", 
-#          cluster_rows = FALSE,
-#         cluster_columns = FALSE, 
-#         row_names_side = "left",
-#         column_title_side = "top",
-#         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
-#         column_names_rot = 0, 
-#         col= col_funTOX,
-#         row_labels = c("DOX","EPI","DNR","MTX"),
-#         column_names_gp = gpar(fontsize = 12,fontface="italic"),
-#         column_names_centered = TRUE,
-#          cell_fun = function(j, i, x, y, width, height, fill) {
-#         if(ZNF740_sig_mat3ptr[i, j] <0.05)
-#             grid.text("*", x, y, gp = gpar(fontsize = 20))
-# })
 
 ```
 
 
 
-
-
-```{r ZNF740 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=FALSE}
-
-
-cpm_boxplot24h(cpmcounts,GOI='283337',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("ZNF740")~log[2]~"cpm "))))
-
-
-```
 
 
 
 #### RMI1
 
-```{r RMI1,echo=FALSE}
+
+
+```{r RMI1 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=TRUE}
+
+
+cpm_boxplot24h(cpmcounts,GOI='80010',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("RMI1")~log[2]~"cpm "))))
+
+
+```
+
+
+```{r RMI1,echo=TRUE}
 toxdata2ptr <- map_df(toxdata2pt, ~as.data.frame(.x), .id="gene")
 
 RMI1_sig_mat2ptr <- toxdata2ptr %>% 
@@ -569,19 +599,21 @@ Heatmap(RMI1_mat2ptr, name = " RMI1 2pt Cardiotox score",
 
 
 
+#### SLC28A3
 
-```{r RMI1 data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=FALSE}
 
 
-cpm_boxplot24h(cpmcounts,GOI='80010',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("RMI1")~log[2]~"cpm "))))
+```{r SLC data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=TRUE}
+
+
+cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
+  ylab=(expression(atop(" ",italic("SLC28A3")~log[2]~"cpm "))))
 
 
 ```
 
-#### SLC28A3
 
-```{r SLC28A3,echo=FALSE}
+```{r SLC28A3,echo=TRUE}
 toxdata2ptr <- map_df(toxdata2pt, ~as.data.frame(.x), .id="gene")
 
 SLC28A3_sig_mat2ptr <- toxdata2ptr %>% 
@@ -615,108 +647,4 @@ Heatmap(SLC28A3_mat2ptr, name = " SLC28A3 2pt Cardiotox score",
 
 ```
 
-
-
-
-```{r SLC data, eval=TRUE, fig.height=3, fig.width=4, include=TRUE,echo=FALSE}
-
-
-cpm_boxplot24h(cpmcounts,GOI='64078',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("SLC28A3")~log[2]~"cpm "))))
-
-
-```
-
-
-
-```{r LDH,data load, fig.height=4, fig.width=6,echo=FALSE}
-drug_pal <- c("#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
-
-level_order2 <- c('75','87','77','79','78','71')
-drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-
-RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt",row.names = 1)
-
-RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c(  "DOX",
-                                          "EPI",
-                                          "DNR",
-                                          "MTX",
-                                          "TRZ",
-                                          "VEH"))) %>%
- mutate(indv= factor(indv,levels= level_order2)) %>% 
-  ggplot(., aes(x=Drug, y=rldh))+
-  geom_boxplot(position = "identity", fill = drug_pal_fact)+
-  geom_point(aes(col=indv, size =3,alpha=0.5))+
- geom_signif(comparisons =list(c("VEH","DOX"),
-                                c("VEH","EPI"),
-                                c("VEH","DNR"),
-                                c("VEH","MTX"),
-                                c("VEH","TRZ")),
-              test="t.test",
-              map_signif_level=TRUE,
-              textsize =4,
-              step_increase = 0.1)+
-  theme_classic()+
-  guides(size = "none",alpha="none")+
-  scale_color_brewer(palette = "Dark2", name = "Individual")+
-  xlab("")+
-  ylab("Relative LDH activity ")+
-  ggtitle("Lactate dehydrogenase release at 24 hours")+
-  theme_classic()+
-  theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = "none",
-         axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
-
-```
-
- Troponin I release
-
-
-```{r troponin_24, fig.height=4, fig.width=6,echo=FALSE}
-
-
-RNAnormlist %>% 
-  mutate(Drug = factor(Drug, levels = c(  "DOX",
-                                          "EPI",
-                                          "DNR",
-                                          "MTX",
-                                          "TRZ",
-                                          "VEH"))) %>%
- mutate(indv= factor(indv,levels= level_order2)) %>% 
-  ggplot(., aes(x=Drug, y=rtnni))+
-  geom_boxplot(position = "identity", fill = drug_pal_fact)+
-  geom_point(aes(col=indv, size =3,alpha=0.5))+
-  geom_signif(comparisons =list(c("VEH","DOX"),
-                                c("VEH","EPI"),
-                                c("VEH","DNR"),
-                                c("VEH","MTX"),
-                                c("VEH","TRZ")),
-              test="t.test",
-              map_signif_level=TRUE,
-              textsize =4,
-              step_increase = 0.1)+
-  theme_classic()+
-  guides(size = "none",alpha="none")+
-  scale_color_brewer(palette = "Dark2", name = "Individual")+
-  xlab("")+
-  ylab("Relative Troponin I levels ")+
-  ggtitle("Troponin I release at 24 hours")+
-  theme_classic()+
-  theme(strip.background = element_rect(fill = "transparent")) +
-  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        legend.position = "none",
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 12, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-ggsave("output/Figures/LDH24h.eps",width = 4, height =6, units = "in")
-```
 
