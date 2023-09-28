@@ -1,5 +1,5 @@
 ---
-title: "Variance"
+title: "Variance evaluation"
 author: "ERM"
 date: "`r Sys.Date()`"
 runtime: shiny
@@ -9,11 +9,22 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = c('svglite','png'),
-	echo = FALSE,
+knitr::opts_chunk$set(
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
 ```
 
 ```{r package loading, message=FALSE, warning=FALSE}
@@ -33,61 +44,11 @@ library(ComplexHeatmap)
 
 ```
 
-## initial calculations and data loading
+### variance of genes across treatment
 
-```{r data loading, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-filcpm_counts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
-time <- rep((rep(c("3h", "24h"), c(6,6))), 6) 
-time <- ordered(time, levels =c("3h", "24h"))
+This contains the wrangling of the data frame and analysis code, and is how the analysis was processed.
 
-indv <- as.factor(rep(c(1,2,3,4,5,6), c(12,12,12,12,12,12))) 
-
-
-group <-(rep(c("1","2","3","4","5","6","7","8","9","10","11","12"),6)) 
-group <- factor(group,levels = c( 1,2,3,4,5,6,7,8,9,10,11,12))
-
-drug <- rep(c("DNR","DOX","EPI","MTX","TRZ", "VEH"),12)
-
-
-mean_varframe <- filcpm_counts %>% 
-  rowwise() %>% 
-  mutate(mean.1.3=mean(c_across(Da.1.3h:Ve.1.3h)),
-         var.1.3=var(c_across(Da.1.3h:Ve.1.3h)),
-         mean.2.3=mean(c_across(Da.2.3h:Ve.2.3h)),
-         var.2.3=var(c_across(Da.2.3h:Ve.2.3h)),
-         mean.3.3=mean(c_across(Da.3.3h:Ve.3.3h)),
-         var.3.3=var(c_across(Da.3.3h:Ve.3.3h)),
-         mean.4.3=mean(c_across(Da.4.3h:Ve.4.3h)),
-         var.4.3=var(c_across(Da.4.3h:Ve.4.3h)),
-         mean.5.3=mean(c_across(Da.5.3h:Ve.5.3h)),
-         var.5.3=var(c_across(Da.5.3h:Ve.5.3h)),
-         mean.6.3=mean(c_across(Da.6.3h:Ve.6.3h)),
-         var.6.3=var(c_across(Da.6.3h:Ve.6.3h)),
-         mean.1.24=mean(c_across(Da.1.24h:Ve.1.24h)),
-         var.1.24=var(c_across(Da.1.24h:Ve.1.24h)),
-         mean.2.24=mean(c_across(Da.2.24h:Ve.2.24h)),
-         var.2.24=var(c_across(Da.2.24h:Ve.2.24h)),
-         mean.3.24=mean(c_across(Da.3.24h:Ve.3.24h)),
-         var.3.24=var(c_across(Da.3.24h:Ve.3.24h)),
-         mean.4.24=mean(c_across(Da.4.24h:Ve.4.24h)),
-         var.4.24=var(c_across(Da.4.24h:Ve.4.24h)),
-         mean.5.24=mean(c_across(Da.5.24h:Ve.5.24h)),
-         var.5.24=var(c_across(Da.5.24h:Ve.5.24h)),
-         mean.6.24=mean(c_across(Da.6.24h:Ve.6.24h)),
-         var.6.24=var(c_across(Da.6.24h:Ve.6.24h))) 
-
-
-  
-  rownames(mean_varframe) <- rownames(filcpm_counts)
- 
-write.csv(mean_varframe,"data/mean_varframe.csv")
-
-
-```
-
-### by drug
-
-```{r manip mean across indv, eval=FALSE,echo=FALSE }
+```{r manip mean across indv, eval=FALSE,echo=TRUE}
 filcpm_counts <- read.csv("data/filtered_cpm_counts.csv", row.names = 1)
 
 mean_vardrug <- filcpm_counts %>% 
@@ -142,26 +103,83 @@ write.csv(mean_vardrug1,"data/mean_vardrug1.csv")
 
 ```
 
-### plot by drug
+### plotting of data
 
 ```{r graph of var by drug indv, fig.height=5, fig.width=6}
 mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
 
 
-drug_frame<- mean_vardrug1 %>% 
-  rownames_to_column(var = "entrezid") %>% 
-  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = "short", values_to = "values") %>% 
-  separate(short, into=c("calc","treatment","time")) %>% 
-  mutate(treatment= factor(treatment, levels = c("Do","Ep","Da","Mi","Tr","Ve"),labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>% 
-  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
-  group_by(treatment, time, calc) %>% 
+drug_frame <- mean_vardrug1 %>%
+  rownames_to_column(var = "entrezid") %>%
+  pivot_longer(cols = mean.Da.3:var.Ve.24,
+               names_to = "short",
+               values_to = "values") %>%
+  separate(short, into = c("calc", "treatment", "time")) %>%
+  mutate(treatment = factor(
+    treatment,
+    levels = c("Do", "Ep", "Da", "Mi", "Tr", "Ve"),
+    labels = c("DOX", "EPI", "DNR", "MTX", "TRZ", "VEH")
+  )) %>%
+  mutate(time = factor(
+    time,
+    levels = c("3", "24"),
+    labels = c("3 hours", "24 hours")
+  )) %>%
+  group_by(treatment, time, calc) %>%
   as.data.frame
 
-drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_pal_fact <-
+  c("#8B006D",
+    "#DF707E",
+    "#F1B72B",
+    "#3386DD",
+    "#707031",
+    "#41B333")
 
-drug_frame %>% 
-  filter(calc!="mean") %>% 
-  ggplot(., aes(x= treatment, y=values, fill=treatment))+
+drug_frame %>%
+  filter(calc != "mean") %>%
+  ggplot(., aes(x = treatment, y = values, fill = treatment)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_signif(
+    comparisons = list(
+      c("DOX", "VEH"),
+      c("EPI", "VEH"),
+      c("DNR", "VEH"),
+      c("MTX", "VEH"),
+      c("TRZ", "VEH")
+    ),
+    test = "t.test",
+    tip_length = 0.01,
+    map_signif_level = FALSE,
+    textsize = 4,
+    y_position = 0.85,
+    step_increase = 0.1
+  ) +
+  facet_wrap( ~ time) +
+  ggtitle("Variance") +
+  coord_cartesian(ylim = c(0, 1)) +
+  # ylim(0,2)+
+  scale_fill_manual(values = drug_pal_fact) +
+  theme_bw() +
+  xlab(" ") +
+  ylab(expression("variance of log "[2] ~ " cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
+
+drug_frame %>%
+  filter(calc!="mean") %>%
+  ggplot(., aes(x= treatment, y=values))+
   geom_boxplot(outlier.shape=NA)+
   geom_signif(comparisons =list(c("DOX","VEH"),
                                 c("EPI","VEH"),
@@ -169,77 +187,59 @@ drug_frame %>%
                                 c("MTX","VEH"),
                                 c("TRZ","VEH")),
               test= "t.test",
-              tip_length = 0.01,
               map_signif_level=FALSE,
               textsize =4,
-              y_position=0.85,
+               y_position=(.5),
               step_increase = 0.1)+
   facet_wrap(~time)+
-  ggtitle("Variance")+
-  coord_cartesian(ylim = c(0,1))+
-  # ylim(0,2)+
-scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(" ")+
-  ylab(expression("variance of log "[2]~" cpm "))+
-  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+  ggtitle("var statistics")#+
+  # ylim(0,0.5)
 
-# drug_frame %>% 
-#   filter(calc!="mean") %>% 
-#   ggplot(., aes(x= treatment, y=values))+
-#   geom_boxplot(outlier.shape=NA)+
-#   geom_signif(comparisons =list(c("DOX","VEH"),
-#                                 c("EPI","VEH"),
-#                                 c("DNR","VEH"),
-#                                 c("MTX","VEH"),
-#                                 c("TRZ","VEH")),
-#               test= "t.test",
-#               map_signif_level=FALSE,
-#               textsize =4,
-#                y_position=(.5),
-#               step_increase = 0.1)+
-#   facet_wrap(~time)+
-#   ggtitle("var")#+
-#   # ylim(0,0.5)
-
-drug_frame %>% 
-  filter(calc!="var") %>% 
-  ggplot(., aes(x= treatment, y=values,fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c("TRZ","VEH"),
-                                c("MTX","VEH"),
-                                c("DNR","VEH"),
-                                c("EPI","VEH"),
-                                c("DOX","VEH")),
-              test= "t.test",
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=11,
-              step_increase = 0.05)+
-  facet_wrap(.~time)+
-  ggtitle("Means")+
-  ylim(0,15)+
- scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(" ")+
-  ylab(expression("counts log"[2]~"cpm "))+
-  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
-
+drug_frame %>%
+  filter(calc != "var") %>%
+  ggplot(., aes(x = treatment, y = values, fill = treatment)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_signif(
+    comparisons = list(
+      c("TRZ", "VEH"),
+      c("MTX", "VEH"),
+      c("DNR", "VEH"),
+      c("EPI", "VEH"),
+      c("DOX", "VEH")
+    ),
+    test = "t.test",
+    tip_length = 0.01,
+    map_signif_level = FALSE,
+    textsize = 4,
+    y_position = 11,
+    step_increase = 0.05
+  ) +
+  facet_wrap(. ~ time) +
+  ggtitle("Means") +
+  ylim(0, 18) +
+  scale_fill_manual(values = drug_pal_fact) +
+  theme_bw() +
+  xlab(" ") +
+  ylab(expression("counts log"[2] ~ "cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
 
 ```
+
+### Finding where the variance may exist
+
+This is initial analysis to see if DOX response eGenes are increased in variance within my data.
 
 ```{r evaluate eGenes in var}
 mean_vardrug1 <- read.csv("data/mean_vardrug1.csv",row.names = 1)
@@ -270,6 +270,7 @@ ggplot(drug_frame2, aes(x= treatment, y=values))+
               map_signif_level=TRUE,
               textsize =4,
               step_increase = 0.1)+
+  ggtitle(" Dox eGenes")+
   # stat_compare_means(method= "anova", label.y=15, label.x =2)+
   facet_wrap(time~calc, scales = "free_y")
 
@@ -310,9 +311,9 @@ drug_frame2 %>%
   
 ```
 
+We found significant differences to the vehicle in the EPI 24 hour variance. This was based on a smaller set of genes,
 
-
-
+This was a different way of wrangling the values with var.test as the function across all genes.
 
 ```{r data wrangling-evalute variance, message=FALSE, warning=FALSE, eval=FALSE}
 
@@ -391,7 +392,7 @@ names(Var_test_list3) <- c('DNR.VEH.3','DOX.VEH.3','EPI.VEH.3','MTX.VEH.3','TRZ.
                      saveRDS(Var_test_list3,"data/Var_test_list3.RDS") 
 ```
 
-Watch for the caption to tell which data set is plotted!
+Watch for the caption to tell which data set is plotted! \#### 3 hour
 
 ```{r extract pvalue and qvalue list 3 hours}
 
@@ -474,6 +475,11 @@ qval3hr <-  DOXstorelist3 %>%
   select(ENTREZID, ends_with("qvalues"))
 # saveRDS(qval3hr,"data/qval3hr.RDS")
 ```
+
+We ended up using the qvalue package to find genes that are more than likely highly variable genes.
+
+#### 24 hour
+
 ```{r extract pvalue and qvalue list 24 hours}
 
                  
@@ -543,134 +549,13 @@ qval24hr <-  DOXstorelist24 %>%
     full_join(.,DNRstorelist24, by="ENTREZID") %>% 
     full_join(.,MTXstorelist24, by="ENTREZID") %>% 
     full_join(.,TRZstorelist24, by="ENTREZID") %>% 
-  select(ENTREZID, ends_with("qvalues"))
-saveRDS(qval24hr,"data/qval24hr.RDS") 
+  select(ENTREZID, ends_with("qvalues"), ends_with("24"))
+# saveRDS(qval24hr,"data/qval24hr.RDS") 
 
  
 ```
 
-
-
-### BH correction
-
-I tried doing by hand using i= p.value rank m= 14084 (number of tests) FDR= 0.05 I first ranked the list, divided the rank by 14084, then took the highest pvalue that was less than 0.05 of the calculated crit. pvalue(i/m). I then ran the pvalue numbers through `p.adjust(data, method = "BH")` and found the easier way to calculate the adj.p.value. (I mean, the hard way is fun, but I did it incorrectly somehow). The way I tried to do it was commented out in the code. The table contains the values after `p.adjust` was run.
-
-```{r BH correction on framefun}
-
-rank3 <- framefun3 %>% 
-  # mutate(DNR_rank=dense_rank(DNR.VEH.3),
-  #        DOX_rank=dense_rank(DOX.VEH.3),
-  #        EPI_rank=dense_rank(EPI.VEH.3),
-  #        MTX_rank=dense_rank(MTX.VEH.3),
-  #        TRZ_rank=dense_rank(TRZ.VEH.3)) %>% 
-  # mutate(DNR_BH=DNR_rank/14084,
-  #        DOX_BH=DOX_rank/14084,
-  #        EPI_BH=EPI_rank/14084,
-  #        MTX_BH=MTX_rank/14084,
-  #        TRZ_BH=TRZ_rank/14084) %>% 
-  # mutate(sigDNR=if_else(DNR.VEH.3<DNR_BH&DNR_BH<=0.05,"sig","ns"),
-  #        sigDOX=if_else(DOX.VEH.3<DOX_BH&DOX_BH<=0.05,"sig","ns"),
-  #        sigEPI=if_else(EPI.VEH.3<EPI_BH&EPI_BH<=0.05,"sig","ns"),
-  #        sigMTX=if_else(MTX.VEH.3<MTX_BH&MTX_BH<=0.05,"sig","ns"),
-  #        sigTRZ=if_else(TRZ.VEH.3<TRZ_BH&TRZ_BH<=0.05,"sig","ns")) %>% 
-  mutate(p.adjustDOX= round(p.adjust(DOX.VEH.3, method= "BH"),3),
-         p.adjustEPI= round(p.adjust(EPI.VEH.3, method= "BH"),3),
-         p.adjustDNR= round(p.adjust(DNR.VEH.3, method= "BH"),3),
-         p.adjustMTX= round(p.adjust(MTX.VEH.3, method= "BH"),3),
-         p.adjustTRZ= round(p.adjust(TRZ.VEH.3, method= "BH"),3)) %>% 
-  dplyr::select(ENTREZID,c(starts_with("DOX")|ends_with("DOX")),
-                c(starts_with("EPI")|ends_with("EPI")),
-                c(starts_with("DNR")|ends_with("DNR")),
-                c(starts_with("MTX")|ends_with("MTX")),
-                c(starts_with("TRZ")|ends_with("TRZ")))
-
-# renderDataTable({datatable(rank3, options = list(
-#   order = list(list(2, 'desc'), list(3, 'desc')))
-# )})
-rank3 %>% 
-  mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = " 3 hour highly var genes and pvalues") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = TRUE,bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-
-
-rank24 <-  framefun24 %>% 
-  # mutate(DNR_rank=dense_rank(DNR.VEH.24),
-  #        DOX_rank=dense_rank(DOX.VEH.24),
-  #        EPI_rank=dense_rank(EPI.VEH.24),
-  #        MTX_rank=dense_rank(MTX.VEH.24),
-  #        TRZ_rank=dense_rank(TRZ.VEH.24)) %>% 
-  # mutate(DNR_BH=DNR_rank/14084,
-  #        DOX_BH=DOX_rank/14084,
-  #        EPI_BH=EPI_rank/14084,
-  #        MTX_BH=MTX_rank/14084,
-  #        TRZ_BH=TRZ_rank/14084) %>% 
-  # mutate(sigDNR=if_else(DNR.VEH.24<DNR_BH&DNR_BH<=0.05,"sig","ns"),
-  #        sigDOX=if_else(DOX.VEH.24<DOX_BH&DOX_BH<=0.05,"sig","ns"),
-  #        sigEPI=if_else(EPI.VEH.24<EPI_BH&EPI_BH<=0.05,"sig","ns"),
-  #        sigMTX=if_else(MTX.VEH.24<MTX_BH&MTX_BH<=0.05,"sig","ns"),
-  #        sigTRZ=if_else(TRZ.VEH.24<TRZ_BH&TRZ_BH<=0.05,"sig","ns")) %>% 
-  mutate(p.adjustDOX= round(p.adjust(DOX.VEH.24, method= "BH"),3),
-         p.adjustEPI=round(p.adjust(EPI.VEH.24, method= "BH"),3),
-         p.adjustDNR=round(p.adjust(DNR.VEH.24, method= "BH"),3),
-         p.adjustMTX=round(p.adjust(MTX.VEH.24, method= "BH"),3),
-         p.adjustTRZ=round(p.adjust(TRZ.VEH.24, method= "BH"),3)) %>% 
-  dplyr::select(ENTREZID,c(starts_with("DOX")|ends_with("DOX")),
-                c(starts_with("EPI")|ends_with("EPI")),
-                c(starts_with("DNR")|ends_with("DNR")),
-                c(starts_with("MTX")|ends_with("MTX")),
-                c(starts_with("TRZ")|ends_with("TRZ")))
-# renderDataTable({datatable(rank24, options = list(
-#   order = list(list(2, 'desc'), list(3, 'desc')))
-# )})
-rank24 %>% 
-  mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = " 24 hour highly var genes and pvalues") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = TRUE,bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-```
-
-```{r new gene list plots}
-# bhDOX_24_var <- sigvar_24h %>% filter(set=="DOX24") %>% select(ENTREZID)#1089 
-# bhEPI_24_var <- sigvar_24h %>% filter(set=="EPI24")%>% select(ENTREZID)#2211
-# bhDNR_24_var <- sigvar_24h %>% filter(set=="DNR24")%>% select(ENTREZID)#928
-# bhMTX_24_var <- sigvar_24h %>% filter(set=="MTX24")%>% select(ENTREZID)#269
-# bhTRZ_24_var <- sigvar_24h %>% filter(set=="TRZ24")%>% select(ENTREZID)#157
-# 
-# bhgeneset_24 <- list(bhDOX_24_var$ENTREZID, bhEPI_24_var$ENTREZID, bhDNR_24_var$ENTREZID)
-# names(bhgeneset_24) <- c("DOX_24_var","EPI_24_var","DNR_24_var")
-# ggVennDiagram::ggVennDiagram(bhgeneset_24,
-#               category.names = c("DOX ",
-#                                  "EPI",
-#                                  "DNR"),
-#                                  
-#                                 
-#               show_intersect = FALSE,
-#               set_color = "black",
-#               category_size = c(6,6,6,6),
-#               label = "count",
-#               label_percent_digit = 1,
-#               label_size = 4,
-#               label_alpha = 0,
-#               label_color = "black",
-#               edge_lty = "solid", set_size = 4.5)+
-#   scale_x_continuous(expand = expansion(mult = .3))+
-#   scale_y_continuous(expand = expansion(mult = .2))+
-#   scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
-#   scale_fill_distiller(palette="Spectral", direction = -1)+
-#   # labs(title = "24 hour var genes p. value <0.05",
-#   #      caption = paste("n =", length(unique(var24$ENTREZID)),"genes"))+
-#   # 
-#   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
-
-
-```
 ## evaluation of F statistic using correlation
-
 
 ```{r Fstatcorr}
 
@@ -706,20 +591,28 @@ for (i in 1:length(set24)){
  
 }
  col_fun <- circlize::colorRamp2(c(-1,0, 1), c("blue","white", "red"))
+ 
+# to combine with 3 hr
 matstat24 <- statfun24 %>%  
    column_to_rownames('ENTREZID') %>% 
    as.matrix(.) #%>%
    # rowwise() %>% 
+# 24 hour spearman correlation
+
 statfun24 %>%  
    column_to_rownames('ENTREZID') %>% 
    # as.matrix(.) #%>%
-   cor(., use="pairwise") %>% 
+   cor(.,method="spearman", use="pairwise") %>% 
    Heatmap(., column_title = "24 hour F stat corr", col=col_fun)
+# to combine with 24 hr
 matstat3 <-  
   statfun3 %>% 
    column_to_rownames('ENTREZID') %>% 
    as.matrix(.)
- statfun3 %>% 
+ 
+
+
+statfun3 %>% 
    column_to_rownames('ENTREZID') %>% 
    # as.matrix(.) %>% 
    # rowwise() %>% 
@@ -735,8 +628,12 @@ statfun24 %>%
    column_to_rownames('ENTREZID') %>% 
    # as.matrix(.) %>% 
    # rowwise() %>% 
-   cor(.) %>% 
-   Heatmap(., column_title = "3 & 24 hr F stat corr", col=col_fun)
+   cor(., method="spearman") %>% 
+   Heatmap(., column_title = "3 & 24 hr F stat corr", 
+           col=col_fun,
+           cell_fun = function(j, i, x, y, width, height, fill) {
+        grid.text(sprintf("%.2f", .[i, j]), x, y, gp = gpar(fontsize = 10))})
+
 matframeall <-framefun24 %>% 
   full_join(., framefun3, by="ENTREZID") %>% 
    column_to_rownames('ENTREZID') %>% 
@@ -745,7 +642,7 @@ framefun3 %>%
   column_to_rownames('ENTREZID') %>% 
    # as.matrix(.) %>% 
    # rowwise() %>% 
-   cor(., use="pairwise") %>% 
+   cor(., method="spearman",use="pairwise") %>% 
    Heatmap(., column_title = "3 hour pval corr", col=col_fun)
 matframe24 <- framefun24 %>% 
   # full_join(., framefun, by="ENTREZID") %>% 
@@ -758,24 +655,20 @@ framefun24 %>%
   column_to_rownames('ENTREZID') %>% 
    # as.matrix(.) %>% 
    # rowwise() %>% 
-   cor(.) %>% 
-   Heatmap(., column_title = "24 and 3 hour pval corr", col=col_fun)
+   cor(.,method="spearman") %>% 
+   Heatmap(., column_title = "24 and 3 hour p val correlation", col=col_fun,
+           cell_fun = function(j, i, x, y, width, height, fill) {
+        grid.text(sprintf("%.2f", .[i, j]), x, y, gp = gpar(fontsize = 10))})
 
-cor(x=matstat24,y=matframe24, use="pairwise") %>% 
-  Heatmap(., column_title = "Fstat and pvalue rows", col=col_fun,clustering_distance_rows = "pearson")
 
-cor(x=matstatall,y=matframeall, use="pairwise") %>% 
-  Heatmap(., column_title = "Fstat and pvalue cols", col=col_fun,clustering_distance_columns = "pearson")
-
-cor(x=matstatall,y=matframeall) %>% 
-  Heatmap(., column_title = "Fstat and pvalue euc", col=col_fun)
 
 
 ```
-### q stat plots
 
-```{r qstat plotsheatmp}
+### q stat plots using Spearman correlation
 
+```{r qstat plotsheatmap}
+# sum(qvalue24hr$EPIqvalues<0.1)
 
 qvalue3hr <- readRDS("data/qval3hr.RDS")
 qvalue3hr %>%  
@@ -783,25 +676,27 @@ qvalue3hr %>%
   select(!TRZqvalues) %>% 
    as.matrix(.) %>%
    # rowwise() %>% 
-   cor(.) %>% 
+   cor(., method="spearman") %>% 
   
-   Heatmap(., column_title = "3 hour q value corr", col=col_fun)
+   Heatmap(., column_title = "3 hour q value corr (Spearman)", col=col_fun,
+           )
 
 
 qvalue24hr <- readRDS("data/qval24hr.RDS")
 qvalue24hr %>%  
   column_to_rownames('ENTREZID') %>% 
   select(!MTXqvalues) %>%
+  select(ends_with("qvalues")) %>% 
    as.matrix(.) %>%
    # rowwise() %>% 
-   cor(.)%>%
+   cor(.,method="spearman", use="pairwise")%>%
   
-   Heatmap(., column_title = "24 hour q value corr", col=col_fun)
+   Heatmap(., column_title = "24 hour q value corr", col=col_fun,na_col = "tan",
+           cell_fun = function(j, i, x, y, width, height, fill) {
+        grid.text(sprintf("%.2f", .[i, j]), x, y, gp = gpar(fontsize = 10))})
 
 
 ```
-
-
 
 ## 3 and 24 hour histogram of var using un-adjusted and adjust p.values
 
@@ -846,11 +741,16 @@ hist(est24pMTX)+labs(caption= "MTX 24")
 hist(est24pTRZ)+labs(caption= "TRZ 24")
 
 
-plot(est24pDNR)
+plot(est24pDNR, caption =paste("DNR"))
+print("DNR")
 plot(est24pDOX)
+print("DOX")
 plot(est24pEPI)
+print("EPI")
 plot(est24pMTX)
+print("MTX")
 plot(est24pTRZ)
+print("TRZ")
 
 
 ```
@@ -891,10 +791,13 @@ names(geneset_3) <- c("DOX_3_var","EPI_3_var","DNR_3_var" ,"MTX_3_var","TRZ_3_va
 # saveRDS(geneset_24,"data/geneset_24.RDS")
 ```
 
-## Venn
+## Venn of highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r venn of 24 hours}
 
+geneset_24 <- readRDS("data/geneset_24.RDS")
 ggVennDiagram::ggVennDiagram(geneset_24,
               category.names = c("DOX\nn = 1089 ",
                                  "EPI\nn = 2211\n",
@@ -921,7 +824,9 @@ ggVennDiagram::ggVennDiagram(geneset_24,
 
 ```
 
-## 24 hour DOX
+## 24 hour DOX highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r GO analysis of DOX24}
 
@@ -979,7 +884,9 @@ DOX_var24_table %>%
 
 ```
 
-## 24 hour EPI
+## 24 hour EPI highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r GO analysis of EPI24}
 
@@ -999,8 +906,8 @@ DOX_var24_table %>%
 # saveRDS(EPI_var24gost,"data/DEG-GO/var/EPI_var24gost.RDS")
 EPI_var24gost <- readRDS("data/DEG-GO/var/EPI_var24gost.RDS")
 
-EPI_var24p <- gostplot(EPI_var24gost, capped = FALSE, interactive = TRUE)
-EPI_var24p
+# EPI_var24p <- gostplot(EPI_var24gost, capped = FALSE, interactive = TRUE)
+# EPI_var24p
 
 EPI_var24_table <- EPI_var24gost$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
@@ -1036,7 +943,7 @@ EPI_var24_table %>%
 EPI_var24_table %>% 
   filter(source=="KEGG") %>% 
     mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "KEGG EPI 24 hour enrichment terms of highly var genes") %>% 
+  kable(.,caption = "KEGG EPI 24 hour enrichment terms of highly var genes using nominal p value") %>% 
   
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
@@ -1045,7 +952,241 @@ EPI_var24_table %>%
 
 ```
 
-## 24 hour DNR
+
+### EPI 508 var genes (using q value <0.1)
+  Looking at variance in all treatment & time in the significantly variable EPI genes (n = 508)
+
+
+```{r epi 508 corr}
+EPIstore <- EPIstorelist24 %>% 
+  dplyr::filter(EPIqvalues<0.1)
+
+var508only <-  mean_vardrug1 %>% 
+  rownames_to_column(var = "entrezid") %>% 
+  mutate(entrezid=as.integer(entrezid)) %>% 
+  dplyr::filter(entrezid %in% EPIstore$ENTREZID) %>% 
+  column_to_rownames("entrezid") %>% 
+  dplyr::select(starts_with("var"))
+var_corr <- cor(var508only)
+
+ComplexHeatmap::Heatmap(var_corr)
+
+var50824only <-  var508only %>% 
+   dplyr::select(starts_with("var")&contains(".24"))
+  
+ 
+var_24corr <- cor(var50824only)
+ComplexHeatmap::Heatmap(var_24corr)
+
+var_all <- mean_vardrug1 %>% 
+   dplyr::select(starts_with("var"))
+
+var_24all <- mean_vardrug1 %>% 
+    dplyr::select(starts_with("var")&contains(".24"))
+
+var_allcorr <- cor(var_all)
+
+ComplexHeatmap::Heatmap(var_allcorr,col=col_fun)
+
+var_24allcorr <- cor(var_24all)
+
+ComplexHeatmap::Heatmap(var_24allcorr,col=col_fun)
+
+DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
+
+# storeEPI %>% 
+#   filter (ENTREZID %in% DOXreQTLs$ENTREZID) %>% 
+#   left_join(., backGL, by=c("ENTREZID"))
+
+ggVennDiagram::ggVennDiagram(list(unique(EPIstore$ENTREZID),DOXreQTLs$ENTREZID),category.names = c("EPI var\nn = 508","DOXreQTLs\nn = 142"))
+
+
+```
+
+```{r epivarvar}
+
+mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
+
+
+drug_frameepivar<- mean_vardrug1 %>% 
+  rownames_to_column(var = "entrezid") %>% 
+  dplyr::filter(entrezid %in% EPIstore$ENTREZID) %>% 
+  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = "short", values_to = "values") %>% 
+  separate(short, into=c("calc","treatment","time")) %>% 
+  mutate(treatment= factor(treatment, levels = c("Do","Ep","Da","Mi","Tr","Ve"),labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>% 
+  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
+  group_by(treatment, time, calc) %>% 
+  mutate(entrezid=as.integer(entrezid)) %>% 
+  as.data.frame
+
+drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+
+drug_frameepivar %>% 
+  filter(calc!="mean") %>% 
+  ggplot(., aes(x= treatment, y=values, fill=treatment))+
+  geom_boxplot(outlier.shape=NA)+
+  geom_signif(comparisons =list(c("DOX","VEH"),
+                                c("EPI","VEH"),
+                                c("DNR","VEH"),
+                                c("MTX","VEH"),
+                                c("TRZ","VEH")),
+              test= "t.test",
+              tip_length = 0.01,
+              map_signif_level=FALSE,
+              textsize =4,
+              y_position=0.85,
+              step_increase = 0.1)+
+  facet_wrap(~time)+
+  ggtitle("Variance of 508 highly variable EPI genes")+
+  # coord_cartesian(ylim = c(0,1))+
+  # ylim(0,2)+
+scale_fill_manual(values=drug_pal_fact)+
+  theme_bw()+
+  xlab(" ")+
+  ylab(expression("variance of log "[2]~" cpm "))+
+  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+
+
+drug_frameepivar %>% 
+  filter(calc!="var") %>% 
+  ggplot(., aes(x= treatment, y=values,fill=treatment))+
+  geom_boxplot(outlier.shape=NA)+
+  geom_signif(comparisons =list(c("TRZ","VEH"),
+                                c("MTX","VEH"),
+                                c("DNR","VEH"),
+                                c("EPI","VEH"),
+                                c("DOX","VEH")),
+              test= "t.test",
+              tip_length = 0.01,
+              map_signif_level=FALSE,
+              textsize =4,
+              y_position=11,
+              step_increase = 0.05)+
+  facet_wrap(.~time)+
+  ggtitle("Means of the 508 highly variable EPI genes")+
+  ylim(0,15)+
+ scale_fill_manual(values=drug_pal_fact)+
+  theme_bw()+
+  xlab(" ")+
+  ylab(expression("counts log"[2]~"cpm "))+
+  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
+          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
+          axis.title = element_text(size = 10, color = "black"),
+          axis.ticks = element_line(linewidth = 1.0),
+          panel.background = element_rect(colour = "black", size=1),
+          axis.text.x = element_blank(),
+          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+
+
+
+```
+
+## EPI var GO info
+GO analysis across the 508 genes
+```{r Epi-go-qvalue}
+
+
+# 
+# EPIvargostq <- gost(query = EPIstore$ENTREZID,
+#                     organism = "hsapiens", significant = FALSE,
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg =my_exp_genes$ENTREZID,
+#                     sources=c("GO:BP","KEGG"))
+# saveRDS(EPIvargostq,"data/DEG-GO/EPIvargostq.RDS")
+EPIvargostq <- readRDS("data/DEG-GO/EPIvargostq.RDS")
+# EPIvarq<- gostplot(EPIvargostq, capped = FALSE, interactive = TRUE)
+# EPIvarq
+
+EPI_table_var <- EPIvargostq$result %>% 
+  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
+ 
+ EPI_table_var  %>% 
+    dplyr::filter(source=="GO:BP") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=5 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), 
+                  col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)))+
+    scale_y_discrete(labels = scales::label_wrap(30))+
+    guides(col="none", 
+           size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('EPI highly var genes GO:BP terms') +
+     xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("GO: BP term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text = element_text(size = 10, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+  
+  EPI_table_var  %>% 
+    dplyr::filter(source=="KEGG") %>% 
+    dplyr::select(p_value,term_name,intersection_size) %>%
+    slice_min(., n=5 ,order_by=p_value) %>%
+    mutate(log_val = -log10(p_value)) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), 
+                  col= intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+   geom_vline(xintercept = (-log10(0.05)))+
+    scale_y_discrete(labels = scales::label_wrap(30))+
+    guides(col="none", 
+           size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('EPI highly var genes KEGG terms') +
+     xlab(expression(" -"~log[10]~("adj. p-value")))+
+    ylab("KEGG term")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+          axis.title = element_text(size = 15, color = "black"),
+          axis.ticks = element_line(linewidth = 1.5),
+          axis.line = element_line(linewidth = 1.5),
+          axis.text = element_text(size = 10, color = "black", angle = 0),
+          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
+ 
+ 
+ 
+  EPI_table_var %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+    kable(.,) %>% 
+    kable(.,caption = "KEGG GO:BP var enrichment terms ") %>% 
+    kable_paper("striped", full_width = FALSE) %>%
+    kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>%
+    scroll_box(width = "100%", height = "400px") 
+  
+  
+ EPI_table_var %>%  
+  filter(source=="KEGG") %>% 
+    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
+  kable(.,caption = "KEGG EPI var enrichment terms of highly var genes") %>% 
+  
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+  
+  
+  
+```
+we did not find significantly enriched GO:BP or KEGG pathways enrichment in the 508 highly variable EPI gene names
+
+
+
+## 24 hour DNR highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r GO analysis of DNR24}
 
@@ -1111,7 +1252,9 @@ DNR_var24_table %>%
 
 ```
 
-## 24 hour MTX
+## 24 hour MTX highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r GO analysis of MTX24}
 
@@ -1177,7 +1320,9 @@ MTX_var24_table %>%
 
 ```
 
-## 24 hour TRZ
+## 24 hour TRZ highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r GO analysis of TRZ24}
 
@@ -1243,7 +1388,9 @@ TRZ_var24_table %>%
 
 ```
 
-## 24 hour AC shared
+## 24 hour AC shared highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r GO analysis of AC_share24}
 venn24part <- VennDiagram::get.venn.partitions(geneset_24)
@@ -1310,7 +1457,9 @@ AC_share_var24_table %>%
 
 ```
 
-## 24 hour TOP2i shared
+## 24 hour TOP2i shared highly variable genes
+
+based on nominal pvalues \<0.05
 
 ```{r GO analysis of TOP2i24}
 
@@ -1377,846 +1526,4 @@ TOP2i_var24_table %>%
 
 ```
 
-## EPI var GO info
-```{r Epi-go-qvalue}
 
-
-
-# EPIvargost <- gost(query = EPIgoi$entrezgene_id,
-#                     organism = "hsapiens", significant = FALSE,
-#                     ordered_query = TRUE,
-#                     domain_scope = "custom",
-#                     measure_underrepresentation = FALSE,
-#                     evcodes = FALSE,
-#                     user_threshold = 0.05,
-#                     correction_method = c("fdr"),
-#                     custom_bg =expressedgenes$ENTREZID,
-#                     sources=c("GO:BP","KEGG"))
-# saveRDS(EPIvargost,"data/DEG-GO/EPIvargost.RDS")
-EPIvargost <- readRDS("data/DEG-GO/EPIvargost.RDS")
-EPIvar<- gostplot(EPIvargost, capped = FALSE, interactive = TRUE)
-EPIvar
-
-EPI_table_var <- EPIvargost$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))  
- 
- EPI_table_var  %>% 
-    dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), 
-                  col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-   geom_vline(xintercept = (-log10(0.05)))+
-    scale_y_discrete(labels = scales::label_wrap(30))+
-    guides(col="none", 
-           size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('EPI highly var genes GO:BP terms') +
-     xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-    theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-          axis.title = element_text(size = 15, color = "black"),
-          axis.ticks = element_line(linewidth = 1.5),
-          axis.line = element_line(linewidth = 1.5),
-          axis.text = element_text(size = 10, color = "black", angle = 0),
-          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
-  
-  EPI_table_var  %>% 
-    dplyr::filter(source=="KEGG") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), 
-                  col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-   geom_vline(xintercept = (-log10(0.05)))+
-    scale_y_discrete(labels = scales::label_wrap(30))+
-    guides(col="none", 
-           size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('EPI highly var genes KEGG terms') +
-     xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-    theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-          axis.title = element_text(size = 15, color = "black"),
-          axis.ticks = element_line(linewidth = 1.5),
-          axis.line = element_line(linewidth = 1.5),
-          axis.text = element_text(size = 10, color = "black", angle = 0),
-          strip.text.x = element_text(size = 15, color = "black", face = "bold"))
- 
- 
- 
-  EPI_table_var %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-    kable(.,) %>% 
-    kable(.,caption = "KEGG GO:BP var enrichment terms ") %>% 
-    kable_paper("striped", full_width = FALSE) %>%
-    kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>%
-    scroll_box(width = "100%", height = "400px") 
-  
-  
- EPI_table_var %>%  
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "KEGG EPI var enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-  
-  
-  
-```
-
-### EPI 508 var genes 
-
-```{r epivarvar}
-
-mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
-
-
-drug_frameepivar<- mean_vardrug1 %>% 
-  rownames_to_column(var = "entrezid") %>% 
-  dplyr::filter(entrezid %in% EPIstorelist24$ENTREZID) %>% 
-  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = "short", values_to = "values") %>% 
-  separate(short, into=c("calc","treatment","time")) %>% 
-  mutate(treatment= factor(treatment, levels = c("Do","Ep","Da","Mi","Tr","Ve"),labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>% 
-  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
-  group_by(treatment, time, calc) %>% 
-  mutate(entrezid=as.integer(entrezid)) %>% 
-  as.data.frame
-
-drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
-
-drug_frameepivar %>% 
-  filter(calc!="mean") %>% 
-  ggplot(., aes(x= treatment, y=values, fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c("DOX","VEH"),
-                                c("EPI","VEH"),
-                                c("DNR","VEH"),
-                                c("MTX","VEH"),
-                                c("TRZ","VEH")),
-              test= "t.test",
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=0.85,
-              step_increase = 0.1)+
-  facet_wrap(~time)+
-  ggtitle("Variance")+
-  # coord_cartesian(ylim = c(0,1))+
-  # ylim(0,2)+
-scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(" ")+
-  ylab(expression("variance of log "[2]~" cpm "))+
-  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
-
-
-drug_frameepivar %>% 
-  filter(calc!="var") %>% 
-  ggplot(., aes(x= treatment, y=values,fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c("TRZ","VEH"),
-                                c("MTX","VEH"),
-                                c("DNR","VEH"),
-                                c("EPI","VEH"),
-                                c("DOX","VEH")),
-              test= "t.test",
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=11,
-              step_increase = 0.05)+
-  facet_wrap(.~time)+
-  ggtitle("Means")+
-  ylim(0,15)+
- scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(" ")+
-  ylab(expression("counts log"[2]~"cpm "))+
-  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
-
-
-```
-
-
-
-``` {r epi 508 corr}
-EPIstore <- EPIstorelist24 %>% 
-  dplyr::filter(EPIqvalues<0.1)
-
-var508only <-  mean_vardrug1 %>% 
-  rownames_to_column(var = "entrezid") %>% 
-  mutate(entrezid=as.integer(entrezid)) %>% 
-  dplyr::filter(entrezid %in% EPIstore$ENTREZID) %>% 
-  column_to_rownames("entrezid") %>% 
-  dplyr::select(starts_with("var"))
-var_corr <- cor(var508only)
-
-ComplexHeatmap::Heatmap(var_corr)
-
-var50824only <-  var508only %>% 
-   dplyr::select(starts_with("var")&contains(".24"))
-  
- 
-var_24corr <- cor(var50824only)
-ComplexHeatmap::Heatmap(var_24corr)
-
-var_all <- mean_vardrug1 %>% 
-   dplyr::select(starts_with("var"))
-
-var_24all <- mean_vardrug1 %>% 
-    dplyr::select(starts_with("var")&contains(".24"))
-
-var_allcorr <- cor(var_all)
-
-ComplexHeatmap::Heatmap(var_allcorr,col=col_fun)
-
-var_24allcorr <- cor(var_24all)
-
-ComplexHeatmap::Heatmap(var_24allcorr,col=col_fun)
-
-DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
-
-# storeEPI %>% 
-#   filter (ENTREZID %in% DOXreQTLs$ENTREZID) %>% 
-#   left_join(., backGL, by=c("ENTREZID"))
-
-ggVennDiagram::ggVennDiagram(list(unique(EPIstore$ENTREZID),DOXreQTLs$ENTREZID),category.names = c("EPI var\nn = 508","DOXreQTLs\nn = 142"))
-
-
-```
-
-
-## using the Alternative hypothesis = "greater",
-
-(data not included currently)
-
-```{r alt data wrangling-evalute variance, message=FALSE, warning=FALSE, eval=FALSE}
-
-organized_drugframe <- read.csv("data/organized_drugframe.csv",
-                                row.names = 1)
-
-DNR.VEH.24alt <- organized_drugframe %>% 
-  select(c(starts_with("Da")&ends_with("24h")),
-         c(starts_with("Ve")&ends_with("24h"))) %>%
-  rowwise() %>% 
-  mutate(data=list(var.test(c_across(starts_with("Da")),c_across(starts_with("Ve")),alternative = "greater"))) 
-DOX.VEH.24alt <- organized_drugframe %>% 
-  select(c(starts_with("Do")&ends_with("24h")),
-         c(starts_with("Ve")&ends_with("24h"))) %>%
- rowwise() %>% 
-  mutate(data=list(var.test(c_across(starts_with("Do")),c_across(starts_with("Ve")),alternative = "greater")))
-
-EPI.VEH.24alt <- organized_drugframe %>% 
-  select(c(starts_with("Ep")&ends_with("24h")),
-         c(starts_with("Ve")&ends_with("24h"))) %>%
- rowwise() %>% 
-  mutate(data=list(var.test(c_across(starts_with("Ep")),c_across(starts_with("Ve")),alternative = "greater")))
-
-MTX.VEH.24alt <- organized_drugframe %>% 
-  select(c(starts_with("Mi")&ends_with("24h")),
-         c(starts_with("Ve")&ends_with("24h"))) %>%
-  rowwise() %>% 
-  mutate(data=list(var.test(c_across(starts_with("Mi")),c_across(starts_with("Ve")),alternative = "greater")))
-TRZ.VEH.24alt <- organized_drugframe %>% 
-  select(c(starts_with("Tr")&ends_with("24h")),
-         c(starts_with("Ve")&ends_with("24h"))) %>%
-  rowwise() %>% 
-  mutate(data=list(var.test(c_across(starts_with("Tr")),c_across(starts_with("Ve")),alternative = "greater")))
-
-
-Var_test_list24alt <- list(DNR.VEH.24alt,DOX.VEH.24alt,EPI.VEH.24alt,MTX.VEH.24alt,TRZ.VEH.24alt)
-                      
-names(Var_test_list24) <- c('DNR.VEH.24','DOX.VEH.24.alt','EPI.VEH.24.alt','MTX.VEH.24.alt','TRZ.VEH.24.alt')
-                    
-  
- saveRDS(Var_test_list24,"data/Var_test_list24alt.RDS")   
- 
- 
-```
-
-```{r alt extract pvalue list, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-                 
-organized_drugframe <- read.csv("data/organized_drugframe.csv",
-                                row.names = 1)
-
-Var_test_list24alt <- readRDS("data/Var_test_list24alt.RDS")
-set24 <- names(Var_test_list24alt) 
-
-framefun24alt <- data.frame(ENTREZID=rownames(organized_drugframe))
-for (i in 1:length(set24)){
-  a <- set24[i]
-    s_list<- Var_test_list24alt[[i]][[13]]
-  names(s_list) <- rownames(organized_drugframe)
-  hold<- map_df(s_list, ~as.data.frame(.x$p.value), .id="ENTREZID")
-   framefun24alt[paste0(a)] <- hold$`.x$p.value`
- 
-}
-statfun24alt <- data.frame(ENTREZID=rownames(organized_drugframe))
-for (i in 1:length(set24)){
-  a <- set24[i]
-    s_list<- Var_test_list24alt[[i]][[13]]
-  names(s_list) <- rownames(organized_drugframe)
-  hold<- map_df(s_list, ~as.data.frame(.x$statistic), .id="ENTREZID")
-   statfun24alt[paste0(a)] <- hold$`.x$statistic`
- 
-}
-statfun24alt %>% 
-  column_to_rownames("ENTREZID") %>% 
-  cor(.) %>% 
-Heatmap(., column_title = "24 hour alt = greater hypothesis F stat corr", col=col_fun)
-
-```
-
-## alt 24 hour histogram of var
-
-```{r plot pvalue as histo alt, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-framefun24alt %>% 
-  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
-  separate(combo, into= c("drug", NA,"time",NA)) %>%
-  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
-  ggplot(.,aes(x=p.value,col=drug,fill=drug))+
-  geom_histogram()+
-  facet_wrap(~drug)+
-  ggtitle("24 hour var.test p.value alternate hypo= greater")
-  
-```
-
-## Venn 24hr alternative hypo
-
-```{r gene filteringalt, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-backGL <-read_csv("data/backGL.txt", 
-    col_types = cols(...1 = col_skip()))
-
-var24alt<- list <- framefun24alt%>% 
-  pivot_longer(col=!ENTREZID,names_to= "combo", values_to = "p.value") %>% 
-  separate(combo, into= c("drug", NA,"time",NA)) %>%
-  mutate(drug = factor(drug, levels = c("DOX", "EPI", "DNR","MTX", "TRZ"))) %>% 
-  filter(p.value<0.05)
-
-DOX_24_vara <- var24alt %>% filter(drug=="DOX") %>% select(ENTREZID)#1534 
-EPI_24_vara <- var24alt %>% filter(drug=="EPI")%>% select(ENTREZID)#3147
-DNR_24_vara <- var24alt %>% filter(drug=="DNR")%>% select(ENTREZID)#904
-MTX_24_vara <- var24alt %>% filter(drug=="MTX")%>% select(ENTREZID)#196
-TRZ_24_vara <- var24alt %>% filter(drug=="TRZ")%>% select(ENTREZID)#206
-
-geneset_24alt <- list(DOX_24_vara$ENTREZID, EPI_24_vara$ENTREZID, DNR_24_vara$ENTREZID, MTX_24_vara$ENTREZID, TRZ_24_vara$ENTREZID)
-names(geneset_24alt) <- c("DOX_24_var","EPI_24_var","DNR_24_var" ,"MTX_24_var","TRZ_24_var")
-
-ggVennDiagram::ggVennDiagram(geneset_24alt,
-              category.names = c("DOX\nn = 1534 ",
-                                 "EPI\nn = 31471\n",
-                                 "DNR\nn = 904",
-                                 "MTX\nn = 196", 
-                                "TRZ\nn = 206"),
-              show_intersect = FALSE,
-              set_color = "black",
-              category_size = c(6,6,6,6),
-              label = "count",
-              label_percent_digit = 1,
-              label_size = 4,
-              label_alpha = 0,
-              label_color = "black",
-              edge_lty = "solid", set_size = 4.5)+
-  scale_x_continuous(expand = expansion(mult = .3))+
-  scale_y_continuous(expand = expansion(mult = .2))+
-  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
-  scale_fill_distiller(palette="Spectral", direction = -1)+
-  labs(title = "24 hour var,alternative hypo =greater, genes p. value <0.05",
-       caption = paste("n =", length(unique(var24alt$ENTREZID)),"genes"))+
-  
-  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
-
-```
-
-## ALT 24 hour DOX
-
-```{r alt GO analysis of DOX24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-# altDOX_var24gost <- gost(query = DOX_24_vara$ENTREZID,
-#                   organism = "hsapiens",
-#                   significant = FALSE,
-#                   ordered_query = TRUE,
-#                   domain_scope = "custom",
-#                   measure_underrepresentation = FALSE,
-#                   evcodes = FALSE,
-#                   numeric_ns="ENTREZGENE",
-#                   user_threshold = 0.05,
-#                   correction_method = "fdr",
-#                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
-# 
-# saveRDS(altDOX_var24gost,"data/DEG-GO/var/altDOX_var24gost.RDS")
-altDOX_var24gost <- readRDS("data/DEG-GO/var/altDOX_var24gost.RDS")
-
-altDOX_var24p <- gostplot(altDOX_var24gost, capped = FALSE, interactive = TRUE)
-altDOX_var24p
-
-altDOX_var24_table <- altDOX_var24gost$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-
-altDOX_var24_table %>% 
- dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-  geom_vline(xintercept = (-log10(0.05)), col="red")+
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('DOX24 hour(alt) top 10 GO:BP terms') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-
-altDOX_var24_table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "DOX 24 hour (alt) enrichment terms of highly var genes") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-altDOX_var24_table %>% 
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "KEGG DOX 24 hour (alt) enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-```
-
-## ALT 24 hour EPI
-
-```{r alt GO analysis of EPI24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-# altEPI_var24gost <- gost(query = EPI_24_vara$ENTREZID,
-#                   organism = "hsapiens",
-#                   significant = FALSE,
-#                   ordered_query = TRUE,
-#                   domain_scope = "custom",
-#                   measure_underrepresentation = FALSE,
-#                   evcodes = FALSE,
-#                   numeric_ns="ENTREZGENE",
-#                   user_threshold = 0.05,
-#                   correction_method = "fdr",
-#                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
-# 
-# saveRDS(altEPI_var24gost,"data/DEG-GO/var/altEPI_var24gost.RDS")
-altEPI_var24gost <- readRDS("data/DEG-GO/var/altEPI_var24gost.RDS")
-
-altEPI_var24p <- gostplot(altEPI_var24gost, capped = FALSE, interactive = TRUE)
-altEPI_var24p
-
-altEPI_var24_table <- altEPI_var24gost$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-
-altEPI_var24_table %>% 
- dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-  geom_vline(xintercept = (-log10(0.05)), col="red")+
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('EPI24 hour(alt) top 10 GO:BP terms') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-
-altEPI_var24_table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "EPI 24 hour (alt) enrichment terms of highly var genes") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-altEPI_var24_table %>% 
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "KEGG EPI 24 hour (alt) enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-```
-
-## ALT 24 hour DNR
-
-```{r alt GO analysis of DNR24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-# altDNR_var24gost <- gost(query = DNR_24_vara$ENTREZID,
-#                   organism = "hsapiens",
-#                   significant = FALSE,
-#                   ordered_query = TRUE,
-#                   domain_scope = "custom",
-#                   measure_underrepresentation = FALSE,
-#                   evcodes = FALSE,
-#                   numeric_ns="ENTREZGENE",
-#                   user_threshold = 0.05,
-#                   correction_method = "fdr",
-#                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
-# 
-# saveRDS(altDNR_var24gost,"data/DEG-GO/var/altDNR_var24gost.RDS")
-altDNR_var24gost <- readRDS("data/DEG-GO/var/altDNR_var24gost.RDS")
-
-altDNR_var24p <- gostplot(altDNR_var24gost, capped = FALSE, interactive = TRUE)
-altDNR_var24p
-
-altDNR_var24_table <- altDNR_var24gost$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-
-altDNR_var24_table %>% 
- dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-  geom_vline(xintercept = (-log10(0.05)), col="red")+
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('DNR24 hour(alt) top 10 GO:BP terms') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-
-altDNR_var24_table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "DNR 24 hour (alt) enrichment terms of highly var genes") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-altDNR_var24_table %>% 
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "KEGG DNR 24 hour (alt) enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-
-```
-
-## ALT 24 hour MTX
-
-```{r alt GO analysis of MTX24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# 
-# altMTX_var24gost <- gost(query = MTX_24_vara$ENTREZID,
-#                   organism = "hsapiens",
-#                   significant = FALSE,
-#                   ordered_query = TRUE,
-#                   domain_scope = "custom",
-#                   measure_underrepresentation = FALSE,
-#                   evcodes = FALSE,
-#                   numeric_ns="ENTREZGENE",
-#                   user_threshold = 0.05,
-#                   correction_method = "fdr",
-#                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
-# 
-# saveRDS(altMTX_var24gost,"data/DEG-GO/var/altMTX_var24gost.RDS")
-altMTX_var24gost <- readRDS("data/DEG-GO/var/altMTX_var24gost.RDS")
-
-altMTX_var24p <- gostplot(altMTX_var24gost, capped = FALSE, interactive = TRUE)
-altMTX_var24p
-
-altMTX_var24_table <- altMTX_var24gost$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-
-altMTX_var24_table %>% 
- dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=5 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-  geom_vline(xintercept = (-log10(0.05)), col="red")+
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('MTX24 hour(alt) top 10 GO:BP terms') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-
-altMTX_var24_table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "MTX 24 hour (alt) enrichment terms of highly var genes") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-altMTX_var24_table %>% 
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "KEGG MTX 24 hour (alt) enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-
-```
-
-## ALT 24 hour TRZ
-
-```{r alt GO analysis of TRZ24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# 
-# altTRZ_var24gost <- gost(query = TRZ_24_vara$ENTREZID,
-#                   organism = "hsapiens",
-#                   significant = FALSE,
-#                   ordered_query = TRUE,
-#                   domain_scope = "custom",
-#                   measure_underrepresentation = FALSE,
-#                   evcodes = FALSE,
-#                   numeric_ns="ENTREZGENE",
-#                   user_threshold = 0.05,
-#                   correction_method = "fdr",
-#                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
-# 
-# saveRDS(altTRZ_var24gost,"data/DEG-GO/var/altTRZ_var24gost.RDS")
-altTRZ_var24gost <- readRDS("data/DEG-GO/var/altTRZ_var24gost.RDS")
-
-altTRZ_var24p <- gostplot(altTRZ_var24gost, capped = FALSE, interactive = TRUE)
-altTRZ_var24p
-
-altTRZ_var24_table <- altTRZ_var24gost$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-
-altTRZ_var24_table %>% 
- dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=3 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-  geom_vline(xintercept = (-log10(0.05)), col="red")+
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('TRZ24 hour(alt) top 10 GO:BP terms') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-
-altTRZ_var24_table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "TRZ 24 hour (alt) enrichment terms of highly var genes") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-altTRZ_var24_table %>% 
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "KEGG TRZ 24 hour (alt) enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-```
-
-## ALT 24 hour AC shared
-
-```{r GO analysis of altAC_share24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-venn24partalt <- VennDiagram::get.venn.partitions(geneset_24alt)
-
-
-alt_AC_share <- venn24partalt$..values..[[25]]
-# AC_share_var24gosta <- gost(query = alt_AC_share,
-#                   organism = "hsapiens",
-#                   significant = FALSE,
-#                   ordered_query = TRUE,
-#                   domain_scope = "custom",
-#                   measure_underrepresentation = FALSE,
-#                   evcodes = FALSE,
-#                   numeric_ns="ENTREZGENE",
-#                   user_threshold = 0.05,
-#                   correction_method = "fdr",
-#                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
-# 
-# saveRDS(AC_share_var24gosta,"data/DEG-GO/var/AC_share_var24gosta.RDS")
-AC_share_var24gosta <- readRDS("data/DEG-GO/var/AC_share_var24gost.RDS")
-
-AC_share_var24pa <- gostplot(AC_share_var24gosta, capped = FALSE, interactive = TRUE)
-AC_share_var24pa
-
-AC_share_var24_tablea <- AC_share_var24gosta$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-
-AC_share_var24_tablea %>% 
- dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-   geom_vline(xintercept = (-log10(0.05)), col="red")+
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle('alt AC_share24 hour top 10 GO:BP terms') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-  AC_share_var24_table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = " altAC_share 24 enrichment terms of highly var genes") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-AC_share_var24_table %>% 
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "alt KEGG AC_share 24 hour enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-```
-
-## ALT 24 hour TOP2i shared
-
-```{r GO analysis of altTOP2i24,eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-TOP2i_alt <- venn24partalt$..values..[[17]]
-# TOP2i_var24gosta <- gost(query = TOP2i_alt,
-#                   organism = "hsapiens",
-#                   significant = FALSE,
-#                   ordered_query = TRUE,
-#                   domain_scope = "custom",
-#                   measure_underrepresentation = FALSE,
-#                   evcodes = FALSE,
-#                   numeric_ns="ENTREZGENE",
-#                   user_threshold = 0.05,
-#                   correction_method = "fdr",
-#                   custom_bg = backGL$ENTREZID,
-#                   sources=c("GO:BP","KEGG"))
-# 
-# saveRDS(TOP2i_var24gosta,"data/DEG-GO/var/TOP2i_var24gosta.RDS")
-TOP2i_var24gosta <- readRDS("data/DEG-GO/var/TOP2i_var24gosta.RDS")
-
-TOP2i_var24pa <- gostplot(TOP2i_var24gosta, capped = FALSE, interactive = TRUE)
-TOP2i_var24pa
-
-TOP2i_var24_tablea <- TOP2i_var24gosta$result %>% 
-  dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
-
-TOP2i_var24_tablea %>% 
- dplyr::filter(source=="GO:BP") %>% 
-    dplyr::select(p_value,term_name,intersection_size) %>%
-    slice_min(., n=10 ,order_by=p_value) %>%
-    mutate(log_val = -log10(p_value)) %>%
-   # slice_max(., n=10,order_by = p_value) %>%
-   ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col= intersection_size)) +
-    geom_point(aes(size = intersection_size)) +
-   geom_vline(xintercept = (-log10(0.05)), col="red")+
-    scale_y_discrete(labels = label_wrap(30))+
-    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
-    ggtitle(' alt TOP2i 24 hour top 10 GO:BP terms') +
-    xlab(expression(" -"~log[10]~("adj. p-value")))+
-    ylab("GO: BP term")+
-      theme_bw()+
-    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
-        axis.title = element_text(size = 15, color = "black"),
-        axis.ticks = element_line(linewidth = 1.5),
-        axis.line = element_line(linewidth = 1.5),
-        axis.text = element_text(size = 10, color = "black", angle = 0),
-        strip.text.x = element_text(size = 15, color = "black", face = "bold")) 
-  TOP2i_var24_table %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "alt TOP2i 24 enrichment terms of highly var genes") %>% 
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-TOP2i_var24_tablea %>% 
-  filter(source=="KEGG") %>% 
-    mutate_at(.vars = 6, .funs= scientific_format()) %>% 
-  kable(.,caption = "alt KEGG TOP2i 24 hour enrichment terms of highly var genes") %>% 
-  
-  kable_paper("striped", full_width = FALSE) %>%  
-  kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped","hover")) %>% 
-  scroll_box(width = "100%", height = "400px")
-
-
-```
