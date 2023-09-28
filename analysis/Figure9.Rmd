@@ -391,7 +391,7 @@ for (hay in 1:5) {
       size = 3
     )
   tox_build <- ggplot_build(p)
-  plot(p)
+  # plot(p)
   
   toxdata2pt[[dataname]] <- list(
     'tox_val' = c(tox_build$data[[3]]$r),
