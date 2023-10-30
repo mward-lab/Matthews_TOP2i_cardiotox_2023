@@ -7,8 +7,8 @@ A [workflowr] project started by E. Renee Matthews
 This repository contains code and data resources to accompany our research paper :
 
 
-Pending Title and citation links:
-
+[Anthracycline-induced cardiotoxicity associates with a shared gene expression response signature to TOP2-inhibiting breast cancer drugs in cardiomyocytes] https://biorxiv.org/cgi/content/short/2023.10.03.560405v1
+ 
 
 What's included in this repository:
 
@@ -27,4 +27,6 @@ The website contains links to the figures of the paper and the associated code a
 
 [workflowr]: https://github.com/workflowr/workflowr
 [here]: https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/index.html
+
+
 >>>>>>> 2ed3e090157c57efc334735892564b1266d774c3
