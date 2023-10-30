@@ -36,32 +36,35 @@ library(scales)
 library(sjmisc)
 library(kableExtra)
 library(broom)
-# library(ComplexHeatmap)
-# library(ggVennDiagram)
+library(ComplexHeatmap)
+library(ggVennDiagram)
 library(biomaRt)
+library(limma)
+library(edgeR)
+
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
-ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
-my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-#
-my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
-
-genehold <- c("ENSG00000049239", "ENSG00000116663","ENSG00000132768",	
-"ENSG00000162601",	
-"ENSG00000142856",	
-"ENSG00000143450",	"ENSG00000165886",	
-"ENSG00000198018",	
-"ENSG00000166881",	
-"ENSG00000100968",	
-"ENSG00000081181",	
-"ENSG00000181827",
-"ENSG00000154945",	
-"ENSG00000125457",	
-"ENSG00000189362",	
-"ENSG00000128274",	
-"ENSG00000104205")
+# ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
+# my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
+# #
+# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+# 
+# genehold <- c("ENSG00000049239", "ENSG00000116663","ENSG00000132768",	
+# "ENSG00000162601",	
+# "ENSG00000142856",	
+# "ENSG00000143450",	"ENSG00000165886",	
+# "ENSG00000198018",	
+# "ENSG00000166881",	
+# "ENSG00000100968",	
+# "ENSG00000081181",	
+# "ENSG00000181827",
+# "ENSG00000154945",	
+# "ENSG00000125457",	
+# "ENSG00000189362",	
+# "ENSG00000128274",	
+# "ENSG00000104205")
 
 elife.33480.supp14.v2 <- read.delim("~/Ward Lab/Cardiotoxicity/supplementals from papers/elife-33480-supp14-v2.gz")
 
@@ -76,53 +79,6 @@ sample_table_k <- read_delim("C:/Users/renee/Downloads/Knowles_raw_data_dryad_do
 trop_knowles <- read.delim("~/Ward Lab/Cardiotoxicity/supplementals from papers/elife-33480-supp11-v2.txt")
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -202,8 +158,8 @@ lcpm_main <- all_cpmcount %>%
   cpm(., log=TRUE) %>% 
   as.data.frame() %>% 
   rownames_to_column(var = "ENTREZID") %>% 
-  select(ENTREZID, all_of(starts_with("DOX"))) %>% 
-  select(ENTREZID, all_of(ends_with("3h")))  
+  dplyr::select(ENTREZID, all_of(starts_with("DOX"))) %>% 
+  dplyr::select(ENTREZID, all_of(ends_with("3h")))  
   
 combined_data <- lcpm_main %>%
   full_join(., lcpm_trial_full, by= "ENTREZID") %>% 
@@ -219,7 +175,7 @@ combined_data <- lcpm_main %>%
   
   only79_ind <- lcpm_main %>%
   full_join(., lcpm_trial_full, by= "ENTREZID") %>% 
-    select(ENTREZID,'3hr_0.5',"DOX.4.3h") %>% 
+    dplyr::select(ENTREZID,'3hr_0.5',"DOX.4.3h") %>% 
     column_to_rownames("ENTREZID") %>% 
   cor(.,) 
 
@@ -236,8 +192,8 @@ lcpm_main_veh <- all_cpmcount %>%
   cpm(., log=TRUE) %>% 
   as.data.frame() %>% 
   rownames_to_column(var = "ENTREZID") %>% 
-  select(ENTREZID, all_of(c(starts_with("DOX"),starts_with("VEH")))) %>% 
-  select(ENTREZID, all_of(ends_with("3h")))  
+  dplyr::select(ENTREZID, all_of(c(starts_with("DOX"),starts_with("VEH")))) %>% 
+   dplyr::select(ENTREZID, all_of(ends_with("3h")))  
   
 
 combined_data_veh<- lcpm_main_veh %>%
