@@ -274,6 +274,7 @@ combined_data_veh<- lcpm_main_veh %>%
 ```
 
 ```{r correlation RNAseqtrial filter}
+
 lcpm_trial_filter_main <- lcpm_trial_full %>% 
   filter(ENTREZID %in% cpm_count_main$ENTREZID)
  
@@ -338,12 +339,12 @@ hr3_indv4 <- lcpm_trial_filter_main %>%
 plot(hr3_indv4)
  
 ```
+### barplots
+
+```{r bar_plots of GOI}
 
 
-```{r bar_plots of GOI, eval=FALSE, include=FALSE}
-
-
-
+GOI_genelist <- read.csv("output/GOI_genelist.txt")
 
 cpm_boxplot_trial <-function(lcpm_trial, GOI, ylab) {
     ##GOI needs to be ENTREZID
