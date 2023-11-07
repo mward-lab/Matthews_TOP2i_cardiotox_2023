@@ -79,13 +79,15 @@ Knowles_log2cpm <- read_table("C:/Users/renee/Downloads/Knowles_raw_data_dryad_d
 sample_table_k <- read_delim("C:/Users/renee/Downloads/Knowles_raw_data_dryad_download/sample_table.txt", delim = "\t")
 
 trop_knowles <- read.delim("~/Ward Lab/Cardiotoxicity/supplementals from papers/elife-33480-supp11-v2.txt")
+write.csv(trop_knowles, "output/trop_knowles_fun.csv")
+write.csv(Knowles_log2cpm, "output/Knowles_log2cpm.csv")
 
 ```
 
 
 ```{r colorpalette}
 
-palette_colors_mine <- colorRampPalette(colors = c("green","white","red" ))(48)
+palette_colors_mine <- colorRampPalette(colors = c("green","white","purple","red" ))(90)
 scales::show_col(palette_colors_mine)
 
 ```
@@ -95,14 +97,15 @@ Here I will attempt to recreate my correlation analysis on the knowles data usin
 ```{r troponin knowles}
 ### genes I want to know about
 interest_genes <- read.csv("output/GOI_genelist.txt", row.names = 1)
-
+trop_knowles <- read.csv("output/trop_knowles_fun.csv", row.names = 1)
+Knowles_log2cpm <- read.csv("output/Knowles_log2cpm.csv", row.names = 1)
 trop0.625 <- trop_knowles %>% 
   filter(dosage <1) 
 store <- Knowles_log2cpm %>% 
-  dplyr::select("ESGN",ends_with(':0.625'), ends_with(':0')) %>% 
+  dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
   dplyr::filter(ESGN %in% interest_genes$ensembl_gene_id) %>% 
   pivot_longer(cols=!ESGN, names_to = "ind", values_to = "counts") %>% 
-  separate(.,ind,into=c("cell_line","dosage"), sep = ":") %>%
+  separate(ind,into=c("cell_line","dosage"), sep = ":") %>%
   mutate(dosage = as.numeric(dosage)) %>% 
   full_join(., trop0.625, by=c("cell_line", "dosage")) %>% 
   group_by(cell_line) %>% 
