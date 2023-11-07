@@ -11,11 +11,11 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-28" />
+<meta name="date" content="2023-11-06" />
 
 <title>GOI_plots</title>
 
-<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -39,8 +39,8 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -363,7 +363,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GOI_plots</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-28</h4>
+<h4 class="date">2023-11-06</h4>
 
 </div>
 
@@ -371,7 +371,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -382,8 +382,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -392,13 +392,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-28
+<strong>Last updated:</strong> 2023-11-06
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Cardiotoxicity/</code> <span
@@ -410,7 +410,7 @@ title="This is the local directory in which the code in this file was executed."
 This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
 analysis was created with <a
   href="https://github.com/workflowr/workflowr">workflowr</a> (version
-1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
 that were applied when the results were created. The <em>Past
 versions</em> tab lists the development history.
 </p>
@@ -421,18 +421,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -523,15 +526,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreebb2eed0f1e0e1007d25bfc67586351e8580e3fa9targetblankbb2eed0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treeae9124e322fd3342060257351761e464eaaf4262targetblankae9124ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/bb2eed0f1e0e1007d25bfc67586351e8580e3fa9" target="_blank">bb2eed0</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/ae9124e322fd3342060257351761e464eaaf4262" target="_blank">ae9124e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreebb2eed0f1e0e1007d25bfc67586351e8580e3fa9targetblankbb2eed0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treeae9124e322fd3342060257351761e464eaaf4262targetblankae9124ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +544,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/bb2eed0f1e0e1007d25bfc67586351e8580e3fa9" target="_blank">bb2eed0</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/ae9124e322fd3342060257351761e464eaaf4262" target="_blank">ae9124e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,7 +562,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -570,6 +572,7 @@ Ignored files:
     Ignored:    data/CALIMA_Data/
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/Counts_RNA_ERMatthews.txt
     Ignored:    data/DAgostres24.RDS
     Ignored:    data/DAtable1.csv
     Ignored:    data/DDEMresp_list.csv
@@ -582,6 +585,7 @@ Ignored files:
     Ignored:    data/Da24counts.txt
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
     Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
@@ -603,15 +607,20 @@ Ignored files:
     Ignored:    data/Mt24counts.txt
     Ignored:    data/NoRespDEG_final.csv
     Ignored:    data/RINsamplelist.txt
+    Ignored:    data/RNA_seq_trial.RDS
     Ignored:    data/Seonane2019supp1.txt
     Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
+    Ignored:    data/TableS10.csv
+    Ignored:    data/TableS11.csv
+    Ignored:    data/TableS9.csv
     Ignored:    data/Top2biresp_cluster24h.csv
     Ignored:    data/Var_test_list.RDS
     Ignored:    data/Var_test_list24.RDS
     Ignored:    data/Var_test_list24alt.RDS
     Ignored:    data/Var_test_list3.RDS
+    Ignored:    data/Vargenes.RDS
     Ignored:    data/Viabilitylistfull.csv
     Ignored:    data/allexpressedgenes.txt
     Ignored:    data/allfinal3hour.RDS
@@ -630,6 +639,7 @@ Ignored files:
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
     Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/cormotifprobs.csv
     Ignored:    data/counts24hours.RDS
     Ignored:    data/cpmcount.RDS
     Ignored:    data/cpmnorm_counts.csv
@@ -687,6 +697,8 @@ Ignored files:
     Ignored:    data/plan2plot.png
     Ignored:    data/plot_intv_list.RDS
     Ignored:    data/plot_list_DRC.RDS
+    Ignored:    data/qval24hr.RDS
+    Ignored:    data/qval3hr.RDS
     Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
@@ -704,9 +716,12 @@ Ignored files:
     Ignored:    data/siglist_final.RDS
     Ignored:    data/siglist_old.RDS
     Ignored:    data/slope_table.csv
+    Ignored:    data/supp10_24hlist.RDS
+    Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
     Ignored:    data/table3a.omar
+    Ignored:    data/test_run_sample_list.txt
     Ignored:    data/testlist.txt
     Ignored:    data/toplistall.RDS
     Ignored:    data/trtonly_24h_genes.RDS
@@ -720,44 +735,55 @@ Untracked files:
     Untracked:  .RDataTmp
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
+    Untracked:  .RDataTmp3
+    Untracked:  3hr all.pdf
+    Untracked:  Code_files_list.csv
+    Untracked:  Data_files_list.csv
     Untracked:  Doxorubicin_vehicle_3_24.csv
     Untracked:  Doxtoplist.csv
+    Untracked:  EPIqvalue_analysis.Rmd
     Untracked:  GWAS_list_of_interest.xlsx
     Untracked:  KEGGpathwaylist.R
     Untracked:  OmicNavigator_learn.R
     Untracked:  SigDoxtoplist.csv
-    Untracked:  analysis/DRC_analysist.Rmd
     Untracked:  analysis/ciFIT.R
-    Untracked:  analysis/enricher.Rmd
     Untracked:  analysis/export_to_excel.R
-    Untracked:  analysis/untitled1.R
-    Untracked:  code/DRC_plotfigure1.png
+    Untracked:  analysis/featureCountsPLAY.R
+    Untracked:  cleanupfiles_script.R
+    Untracked:  code/biomart_gene_names.R
     Untracked:  code/constantcode.R
+    Untracked:  code/corMotifcustom.R
     Untracked:  code/cpm_boxplot.R
     Untracked:  code/extracting_ggplot_data.R
-    Untracked:  code/fig1plot.png
-    Untracked:  code/figurelegeddrc.png
     Untracked:  code/movingfilesto_ppl.R
     Untracked:  code/pearson_extract_func.R
     Untracked:  code/pearson_tox_extract.R
     Untracked:  code/plot1C.fun.R
     Untracked:  code/spearman_extract_func.R
     Untracked:  code/venndiagramcolor_control.R
-    Untracked:  cormotif_probability_genelist.csv
+    Untracked:  cormotif_p.post.list_4.csv
+    Untracked:  figS1024h.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/DNR_DEGlist.csv
     Untracked:  output/DNRvenn.RDS
+    Untracked:  output/DOX_DEGlist.csv
     Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EPI_DEGlist.csv
     Untracked:  output/EPIvenn.RDS
     Untracked:  output/Figures/
+    Untracked:  output/MTX_DEGlist.csv
     Untracked:  output/MTXvenn.RDS
+    Untracked:  output/TRZ_DEGlist.csv
+    Untracked:  output/TableS8.csv
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
     Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/endocytosisgenes.csv
     Untracked:  output/gene_corr_fig9.RDS
     Untracked:  output/legend_b.RDS
     Untracked:  output/motif_ERrep.RDS
@@ -767,21 +793,32 @@ Untracked files:
     Untracked:  output/output-old/
     Untracked:  output/rank24genes.csv
     Untracked:  output/rank3genes.csv
+    Untracked:  output/reneem@ls6.tacc.utexas.edu
+    Untracked:  output/sequencinginformationforsupp.csv
+    Untracked:  output/sequencinginformationforsupp.prn
+    Untracked:  output/sigVDA24.txt
+    Untracked:  output/sigVDA3.txt
+    Untracked:  output/sigVDX24.txt
+    Untracked:  output/sigVDX3.txt
+    Untracked:  output/sigVEP24.txt
+    Untracked:  output/sigVEP3.txt
+    Untracked:  output/sigVMT24.txt
+    Untracked:  output/sigVMT3.txt
+    Untracked:  output/sigVTR24.txt
+    Untracked:  output/sigVTR3.txt
     Untracked:  output/supplementary_motif_list_GO.RDS
     Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/tvl24hour.txt
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/Knowles2019.Rmd
-    Modified:   analysis/variance_scrip.Rmd
-    Modified:   output/TNNI_LDH_RNAnormlist.txt
+    Modified:   analysis/GOI_plots.Rmd
     Modified:   output/daplot.RDS
     Modified:   output/dxplot.RDS
     Modified:   output/epplot.RDS
     Modified:   output/mtplot.RDS
     Modified:   output/plan2plot.png
-    Modified:   output/toplistall.csv
     Modified:   output/trplot.RDS
     Modified:   output/veplot.RDS
 
@@ -831,10 +868,27 @@ Message
 <tbody>
 <tr>
 <td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/GOI_plots.html" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/bb2eed0f1e0e1007d25bfc67586351e8580e3fa9/analysis/GOI_plots.Rmd" target="_blank">bb2eed0</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/bb2eed0f1e0e1007d25bfc67586351e8580e3fa9/analysis/GOI_plots.Rmd" target="_blank">bb2eed0</a>
 </td>
 <td>
 reneeisnowhere
@@ -851,7 +905,7 @@ new figures update
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/62286c39df588d70d06650c1569865a76958bc09/analysis/GOI_plots.Rmd" target="_blank">62286c3</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/62286c39df588d70d06650c1569865a76958bc09/analysis/GOI_plots.Rmd" target="_blank">62286c3</a>
 </td>
 <td>
 reneeisnowhere
@@ -868,7 +922,7 @@ Updateing figure code
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/GOI_plots.html" target="_blank">da2a305</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/GOI_plots.html" target="_blank">da2a305</a>
 </td>
 <td>
 reneeisnowhere
@@ -885,7 +939,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/ca7c6c6cb8e4304347043055df78912da5340d13/analysis/GOI_plots.Rmd" target="_blank">ca7c6c6</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ca7c6c6cb8e4304347043055df78912da5340d13/analysis/GOI_plots.Rmd" target="_blank">ca7c6c6</a>
 </td>
 <td>
 reneeisnowhere
@@ -902,7 +956,7 @@ added plots individually
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/3db5216067966eee47e380db1be83e041f9f7bec/docs/GOI_plots.html" target="_blank">3db5216</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/3db5216067966eee47e380db1be83e041f9f7bec/docs/GOI_plots.html" target="_blank">3db5216</a>
 </td>
 <td>
 reneeisnowhere
@@ -919,7 +973,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/d68fa43e81806dd1e6d18404962b4352d9159176/analysis/GOI_plots.Rmd" target="_blank">d68fa43</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/d68fa43e81806dd1e6d18404962b4352d9159176/analysis/GOI_plots.Rmd" target="_blank">d68fa43</a>
 </td>
 <td>
 reneeisnowhere
@@ -936,7 +990,7 @@ adding variance top 24h gene plots
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/GOI_plots.html" target="_blank">ad58c4d</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/GOI_plots.html" target="_blank">ad58c4d</a>
 </td>
 <td>
 reneeisnowhere
@@ -953,7 +1007,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/4cc1c4053b8828515aa755044fdc47cfaf22a262/analysis/GOI_plots.Rmd" target="_blank">4cc1c40</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4cc1c4053b8828515aa755044fdc47cfaf22a262/analysis/GOI_plots.Rmd" target="_blank">4cc1c40</a>
 </td>
 <td>
 reneeisnowhere
@@ -970,7 +1024,7 @@ updating pearson correlation plots for each GOI
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/a48eda548fb9e1b83986063aa5f503d7975ffd28/docs/GOI_plots.html" target="_blank">a48eda5</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/a48eda548fb9e1b83986063aa5f503d7975ffd28/docs/GOI_plots.html" target="_blank">a48eda5</a>
 </td>
 <td>
 reneeisnowhere
@@ -987,7 +1041,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/4b1a17ba5c789ca0c31eb4ab270382193e88d8b4/analysis/GOI_plots.Rmd" target="_blank">4b1a17b</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/4b1a17ba5c789ca0c31eb4ab270382193e88d8b4/analysis/GOI_plots.Rmd" target="_blank">4b1a17b</a>
 </td>
 <td>
 reneeisnowhere
@@ -1004,7 +1058,7 @@ fixing SLC corr plot
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/554ef92b4cceefc610c38622044c08ffac61108a/docs/GOI_plots.html" target="_blank">554ef92</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/554ef92b4cceefc610c38622044c08ffac61108a/docs/GOI_plots.html" target="_blank">554ef92</a>
 </td>
 <td>
 reneeisnowhere
@@ -1021,7 +1075,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b327d60fc3f6a54f1c5b2e8f21f11d00fabcc11c/analysis/GOI_plots.Rmd" target="_blank">b327d60</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/b327d60fc3f6a54f1c5b2e8f21f11d00fabcc11c/analysis/GOI_plots.Rmd" target="_blank">b327d60</a>
 </td>
 <td>
 reneeisnowhere
@@ -1038,7 +1092,7 @@ fix images not loading
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/995ce6848d78508197e8f1e329bddbf181582538/docs/GOI_plots.html" target="_blank">995ce68</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/995ce6848d78508197e8f1e329bddbf181582538/docs/GOI_plots.html" target="_blank">995ce68</a>
 </td>
 <td>
 reneeisnowhere
@@ -1055,7 +1109,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/26afd1e3021a36ec84e1ff66780fbf276423558d/analysis/GOI_plots.Rmd" target="_blank">26afd1e</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/26afd1e3021a36ec84e1ff66780fbf276423558d/analysis/GOI_plots.Rmd" target="_blank">26afd1e</a>
 </td>
 <td>
 reneeisnowhere
@@ -1072,7 +1126,7 @@ adding heatmaps
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/c1d667f03ba3bb1dc3cfb40559c8991a31f74974/analysis/GOI_plots.Rmd" target="_blank">c1d667f</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c1d667f03ba3bb1dc3cfb40559c8991a31f74974/analysis/GOI_plots.Rmd" target="_blank">c1d667f</a>
 </td>
 <td>
 reneeisnowhere
@@ -1089,7 +1143,7 @@ updating the codes at Friday start.
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/reneeisnowhere/Cardiotoxicity/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/GOI_plots.html" target="_blank">924262d</a>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/GOI_plots.html" target="_blank">924262d</a>
 </td>
 <td>
 reneeisnowhere
@@ -1106,7 +1160,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/eab6c68f283bcfe2b4d4c2974d348455433151b9/analysis/GOI_plots.Rmd" target="_blank">eab6c68</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/eab6c68f283bcfe2b4d4c2974d348455433151b9/analysis/GOI_plots.Rmd" target="_blank">eab6c68</a>
 </td>
 <td>
 reneeisnowhere
@@ -1123,7 +1177,7 @@ update on code moving
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/3d4ca6458d1a506bfb480498918285e886386178/analysis/GOI_plots.Rmd" target="_blank">3d4ca64</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3d4ca6458d1a506bfb480498918285e886386178/analysis/GOI_plots.Rmd" target="_blank">3d4ca64</a>
 </td>
 <td>
 reneeisnowhere
@@ -1263,37 +1317,601 @@ library(ggpubr)</code></pre>
 <div id="top2b" class="section level3">
 <h3>TOP2B</h3>
 <p><img src="figure/GOI_plots.Rmd/GOI-top2b-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOI-top2b-1">
+Past versions of GOI-top2b-1.png
+</button>
+</p>
+<div id="fig-GOI-top2b-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOI-top2b-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOI-top2b-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/GOI-top2b-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/GOI-top2b-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="top2a" class="section level3">
 <h3>Top2a</h3>
 <p><img src="figure/GOI_plots.Rmd/GOI-top2a-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOI-top2a-1">
+Past versions of GOI-top2a-1.png
+</button>
+</p>
+<div id="fig-GOI-top2a-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOI-top2a-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOI-top2a-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/GOI-top2a-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/GOI-top2a-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cdkn1a" class="section level3">
 <h3>CDKN1a</h3>
 <p><img src="figure/GOI_plots.Rmd/GOI%20CDKN1a-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-GOI-CDKN1a-1">
+Past versions of "GOI CDKN1a-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-GOI-CDKN1a-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOI CDKN1a-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOI CDKN1a-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/GOI CDKN1a-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/GOI CDKN1a-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="atm" class="section level3">
 <h3>ATM</h3>
-<p><img src="figure/GOI_plots.Rmd/GOI-atm-1.png" width="576" style="display: block; margin: auto;" />
-### ATR
-<img src="figure/GOI_plots.Rmd/GOI-atr-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/GOI-atm-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOI-atm-1">
+Past versions of GOI-atm-1.png
+</button>
+</p>
+<div id="fig-GOI-atm-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOI-atm-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOI-atm-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/GOI-atm-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/GOI-atm-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="atr" class="section level3">
+<h3>ATR</h3>
+<p><img src="figure/GOI_plots.Rmd/GOI-atr-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOI-atr-1">
+Past versions of GOI-atr-1.png
+</button>
+</p>
+<div id="fig-GOI-atr-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOI-atr-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOI-atr-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/GOI-atr-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/GOI-atr-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="rarg" class="section level3">
 <h3>RARG</h3>
 <p><img src="figure/GOI_plots.Rmd/GOI%20RARG-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-GOI-RARG-1">
+Past versions of "GOI RARG-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-GOI-RARG-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOI RARG-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOI RARG-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/GOI RARG-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/GOI RARG-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="kat6b" class="section level3">
 <h3>KAT6b</h3>
 <pre class="r"><code>cpm_boxplot(cpmcounts,GOI=&#39;23522&#39;,&quot;Dark2&quot;,drug_pal_vehend,
   ylab=(expression(atop(&quot; &quot;,italic(&quot;KAT6B&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
 <p><img src="figure/GOI_plots.Rmd/KAT6b%20logcpm-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-KAT6b-logcpm-1">
+Past versions of "KAT6b logcpm-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-KAT6b-logcpm-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/KAT6b logcpm-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/KAT6b logcpm-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/KAT6b logcpm-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/KAT6b logcpm-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="kdm4b" class="section level3">
 <h3>KDM4b</h3>
 <pre class="r"><code>cpm_boxplot(cpmcounts,GOI=&#39;23030&#39;,&quot;Dark2&quot;,drug_pal_vehend,
   ylab=(expression(atop(&quot; &quot;,italic(&quot;KDM4B&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
-<p><img src="figure/GOI_plots.Rmd/KDM4b%20logcpm-1.png" width="576" style="display: block; margin: auto;" />
-## expression correlation:</p>
+<p><img src="figure/GOI_plots.Rmd/KDM4b%20logcpm-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-KDM4b-logcpm-1">
+Past versions of "KDM4b logcpm-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-KDM4b-logcpm-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/KDM4b logcpm-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/KDM4b logcpm-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/KDM4b logcpm-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/924262dc28531f13537ce6a4c81fe904a2d663d7/docs/figure/GOI_plots.Rmd/KDM4b logcpm-1.png" target="_blank">924262d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="expression-correlation" class="section level2">
+<h2>expression correlation:</h2>
 <p>first, will do expression the following GOIs:</p>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:60%; ">
@@ -1871,7 +2489,534 @@ for (gene in GOI_genelist$entrezgene_id){
    print(gene_plot)
    
   }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-1">
+Past versions of "correlation of TNNI-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-1.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-2">
+Past versions of "correlation of TNNI-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-2.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-2.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-3">
+Past versions of "correlation of TNNI-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-3.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-3.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-4">
+Past versions of "correlation of TNNI-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-4.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-4.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-5">
+Past versions of "correlation of TNNI-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-5.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-5.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-6">
+Past versions of "correlation of TNNI-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-6.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-6.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-7">
+Past versions of "correlation of TNNI-7.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-7.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-7.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-8">
+Past versions of "correlation of TNNI-8.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-8.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-8.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-9">
+Past versions of "correlation of TNNI-9.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-9.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-9.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-10">
+Past versions of "correlation of TNNI-10.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-10.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/correlation of TNNI-10.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/correlation%20of%20TNNI-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-correlation-of-TNNI-11">
+Past versions of "correlation of TNNI-11.png"
+</button>
+</p>
+<div id="fig-no-spaces-correlation-of-TNNI-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/correlation of TNNI-11.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="hour-ldh-to-cpm" class="section level4">
 <h4>24 hour LDH to cpm</h4>
@@ -1905,7 +3050,534 @@ for (gene in GOI_genelist$entrezgene_id){
    print(gene_plot)
    
   }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-1">
+Past versions of "LDH 24 hour-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-1.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-2">
+Past versions of "LDH 24 hour-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-2.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-2.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-3">
+Past versions of "LDH 24 hour-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-3.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-3.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-4">
+Past versions of "LDH 24 hour-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-4.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-4.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-5">
+Past versions of "LDH 24 hour-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-5.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-5.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-6">
+Past versions of "LDH 24 hour-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-6.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-6.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-7">
+Past versions of "LDH 24 hour-7.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-7.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-7.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-8">
+Past versions of "LDH 24 hour-8.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-8.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-8.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-9">
+Past versions of "LDH 24 hour-9.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-9.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-9.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-10">
+Past versions of "LDH 24 hour-10.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-10.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/LDH 24 hour-10.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/LDH%2024%20hour-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-LDH-24-hour-11">
+Past versions of "LDH 24 hour-11.png"
+</button>
+</p>
+<div id="fig-no-spaces-LDH-24-hour-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/LDH 24 hour-11.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="toxicity-for-goi" class="section level4">
 <h4>Toxicity for GOI</h4>
@@ -1936,7 +3608,534 @@ for (gene in GOI_genelist$entrezgene_id){
    print(gene_plot)
    
  }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/toxicity%20corr-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-1">
+Past versions of "toxicity corr-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-1.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-1.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-2">
+Past versions of "toxicity corr-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-2.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-2.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-3">
+Past versions of "toxicity corr-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-3.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-3.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-4">
+Past versions of "toxicity corr-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-4.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-4.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-5">
+Past versions of "toxicity corr-5.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-5.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-5.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-6">
+Past versions of "toxicity corr-6.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-6.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-6.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-7">
+Past versions of "toxicity corr-7.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-7.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-7.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-8">
+Past versions of "toxicity corr-8.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-8.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-8.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-9">
+Past versions of "toxicity corr-9.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-9.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-9.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-10">
+Past versions of "toxicity corr-10.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-10.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ad58c4db3b9e7b48c9ea0e4d8c60973876bdf8a1/docs/figure/GOI_plots.Rmd/toxicity corr-10.png" target="_blank">ad58c4d</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/toxicity%20corr-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-toxicity-corr-11">
+Past versions of "toxicity corr-11.png"
+</button>
+</p>
+<div id="fig-no-spaces-toxicity-corr-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/toxicity corr-11.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="fig9-expression-correlation" class="section level4">
 <h4>Fig9 expression correlation</h4>
@@ -1999,7 +4198,202 @@ for (g in seq(1:4)){
               ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
   
 }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/GOIvar-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/GOIvar-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/GOIvar-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/GOIvar-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/GOIvar-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOIvar-1">
+Past versions of GOIvar-1.png
+</button>
+</p>
+<div id="fig-GOIvar-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOIvar-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOIvar-1.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/GOIvar-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOIvar-2">
+Past versions of GOIvar-2.png
+</button>
+</p>
+<div id="fig-GOIvar-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOIvar-2.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOIvar-2.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/GOIvar-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOIvar-3">
+Past versions of GOIvar-3.png
+</button>
+</p>
+<div id="fig-GOIvar-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOIvar-3.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOIvar-3.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/GOIvar-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GOIvar-4">
+Past versions of GOIvar-4.png
+</button>
+</p>
+<div id="fig-GOIvar-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/GOIvar-4.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3db5216067966eee47e380db1be83e041f9f7bec/docs/figure/GOI_plots.Rmd/GOIvar-4.png" target="_blank">3db5216</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="epi-examples" class="section level3">
 <h3>EPI examples</h3>
@@ -2013,8 +4407,161 @@ for (g in seq(1:4)){
               ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
   
 }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/EPI%20example-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/EPI%20example-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/EPI%20example-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/EPI%20example-4.png" width="672" style="display: block; margin: auto;" />
-### qvalue EPI</p>
+<p><img src="figure/GOI_plots.Rmd/EPI%20example-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-example-1">
+Past versions of "EPI example-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-example-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/EPI example-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/EPI%20example-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-example-2">
+Past versions of "EPI example-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-example-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/EPI example-2.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/EPI%20example-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-example-3">
+Past versions of "EPI example-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-example-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/EPI example-3.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/EPI%20example-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-example-4">
+Past versions of "EPI example-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-example-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/EPI example-4.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="qvalue-epi" class="section level3">
+<h3>qvalue EPI</h3>
 <pre class="r"><code>cpm_boxplot_time &lt;-function(cpmcounts,timex, GOI,brewer_palette, fill_colors, ylab) {
   ##GOI needs to be ENTREZID
   df &lt;- cpmcounts
@@ -2071,7 +4618,158 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
                 ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
 
 }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-qvalues-example-1">
+Past versions of "EPI qvalues example-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-qvalues-example-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/EPI qvalues example-1.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-qvalues-example-2">
+Past versions of "EPI qvalues example-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-qvalues-example-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/EPI qvalues example-2.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-qvalues-example-3">
+Past versions of "EPI qvalues example-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-qvalues-example-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/EPI qvalues example-3.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/EPI%20qvalues%20example-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EPI-qvalues-example-4">
+Past versions of "EPI qvalues example-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-EPI-qvalues-example-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/3359641c86f3ea37a259dcebf7156c2161e88b1f/docs/figure/GOI_plots.Rmd/EPI qvalues example-4.png" target="_blank">3359641</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="mtx-examples" class="section level3">
 <h3>MTX examples</h3>
@@ -2085,7 +4783,158 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
               ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
   
 }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/MTX%20example-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/MTX%20example-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/MTX%20example-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/MTX%20example-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/MTX%20example-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-MTX-example-1">
+Past versions of "MTX example-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-MTX-example-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/MTX example-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/MTX%20example-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-MTX-example-2">
+Past versions of "MTX example-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-MTX-example-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/MTX example-2.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/MTX%20example-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-MTX-example-3">
+Past versions of "MTX example-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-MTX-example-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/MTX example-3.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/MTX%20example-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-MTX-example-4">
+Past versions of "MTX example-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-MTX-example-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/MTX example-4.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="trz-examples" class="section level3">
 <h3>TRZ examples</h3>
@@ -2099,7 +4948,158 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
               ylab=bquote(~italic(.(a))~log[2]~&quot;cpm &quot;))
   
 }</code></pre>
-<p><img src="figure/GOI_plots.Rmd/TRZ%20example-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/TRZ%20example-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/TRZ%20example-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/GOI_plots.Rmd/TRZ%20example-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/GOI_plots.Rmd/TRZ%20example-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-TRZ-example-1">
+Past versions of "TRZ example-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-TRZ-example-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/TRZ example-1.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/TRZ%20example-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-TRZ-example-2">
+Past versions of "TRZ example-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-TRZ-example-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/TRZ example-2.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/TRZ%20example-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-TRZ-example-3">
+Past versions of "TRZ example-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-TRZ-example-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/TRZ example-3.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/GOI_plots.Rmd/TRZ%20example-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-TRZ-example-4">
+Past versions of "TRZ example-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-TRZ-example-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/da2a305e9f6254f5a316ad7fa48779c4833b92d2/docs/figure/GOI_plots.Rmd/TRZ example-4.png" target="_blank">da2a305</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2131,48 +5131,48 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] ggpubr_0.6.0          Hmisc_5.1-0           ggstats_0.3.0        
+ [1] ggpubr_0.6.0          Hmisc_5.1-1           ggstats_0.5.0        
  [4] broom_1.0.5           kableExtra_1.3.4      sjmisc_2.8.9         
  [7] scales_1.2.1          RColorBrewer_1.1-3    ggsignif_0.6.4       
-[10] lubridate_1.9.2       forcats_1.0.0         stringr_1.5.0        
-[13] dplyr_1.1.2           purrr_1.0.1           readr_2.1.4          
-[16] tidyr_1.3.0           tibble_3.2.1          ggplot2_3.4.2        
-[19] tidyverse_2.0.0       ComplexHeatmap_2.16.0 workflowr_1.7.0      
+[10] lubridate_1.9.3       forcats_1.0.0         stringr_1.5.0        
+[13] dplyr_1.1.3           purrr_1.0.2           readr_2.1.4          
+[16] tidyr_1.3.0           tibble_3.2.1          ggplot2_3.4.4        
+[19] tidyverse_2.0.0       ComplexHeatmap_2.16.0 workflowr_1.7.1      
 
 loaded via a namespace (and not attached):
   [1] gridExtra_2.3       rlang_1.1.1         magrittr_2.0.3     
-  [4] clue_0.3-64         GetoptLong_1.0.5    git2r_0.32.0       
+  [4] clue_0.3-65         GetoptLong_1.0.5    git2r_0.32.0       
   [7] matrixStats_1.0.0   compiler_4.3.1      mgcv_1.9-0         
- [10] getPass_0.2-2       png_0.1-8           systemfonts_1.0.4  
- [13] callr_3.7.3         vctrs_0.6.3         rvest_1.0.3        
+ [10] getPass_0.2-2       png_0.1-8           systemfonts_1.0.5  
+ [13] callr_3.7.3         vctrs_0.6.4         rvest_1.0.3        
  [16] pkgconfig_2.0.3     shape_1.4.6         crayon_1.5.2       
- [19] fastmap_1.1.1       backports_1.4.1     labeling_0.4.2     
- [22] utf8_1.2.3          promises_1.2.0.1    rmarkdown_2.23     
- [25] tzdb_0.4.0          ps_1.7.5            xfun_0.39          
+ [19] fastmap_1.1.1       backports_1.4.1     labeling_0.4.3     
+ [22] utf8_1.2.3          promises_1.2.1      rmarkdown_2.25     
+ [25] tzdb_0.4.0          ps_1.7.5            xfun_0.40          
  [28] cachem_1.0.8        jsonlite_1.8.7      highr_0.10         
  [31] later_1.3.1         parallel_4.3.1      cluster_2.1.4      
- [34] R6_2.5.1            bslib_0.5.0         stringi_1.7.12     
- [37] car_3.1-2           rpart_4.1.19        jquerylib_0.1.4    
- [40] Rcpp_1.0.11         iterators_1.0.14    knitr_1.43         
- [43] base64enc_0.1-3     IRanges_2.34.1      Matrix_1.6-0       
+ [34] R6_2.5.1            bslib_0.5.1         stringi_1.7.12     
+ [37] car_3.1-2           rpart_4.1.21        jquerylib_0.1.4    
+ [40] Rcpp_1.0.11         iterators_1.0.14    knitr_1.44         
+ [43] base64enc_0.1-3     IRanges_2.34.1      Matrix_1.6-1.1     
  [46] splines_4.3.1       httpuv_1.6.11       nnet_7.3-19        
  [49] timechange_0.2.0    tidyselect_1.2.0    abind_1.4-5        
  [52] rstudioapi_0.15.0   yaml_2.3.7          doParallel_1.0.17  
  [55] codetools_0.2-19    sjlabelled_1.2.0    processx_3.8.2     
- [58] lattice_0.21-8      withr_2.5.0         evaluate_0.21      
- [61] foreign_0.8-84      xml2_1.3.5          circlize_0.4.15    
+ [58] lattice_0.22-5      withr_2.5.1         evaluate_0.22      
+ [61] foreign_0.8-85      xml2_1.3.5          circlize_0.4.15    
  [64] pillar_1.9.0        carData_3.0-5       whisker_0.4.1      
- [67] checkmate_2.2.0     foreach_1.5.2       stats4_4.3.1       
- [70] insight_0.19.3      generics_0.1.3      rprojroot_2.0.3    
- [73] S4Vectors_0.38.1    hms_1.1.3           munsell_0.5.0      
+ [67] checkmate_2.3.0     foreach_1.5.2       stats4_4.3.1       
+ [70] insight_0.19.6      generics_0.1.3      rprojroot_2.0.3    
+ [73] S4Vectors_0.38.2    hms_1.1.3           munsell_0.5.0      
  [76] glue_1.6.2          tools_4.3.1         data.table_1.14.8  
  [79] webshot_0.5.5       fs_1.6.3            colorspace_2.1-0   
- [82] nlme_3.1-162        htmlTable_2.4.1     Formula_1.2-5      
- [85] cli_3.6.1           fansi_1.0.4         viridisLite_0.4.2  
- [88] svglite_2.1.1       gtable_0.3.3        rstatix_0.7.2      
+ [82] nlme_3.1-163        htmlTable_2.4.2     Formula_1.2-5      
+ [85] cli_3.6.1           fansi_1.0.5         viridisLite_0.4.2  
+ [88] svglite_2.1.2       gtable_0.3.4        rstatix_0.7.2      
  [91] sass_0.4.7          digest_0.6.33       BiocGenerics_0.46.0
  [94] farver_2.1.1        rjson_0.2.21        htmlwidgets_1.6.2  
- [97] htmltools_0.5.5     lifecycle_1.0.3     httr_1.4.6         
+ [97] htmltools_0.5.6.1   lifecycle_1.0.3     httr_1.4.7         
 [100] GlobalOptions_0.1.2</code></pre>
 </div>
 </div>

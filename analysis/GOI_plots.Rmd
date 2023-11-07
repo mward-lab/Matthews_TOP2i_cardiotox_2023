@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r function,echo=TRUE}
+```{r function, echo=TRUE}
 
 cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
     ##GOI needs to be ENTREZID
@@ -149,15 +149,7 @@ drug_pal_vehend <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333
 toplistall <- readRDS("data/toplistall.RDS") 
 # 
 GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","RMI1","KDM4B","KAT6B","TNS2", "EEF1B2"))
-# library(biomaRt)
-# ensembl <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
-# my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-# #
-# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
-# GOI_genelist<- getBM(attributes=my_attributes,filters ='hgnc_symbol',
-#          values = GOIcorr, mart = ensembl)
-# GOI_genelist <- GOI_genelist %>% distinct(entrezgene_id, .keep_all = TRUE)
-# write.csv(GOI_genelist,"output/GOI_genelist.txt")
+
 GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 
 RNAnormlist <- read.csv("output/TNNI_LDH_RNAnormlist.txt", row.names = 1)
@@ -250,9 +242,9 @@ GOIsig%>%
   kable_styling(full_width = FALSE, position = "left",bootstrap_options = c("striped"),font_size = 18) %>% 
   scroll_box(width = "60%", height = "400px")
 # write.csv(GOIsig,"data/GOIsig.csv")
-# saveRDS(avg_LD50,"data/avg_LD50.RDS")
+
 avg_LD50 <- readRDS("data/avg_LD50.RDS")
-# print(GOI_genelist)
+
 
 GOI_join <- RNAnormlist %>%
   mutate(indv=factor(indv,levels = level_order2)) %>%
