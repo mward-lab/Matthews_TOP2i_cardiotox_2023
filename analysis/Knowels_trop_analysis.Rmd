@@ -80,14 +80,14 @@ sample_table_k <- read_delim("C:/Users/renee/Downloads/Knowles_raw_data_dryad_do
 
 trop_knowles <- read.delim("~/Ward Lab/Cardiotoxicity/supplementals from papers/elife-33480-supp11-v2.txt")
 write.csv(trop_knowles, "output/trop_knowles_fun.csv")
-write.csv(Knowles_log2cpm, "output/Knowles_log2cpm.csv")
-
+write.table(Knowles_log2cpm, "output/Knowles_log2cpm.csv")
+saveRDS(Knowles_log2cpm,"data/Knowles_log2cpm_real.RDS")
 ```
 
 
 ```{r colorpalette}
 
-palette_colors_mine <- colorRampPalette(colors = c("green","white","purple","red" ))(90)
+palette_colors_mine <- colorRampPalette(colors = c("green","white","purple","red" ))(60)
 scales::show_col(palette_colors_mine)
 
 ```
@@ -98,7 +98,7 @@ Here I will attempt to recreate my correlation analysis on the knowles data usin
 ### genes I want to know about
 interest_genes <- read.csv("output/GOI_genelist.txt", row.names = 1)
 trop_knowles <- read.csv("output/trop_knowles_fun.csv", row.names = 1)
-Knowles_log2cpm <- read.csv("output/Knowles_log2cpm.csv", row.names = 1)
+Knowles_log2cpm <- readRDS("data/Knowles_log2cpm_real.RDS")
 trop0.625 <- trop_knowles %>% 
   filter(dosage <1) 
 store <- Knowles_log2cpm %>% 
@@ -111,8 +111,6 @@ store <- Knowles_log2cpm %>%
   group_by(cell_line) %>% 
   full_join(., interest_genes, by = c("ESGN" = "ensembl_gene_id"))
   
-  store %>% 
-  filter(ESGN==interest_genes[1,2])
   
   ###new graph stuff
   for (gene in interest_genes$ensembl_gene_id){
@@ -146,7 +144,28 @@ store <- Knowles_log2cpm %>%
 
 
 ```
+Knowles Boxplots of Fig9 genes
 
+```{r KnowBoxfig9}
+Knowles_log2cpm_box <- readRDS("data/Knowles_log2cpm_real.RDS")
+
+store_box <- Knowles_log2cpm_box %>% 
+  # dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
+  dplyr::filter(ESGN %in% interest_genes$ensembl_gene_id) %>% 
+  pivot_longer(cols=!ESGN, names_to = "ind", values_to = "counts") %>% 
+  separate(ind,into=c("cell_line","dosage"), sep = ":") %>%
+  mutate(dosage = as.numeric(dosage)) %>% 
+  # full_join(., trop0.625, by=c("cell_line", "dosage")) %>% 
+  group_by(cell_line) %>% 
+  full_join(., interest_genes, by = c("ESGN" = "ensembl_gene_id"))
+store_box %>% 
+  mutate(dosage=factor(dosage, levels=c('0','0.000', '0.625','1.25', '2.5','5'))) %>% 
+  ggplot(., aes(x=dosage,y=counts), group=dosage)+
+  geom_boxplot()+
+  facet_wrap(~hgnc_symbol)
+
+
+```
 
 
 
@@ -240,7 +259,7 @@ combined_data <- lcpm_main %>%
   cor(.,) 
 
   
-  Heatmap(only79_ind,column_title = "Full gene list",
+  Heatmap(only79_ind,column_title = "Full gene list_79",
           layer_fun = function(j, i, x, y, width, height, fill) {
               grid.text(sprintf("%.3f", pindex(only79_ind, i, j)), x, y, 
             gp = gpar(fontsize = 10))})
@@ -339,6 +358,31 @@ hr3_indv4 <- lcpm_trial_filter_main %>%
 plot(hr3_indv4)
  
 ```
+corrlation heatmap of 3hr Dox 1-6 individuals and trial data
+
+
+```{r ind1-6trial}
+
+lcpm_trial_filter_main %>% 
+  left_join(., lcpm_main, by = "ENTREZID") %>% 
+  column_to_rownames(var="ENTREZID") %>%
+  dplyr::select(starts_with("DOX"),`3hr_0.5`)%>% 
+  cor(.) %>% 
+  Heatmap(.,column_title = "Using 14084 expressed genes, just 79-1 with all 3 hour samples",
+          layer_fun = function(j, i, x, y, width, height, fill) {
+              grid.text(sprintf("%.3f", pindex(., i, j)), x, y, 
+            gp = gpar(fontsize = 8))})
+  #  all3hrdata <- lcpm_main %>%
+  # full_join(., lcpm_trial_full, by= "ENTREZID") %>% 
+  #   dplyr::select(ENTREZID,'3hr_0.5',start) %>% 
+  #   column_to_rownames("ENTREZID") %>% 
+  # cor(.,) 
+
+
+
+
+```
+
 ### barplots
 
 ```{r bar_plots of GOI}
