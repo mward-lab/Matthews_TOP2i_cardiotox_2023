@@ -388,7 +388,7 @@ lcpm_trial_filter_main %>%
 ```{r bar_plots of GOI}
 
 
-GOI_genelist <- read.csv("output/GOI_genelist.txt")
+GOI_genelist <- read.csv("output/GOI_genelist.txt", row.names = 1)
 
 cpm_boxplot_trial <-function(lcpm_trial, GOI, ylab) {
     ##GOI needs to be ENTREZID
