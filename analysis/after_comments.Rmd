@@ -1,0 +1,235 @@
+---
+title: "After_comments"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
+```{r functions}
+drug_pal <- c("#707031","#41B333")
+# use "Dark2" for individuals, and drug_pal for drug fill
+
+cpm_TRZ <-
+  function(cpmcounts,
+           GOI,
+           ylab) {
+    ##GOI needs to be ENTREZID
+    df <- trz_veh_count %>% 
+      column_to_rownames("ENTREZID")
+    df_plot <- df %>%
+      dplyr::filter(rownames(.) == GOI) %>%
+      pivot_longer(everything(),
+                   names_to = "treatment",
+                   values_to = "counts") %>%
+      separate(treatment, c("drug", "indv", "time")) %>%
+      mutate(time = factor(time, levels = c("3h", "24h"))) %>%
+      mutate(indv = factor(indv, levels = c(1, 2, 3, 4, 5, 6))) %>%
+      mutate(
+        drug = case_match(
+          drug,
+          "Da" ~ "DNR",
+          "Do" ~ "DOX",
+          "Ep" ~ "EPI",
+          "Mi" ~ "MTX",
+          "Tr" ~ "TRZ",
+          "Ve" ~ "VEH",
+          .default = drug
+        )
+      ) %>%
+      mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH')))
+    plot <-
+    ggplot2::ggplot(df_plot, aes(x = drug, y = counts)) +
+      geom_boxplot(position = "identity", aes(fill = drug)) +
+      geom_point(aes(
+        col = indv,
+        size = 1.5,
+        alpha = 0.5
+      )) +
+      guides(alpha = "none", size = "none") +
+      # scale_color_brewer(palette = "Dark2", guide = "none") +
+      scale_fill_manual(values = drug_pal) +
+      facet_wrap("time", nrow = 1, ncol = 2) +
+      theme_bw() +
+      ylab(ylab) +
+      xlab("") +
+      theme(
+        strip.background = element_rect(
+          fill = "white",
+          linetype = 1,
+          linewidth = 0.5
+        ),
+        plot.title = element_text(
+          size = 10,
+          hjust = 0.5,
+          face = "bold"
+        ),
+        axis.title = element_text(size = 10, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text.x = element_blank(),
+        strip.text.x = element_text(margin = margin(2, 0, 2, 0, "pt"), face = "bold")
+      )
+    print(plot)
+  }
+
+
+
+```
+
+```{r package loading}
+library(tidyverse)
+library(ggsignif)
+library(cowplot)
+library(ggpubr)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(ComplexHeatmap)
+library(ggVennDiagram)
+library(biomaRt)
+# library(limma)
+# library(edgeR)
+library(RColorBrewer)
+
+```
+
+### Loading of data from Necela, supplemental 1.
+
+
+```{r load_data}
+
+FC_necela <- readRDS("output/FC_necela.RDS")
+FC_mine <- readRDS("data/toplistall.RDS")
+
+TRZ_list <- FC_mine %>% 
+  filter(id=="TRZ",P.Value < 0.05) #%>% 
+
+TRZ_list %>% 
+kable(., caption = "List of nominal pvalue TRZ genes in my data") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left"
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+
+  # unique(SYMBOL) %>% 
+  # dplyr::distinct(SYMBOL)
+necela_list <- FC_necela %>% 
+  dplyr::filter(PValue<0.05) %>% 
+  dplyr::select(Gene) 
+
+FC_necela %>%# mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "List of nominal pvalue Necela TRZ genes") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left"
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+
+ggVennDiagram::ggVennDiagram(list(necela_list$Gene, TRZ_list$SYMBOL))
+intersect(necela_list$Gene,TRZ_list$SYMBOL)
+ven_list <- VennDiagram::get.venn.partitions(list(necela_list$Gene, TRZ_list$SYMBOL))
+```
+
+
+Necela's Supplemental 1 contains the column names `r colnames(FC_necela)`. To find the nominally expressed number of genes, I used the PValue column and filtered for all genes with a PValue of \< 0.05. This gave me a list of `r length(necela_list)` genes.\
+I then did the same with my data, filtering for the nominal pvalue (P \<0.05) genes and getting a total of `r length(TRZ_list$ENTREZID)`.  When I intersected their nominal pvalue genes with mine, I had 3 out of 36 nominally expressed genes in common.
+The genes that are shared are `r intersect(necela_list$Gene, TRZ_list$SYMBOL)`
+
+  
+  
+## Gene expression of TRZ_3 and TRZ_24 hour nominal genes
+
+using Pvalue\<0.05
+
+These genes are examples of the 36 observed nominally DE genes.
+
+```{r TRZnominal}
+
+# use "Dark2" for individuals, and drug_pal for drug fill
+all_cpmcount <-   readRDS("data/cpmcount.RDS") %>% rownames_to_column(var = "ENTREZID")
+##pulled all my logcpm, now choosing only TRZ and VEH for plotting
+
+trz_veh_count <- all_cpmcount %>% 
+  dplyr::select(ENTREZID, starts_with("Tr"), starts_with("Ve"))
+
+set.seed(12345)
+sampset <- readRDS("data/sampsettrz.RDS")
+#  <- TRZ_list %>% 
+#   distinct(ENTREZID,.keep_all = TRUE) %>% 
+#   sample_n(.,6)
+for (g in seq(from=1, to=length(sampset$ENTREZID))){
+  a <- sampset$SYMBOL[g]
+  cpm_TRZ(trz_veh_count,GOI=sampset[g,3],
+          ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+
+}
+
+```
+
+```{r Biomart}
+ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl" )
+my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
+# #
+
+listogene <- necela_list$Gene
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+# devtools::install_version("dbplyr", version = "2.3.4")
+necela_list_test <- getBM(attributes = my_attributes, 
+                     filters ="hgnc_symbol",   
+                     values =listogene, 
+                     mart = ensembl)
+
+
+
+
+```
+
+
+
+
+## DOX CRISPR paper
+
+Sapp, V., Aguirre, A., Mainkar, G. et al. Genome-wide CRISPR/Cas9 screening in human iPS derived cardiomyocytes uncovers novel mediators of doxorubicin cardiotoxicity. Sci Rep 11, 13866 (2021). https://doi.org/10.1038/s41598-021-92988-1
+
+
+
+using this paper, I want to examine the expression of genes the implicate as contributors to Dox-induced cardiotoxicity--- ugh, the supplementals are NOT HELPFUL!
+
+```{r dOxCrisPr}
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
