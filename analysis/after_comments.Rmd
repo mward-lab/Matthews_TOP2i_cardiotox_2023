@@ -115,7 +115,6 @@ library(RColorBrewer)
 
 ### Loading of data from Necela, supplemental 1.
 
-
 ```{r load_data}
 
 FC_necela <- readRDS("output/FC_necela.RDS")
@@ -151,15 +150,19 @@ FC_necela %>%# mutate_at(.vars = 6, .funs = scientific_format()) %>%
 ggVennDiagram::ggVennDiagram(list(necela_list$Gene, TRZ_list$SYMBOL))
 intersect(necela_list$Gene,TRZ_list$SYMBOL)
 ven_list <- VennDiagram::get.venn.partitions(list(necela_list$Gene, TRZ_list$SYMBOL))
+
+
+hr3trz <- TRZ_list %>% 
+  filter(time=="3_hours")
+hr24trz <- TRZ_list %>% 
+  filter(time=="24_hours")
+intersect(hr24trz$SYMBOL, hr3trz$SYMBOL)
+
 ```
 
-
 Necela's Supplemental 1 contains the column names `r colnames(FC_necela)`. To find the nominally expressed number of genes, I used the PValue column and filtered for all genes with a PValue of \< 0.05. This gave me a list of `r length(necela_list)` genes.\
-I then did the same with my data, filtering for the nominal pvalue (P \<0.05) genes and getting a total of `r length(TRZ_list$ENTREZID)`.  When I intersected their nominal pvalue genes with mine, I had 3 out of 36 nominally expressed genes in common.
-The genes that are shared are `r intersect(necela_list$Gene, TRZ_list$SYMBOL)`
+I then did the same with my data, filtering for the nominal pvalue (P \<0.05) genes and getting a total of `r length(TRZ_list$ENTREZID)`. When I intersected their nominal pvalue genes with mine, I had 3 out of 36 nominally expressed genes in common. The genes that are shared are `r intersect(necela_list$Gene, TRZ_list$SYMBOL)`
 
-  
-  
 ## Gene expression of TRZ_3 and TRZ_24 hour nominal genes
 
 using Pvalue\<0.05
@@ -187,6 +190,12 @@ for (g in seq(from=1, to=length(sampset$ENTREZID))){
 
 }
 
+
+
+
+
+
+
 ```
 
 ```{r Biomart}
@@ -202,21 +211,162 @@ necela_list_test <- getBM(attributes = my_attributes,
                      values =listogene, 
                      mart = ensembl)
 
+necela_val_genes <- getBM(attributes = my_attributes, 
+                     filters ="hgnc_symbol",   
+                     values =c("RGS4","EGR1", "SLC6A6", "PHLDA1"), 
+                     mart = ensembl)
+HER2_gene <- getBM(attributes = my_attributes,
+                   filters = "entrezgene_id",
+                   values= 2064,
+                   mart = ensembl)
+# FC_necela_names <- getBM(attributes = my_attributes,
+#                          filter = "hgnc_symbol",
+#                          values=FC_necela$Gene,
+#                          mart = ensembl)
 
 
 
 ```
 
+```{r val_genes}
+
+trz_veh_count <- all_cpmcount %>% 
+  dplyr::select(ENTREZID, starts_with("Tr"), starts_with("Ve"))
+necela_val_genes <- rbind(HER2_gene[1,],necela_val_genes)
+set.seed(12345)
+
+#  <- TRZ_list %>% 
+#   distinct(ENTREZID,.keep_all = TRUE) %>% 
+#   sample_n(.,6)
+for (g in seq(from=1, to=length(necela_val_genes$entrezgene_id))){
+  a <- necela_val_genes$hgnc_symbol[g]
+  cpm_TRZ(trz_veh_count,GOI=necela_val_genes[g,1],
+          ylab=bquote(~italic(.(a))~log[2]~"cpm "))
+
+}
+
+```
+
+### Cell cycle genes
+
+```{r cellcycle, fig.show="hold", out.width="25%"}
 
 
+cell_cycle_list <-
+  c(595,894,896,1019,1021 ,5925, 5933,5934,1869,7027,7029, 2932,
+    1027, 1028 ,1026, 898,1017, 6500, 890,
+    8900,  8318, 90381,  27085, 8317, 983, 891, 9133, 85417,994,
+    995 , 5347 ,7465 , 902, 1022, 64682, 29882, 113130, 9212,
+    8379 ,1647,  4616 , 10912, 1111, 11200,993) 
+
+
+cell_cycle_genes <- getBM(attributes = my_attributes,
+                   filters = "entrezgene_id",
+                   values= cell_cycle_list,
+                   mart = ensembl)
+cell_cycle_genes <- cell_cycle_genes %>% 
+  dplyr::distinct(entrezgene_id,.keep_all = TRUE) %>% 
+  filter(entrezgene_id %in% trz_veh_count$ENTREZID)
+
+FC_necela_names <- readRDS("data/FC_necela_names.RDS")
+necela_cc_shortlist <- FC_necela_names %>% 
+  distinct(entrezgene_id,.keep_all = TRUE) %>% 
+  filter(entrezgene_id %in% cell_cycle_genes$entrezgene_id) %>% 
+  # mutate(entrezgene_id_chr=as.charater(entrezgene_id)) %>% 
+  full_join(., FC_necela, by=c("hgnc_symbol"="Gene"))
+
+
+
+for (g in seq(from=1, to=44)){
+  a <- cell_cycle_genes$hgnc_symbol[g]
+  cpm_TRZ(trz_veh_count,GOI=cell_cycle_genes[g,1],
+          ylab=bquote(~italic(.(a))~log[2]~"cpm "))+
+    labs(title=bquote(~italic(.(a))))
+
+}
+
+
+
+```
+
+```{r necela_cellcycle, eval=FALSE, include=FALSE}
+
+df_nc <- necela_cc_shortlist %>% as.tibble() %>% 
+        select(ensembl_gene_id,hgnc_symbol,logCPM) %>% 
+  
+
+cpm_necela <-
+  function(necela_cc_shortlist,
+           GOI,
+           ylab) {
+    ##GOI needs to be ENTREZID
+    df <- necela_cc_shortlist %>% 
+      column_to_rownames("entrezgene_id") %>% 
+      select(ensembl_gene_id,hgnc_symbol,logCPM)
+    df_plot <- df %>%
+      dplyr::filter(rownames(.) == GOI) %>%
+      pivot_longer(everything(),
+                   names_to = "treatment",
+                   values_to = "counts") %>%
+      mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH')))
+    plot <-
+    ggplot2::ggplot(df_plot, aes(x = drug, y = counts)) +
+      geom_boxplot(position = "identity", aes(fill = drug)) +
+      geom_point(aes(
+        col = indv,
+        size = 1.5,
+        alpha = 0.5
+      )) +
+      guides(alpha = "none", size = "none") +
+      # scale_color_brewer(palette = "Dark2", guide = "none") +
+      scale_fill_manual(values = drug_pal) +
+      facet_wrap("time", nrow = 1, ncol = 2) +
+      theme_bw() +
+      ylab(ylab) +
+      xlab("") +
+      theme(
+        strip.background = element_rect(
+          fill = "white",
+          linetype = 1,
+          linewidth = 0.5
+        ),
+        plot.title = element_text(
+          size = 10,
+          hjust = 0.5,
+          face = "bold"
+        ),
+        axis.title = element_text(size = 10, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text.x = element_blank(),
+        strip.text.x = element_text(margin = margin(2, 0, 2, 0, "pt"), face = "bold")
+      )
+    print(plot)
+  }
+
+
+necela_cc_genes <- necela_cc_shortlist %>% 
+  dplyr::distinct(entrezgene_id,.keep_all = TRUE) %>% 
+  filter(entrezgene_id %in% cell_cycle_genes$entrezgene_id)
+
+for (g in seq(from=1, to=44)){
+  a <- cell_cycle_genes$hgnc_symbol[g]
+  cpm_TRZ(necela_cc_genes,GOI=necela_cc_genes[g,1],
+          ylab=bquote(~italic(.(a))~log[2]~"cpm "))+
+    ggtitle(bquote(~italic(.(a))))
+
+}
+
+
+
+
+```
 
 ## DOX CRISPR paper
 
-Sapp, V., Aguirre, A., Mainkar, G. et al. Genome-wide CRISPR/Cas9 screening in human iPS derived cardiomyocytes uncovers novel mediators of doxorubicin cardiotoxicity. Sci Rep 11, 13866 (2021). https://doi.org/10.1038/s41598-021-92988-1
+Sapp, V., Aguirre, A., Mainkar, G. et al. Genome-wide CRISPR/Cas9 screening in human iPS derived cardiomyocytes uncovers novel mediators of doxorubicin cardiotoxicity. Sci Rep 11, 13866 (2021). <https://doi.org/10.1038/s41598-021-92988-1>
 
-
-
-using this paper, I want to examine the expression of genes the implicate as contributors to Dox-induced cardiotoxicity--- ugh, the supplementals are NOT HELPFUL!
+using this paper, I want to examine the expression of genes they implicate as contributors to Dox-induced cardiotoxicity--- ugh, the supplemental files are NOT HELPFUL!
 
 ```{r dOxCrisPr}
 
@@ -226,10 +376,3 @@ using this paper, I want to examine the expression of genes the implicate as con
 
 
 ```
-
-
-
-
-
-
-
