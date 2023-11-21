@@ -498,3 +498,13 @@ I found `r length(intersect(DOXtop_upreg$SYMBOL, reyes_setA$HGNC))` up-regulated
 
 I found `rlength(intersect(DOXtop_down$SYMBOL, reyes_setA$HGNC))` down regulated DEGS in my data set that intersected with Set A.  A closer look yielded NPPB to be the only down-regulated DEG that interseted with SetA from the Reyes paper.
 
+
+
+
+
+
+### Link to other pages here:
+
+[Knowles troponin]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowels_trop_analysis.html
+
+GO analysis on after_comments data [here]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_after_comments.html
