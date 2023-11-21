@@ -167,6 +167,7 @@ store_box %>%
   facet_wrap(~hgnc_symbol)
 
 
+  
 ```
 
 
@@ -243,8 +244,9 @@ lcpm_main <- all_cpmcount %>%
   dplyr::select(ENTREZID, all_of(ends_with("3h")))  
   
 combined_data <- lcpm_main %>%
-  full_join(., lcpm_trial_full, by= "ENTREZID") %>% 
+  full_join(., lcpm_trial_full, by= "ENTREZID") %>%
   column_to_rownames("ENTREZID") %>% 
+  dplyr::select(starts_with("DOX"),`3hr_0.5`)%>% 
   cor(.,) 
 
 
@@ -360,7 +362,7 @@ hr3_indv4 <- lcpm_trial_filter_main %>%
 plot(hr3_indv4)
  
 ```
-corrlation heatmap of 3hr Dox 1-6 individuals and trial data
+correlation heatmap of 3hr Dox 1-6 individuals and trial data
 
 
 ```{r ind1-6trial}
@@ -374,13 +376,17 @@ lcpm_trial_filter_main %>%
           layer_fun = function(j, i, x, y, width, height, fill) {
               grid.text(sprintf("%.3f", pindex(., i, j)), x, y, 
             gp = gpar(fontsize = 8))})
-  #  all3hrdata <- lcpm_main %>%
-  # full_join(., lcpm_trial_full, by= "ENTREZID") %>% 
-  #   dplyr::select(ENTREZID,'3hr_0.5',start) %>% 
-  #   column_to_rownames("ENTREZID") %>% 
-  # cor(.,) 
+ 
 
-
+lcpm_main %>% 
+  left_join(., lcpm_trial_full, by = "ENTREZID") %>% 
+  column_to_rownames(var="ENTREZID") %>%
+  dplyr::select(starts_with("DOX"),`3hr_0.5`)%>% 
+  cor(.) %>% 
+  Heatmap(.,column_title = "all 29395 genes expriment with trial 0.5 uM",
+          layer_fun = function(j, i, x, y, width, height, fill) {
+              grid.text(sprintf("%.3f", pindex(., i, j)), x, y, 
+            gp = gpar(fontsize = 8))})
 
 
 ```
@@ -435,6 +441,53 @@ for (g in seq(1:11)){
 ```
 
 expression of trial RNA seq data
+### Knowles log2cpm 24hr and my log2cpm 24hr
+
+```{r K and Me}
+library(ggsignif)
+kcpm <- store_box %>%  
+  mutate(dosage=factor(dosage, levels=c('0','0.000', '0.625','1.25', '2.5','5'))) %>% 
+  dplyr::filter(dosage==("0")|dosage == "0.625") %>% 
+  mutate(expr="K")
+  
+lcpm_24h <- all_cpmcount %>% 
+  column_to_rownames("ENTREZID") %>% 
+  cpm(., log=TRUE) %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = "ENTREZID") %>% 
+  dplyr::select(ENTREZID, all_of(starts_with(c("DOX","VEH")))) %>% 
+  dplyr::select(ENTREZID, all_of(ends_with("24h")))  %>% 
+  dplyr::filter(ENTREZID %in% interest_genes$entrezgene_id) %>% 
+  pivot_longer(cols=!ENTREZID, names_to = "ind", values_to = "counts") %>% 
+  mutate(ENTREZID = as.numeric(ENTREZID)) %>% 
+  full_join(., interest_genes, by = c("ENTREZID"="entrezgene_id")) %>% 
+  mutate(expr="ME") %>% 
+  rename("ESGN"="ensembl_gene_id","entrezgene_id"="ENTREZID") %>% 
+  separate(ind, into = c("dosage","cell_line",NA)) %>% 
+  mutate(dosage=case_match(dosage,"DOX"~"0.5","VEH"~"0.000", .default = dosage)) %>% 
+  mutate(dosage = as.numeric(dosage))
+  
+lcpm_24h %>% 
+  rbind(.,kcpm) %>% 
+  mutate(dosage=factor(dosage, levels=c('0','0.5', '0.625','1.25', '2.5','5'))) %>% 
+  ggplot(., aes(x=dosage,y=counts), group=expr)+
+  geom_boxplot()+
+  facet_wrap(~hgnc_symbol, scales="free_y" )#+
+  # geom_signif(
+  #   comparisons = list(
+  #     c('0', '0.5'),
+  #     c('0', '0.625'),
+  #     c('0.5','0.625')
+  #   ),
+  #   test = "t.test",
+  #   tip_length = 0.01,
+  #   map_signif_level = FALSE,
+  #   textsize = 4,
+  #   step_increase = 0.3
+  # ) 
+  
+  
+```
 
 
 ### Link to other pages here:
