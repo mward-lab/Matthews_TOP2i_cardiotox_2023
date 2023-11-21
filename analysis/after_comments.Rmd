@@ -505,6 +505,7 @@ I found `rlength(intersect(DOXtop_down$SYMBOL, reyes_setA$HGNC))` down regulated
 
 ### Link to other pages here:
 
-[Knowles troponin]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowels_trop_analysis.html
+[Knowles and troponin](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowels_trop_analysis.html)
 
-GO analysis on after_comments data [here]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_after_comments.html
+GO analysis on after_comments data [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_after_comments.html)
+

@@ -119,16 +119,18 @@ store <- Knowles_log2cpm %>%
       ggplot(., aes(x=troponin, y=counts))+
       geom_point(aes(col=cell_line))+
       geom_smooth(method="lm")+
+      
       facet_wrap(hgnc_symbol~dosage, scales="free")+
       theme_classic()+
       xlab("troponin I expression") +
       ylab("Gene counts in log2 cpm") +
       ggtitle(expression(paste("Correlation between counts and troponin I Knowles")))+
-      scale_color_manual(values = palette_colors_mine, aesthetics = c("color", "fill"))+
+      scale_color_manual(values = palette_colors_mine, aesthetics = c("color", "fill"), guide=FALSE)+
+      # guides(fill="none")+
      ggpubr:: stat_cor(method="spearman",
                        # cor.coef.name="rho",
                aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
-               color = "red",
+               color = "black",
                label.x.npc = 0.01,
                label.y.npc=0.01, 
                size = 3)+
@@ -437,8 +439,8 @@ expression of trial RNA seq data
 
 ### Link to other pages here:
 
-[after_comments]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html
+[after_comments](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html)
 
-GO analysis on after_comments data [here]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_after_comments.html
+GO analysis on after_comments data [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_after_comments.html)
 
 
