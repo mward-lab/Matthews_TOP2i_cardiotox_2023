@@ -464,12 +464,11 @@ lcpm_24h <- all_cpmcount %>%
   mutate(expr="ME") %>% 
   rename("ESGN"="ensembl_gene_id","entrezgene_id"="ENTREZID") %>% 
   separate(ind, into = c("dosage","cell_line",NA)) %>% 
-  mutate(dosage=case_match(dosage,"DOX"~"0.5","VEH"~"0.000", .default = dosage)) %>% 
-  mutate(dosage = as.numeric(dosage))
+  mutate(dosage=case_match(dosage,"DOX"~"0.5", .default = dosage)) 
   
 lcpm_24h %>% 
   rbind(.,kcpm) %>% 
-  mutate(dosage=factor(dosage, levels=c('0','0.5', '0.625','1.25', '2.5','5'))) %>% 
+  mutate(dosage=factor(dosage, levels=c('0','0.625',"VEH","0.5"))) %>% 
   ggplot(., aes(x=dosage,y=counts), group=expr)+
   geom_boxplot()+
   facet_wrap(~hgnc_symbol, scales="free_y" )#+
