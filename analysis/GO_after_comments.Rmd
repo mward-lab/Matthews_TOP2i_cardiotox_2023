@@ -1,0 +1,245 @@
+---
+title: "GO_after_comments"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
+```{r  package loading}
+library(tidyverse)
+library(ggsignif)
+library(cowplot)
+library(ggpubr)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(biomaRt)
+library(RColorBrewer)
+library(gprofiler2)
+```
+
+
+
+```{r data loading}
+FC_mine <- readRDS("data/toplistall.RDS")
+TRZ_list <- FC_mine %>% 
+  filter(id=="TRZ",P.Value < 0.05) #%>% 
+backGL <- read_csv("data/backGL.txt", 
+    col_types = cols(...1 = col_skip()))
+
+TRZ_list3h <- FC_mine %>% 
+  filter(id=="TRZ",P.Value < 0.05, time == "3_hours")
+TRZ_list24h <- FC_mine %>% 
+  filter(id=="TRZ",P.Value < 0.05, time == "24_hours")
+
+```
+
+### TRZ  nom de (3 & 24 hour)
+```{r GOanalysis}
+# TRZresgenes <- gost(query = TRZ_list$ENTREZID,
+#                     organism = "hsapiens",
+#                     significant = FALSE,
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg = backGL$ENTREZID,
+#                     sources=c("GO:BP","KEGG"))
+# saveRDS(TRZresgenes,"data/DEG-GO/TRZresgenes.RDS")
+TRZresgenes <- readRDS("data/DEG-GO/TRZresgenes.RDS")
+
+TRZnom <- gostplot(TRZresgenes, capped = FALSE, interactive = TRUE)
+TRZnom
+
+TRZnomtable <- TRZresgenes$result %>% 
+  dplyr::select(c(source, term_id,
+                  term_name,intersection_size, 
+                   term_size, p_value))# %>% 
+
+TRZnomtable %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., ) %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+
+TRZnomtable %>%
+  filter(source=="KEGG") %>% 
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "Enrichment of KEGG terms using nominal pvalue TRZ genes in my data") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+
+
+```
+### TRZ 3 hour nom de
+
+
+```{r  TRZ3h}
+
+
+# TRZresgenes3h <- gost(query = TRZ_list3h$ENTREZID,
+#                     organism = "hsapiens",
+#                     significant = FALSE,
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg = backGL$ENTREZID,
+#                     sources=c("GO:BP","KEGG"))
+# saveRDS(TRZresgenes3h,"data/DEG-GO/TRZresgenes3h.RDS")
+TRZresgenes3h <- readRDS("data/DEG-GO/TRZresgenes3h.RDS")
+
+TRZnom3h <- gostplot(TRZresgenes3h, capped = FALSE, interactive = TRUE)
+TRZnom3h
+
+TRZnomtable3h <- TRZresgenes3h$result %>% 
+  dplyr::select(c(source, term_id,
+                  term_name,intersection_size, 
+                   term_size, p_value))# %>% 
+
+TRZnomtable3h %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., ) %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+
+TRZnomtable3h %>%
+  filter(source=="KEGG") %>% 
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "Enrichment of KEGG terms using nominal pvalue TRZ 3hour genes in my data") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+```
+
+
+### TRZ 24 hour nom de
+
+```{r TRZ24h}
+
+
+
+
+# TRZresgenes24h <- gost(query = TRZ_list24h$ENTREZID,
+#                     organism = "hsapiens",
+#                     significant = FALSE,
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg = backGL$ENTREZID,
+#                     sources=c("GO:BP","KEGG"))
+# saveRDS(TRZresgenes24h,"data/DEG-GO/TRZresgenes24h.RDS")
+TRZresgenes24h <- readRDS("data/DEG-GO/TRZresgenes24h.RDS")
+
+TRZnom24h <- gostplot(TRZresgenes24h, capped = FALSE, interactive = TRUE)
+TRZnom24h
+
+TRZnomtable24h <- TRZresgenes24h$result %>% 
+  dplyr::select(c(source, term_id,
+                  term_name,intersection_size, 
+                   term_size, p_value))# %>% 
+
+TRZnomtable24h %>%
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., ) %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+
+TRZnomtable24h %>%
+  filter(source=="KEGG") %>% 
+  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  kable(., caption = "Enrichment of KEGG terms using nominal pvalue TRZ 24hour genes in my data") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+```
+```{r eval=FALSE, include=FALSE}
+
+# 
+#  Code from another
+# DAspgostres3 <- readRDS("C:/Program Files/R_WD/Cardiotoxicity/data/DEG-GO/DAspgostres3.RDS")
+# sampleDAsp3 <- DAspgostres3$result %>% 
+#   dplyr::select(c(source, term_id,
+#                   term_name,intersection_size, 
+#                    term_size, p_value))# %>% 
+# 
+# sampleDAsp3 %>%
+#   mutate_at(.vars = 6, .funs = scientific_format()) %>%
+#   kable(., ) %>%
+#   kable_paper("striped", full_width = FALSE) %>%
+#   kable_styling(
+#     full_width = FALSE,
+#     position = "left",
+#     bootstrap_options = c("striped", "hover")
+#   ) %>%
+#   scroll_box(width = "100%", height = "400px")
+# 
+# 
+
+```
+
+
+
+
+
+
+Link to other pages here:
+
+[Knowles troponin data]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowels_trop_analysis.html
+
+GO analysis on after_comments data [here]https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_after_comments.html
