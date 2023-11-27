@@ -394,7 +394,8 @@ lcpm_main %>%
 ### barplots
 
 ```{r bar_plots of GOI}
-
+backGL <-read_csv("data/backGL.txt", 
+    col_types = cols(...1 = col_skip()))
 
 GOI_genelist <- read.csv("output/GOI_genelist.txt", row.names = 1)
 
@@ -486,6 +487,100 @@ lcpm_24h %>%
   # ) 
   
   
+```
+### Replication of variance figures using Knowels data
+
+
+
+```{r varianceKnowles}
+
+
+store_var <- Knowles_log2cpm %>% 
+  dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
+  rowwise() %>% 
+  mutate(mean_DOX=mean(c_across(ends_with('0.625'))),
+         var_DOX=var(c_across(ends_with('0.625'))),
+        mean_NT=mean(c_across(ends_with('0'))),
+         var_NT=var(c_across(ends_with('0')))) %>% 
+  mutate(data=list(var.test(c_across(ends_with("0.625")),c_across(ends_with("0"))))) %>% 
+  dplyr::select("ESGN","mean_DOX","var_DOX","mean_NT", "var_NT","data")
+saveRDS(store_var, "data/Knowles_variation_data.RDS")
+
+knowlesdrug<- store_var %>% 
+  dplyr::select("ESGN","mean_DOX","var_DOX","mean_NT", "var_NT") %>% 
+  pivot_longer(cols = !"ESGN", names_to = "short", values_to = "values") %>% 
+  separate(short, into=c("calc","treatment")) #%>% 
+knowlesdrug %>% 
+  as.data.frame() %>% 
+  dplyr::filter(calc == "mean") %>% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot()+
+  ggtitle("Knowles Means across all genes")+
+  geom_signif(
+    comparisons = list(
+      c("DOX", "NT")),
+    test = "t.test",
+    tip_length = 0.01,
+    map_signif_level = FALSE
+    # textsize = 4,
+    # # y_position = 11,
+    # step_increase = 0.05
+  )
+
+knowlesdrug %>% 
+  as.data.frame() %>% 
+  dplyr::filter(calc == "var") %>% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot(outlier.shape= NA)+
+  ggtitle(" Knowles Variance across all genes")+
+  
+  geom_signif(
+    comparisons = list(
+      c("DOX", "NT")),
+    test = "t.test",
+    tip_length = 0.01,
+    y_position = 0.5,
+    # vjust=1,
+    map_signif_level = FALSE)+
+ ylim(NA,1.25)
+
+library(qvalue)
+
+
+p_list <- map_df(store_var$data,~as.data.frame(.x$p.value))
+ rownames(p_list) <- store_var$ESGN
+estDOXk <- qvalue(p_list) 
+ hist(estDOXk)
+ plot(estDOXk)
+summary(estDOXk) 
+knowlesvar <- data.frame("pvalues"=estDOXk$pvalues,"qvalues"=estDOXk$qvalues,"lfdr"= estDOXk$lfdr)  
+ colnames(knowlesvar) <- c("pvalues", "qvalues","lfdr")
+intersecting_K <- knowlesvar %>% 
+  filter(lfdr<0.1)
+my_qval_list24 <- readRDS("data/qval24hr.RDS") 
+
+EPI508_list <- my_qval_list24 %>% 
+  dplyr::select(ENTREZID,EPIqvalues) %>% 
+  filter(EPIqvalues<0.1) %>% 
+  dplyr::select(ENTREZID) %>%
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  left_join(.,backGL, by="ENTREZID")
+Knowlesvarlist <- readRDS("data/Knowlesvarlist.RDS")
+  
+# Knowlesvarlist<- getBM(attributes=my_attributes,filters ='ensembl_gene_id',values = rownames(intersecting_K), mart = ensembl)
+
+length(intersect(EPI508_list$ENTREZID,Knowlesvarlist$entrezgene_id))
+intersect_genes <- EPI508_list %>% 
+  dplyr::filter(ENTREZID %in% Knowlesvarlist$entrezgene_id)
+
+intersect_genes %>% 
+kable(.,caption = "EPI Highly variable genes") %>% 
+  kable_paper("striped", full_width = FALSE) %>%  
+  kable_styling(full_width = TRUE, bootstrap_options = c("striped","hover")) %>% 
+  scroll_box(width = "100%", height = "400px")
+
+
+# saveRDS(Knowlesvarlist,"data/Knowlesvarlist.RDS")
 ```
 
 
