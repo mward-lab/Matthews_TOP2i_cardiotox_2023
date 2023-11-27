@@ -150,36 +150,41 @@ FC_necela %>%# mutate_at(.vars = 6, .funs = scientific_format()) %>%
 ggVennDiagram::ggVennDiagram(list(necela_list$Gene, TRZ_list$SYMBOL))
 intersect(necela_list$Gene,TRZ_list$SYMBOL)
 ven_list <- VennDiagram::get.venn.partitions(list(necela_list$Gene, TRZ_list$SYMBOL))
+TRZ_list %>% 
+  group_by(time) %>% 
+ count()
 
 
 ```
 
 
 ```{r Biomart}
-ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl" )
-# my_chr <- c(1:22, 'M', 'X', 'Y')  ## creates a filter for each
-# #
+# ensembl <- useMart(biomart="ensembl",dataset ="hsapiens_gene_ensembl")
 
 listogene <- necela_list$Gene
-my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 # devtools::install_version("dbplyr", version = "2.3.4")
-necela_list_test <- getBM(attributes = my_attributes, 
-                     filters ="hgnc_symbol",   
-                     values =listogene, 
-                     mart = ensembl)
-
-necela_val_genes <- getBM(attributes = my_attributes, 
-                     filters ="hgnc_symbol",   
-                     values =c("RGS4","EGR1", "SLC6A6", "PHLDA1"), 
-                     mart = ensembl)
-HER2_gene <- getBM(attributes = my_attributes,
-                   filters = "entrezgene_id",
-                   values= 2064,
-                   mart = ensembl)
-FC_necela_names <- getBM(attributes = my_attributes,
-                         filters = "hgnc_symbol",
-                         values=FC_necela$Gene,
-                         mart = ensembl)
+# necela_list_test <- getBM(attributes = my_attributes, 
+#                      filters ="hgnc_symbol",   
+#                      values =listogene, 
+#                      mart = ensembl)
+# 
+# necela_val_genes <- getBM(attributes = my_attributes, 
+#                      filters ="hgnc_symbol",   
+#                      values =c("RGS4","EGR1", "SLC6A6", "PHLDA1"), 
+#                      mart = ensembl)
+# HER2_gene <- getBM(attributes = my_attributes,
+#                    filters = "entrezgene_id",
+#                    values= 2064,
+#                    mart = ensembl)
+# FC_necela_names <- getBM(attributes = my_attributes,
+#                          filters = "hgnc_symbol",
+#                          values=FC_necela$Gene,
+#                          mart = ensembl)
+HER2_gene <- readRDS("output/HER2_gene.RDS")
+FC_necela_names <- readRDS("output/FC_necela_names.RDS")
+necela_val_genes <- readRDS("output/necela_val_genes.RDS")
+necela_list_test <- readRDS("output/necela_list_test.RDS")
 length(intersect(FC_necela_names$entrezgene_id, backGL$ENTREZID))
 hr3trz <- TRZ_list %>% 
   filter(time=="3_hours")
@@ -409,7 +414,7 @@ gtex_counts_matrix<- counts_v8_heart_left_ventricle_gct %>%
   dplyr::select(!Description) %>% 
   as.matrix()
   
-cpm <- cpm(gtex_counts_matrix)
+# cpm <- cpm(gtex_counts_matrix)
 lcpm <- cpm(gtex_counts_matrix, log=TRUE)  ### for determining the basic cutoffs
 dim(lcpm)
 
@@ -419,7 +424,7 @@ dim(gtex_x)
 names_gtex_genes <- counts_v8_heart_left_ventricle_gct %>% 
   dplyr::select(Name, Description)
 GTEX_heartLV_log2cpm <- gtex_x %>% 
-  as_data_frame() %>%
+  as.data.frame() %>%
   mutate(Name = rownames(gtex_x)) %>% 
   left_join(.,names_gtex_genes, by =c("Name"))
 
@@ -427,9 +432,35 @@ cellcycle_gtex_expression <- GTEX_heartLV_log2cpm %>%
   dplyr::filter(Description %in% cell_cycle_list$hgnc_symbol)
 length(cellcycle_gtex_expression$Name)
 
+
+Top2_expression <- lcpm %>% 
+  as.data.frame() %>%
+  mutate(Name = rownames(lcpm)) %>% 
+  left_join(.,names_gtex_genes, by =c("Name")) %>% 
+  dplyr::filter(Description == "TOP2A"| Description == "TOP2B")
+
+saveRDS(Top2_expression,"data/Top2_expression.RDS")
+
 ```
 
 
+```{r Top2expression}
+Top2_expression %>% 
+  pivot_longer(cols=!c(Name,Description), names_to = "indv", values_to = "counts") %>% 
+  ggplot(., aes(x=Description, y=counts))+
+  geom_boxplot()+
+  ggtitle("GTEX log 2 cpm  of TOP2A and TOP2B")
+
+Top2_expression %>% 
+  pivot_longer(cols=!c(Name,Description), names_to = "indv", values_to = "counts") %>% 
+  filter(Description=="TOP2A") %>% 
+  summary()
+Top2_expression %>% 
+  pivot_longer(cols=!c(Name,Description), names_to = "indv", values_to = "counts") %>% 
+  filter(Description=="TOP2B") %>% 
+  summary()
+
+```
 
 
 
@@ -496,7 +527,7 @@ intersect(DOXtop_downreg$SYMBOL, reyes_setA$HGNC)
 
 I found `r length(intersect(DOXtop_upreg$SYMBOL, reyes_setA$HGNC))` up-regulated DEGs in my data set to intersect with Set A.
 
-I found `rlength(intersect(DOXtop_down$SYMBOL, reyes_setA$HGNC))` down regulated DEGS in my data set that intersected with Set A.  A closer look yielded NPPB to be the only down-regulated DEG that interseted with SetA from the Reyes paper.
+I found `rlength(intersect(DOXtop_down$SYMBOL, reyes_setA$HGNC))` down regulated DEGS in my data set that intersected with Set A.  A closer look yielded NPPB to be the only down-regulated DEG that intersected with SetA from the Reyes paper.
 
 
 
