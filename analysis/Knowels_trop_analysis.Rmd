@@ -445,7 +445,7 @@ expression of trial RNA seq data
 ### Knowles log2cpm 24hr and my log2cpm 24hr
 
 ```{r K and Me}
-library(ggsignif)
+
 kcpm <- store_box %>%  
   mutate(dosage=factor(dosage, levels=c('0','0.000', '0.625','1.25', '2.5','5'))) %>% 
   dplyr::filter(dosage==("0")|dosage == "0.625") %>% 
@@ -459,8 +459,7 @@ lcpm_24h <- all_cpmcount %>%
   dplyr::select(ENTREZID, all_of(starts_with(c("DOX","VEH")))) %>% 
   dplyr::select(ENTREZID, all_of(ends_with("24h")))  %>% 
   dplyr::filter(ENTREZID %in% interest_genes$entrezgene_id) %>% 
-  pivot_longer(cols=!ENTREZID, names_to = "ind", values_to = "counts") %>% 
-  mutate(ENTREZID = as.numeric(ENTREZID)) %>% 
+  pivot_longer(cols=!ENTREZID, names_to = "ind", values_to = "counts") %>%   mutate(ENTREZID = as.numeric(ENTREZID)) %>% 
   full_join(., interest_genes, by = c("ENTREZID"="entrezgene_id")) %>% 
   mutate(expr="ME") %>% 
   rename("ESGN"="ensembl_gene_id","entrezgene_id"="ENTREZID") %>% 
@@ -494,17 +493,19 @@ lcpm_24h %>%
 
 ```{r varianceKnowles}
 
+# saveRDS(store_var, "data/Knowles_variation_data.RDS")
+# store_var <- Knowles_log2cpm %>% 
+#   dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
+#   rowwise() %>% 
+#   mutate(mean_DOX=mean(c_across(ends_with('0.625'))),
+#          var_DOX=var(c_across(ends_with('0.625'))),
+#         mean_NT=mean(c_across(ends_with('0'))),
+#          var_NT=var(c_across(ends_with('0')))) %>% 
+#   mutate(data=tidy(var.test(c_across(ends_with("0.625")),c_across(ends_with("0")))))# %>% 
+  # dplyr::select("ESGN","mean_DOX","var_DOX","mean_NT", "var_NT","data")
 
-store_var <- Knowles_log2cpm %>% 
-  dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
-  rowwise() %>% 
-  mutate(mean_DOX=mean(c_across(ends_with('0.625'))),
-         var_DOX=var(c_across(ends_with('0.625'))),
-        mean_NT=mean(c_across(ends_with('0'))),
-         var_NT=var(c_across(ends_with('0')))) %>% 
-  mutate(data=list(var.test(c_across(ends_with("0.625")),c_across(ends_with("0"))))) %>% 
-  dplyr::select("ESGN","mean_DOX","var_DOX","mean_NT", "var_NT","data")
-saveRDS(store_var, "data/Knowles_variation_data.RDS")
+
+store_var <- readRDS("data/Knowles_variation_data.RDS")
 
 knowlesdrug<- store_var %>% 
   dplyr::select("ESGN","mean_DOX","var_DOX","mean_NT", "var_NT") %>% 
@@ -543,20 +544,26 @@ knowlesdrug %>%
     # vjust=1,
     map_signif_level = FALSE)+
  ylim(NA,1.25)
-
+```
+### qvalue data
+```{r qvalue manip}
 library(qvalue)
 
 
-p_list <- map_df(store_var$data,~as.data.frame(.x$p.value))
- rownames(p_list) <- store_var$ESGN
-estDOXk <- qvalue(p_list) 
+# p_list <- map_df(store_var$data,~as.data.frame(.x$p.value))
+#  rownames(p_list) <- store_var$ESGN
+
+p_list <- store_var %>% 
+  unnest(data) %>% 
+   dplyr::select(ESGN,statistic,p.value)
+estDOXk <- qvalue(p_list$p.value) 
  hist(estDOXk)
  plot(estDOXk)
 summary(estDOXk) 
-knowlesvar <- data.frame("pvalues"=estDOXk$pvalues,"qvalues"=estDOXk$qvalues,"lfdr"= estDOXk$lfdr)  
- colnames(knowlesvar) <- c("pvalues", "qvalues","lfdr")
+knowlesvar <- data.frame("ESGN"=p_list$ESGN,"pvalues"=estDOXk$pvalues,"qvalues"=estDOXk$qvalues,"lfdr"= estDOXk$lfdr)  
+
 intersecting_K <- knowlesvar %>% 
-  filter(lfdr<0.1)
+  filter(qvalues<0.1)
 my_qval_list24 <- readRDS("data/qval24hr.RDS") 
 
 EPI508_list <- my_qval_list24 %>% 
@@ -567,14 +574,14 @@ EPI508_list <- my_qval_list24 %>%
   left_join(.,backGL, by="ENTREZID")
 Knowlesvarlist <- readRDS("data/Knowlesvarlist.RDS")
   
-# Knowlesvarlist<- getBM(attributes=my_attributes,filters ='ensembl_gene_id',values = rownames(intersecting_K), mart = ensembl)
+# Knowlesvarlist<- getBM(attributes=my_attributes,filters ='ensembl_gene_id',values = intersecting_K$ESGN, mart = ensembl)
 
 length(intersect(EPI508_list$ENTREZID,Knowlesvarlist$entrezgene_id))
 intersect_genes <- EPI508_list %>% 
   dplyr::filter(ENTREZID %in% Knowlesvarlist$entrezgene_id)
 
 intersect_genes %>% 
-kable(.,caption = "EPI Highly variable genes") %>% 
+kable(.,caption = "EPI Highly variable genes found in Knowles higly  variable DOX genes") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = TRUE, bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
@@ -582,6 +589,123 @@ kable(.,caption = "EPI Highly variable genes") %>%
 
 # saveRDS(Knowlesvarlist,"data/Knowlesvarlist.RDS")
 ```
+### GO analysis of Highly Variable genes
+
+I am using two backgrounds:  
+(1)  the expressed background of the expressed genes in my data in the A set (n = 14,084)  
+(2)  the full EPI highly variable genes from my data in the B set (n = 508)
+set 2 or B did not yield anything!
+
+#### A set
+```{r  A_set}
+library(gprofiler2)
+library(org.Hs.eg.db)
+### This is for retrieving all genes annotated in the Herpes simplex virus list
+# https://support.bioconductor.org/p/109871/
+library(limma)
+tab <- getGeneKEGGLinks(species="hsa")
+tab$Symbol <- mapIds(org.Hs.eg.db, tab$GeneID,
+                       column="SYMBOL", keytype="ENTREZID")
+KEGG_05168 <- tab %>% dplyr::filter(PathwayID=="hsa05168")
+
+# backGL <-read_csv("data/backGL.txt", 
+#     col_types = cols(...1 = col_skip()))
+
+# SETA_resgenes <- gost(query = intersect_genes$SYMBOL,
+#                     organism = "hsapiens",
+#                     significant = FALSE,
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg = backGL$SYMBOL,
+#                     sources=c("KEGG"))
+# saveRDS(SETA_resgenes,"data/DEG-GO/SETA_resgenes.RDS")
+SETA_resgenes <- readRDS("data/DEG-GO/SETA_resgenes.RDS")
+
+Set_A_genes <- gostplot(SETA_resgenes, capped = FALSE, interactive = TRUE)
+Set_A_genes
+
+setA_table <- SETA_resgenes$result %>% 
+  dplyr::select(c(source, term_id,
+                  term_name,intersection_size, 
+                   term_size, p_value))# %>% 
+
+list_intersect_path <- KEGG_05168 %>% 
+  filter(Symbol%in% intersect_genes$SYMBOL) 
+
+list_intersect_path%>% 
+  kable(., caption = "List of intersecting genes from the Herpes simplex KEGG pathway") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+setA_table %>% 
+  kable(., caption = "List of KEGG pathways enriched") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
+
+```
+
+
+
+
+
+
+#### B set
+```{r B_set}
+# SETB_resgenes <- gost(query = intersect_genes$ENTREZID,
+#                     organism = "hsapiens",
+#                     significant = FALSE,
+#                     ordered_query = TRUE,
+#                     domain_scope = "custom",
+#                     measure_underrepresentation = FALSE,
+#                     evcodes = FALSE,
+#                     user_threshold = 0.05,
+#                     correction_method = c("fdr"),
+#                     custom_bg = EPI508_list$ENTREZID,
+#                     sources=c("KEGG"))
+# saveRDS(SETB_resgenes,"data/DEG-GO/SETB_resgenes.RDS")
+# SETB_resgenes <- readRDS("data/DEG-GO/SETB_resgenes.RDS")
+# 
+# Set_B_genes <- gostplot(SETB_resgenes, capped = FALSE, interactive = TRUE)
+# Set_B_genes
+# 
+# setB_table <- SETB_resgenes$result %>% 
+#   dplyr::select(c(source, term_id,
+#                   term_name,intersection_size, 
+#                    term_size, p_value))# %>% 
+# 
+# # list_intersect_path <- KEGG_05168 %>% 
+# #   filter(Symbol%in% intersect_genes$SYMBOL) 
+# 
+# setB_table%>% 
+#   kable(., caption = "No enrichment with this small background of KEGG pathway") %>%
+#   kable_paper("striped", full_width = FALSE) %>%
+#   kable_styling(
+#     full_width = FALSE,
+#     position = "left",
+#     bootstrap_options = c("striped", "hover")
+#   ) %>%
+#   scroll_box(width = "100%", height = "400px")
+```
+
+
+
+
+
+
+
 
 
 ### Link to other pages here:
