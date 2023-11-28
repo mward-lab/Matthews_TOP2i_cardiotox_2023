@@ -597,7 +597,7 @@ pd <- paired(before, after)
 plot(pd, type = "profile") + theme_bw()+
   ggtitle("DRC vehicles before and after")
 
-t.test(before,after)
+t.test(before,after, paired = TRUE)
 
 # 
 # before <- subset(Veh_4_75,  time == "0", percent,
