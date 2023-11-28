@@ -531,91 +531,124 @@ I found `r length(intersect(DOXtop_downreg$SYMBOL, reyes_setA$HGNC))` down regul
 
 
 
-### DRC viability at 0 and 48 hours
+## DRC viability at 0 and 48 hours
 
-only two sets of 75-1 and 87-1 availible.
+only two sets of 75-1 and 87-1 available.
 ```{r DRCviability}
 
 CMD04_75 <- read.csv("data/CMD04_75DRCviability.csv", row.names = 1)
 CMD05_75 <- read.csv("data/CMD05_75DRCviability.csv", row.names = 1)
 CMD04_87 <- read.csv("data/CMD04_87DRCviability.csv", row.names = 1)
 CMD05_87 <- read.csv("data/CMD05_87DRCviability.csv", row.names = 1)
+
+
 Veh_4_75 <- CMD04_75 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
   filter(drug=="Veh") %>% 
-  mutate(percent= if_else(time=="0",RFLU/mean(RFLU[time=="0"]),RFLU/mean(RFLU[time=="48"])))
-wilcox.test(percent~time, paired=TRUE, data=Veh_4_75,alternative= "less")
+  mutate(percent= if_else(time=="0",RFLU/26609,RFLU/55596.67))%>% 
+  group_by(time) %>% 
+  summarize(as.tibble(rbind(summary(percent))))
+# wilcox.test(percent~time, paired=TRUE, data=Veh_4_75,alternative= "less")
 
 Veh_5_75 <- CMD05_75 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
   filter(drug=="Veh") %>% 
-  mutate(percent= if_else(time=="0",RFLU/mean(RFLU[time=="0"]),RFLU/mean(RFLU[time=="48"])))
-wilcox.test(percent~time, paired=TRUE, data=Veh_5_75,alternative= "less")
+  mutate(percent= if_else(time=="0",RFLU/70958.5,RFLU/32740))%>% 
+  group_by(time) %>% 
+  summarize(as.tibble(rbind(summary(percent))))
+# wilcox.test(percent~time, paired=TRUE, data=Veh_5_75,alternative= "less")
 
 
 Veh_4_87 <- CMD04_87 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
   filter(drug=="Veh") %>% 
-  mutate(percent= if_else(time=="0",RFLU/mean(RFLU[time=="0"]),RFLU/mean(RFLU[time=="48"])))
-wilcox.test(percent~time, paired=TRUE, data=Veh_4_87,alternative= "less")
+  mutate(percent= if_else(time=="0",RFLU/73528.67,RFLU/72454.83))%>% 
+  group_by(time) %>% 
+  summarize(as.tibble(rbind(summary(percent))))
+# wilcox.test(percent~time, paired=TRUE, data=Veh_4_87,alternative= "less")
 
 Veh_5_87 <- CMD05_87 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
   filter(drug=="Veh") %>% 
-  mutate(percent= if_else(time=="0",RFLU/mean(RFLU[time=="0"]),RFLU/mean(RFLU[time=="48"])))
-wilcox.test(percent~time, paired=TRUE, data=Veh_5_87,alternative= "less")
+  mutate(percent= if_else(time=="0",RFLU/59901.33,RFLU/50557.33)) %>% 
+  group_by(time) %>% 
+  summarize(as.tibble(rbind(summary(percent))))
+# wilcox.test(percent~time, paired=TRUE, data=Veh_5_87,alternative= "less")
+Veh_via_table <- Veh_4_75 %>% 
+  bind_rows(Veh_5_75,Veh_4_87,Veh_5_87, .id="DRC") %>% 
+  dplyr::select(DRC,time,Mean)
+
+
 
 ```
+
+
+
 ```{r plotsof DRC}
-before <- subset(Veh_4_75,  time == "0", percent,
+library(PairedData)
+before <- subset(Veh_via_table,  time == "0", Mean,
                  drop = TRUE)
 # subset weight data after treatment
-after <- subset(Veh_4_75,  time == "48", percent,
+after <- subset(Veh_via_table,  time == "48", Mean,
                  drop = TRUE)
-# Plot paired data
-library(PairedData)
+
+
 pd <- paired(before, after)
 plot(pd, type = "profile") + theme_bw()+
-  ggtitle("Veh_4_75")
+  ggtitle("DRC vehicles before and after")
 
+t.test(before,after)
 
-before_1 <- subset(Veh_5_75,  time == "0", percent,
-                 drop = TRUE)
-# subset weight data after treatment
-after_1 <- subset(Veh_5_75,  time == "48", percent,
-                 drop = TRUE)
-# Plot paired data
-
-pd_1 <- paired(before_1, after_1)
-plot(pd_1, type = "profile") + theme_bw()+
-  ggtitle("Veh_5_75")
-
-
-
-before_2 <- subset(Veh_5_87,  time == "0", percent,
-                 drop = TRUE)
-# subset weight data after treatment
-after_2 <- subset(Veh_5_87,  time == "48", percent,
-                 drop = TRUE)
-# Plot paired data
-
-pd_2 <- paired(before_2, after_2)
-plot(pd_2, type = "profile") + theme_bw()+
-  ggtitle("Veh_5_87")
-
-
-
-before_3 <- subset(Veh_4_87,  time == "0", percent,
-                 drop = TRUE)
-# subset weight data after treatment
-after_3 <- subset(Veh_4_87,  time == "48", percent,
-                 drop = TRUE)
-# Plot paired data
-
-pd_3 <- paired(before_3, after_3)
-plot(pd_3, type = "profile") + theme_bw()+
-  ggtitle("Veh_4_87")
-
+# 
+# before <- subset(Veh_4_75,  time == "0", percent,
+#                  drop = TRUE)
+# # subset weight data after treatment
+# after <- subset(Veh_4_75,  time == "48", percent,
+#                  drop = TRUE)
+# # Plot paired data
+# library(PairedData)
+# pd <- paired(before, after)
+# plot(pd, type = "profile") + theme_bw()+
+#   ggtitle("Veh_4_75")
+# 
+# 
+# before_1 <- subset(Veh_5_75,  time == "0", percent,
+#                  drop = TRUE)
+# # subset weight data after treatment
+# after_1 <- subset(Veh_5_75,  time == "48", percent,
+#                  drop = TRUE)
+# # Plot paired data
+# 
+# pd_1 <- paired(before_1, after_1)
+# plot(pd_1, type = "profile") + theme_bw()+
+#   ggtitle("Veh_5_75")
+# 
+# 
+# 
+# before_2 <- subset(Veh_5_87,  time == "0", percent,
+#                  drop = TRUE)
+# # subset weight data after treatment
+# after_2 <- subset(Veh_5_87,  time == "48", percent,
+#                  drop = TRUE)
+# # Plot paired data
+# 
+# pd_2 <- paired(before_2, after_2)
+# plot(pd_2, type = "profile") + theme_bw()+
+#   ggtitle("Veh_5_87")
+# 
+# 
+# 
+# before_3 <- subset(Veh_4_87,  time == "0", percent,
+#                  drop = TRUE)
+# # subset weight data after treatment
+# after_3 <- subset(Veh_4_87,  time == "48", percent,
+#                  drop = TRUE)
+# # Plot paired data
+# 
+# pd_3 <- paired(before_3, after_3)
+# plot(pd_3, type = "profile") + theme_bw()+
+#   ggtitle("Veh_4_87")
+# 
 
 
 
