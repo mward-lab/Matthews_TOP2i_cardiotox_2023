@@ -159,7 +159,7 @@ TRZ_list %>%
 
 
 ```{r Biomart}
-# ensembl <- useMart(biomart="ensembl",dataset ="hsapiens_gene_ensembl")
+ensembl <- useMart(biomart="ensembl",dataset ="hsapiens_gene_ensembl")
 
 listogene <- necela_list$Gene
 # my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
@@ -250,6 +250,8 @@ for (g in seq(from=1, to=length(necela_val_genes$entrezgene_id))){
 }
 
 ```
+
+### Adding in TRZ and 
 
 ### Cell cycle genes
 
@@ -657,11 +659,105 @@ t.test(before,after, paired = TRUE)
 
 ```
 
+### SNP from another GWAS
+
+paper ref: [https://aacrjournals.org/clincancerres/article/23/1/43/122971/Genome-Wide-Association-Study-for-Anthracycline]
 
 
 
 
+```{r  SnPupload}
+# library(readr)
+# near_genes_SNP1 <- read_table("~/Ward Lab/Cardiotoxicity/Manuscript/SNP_work/near_genes_SNP1.txt", 
+#     col_types = cols(CLIN_SIG = col_skip()))
+list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")
 
+
+SNP_supp <- readRDS("output/SNP_supp.RDS")
+near_genes_SNP1 <- readRDS("output/near_genes_SNP1.RDS")
+SNP_gene_list <- near_genes_SNP1 %>% 
+  rename("RSID"=1) %>% 
+  dplyr::select(RSID,SYMBOL,Gene) %>%
+  distinct(RSID,.keep_all = TRUE) %>% 
+  full_join(.,SNP_supp,by="RSID") %>% 
+  dplyr::select(RSID, SYMBOL,Gene,Ch,BP,Pvalue) %>% 
+  distinct(Gene,.keep_all = TRUE) %>% 
+  dplyr::select(SYMBOL,Gene) 
+full_SNP_list <- near_genes_SNP1 %>% 
+  rename("RSID"=1) %>% 
+  # dplyr::select(RSID,SYMBOL,Gene) %>% 
+ 
+  distinct(RSID,.keep_all = TRUE) 
+
+# write.csv(full_SNP_list,"output/SNP_list_full.txt")
+
+# ensembl <- useMart(biomart="ensembl",dataset ="hsapiens_gene_ensembl")
+# 
+# 
+# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+# 
+# 
+
+  # list_snp_IDS <- getBM(attributes = my_attributes,
+  #                    filters ="ensembl_gene_id",
+  #                    values =SNP_gene_list$Gene,
+  #                    mart = ensembl)
+# saveRDS(list_snp_IDS,"output/SNP_list_ID.RDS")
+```
+
+
+```{r graph with my data}
+new_Gwas_genes_sig <- FC_mine %>% 
+  dplyr::filter(ENTREZID %in% list_snp_IDS$entrezgene_id) %>% 
+  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+ filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+  
+new_gwas_mat <-  FC_mine %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  filter(ENTREZID %in% list_snp_IDS$entrezgene_id) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+ComplexHeatmap::Heatmap(new_gwas_mat, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change values of GWAS `new set` genes", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        # column_order= c('RARG',
+        #                 'TNS2', 
+        #                 'ZNF740',
+        #                 'SLC28A3',
+        #                 'RMI1',
+        #                 'EEF1B2',
+        #                 'FRS2', 
+        #                 'HDDC2'),
+        # bottom_annotation = ht,
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(new_Gwas_genes_sig[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+```
 
 ### Link to other pages here:
 
