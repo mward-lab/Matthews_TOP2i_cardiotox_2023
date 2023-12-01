@@ -518,7 +518,7 @@ DOXtop_upreg<- toplistall %>%
 
 length(intersect(DOXtop_upreg$SYMBOL, reyes_setA$HGNC))
 
-DOXtop_downreg <- toplistall %>% 
+DOXtop_downreg <- toplistall %>% ##use opp logFC because of how DEGs were processed
   dplyr::filter(time == "24_hours", id=="DOX", adj.P.Val<0.05,logFC>0)
 length(intersect(DOXtop_downreg$SYMBOL, reyes_setA$HGNC))
 
@@ -671,7 +671,7 @@ paper ref: [https://aacrjournals.org/clincancerres/article/23/1/43/122971/Genome
 # near_genes_SNP1 <- read_table("~/Ward Lab/Cardiotoxicity/Manuscript/SNP_work/near_genes_SNP1.txt", 
 #     col_types = cols(CLIN_SIG = col_skip()))
 list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")
-
+RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)
 
 SNP_supp <- readRDS("output/SNP_supp.RDS")
 near_genes_SNP1 <- readRDS("output/near_genes_SNP1.RDS")
@@ -680,13 +680,13 @@ SNP_gene_list <- near_genes_SNP1 %>%
   dplyr::select(RSID,SYMBOL,Gene) %>%
   distinct(RSID,.keep_all = TRUE) %>% 
   full_join(.,SNP_supp,by="RSID") %>% 
-  dplyr::select(RSID, SYMBOL,Gene,Ch,BP,Pvalue) %>% 
-  distinct(Gene,.keep_all = TRUE) %>% 
-  dplyr::select(SYMBOL,Gene) 
+  dplyr::select(RSID, SYMBOL,Gene,Ch,BP,OR,Pvalue) %>%
+  left_join(.,list_snp_IDS,by=c("Gene"="ensembl_gene_id"))
+  # distinct(Gene,.keep_all = TRUE)# %>%
+  # dplyr::select(SYMBOL,Gene) %>%
+
 full_SNP_list <- near_genes_SNP1 %>% 
   rename("RSID"=1) %>% 
-  # dplyr::select(RSID,SYMBOL,Gene) %>% 
- 
   distinct(RSID,.keep_all = TRUE) 
 
 # write.csv(full_SNP_list,"output/SNP_list_full.txt")
@@ -695,13 +695,13 @@ full_SNP_list <- near_genes_SNP1 %>%
 # 
 # 
 # my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
-# 
+# length(unique(RSID_QTL_list_full$Gene))
 # 
 
-  # list_snp_IDS <- getBM(attributes = my_attributes,
-  #                    filters ="ensembl_gene_id",
-  #                    values =SNP_gene_list$Gene,
-  #                    mart = ensembl)
+#   list_snp_IDS <- getBM(attributes = my_attributes,
+#                      filters ="ensembl_gene_id",
+#                      values =RSID_QTL_list_full$Gene,
+#                      mart = ensembl)
 # saveRDS(list_snp_IDS,"output/SNP_list_ID.RDS")
 ```
 
@@ -739,6 +739,75 @@ ComplexHeatmap::Heatmap(new_gwas_mat, name = "Fold change\nvalues",
         column_title = "Fold change values of GWAS `new set` genes", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_order= c("LRRTM4","CLYBL",	"ADCY2","NEDD4L",	"PLEKHA5"	,	"PAG1",	"PPARA","PRODH", "CALD1","PAM",  "CDPF1",	"DUBR","PRR5L","RSU1",	"WDHD1"	,	"PRDX6","MSI1",	"SIRT4","GAREM1",	"ADAMTSL1","DENND3"	, "ESD"	,	"TRIB2"	,"KTN1","NFE2L3",	"SULF1"), 
+        # bottom_annotation = ht,
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(new_Gwas_genes_sig[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+# simpnames <- data.frame(SYMBOL=c("PRDX6","PRODH","CDPF1" ,"RSU1", "ESD", "PPARA" ,"PRR5L", "WDHD1",  "PAG1",
+#           "ADAMTSL1", "DENND3","PLEKHA5","NEDD4L","TRIB2","KTN1","GAREM1", "CLYBL",
+#           "MSI1","DUBR", "NFE2L3","CALD1","PAM" ,"SIRT4","LRRTM4","ADCY2" ,"SULF1"))
+
+# simpnames %>% 
+#   left_join(., (SNP_gene_list %>% select(SYMBOL,Pvalue))) %>% 
+#   arrange(Pvalue) %>% 
+#   distinct(SYMBOL) %>% 
+#   print
+
+```
+
+
+The new set is in order of  the pvalue on GWAS genes in common.
+```{r  egenes of new GWAS}
+RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)
+# saveRDS(SNP_egenes_allfiles,"output/SNP_egenes_allfiles.RDS")
+
+SNP_egenes_allfiles <- readRDS("output/SNP_egenes_allfiles.RDS")
+# SNP_egenes_allfiles <- allfiles %>% 
+#   rename("whoops"="X1","SYMBOL" = "X2", "Variant_ID"="X3", "RSID"="X4", "P_value"="X5", "NES"="X6", "Tissue"="X7") %>% 
+#   separate(whoops, into = c("filenameref",NA,NA,NA,"ensembl_gene_id"))
+
+egene_SNP <- SNP_egenes_allfiles %>% 
+  distinct(ensembl_gene_id,.keep_all = TRUE) 
+
+new_egenes_sig <- FC_mine %>% 
+  dplyr::filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
+  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+ filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+  
+new_egenes_mat <-  FC_mine %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change values new GWAS eGenes", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         # column_order= c('RARG',
         #                 'TNS2', 
         #                 'ZNF740',
@@ -753,12 +822,12 @@ ComplexHeatmap::Heatmap(new_gwas_mat, name = "Fold change\nvalues",
         column_names_gp = gpar(fontsize = 8,fontface="italic"),
         column_names_centered =TRUE,
          cell_fun = function(j, i, x, y, width, height, fill) {
-        if(new_Gwas_genes_sig[i, j] <0.05)
+        if(new_egenes_sig[i, j] <0.05)
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
 
 ```
-
+The eGenes from gTEX are in order of adj. P.Value found in the Fold Change.  I can order another way if wanted.
 ### Link to other pages here:
 
 [Knowles and troponin](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowels_trop_analysis.html)
