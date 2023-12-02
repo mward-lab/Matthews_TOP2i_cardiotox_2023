@@ -621,7 +621,7 @@ KEGG_05168 <- tab %>% dplyr::filter(PathwayID=="hsa05168")
 #                     user_threshold = 0.05,
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$SYMBOL,
-#                     sources=c("KEGG"))
+#                     sources=c("GO:BP","KEGG"))
 # saveRDS(SETA_resgenes,"data/DEG-GO/SETA_resgenes.RDS")
 SETA_resgenes <- readRDS("data/DEG-GO/SETA_resgenes.RDS")
 
@@ -646,7 +646,7 @@ list_intersect_path%>%
   ) %>%
   scroll_box(width = "100%", height = "400px")
 setA_table %>% 
-  kable(., caption = "List of KEGG pathways enriched") %>%
+  kable(., caption = "List of GO BP and KEGG pathways enriched") %>%
   kable_paper("striped", full_width = FALSE) %>%
   kable_styling(
     full_width = FALSE,
@@ -699,8 +699,6 @@ setA_table %>%
 #   ) %>%
 #   scroll_box(width = "100%", height = "400px")
 ```
-
-
 
 
 
