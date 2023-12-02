@@ -694,7 +694,7 @@ full_SNP_list <- near_genes_SNP1 %>%
 # ensembl <- useMart(biomart="ensembl",dataset ="hsapiens_gene_ensembl")
 # 
 # 
-# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+
 # length(unique(RSID_QTL_list_full$Gene))
 # 
 
@@ -828,6 +828,76 @@ ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues",
 
 ```
 The eGenes from gTEX are in order of adj. P.Value found in the Fold Change.  I can order another way if wanted.
+
+### Knowles troponin genes
+```{r importKnowles, fig.width=10}
+Knowles_S13 <- read.csv("output/Knowles_S13.csv", row.names = 1)
+# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+# Knowles_S13 <- getBM(attributes = my_attributes,
+#                      filters ="ensembl_gene_id",
+#                      values =Knowles_S13$gene,
+#                      mart = ensembl)
+# 
+# write.csv(Knowles_S13,"output/Knowles_S13.csv")
+
+Knowles_13trop_sig <- FC_mine %>% 
+  dplyr::filter(ENTREZID %in% Knowles_S13$entrezgene_id) %>% 
+  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+ filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+  
+Knowles_13trop_mat <-  FC_mine %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  dplyr::filter(ENTREZID %in% Knowles_S13$entrezgene_id) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+ComplexHeatmap::Heatmap(Knowles_13trop_mat, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change of all Knowles-Troponin variable genes in my data", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        # column_order= c('RARG',
+        #                 'TNS2', 
+        #                 'ZNF740',
+        #                 'SLC28A3',
+        #                 'RMI1',
+        #                 'EEF1B2',
+        #                 'FRS2', 
+        #                 'HDDC2'),
+        # bottom_annotation = ht,
+            column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(Knowles_13trop_sig[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+
+
+
+
+```
+
+
+
+
+
 ### Link to other pages here:
 
 [Knowles and troponin](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowels_trop_analysis.html)
