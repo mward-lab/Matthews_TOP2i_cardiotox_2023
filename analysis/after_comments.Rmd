@@ -759,7 +759,52 @@ ComplexHeatmap::Heatmap(new_gwas_mat, name = "Fold change\nvalues",
 #   arrange(Pvalue) %>% 
 #   distinct(SYMBOL) %>% 
 #   print
+```
 
+
+```{r heatmaplog10pvalue with my data}
+
+
+framefun24 <- readRDS("data/framefun24.RDS")
+
+
+logFtestSNP_mat <- framefun24 %>% 
+  mutate(DOX_plog=(log10(DOX.VEH.24)*(-1)),
+         EPI_plog=(log10(EPI.VEH.24)*(-1)),
+         DNR_plog=(log10(DNR.VEH.24)*(-1)),
+         MTX_plog=(log10(MTX.VEH.24)*(-1)),
+         TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
+  dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
+  dplyr::filter(ENTREZID %in% list_snp_IDS$entrezgene_id) %>% 
+  pivot_longer(cols = !ENTREZID, names_to = "treatment", values_to = "plog") %>% 
+  separate(treatment, into=c("treatment",NA)) %>% 
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  left_join(., (backGL)) %>% 
+  pivot_wider(id_cols=treatment, 
+              names_from = SYMBOL, 
+              values_from = plog) %>% 
+  column_to_rownames(var="treatment") %>%
+  as.matrix()
+
+
+Heatmap(logFtestSNP_mat, name = "-Log10 \n p value", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX', 'TRZ'),
+        column_title = "-log10 Ftestpvalue SNP genes", 
+        column_title_side = "top",
+        column_order= c("LRRTM4","CLYBL",	"ADCY2","NEDD4L",	"PLEKHA5"	,	"PAG1",	"PPARA","PRODH", "CALD1","PAM",  "CDPF1",	"DUBR","PRR5L","RSU1",	"WDHD1"	,	"PRDX6","MSI1",	"SIRT4","GAREM1",	"ADAMTSL1","DENND3"	, "ESD"	,	"TRIB2"	,"KTN1","NFE2L3",	"SULF1"), 
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(logFtestSNP_mat[i, j] > log10(0.05)*(-1))
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+  
 ```
 
 
@@ -825,6 +870,66 @@ ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues",
         if(new_egenes_sig[i, j] <0.05)
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
+```
+
+
+```{r  log10pvalue of ftest egenes}
+
+
+LogPvaluelist <- SNP_egenes_allfiles %>% 
+  distinct(ensembl_gene_id,.keep_all = TRUE) 
+
+new_egenes_sig <- FC_mine %>% 
+  dplyr::filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
+  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+ filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+  
+new_egenes_mat <-  FC_mine %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change values new GWAS eGenes", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_order = sort(colnames(new_egenes_mat)),
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(new_egenes_sig[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+
+
+
+
+
+
+
+
+
 
 ```
 The eGenes from gTEX are in order of adj. P.Value found in the Fold Change.  I can order another way if wanted.
@@ -833,12 +938,12 @@ The eGenes from gTEX are in order of adj. P.Value found in the Fold Change.  I c
 ```{r importKnowles, fig.width=10}
 Knowles_S13 <- read.csv("output/Knowles_S13.csv", row.names = 1)
 # my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
-# Knowles_S13 <- getBM(attributes = my_attributes,
-#                      filters ="ensembl_gene_id",
-#                      values =Knowles_S13$gene,
-#                      mart = ensembl)
-# 
-# write.csv(Knowles_S13,"output/Knowles_S13.csv")
+# expre7k <- getBM(attributes = my_attributes,
+                     # filters ="ensembl_gene_id",
+                     # values=top7K$gene,
+                     # mart = ensembl)
+
+# write.csv(expre7k,"output/expre7k.csv")
 
 Knowles_13trop_sig <- FC_mine %>% 
   dplyr::filter(ENTREZID %in% Knowles_S13$entrezgene_id) %>% 
@@ -872,6 +977,57 @@ ComplexHeatmap::Heatmap(Knowles_13trop_mat, name = "Fold change\nvalues",
         column_title = "Fold change of all Knowles-Troponin variable genes in my data", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_order = sort(colnames(Knowles_13trop_mat)),
+            column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(Knowles_13trop_sig[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+
+# intersect(Knowles_S13$entrezgene_id, EPI508_list$ENTREZID)
+```
+
+
+```{r top troponin7, fig.width=10}
+###Top 7:
+top7kgene <- read.csv("output/expre7k.csv", row.names = 1)
+# top7K <- elife_33480_supp14 %>% 
+#   dplyr::filter(conc=="0.625") #%>% 
+#   select(gene)
+trop7_sig <- FC_mine %>% 
+  dplyr::filter(ENTREZID %in%top7kgene$entrezgene_id) %>% 
+  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+ filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+  
+trop7_mat <-  FC_mine %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  dplyr::filter(ENTREZID %in% top7kgene$entrezgene_id) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  as.matrix()
+
+ComplexHeatmap::Heatmap(trop7_mat, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change 0.625 top 7 Knowles-Troponin genes in my data", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         # column_order= c('RARG',
         #                 'TNS2', 
         #                 'ZNF740',
@@ -885,10 +1041,9 @@ ComplexHeatmap::Heatmap(Knowles_13trop_mat, name = "Fold change\nvalues",
         column_names_gp = gpar(fontsize = 8,fontface="italic"),
         column_names_centered =TRUE,
          cell_fun = function(j, i, x, y, width, height, fill) {
-        if(Knowles_13trop_sig[i, j] <0.05)
+        if(trop7_sig[i, j] <0.05)
             grid.text("*", x, y, gp = gpar(fontsize = 16))
 })
-
 
 
 
@@ -896,6 +1051,89 @@ ComplexHeatmap::Heatmap(Knowles_13trop_mat, name = "Fold change\nvalues",
 
 
 
+```{r qvalueheatmap}
+my_qval_list24 <- readRDS("data/qval24hr.RDS") 
+# list2env(my_qval_list24, envir = .GlobalEnv)
+# organized_drugframe <- read.csv("data/organized_drugframe.csv",
+#                                 row.names = 1)
+# 
+# Var_test_list24 <- readRDS("data/Var_test_list24.RDS")
+# set24 <- names(Var_test_list24) 
+# 
+# framefun24 <- data.frame(ENTREZID=rownames(organized_drugframe))
+# for (i in 1:length(set24)){
+#   a <- set24[i]
+#     s_list<- Var_test_list24[[i]][[13]]
+#   names(s_list) <- rownames(organized_drugframe)
+#   hold<- map_df(s_list, ~as.data.frame(.x$p.value), .id="ENTREZID")
+#    framefun24[paste0(a)] <- hold$`.x$p.value`
+#  
+# }
+# saveRDS(framefun24, "data/framefun24.RDS")
+
+framefun24 <- readRDS("data/framefun24.RDS")
+
+
+logFtestval_mat <- framefun24 %>% 
+  mutate(DOX_plog=(log10(DOX.VEH.24)*(-1)),
+         EPI_plog=(log10(EPI.VEH.24)*(-1)),
+         DNR_plog=(log10(DNR.VEH.24)*(-1)),
+         MTX_plog=(log10(MTX.VEH.24)*(-1)),
+         TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
+  dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
+  dplyr::filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
+  pivot_longer(cols = !ENTREZID, names_to = "treatment", values_to = "plog") %>% 
+  separate(treatment, into=c("treatment",NA)) %>% 
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  left_join(., (backGL)) %>% 
+  pivot_wider(id_cols=treatment, 
+              names_from = SYMBOL, 
+              values_from = plog) %>% 
+  column_to_rownames(var="treatment") %>%
+  as.matrix()
+
+
+Heatmap(logFtestval_mat, name = "-Log10 \n p value", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX', 'TRZ'),
+        column_title = "-log10 Ftestpvalue eGenes", 
+        column_title_side = "top",
+        column_order = sort(colnames(logFtestval_mat)),
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(logFtestval_mat[i, j] > log10(0.05)*(-1))
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+  
+```
+```{r Cardiotoxval}
+
+Cardiotox_table <- readRDS("output/Cardiotox_dif_values.RDS")
+
+Cardiotox_table %>% 
+  ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="RARG ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()
+
+
+```
+```{r other genes}
+gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
+gene_corr_frame %>% 
+  dplyr::select(indv,Drug,counts,tox,hgnc_symbol)
+
+```
 
 
 ### Link to other pages here:
