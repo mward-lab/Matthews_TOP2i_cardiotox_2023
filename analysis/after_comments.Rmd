@@ -157,18 +157,22 @@ TRZ_list %>%
 
 ```
 
+```{r}
+FC_mine %>% 
+  separate(time, into=c("number","unit",sep="_"))
+```
 
 ```{r Biomart}
 ensembl <- useMart(biomart="ensembl",dataset ="hsapiens_gene_ensembl")
 
 listogene <- necela_list$Gene
-# my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
+my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 # devtools::install_version("dbplyr", version = "2.3.4")
-# necela_list_test <- getBM(attributes = my_attributes, 
-#                      filters ="hgnc_symbol",   
-#                      values =listogene, 
+# necela_list_test <- getBM(attributes = my_attributes,
+#                      filters ="hgnc_symbol",
+#                      values =listogene,
 #                      mart = ensembl)
-# 
+# # 
 # necela_val_genes <- getBM(attributes = my_attributes, 
 #                      filters ="hgnc_symbol",   
 #                      values =c("RGS4","EGR1", "SLC6A6", "PHLDA1"), 
@@ -287,7 +291,7 @@ for (g in seq(from=1, to=44)){
 ```{r necela_cellcycle, eval=FALSE, include=FALSE}
 
 df_nc <- necela_cc_shortlist %>% as_tibble() %>% 
-        select(entrezgene_id,ensembl_gene_id,hgnc_symbol,logCPM) %>% 
+        dplyr::select(entrezgene_id,ensembl_gene_id,hgnc_symbol,logCPM) %>% 
   filter(entrezgene_id%in% cell_cycle_list$entrezgene_id)
   
 
@@ -667,13 +671,14 @@ paper ref: [https://aacrjournals.org/clincancerres/article/23/1/43/122971/Genome
 
 
 ```{r  SnPupload}
-# library(readr)
+library(readr)
 # near_genes_SNP1 <- read_table("~/Ward Lab/Cardiotoxicity/Manuscript/SNP_work/near_genes_SNP1.txt", 
 #     col_types = cols(CLIN_SIG = col_skip()))
-list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")
-RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)
-
-SNP_supp <- readRDS("output/SNP_supp.RDS")
+list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")##list to assign ensemble/hgnc/entrezid
+RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)##closest annotated genetto complete rsid list
+# Knowles_supp13 <- elife_33480_supp13
+# write.csv(Knowles_supp13, "output/Knowles_supp13.csv")
+SNP_supp <- readRDS("output/SNP_supp.RDS")## has the pvalue
 near_genes_SNP1 <- readRDS("output/near_genes_SNP1.RDS")
 SNP_gene_list <- near_genes_SNP1 %>% 
   rename("RSID"=1) %>% 
@@ -688,6 +693,9 @@ SNP_gene_list <- near_genes_SNP1 %>%
 full_SNP_list <- near_genes_SNP1 %>% 
   rename("RSID"=1) %>% 
   distinct(RSID,.keep_all = TRUE) 
+
+RSID_QTL_list_full %>% 
+  full_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)))
 
 # write.csv(full_SNP_list,"output/SNP_list_full.txt")
 
@@ -704,6 +712,7 @@ full_SNP_list <- near_genes_SNP1 %>%
 #                      mart = ensembl)
 # saveRDS(list_snp_IDS,"output/SNP_list_ID.RDS")
 ```
+
 
 
 ```{r graph with my data}
@@ -871,7 +880,7 @@ ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues",
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
 ```
-
+### egene log10 pvalue Ftest
 
 ```{r  log10pvalue of ftest egenes}
 
@@ -908,7 +917,7 @@ ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues",
         row_names_side = "left",
         # col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Fold change values new GWAS eGenes", 
+        column_title = "Log10 pvalue GWAS eGenes", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         column_order = sort(colnames(new_egenes_mat)),
@@ -934,9 +943,291 @@ ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues",
 ```
 The eGenes from gTEX are in order of adj. P.Value found in the Fold Change.  I can order another way if wanted.
 
+
+```{r making Schneider_completeSNP_egenes,  include=TRUE,eval=FALSE}
+
+list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")##list of all SNP near genes with ensemble/hgnc/entrezid ID
+RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)##closest annotated gene to complete rsid list
+SNP_supp <- readRDS("output/SNP_supp.RDS")## has the pvalue (this is the supplement from that paper)
+egene_of_SNP <- SNP_egenes_allfiles %>% 
+  distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
+  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue)
+# contains the eGenes to every SNP
+ESGN_rds <- readRDS("output/ESGN_rds.RDS")
+
+
+SNP_genes <- RSID_QTL_list_full %>% 
+  distinct(Gene, .keep_all = TRUE) %>% 
+  ##first add pvalue to rsid list
+  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>%
+  left_join(., list_snp_IDS, by = c("SYMBOL"="hgnc_symbol", "Gene"="ensembl_gene_id")) %>% 
+            
+            dplyr::select(SYMBOL,Gene,entrezgene_id,Pvalue) 
+
+complete_list <- bind_rows(list(SNP_genes=SNP_genes,egene_of_SNP=egene_of_SNP),.id ="id" )
+  ##got list of unique ESGNs to try to match up all entrezids
+# ESGN_retrieve <- complete_list %>% 
+#   mutate(ESGN= if_else(ensembl_gene_id=="NA",Gene,ensembl_gene_id)) %>% 
+#   dplyr::select(ESGN) %>% 
+#     distinct(ESGN)
+    
+# ESGN_rds <- getBM(attributes = my_attributes,
+#                      filters ="ensembl_gene_id",
+#                      values =ESGN_retrieve$ESGN,
+#                      mart = ensembl)
+# saveRDS(ESGN_rds,"output/ESGN_rds.RDS")
+#   saved as an .RDS so I could match it up below
+# complete_list <- 
+  complete_list %>% 
+  mutate(ESGN = coalesce(ensembl_gene_id,Gene)) %>% 
+  dplyr::select(ESGN,entrezgene_id,SYMBOL,Pvalue,id) %>% 
+    left_join(., ESGN_rds, by=c("ESGN"="ensembl_gene_id","SYMBOL"="hgnc_symbol")) %>% 
+    mutate(ENTREZID=coalesce(entrezgene_id.y,entrezgene_id.x)) %>% 
+    dplyr::select(ESGN,SYMBOL, Pvalue,id,ENTREZID) %>% 
+    distinct() %>% 
+    arrange(ENTREZID,by=(Pvalue)) 
+  ##saved after all the arrangement above
+write.csv(complete_list,"data/Schneider_GWAS.txt")
+
+
+```
+
+
+```{r Schneider_orderHeatmap}
+Schneider_GWAS <- read.csv("data/Schneider_GWAS.txt", row.names = 1)
+SGWAS_sig_order <- Schneider_GWAS %>% 
+  dplyr::filter(ENTREZID %in%backGL$ENTREZID) %>% 
+  arrange(Pvalue) %>% 
+  dplyr::select(!SYMBOL) %>% 
+  left_join(.,backGL, by = c("ENTREZID"= "ENTREZID"))
+  # dplyr::select(SYMBOL) #%>% 
+  # distinct()
+SGWAS_sig <- FC_mine %>% 
+  dplyr::filter(ENTREZID %in% Schneider_GWAS$ENTREZID) %>% 
+  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+ filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val) %>% 
+  column_to_rownames(var="id") %>%
+  dplyr::select(SGWAS_sig_order$SYMBOL) %>% 
+  as.matrix()
+
+SGWAS_mat <-  FC_mine %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  dplyr::filter(ENTREZID %in% Schneider_GWAS$ENTREZID) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  dplyr::select(SGWAS_sig_order$SYMBOL) %>% 
+  as.matrix()
+
+
+
+ComplexHeatmap::Heatmap(SGWAS_mat, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Full GWAS from Schneider",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        # column_order = 
+            column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(SGWAS_sig[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+
+
+framefun24 <- readRDS("data/framefun24.RDS")
+
+
+logFtestSGWAS <- framefun24 %>% 
+  mutate(DOX_plog=(log10(DOX.VEH.24)*(-1)),
+         EPI_plog=(log10(EPI.VEH.24)*(-1)),
+         DNR_plog=(log10(DNR.VEH.24)*(-1)),
+         MTX_plog=(log10(MTX.VEH.24)*(-1)),
+         TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
+  dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
+  dplyr::filter(ENTREZID %in% SGWAS_sig_order$ENTREZID) %>% 
+  pivot_longer(cols = !ENTREZID, names_to = "treatment", values_to = "plog") %>% 
+  separate(treatment, into=c("treatment",NA)) %>% 
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  left_join(., (backGL)) %>% 
+  pivot_wider(id_cols=treatment, 
+              names_from = SYMBOL, 
+              values_from = plog) %>% 
+  column_to_rownames(var="treatment") %>%
+  dplyr::select(SGWAS_sig_order$SYMBOL) %>% 
+  as.matrix()
+
+
+ComplexHeatmap::Heatmap(logFtestSGWAS, name = "-log10\np value", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = " Variance in Full GWAS from Schneider",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        # column_order = 
+            column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(logFtestSGWAS[i, j] > log10(0.05)*(-1))
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+
+```
+###  Top 50 SNP and eGenes from Schneider GWAS
+
+
+```{r top50 p value}
+
+
+SNP_supp <- readRDS("output/SNP_supp.RDS")
+SNP_top50 <- SNP_supp %>% 
+  arrange(Pvalue) %>% 
+  slice(.,1:50)
+egenes_top50SNP <- SNP_egenes_allfiles%>% 
+  dplyr::filter(RSID %in%SNP_top50$RSID) %>% 
+  distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
+  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue)
+###33 seperate egenes (pvalue is associated with the RSID and that gene)
+
+SNP_genestop50 <- RSID_QTL_list_full %>% 
+  distinct(Gene, .keep_all = TRUE) %>% 
+  ##first add pvalue to rsid list
+  dplyr::filter(RSID %in% SNP_top50$RSID) %>% 
+  left_join(., (SNP_top50 %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>%
+  left_join(., list_snp_IDS, 
+            by = c("SYMBOL"="hgnc_symbol", "Gene"="ensembl_gene_id")) %>% 
+  dplyr::select(SYMBOL,Gene,entrezgene_id,Pvalue) %>% 
+  rename("ensembl_gene_id"="Gene")
+top50full <- bind_rows(list(SNP_genes=SNP_genestop50,egene_of_SNP=egenes_top50SNP),.id ="id" )
+top50full %>% 
+  dplyr::filter(entrezgene_id %in% backGL$ENTREZID) %>% 
+  arrange(Pvalue)
+
+SGWAS_top50_order <- top50full %>% 
+  dplyr::filter(entrezgene_id %in%backGL$ENTREZID) %>% 
+  arrange(Pvalue) %>% 
+  dplyr::select(!SYMBOL) %>% 
+  left_join(.,backGL, by = c("entrezgene_id"= "ENTREZID"))
+
+
+SGWAS50_sig <- FC_mine %>% 
+  dplyr::filter(ENTREZID %in% top50full$entrezgene_id) %>% 
+  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+ filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val) %>% 
+  column_to_rownames(var="id") %>%
+  dplyr::select(SGWAS_top50_order$SYMBOL) %>% 
+  as.matrix()
+
+SGWAS50_mat <-  FC_mine %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  dplyr::filter(ENTREZID %in% top50full$entrezgene_id) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  dplyr::select(SGWAS_top50_order$SYMBOL) %>% 
+  as.matrix()
+
+ComplexHeatmap::Heatmap(SGWAS50_mat, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Top50 SNPs from Schneider",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        # column_order = 
+            column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(SGWAS50_sig[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+
+
+
+
+
+
+
+framefun24 <- readRDS("data/framefun24.RDS")
+
+
+logFtest50SGWAS <- framefun24 %>% 
+  mutate(DOX_plog=(log10(DOX.VEH.24)*(-1)),
+         EPI_plog=(log10(EPI.VEH.24)*(-1)),
+         DNR_plog=(log10(DNR.VEH.24)*(-1)),
+         MTX_plog=(log10(MTX.VEH.24)*(-1)),
+         TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
+  dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
+  dplyr::filter(ENTREZID %in% SGWAS_top50_order$entrezgene_id) %>% 
+  pivot_longer(cols = !ENTREZID, 
+               names_to = "treatment", values_to = "plog") %>% 
+  separate(treatment, into=c("treatment",NA)) %>% 
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  left_join(., (backGL)) %>% 
+  pivot_wider(id_cols=treatment, 
+              names_from = SYMBOL, 
+              values_from = plog) %>% 
+  column_to_rownames(var="treatment") %>%
+  dplyr::select(SGWAS_top50_order$SYMBOL) %>% 
+  as.matrix()
+
+
+ComplexHeatmap::Heatmap(logFtest50SGWAS, name = "-log10\np value", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        # col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = " Top50 SNPs and Variance in Schneider GWAS",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        # column_order = 
+            column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(logFtestSGWAS[i, j] > log10(0.05)*(-1))
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+
+```
+
+
 ### Knowles troponin genes
 ```{r importKnowles, fig.width=10}
+Knowles_supp13 <- read.csv("output/Knowles_supp13.csv", row.names = 1)
+
 Knowles_S13 <- read.csv("output/Knowles_S13.csv", row.names = 1)
+Knowles_supp13 %>% 
+  left_join(., Knowles_S13, by=c("gene"="ensembl_gene_id", "hugo"="hgnc_symbol"))
+
+
 # my_attributes <- c('entrezgene_id', 'ensembl_gene_id', 'hgnc_symbol')
 # expre7k <- getBM(attributes = my_attributes,
                      # filters ="ensembl_gene_id",
@@ -1120,11 +1411,25 @@ Cardiotox_table %>%
   ggplot(., aes(x=tox, y=cpm))+
   geom_point(aes(color=indv))+
   geom_smooth(method="lm")+
-  stat_regline_equation(label.x.npc = "center")+
+  # stat_regline_equation(label.x.npc = "center")+
   facet_wrap(~drug, scales = "free_x")+
   labs(title="RARG ", y = "delta cpm", x = "delta tox")+
   scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
-  theme_bw()
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
 
 
 ```
