@@ -112,6 +112,7 @@ library(biomaRt)
 library(edgeR)
 library(RColorBrewer)
 
+
 ```
 
 ### Loading of data from Necela, supplemental 1.
@@ -162,7 +163,7 @@ FC_mine %>%
   separate(time, into=c("number","unit",sep="_"))
 ```
 
-```{r Biomart}
+```{r basicBiomart}
 ensembl <- useMart(biomart="ensembl",dataset ="hsapiens_gene_ensembl")
 
 listogene <- necela_list$Gene
@@ -672,21 +673,19 @@ paper ref: [https://aacrjournals.org/clincancerres/article/23/1/43/122971/Genome
 
 ```{r  SnPupload}
 library(readr)
-# near_genes_SNP1 <- read_table("~/Ward Lab/Cardiotoxicity/Manuscript/SNP_work/near_genes_SNP1.txt", 
+# near_genes_SNP1 <- read_table("~/Ward Lab/Cardiotoxicity/Manuscript/SNP_work/near_genes_SNP1.txt",
 #     col_types = cols(CLIN_SIG = col_skip()))
-list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")##list to assign ensemble/hgnc/entrezid
-RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)##closest annotated genetto complete rsid list
-# Knowles_supp13 <- elife_33480_supp13
-# write.csv(Knowles_supp13, "output/Knowles_supp13.csv")
+# list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")##list to assign ensemble/hgnc/entrezid
+RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)##closest annotated gene to complete rsid list
+
 SNP_supp <- readRDS("output/SNP_supp.RDS")## has the pvalue
 near_genes_SNP1 <- readRDS("output/near_genes_SNP1.RDS")
 SNP_gene_list <- near_genes_SNP1 %>% 
   rename("RSID"=1) %>% 
   dplyr::select(RSID,SYMBOL,Gene) %>%
   distinct(RSID,.keep_all = TRUE) %>% 
-  full_join(.,SNP_supp,by="RSID") %>% 
-  dplyr::select(RSID, SYMBOL,Gene,Ch,BP,OR,Pvalue) %>%
-  left_join(.,list_snp_IDS,by=c("Gene"="ensembl_gene_id"))
+  left_join(.,SNP_supp,by="RSID") %>% 
+  dplyr::select(RSID, SYMBOL,Gene,Ch,BP,OR,Pvalue) #
   # distinct(Gene,.keep_all = TRUE)# %>%
   # dplyr::select(SYMBOL,Gene) %>%
 
@@ -713,6 +712,48 @@ RSID_QTL_list_full %>%
 # saveRDS(list_snp_IDS,"output/SNP_list_ID.RDS")
 ```
 
+```{r}
+##making a newfile## used bedtools to map closest transcript (ENST)
+# schneider_closest_output <- read_delim("C:/Users/renee/AppData/Roaming/MobaXterm/slash/RemoteFiles/2687104_3_27/output.bed",delim = "\t", escape_double = FALSE,col_names = c("chrom","start","stop","RSID","Pvalue","chrom_gene","start_gene","end_gene","transcript"), trim_ws = TRUE)
+# saveRDS(schneider_closest_output,"data/schneider_closest_output.RDS")
+
+schneider_closest_output <- readRDS("data/schneider_closest_output.RDS")
+
+listoftranscripts <- schneider_closest_output %>% 
+  dplyr::select(chrom:transcript) %>% 
+  distinct(RSID,.keep_all = TRUE) %>% 
+  # dplyr::select(transcript) %>% 
+  separate(transcript, into=c("transcript", "version"))
+
+saveRDS(test_biomart_run)
+my_filter <- c("ensembl_transcript_id")
+test_biomart_run <- getBM(attributes=my_attributes, 
+      filters = "ensembl_transcript_id", 
+      values = listoftranscripts$transcript, 
+      mart = ensembl)
+SNP_bedtools_data <- test_biomart_run %>% 
+  distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
+  left_join(., (listoftranscripts %>% dplyr::select(transcript,RSID,chrom,start,stop,Pvalue)), by=c("ensembl_transcript_id" = "transcript")) %>% 
+  arrange(., ensembl_transcript_id, Pvalue) %>% 
+  mutate(gene_ID=coalesce(as.character(entrezgene_id),ensembl_gene_id)) 
+
+just_the_SNPs <- SNP_bedtools_data %>% 
+  distinct(.,ensembl_gene_id,.keep_all = TRUE)
+
+backGL <- read.csv("data/backGL.txt", row.names = 1)
+
+# backGL <- getBM(attributes=my_attributes, 
+#       filters = "entrezgene_id", 
+#       values = backGL$ENTREZID, 
+#       mart = ensembl)
+# backGL2 <- backGL %>% 
+#   dplyr::select(entrezgene_id:hgnc_symbol) %>% 
+#   distinct(ensembl_gene_id,.keep_all = TRUE)
+# backGL <- backGL %>% 
+#   left_join(.,backGL2, by=c("ENTREZID"="entrezgene_id")) %>% 
+#   distinct(ENTREZID,.keep_all = TRUE)
+# write.csv(backGL,"data/backGL.txt")
+```
 
 
 ```{r graph with my data}
