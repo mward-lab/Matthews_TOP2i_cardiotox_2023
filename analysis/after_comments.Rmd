@@ -123,7 +123,7 @@ FC_necela <- readRDS("output/FC_necela.RDS")
 FC_mine <- readRDS("data/toplistall.RDS")
 
 TRZ_list <- FC_mine %>% 
-  filter(id=="TRZ",P.Value < 0.05) #%>% 
+  dplyr::filter(id=="TRZ",P.Value < 0.05) #%>% 
 
 TRZ_list %>% 
 kable(., caption = "List of nominal pvalue TRZ genes in my data") %>%
@@ -192,9 +192,9 @@ necela_val_genes <- readRDS("output/necela_val_genes.RDS")
 necela_list_test <- readRDS("output/necela_list_test.RDS")
 length(intersect(FC_necela_names$entrezgene_id, backGL$ENTREZID))
 hr3trz <- TRZ_list %>% 
-  filter(time=="3_hours")
+  dplyr::filter(time=="3_hours")
 hr24trz <- TRZ_list %>% 
-  filter(time=="24_hours")
+  dplyr::filter(time=="24_hours")
 intersect(hr24trz$SYMBOL, hr3trz$SYMBOL)
 
 
@@ -266,12 +266,12 @@ cell_cycle_list <- readRDS("output/KEGGcellcyclegenes.RDS")
 
 cell_cycle_genes <- cell_cycle_list %>% 
   dplyr::distinct(entrezgene_id,.keep_all = TRUE) %>% 
-  filter(entrezgene_id %in% trz_veh_count$ENTREZID)
+  dplyr::filter(entrezgene_id %in% trz_veh_count$ENTREZID)
 
 FC_necela_names <- readRDS("data/FC_necela_names.RDS")
 necela_cc_shortlist <- FC_necela_names %>% 
   distinct(entrezgene_id,.keep_all = TRUE) %>% 
-  filter(entrezgene_id %in% cell_cycle_genes$entrezgene_id) %>% 
+  dplyr::filter(entrezgene_id %in% cell_cycle_genes$entrezgene_id) %>% 
   # mutate(entrezgene_id_chr=as.charater(entrezgene_id)) %>% 
   full_join(., FC_necela, by=c("hgnc_symbol"="Gene"))
 
@@ -293,7 +293,7 @@ for (g in seq(from=1, to=44)){
 
 df_nc <- necela_cc_shortlist %>% as_tibble() %>% 
         dplyr::select(entrezgene_id,ensembl_gene_id,hgnc_symbol,logCPM) %>% 
-  filter(entrezgene_id%in% cell_cycle_list$entrezgene_id)
+  dplyr::filter(entrezgene_id%in% cell_cycle_list$entrezgene_id)
   
 
 # 
@@ -334,7 +334,7 @@ df_nc <- necela_cc_shortlist %>% as_tibble() %>%
 
 necela_cc_genes <- necela_cc_shortlist %>% 
   dplyr::distinct(entrezgene_id,.keep_all = TRUE) %>% 
-  filter(entrezgene_id %in% cell_cycle_genes$entrezgene_id)
+  dplyr::filter(entrezgene_id %in% cell_cycle_genes$entrezgene_id)
 
 # for (g in seq(from=1, to=44)){
 #   a <- cell_cycle_genes$hgnc_symbol[g]
@@ -403,13 +403,13 @@ intersect(cell_cycle_list$hgnc_symbol, backGL$SYMBOL)
 Knowles_log2cpm <- readRDS("data/Knowles_log2cpm_real.RDS")
 
 Knowles_log2cpm %>% 
-  filter(ESGN %in%cell_cycle_list$ensembl_gene_id)
+  dplyr::filter(ESGN %in%cell_cycle_list$ensembl_gene_id)
 FC_necela %>% 
-  filter(Gene %in% cell_cycle_list$hgnc_symbol)
+  dplyr::filter(Gene %in% cell_cycle_list$hgnc_symbol)
 FC_necela %>% 
   dplyr::filter(PValue<0.05, FC >1.5) %>% 
   dplyr::select(Gene) %>% 
-  filter(Gene %in% TRZ_list$SYMBOL)
+  dplyr::filter(Gene %in% TRZ_list$SYMBOL)
 
 print("147 in necela")
 
@@ -460,11 +460,11 @@ Top2_expression %>%
 
 Top2_expression %>% 
   pivot_longer(cols=!c(Name,Description), names_to = "indv", values_to = "counts") %>% 
-  filter(Description=="TOP2A") %>% 
+  dplyr::filter(Description=="TOP2A") %>% 
   summary()
 Top2_expression %>% 
   pivot_longer(cols=!c(Name,Description), names_to = "indv", values_to = "counts") %>% 
-  filter(Description=="TOP2B") %>% 
+  dplyr::filter(Description=="TOP2B") %>% 
   summary()
 
 ```
@@ -551,7 +551,7 @@ CMD05_87 <- read.csv("data/CMD05_87DRCviability.csv", row.names = 1)
 
 Veh_4_75 <- CMD04_75 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
-  filter(drug=="Veh") %>% 
+  dplyr::filter(drug=="Veh") %>% 
   mutate(percent= if_else(time=="0",RFLU/26609,RFLU/55596.67))%>% 
   group_by(time) %>% 
   summarize(as.tibble(rbind(summary(percent))))
@@ -559,7 +559,7 @@ Veh_4_75 <- CMD04_75 %>%
 
 Veh_5_75 <- CMD05_75 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
-  filter(drug=="Veh") %>% 
+  dplyr::filter(drug=="Veh") %>% 
   mutate(percent= if_else(time=="0",RFLU/70958.5,RFLU/32740))%>% 
   group_by(time) %>% 
   summarize(as.tibble(rbind(summary(percent))))
@@ -568,7 +568,7 @@ Veh_5_75 <- CMD05_75 %>%
 
 Veh_4_87 <- CMD04_87 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
-  filter(drug=="Veh") %>% 
+  dplyr::filter(drug=="Veh") %>% 
   mutate(percent= if_else(time=="0",RFLU/73528.67,RFLU/72454.83))%>% 
   group_by(time) %>% 
   summarize(as.tibble(rbind(summary(percent))))
@@ -576,7 +576,7 @@ Veh_4_87 <- CMD04_87 %>%
 
 Veh_5_87 <- CMD05_87 %>% 
       separate(sample, into=c("drug","conc"),sep="_") %>% 
-  filter(drug=="Veh") %>% 
+  dplyr::filter(drug=="Veh") %>% 
   mutate(percent= if_else(time=="0",RFLU/59901.33,RFLU/50557.33)) %>% 
   group_by(time) %>% 
   summarize(as.tibble(rbind(summary(percent))))
@@ -712,33 +712,60 @@ RSID_QTL_list_full %>%
 # saveRDS(list_snp_IDS,"output/SNP_list_ID.RDS")
 ```
 
-```{r}
+```{r retrieving TSSstartstop and IDs}
+# genes = getBM(c( "chromosome_name","start_position","end_position","strand","entrezgene_id","ensembl_gene_id"), filters =
+# c("chromosome_name","with_entrezgene"),
+# values=list(c(1:22,"X","Y"),TRUE), mart=ensembl)
+# saveRDS(genes,"output/genes.RDS")
+genes <- readRDS("output/genes.RDS")
+genes %>% 
+  dplyr::select("chromosome_name","start_position","end_position","entrezgene_id","ensembl_gene_id") %>%  
+  
+  mutate(chromosome_name=paste("chr",chromosome_name,sep="")) %>% 
+  
+  write_tsv(.,"~/ATAC_downloads/BEDtoolplay/biomart_genes.bed",col_names = FALSE)
+  
+
+
+```
+
+
+```{r bedtools output}
+
 ##making a newfile## used bedtools to map closest transcript (ENST)
-# schneider_closest_output <- read_delim("C:/Users/renee/AppData/Roaming/MobaXterm/slash/RemoteFiles/2687104_3_27/output.bed",delim = "\t", escape_double = FALSE,col_names = c("chrom","start","stop","RSID","Pvalue","chrom_gene","start_gene","end_gene","transcript"), trim_ws = TRUE)
+# schneider_closest_output <- read_delim("~/ATAC_downloads/BEDtoolplay/output.bed",
+#     delim = "\t", escape_double = FALSE,
+#    col_names = c("chrom","start","stop","RSID","Pvalue","chrom_gene","start_gene","end_gene","ENTREZID","ensembl_gene_id"), trim_ws = TRUE)
 # saveRDS(schneider_closest_output,"data/schneider_closest_output.RDS")
 
 schneider_closest_output <- readRDS("data/schneider_closest_output.RDS")
+##below was from the first alignment attempt then I retrieved TSS from biomart and redid the mapping in bedtools
+# listoftranscripts <- schneider_closest_output %>% 
+#   dplyr::select(chrom:transcript) %>% 
+#   distinct(RSID,.keep_all = TRUE) %>% 
+#   # dplyr::select(transcript) %>% 
+#   separate(transcript, into=c("transcript", "version"))
+# 
+# 
+# my_filter <- c("ensembl_transcript_id")
+# # test_biomart_run <- getBM(attributes=my_attributes, 
+# #       filters = "ensembl_transcript_id", 
+# #       values = listoftranscripts$transcript, 
+# #       mart = ensembl)
+# 
+# test_biomart_run <- readRDS("output/test_biomart_run.RDS")
+# 
 
-listoftranscripts <- schneider_closest_output %>% 
-  dplyr::select(chrom:transcript) %>% 
-  distinct(RSID,.keep_all = TRUE) %>% 
-  # dplyr::select(transcript) %>% 
-  separate(transcript, into=c("transcript", "version"))
 
-saveRDS(test_biomart_run)
-my_filter <- c("ensembl_transcript_id")
-test_biomart_run <- getBM(attributes=my_attributes, 
-      filters = "ensembl_transcript_id", 
-      values = listoftranscripts$transcript, 
-      mart = ensembl)
-SNP_bedtools_data <- test_biomart_run %>% 
-  distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
-  left_join(., (listoftranscripts %>% dplyr::select(transcript,RSID,chrom,start,stop,Pvalue)), by=c("ensembl_transcript_id" = "transcript")) %>% 
-  arrange(., ensembl_transcript_id, Pvalue) %>% 
-  mutate(gene_ID=coalesce(as.character(entrezgene_id),ensembl_gene_id)) 
+# SNP_bedtools_data <- test_biomart_run %>% 
+#   distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
+#   left_join(., (listoftranscripts %>% dplyr::select(transcript,RSID,chrom,start,stop,Pvalue)), by=c("ensembl_transcript_id" = "transcript")) %>% 
+#   arrange(., ensembl_transcript_id, Pvalue) %>% 
+#   mutate(gene_ID=coalesce(as.character(entrezgene_id),ensembl_gene_id)) 
 
-just_the_SNPs <- SNP_bedtools_data %>% 
-  distinct(.,ensembl_gene_id,.keep_all = TRUE)
+just_the_SNPs <- schneider_closest_output %>% 
+  distinct(.,ensembl_gene_id,.keep_all = TRUE) %>% 
+  arrange(., Pvalue)
 
 backGL <- read.csv("data/backGL.txt", row.names = 1)
 
@@ -753,31 +780,44 @@ backGL <- read.csv("data/backGL.txt", row.names = 1)
 #   left_join(.,backGL2, by=c("ENTREZID"="entrezgene_id")) %>% 
 #   distinct(ENTREZID,.keep_all = TRUE)
 # write.csv(backGL,"data/backGL.txt")
+
+length(intersect(just_the_SNPs$ensembl_gene_id,backGL$ensembl_gene_id))
+length(intersect(just_the_SNPs$ENTREZID,backGL$ENTREZID))
+          
 ```
 
 
 ```{r graph with my data}
+order_frame <- just_the_SNPs %>% 
+  dplyr::filter(ENTREZID %in% backGL$ENTREZID) %>% 
+  left_join(., (backGL %>% dplyr::select(ENTREZID,ensembl_gene_id,SYMBOL,hgnc_symbol)), by=c("ENTREZID"="ENTREZID","ensembl_gene_id"="ensembl_gene_id")) %>% 
+  mutate(SYMBOL= if_else(is.na(SYMBOL),"NDN",SYMBOL))
+##had to add NDN name to missing ENTREZID
+
+
 new_Gwas_genes_sig <- FC_mine %>% 
-  dplyr::filter(ENTREZID %in% list_snp_IDS$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% just_the_SNPs$ENTREZID) %>% 
   mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
- filter(time =="24_hours") %>% 
+ dplyr::filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
               values_from =adj.P.Val) %>% 
   column_to_rownames(var="id") %>%
+  dplyr::select(order_frame$SYMBOL) %>% 
   as.matrix()
 
   
 new_gwas_mat <-  FC_mine %>% 
-  filter(time=="24_hours") %>% 
+  dplyr::filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
-  filter(ENTREZID %in% list_snp_IDS$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% just_the_SNPs$ENTREZID) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
               values_from = logFC) %>% 
   column_to_rownames(var="id") %>%
+   dplyr::select(order_frame$SYMBOL) %>% 
   as.matrix()
 
 ComplexHeatmap::Heatmap(new_gwas_mat, name = "Fold change\nvalues", 
@@ -786,12 +826,9 @@ ComplexHeatmap::Heatmap(new_gwas_mat, name = "Fold change\nvalues",
         row_names_side = "left",
         # col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Fold change values of GWAS `new set` genes", 
+        column_title = "Schneider GWAS SNP-closest gene FC", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
-        column_order= c("LRRTM4","CLYBL",	"ADCY2","NEDD4L",	"PLEKHA5"	,	"PAG1",	"PPARA","PRODH", "CALD1","PAM",  "CDPF1",	"DUBR","PRR5L","RSU1",	"WDHD1"	,	"PRDX6","MSI1",	"SIRT4","GAREM1",	"ADAMTSL1","DENND3"	, "ESD"	,	"TRIB2"	,"KTN1","NFE2L3",	"SULF1"), 
-        # bottom_annotation = ht,
-        
         column_names_rot = 90, 
         column_names_gp = gpar(fontsize = 8,fontface="italic"),
         column_names_centered =TRUE,
@@ -799,16 +836,6 @@ ComplexHeatmap::Heatmap(new_gwas_mat, name = "Fold change\nvalues",
         if(new_Gwas_genes_sig[i, j] <0.05)
             grid.text("*", x, y, gp = gpar(fontsize = 20))
 })
-
-# simpnames <- data.frame(SYMBOL=c("PRDX6","PRODH","CDPF1" ,"RSU1", "ESD", "PPARA" ,"PRR5L", "WDHD1",  "PAG1",
-#           "ADAMTSL1", "DENND3","PLEKHA5","NEDD4L","TRIB2","KTN1","GAREM1", "CLYBL",
-#           "MSI1","DUBR", "NFE2L3","CALD1","PAM" ,"SIRT4","LRRTM4","ADCY2" ,"SULF1"))
-
-# simpnames %>% 
-#   left_join(., (SNP_gene_list %>% select(SYMBOL,Pvalue))) %>% 
-#   arrange(Pvalue) %>% 
-#   distinct(SYMBOL) %>% 
-#   print
 ```
 
 
@@ -825,7 +852,7 @@ logFtestSNP_mat <- framefun24 %>%
          MTX_plog=(log10(MTX.VEH.24)*(-1)),
          TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
   dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
-  dplyr::filter(ENTREZID %in% list_snp_IDS$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% just_the_SNPs$ENTREZID) %>% 
   pivot_longer(cols = !ENTREZID, names_to = "treatment", values_to = "plog") %>% 
   separate(treatment, into=c("treatment",NA)) %>% 
   mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
@@ -834,6 +861,7 @@ logFtestSNP_mat <- framefun24 %>%
               names_from = SYMBOL, 
               values_from = plog) %>% 
   column_to_rownames(var="treatment") %>%
+   dplyr::select(order_frame$SYMBOL) %>% 
   as.matrix()
 
 
@@ -843,9 +871,9 @@ Heatmap(logFtestSNP_mat, name = "-Log10 \n p value",
         row_names_side = "left",
         # col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX', 'TRZ'),
-        column_title = "-log10 Ftestpvalue SNP genes", 
+        column_title = "-log10 Ftestpvalue SNP nearest-genes", 
         column_title_side = "top",
-        column_order= c("LRRTM4","CLYBL",	"ADCY2","NEDD4L",	"PLEKHA5"	,	"PAG1",	"PPARA","PRODH", "CALD1","PAM",  "CDPF1",	"DUBR","PRR5L","RSU1",	"WDHD1"	,	"PRDX6","MSI1",	"SIRT4","GAREM1",	"ADAMTSL1","DENND3"	, "ESD"	,	"TRIB2"	,"KTN1","NFE2L3",	"SULF1"), 
+        # column_order= c("LRRTM4","CLYBL",	"ADCY2","NEDD4L",	"PLEKHA5"	,	"PAG1",	"PPARA","PRODH", "CALD1","PAM",  "CDPF1",	"DUBR","PRR5L","RSU1",	"WDHD1"	,	"PRDX6","MSI1",	"SIRT4","GAREM1",	"ADAMTSL1","DENND3"	, "ESD"	,	"TRIB2"	,"KTN1","NFE2L3",	"SULF1"), 
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         column_names_rot = 90, 
         column_names_gp = gpar(fontsize = 8,fontface="italic"),
@@ -860,7 +888,6 @@ Heatmap(logFtestSNP_mat, name = "-Log10 \n p value",
 
 The new set is in order of  the pvalue on GWAS genes in common.
 ```{r  egenes of new GWAS}
-RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)
 # saveRDS(SNP_egenes_allfiles,"output/SNP_egenes_allfiles.RDS")
 
 SNP_egenes_allfiles <- readRDS("output/SNP_egenes_allfiles.RDS")
@@ -874,7 +901,7 @@ egene_SNP <- SNP_egenes_allfiles %>%
 new_egenes_sig <- FC_mine %>% 
   dplyr::filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
   mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
- filter(time =="24_hours") %>% 
+ dplyr::filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -884,9 +911,9 @@ new_egenes_sig <- FC_mine %>%
 
   
 new_egenes_mat <-  FC_mine %>% 
-  filter(time=="24_hours") %>% 
+  dplyr::filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
-  filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -900,19 +927,10 @@ ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues",
         row_names_side = "left",
         # col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Fold change values new GWAS eGenes", 
+        column_title = "Fold change values Schneider/GTEx eGenes", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
-        # column_order= c('RARG',
-        #                 'TNS2', 
-        #                 'ZNF740',
-        #                 'SLC28A3',
-        #                 'RMI1',
-        #                 'EEF1B2',
-        #                 'FRS2', 
-        #                 'HDDC2'),
-        # bottom_annotation = ht,
-        
+        column_order = sort(colnames(new_egenes_mat)),
         column_names_rot = 90, 
         column_names_gp = gpar(fontsize = 8,fontface="italic"),
         column_names_centered =TRUE,
@@ -929,124 +947,86 @@ ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues",
 LogPvaluelist <- SNP_egenes_allfiles %>% 
   distinct(ensembl_gene_id,.keep_all = TRUE) 
 
-new_egenes_sig <- FC_mine %>% 
-  dplyr::filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
-  mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
- filter(time =="24_hours") %>% 
-  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
-  pivot_wider(id_cols=id, 
+logFtestegene_mat <- framefun24 %>% 
+  mutate(DOX_plog=(log10(DOX.VEH.24)*(-1)),
+         EPI_plog=(log10(EPI.VEH.24)*(-1)),
+         DNR_plog=(log10(DNR.VEH.24)*(-1)),
+         MTX_plog=(log10(MTX.VEH.24)*(-1)),
+         TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
+  dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
+  dplyr::filter(ENTREZID %in% LogPvaluelist$entrezgene_id) %>% 
+  pivot_longer(cols = !ENTREZID, names_to = "treatment", values_to = "plog") %>% 
+  separate(treatment, into=c("treatment",NA)) %>% 
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  left_join(., (backGL)) %>% 
+  pivot_wider(id_cols=treatment, 
               names_from = SYMBOL, 
-              values_from =adj.P.Val) %>% 
-  column_to_rownames(var="id") %>%
+              values_from = plog) %>% 
+  column_to_rownames(var="treatment") %>%
+   # dplyr::select(order_frame$SYMBOL) %>% 
   as.matrix()
 
-  
-new_egenes_mat <-  FC_mine %>% 
-  filter(time=="24_hours") %>% 
-  mutate(logFC= logFC*(-1)) %>%
-  filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
-  dplyr::select(SYMBOL ,time, id, logFC) %>% 
-  pivot_wider(id_cols=id, 
-              names_from = SYMBOL, 
-              values_from = logFC) %>% 
-  column_to_rownames(var="id") %>%
-  as.matrix()
-
-ComplexHeatmap::Heatmap(new_egenes_mat, name = "Fold change\nvalues", 
+Heatmap(logFtestegene_mat, name = "-Log10 \n p value", 
          cluster_rows = FALSE,
         cluster_columns = FALSE, 
         row_names_side = "left",
         # col = col_funFC,
-        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Log10 pvalue GWAS eGenes", 
+        row_order = c('DOX','EPI','DNR', 'MTX', 'TRZ'),
+        column_title = "-log10 Ftestpvalue Schneider/GTEx eGenes", 
         column_title_side = "top",
+         column_order = sort(colnames(new_egenes_mat)),
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
-        column_order = sort(colnames(new_egenes_mat)),
-        
         column_names_rot = 90, 
         column_names_gp = gpar(fontsize = 8,fontface="italic"),
         column_names_centered =TRUE,
-         cell_fun = function(j, i, x, y, width, height, fill) {
-        if(new_egenes_sig[i, j] <0.05)
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(logFtestegene_mat[i, j] > log10(0.05)*(-1))
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
 })
 
 
-
-
-
-
-
-
-
-
-
 ```
-The eGenes from gTEX are in order of adj. P.Value found in the Fold Change.  I can order another way if wanted.
 
 
 ```{r making Schneider_completeSNP_egenes,  include=TRUE,eval=FALSE}
 
-list_snp_IDS <- readRDS("output/SNP_list_ID.RDS")##list of all SNP near genes with ensemble/hgnc/entrezid ID
-RSID_QTL_list_full <- read.csv("output/RSID_QTL_list_full.txt", row.names = 1)##closest annotated gene to complete rsid list
 SNP_supp <- readRDS("output/SNP_supp.RDS")## has the pvalue (this is the supplement from that paper)
-egene_of_SNP <- SNP_egenes_allfiles %>% 
+egene_pvalue_SNP <- SNP_egenes_allfiles %>% 
   distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
   left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue)
 # contains the eGenes to every SNP
-ESGN_rds <- readRDS("output/ESGN_rds.RDS")
 
 
-SNP_genes <- RSID_QTL_list_full %>% 
-  distinct(Gene, .keep_all = TRUE) %>% 
-  ##first add pvalue to rsid list
-  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>%
-  left_join(., list_snp_IDS, by = c("SYMBOL"="hgnc_symbol", "Gene"="ensembl_gene_id")) %>% 
-            
-            dplyr::select(SYMBOL,Gene,entrezgene_id,Pvalue) 
+SNPXgenes <- just_the_SNPs %>% 
+dplyr::filter(ENTREZID %in% backGL$ENTREZID) %>% 
+  left_join(., (backGL %>% dplyr::select(ENTREZID,ensembl_gene_id,SYMBOL,hgnc_symbol)), by=c("ENTREZID"="ENTREZID","ensembl_gene_id"="ensembl_gene_id")) %>% 
+  mutate(SYMBOL= if_else(is.na(SYMBOL),"NDN",SYMBOL)) %>% 
+  dplyr::select(SYMBOL, ensembl_gene_id, ENTREZID,Pvalue) %>% 
+  dplyr::rename("ENTREZID"="entrezgene_id" )
 
-complete_list <- bind_rows(list(SNP_genes=SNP_genes,egene_of_SNP=egene_of_SNP),.id ="id" )
-  ##got list of unique ESGNs to try to match up all entrezids
-# ESGN_retrieve <- complete_list %>% 
-#   mutate(ESGN= if_else(ensembl_gene_id=="NA",Gene,ensembl_gene_id)) %>% 
-#   dplyr::select(ESGN) %>% 
-#     distinct(ESGN)
-    
-# ESGN_rds <- getBM(attributes = my_attributes,
-#                      filters ="ensembl_gene_id",
-#                      values =ESGN_retrieve$ESGN,
-#                      mart = ensembl)
-# saveRDS(ESGN_rds,"output/ESGN_rds.RDS")
-#   saved as an .RDS so I could match it up below
-# complete_list <- 
-  complete_list %>% 
-  mutate(ESGN = coalesce(ensembl_gene_id,Gene)) %>% 
-  dplyr::select(ESGN,entrezgene_id,SYMBOL,Pvalue,id) %>% 
-    left_join(., ESGN_rds, by=c("ESGN"="ensembl_gene_id","SYMBOL"="hgnc_symbol")) %>% 
-    mutate(ENTREZID=coalesce(entrezgene_id.y,entrezgene_id.x)) %>% 
-    dplyr::select(ESGN,SYMBOL, Pvalue,id,ENTREZID) %>% 
-    distinct() %>% 
-    arrange(ENTREZID,by=(Pvalue)) 
-  ##saved after all the arrangement above
-write.csv(complete_list,"data/Schneider_GWAS.txt")
+complete_list <- bind_rows(list(SNP_genes=SNPXgenes,egene_SNP=egene_pvalue_SNP),.id ="id" )
+ 
+# write.csv(complete_list,"data/Schneider_GWAS.txt")
 
 
 ```
 
 
 ```{r Schneider_orderHeatmap}
+
 Schneider_GWAS <- read.csv("data/Schneider_GWAS.txt", row.names = 1)
+
 SGWAS_sig_order <- Schneider_GWAS %>% 
-  dplyr::filter(ENTREZID %in%backGL$ENTREZID) %>% 
+  dplyr::filter(entrezgene_id %in%backGL$ENTREZID) %>% 
   arrange(Pvalue) %>% 
   dplyr::select(!SYMBOL) %>% 
-  left_join(.,backGL, by = c("ENTREZID"= "ENTREZID"))
+  left_join(.,backGL, by = c("entrezgene_id"= "ENTREZID"))
   # dplyr::select(SYMBOL) #%>% 
   # distinct()
 SGWAS_sig <- FC_mine %>% 
-  dplyr::filter(ENTREZID %in% Schneider_GWAS$ENTREZID) %>% 
+  dplyr::filter(ENTREZID %in% Schneider_GWAS$entrezgene_id) %>% 
   mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
- filter(time =="24_hours") %>% 
+ dplyr::filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -1056,9 +1036,9 @@ SGWAS_sig <- FC_mine %>%
   as.matrix()
 
 SGWAS_mat <-  FC_mine %>% 
-  filter(time=="24_hours") %>% 
+  dplyr::filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
-  dplyr::filter(ENTREZID %in% Schneider_GWAS$ENTREZID) %>% 
+  dplyr::filter(ENTREZID %in% Schneider_GWAS$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -1075,7 +1055,7 @@ ComplexHeatmap::Heatmap(SGWAS_mat, name = "Fold change\nvalues",
         row_names_side = "left",
         # col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Full GWAS from Schneider",
+        column_title = "Full Schneider SNP-genes and eGenes",
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         # column_order = 
@@ -1098,7 +1078,7 @@ logFtestSGWAS <- framefun24 %>%
          MTX_plog=(log10(MTX.VEH.24)*(-1)),
          TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
   dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
-  dplyr::filter(ENTREZID %in% SGWAS_sig_order$ENTREZID) %>% 
+  dplyr::filter(ENTREZID %in% SGWAS_sig_order$entrezgene_id) %>% 
   pivot_longer(cols = !ENTREZID, names_to = "treatment", values_to = "plog") %>% 
   separate(treatment, into=c("treatment",NA)) %>% 
   mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
@@ -1117,7 +1097,7 @@ ComplexHeatmap::Heatmap(logFtestSGWAS, name = "-log10\np value",
         row_names_side = "left",
         # col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = " Variance in Full GWAS from Schneider",
+        column_title = " Variance Full Schneider SNP-genes and eGenes",
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         # column_order = 
@@ -1136,53 +1116,54 @@ ComplexHeatmap::Heatmap(logFtestSGWAS, name = "-log10\np value",
 ```{r top50 p value}
 
 
-SNP_supp <- readRDS("output/SNP_supp.RDS")
-SNP_top50 <- SNP_supp %>% 
-  arrange(Pvalue) %>% 
-  slice(.,1:50)
-egenes_top50SNP <- SNP_egenes_allfiles%>% 
-  dplyr::filter(RSID %in%SNP_top50$RSID) %>% 
+schneider_closest_output <- readRDS("data/schneider_closest_output.RDS")
+SNP_genestop50 <- schneider_closest_output %>% 
+  arrange(., Pvalue) %>% 
+  # dplyr::select(RSID,Pvalue,ENTREZID,ensembl_gene_id) %>% 
+  slice_min(.,Pvalue,n=50) %>% 
   distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
-  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue)
-###33 seperate egenes (pvalue is associated with the RSID and that gene)
+  left_join(., (Schneider_GWAS %>%
+                  dplyr::select(ensembl_gene_id,entrezgene_id,SYMBOL)), 
+            by = c("ensembl_gene_id"="ensembl_gene_id","ENTREZID"="entrezgene_id"))  %>% 
+mutate(SYMBOL= if_else(is.na(SYMBOL)& ENTREZID =="4692","NDN",SYMBOL))
+  
+# egenes_top50SNP <- SNP_egenes_allfiles%>% 
+#   dplyr::filter(RSID %in%SNP_genestop50$RSID) %>% 
+#   distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
+#   left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue)
+###24 separate egenes (pvalue is associated with the RSID and that gene)
 
-SNP_genestop50 <- RSID_QTL_list_full %>% 
-  distinct(Gene, .keep_all = TRUE) %>% 
-  ##first add pvalue to rsid list
-  dplyr::filter(RSID %in% SNP_top50$RSID) %>% 
-  left_join(., (SNP_top50 %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>%
-  left_join(., list_snp_IDS, 
-            by = c("SYMBOL"="hgnc_symbol", "Gene"="ensembl_gene_id")) %>% 
-  dplyr::select(SYMBOL,Gene,entrezgene_id,Pvalue) %>% 
-  rename("ensembl_gene_id"="Gene")
-top50full <- bind_rows(list(SNP_genes=SNP_genestop50,egene_of_SNP=egenes_top50SNP),.id ="id" )
-top50full %>% 
-  dplyr::filter(entrezgene_id %in% backGL$ENTREZID) %>% 
-  arrange(Pvalue)
+# top50full <- bind_rows(list(SNP_genes=SNP_genestop50,egene_SNP=egenes_top50SNP),.id ="id" )
+max(SNP_genestop50$Pvalue)
 
-SGWAS_top50_order <- top50full %>% 
+completetop50 <- Schneider_GWAS %>% 
+  dplyr::filter(Pvalue <= max(SNP_genestop50$Pvalue))
+ 
+
+SGWAS_top50_order <- completetop50 %>% 
   dplyr::filter(entrezgene_id %in%backGL$ENTREZID) %>% 
   arrange(Pvalue) %>% 
   dplyr::select(!SYMBOL) %>% 
   left_join(.,backGL, by = c("entrezgene_id"= "ENTREZID"))
+  
 
 
 SGWAS50_sig <- FC_mine %>% 
-  dplyr::filter(ENTREZID %in% top50full$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% completetop50$entrezgene_id) %>% 
   mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
- filter(time =="24_hours") %>% 
+ dplyr::filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
               values_from =adj.P.Val) %>% 
   column_to_rownames(var="id") %>%
-  dplyr::select(SGWAS_top50_order$SYMBOL) %>% 
+  dplyr::select(SGWAS_top50_order$SYMBOL) %>%
   as.matrix()
 
 SGWAS50_mat <-  FC_mine %>% 
-  filter(time=="24_hours") %>% 
+  dplyr::filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
-  dplyr::filter(ENTREZID %in% top50full$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% completetop50$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -1280,7 +1261,7 @@ Knowles_supp13 %>%
 Knowles_13trop_sig <- FC_mine %>% 
   dplyr::filter(ENTREZID %in% Knowles_S13$entrezgene_id) %>% 
   mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
- filter(time =="24_hours") %>% 
+ dplyr::filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -1290,7 +1271,7 @@ Knowles_13trop_sig <- FC_mine %>%
 
   
 Knowles_13trop_mat <-  FC_mine %>% 
-  filter(time=="24_hours") %>% 
+  dplyr::filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
   dplyr::filter(ENTREZID %in% Knowles_S13$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
@@ -1331,7 +1312,7 @@ top7kgene <- read.csv("output/expre7k.csv", row.names = 1)
 trop7_sig <- FC_mine %>% 
   dplyr::filter(ENTREZID %in%top7kgene$entrezgene_id) %>% 
   mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
- filter(time =="24_hours") %>% 
+ dplyr::filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -1341,7 +1322,7 @@ trop7_sig <- FC_mine %>%
 
   
 trop7_mat <-  FC_mine %>% 
-  filter(time=="24_hours") %>% 
+  dplyr::filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
   dplyr::filter(ENTREZID %in% top7kgene$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
@@ -1447,7 +1428,7 @@ Heatmap(logFtestval_mat, name = "-Log10 \n p value",
 ```{r Cardiotoxval}
 
 Cardiotox_table <- readRDS("output/Cardiotox_dif_values.RDS")
-
+EEF1B2_table <- readRDS("output/EEF1B2_dif_values.RDS")
 Cardiotox_table %>% 
   ggplot(., aes(x=tox, y=cpm))+
   geom_point(aes(color=indv))+
@@ -1472,7 +1453,29 @@ ggpubr:: stat_cor(method="spearman",
                label.y.npc=0.01,
                size = 3)
 
-
+EEF1B2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="EEF1B2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
 ```
 ```{r other genes}
 gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
@@ -1480,6 +1483,7 @@ gene_corr_frame %>%
   dplyr::select(indv,Drug,counts,tox,hgnc_symbol)
 
 ```
+
 
 
 ### Link to other pages here:
