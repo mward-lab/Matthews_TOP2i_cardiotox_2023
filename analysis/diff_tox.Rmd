@@ -1,0 +1,974 @@
+---
+title: "differential_tox"
+author: "ERM"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
+```{r  package loading}
+library(tidyverse)
+library(ggsignif)
+library(cowplot)
+library(ggpubr)
+library(scales)
+library(sjmisc)
+library(kableExtra)
+library(broom)
+library(biomaRt)
+library(RColorBrewer)
+# library(gprofiler2)
+# library(qvalue)
+```
+
+
+```{r  data_loading}
+all_cpmcount <-  read_table("data/Counts_RNA_ERMatthews.txt")
+cpm_count_main <- readRDS("data/cpmcount.RDS") %>% rownames_to_column(var = "ENTREZID")
+colnames(cpm_count_main) <- colnames(all_cpmcount)
+gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
+
+interest_genes <- read.csv("output/GOI_genelist.txt", row.names = 1)
+top7kgene <- read.csv("output/expre7k.csv", row.names = 1)
+genes_for_graph <- bind_rows(interest_genes,top7kgene)
+```
+
+## RARG
+```{r  RARG}
+RARG_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==5916) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+
+
+Cardiotox_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="RARG") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(RARG_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+saveRDS(Cardiotox_table,"output/Cardiotox_dif_values.RDS") 
+
+```
+
+### EEF1B2
+```{r  EEF1B2data}
+
+EEF1B2_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==1933) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+EEF1B2_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="EEF1B2") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(EEF1B2_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+EEF1B2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="EEF1B2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(EEF1B2_table,"output/EEF1B2_dif_values.RDS")
+```
+
+### FRS2
+```{r FRS2}
+FRS2_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==10818) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+FRS2_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="FRS2") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(FRS2_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+FRS2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="FRS2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(FRS2_table,"output/FRS2_dif_values.RDS")
+```
+
+### HDDC2
+```{r HDDC2}
+HDDC2_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==51020) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+HDDC2_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="HDDC2") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(HDDC2_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+HDDC2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="HDDC2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(HDDC2_table,"output/HDDC2_dif_values.RDS")
+```
+
+### RMI1
+```{r RMI1}
+RMI1_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==80010) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+RMI1_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="RMI1") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(RMI1_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+RMI1_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="RMI1 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(RMI1_table,"output/RMI1_dif_values.RDS")
+```
+
+### SLC28A3
+```{r SLC28A3}
+
+SLC28A3_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==64078) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+SLC28A3_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="SLC28A3") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(SLC28A3_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+SLC28A3_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="SLC28A3 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(SLC28A3_table,"output/SLC28A3_dif_values.RDS")
+
+```
+
+### TNS2
+```{r TNS2}
+TNS2_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==23371) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+TNS2_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="TNS2") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(TNS2_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+TNS2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="TNS2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(TNS2_table,"output/TNS2_dif_values.RDS")
+
+
+```
+### ZNF740
+
+```{r ZNF740}
+
+
+ZNF740_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==283337) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+ZNF740_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="ZNF740") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(ZNF740_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+ZNF740_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="ZNF740 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(ZNF740_table,"output/ZNF740_dif_values.RDS")
+```
+### C3orf18
+
+```{r C3orf18}
+
+C3orf18_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==51161) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+C3orf18_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="C3orf18") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(C3orf18_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+C3orf18_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="C3orf18 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(C3orf18_table,"output/C3orf18_dif_values.RDS")
+
+
+```
+###RASIP1
+
+```{r RASIP1}
+
+RASIP1_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==54922) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+RASIP1_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="RASIP1") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(RASIP1_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+RASIP1_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="RASIP1 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(RASIP1_table,"output/RASIP1_dif_values.RDS")
+
+```
+
+### PEX16
+```{r PEX16}
+
+PEX16_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==9409) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+PEX16_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="PEX16") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(PEX16_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+PEX16_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="PEX16 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(PEX16_table,"output/PEX16_dif_values.RDS")
+
+
+
+```
+
+### ABHD8
+```{r ABHD8}
+
+
+ABHD8_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==79575) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+ABHD8_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="ABHD8") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(ABHD8_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+ABHD8_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="ABHD8 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(ABHD8_table,"output/ABHD8_dif_values.RDS")
+
+```
+
+### SLC27A1
+```{r  SLC27A1}
+
+
+SLC27A1_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==376497) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+SLC27A1_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="SLC27A1") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join(SLC27A1_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+SLC27A1_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="SLC27A1 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(SLC27A1_table,"output/SLC27A1_dif_values.RDS")
+
+```
+### EEIG1
+```{r EEIG1}
+
+
+EEIG1_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==399665) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+ EEIG1_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="EEIG1") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join( EEIG1_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+ EEIG1_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="EEIG1 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(EEIG1_table,"output/EEIG1_dif_values.RDS")
+```
+
+### TGFBR3L
+
+```{r TGFBR3L}
+
+TGFBR3L_24h_cpm <- cpm_count_main %>%
+  dplyr::filter(ENTREZID==100507588) %>% 
+  column_to_rownames("ENTREZID") %>% 
+  dplyr::select(ends_with("24h"))  %>% 
+  pivot_longer(everything(), names_to = "treatments",values_to = "counts") %>% 
+  separate(treatments, into=c("drug", "indv","time")) %>% 
+  pivot_wider(id_cols=c("time","indv"),names_from = "drug",values_from = "counts") %>% 
+  rowwise() %>%  
+  mutate("DNR_cpm"= abs(DNR-VEH),
+         "DOX_cpm"= abs(DOX-VEH),
+         "EPI_cpm"= abs(EPI-VEH),
+         "MTX_cpm"= abs(MTX-VEH),
+         "TRZ_cpm"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "countcpm")
+
+ TGFBR3L_table <- gene_corr_frame %>% 
+  dplyr::filter(hgnc_symbol=="TGFBR3L") %>%
+  dplyr::select(Drug, indv, tox) %>% 
+  pivot_wider(id_cols=c("indv"),names_from = "Drug",values_from = "tox") %>% 
+  rowwise() %>%  
+  mutate("DNR_tox"= abs(DNR-VEH),
+         "DOX_tox"= abs(DOX-VEH),
+         "EPI_tox"= abs(EPI-VEH),
+         "MTX_tox"= abs(MTX-VEH),
+         "TRZ_tox"= abs(TRZ-VEH)) %>% 
+  pivot_longer(cols=c("DNR","DOX","EPI","MTX","TRZ","VEH"), names_to = "Drug", values_to = "tox") %>% 
+  left_join( TGFBR3L_24h_cpm, by =c("indv"="indv", "Drug" = "Drug")) %>% ###might need to change
+  distinct(indv,.keep_all = TRUE) %>% 
+  dplyr::select(!c(tox,countcpm,time,Drug)) %>% 
+  pivot_longer(!indv, names_to = "calc", values_to = "value") %>% 
+  separate(calc, into = c("drug","stat")) %>% 
+  pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
+
+ TGFBR3L_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="TGFBR3L ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+saveRDS(TGFBR3L_table,"output/TGFBR3L_dif_values.RDS")
+
+```
+
