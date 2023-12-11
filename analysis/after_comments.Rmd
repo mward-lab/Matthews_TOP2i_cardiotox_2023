@@ -1484,7 +1484,108 @@ gene_corr_frame %>%
 
 ```
 
+## Making highly variable supersets and overlapping with Seoane and Knowles data sets in figure 8
+ 
+ 
+ 
+```{r loading highly vargene sets}
 
+all_expressed <-read_csv("data/backGL.txt", 
+    col_types = cols(...1 = col_skip()))
+
+
+base_egene <-readRDS("output/knowles4.RDS")
+resp_egene <-readRDS("output/knowles5.RDS")
+
+highly_var_genelist<- readRDS("data/highly_var_genelist.RDS")
+
+chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
+Seoane_2019 <- chrom_reg_Seoane[,2]
+names(Seoane_2019) <- "ENTREZID"
+Chrom_reg <- data.frame("entrez"=(unique(Seoane_2019$ENTREZID)))
+
+Sup4seoane <- read.csv("output/Sup4seoane.csv", row.names = 1)
+DOX_reg <- Sup4seoane  %>% 
+  filter(pval.expAnth<0.05) %>% 
+  distinct(entrez, .keep_all = TRUE) %>% 
+  dplyr::select(entrez)
+
+```
+ 
+### enrichment test
+
+
+```{r getting the plot}
+
+Hvar_y <- all_expressed %>%
+  mutate(Seoane_1 = if_else(ENTREZID %in% Chrom_reg$entrez,1,0)) %>%
+  mutate(Seoane_4 = if_else(ENTREZID %in% DOX_reg$entrez, 1,0)) %>%
+  mutate(base_egene = if_else(ENTREZID %in% base_egene$entrezgene_id,1,0))%>%
+  mutate(resp_egene= if_else(ENTREZID %in% resp_egene$entrezgene_id,1,0))%>%
+  mutate(Highvar= if_else(ENTREZID %in% highly_var_genelist,"y","n")) %>% 
+  group_by(Highvar) %>% 
+  dplyr::summarize(n=n(), K4=sum(base_egene), K5=sum(resp_egene),S1=sum(Seoane_1), S4=sum(Seoane_4)) %>% 
+  aggregate(.~Highvar,sum)  
+  
+
+Hvar_y %>% 
+  pivot_longer(cols = K4:S4, names_to ="class", values_to = "Hvar_y") %>% 
+   mutate("Hvar_n"= n-Hvar_y) %>% 
+  dplyr::select(class, Hvar_y,Hvar_n, Highvar) %>% 
+  pivot_longer(cols= c(Hvar_y, Hvar_n), names_to = "group", values_to = "counts") %>% 
+  mutate(class=factor(class, levels = c("K4", "K5", "S1", "S4"), labels=c("base eGenes set", "response genes set", "chromatin reg. gene set","AC-sensitive chrom reg gene set"))) %>% 
+  mutate(Highvar=factor(Highvar, levels = c("y","n"))) %>%
+  mutate(group=factor(group, levels = c("Hvar_y", "Hvar_n"))) %>% 
+  ggplot(., aes(x=group,y=counts, group=group, fill=Highvar))+
+   geom_col(position='fill')+
+  facet_wrap(.~class)+
+  ylab("")+
+  xlab("Type of geneset")+
+  guides(fill=guide_legend("Grouping var"))+
+           theme_classic()
+
+```
+
+
+
+```{r Highvar chisquare}
+Knowsvar_base <- matrix(
+  c(5, 395, 362, 13322),
+  nrow = 2,
+  ncol = 2,
+  byrow = FALSE,
+  dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
+
+base_egeneset<- chisq.test(Knowsvar_base, correct = FALSE)$p.value
+base_egeneset
+
+Knowsvar_respE <- matrix(
+  c(9, 262,358, 13455),
+  nrow = 2,
+  ncol = 2,
+  byrow = FALSE,
+  dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
+
+resp_egeneset<- chisq.test(Knowsvar_respE, correct = FALSE)$p.value
+resp_egeneset
+
+Seoane_Var <-  matrix(c(13, 317, 354, 13400),
+  nrow = 2,
+  ncol = 2,
+  byrow = FALSE,
+  dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
+all_chrom_regs<- chisq.test(Seoane_Var, correct = FALSE)$p.value
+all_chrom_regs
+
+Seoane_Var2 <-  matrix(c(3, 47, 364, 13670),
+  nrow = 2,
+  ncol = 2,
+  byrow = FALSE,
+  dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
+AC_sens_chrom_regs<- chisq.test(Seoane_Var2, correct = FALSE)$p.value
+AC_sens_chrom_regs
+
+```
 
 ### Link to other pages here:
 
