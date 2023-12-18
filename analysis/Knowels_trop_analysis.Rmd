@@ -171,8 +171,6 @@ store_box %>%
   
 ```
 
-### Knowles replication data:
-
 
 ## RNA-seq trial analysis  
 
@@ -442,12 +440,35 @@ for (g in seq(1:11)){
 
 ```
 
-expression of trial RNA seq data
+ above is expression of trial RNA seq data  
+ 
+ 
 ### Knowles log2cpm 24hr and my log2cpm 24hr
 
 ```{r K and Me}
 
-kcpm <- store_box %>%  
+### Creating new interest genes for supplemental figure
+# # SNP_genestop50 <- read.csv("output/TOP_50SNPreffile.csv", row.names = 1)
+#  backGL <- read.csv("data/backGL.txt", row.names = 1)
+# 
+# DOX_de_genes_interest <- data.frame("hgnc_symbol"= c("PELI2","LGALS3", "PCCA", "SORT1", "GPSM2", "CLCC1", "LNPK", "GRAMD4", "CYREN", "LPL", "CELSR1", "TNS2", "ZNF740", "SLC28A3", "RMI1", "FRS2", "HDDC2"))
+# 
+# 
+# DOX_de_genes_interest %>% 
+#   left_join(., backGL, by= c("hgnc_symbol"="SYMBOL"))  %>% 
+#   dplyr::select(!hgnc_symbol.y) %>% 
+#   write.csv(.,"output/DOX_de_goi.csv")
+
+DOX_de_genes_interest <- read.csv("output/DOX_de_goi.csv", row.names = 1)
+
+kcpm <-  Knowles_log2cpm_box %>% 
+  dplyr::filter(ESGN %in% DOX_de_genes_interest$ensembl_gene_id) %>% 
+  pivot_longer(cols=!ESGN, names_to = "ind", values_to = "counts") %>% 
+  separate(ind,into=c("cell_line","dosage"), sep = ":") %>%
+  mutate(dosage = as.numeric(dosage)) %>% 
+  # full_join(., trop0.625, by=c("cell_line", "dosage")) %>% 
+  group_by(cell_line) %>% 
+  full_join(., DOX_de_genes_interest, by = c("ESGN" = "ensembl_gene_id"))%>%  
   mutate(dosage=factor(dosage, levels=c('0','0.000', '0.625','1.25', '2.5','5'))) %>% 
   dplyr::filter(dosage==("0")|dosage == "0.625") %>% 
   mutate(expr="K")
@@ -459,11 +480,11 @@ lcpm_24h <- all_cpmcount %>%
   rownames_to_column(var = "ENTREZID") %>% 
   dplyr::select(ENTREZID, all_of(starts_with(c("DOX","VEH")))) %>% 
   dplyr::select(ENTREZID, all_of(ends_with("24h")))  %>% 
-  dplyr::filter(ENTREZID %in% interest_genes$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% DOX_de_genes_interest$ENTREZID) %>% 
   pivot_longer(cols=!ENTREZID, names_to = "ind", values_to = "counts") %>%   mutate(ENTREZID = as.numeric(ENTREZID)) %>% 
-  full_join(., interest_genes, by = c("ENTREZID"="entrezgene_id")) %>% 
+  full_join(., DOX_de_genes_interest, by = c("ENTREZID"="ENTREZID")) %>% 
   mutate(expr="ME") %>% 
-  rename("ESGN"="ensembl_gene_id","entrezgene_id"="ENTREZID") %>% 
+  rename("ESGN"="ensembl_gene_id") %>% 
   separate(ind, into = c("dosage","cell_line",NA)) %>% 
   mutate(dosage=case_match(dosage,"DOX"~"0.5", .default = dosage)) 
   
@@ -472,7 +493,7 @@ lcpm_24h %>%
   mutate(dosage=factor(dosage, levels=c('0','0.625',"VEH","0.5"))) %>% 
   ggplot(., aes(x=dosage,y=counts), group=expr)+
   geom_boxplot()+
-  facet_wrap(~hgnc_symbol, scales="free_y" )#+
+  facet_wrap(~hgnc_symbol, scales="free_y", nrow=3, ncol = 6 )#+
   # geom_signif(
   #   comparisons = list(
   #     c('0', '0.5'),
@@ -494,6 +515,8 @@ lcpm_24h %>%
 
 ```{r varianceKnowles}
 
+
+
 # saveRDS(store_var, "data/Knowles_variation_data.RDS")
 # store_var <- Knowles_log2cpm %>% 
 #   dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
@@ -504,6 +527,8 @@ lcpm_24h %>%
 #          var_NT=var(c_across(ends_with('0')))) %>% 
 #   mutate(data=tidy(var.test(c_across(ends_with("0.625")),c_across(ends_with("0")))))# %>% 
   # dplyr::select("ESGN","mean_DOX","var_DOX","mean_NT", "var_NT","data")
+
+
 
 
 store_var <- readRDS("data/Knowles_variation_data.RDS")
@@ -546,6 +571,18 @@ knowlesdrug %>%
     map_signif_level = FALSE)+
  ylim(NA,1.25)
 ```
+
+
+
+
+### Knowles replication data:
+```{r Replication supplementary}
+
+
+
+
+```
+
 ### qvalue data
 ```{r qvalue manip}
 library(qvalue)
