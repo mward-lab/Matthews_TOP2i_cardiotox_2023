@@ -1126,7 +1126,7 @@ SNP_genestop50 <- schneider_closest_output %>%
                   dplyr::select(ensembl_gene_id,entrezgene_id,SYMBOL)), 
             by = c("ensembl_gene_id"="ensembl_gene_id","ENTREZID"="entrezgene_id"))  %>% 
 mutate(SYMBOL= if_else(is.na(SYMBOL)& ENTREZID =="4692","NDN",SYMBOL))
-  
+  # write.csv(SNP_genestop50,"output/TOP_50SNPreffile.csv")
 # egenes_top50SNP <- SNP_egenes_allfiles%>% 
 #   dplyr::filter(RSID %in%SNP_genestop50$RSID) %>% 
 #   distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
@@ -1146,7 +1146,7 @@ SGWAS_top50_order <- completetop50 %>%
   dplyr::select(!SYMBOL) %>% 
   left_join(.,backGL, by = c("entrezgene_id"= "ENTREZID"))
   
-
+# write.csv(SGWAS_top50_order,"output/SGWAS_top50_order.csv")
 
 SGWAS50_sig <- FC_mine %>% 
   dplyr::filter(ENTREZID %in% completetop50$entrezgene_id) %>% 
@@ -1556,7 +1556,7 @@ Knowsvar_base <- matrix(
   byrow = FALSE,
   dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
 
-base_egeneset<- chisq.test(Knowsvar_base, correct = FALSE)$p.value
+base_egeneset<- chisq.test(Knowsvar_base, correct = FALSE)
 base_egeneset
 
 Knowsvar_respE <- matrix(
@@ -1566,7 +1566,7 @@ Knowsvar_respE <- matrix(
   byrow = FALSE,
   dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
 
-resp_egeneset<- chisq.test(Knowsvar_respE, correct = FALSE)$p.value
+resp_egeneset<- chisq.test(Knowsvar_respE, correct = FALSE)
 resp_egeneset
 
 Seoane_Var <-  matrix(c(13, 317, 354, 13400),
@@ -1574,18 +1574,138 @@ Seoane_Var <-  matrix(c(13, 317, 354, 13400),
   ncol = 2,
   byrow = FALSE,
   dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
-all_chrom_regs<- chisq.test(Seoane_Var, correct = FALSE)$p.value
+all_chrom_regs<- chisq.test(Seoane_Var, correct = FALSE)
 all_chrom_regs
 
-Seoane_Var2 <-  matrix(c(3, 47, 364, 13670),
+# Seoane_Var2 <-  matrix(c(3, , 364,47 1   3670),
+#   nrow = 2,
+#   ncol = 2,
+#   byrow = FALSE,
+#   dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
+# AC_sens_chrom_regs<- chisq.test(Seoane_Var2, correct = FALSE)
+# AC_sens_chrom_regs
+
+
+baseVegene <- matrix(
+  c(5, 9, 362, 358),
   nrow = 2,
   ncol = 2,
   byrow = FALSE,
-  dimnames = list(c("Hvar", "nHvar"), c("y", "n")))
-AC_sens_chrom_regs<- chisq.test(Seoane_Var2, correct = FALSE)$p.value
-AC_sens_chrom_regs
+  dimnames = list(c("base", "nbase"), c("egene", "negene")))
+
+baseVegeneset<- chisq.test(baseVegene, correct = FALSE)
+baseVegeneset
+
+
+chromVactox <- matrix(
+  c(5, 9, 362, 358),
+  nrow = 2,
+  ncol = 2,
+  byrow = FALSE,
+  dimnames = list(c("chrom", "nchrom"), c("ACtox", "nACtox")))
+
+chisq.test(chromVactox, correct = FALSE)
+
 
 ```
+
+
+### Combine heatmaps for final figure:
+
+```{r Finfig_hm}
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
+
+
+col_fun1 = circlize::colorRamp2(c(-1, 3), c("white", "purple"))
+col_funFC= circlize::colorRamp2(c(-2,0, 2), c("darkgreen","white", "darkorange2"))
+col_funTOX = circlize::colorRamp2(c(-1,0, 1), c("darkviolet", "white","firebrick4"))
+
+toplistall <- readRDS("data/toplistall.RDS")
+DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
+list2env(DEG_cormotif,envir=.GlobalEnv)
+
+SGWAS_order_frame <- read.csv("output/SGWAS_top50_order.csv", row.names = 1)
+orderit <- data.frame(SYMBOL=c(SGWAS_order_frame$SYMBOL,'RARG',
+                        'TNS2', 
+                        'ZNF740',
+                        'SLC28A3',
+                        'RMI1',
+                        'EEF1B2',
+                        'FRS2', 
+                        'HDDC2')) %>% 
+  left_join(.,backGL) %>% 
+  mutate(motif= if_else(ENTREZID %in% motif_ER, "ER", if_else(ENTREZID %in% motif_LR, "LR",if_else(ENTREZID %in% motif_TI, "TI", "NR" ))))
+
+
+
+
+toplistall %>% 
+    mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+   filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) 
+ 
+
+GWASabsFCsig <- 
+  toplistall %>% 
+    mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+   filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL)  %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val)
+  
+gwas_sig_mat <- GWASabsFCsig %>% 
+   column_to_rownames(var="id") %>%
+  dplyr::select(orderit$SYMBOL) %>%
+  as.matrix()
+ 
+
+GWASabsFC <- toplistall %>% 
+  
+  # filter(id !="TRZ") %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  dplyr::select(orderit$SYMBOL) %>%
+  as.matrix()
+
+study_anno <- data.frame(Study=c(rep("GWAS",30),rep("TWAS",3)),motif=orderit$motif)
+rownames(study_anno) <- colnames(GWASabsFC)
+ht <- HeatmapAnnotation(df = study_anno,
+              col = list(Study=c("GWAS"="darkorange","TWAS"= "blueviolet"),motif = c("LR"="#7CAE00","NR"="#C77CFF"), just = "left"))
+
+
+Heatmap(GWASabsFC, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change values of GWAS and TWAS genes", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_order= orderit$SYMBOL,
+        bottom_annotation = ht,
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(gwas_sig_mat[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
+```
+
+
 
 ### Link to other pages here:
 
