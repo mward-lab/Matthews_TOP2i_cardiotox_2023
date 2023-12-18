@@ -91,6 +91,7 @@ palette_colors_mine <- colorRampPalette(colors = c("green","white","purple","red
 scales::show_col(palette_colors_mine)
 
 ```
+# Knowles data analysis  
 
 Here I will attempt to recreate my correlation analysis on the knowles data using their troponin and RNAseq  log2cpm.
 
@@ -170,7 +171,7 @@ store_box %>%
   
 ```
 
-
+### Knowles replication data:
 
 
 ## RNA-seq trial analysis  
@@ -579,9 +580,10 @@ Knowlesvarlist <- readRDS("data/Knowlesvarlist.RDS")
 length(intersect(EPI508_list$ENTREZID,Knowlesvarlist$entrezgene_id))
 intersect_genes <- EPI508_list %>% 
   dplyr::filter(ENTREZID %in% Knowlesvarlist$entrezgene_id)
-
+highly_var_genelist <- intersect(EPI508_list$ENTREZID,Knowlesvarlist$entrezgene_id)
+saveRDS(highly_var_genelist,"data/highly_var_genelist.RDS")
 intersect_genes %>% 
-kable(.,caption = "EPI Highly variable genes found in Knowles higly  variable DOX genes") %>% 
+kable(.,caption = "EPI Highly variable genes found in Knowles highly  variable DOX genes") %>% 
   kable_paper("striped", full_width = FALSE) %>%  
   kable_styling(full_width = TRUE, bootstrap_options = c("striped","hover")) %>% 
   scroll_box(width = "100%", height = "400px")
@@ -589,6 +591,16 @@ kable(.,caption = "EPI Highly variable genes found in Knowles higly  variable DO
 
 # saveRDS(Knowlesvarlist,"data/Knowlesvarlist.RDS")
 ```
+
+
+```{r}
+
+```
+
+
+
+
+
 ### GO analysis of Highly Variable genes
 
 I am using two backgrounds:  
