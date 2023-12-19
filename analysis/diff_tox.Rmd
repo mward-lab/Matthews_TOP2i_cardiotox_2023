@@ -52,7 +52,7 @@ top7kgene <- read.csv("output/expre7k.csv", row.names = 1)
 genes_for_graph <- bind_rows(interest_genes,top7kgene)
 ```
 
-## RARG
+### RARG
 ```{r  RARG}
 RARG_24h_cpm <- cpm_count_main %>%
   dplyr::filter(ENTREZID==5916) %>% 
@@ -89,6 +89,7 @@ Cardiotox_table <- gene_corr_frame %>%
   separate(calc, into = c("drug","stat")) %>% 
   pivot_wider(id_cols=c(indv,drug), values_from = "value", names_from = "stat")
 saveRDS(Cardiotox_table,"output/Cardiotox_dif_values.RDS") 
+
 
 ```
 

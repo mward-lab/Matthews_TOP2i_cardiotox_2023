@@ -217,31 +217,6 @@ TRZnomtable24h %>%
   ) %>%
   scroll_box(width = "100%", height = "400px")
 ```
-```{r eval=FALSE, include=FALSE}
-
-# 
-#  Code from another
-# DAspgostres3 <- readRDS("C:/Program Files/R_WD/Cardiotoxicity/data/DEG-GO/DAspgostres3.RDS")
-# sampleDAsp3 <- DAspgostres3$result %>% 
-#   dplyr::select(c(source, term_id,
-#                   term_name,intersection_size, 
-#                    term_size, p_value))# %>% 
-# 
-# sampleDAsp3 %>%
-#   mutate_at(.vars = 6, .funs = scientific_format()) %>%
-#   kable(., ) %>%
-#   kable_paper("striped", full_width = FALSE) %>%
-#   kable_styling(
-#     full_width = FALSE,
-#     position = "left",
-#     bootstrap_options = c("striped", "hover")
-#   ) %>%
-#   scroll_box(width = "100%", height = "400px")
-# 
-# 
-
-```
-
 
 ```{r KEGG pathway}
 # DAgostres3 <- readRDS("data/DEG-GO/DAgostres3.RDS")

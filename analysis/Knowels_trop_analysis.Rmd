@@ -552,6 +552,22 @@ knowlesdrug %>%
     # textsize = 4,
     # # y_position = 11,
     # step_increase = 0.05
+  )+
+  theme_bw() +
+  # xlab(" ") +
+  ylab(expression("counts log"[2] ~ "cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
   )
 
 knowlesdrug %>% 
@@ -569,7 +585,23 @@ knowlesdrug %>%
     y_position = 0.5,
     # vjust=1,
     map_signif_level = FALSE)+
- ylim(NA,1.25)
+ ylim(NA,1.25)+
+theme_bw() +
+  # xlab(" ") +
+  ylab(expression("counts log"[2] ~ "cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
 ```
 
 
