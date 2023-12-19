@@ -151,10 +151,30 @@ FC_necela %>%# mutate_at(.vars = 6, .funs = scientific_format()) %>%
 ggVennDiagram::ggVennDiagram(list(necela_list$Gene, TRZ_list$SYMBOL))
 intersect(necela_list$Gene,TRZ_list$SYMBOL)
 ven_list <- VennDiagram::get.venn.partitions(list(necela_list$Gene, TRZ_list$SYMBOL))
-TRZ_list %>% 
+ TRZ_list %>% 
   group_by(time) %>% 
- count()
-
+ count() %>% 
+  mutate(time = factor(time, levels = c("3_hours", "24_hours"), labels = c("3 hours", "24 hours")))%>% 
+  
+  ggplot(., aes(x=time, y=n))+
+  geom_col()+
+   theme_bw() +
+  ggtitle("Number of nominal pvalue TRZ genes by time"
+  )+
+  ylab(expression("count")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    # axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
 
 ```
 
@@ -256,7 +276,14 @@ for (g in seq(from=1, to=length(necela_val_genes$entrezgene_id))){
 
 ```
 
-### Adding in TRZ and 
+### Adding in TRZ and pathway analysis
+
+
+```{r}
+
+
+```
+
 
 ### Cell cycle genes
 
@@ -712,7 +739,9 @@ RSID_QTL_list_full %>%
 # saveRDS(list_snp_IDS,"output/SNP_list_ID.RDS")
 ```
 
-```{r retrieving TSSstartstop and IDs}
+
+old tSS method...
+```{r retrieving TSSstartstop and IDs, eval=FALSE, include=TRUE}
 # genes = getBM(c( "chromosome_name","start_position","end_position","strand","entrezgene_id","ensembl_gene_id"), filters =
 # c("chromosome_name","with_entrezgene"),
 # values=list(c(1:22,"X","Y"),TRUE), mart=ensembl)
@@ -783,7 +812,8 @@ backGL <- read.csv("data/backGL.txt", row.names = 1)
 
 length(intersect(just_the_SNPs$ensembl_gene_id,backGL$ensembl_gene_id))
 length(intersect(just_the_SNPs$ENTREZID,backGL$ENTREZID))
-          
+# length(intersect(egene_SNP$ensembl_gene_id,backGL$ensembl_gene_id))
+#      length(intersect(egene_SNP$entrezgene_id,backGL$ENTREZID))     
 ```
 
 
@@ -896,7 +926,8 @@ SNP_egenes_allfiles <- readRDS("output/SNP_egenes_allfiles.RDS")
 #   separate(whoops, into = c("filenameref",NA,NA,NA,"ensembl_gene_id"))
 
 egene_SNP <- SNP_egenes_allfiles %>% 
-  distinct(ensembl_gene_id,.keep_all = TRUE) 
+  distinct(ensembl_gene_id,RSID,.keep_all = TRUE) 
+
 
 new_egenes_sig <- FC_mine %>% 
   dplyr::filter(ENTREZID %in% egene_SNP$entrezgene_id) %>% 
@@ -990,24 +1021,34 @@ Heatmap(logFtestegene_mat, name = "-Log10 \n p value",
 
 ```{r making Schneider_completeSNP_egenes,  include=TRUE,eval=FALSE}
 
-SNP_supp <- readRDS("output/SNP_supp.RDS")## has the pvalue (this is the supplement from that paper)
+SNP_supp <- readRDS("output/SNP_supp.RDS")
+## has the pvalue (this is the supplement from that paper)
+# alternate file is the schneider_closest_output for paper
 egene_pvalue_SNP <- SNP_egenes_allfiles %>% 
-  distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
-  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID)) %>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue)
-# contains the eGenes to every SNP
+  distinct(ensembl_gene_id,RSID,.keep_all = TRUE) %>% 
+  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID))
+%>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue, RSID)
+# contains the eGenes to every SNP with pvalue of associated RSID
 
 
-SNPXgenes <- just_the_SNPs %>% 
-dplyr::filter(ENTREZID %in% backGL$ENTREZID) %>% 
-  left_join(., (backGL %>% dplyr::select(ENTREZID,ensembl_gene_id,SYMBOL,hgnc_symbol)), by=c("ENTREZID"="ENTREZID","ensembl_gene_id"="ensembl_gene_id")) %>% 
-  mutate(SYMBOL= if_else(is.na(SYMBOL),"NDN",SYMBOL)) %>% 
-  dplyr::select(SYMBOL, ensembl_gene_id, ENTREZID,Pvalue) %>% 
-  dplyr::rename("ENTREZID"="entrezgene_id" )
 
-complete_list <- bind_rows(list(SNP_genes=SNPXgenes,egene_SNP=egene_pvalue_SNP),.id ="id" )
+
+SNPXgenes <- schneider_closest_output %>% 
+# dplyr::filter(ENTREZID %in% backGL$ENTREZID) %>% 
+  left_join(., (backGL %>% dplyr::select(ENTREZID,ensembl_gene_id,SYMBOL,hgnc_symbol)), by=c("ENTREZID"="ENTREZID","ensembl_gene_id"="ensembl_gene_id"))%>% 
+  mutate(SYMBOL= if_else(is.na(SYMBOL)& ENTREZID==4692,"NDN",SYMBOL)) %>% 
+  dplyr::select(SYMBOL, ensembl_gene_id, ENTREZID,Pvalue, RSID) #%>% 
+  # dplyr::rename("ENTREZID"="entrezgene_id" )
+
+complete_list <- bind_rows(list(SNP_genes=SNPXgenes,egene_SNP=egene_pvalue_SNP),.id ="id" ) 
+complete_list <- complete_list%>% 
+  mutate(entrezgeneid= if_else(is.na(entrezgene_id),ENTREZID,entrezgene_id)) %>% 
+  dplyr::select(!entrezgene_id) %>% 
+  rename("entrezgene_id"="entrezgeneid") %>% 
+  dplyr::select(!ENTREZID)
  
-# write.csv(complete_list,"data/Schneider_GWAS.txt")
-
+write.csv(complete_list,"data/Schneider_GWAS.txt")
+# write.csv(egene_SNP, "output/expressed_egenes_by_RSID.csv")
 
 ```
 
@@ -1055,7 +1096,7 @@ ComplexHeatmap::Heatmap(SGWAS_mat, name = "Fold change\nvalues",
         row_names_side = "left",
         # col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Full Schneider SNP-genes and eGenes",
+        column_title = "Full Schneider SNP-genes and eGenes n = 91",
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         # column_order = 
@@ -1117,16 +1158,39 @@ ComplexHeatmap::Heatmap(logFtestSGWAS, name = "-log10\np value",
 
 
 schneider_closest_output <- readRDS("data/schneider_closest_output.RDS")
-SNP_genestop50 <- schneider_closest_output %>% 
+# egenes_full <- read.csv("output/expressed_egenes_by_RSID.csv",row.names = 1)
+Schneider_GWAS <- read.csv("data/Schneider_GWAS.txt", row.names = 1)
+top50RSID <- schneider_closest_output %>% 
   arrange(., Pvalue) %>% 
-  # dplyr::select(RSID,Pvalue,ENTREZID,ensembl_gene_id) %>% 
   slice_min(.,Pvalue,n=50) %>% 
-  distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
-  left_join(., (Schneider_GWAS %>%
-                  dplyr::select(ensembl_gene_id,entrezgene_id,SYMBOL)), 
-            by = c("ensembl_gene_id"="ensembl_gene_id","ENTREZID"="entrezgene_id"))  %>% 
-mutate(SYMBOL= if_else(is.na(SYMBOL)& ENTREZID =="4692","NDN",SYMBOL))
-  # write.csv(SNP_genestop50,"output/TOP_50SNPreffile.csv")
+ dplyr::select(RSID)
+# 
+# top40RSID <- schneider_closest_output %>% 
+#   arrange(., Pvalue) %>% 
+#   slice_min(.,Pvalue,n=40) %>% 
+#  dplyr::select(RSID)
+# 
+# top30RSID <- schneider_closest_output %>% 
+#   arrange(., Pvalue) %>% 
+#   slice_min(.,Pvalue,n=30) %>% 
+#  dplyr::select(RSID)
+# 
+# top25RSID <- schneider_closest_output %>% 
+#   arrange(., Pvalue) %>% 
+#   slice_min(.,Pvalue,n=25) %>% 
+#  dplyr::select(RSID)
+
+SNP_genestop50 <- Schneider_GWAS %>% 
+  dplyr::filter(RSID %in% top50RSID$RSID) %>% 
+  distinct(entrezgene_id,.keep_all = TRUE) 
+    
+  # left_join(., (Schneider_GWAS %>%
+  #                 dplyr::select(ensembl_gene_id,entrezgene_id,SYMBOL)), 
+  #           by = c("ensembl_gene_id"="ensembl_gene_id","ENTREZID"="entrezgene_id"))  %>% 
+# mutate(SYMBOL= if_else(is.na(SYMBOL)& ENTREZID =="4692","NDN",SYMBOL))
+ 
+
+ # write.csv(SNP_genestop50,"output/TOP_50SNPreffile.csv")
 # egenes_top50SNP <- SNP_egenes_allfiles%>% 
 #   dplyr::filter(RSID %in%SNP_genestop50$RSID) %>% 
 #   distinct(ensembl_gene_id,.keep_all = TRUE) %>% 
@@ -1134,14 +1198,15 @@ mutate(SYMBOL= if_else(is.na(SYMBOL)& ENTREZID =="4692","NDN",SYMBOL))
 ###24 separate egenes (pvalue is associated with the RSID and that gene)
 
 # top50full <- bind_rows(list(SNP_genes=SNP_genestop50,egene_SNP=egenes_top50SNP),.id ="id" )
-max(SNP_genestop50$Pvalue)
+# max(SNP_genestop50$Pvalue)
+# 
+# completetop50 <- Schneider_GWAS %>% 
+#   dplyr::filter(id=="SNP_genes"& 
+#                   Pvalue <= max(SNP_genestop50$Pvalue) | id=="egene_SNP")
+#  
 
-completetop50 <- Schneider_GWAS %>% 
-  dplyr::filter(Pvalue <= max(SNP_genestop50$Pvalue))
- 
-
-SGWAS_top50_order <- completetop50 %>% 
-  dplyr::filter(entrezgene_id %in%backGL$ENTREZID) %>% 
+SGWAS_top50_order <- SNP_genestop50 %>% 
+  dplyr::filter(entrezgene_id %in% backGL$ENTREZID) %>% 
   arrange(Pvalue) %>% 
   dplyr::select(!SYMBOL) %>% 
   left_join(.,backGL, by = c("entrezgene_id"= "ENTREZID"))
@@ -1149,7 +1214,7 @@ SGWAS_top50_order <- completetop50 %>%
 # write.csv(SGWAS_top50_order,"output/SGWAS_top50_order.csv")
 
 SGWAS50_sig <- FC_mine %>% 
-  dplyr::filter(ENTREZID %in% completetop50$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% SNP_genestop50$entrezgene_id) %>% 
   mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
  dplyr::filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) %>%
@@ -1163,7 +1228,7 @@ SGWAS50_sig <- FC_mine %>%
 SGWAS50_mat <-  FC_mine %>% 
   dplyr::filter(time=="24_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
-  dplyr::filter(ENTREZID %in% completetop50$entrezgene_id) %>% 
+  dplyr::filter(ENTREZID %in% SNP_genestop50$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
@@ -1477,12 +1542,263 @@ ggpubr:: stat_cor(method="spearman",
                label.y.npc=0.01,
                size = 3)
 ```
-```{r other genes}
-gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
-gene_corr_frame %>% 
-  dplyr::select(indv,Drug,counts,tox,hgnc_symbol)
+
+### FRS2
+```{r FRS2}
+FRS2_table <- readRDS("output/FRS2_dif_values.RDS")
+
+FRS2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="FRS2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
 
 ```
+
+### HDDC2
+```{r HDDC2}
+
+HDDC2_table <- readRDS("output/FRS2_dif_values.RDS")
+
+HDDC2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="HDDC2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+```
+
+### RMI1
+```{r RMI1}
+
+RMI1_table <- readRDS("output/RMI1_dif_values.RDS")
+
+RMI1_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="RMI1 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+```
+
+### SLC28A3
+```{r SLC28A3}
+
+
+
+SLC28A3_table <- readRDS("output/SLC28A3_dif_values.RDS")
+SLC28A3_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="SLC28A3 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+
+```
+
+### TNS2
+```{r TNS2}
+
+  
+
+TNS2_table <- readRDS("output/TNS2_dif_values.RDS")
+
+TNS2_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="TNS2 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+
+
+```
+### ZNF740
+
+```{r ZNF740}
+
+
+ZNF740_table <- readRDS("output/ZNF740_dif_values.RDS")
+ZNF740_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="ZNF740 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+```
+### C3orf18
+
+```{r C3orf18}
+
+C3orf18_table <- readRDS("output/C3orf18_dif_values.RDS")
+
+C3orf18_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="C3orf18 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+
+```
+###RASIP1
+
+```{r RASIP1}
+
+
+RASIP1_table <- readRDS("output/RASIP1_dif_values.RDS")
+
+RASIP1_table %>% 
+ggplot(., aes(x=tox, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="RASIP1 ", y = "delta cpm", x = "delta tox")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+
+```
+other graphs are on the webpage ending in diff_tox.html
 
 ## Making highly variable supersets and overlapping with Seoane and Knowles data sets in figure 8
  
@@ -1677,10 +1993,11 @@ GWASabsFC <- toplistall %>%
   dplyr::select(orderit$SYMBOL) %>%
   as.matrix()
 
-study_anno <- data.frame(Study=c(rep("GWAS",30),rep("TWAS",3)),motif=orderit$motif)
+study_anno <- data.frame(Study=c(rep("GWAS",35),rep("TWAS",3)),motif=orderit$motif)
 rownames(study_anno) <- colnames(GWASabsFC)
 ht <- HeatmapAnnotation(df = study_anno,
-              col = list(Study=c("GWAS"="darkorange","TWAS"= "blueviolet"),motif = c("LR"="#7CAE00","NR"="#C77CFF"), just = "left"))
+              col = list(Study=c("GWAS"="darkorange","TWAS"= "blueviolet"),
+                         motif = c("LR"="#00BFC4", "NR"="#C77CFF", "ER"="#F8766D", "TI"="#7CAE00"), just = "left"))
 
 
 Heatmap(GWASabsFC, name = "Fold change\nvalues", 
@@ -1689,7 +2006,7 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
         row_names_side = "left",
         col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Fold change values of GWAS and TWAS genes", 
+        column_title = "Fold change values of GWAS and TWAS genes n = 38", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         column_order= orderit$SYMBOL,
