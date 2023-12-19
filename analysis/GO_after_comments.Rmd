@@ -36,6 +36,7 @@ library(broom)
 library(biomaRt)
 library(RColorBrewer)
 library(gprofiler2)
+library(qvalue)
 ```
 
 
@@ -51,6 +52,14 @@ TRZ_list3h <- FC_mine %>%
   filter(id=="TRZ",P.Value < 0.05, time == "3_hours")
 TRZ_list24h <- FC_mine %>% 
   filter(id=="TRZ",P.Value < 0.05, time == "24_hours")
+
+TRZ_listqvalue <- FC_mine %>% 
+  filter(id=="TRZ", time=="24_hours") %>% 
+  dplyr::select(ENTREZID,P.Value)
+
+qobj <- qvalue(TRZ_listqvalue$P.Value)
+hist(qobj)
+plot(qobj)
 
 ```
 
@@ -234,6 +243,134 @@ TRZnomtable24h %>%
 ```
 
 
+```{r KEGG pathway}
+# DAgostres3 <- readRDS("data/DEG-GO/DAgostres3.RDS")
+# DAgostres24 <- readRDS("data/DAgostres24.RDS")
+# DXgostres <- readRDS("data/DEG-GO/DXgostres.RDS")
+# DXgostres24 <- readRDS("data/DEG-GO/DXgostres24.RDS")
+# EPgostres <- readRDS("data/DEG-GO/EPgostres.RDS")
+# EPgostres24 <- readRDS("data/DEG-GO/EPgostres24.RDS")
+# MTgostres <- readRDS("data/DEG-GO/MTgostres.RDS")
+# MTgostres24 <- readRDS("data/DEG-GO/MTgostres24.RDS")
+# DDEgostres24only <- readRDS("data/DEG-GO/DDEgostres24only.RDS")
+# DDEgostres3only <- readRDS("data/DEG-GO/DDEgostres3only.RDS")
+# DDEMgostres3 <- readRDS("data/DEG-GO/DDEMgostres3.RDS")
+# DDEMgostres24 <- readRDS("data/DEG-GO/DDEMgostres24.RDS")
+# TRZresgenes24h  <- readRDS("data/DEG-GO/TRZresgenes24h.RDS") 
+# TRZresgenes3h  <- readRDS("data/DEG-GO/TRZresgenes3h.RDS") 
+# saveRDS(list3hr,"data/DEG-GO/list3hr.RDS")
+# saveRDS(list24hr,"data/DEG-GO/list24hr.RDS")
+# list3hr <- list(DAgostres3=DAgostres3,DXgostres=DXgostres,EPgostres=EPgostres,MTgostres=MTgostres,TRZresgenes3h=TRZresgenes3h,DDEgostres3only=DDEgostres3only,DDEMgostres3=DDEMgostres3)
+#  list24hr <- list(DAgostres24=DAgostres24,DXgostres24=DXgostres24,EPgostres24=EPgostres24,MTgostres24=MTgostres24,TRZresgenes243h=TRZresgenes24h,DDEgostres24only=DDEgostres24only,DDEMgostres24=DDEMgostres24)
+
+list3hr <- readRDS("data/DEG-GO/list3hr.RDS")
+list24hr <- readRDS("data/DEG-GO/list24hr.RDS")
+KEGGtrz3 <- c("KEGG:05202", "KEGG:04115", "KEGG:05223", "KEGG:05212","KEGG:05222")
+KEGGtrz24 <- c("KEGG:05202", "KEGG:05215", "KEGG:00510")
+# testframe <- lapply(list3hr, `[`,'result')
+
+hr3_results <- list3hr |> 
+  map(~ .x$result |> dplyr::select(p_value,term_id,term_name,intersection_size))
+hr24_results <- list24hr |> 
+  map(~ .x$result |> dplyr::select(p_value,term_id,term_name,,intersection_size))
+
+table_3hr <- list_rbind(hr3_results,names_to = "set")%>%
+  mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(term_id %in% KEGGtrz3) %>% 
+  mutate(treatment = case_when(set =="DAgostres3"~"DNR",set=="DXgostres" ~ "DOX",set=="EPgostres"~"EPI",set=="MTgostres"~"MTX",set=="TRZresgenes3h"~"TRZ",set=="DDEgostres23only"~"AC",set=="DDEMgostres3"~"TOP2i"))
+
+
+table_24hr <- list_rbind(hr24_results,names_to = "set") %>%
+  mutate(log_val = -log10(p_value))%>% 
+  dplyr::filter(term_id %in% KEGGtrz24) %>% 
+  mutate(treatment = case_when(set =="DAgostres24"~"DNR",set=="DXgostres24" ~ "DOX",set=="EPgostres24"~"EPI",set=="MTgostres24"~"MTX",set=="TRZresgenes243h"~"TRZ",set=="DDEgostres24only"~"AC",set=="DDEMgostres24"~"TOP2i"))
+
+
+hr3_results[["TRZresgenes3h"]]  %>% 
+    mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(str_detect(term_id,"^KEGG:")) %>% 
+  slice_min(., n=5,order_by=p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::label_wrap(30))+
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TRZ 3 hour nominal DE\n KEGG pathway enrichment') +
+    xlab(expression(" -"~log[10]~("nominal p-value")))+
+    ylab("KEGG")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+
+
+hr24_results[["TRZresgenes243h"]]  %>% 
+    mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(str_detect(term_id,"^KEGG:")) %>% 
+  slice_min(., n=5,order_by=p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col=intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::label_wrap(30))+
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TRZ 24 hour nominal DE\n KEGG pathway enrichment') +
+    xlab(expression(" -"~log[10]~("nominal p-value")))+
+    ylab("KEGG")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+```
+```{r GOBP}
+hr3_results[["TRZresgenes3h"]]  %>% 
+    mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(str_detect(term_id,"^GO:")) %>% 
+  slice_min(., n=5,order_by=p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::label_wrap(30))+
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TRZ 3 hour nominal DE\n GO:BP enrichment') +
+    xlab(expression(" -"~log[10]~("nominal p-value")))+
+    ylab("KEGG")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+hr24_results[["TRZresgenes243h"]]  %>% 
+    mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(str_detect(term_id,"^GO:")) %>% 
+  slice_min(., n=4,order_by=p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col=intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::label_wrap(30))+
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TRZ 24 hour nominal DE\n GO:BP enrichment') +
+    xlab(expression(" -"~log[10]~("nominal p-value")))+
+    ylab("KEGG")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+```
 
 
 
