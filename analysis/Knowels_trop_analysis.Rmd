@@ -676,7 +676,7 @@ I am using two backgrounds:
 (1)  the expressed background of the expressed genes in my data in the A set (n = 14,084)  
 (2)  the full EPI highly variable genes from my data in the B set (n = 508)
 set 2 or B did not yield anything!
-
+##LIST KEGG Pathway genes for HSV-1
 #### A set
 ```{r  A_set}
 library(gprofiler2)
@@ -688,6 +688,16 @@ tab <- getGeneKEGGLinks(species="hsa")
 tab$Symbol <- mapIds(org.Hs.eg.db, tab$GeneID,
                        column="SYMBOL", keytype="ENTREZID")
 KEGG_05168 <- tab %>% dplyr::filter(PathwayID=="hsa05168")
+# KEGG_05168 %>% 
+ kable(list(KEGG_05168[1:171,], KEGG_05168[172:343,],KEGG_05168[344:512,]),
+       caption = "List of KEGG Herpes simplex KEGG pathway genes") %>%
+  kable_paper("striped", full_width = FALSE) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "left",
+    bootstrap_options = c("striped", "hover")
+  ) %>%
+  scroll_box(width = "100%", height = "400px")
 
 # backGL <-read_csv("data/backGL.txt", 
 #     col_types = cols(...1 = col_skip()))
