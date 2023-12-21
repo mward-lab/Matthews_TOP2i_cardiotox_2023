@@ -241,6 +241,7 @@ all_cpmcount <-   readRDS("data/cpmcount.RDS") %>% rownames_to_column(var = "ENT
 trz_veh_count <- all_cpmcount %>% 
   dplyr::select(ENTREZID, starts_with("Tr"), starts_with("Ve"))
 
+
 set.seed(12345)
 sampset <- readRDS("data/sampsettrz.RDS")
 #  <- TRZ_list %>% 
@@ -473,7 +474,7 @@ Top2_expression <- lcpm %>%
   left_join(.,names_gtex_genes, by =c("Name")) %>% 
   dplyr::filter(Description == "TOP2A"| Description == "TOP2B")
 
-saveRDS(Top2_expression,"data/Top2_expression.RDS")
+# saveRDS(Top2_expression,"data/Top2_expression.RDS")
 
 ```
 
@@ -1026,8 +1027,9 @@ SNP_supp <- readRDS("output/SNP_supp.RDS")
 # alternate file is the schneider_closest_output for paper
 egene_pvalue_SNP <- SNP_egenes_allfiles %>% 
   distinct(ensembl_gene_id,RSID,.keep_all = TRUE) %>% 
-  left_join(., (SNP_supp %>% dplyr::select(RSID,Pvalue)),by = join_by(RSID))
-%>% dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue, RSID)
+  left_join(., (SNP_supp %>% 
+                  dplyr::select(RSID,Pvalue)),by = join_by(RSID))%>% 
+  dplyr::select(SYMBOL, ensembl_gene_id, entrezgene_id,Pvalue, RSID)
 # contains the eGenes to every SNP with pvalue of associated RSID
 
 
@@ -1047,7 +1049,7 @@ complete_list <- complete_list%>%
   rename("entrezgene_id"="entrezgeneid") %>% 
   dplyr::select(!ENTREZID)
  
-write.csv(complete_list,"data/Schneider_GWAS.txt")
+# write.csv(complete_list,"data/Schneider_GWAS.txt")
 # write.csv(egene_SNP, "output/expressed_egenes_by_RSID.csv")
 
 ```
@@ -1254,11 +1256,6 @@ ComplexHeatmap::Heatmap(SGWAS50_mat, name = "Fold change\nvalues",
         if(SGWAS50_sig[i, j] <0.05)
             grid.text("*", x, y, gp = gpar(fontsize = 16))
 })
-
-
-
-
-
 
 
 framefun24 <- readRDS("data/framefun24.RDS")
@@ -2022,7 +2019,109 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
 
 ```
 
+```{r final map var heatmap}
 
+framefun24 <- readRDS("data/framefun24.RDS")
+
+col_pvalue = circlize::colorRamp2(c(0,1 ,2), c("blue","white", "red"))
+logFtestfullSGWAS <- framefun24 %>% 
+  mutate(DOX_plog=(log10(DOX.VEH.24)*(-1)),
+         EPI_plog=(log10(EPI.VEH.24)*(-1)),
+         DNR_plog=(log10(DNR.VEH.24)*(-1)),
+         MTX_plog=(log10(MTX.VEH.24)*(-1)),
+         TRZ_plog=(log10(TRZ.VEH.24)*(-1)),) %>% 
+  dplyr::select(ENTREZID,DOX_plog,EPI_plog, DNR_plog, MTX_plog,TRZ_plog) %>% 
+  dplyr::filter(ENTREZID %in% orderit$ENTREZID) %>% 
+  pivot_longer(cols = !ENTREZID, 
+               names_to = "treatment", values_to = "plog") %>% 
+  separate(treatment, into=c("treatment",NA)) %>% 
+  mutate(ENTREZID=as.numeric(ENTREZID)) %>% 
+  left_join(., (backGL)) %>% 
+  pivot_wider(id_cols=treatment, 
+              names_from = SYMBOL, 
+              values_from = plog) %>% 
+  column_to_rownames(var="treatment") %>%
+  dplyr::select(orderit$SYMBOL) %>% 
+  as.matrix()
+
+
+ComplexHeatmap::Heatmap(logFtestfullSGWAS, name = "-log10\np value", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        col = col_pvalue,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = " Last Heatmap Variance",
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 8,fontface="italic"),
+        column_names_centered =TRUE,
+        cell_fun = function(j, i, x, y, width, height, fill) {
+        if(logFtestfullSGWAS[i, j] > log10(0.05)*(-1))
+            grid.text("*", x, y, gp = gpar(fontsize = 16))
+})
+
+
+
+```
+
+
+## Combined Expression
+```{r KNowles expression}
+DOX_de_genes_interest <- read.csv("output/DOX_de_goi.csv", row.names = 1)
+
+
+all_cpmcounts <-  read_table("data/Counts_RNA_ERMatthews.txt")
+Knowles_log2cpm <- readRDS("data/Knowles_log2cpm_real.RDS") 
+store_box <- Knowles_log2cpm%>% 
+  # dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
+  dplyr::filter(ESGN %in% DOX_de_genes_interest$ensembl_gene_id) %>% 
+  pivot_longer(cols=!ESGN, names_to = "ind", values_to = "counts") %>% 
+  separate(ind,into=c("cell_line","dosage"), sep = ":")%>%
+  # mutate(dosage = as.double(dosage, length = 3)) #%>% 
+  # full_join(., trop0.625, by=c("cell_line", "dosage")) %>%   group_by(cell_line) %>% 
+  left_join(., DOX_de_genes_interest, by = c("ESGN" = "ensembl_gene_id")) %>% 
+  mutate(expr="K")
+
+store_box %>% 
+  mutate(dosage=factor(dosage, levels=c('0', '0.625','1.25', '2.5','5'))) %>% 
+  ggplot(., aes(x=dosage,y=counts), group=dosage)+
+  geom_boxplot()+
+  facet_wrap(~hgnc_symbol)
+```
+
+
+```{r KNowles expression2, fig.height=11, fig.width=8}
+lcpm_24h <- all_cpmcounts %>% 
+  column_to_rownames("ENTREZID") %>% 
+  cpm(., log=TRUE) %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = "ENTREZID") %>% 
+  # dplyr::select(ENTREZID, all_of(starts_with(c("DOX","VEH")))) %>%
+  dplyr::select(ENTREZID, all_of(ends_with("24h")))  %>% 
+  dplyr::filter(ENTREZID %in% DOX_de_genes_interest$ENTREZID) %>% 
+  pivot_longer(cols=!ENTREZID, names_to = "ind", values_to = "counts") %>%   mutate(ENTREZID = as.numeric(ENTREZID)) %>% 
+  full_join(., DOX_de_genes_interest, by = c("ENTREZID"="ENTREZID")) %>% 
+  mutate(expr="ME") %>% 
+  rename("ESGN"="ensembl_gene_id") %>% 
+  separate(ind, into = c("dosage","cell_line",NA)) %>% 
+  mutate(dosage=case_match(dosage,"DOX"~"0.5", .default = dosage)) 
+
+my_fill_colors <-  c("#41B333","#8B006D","chocolate1","chocolate","chocolate4","#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+
+lcpm_24h %>% 
+  rbind(.,store_box) %>% 
+  mutate(dosage=factor(dosage, levels=c('0','0.625',"1.25","2.5","5","VEH","0.5","EPI","DNR", "MTX","TRZ"))) %>% 
+  ggplot(., aes(x=dosage,y=counts))+
+  geom_boxplot(aes(fill=dosage))+
+  facet_wrap(~hgnc_symbol, scales="free_y", nrow=10, ncol = 2 )+
+  theme_bw()+
+  scale_fill_manual(values=my_fill_colors)
+
+
+
+```
 
 ### Link to other pages here:
 
