@@ -116,8 +116,7 @@ TRZnomtable %>%
 
 
 ```{r  TRZ3h}
-
-
+TRZ_list3h <- TRZ_list %>% dplyr::filter(time =="3_hours")
 # TRZresgenes3h <- gost(query = TRZ_list3h$ENTREZID,
 #                     organism = "hsapiens",
 #                     significant = FALSE,
@@ -168,10 +167,7 @@ TRZnomtable3h %>%
 ### TRZ 24 hour nom de
 
 ```{r TRZ24h}
-
-
-
-
+# TRZ_list24h <- TRZ_list %>% dplyr::filter(time =="24_hours")
 # TRZresgenes24h <- gost(query = TRZ_list24h$ENTREZID,
 #                     organism = "hsapiens",
 #                     significant = FALSE,
@@ -207,7 +203,7 @@ TRZnomtable24h %>%
 
 TRZnomtable24h %>%
   filter(source=="KEGG") %>% 
-  mutate_at(.vars = 6, .funs = scientific_format()) %>%
+  mutate_at(.vars =6, .funs = scientific_format()) %>%
   kable(., caption = "Enrichment of KEGG terms using nominal pvalue TRZ 24hour genes in my data") %>%
   kable_paper("striped", full_width = FALSE) %>%
   kable_styling(
@@ -231,7 +227,7 @@ TRZnomtable24h %>%
 # DDEgostres3only <- readRDS("data/DEG-GO/DDEgostres3only.RDS")
 # DDEMgostres3 <- readRDS("data/DEG-GO/DDEMgostres3.RDS")
 # DDEMgostres24 <- readRDS("data/DEG-GO/DDEMgostres24.RDS")
-# TRZresgenes24h  <- readRDS("data/DEG-GO/TRZresgenes24h.RDS") 
+# TRZresgenes24h  <- readRDS("data/DEG-GO/TRZresgenes24h.RDS")
 # TRZresgenes3h  <- readRDS("data/DEG-GO/TRZresgenes3h.RDS") 
 # saveRDS(list3hr,"data/DEG-GO/list3hr.RDS")
 # saveRDS(list24hr,"data/DEG-GO/list24hr.RDS")
