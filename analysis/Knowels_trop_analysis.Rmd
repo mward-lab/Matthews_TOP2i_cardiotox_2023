@@ -451,12 +451,12 @@ for (g in seq(1:11)){
 # # SNP_genestop50 <- read.csv("output/TOP_50SNPreffile.csv", row.names = 1)
 #  backGL <- read.csv("data/backGL.txt", row.names = 1)
 # 
-# DOX_de_genes_interest <- data.frame("hgnc_symbol"= c("PELI2","LGALS3", "PCCA", "SORT1", "GPSM2", "CLCC1", "LNPK", "GRAMD4", "CYREN", "LPL", "CELSR1", "TNS2", "ZNF740", "SLC28A3", "RMI1", "FRS2", "HDDC2"))
-# 
-# 
-# DOX_de_genes_interest %>% 
-#   left_join(., backGL, by= c("hgnc_symbol"="SYMBOL"))  %>% 
-#   dplyr::select(!hgnc_symbol.y) %>% 
+# DOX_de_genes_interest <- data.frame("hgnc_symbol"= c("PELI2","LGALS3", "PCCA", "SORT1", "GPSM2", "CLCC1", "LNPK", "GRAMD4","TTC38","CDPF1", "CYREN", "LPL", "CELSR1","PPIP5K2", "TNS2", "ZNF740", "SLC28A3", "RMI1", "FRS2", "HDDC2"))
+# #
+# #
+# DOX_de_genes_interest %>%
+#   left_join(., backGL, by= c("hgnc_symbol"="SYMBOL"))  %>%
+#   dplyr::select(!hgnc_symbol.y) %>%
 #   write.csv(.,"output/DOX_de_goi.csv")
 
 DOX_de_genes_interest <- read.csv("output/DOX_de_goi.csv", row.names = 1)
@@ -493,7 +493,7 @@ lcpm_24h %>%
   mutate(dosage=factor(dosage, levels=c('0','0.625',"VEH","0.5"))) %>% 
   ggplot(., aes(x=dosage,y=counts), group=expr)+
   geom_boxplot()+
-  facet_wrap(~hgnc_symbol, scales="free_y", nrow=3, ncol = 6 )#+
+  facet_wrap(~hgnc_symbol, scales="free_y", nrow=4, ncol = 6 )#+
   # geom_signif(
   #   comparisons = list(
   #     c('0', '0.5'),
@@ -512,11 +512,7 @@ lcpm_24h %>%
 ### Replication of variance figures using Knowels data
 
 
-
 ```{r varianceKnowles}
-
-
-
 # saveRDS(store_var, "data/Knowles_variation_data.RDS")
 # store_var <- Knowles_log2cpm %>% 
 #   dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
@@ -566,7 +562,7 @@ knowlesdrug %>%
     axis.title = element_text(size = 10, color = "black"),
     axis.ticks = element_line(linewidth = 1.0),
     panel.background = element_rect(colour = "black", size = 1),
-    axis.text.x = element_blank(),
+    # axis.text.x = element_blank(),
     strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
   )
 
@@ -576,16 +572,15 @@ knowlesdrug %>%
   ggplot(., aes(x= treatment, y=values))+
   geom_boxplot(outlier.shape= NA)+
   ggtitle(" Knowles Variance across all genes")+
-  
   geom_signif(
     comparisons = list(
       c("DOX", "NT")),
-    test = "t.test",
+    test = "var.test",
     tip_length = 0.01,
     y_position = 0.5,
     # vjust=1,
     map_signif_level = FALSE)+
- ylim(NA,1.25)+
+   coord_cartesian(ylim = c(NA, 1.5), expand = TRUE)+
 theme_bw() +
   # xlab(" ") +
   ylab(expression("counts log"[2] ~ "cpm ")) +
@@ -599,21 +594,118 @@ theme_bw() +
     axis.title = element_text(size = 10, color = "black"),
     axis.ticks = element_line(linewidth = 1.0),
     panel.background = element_rect(colour = "black", size = 1),
-    axis.text.x = element_blank(),
+    # axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
+```
+
+
+```{r varianceKnowlesbyconc}
+# store_varconc <- Knowles_log2cpm %>% 
+# #   dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
+#   rowwise() %>%
+#   mutate(mean_DOX_0.625=mean(c_across(ends_with('0.625'))),
+#          var_DOX_0.625=var(c_across(ends_with('0.625'))),
+#         mean_NT=mean(c_across(ends_with('0'))),
+#          var_NT=var(c_across(ends_with('0'))),
+#         mean_DOX_1.25=mean(c_across(ends_with('1.25'))),
+#          var_DOX_1.25=var(c_across(ends_with('1.25'))),
+#         mean_DOX_2.5=mean(c_across(ends_with('2.5'))),
+#          var_DOX_2.5=var(c_across(ends_with('2.5'))),
+#         mean_DOX_5=mean(c_across(ends_with(':5'))),
+#          var_DOX_5=var(c_across(ends_with(':5')))) %>%
+# #   mutate(data1=tidy(var.test(c_across(ends_with("0.625")),c_across(ends_with("0")))))# %>% 
+  # dplyr::select("ESGN","mean_DOX_0.625","var_DOX_0.625","mean_NT", "var_NT","mean_DOX_1.25","var_DOX_1.25","mean_DOX_2.5","var_DOX_2.5","mean_DOX_5","var_DOX_5")
+# saveRDS(store_varconc,"data/Knowles_variation_data_conc.RDS")
+store_varconc <- readRDS("data/Knowles_variation_data_conc.RDS")
+
+# knowlesdrug<- 
+  store_varconc %>% 
+  pivot_longer(cols = !"ESGN", names_to = "short", values_to = "values") %>% 
+  separate(short, into=c("calc","treatment","conc"), sep = "_") %>% 
+    mutate(conc= if_else(is.na(conc),"0",conc)) %>% 
+  as.data.frame() %>% 
+  dplyr::filter(calc == "mean") %>%
+    group_by(conc) %>% 
+  ggplot(., aes(x= conc, y=values), group=treatment)+
+  geom_boxplot(outlier.shape= NA)+
+  ggtitle("Knowles Means across all genes")+
+  geom_signif(
+    comparisons = list(
+      c("0", "0.625"),
+       c("0", "1.25"),
+       c("0", "2.5"),
+       c("0", "5")),
+    test = "t.test",
+    tip_length = 0.01,
+    # y_position = 0.2,
+    step_increase = 0.04,
+    map_signif_level = FALSE)+
+      theme_bw() +
+   # xlab(" ") +
+  ylab(expression("counts log"[2] ~ "cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    # axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
+  
+  
+  
+  
+
+store_varconc %>% 
+  pivot_longer(cols = !"ESGN", names_to = "short", values_to = "values") %>% 
+  separate(short, into=c("calc","treatment","conc"), sep = "_") %>% 
+  mutate(conc= if_else(is.na(conc),"0",conc)) %>% 
+  as.data.frame() %>% 
+  dplyr::filter(calc == "var") %>%
+    group_by(conc) %>% 
+  ggplot(., aes(x= conc, y=values), group=treatment)+
+  geom_boxplot(outlier.shape= NA)+
+  ggtitle(" Knowles Variance across all genes")+
+  
+  geom_signif(
+    comparisons = list(
+      c("0", "0.625"),
+       c("0", "1.25"),
+       c("0", "2.5"),
+       c("0", "5")),
+    test = "var.test",
+    tip_length = 0.01,
+    y_position = 0.2,
+    step_increase = 0.02,
+    map_signif_level = FALSE)+
+ # ylim(NA,1.2)+
+  coord_cartesian(ylim = c(NA, 2.1))+
+theme_bw() +
+  # xlab(" ") +
+  ylab(expression("counts log"[2] ~ "cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    # axis.text.x = element_blank(),
     strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
   )
 ```
 
 
 
-
-### Knowles replication data:
-```{r Replication supplementary}
-
-
-
-
-```
 
 ### qvalue data
 ```{r qvalue manip}
@@ -662,12 +754,6 @@ kable(.,caption = "EPI Highly variable genes found in Knowles highly  variable D
 ```
 
 
-```{r}
-
-```
-
-
-
 
 
 ### GO analysis of Highly Variable genes
@@ -701,14 +787,14 @@ KEGG_05168 <- tab %>% dplyr::filter(PathwayID=="hsa05168")
 
 # backGL <-read_csv("data/backGL.txt", 
 #     col_types = cols(...1 = col_skip()))
-
+# 
 # SETA_resgenes <- gost(query = intersect_genes$SYMBOL,
 #                     organism = "hsapiens",
 #                     significant = FALSE,
 #                     ordered_query = TRUE,
 #                     domain_scope = "custom",
 #                     measure_underrepresentation = FALSE,
-#                     evcodes = FALSE,
+#                     evcodes = TRUE,
 #                     user_threshold = 0.05,
 #                     correction_method = c("fdr"),
 #                     custom_bg = backGL$SYMBOL,
@@ -720,8 +806,7 @@ Set_A_genes <- gostplot(SETA_resgenes, capped = FALSE, interactive = TRUE)
 Set_A_genes
 
 setA_table <- SETA_resgenes$result %>% 
-  dplyr::select(c(source, term_id,
-                  term_name,intersection_size, 
+  dplyr::select(c(source, term_id,                  term_name,intersection_size,intersection, 
                    term_size, p_value))# %>% 
 
 list_intersect_path <- KEGG_05168 %>% 
@@ -749,6 +834,16 @@ setA_table %>%
 ```
 
 
+### looking at the enriched HSV-1 genes in my data: 
+
+```{r HSV identify}
+# FC_mine %>% 
+#   dplyr::filter(time=="3_hours") %>% 
+#  dplyr::filter(ENTREZID %in% KEGG_05168$GeneID)
+
+
+
+```
 
 
 
