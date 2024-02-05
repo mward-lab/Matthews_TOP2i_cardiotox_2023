@@ -44,6 +44,11 @@ Top2i drugs affect cardiomyocyte viability in a dose-dependent manner.
 
 ### A. Project overview: Image not given here. Please look at our paper.
 
+```{r figure1A, dev='png'}
+knitr::include_graphics("data/Figure1-A.png")
+```
+
+
 ### B. Dose-response curves from 48 hour drug exposure.
 
 ```{r B drc, fig.width=12, fig.height=3}
@@ -64,6 +69,8 @@ Lines are a 4 point log-logistic regression of the mean from two biological repl
 
 You can find the link to initial DRC analysis at this[link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#Ploting_the_DRC)
 
+
+### C & D. LD~50~ and EC~50~
 ```{r LD50}
 drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 BC_cell_lines <- read.csv("data/BC_cell_lines.csv",row.names = 1)
@@ -120,7 +127,7 @@ graphLD50 <- LD50_table %>%
 
 You can find the links to DRC and BCC analysis at this[link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html#LD50_correlation).
 
-### C & D. LD~50~ and EC~50~
+
 
 ```{r BCcells ld50,fig.width=12, fig.height=5}
 
