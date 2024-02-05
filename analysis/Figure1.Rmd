@@ -44,9 +44,13 @@ Top2i drugs affect cardiomyocyte viability in a dose-dependent manner.
 
 ### A. Project overview: Image not given here. Please look at our paper.
 
-```{r figure1A, dev='png'}
-knitr::include_graphics("data/Figure1-A.png")
+```{r figure1A, echo=TRUE, message=FALSE, warning=FALSE, dev='png'}
+  knitr::include_graphics("data/Figure1-A.png")
+
 ```
+
+![Intro Figure](C:/Program Files/R_WD/Cardiotoxicity/data/Figure1-A.png)
+
 
 
 ### B. Dose-response curves from 48 hour drug exposure.
