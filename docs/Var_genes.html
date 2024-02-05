@@ -11,11 +11,11 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-07-21" />
+<meta name="date" content="2024-02-05" />
 
 <title>Highly variable genes</title>
 
-<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -37,8 +37,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Highly variable genes</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-07-21</h4>
+<h4 class="date">2024-02-05</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-07-21
+<strong>Last updated:</strong> 2024-02-05
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -408,7 +408,7 @@ title="This is the local directory in which the code in this file was executed."
 This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
 analysis was created with <a
   href="https://github.com/workflowr/workflowr">workflowr</a> (version
-1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
 that were applied when the results were created. The <em>Past
 versions</em> tab lists the development history.
 </p>
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeb94104b2dd9628dc93469cd870f8b597bf0fd812targetblankb94104ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treedf08393e94c7f554a1293ba0935e1de7778d9137targetblankdf08393a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/b94104b2dd9628dc93469cd870f8b597bf0fd812" target="_blank">b94104b</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/df08393e94c7f554a1293ba0935e1de7778d9137" target="_blank">df08393</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomreneeisnowhereCardiotoxicitytreeb94104b2dd9628dc93469cd870f8b597bf0fd812targetblankb94104ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treedf08393e94c7f554a1293ba0935e1de7778d9137targetblankdf08393a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/tree/b94104b2dd9628dc93469cd870f8b597bf0fd812" target="_blank">b94104b</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/df08393e94c7f554a1293ba0935e1de7778d9137" target="_blank">df08393</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,16 +557,22 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
+    Ignored:    analysis/variance_values by gene.png
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
     Ignored:    data/BC_cell_lines.csv
+    Ignored:    data/BurridgeDOXTOX.RDS
     Ignored:    data/CADGWASgene_table.csv
     Ignored:    data/CAD_geneset.RDS
     Ignored:    data/CALIMA_Data/
+    Ignored:    data/CMD04_75DRCviability.csv
+    Ignored:    data/CMD04_87DRCviability.csv
+    Ignored:    data/CMD05_75DRCviability.csv
+    Ignored:    data/CMD05_87DRCviability.csv
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
+    Ignored:    data/Counts_RNA_ERMatthews.txt
     Ignored:    data/DAgostres24.RDS
     Ignored:    data/DAtable1.csv
     Ignored:    data/DDEMresp_list.csv
@@ -579,7 +585,10 @@ Ignored files:
     Ignored:    data/Da24counts.txt
     Ignored:    data/Dx24counts.txt
     Ignored:    data/Dx_reQTL_specific.txt
+    Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/FC_necela.RDS
+    Ignored:    data/FC_necela_names.RDS
     Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
@@ -595,36 +604,53 @@ Ignored files:
     Ignored:    data/K_cluster
     Ignored:    data/K_cluster_kisthree.csv
     Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/Knowles_log2cpm_real.RDS
+    Ignored:    data/Knowles_variation_data.RDS
+    Ignored:    data/Knowles_variation_data_conc.RDS
+    Ignored:    data/Knowlesvarlist.RDS
     Ignored:    data/LD50_05via.csv
     Ignored:    data/LDH48hoursdata.csv
     Ignored:    data/Mt24counts.txt
     Ignored:    data/NoRespDEG_final.csv
     Ignored:    data/RINsamplelist.txt
+    Ignored:    data/RNA_seq_trial.RDS
+    Ignored:    data/Schneider_GWAS.txt
     Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/Sup_replicate_values.csv
     Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
+    Ignored:    data/TableS10.csv
+    Ignored:    data/TableS11.csv
+    Ignored:    data/TableS9.csv
+    Ignored:    data/Top2_expression.RDS
     Ignored:    data/Top2biresp_cluster24h.csv
     Ignored:    data/Var_test_list.RDS
     Ignored:    data/Var_test_list24.RDS
     Ignored:    data/Var_test_list24alt.RDS
     Ignored:    data/Var_test_list3.RDS
+    Ignored:    data/Vargenes.RDS
     Ignored:    data/Viabilitylistfull.csv
     Ignored:    data/allexpressedgenes.txt
+    Ignored:    data/allfinal3hour.RDS
     Ignored:    data/allgenes.txt
     Ignored:    data/allmatrix.RDS
     Ignored:    data/allmymatrix.RDS
     Ignored:    data/annotation_data_frame.RDS
     Ignored:    data/averageviabilitytable.RDS
+    Ignored:    data/averageviabilitytable.csv
     Ignored:    data/avgLD50.RDS
     Ignored:    data/avg_LD50.RDS
+    Ignored:    data/avg_via_table.csv
     Ignored:    data/backGL.txt
+    Ignored:    data/burr_genes.RDS
     Ignored:    data/calcium_data.RDS
     Ignored:    data/clamp_summary.RDS
     Ignored:    data/cormotif_3hk1-8.RDS
     Ignored:    data/cormotif_initalK5.RDS
     Ignored:    data/cormotif_initialK5.RDS
     Ignored:    data/cormotif_initialall.RDS
+    Ignored:    data/cormotifprobs.csv
     Ignored:    data/counts24hours.RDS
     Ignored:    data/cpmcount.RDS
     Ignored:    data/cpmnorm_counts.csv
@@ -645,6 +671,7 @@ Ignored files:
     Ignored:    data/filtered_raw_counts.csv
     Ignored:    data/filtermatrix_x.RDS
     Ignored:    data/folder_05top/
+    Ignored:    data/framefun24.RDS
     Ignored:    data/geneDoxonlyQTL.csv
     Ignored:    data/gene_corr_df.RDS
     Ignored:    data/gene_corr_frame.RDS
@@ -658,6 +685,7 @@ Ignored files:
     Ignored:    data/gostrescoNR
     Ignored:    data/gtex/
     Ignored:    data/heartgenes.csv
+    Ignored:    data/highly_var_genelist.RDS
     Ignored:    data/hsa_kegg_anno.RDS
     Ignored:    data/individualDRCfile.RDS
     Ignored:    data/individual_DRC48.RDS
@@ -679,9 +707,17 @@ Ignored files:
     Ignored:    data/norm_counts.csv
     Ignored:    data/old_sets/
     Ignored:    data/organized_drugframe.csv
+    Ignored:    data/pca_all_anno.csv
     Ignored:    data/plan2plot.png
+    Ignored:    data/plot_intv_list.RDS
+    Ignored:    data/plot_list_DRC.RDS
+    Ignored:    data/qval24hr.RDS
+    Ignored:    data/qval3hr.RDS
+    Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
+    Ignored:    data/sampsettrz.RDS
+    Ignored:    data/schneider_closest_output.RDS
     Ignored:    data/sigVDA24.txt
     Ignored:    data/sigVDA3.txt
     Ignored:    data/sigVDX24.txt
@@ -696,9 +732,13 @@ Ignored files:
     Ignored:    data/siglist_final.RDS
     Ignored:    data/siglist_old.RDS
     Ignored:    data/slope_table.csv
+    Ignored:    data/supp10_24hlist.RDS
+    Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
+    Ignored:    data/supp_viadata.csv
     Ignored:    data/table3a.omar
+    Ignored:    data/test_run_sample_list.txt
     Ignored:    data/testlist.txt
     Ignored:    data/toplistall.RDS
     Ignored:    data/trtonly_24h_genes.RDS
@@ -712,86 +752,147 @@ Untracked files:
     Untracked:  .RDataTmp
     Untracked:  .RDataTmp1
     Untracked:  .RDataTmp2
+    Untracked:  .RDataTmp3
+    Untracked:  3hr all.pdf
+    Untracked:  Code_files_list.csv
+    Untracked:  Data_files_list.csv
     Untracked:  Doxorubicin_vehicle_3_24.csv
     Untracked:  Doxtoplist.csv
+    Untracked:  EPIqvalue_analysis.Rmd
+    Untracked:  Final.sup.pdf
     Untracked:  GWAS_list_of_interest.xlsx
     Untracked:  KEGGpathwaylist.R
+    Untracked:  NA
     Untracked:  OmicNavigator_learn.R
+    Untracked:  SNP_egenes_allfiles.RDS
+    Untracked:  SNP_frame_pdf
+    Untracked:  SNP_frame_pdf.pdf
     Untracked:  SigDoxtoplist.csv
-    Untracked:  analysis/DRC_analysist.Rmd
+    Untracked:  analysis/DRC_viability_check.Rmd
+    Untracked:  analysis/New_code_dec-23.R
+    Untracked:  analysis/cellcycle_kegg_genes.R
     Untracked:  analysis/ciFIT.R
-    Untracked:  analysis/enricher.Rmd
     Untracked:  analysis/export_to_excel.R
-    Untracked:  analysis/untitled1.R
-    Untracked:  code/DRC_plotfigure1.png
+    Untracked:  analysis/featureCountsPLAY.R
+    Untracked:  cleanupfiles_script.R
+    Untracked:  code/biomart_gene_names.R
     Untracked:  code/constantcode.R
+    Untracked:  code/corMotifcustom.R
     Untracked:  code/cpm_boxplot.R
     Untracked:  code/extracting_ggplot_data.R
-    Untracked:  code/fig1plot.png
-    Untracked:  code/figurelegeddrc.png
     Untracked:  code/movingfilesto_ppl.R
     Untracked:  code/pearson_extract_func.R
     Untracked:  code/pearson_tox_extract.R
     Untracked:  code/plot1C.fun.R
     Untracked:  code/spearman_extract_func.R
     Untracked:  code/venndiagramcolor_control.R
-    Untracked:  cormotif_probability_genelist.csv
+    Untracked:  cormotif_p.post.list_4.csv
+    Untracked:  figS1024h.pdf
+    Untracked:  final.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
+    Untracked:  listoftranscripts
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/ABHD8_dif_values.RDS
+    Untracked:  output/C3orf18_dif_values.RDS
+    Untracked:  output/Cardiotox_dif_values.RDS
+    Untracked:  output/DNR_DEGlist.csv
     Untracked:  output/DNRvenn.RDS
+    Untracked:  output/DOX_DEGlist.csv
+    Untracked:  output/DOX_de_goi.csv
     Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EEF1B2_dif_values.RDS
+    Untracked:  output/EEIG1_dif_values.RDS
+    Untracked:  output/EPI_DEGlist.csv
     Untracked:  output/EPIvenn.RDS
+    Untracked:  output/ESGN_rds.RDS
+    Untracked:  output/FC_necela.RDS
+    Untracked:  output/FC_necela_names.RDS
+    Untracked:  output/FRS2_dif_values.RDS
     Untracked:  output/Figures/
+    Untracked:  output/GTEXv8_gene_median_tpm.RDS
+    Untracked:  output/GTEXv8_gene_tpm_heart_left_ventricle.RDS
+    Untracked:  output/HDDC2_dif_values.RDS
+    Untracked:  output/HER2_gene.RDS
+    Untracked:  output/KEGGcellcyclegenes.RDS
+    Untracked:  output/Knowles_S13.csv
+    Untracked:  output/Knowles_log2cpm.csv
+    Untracked:  output/Knowles_supp13.csv
+    Untracked:  output/LD50tox_table.RDS
+    Untracked:  output/MTX_DEGlist.csv
     Untracked:  output/MTXvenn.RDS
+    Untracked:  output/PEX16_dif_values.RDS
+    Untracked:  output/RASIP1_dif_values.RDS
+    Untracked:  output/RMI1_dif_values.RDS
+    Untracked:  output/RSID_QTL_list_full.txt
+    Untracked:  output/SETA_analysis_reyes.RDS
+    Untracked:  output/SGWAS_top50_order.csv
+    Untracked:  output/SLC27A1_dif_values.RDS
+    Untracked:  output/SLC28A3_dif_values.RDS
+    Untracked:  output/SNP_egenes_allfiles.RDS
+    Untracked:  output/SNP_list_ID.RDS
+    Untracked:  output/SNP_list_full.txt
+    Untracked:  output/SNP_supp.RDS
+    Untracked:  output/TGFBR3L_dif_values.RDS
+    Untracked:  output/TNS2_dif_values.RDS
+    Untracked:  output/TOP_50SNPreffile.csv
+    Untracked:  output/TRZ_DEGlist.csv
+    Untracked:  output/TableS8.csv
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
+    Untracked:  output/ZNF740_dif_values.RDS
     Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/counts_v8_heart_left_ventricle_gct.RDS
+    Untracked:  output/crisprfoldchange.RDS
+    Untracked:  output/endocytosisgenes.csv
+    Untracked:  output/expre7k.csv
+    Untracked:  output/expressed_egenes_by_RSID.csv
     Untracked:  output/gene_corr_fig9.RDS
+    Untracked:  output/genes.RDS
     Untracked:  output/legend_b.RDS
     Untracked:  output/motif_ERrep.RDS
     Untracked:  output/motif_LRrep.RDS
     Untracked:  output/motif_NRrep.RDS
     Untracked:  output/motif_TI_rep.RDS
+    Untracked:  output/near_genes_SNP1.RDS
+    Untracked:  output/necela_list_test.RDS
+    Untracked:  output/necela_val_genes.RDS
     Untracked:  output/output-old/
+    Untracked:  output/rank24genes.csv
+    Untracked:  output/rank3genes.csv
+    Untracked:  output/sequencinginformationforsupp.csv
+    Untracked:  output/sequencinginformationforsupp.prn
+    Untracked:  output/sigVDA24.txt
+    Untracked:  output/sigVDA3.txt
+    Untracked:  output/sigVDX24.txt
+    Untracked:  output/sigVDX3.txt
+    Untracked:  output/sigVEP24.txt
+    Untracked:  output/sigVEP3.txt
+    Untracked:  output/sigVMT24.txt
+    Untracked:  output/sigVMT3.txt
+    Untracked:  output/sigVTR24.txt
+    Untracked:  output/sigVTR3.txt
     Untracked:  output/supplementary_motif_list_GO.RDS
+    Untracked:  output/test_biomart_run.RDS
     Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/trop_knowles_fun.csv
+    Untracked:  output/tvl24hour.txt
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/DEG-GO_analysis.Rmd
     Modified:   analysis/DRC_analysis.Rmd
-    Modified:   analysis/Figure3.Rmd
-    Modified:   analysis/Figure5.Rmd
-    Modified:   analysis/Figure6.Rmd
-    Modified:   analysis/Figure8.Rmd
-    Modified:   analysis/Figure9.Rmd
-    Modified:   analysis/Knowles2019.Rmd
-    Modified:   analysis/Supplementary_figures.Rmd
-    Modified:   analysis/index.Rmd
-    Modified:   analysis/other_analysis.Rmd
-    Modified:   analysis/run_all_analysis.Rmd
-    Modified:   analysis/variance_scrip.Rmd
-    Modified:   output/DNRmeSNPs.RDS
-    Modified:   output/DNRreQTLs.RDS
-    Modified:   output/DOXmeSNPs.RDS
-    Modified:   output/DOXreQTLs.RDS
-    Modified:   output/EPImeSNPs.RDS
-    Modified:   output/EPIreQTLs.RDS
-    Modified:   output/GOI_genelist.txt
-    Modified:   output/MTXmeSNPs.RDS
-    Modified:   output/MTXreQTLs.RDS
-    Modified:   output/TNNI_LDH_RNAnormlist.txt
+    Modified:   analysis/GOI_plots.Rmd
+    Modified:   analysis/GTEx_genes.Rmd
+    Deleted:    analysis/Knowles2019.Rmd
     Modified:   output/daplot.RDS
     Modified:   output/dxplot.RDS
     Modified:   output/epplot.RDS
     Modified:   output/mtplot.RDS
     Modified:   output/plan2plot.png
-    Modified:   output/toplistall.csv
     Modified:   output/trplot.RDS
     Modified:   output/veplot.RDS
 
@@ -844,7 +945,75 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/reneeisnowhere/Cardiotoxicity/blob/b94104b2dd9628dc93469cd870f8b597bf0fd812/analysis/Var_genes.Rmd" target="_blank">b94104b</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/df08393e94c7f554a1293ba0935e1de7778d9137/analysis/Var_genes.Rmd" target="_blank">df08393</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-05
+</td>
+<td>
+updates to scripts
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/62286c39df588d70d06650c1569865a76958bc09/analysis/Var_genes.Rmd" target="_blank">62286c3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-28
+</td>
+<td>
+Updateing figure code
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/06800c9a0d5bf629ca2c406711ee7d699ca02279/analysis/Var_genes.Rmd" target="_blank">06800c9</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-26
+</td>
+<td>
+Commits to small changes and edits
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/ee8be4c9b3aff2ee758b025cd3c808ec02f89cf7/docs/Var_genes.html" target="_blank">ee8be4c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/b94104b2dd9628dc93469cd870f8b597bf0fd812/analysis/Var_genes.Rmd" target="_blank">b94104b</a>
 </td>
 <td>
 reneeisnowhere
@@ -864,8 +1033,8 @@ first plot update
 </div>
 </div>
 <p>Goals for this page:</p>
-<p>I will examine the AC-shared variable genes withing AC-shared
-response genes</p>
+<p>I will examine the AC-shared variable genes within AC-shared response
+genes</p>
 <pre class="r"><code>library(tidyverse)
 library(VennDiagram)
 library(paletteer)
@@ -874,12 +1043,26 @@ library(gridtext)
 library(scales)
 library(kableExtra)
 library(ComplexHeatmap)
-library(data.table)</code></pre>
+library(data.table)
+
+
+# library(tidyverse)
+library(ggpubr)
+library(ggsignif)
+
+# library(paletteer)
+# library(ggVennDiagram)
+# library(gridtext)
+# library(scales)
+# library(kableExtra)
+library(qvalue)
+# library(data.table)
+# library(ComplexHeatmap)</code></pre>
 <pre class="r"><code>drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
 Vargenes &lt;- readRDS(&quot;data/geneset_24.RDS&quot;)
 expressedgenes &lt;- read.csv(&quot;data/backGL.txt&quot;)
 venn24part &lt;- VennDiagram::get.venn.partitions(Vargenes)
-
+backGL &lt;- read.csv(&quot;data/backGL.txt&quot;, row.names = 1)
 
 
 toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
@@ -923,6 +1106,43 @@ length(intersect(AC_share_var,AC_shared_sig))  #(88 overlap)</code></pre>
           axis.text.x = element_text(margin = margin(2,0,2,0, &quot;pt&quot;), size=12),
   strip.background = element_rect (linetype=1, linewidth = 0.5))</code></pre>
 <p><img src="figure/Var_genes.Rmd/enrichment%20checks-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-enrichment-checks-1">
+Past versions of "enrichment checks-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-enrichment-checks-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ee8be4c9b3aff2ee758b025cd3c808ec02f89cf7/docs/figure/Var_genes.Rmd/enrichment checks-1.png" target="_blank">ee8be4c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>testmat &lt;- matrix(c(88,4347,115,9534),nrow = 2,byrow = TRUE)
 
 chisq.test(testmat)#$p.value</code></pre>
@@ -965,6 +1185,43 @@ length(intersect(TOP2i_share_var,TOP2i_shared_sig))  #(3 overlap)</code></pre>
           axis.text.x = element_text(margin = margin(2,0,2,0, &quot;pt&quot;), size=12),
   strip.background = element_rect (linetype=1, linewidth = 0.5))</code></pre>
 <p><img src="figure/Var_genes.Rmd/enrichment%20top2bi%20checks-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-enrichment-top2bi-checks-1">
+Past versions of "enrichment top2bi checks-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-enrichment-top2bi-checks-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ee8be4c9b3aff2ee758b025cd3c808ec02f89cf7/docs/figure/Var_genes.Rmd/enrichment top2bi checks-1.png" target="_blank">ee8be4c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>testmatTOP &lt;- matrix(c(3,879,29,13173),nrow = 2,byrow = TRUE)
 
 chisq.test(testmatTOP)#$p.value</code></pre>
@@ -998,13 +1255,13 @@ TOP2i_var24gost &lt;- readRDS(&quot;data/DEG-GO/var/TOP2i_var24gost.RDS&quot;)
 TOP2i_var24_table &lt;- TOP2i_var24gost$result %&gt;% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
 terms &lt;- list()
-terms[1] &lt;- DOX_table %&gt;% filter(source==&quot;GO:BP&quot;) %&gt;% slice_min(.,p_value, n=3) %&gt;% list()
-terms[2] &lt;- EPI_table %&gt;% filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
-terms[3] &lt;- DNR_table %&gt;% filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
-terms[4] &lt;- MTX_table %&gt;% filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
-terms[5] &lt;- TRZ_table %&gt;% filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
-terms[6] &lt;- AC_share_var24_table %&gt;% filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
-terms[7] &lt;- TOP2i_var24_table %&gt;% filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
+terms[1] &lt;- DOX_table %&gt;% dplyr::filter(source==&quot;GO:BP&quot;) %&gt;% slice_min(.,p_value, n=3) %&gt;% list()
+terms[2] &lt;- EPI_table %&gt;% dplyr::filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
+terms[3] &lt;- DNR_table %&gt;% dplyr::filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
+terms[4] &lt;- MTX_table %&gt;% dplyr::filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
+terms[5] &lt;- TRZ_table %&gt;% dplyr::filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
+terms[6] &lt;- AC_share_var24_table %&gt;% dplyr::filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
+terms[7] &lt;- TOP2i_var24_table %&gt;% dplyr::filter(source==&quot;GO:BP&quot;) %&gt;%slice_min(.,p_value, n=3) %&gt;% list()
 names(terms) &lt;- c(&quot;DOX&quot;, &quot;EPI&quot;,&quot;DNR&quot;, &quot;MTX&quot;, &quot;TRZ&quot;, &quot;AC_shared&quot;, &quot;TOP2i_shared&quot;)
 termlist &lt;- rbindlist(terms)
 termlistid &lt;- c(&quot;GO:0010867&quot;,&quot;GO:0043508&quot;,&quot;GO:0070932&quot;)</code></pre>
@@ -1067,6 +1324,324 @@ Heatmap(GO_mat,
             grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
 })</code></pre>
 <p><img src="figure/Var_genes.Rmd/actual%20heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-actual-heatmap-1">
+Past versions of "actual heatmap-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-actual-heatmap-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/ee8be4c9b3aff2ee758b025cd3c808ec02f89cf7/docs/figure/Var_genes.Rmd/actual heatmap-1.png" target="_blank">ee8be4c</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-07-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="seoane-data-investigation-of-variability"
+class="section level3">
+<h3>Seoane data investigation of variability</h3>
+<p>I will examine the Seoane gene sets and overlap with variable
+data</p>
+<pre class="r"><code>list2env(Vargenes, envir = .GlobalEnv)</code></pre>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<pre class="r"><code>chrom_reg_Seoane &lt;- read_csv(file = &quot;data/Seonane2019supp1.txt&quot;,col_types = cols(...1 = col_skip()))
+Seoane_2019 &lt;- chrom_reg_Seoane[,2]
+names(Seoane_2019) &lt;- &quot;ENTREZID&quot;
+Sup1seoane &lt;- (unique(Seoane_2019$ENTREZID))
+Sup4genes &lt;- read.csv(&quot;output/Sup4seoane.csv&quot;, row.names = 1)
+Sup4seoane &lt;- Sup4genes  %&gt;% 
+  dplyr::filter(pval.expAnth&lt;0.05) %&gt;% 
+  distinct(entrez, .keep_all = TRUE) %&gt;% 
+  dplyr::select(entrez) %&gt;% 
+  rename(&quot;ENTREZID&quot;=&#39;entrez&#39;)</code></pre>
+<pre class="r"><code>intersect(Sup1seoane,AC_share_var)</code></pre>
+<pre><code>[1] &quot;387893&quot; &quot;79723&quot;  &quot;86&quot;     &quot;1105&quot;   &quot;8473&quot;   &quot;3012&quot;  </code></pre>
+<pre class="r"><code># 
+intersect(Sup4seoane$ENTREZID,as.numeric(AC_share_var))</code></pre>
+<pre><code>numeric(0)</code></pre>
+<pre class="r"><code>intersect(Sup4seoane$ENTREZID,as.numeric(not_AC_shared))</code></pre>
+<pre><code> [1] 11176 10284  8819 23522  7786  2146  4297 79913  8242 51780  6872 23135
+[13]  6877 23030 64324 79885 10847 51773  5253  9126  3054  9734 53335 27350
+[25]  6601  1108  8289   890 64151 10445  7150  8110 54531 51409 27097  9739
+[37]  6595  9555 22823 54556 10592  7528  9031 51377  7799  6602  8202 51564
+[49] 79858 10856</code></pre>
+<pre class="r"><code># Vargenes[[length(Vargenes)+1]] &lt;- list(Sup4seoane$ENTREZID)
+
+library(paletteer)
+assignInNamespace(x=&quot;plot_venn&quot;, value=plot_venn, ns=&quot;ggVennDiagram&quot;)
+
+sup1overlap &lt;- list(as.numeric(DOX_24_var),as.numeric(EPI_24_var),as.numeric(DNR_24_var),as.numeric(MTX_24_var), Sup1seoane)
+# re_incommon &lt;- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+# 
+# names(reQTL_overlapDE24) &lt;- c(&quot;Dox_reQTLS&quot;, &quot;DNR DEGs&quot;,&quot;EPI DEGs&quot;,&quot;MTX DEGs&quot;)
+
+ggVennDiagram::ggVennDiagram(sup1overlap,
+                             category.names = c(&quot;DOX var&quot;,
+                                     &quot;EPI var&quot;,
+                                      &quot;DNR var&quot;,
+                                 &quot;MTX var&quot;,
+                                 &quot;Seoane S1&quot;),
+              show_intersect = FALSE,
+              set_color = &quot;black&quot;,
+              # category_size = c(6,6,6,6),
+              label = &quot;count&quot;,
+              # color =  c(&quot;DOX\negenes&quot; = &quot;yellow&quot;,&quot;DNR DEGs&quot; =&quot;steelblue&quot;,&quot;EPI DEGs&quot; = &#39;red&#39;, &quot;MTX DEGs&quot; = &#39;black&#39;) ,
+          
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = &quot;black&quot;,
+              edge_lty = &quot;solid&quot;, set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = &quot;colorbar&quot;, limits=c(0, 100)) +
+  scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1, limits= c(1,200),oob=scales::squish)#+</code></pre>
+<p><img src="figure/Var_genes.Rmd/venn%20seoane-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # scale_fill_manual(values = cbp1)+
+  labs(title = &quot;24 hour DOX egenes in other DEG sets&quot;)+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))</code></pre>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>sup4overlap &lt;- list(as.numeric(DOX_24_var),as.numeric(EPI_24_var),as.numeric(DNR_24_var),as.numeric(MTX_24_var), as.numeric(Sup4seoane$ENTREZID))
+ggVennDiagram::ggVennDiagram(sup4overlap,
+                             category.names = c(&quot;DOX var&quot;,
+                                     &quot;EPI var&quot;,
+                                      &quot;DNR var&quot;,
+                                 &quot;MTX var&quot;,
+                                 &quot;Seoane S4&quot;),
+              show_intersect = FALSE,
+              set_color = &quot;black&quot;,
+              # category_size = c(6,6,6,6),
+              label = &quot;count&quot;,
+              # color =  c(&quot;DOX\negenes&quot; = &quot;yellow&quot;,&quot;DNR DEGs&quot; =&quot;steelblue&quot;,&quot;EPI DEGs&quot; = &#39;red&#39;, &quot;MTX DEGs&quot; = &#39;black&#39;) ,
+          
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = &quot;black&quot;,
+              edge_lty = &quot;solid&quot;, set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = &quot;colorbar&quot;, limits=c(0, 100)) +
+  scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1, limits= c(1,200),oob=scales::squish)#+</code></pre>
+<p><img src="figure/Var_genes.Rmd/supp4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # scale_fill_manual(values = cbp1)+
+  labs(title = &quot;24 hour DOX egenes in other DEG sets&quot;)+
+  theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))</code></pre>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>DEG &lt;- Vargenes
+siglist24 &lt;- siglist[6:9]
+test &lt;- siglist24[1][&quot;ENTREZID&quot;]
+sig_24_ENTREZID &lt;- sapply(siglist24,&quot;[[&quot;,1)
+all_unique_DEG &lt;- unique(rbindlist(lapply(sig_24_ENTREZID, as.data.table))) ##8188
+all_unique_var &lt;- unique(rbindlist((lapply(Vargenes, as.data.table))))
+
+length(intersect(all_unique_DEG$V1,all_unique_var$V1))##2190</code></pre>
+<pre><code>[1] 2190</code></pre>
+<pre class="r"><code>DEG_var &lt;- intersect(all_unique_DEG$V1,all_unique_var$V1)
+non_DEG_var &lt;- setdiff(expressedgenes$ENTREZID,DEG_var)
+
+ggVennDiagram::ggVennDiagram(list(all_unique_var$V1, all_unique_DEG$V1),
+                             category.names = c(&quot;all var genes&quot;, &quot;all DEGs&quot;),
+              show_intersect = FALSE,
+              set_color = &quot;black&quot;,
+              label = &quot;count&quot;,
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = &quot;black&quot;,
+              edge_lty = &quot;solid&quot;, set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = &quot;colorbar&quot;, limits=c(0, 100)) +
+  scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1, limits= c(1000,8000),oob=scales::squish)#+</code></pre>
+<p><img src="figure/Var_genes.Rmd/overlap%20with%20degs-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>holdlist &lt;-  list(DEG_var, as.numeric(non_DEG_var), Sup1seoane)
+ggVennDiagram::ggVennDiagram(list( as.numeric(DEG_var), as.numeric(non_DEG_var), Sup1seoane),
+                             category.names = c(&quot;DEG var&quot;, &quot;non DEG var&quot;,&quot;Seoane supp 1&quot;),
+              show_intersect = FALSE,
+              set_color = &quot;black&quot;,
+              label = &quot;count&quot;,
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = &quot;black&quot;,
+              edge_lty = &quot;solid&quot;, set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  # scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
+  # scale_colour_gradientn(colours = cols, 
+  #                      values = rescale(c(0, 20, 75, 1000, 5000)),
+  #                      guide = &quot;colorbar&quot;, limits=c(0, 100)) +
+  scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1, limits= c(1000,8000),oob=scales::squish)#+</code></pre>
+<p><img src="figure/Var_genes.Rmd/overlap%20with%20degs-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>testS1 &lt;- matrix(c(59,271,2131,11623),nrow = 2,byrow = TRUE)
+
+chisq.test(testS1)</code></pre>
+<pre><code>
+    Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+
+data:  testS1
+X-squared = 1.2204, df = 1, p-value = 0.2693</code></pre>
+</div>
+</div>
+<div id="burridge-data" class="section level2">
+<h2>Burridge data</h2>
+<pre class="r"><code>DOXreQTLs &lt;- readRDS(&quot;output/DOXreQTLs.RDS&quot;)
+burr_genes &lt;-  readRDS(&quot;data/BurridgeDOXTOX.RDS&quot;)
+# BurridgeDOXTOX &lt;-  getBM(attributes=my_attributes,filters =&#39;hgnc_symbol&#39;,
+#          values = burr_genes, mart = ensembl)
+# BurridgeDOXTOX &lt;- BurridgeDOXTOX %&gt;% distinct(entrezgene_id, .keep_all = TRUE)
+# saveRDS(BurridgeDOXTOX, &quot;data/BurridgeDOXTOX.RDS&quot;) 
+
+
+storeEPI &lt;- readRDS(&quot;data/qvalueEPItemp.RDS&quot;)
+VennDiagram::get.venn.partitions(list(storeEPI$ENTREZID, DOXreQTLs$ENTREZID))</code></pre>
+<pre><code>     X1    X2   ..set..   ..values.. ..count..
+1  TRUE  TRUE     X1∩X2 5119, 93....         4
+2 FALSE  TRUE (X2)∖(X1) 29965, 2....       138
+3  TRUE FALSE (X1)∖(X2) 49856, 2....       504</code></pre>
+<pre class="r"><code>intersect(DOXreQTLs$ENTREZID, burr_genes$entrezgene_id)</code></pre>
+<pre><code>character(0)</code></pre>
+<pre class="r"><code># DOX_reqtls &lt;-$ENTREZID %&gt;% as.integer()
+  DOXreQTLs %&gt;% dplyr::filter(ENTREZID %in% storeEPI$ENTREZID) %&gt;%  tally( )</code></pre>
+<pre><code>  n
+1 4</code></pre>
+<pre class="r"><code> burr_genes %&gt;% 
+   dplyr::filter(entrezgene_id%in% backGL$ENTREZID) %&gt;% 
+   dplyr::filter(entrezgene_id %in% storeEPI$ENTREZID)</code></pre>
+<pre><code>[1] entrezgene_id   ensembl_gene_id hgnc_symbol    
+&lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<pre class="r"><code>### now for burr genes and epi508
+VennDiagram::get.venn.partitions(list(storeEPI$ENTREZID, burr_genes$entrezgene_id))</code></pre>
+<pre><code>     X1    X2   ..set..   ..values.. ..count..
+1  TRUE  TRUE     X1∩X2                      0
+2 FALSE  TRUE (X2)∖(X1) 220, 790....        22
+3  TRUE FALSE (X1)∖(X2) 49856, 2....       508</code></pre>
+<pre class="r"><code>### looking at the overlap of egenes and  EPI 508 var
+
+storeEPI %&gt;% 
+  dplyr::filter (ENTREZID %in% DOXreQTLs$ENTREZID) %&gt;% 
+  left_join(., backGL, by=c(&quot;ENTREZID&quot;))</code></pre>
+<pre><code>  ENTREZID  EPI.VEH.24    qvalues SYMBOL ensembl_gene_id hgnc_symbol
+1     5119 0.001617342 0.07437143 CHMP1A ENSG00000131165      CHMP1A
+2    93134 0.002341605 0.08331969 ZNF561 ENSG00000171469      ZNF561
+3   132001 0.002319133 0.08331969 TAMM41 ENSG00000279643      TAMM41
+4    10592 0.003429113 0.08968566   SMC2 ENSG00000136824        SMC2</code></pre>
+<div id="looking-at-heatmaps" class="section level3">
+<h3>looking at heatmaps</h3>
+<pre class="r"><code>mean_vardrug1 &lt;- read.csv(&quot;data/mean_vardrug1.csv&quot;, row.names = 1)
+
+
+drug_frame &lt;- mean_vardrug1 %&gt;%
+  rownames_to_column(var = &quot;entrezid&quot;) %&gt;%
+  pivot_longer(cols = mean.Da.3:var.Ve.24,
+               names_to = &quot;short&quot;,
+               values_to = &quot;values&quot;) %&gt;%
+  separate(short, into = c(&quot;calc&quot;, &quot;treatment&quot;, &quot;time&quot;)) %&gt;%
+  # mutate(treatment = factor(
+  #   treatment,
+  #   levels = c(&quot;Do&quot;, &quot;Ep&quot;, &quot;Da&quot;, &quot;Mi&quot;, &quot;Tr&quot;, &quot;Ve&quot;),
+  #   labels = c(&quot;DOX&quot;, &quot;EPI&quot;, &quot;DNR&quot;, &quot;MTX&quot;, &quot;TRZ&quot;, &quot;VEH&quot;)
+  # )) %&gt;%
+  # mutate(time = factor(
+  #   time,
+  #   levels = c(&quot;3&quot;, &quot;24&quot;),
+  #   labels = c(&quot;3 hours&quot;, &quot;24 hours&quot;)
+  # )) %&gt;%
+  # group_by(treatment, time, calc) %&gt;%
+  as.data.frame</code></pre>
+<pre class="r"><code>v_DNR_24 &lt;- drug_frame %&gt;% 
+  dplyr::filter(calc !=&quot;mean&quot;, treatment ==&quot;Da&quot;, time==&quot;24&quot;) %&gt;% 
+  select(entrezid,values)%&gt;% 
+  rename(&quot;DNR&quot;=&quot;values&quot;)
+  
+v_DOX_24 &lt;- drug_frame %&gt;% 
+  dplyr::filter(calc !=&quot;mean&quot;, treatment ==&quot;Do&quot;, time==&quot;24&quot;) %&gt;% 
+  select(entrezid,values)%&gt;% 
+  rename(&quot;DOX&quot;=&quot;values&quot;)
+
+v_EPI_24 &lt;- drug_frame %&gt;% 
+  dplyr::filter(calc !=&quot;mean&quot;, treatment ==&quot;Ep&quot;, time==&quot;24&quot;) %&gt;% 
+  select(entrezid,values)%&gt;% 
+  rename(&quot;EPI&quot;=&quot;values&quot;)
+
+v_MTX_24 &lt;- drug_frame %&gt;% 
+  dplyr::filter(calc !=&quot;mean&quot;, treatment ==&quot;Mi&quot;, time==&quot;24&quot;) %&gt;% 
+  select(entrezid,values)%&gt;% 
+  rename(&quot;MTX&quot;=&quot;values&quot;)
+
+v_TRZ_24 &lt;- drug_frame %&gt;% 
+  dplyr::filter(calc !=&quot;mean&quot;, treatment ==&quot;Tr&quot;, time==&quot;24&quot;) %&gt;% 
+  select(entrezid,values)%&gt;% 
+  rename(&quot;TRZ&quot;=&quot;values&quot;)
+
+v_VEH_24 &lt;- drug_frame %&gt;% 
+  dplyr::filter(calc !=&quot;mean&quot;, treatment ==&quot;Ve&quot;, time==&quot;24&quot;) %&gt;% 
+  select(entrezid,values)%&gt;% 
+  rename(&quot;VEH&quot;=&quot;values&quot;)
+        
+val_mat_24 &lt;- left_join(v_DNR_24,v_DOX_24,
+                        by=c(&quot;entrezid&quot;))%&gt;%
+  left_join(.,v_EPI_24, by=c(&quot;entrezid&quot;)) %&gt;%
+  left_join(.,v_MTX_24, by=c(&quot;entrezid&quot;)) %&gt;% 
+  left_join(.,v_TRZ_24, by=c(&quot;entrezid&quot;)) %&gt;% 
+  left_join(.,v_VEH_24, by=c(&quot;entrezid&quot;)) %&gt;% 
+  column_to_rownames(&quot;entrezid&quot;) %&gt;% 
+  as.matrix
+summary(val_mat_24)</code></pre>
+<pre><code>      DNR                 DOX                EPI                 MTX           
+ Min.   : 0.000902   Min.   : 0.00139   Min.   : 0.001492   Min.   : 0.000579  
+ 1st Qu.: 0.057038   1st Qu.: 0.07892   1st Qu.: 0.124501   1st Qu.: 0.045321  
+ Median : 0.117373   Median : 0.16358   Median : 0.266216   Median : 0.095530  
+ Mean   : 0.249433   Mean   : 0.32816   Mean   : 0.488970   Mean   : 0.235354  
+ 3rd Qu.: 0.252505   3rd Qu.: 0.35258   3rd Qu.: 0.571324   3rd Qu.: 0.230010  
+ Max.   :28.118788   Max.   :33.54419   Max.   :26.410869   Max.   :27.443180  
+      TRZ                VEH          
+ Min.   : 0.00076   Min.   : 0.00057  
+ 1st Qu.: 0.04751   1st Qu.: 0.05105  
+ Median : 0.10385   Median : 0.11627  
+ Mean   : 0.27199   Mean   : 0.30214  
+ 3rd Qu.: 0.24733   3rd Qu.: 0.28361  
+ Max.   :32.76541   Max.   :30.87884  </code></pre>
+<pre class="r"><code>col_fun = circlize::colorRamp2(c(0, 0.4, 2), c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))
+Heatmap(val_mat_24, col=col_fun,
+        show_row_names = FALSE, 
+        # width = unit(5, &quot;mm&quot;),
+        cluster_columns = FALSE)</code></pre>
+<p><img src="figure/Var_genes.Rmd/individual%20matrix-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1098,43 +1673,49 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] data.table_1.14.8     ComplexHeatmap_2.16.0 kableExtra_1.3.4     
- [4] scales_1.2.1          gridtext_0.1.5        ggVennDiagram_1.2.2  
- [7] paletteer_1.5.0       VennDiagram_1.7.3     futile.logger_1.4.3  
-[10] lubridate_1.9.2       forcats_1.0.0         stringr_1.5.0        
-[13] dplyr_1.1.2           purrr_1.0.1           readr_2.1.4          
-[16] tidyr_1.3.0           tibble_3.2.1          ggplot2_3.4.2        
-[19] tidyverse_2.0.0       workflowr_1.7.0      
+ [1] qvalue_2.32.0         ggsignif_0.6.4        ggpubr_0.6.0         
+ [4] data.table_1.14.8     ComplexHeatmap_2.16.0 kableExtra_1.3.4     
+ [7] scales_1.3.0          gridtext_0.1.5        ggVennDiagram_1.5.0  
+[10] paletteer_1.6.0       VennDiagram_1.7.3     futile.logger_1.4.3  
+[13] lubridate_1.9.3       forcats_1.0.0         stringr_1.5.0        
+[16] dplyr_1.1.3           purrr_1.0.2           readr_2.1.4          
+[19] tidyr_1.3.0           tibble_3.2.1          ggplot2_3.4.4        
+[22] tidyverse_2.0.0       workflowr_1.7.1      
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.2.0     viridisLite_0.4.2    farver_2.1.1        
- [4] fastmap_1.1.1        promises_1.2.0.1     digest_0.6.33       
- [7] timechange_0.2.0     lifecycle_1.0.3      cluster_2.1.4       
-[10] processx_3.8.1       magrittr_2.0.3       compiler_4.3.1      
-[13] rlang_1.1.1          sass_0.4.6           tools_4.3.1         
-[16] utf8_1.2.3           yaml_2.3.7           knitr_1.43          
-[19] lambda.r_1.2.4       labeling_0.4.2       xml2_1.3.5          
-[22] RColorBrewer_1.1-3   withr_2.5.0          BiocGenerics_0.46.0 
-[25] stats4_4.3.1         fansi_1.0.4          git2r_0.32.0        
-[28] colorspace_2.1-0     iterators_1.0.14     cli_3.6.1           
-[31] rmarkdown_2.23       crayon_1.5.2         generics_0.1.3      
-[34] rstudioapi_0.15.0    httr_1.4.6           tzdb_0.4.0          
-[37] rjson_0.2.21         cachem_1.0.8         rvest_1.0.3         
-[40] parallel_4.3.1       formatR_1.14         matrixStats_1.0.0   
-[43] vctrs_0.6.3          webshot_0.5.5        jsonlite_1.8.7      
-[46] callr_3.7.3          IRanges_2.34.1       hms_1.1.3           
-[49] GetoptLong_1.0.5     S4Vectors_0.38.1     clue_0.3-64         
-[52] systemfonts_1.0.4    foreach_1.5.2        jquerylib_0.1.4     
-[55] glue_1.6.2           rematch2_2.1.2       codetools_0.2-19    
-[58] ps_1.7.5             shape_1.4.6          stringi_1.7.12      
-[61] gtable_0.3.3         RVenn_1.1.0          later_1.3.1         
-[64] munsell_0.5.0        pillar_1.9.0         htmltools_0.5.5     
-[67] circlize_0.4.15      R6_2.5.1             doParallel_1.0.17   
-[70] rprojroot_2.0.3      evaluate_0.21        highr_0.10          
-[73] futile.options_1.0.1 png_0.1-8            httpuv_1.6.11       
-[76] bslib_0.5.0          Rcpp_1.0.11          svglite_2.1.1       
-[79] whisker_0.4.1        xfun_0.39            fs_1.6.2            
-[82] getPass_0.2-2        pkgconfig_2.0.3      GlobalOptions_0.1.2 </code></pre>
+ [1] formatR_1.14         rematch2_2.1.2       rlang_1.1.2         
+ [4] magrittr_2.0.3       clue_0.3-65          GetoptLong_1.0.5    
+ [7] git2r_0.32.0         matrixStats_1.1.0    compiler_4.3.1      
+[10] getPass_0.2-2        png_0.1-8            systemfonts_1.0.5   
+[13] callr_3.7.3          vctrs_0.6.4          reshape2_1.4.4      
+[16] rvest_1.0.3          pkgconfig_2.0.3      shape_1.4.6         
+[19] crayon_1.5.2         fastmap_1.1.1        magick_2.8.1        
+[22] backports_1.4.1      labeling_0.4.3       utf8_1.2.4          
+[25] promises_1.2.1       rmarkdown_2.25       tzdb_0.4.0          
+[28] ps_1.7.5             bit_4.0.5            xfun_0.41           
+[31] cachem_1.0.8         jsonlite_1.8.7       highr_0.10          
+[34] later_1.3.1          broom_1.0.5          parallel_4.3.1      
+[37] cluster_2.1.4        R6_2.5.1             bslib_0.6.1         
+[40] stringi_1.7.12       RColorBrewer_1.1-3   car_3.1-2           
+[43] jquerylib_0.1.4      Rcpp_1.0.11          iterators_1.0.14    
+[46] knitr_1.45           IRanges_2.34.1       splines_4.3.1       
+[49] httpuv_1.6.12        timechange_0.2.0     tidyselect_1.2.0    
+[52] rstudioapi_0.15.0    abind_1.4-5          yaml_2.3.7          
+[55] doParallel_1.0.17    codetools_0.2-19     processx_3.8.2      
+[58] plyr_1.8.9           withr_3.0.0          evaluate_0.23       
+[61] lambda.r_1.2.4       xml2_1.3.5           circlize_0.4.15     
+[64] pillar_1.9.0         carData_3.0-5        whisker_0.4.1       
+[67] foreach_1.5.2        stats4_4.3.1         generics_0.1.3      
+[70] vroom_1.6.5          rprojroot_2.0.4      S4Vectors_0.38.2    
+[73] hms_1.1.3            munsell_0.5.0        glue_1.6.2          
+[76] tools_4.3.1          webshot_0.5.5        fs_1.6.3            
+[79] colorspace_2.1-0     cli_3.6.1            futile.options_1.0.1
+[82] fansi_1.0.5          viridisLite_0.4.2    svglite_2.1.2       
+[85] gtable_0.3.4         rstatix_0.7.2        sass_0.4.7          
+[88] digest_0.6.33        BiocGenerics_0.46.0  farver_2.1.1        
+[91] rjson_0.2.21         htmltools_0.5.7      lifecycle_1.0.4     
+[94] httr_1.4.7           GlobalOptions_0.1.2  bit64_4.0.5         </code></pre>
+</div>
 </div>
 </div>
 
