@@ -148,7 +148,7 @@ drug_pal_vehend <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333
 
 toplistall <- readRDS("data/toplistall.RDS") 
 # 
-GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","RMI1","KDM4B","KAT6B","TNS2", "EEF1B2"))
+GOIcorr <-(genes = c("RARG", "ZNF740", "KAZN", "SLC28A3", "FRS2" ,"HDDC2","RMI1","KDM4B","KAT6B","TNS2", "EEF1B2","C3orf18", "RASIP1" , "PEX16" ,  "ABHD8",   "SLC27A1", "EEIG1" ,  "TGFBR3L"))
 
 GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 
@@ -259,8 +259,8 @@ GOI_join <- RNAnormlist %>%
                                        "VEH"))) %>%
   dplyr::select(indv, Drug,rldh,rtnni) %>%
   mutate(tox = rowMeans(across(rldh:rtnni))) %>% 
-  full_join(.,avg_LD50,by=c("Drug"="sDrug","indv"="indv")) %>%
-  rename("LD50"="name") 
+  full_join(.,avg_LD50,by=c("Drug"="sDrug","indv"="indv")) #%>%
+  # rename("name"="LD50") 
 
 # 
 # #make a list of GOIs then individual info:
@@ -281,6 +281,25 @@ GOI_join <- RNAnormlist %>%
 #                           "Tr"~"TRZ",
 #                           "Ve"~"VEH", .default = Drug))
 
+# gene_corr_df <- cpmcounts %>%
+#   rownames_to_column(var ="entrezgene_id") %>%
+#   dplyr::filter(entrezgene_id %in% genes_for_graph$entrezgene_id) %>% ##this works to only fileter
+#   # inner_join(., GOI_genelist,by ="entrezgene_id") %>%  view()## this works to filter and append. just depends on the"when" I want to filter and join dataframes
+#   mutate(entrezgene_id=as.numeric(entrezgene_id)) %>%
+#   pivot_longer(!entrezgene_id, names_to="treatment", values_to = "counts") %>%
+#   separate(treatment,c("Drug","indv","time")) %>%
+#   filter(time =="24h") %>%
+#   mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
+#   mutate(Drug =case_match(Drug, "Da"~"DNR",
+#                           "Do"~"DOX",
+#                           "Ep"~"EPI",
+#                           "Mi"~"MTX",
+#                           "Tr"~"TRZ",
+#                           "Ve"~"VEH", .default = Drug))
+
+
+
+
 ```
 
 #### 24 hour TNNI to cpm
@@ -289,11 +308,11 @@ GOI_join <- RNAnormlist %>%
 ```{r correlation of TNNI}
 # # now I have the long dataframe, time to combine with other data snf limit to just the GOIs
 # gene_corr_frame <- gene_corr_df %>%
-#     filter(entrezgene_id %in% GOI_genelist$entrezgene_id) %>%
+#     filter(entrezgene_id %in% genes_for_graph$entrezgene_id) %>%
 #     left_join(., GOI_join, by=c("Drug","indv")) %>%
 #     dplyr::select(indv, Drug,entrezgene_id,counts, rldh,rtnni,LD50,tox) %>%
 #     mutate(Drug=factor(Drug, levels=c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>%
-#     full_join(.,GOI_genelist, by="entrezgene_id")
+#     full_join(.,genes_for_graph, by="entrezgene_id")
 # # #
 # #   saveRDS(gene_corr_df,"data/gene_corr_df.RDS")
 # saveRDS(gene_corr_frame,"data/gene_corr_frame.RDS")
