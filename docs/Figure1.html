@@ -522,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree57987b92e321f1e02fbc3dc4d1e8c2bff756c44atargetblank57987b9a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treee80ab0b0e1f7dfcec6f2ac4e173b6f4dc8fadf91targetblanke80ab0ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/57987b92e321f1e02fbc3dc4d1e8c2bff756c44a" target="_blank">57987b9</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/e80ab0b0e1f7dfcec6f2ac4e173b6f4dc8fadf91" target="_blank">e80ab0b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree57987b92e321f1e02fbc3dc4d1e8c2bff756c44atargetblank57987b9a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treee80ab0b0e1f7dfcec6f2ac4e173b6f4dc8fadf91targetblanke80ab0ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -540,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/57987b92e321f1e02fbc3dc4d1e8c2bff756c44a" target="_blank">57987b9</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/e80ab0b0e1f7dfcec6f2ac4e173b6f4dc8fadf91" target="_blank">e80ab0b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -590,7 +590,6 @@ Ignored files:
     Ignored:    data/Ep24counts.txt
     Ignored:    data/FC_necela.RDS
     Ignored:    data/FC_necela_names.RDS
-    Ignored:    data/Figure1-A.png
     Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
@@ -946,6 +945,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/e80ab0b0e1f7dfcec6f2ac4e173b6f4dc8fadf91/analysis/Figure1.Rmd" target="_blank">e80ab0b</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-05
+</td>
+<td>
+wflow_publish("analysis/Figure1.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/9ede6bcf2269d059b8b9ffb681155734d3815650/docs/Figure1.html" target="_blank">9ede6bc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-05
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1585,7 +1618,8 @@ library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
-library(ComplexHeatmap)</code></pre>
+library(ComplexHeatmap)
+library(png)</code></pre>
 <div id="figure-1" class="section level2">
 <h2>Figure 1</h2>
 <p>Top2i drugs affect cardiomyocyte viability in a dose-dependent
@@ -1595,13 +1629,8 @@ id="a.-project-overview-image-not-given-here.-please-look-at-our-paper."
 class="section level3">
 <h3>A. Project overview: Image not given here. Please look at our
 paper.</h3>
-<pre class="r"><code>  knitr::include_graphics(&quot;data/Figure1-A.png&quot;)</code></pre>
-<p><img src="data/Figure1-A.png" style="display: block; margin: auto;" /></p>
-<div class="float">
-<img src="C:/Program%20Files/R_WD/Cardiotoxicity/data/Figure1-A.png"
-alt="Intro Figure" />
-<div class="figcaption">Intro Figure</div>
-</div>
+<pre class="r"><code>knitr::include_graphics(&quot;docs/assests/Figure1-A.png&quot;)</code></pre>
+<p><img src="docs/assests/Figure1-A.png" style="display: block; margin: auto;" /></p>
 </div>
 <div id="b.-dose-response-curves-from-48-hour-drug-exposure."
 class="section level3">
@@ -1943,45 +1972,45 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] ComplexHeatmap_2.16.0 broom_1.0.5           RColorBrewer_1.1-3   
- [4] ggsignif_0.6.4        cowplot_1.1.1         drc_3.0-1            
- [7] MASS_7.3-60           data.table_1.14.8     BiocGenerics_0.46.0  
-[10] tinytex_0.48          lubridate_1.9.3       forcats_1.0.0        
-[13] stringr_1.5.0         dplyr_1.1.3           purrr_1.0.2          
-[16] readr_2.1.4           tidyr_1.3.0           tibble_3.2.1         
-[19] ggplot2_3.4.4         tidyverse_2.0.0       car_3.1-2            
-[22] carData_3.0-5         workflowr_1.7.1      
+ [1] png_0.1-8             ComplexHeatmap_2.16.0 broom_1.0.5          
+ [4] RColorBrewer_1.1-3    ggsignif_0.6.4        cowplot_1.1.1        
+ [7] drc_3.0-1             MASS_7.3-60           data.table_1.14.8    
+[10] BiocGenerics_0.46.0   tinytex_0.48          lubridate_1.9.3      
+[13] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.3          
+[16] purrr_1.0.2           readr_2.1.4           tidyr_1.3.0          
+[19] tibble_3.2.1          ggplot2_3.4.4         tidyverse_2.0.0      
+[22] car_3.1-2             carData_3.0-5         workflowr_1.7.1      
 
 loaded via a namespace (and not attached):
  [1] sandwich_3.0-2      rlang_1.1.2         magrittr_2.0.3     
  [4] clue_0.3-65         GetoptLong_1.0.5    git2r_0.32.0       
  [7] multcomp_1.4-25     matrixStats_1.1.0   compiler_4.3.1     
-[10] getPass_0.2-2       mgcv_1.9-0          png_0.1-8          
-[13] callr_3.7.3         vctrs_0.6.4         pkgconfig_2.0.3    
-[16] shape_1.4.6         crayon_1.5.2        fastmap_1.1.1      
-[19] backports_1.4.1     labeling_0.4.3      utf8_1.2.4         
-[22] promises_1.2.1      rmarkdown_2.25      tzdb_0.4.0         
-[25] ps_1.7.5            xfun_0.41           cachem_1.0.8       
-[28] jsonlite_1.8.7      highr_0.10          later_1.3.1        
-[31] parallel_4.3.1      cluster_2.1.4       R6_2.5.1           
-[34] bslib_0.5.1         stringi_1.7.12      jquerylib_0.1.4    
-[37] Rcpp_1.0.11         iterators_1.0.14    knitr_1.45         
-[40] zoo_1.8-12          IRanges_2.34.1      httpuv_1.6.12      
-[43] Matrix_1.6-2        splines_4.3.1       timechange_0.2.0   
-[46] tidyselect_1.2.0    rstudioapi_0.15.0   abind_1.4-5        
-[49] yaml_2.3.7          doParallel_1.0.17   codetools_0.2-19   
-[52] processx_3.8.2      lattice_0.22-5      withr_2.5.2        
-[55] evaluate_0.23       survival_3.5-7      circlize_0.4.15    
-[58] pillar_1.9.0        whisker_0.4.1       foreach_1.5.2      
-[61] stats4_4.3.1        generics_0.1.3      rprojroot_2.0.4    
-[64] hms_1.1.3           S4Vectors_0.38.2    munsell_0.5.0      
-[67] scales_1.2.1        gtools_3.9.4        glue_1.6.2         
-[70] tools_4.3.1         fs_1.6.3            mvtnorm_1.2-3      
-[73] plotrix_3.8-3       colorspace_2.1-0    nlme_3.1-163       
-[76] cli_3.6.1           fansi_1.0.5         gtable_0.3.4       
-[79] sass_0.4.7          digest_0.6.33       TH.data_1.1-2      
-[82] farver_2.1.1        rjson_0.2.21        htmltools_0.5.7    
-[85] lifecycle_1.0.4     httr_1.4.7          GlobalOptions_0.1.2</code></pre>
+[10] getPass_0.2-2       mgcv_1.9-0          callr_3.7.3        
+[13] vctrs_0.6.4         pkgconfig_2.0.3     shape_1.4.6        
+[16] crayon_1.5.2        fastmap_1.1.1       backports_1.4.1    
+[19] labeling_0.4.3      utf8_1.2.4          promises_1.2.1     
+[22] rmarkdown_2.25      tzdb_0.4.0          ps_1.7.5           
+[25] xfun_0.41           cachem_1.0.8        jsonlite_1.8.7     
+[28] highr_0.10          later_1.3.1         parallel_4.3.1     
+[31] cluster_2.1.4       R6_2.5.1            bslib_0.5.1        
+[34] stringi_1.7.12      jquerylib_0.1.4     Rcpp_1.0.11        
+[37] iterators_1.0.14    knitr_1.45          zoo_1.8-12         
+[40] IRanges_2.34.1      httpuv_1.6.12       Matrix_1.6-2       
+[43] splines_4.3.1       timechange_0.2.0    tidyselect_1.2.0   
+[46] rstudioapi_0.15.0   abind_1.4-5         yaml_2.3.7         
+[49] doParallel_1.0.17   codetools_0.2-19    processx_3.8.2     
+[52] lattice_0.22-5      withr_2.5.2         evaluate_0.23      
+[55] survival_3.5-7      circlize_0.4.15     pillar_1.9.0       
+[58] whisker_0.4.1       foreach_1.5.2       stats4_4.3.1       
+[61] generics_0.1.3      rprojroot_2.0.4     hms_1.1.3          
+[64] S4Vectors_0.38.2    munsell_0.5.0       scales_1.2.1       
+[67] gtools_3.9.4        glue_1.6.2          tools_4.3.1        
+[70] fs_1.6.3            mvtnorm_1.2-3       plotrix_3.8-3      
+[73] colorspace_2.1-0    nlme_3.1-163        cli_3.6.1          
+[76] fansi_1.0.5         gtable_0.3.4        sass_0.4.7         
+[79] digest_0.6.33       TH.data_1.1-2       farver_2.1.1       
+[82] rjson_0.2.21        htmltools_0.5.7     lifecycle_1.0.4    
+[85] httr_1.4.7          GlobalOptions_0.1.2</code></pre>
 </div>
 </div>
 </div>
