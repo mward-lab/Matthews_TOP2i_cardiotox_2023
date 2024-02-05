@@ -36,6 +36,7 @@ library(ggsignif)
 library(RColorBrewer)
 library(broom)
 library(ComplexHeatmap)
+library(png)
 ```
 
 ## Figure 1
@@ -45,11 +46,11 @@ Top2i drugs affect cardiomyocyte viability in a dose-dependent manner.
 ### A. Project overview: Image not given here. Please look at our paper.
 
 ```{r figure1A, echo=TRUE, message=FALSE, warning=FALSE, dev='png'}
-  knitr::include_graphics("data/Figure1-A.png")
+knitr::include_graphics("docs/assests/Figure1-A.png")
 
 ```
 
-![Intro Figure](C:/Program Files/R_WD/Cardiotoxicity/data/Figure1-A.png)
+
 
 
 
