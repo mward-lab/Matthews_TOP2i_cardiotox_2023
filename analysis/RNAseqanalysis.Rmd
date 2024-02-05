@@ -23,7 +23,7 @@ Hello! I am first loading all the beautiful libraries I will need.
 library(edgeR)#
 library(limma)#
 library(RColorBrewer)
-library(mixOmics)
+# library(mixOmics)
 #library(VennDiagram)
 #library(HTSFilter)
 library(gridExtra)#

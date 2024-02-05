@@ -1812,6 +1812,40 @@ DOX_reg <- Sup4seoane  %>%
   dplyr::select(entrez)
 
 ```
+### RARG LD50 delta cpm
+
+
+```{r   NewRARGLD50}
+
+LD50tox_table<- readRDS("output/LD50tox_table.RDS")
+LD50tox_table %>% 
+  # mutate(LD50=log(LD50)) %>% 
+ggplot(., aes(x=LD50, y=cpm))+
+  geom_point(aes(color=indv))+
+  geom_smooth(method="lm")+
+  # stat_regline_equation(label.x.npc = "center")+
+  facet_wrap(~drug, scales = "free_x")+
+  labs(title="RARG", y = "delta cpm", x = "LD50")+
+  scale_color_brewer(palette = "Dark2",guide="legend",name = "Individual",labels(c(1,2,3,4,5,6)))+
+  theme_bw()+
+  ggpubr:: stat_cor(method="pearson",
+                       # cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "black",
+               # label.x.npc = 0.01,
+               # label.y.npc=0.01, 
+               size = 3)+
+ggpubr:: stat_cor(method="spearman",
+                       cor.coef.name="rho",
+               aes(label = paste(..r.label.., ..p.label.., sep = "~`,\n`~")),
+               color = "red",
+               label.x.npc = 0.01,
+               label.y.npc=0.01,
+               size = 3)
+
+
+```
+
  
 ### enrichment test
 
@@ -2136,7 +2170,7 @@ DOX_de_genes_interest <- read.csv("output/DOX_de_goi.csv", row.names = 1)
 all_cpmcounts <-  read_table("data/Counts_RNA_ERMatthews.txt")
 Knowles_log2cpm <- readRDS("data/Knowles_log2cpm_real.RDS") 
 store_box <- Knowles_log2cpm%>% 
-  # dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>% 
+  dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>%
   dplyr::filter(ESGN %in% DOX_de_genes_interest$ensembl_gene_id) %>% 
   pivot_longer(cols=!ESGN, names_to = "ind", values_to = "counts") %>% 
   separate(ind,into=c("cell_line","dosage"), sep = ":")%>%
@@ -2169,7 +2203,7 @@ lcpm_24h <- all_cpmcounts %>%
   separate(ind, into = c("dosage","cell_line",NA)) %>% 
   mutate(dosage=case_match(dosage,"DOX"~"0.5", .default = dosage)) 
 
-my_fill_colors <-  c("#41B333","#8B006D","chocolate1","chocolate","chocolate4","#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+my_fill_colors <-  c("#41B333","#8B006D","#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
 
 lcpm_24h %>% 
   rbind(.,store_box) %>% 

@@ -268,7 +268,7 @@ dataframHF %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 ```
 ### 3 hours HF
-```{r 3 hours HFGWAS, echo=FALSE}
+```{r 3 hours HFGWAS, echo=TRUE}
 
 #Apply sorting
 toplist3hr %>% 
@@ -305,12 +305,12 @@ dataframHF3 %>%
 
 ```
 #### chi square test HF
-```{r chiHF,echo=TRUE}
+```{r chiHF, echo=TRUE}
 
 
 chi_funhf <-  toplistall %>% 
   mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="Trastuzumab") %>% 
+  dplyr::filter(id!="TRZ") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
   mutate(HF=if_else(ENTREZID %in%HF_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
@@ -324,16 +324,16 @@ chi_funhf %>%
 
 ```
 
-```{r HF heatmap,echo=FALSE}
+```{r HF heatmap, echo=TRUE}
 
 HFmat <- chi_funhf %>% ungroup() %>% 
   mutate(HF= log(pvalue)*(-1)) %>% 
   filter(time=="24_hours") %>% 
-  mutate(id =case_match( id, 'Daunorubicin'~'DNR',
-                         'Doxorubicin'~'DOX',
-                         'Epirubicin'~'EPI',
-                         'Mitoxantrone'~'MTX', 
-                         .default = id)) %>% 
+  # mutate(id =case_match( id, 'Daunorubicin'~'DNR',
+  #                        'Doxorubicin'~'DOX',
+  #                        'Epirubicin'~'EPI',
+  #                        'Mitoxantrone'~'MTX', 
+  #                        .default = id)) %>% 
   mutate(time=case_match(time,"24_hours"~"24_hrs",.default = time)) %>% 
   dplyr::select(id,time,HF) %>% 
   unite("term_name",id,time,sep="_") %>% 
@@ -416,7 +416,7 @@ dataframCAD %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 
 ```
 ### 3 hour data set
-```{r CAD 3 GWAS,echo=FALSE}
+```{r CAD 3 GWAS, echo=TRUE, message=FALSE, warning=FALSE}
 
 #Apply sorting
 toplist3hr %>% 
@@ -454,15 +454,15 @@ dataframCAD3 %>% #mutate_at(.vars = 6, .funs= scientific_format()) %>%
 ```
 
 #### chi square test CAD
-```{r chiCAD,echo=TRUE}
+```{r chiCAD, echo=TRUE}
 
 chi_funCAD <-  toplistall %>% 
   mutate(id = as.factor(id)) %>%
-  dplyr::filter(id!="Trastuzumab") %>% 
+  dplyr::filter(id!="TRZ") %>% 
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
-  mutate(CAD=if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
+  mutate(CAD = if_else(ENTREZID %in%CAD_geneset$entrezgene_id,"y","no")) %>% 
   group_by(id,time) %>% 
-  dplyr::summarise(pvalue= chisq.test(CAD, sigcount)$p.value) 
+  dplyr::summarise(pvalue = chisq.test(sigcount, CAD)$p.value) 
 
 chi_funCAD %>% 
   kable(., caption= "after performing chi square test between DEgenes, and non DE genes") %>% 
@@ -479,11 +479,11 @@ chi_funCAD %>%
 CADmat <- chi_funCAD %>% ungroup() %>% 
   mutate(CAD= log(pvalue)*(-1)) %>% 
   filter(time=="24_hours") %>% 
-  mutate(id =case_match( id, 'Daunorubicin'~'DNR',
-                         'Doxorubicin'~'DOX',
-                         'Epirubicin'~'EPI',
-                         'Mitoxantrone'~'MTX', 
-                         .default = id)) %>% 
+  # mutate(id =case_match( id, 'Daunorubicin'~'DNR',
+  #                        'Doxorubicin'~'DOX',
+  #                        'Epirubicin'~'EPI',
+  #                        'Mitoxantrone'~'MTX', 
+  #                        .default = id)) %>% 
   mutate(time=case_match(time,"24_hours"~"24_hrs",.default = time)) %>% 
   dplyr::select(id,time,CAD) %>% 
   unite("term_name",id,time,sep="_") %>% 
@@ -621,12 +621,12 @@ GWASabsFCsig <-
   filter(ENTREZID %in% GWAS_goi$entrezgene_id) %>% 
    filter(time =="24_hours") %>% 
   dplyr::select(ENTREZID ,time, id,logFC, adj.P.Val, SYMBOL) %>%
-  mutate(id =case_match(id,
-                        'Daunorubicin'~'DNR',
-                        'Doxorubicin'~'DOX',
-                        'Epirubicin'~'EPI',
-                        'Mitoxantrone'~'MTX',
-                        .default = id)) %>% 
+  # mutate(id =case_match(id,
+  #                       'Daunorubicin'~'DNR',
+  #                       'Doxorubicin'~'DOX',
+  #                       'Epirubicin'~'EPI',
+  #                       'Mitoxantrone'~'MTX',
+  #                       .default = id)) %>% 
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
               values_from =adj.P.Val)
@@ -644,11 +644,11 @@ GWASabsFC <- toplistall %>%
   mutate(logFC= logFC*(-1)) %>%
   filter(ENTREZID %in% GWAS_goi$entrezgene_id) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
-  mutate(id =case_match(id,'Daunorubicin'~'DNR', 
-                        'Doxorubicin'~'DOX',
-                        'Epirubicin'~'EPI',
-                        'Mitoxantrone'~'MTX',
-                        .default = id)) %>% 
+  # mutate(id =case_match(id,'Daunorubicin'~'DNR', 
+  #                       'Doxorubicin'~'DOX',
+  #                       'Epirubicin'~'EPI',
+  #                       'Mitoxantrone'~'MTX',
+  #                       .default = id)) %>% 
   pivot_wider(id_cols=id, 
               names_from = SYMBOL, 
               values_from = logFC) %>% 
@@ -757,7 +757,7 @@ col_fun4 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
 
 
 pairwisecrispr <- toplistall %>%
-  filter(id!='Trastuzumab') %>% 
+  filter(id!='TRZ') %>% 
   mutate(id = as.factor(id)) %>%
   mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
   mutate(sigcount = if_else(adj.P.Val <0.05,'sig','notsig'))%>%
@@ -789,9 +789,9 @@ pairwisecrispr%>% kable(., caption= "Summary of chisqure values between numbers 
 
 crisp_pair_mat <- pairwisecrispr %>%
   mutate(neg.log.pvalue= (-1*log(pvalue))) %>% 
-  mutate(time= case_match(time, '3_hours'~'3_hrs', '24_hours'~'24_hrs',.default = id)) %>% 
-  mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
-  unite('pairset',time,id ) %>% 
+  # mutate(time= case_match(time, '3_hours'~'3_hrs', '24_hours'~'24_hrs',.default = id)) %>% 
+  # mutate(id =case_match( id, 'Daunorubicin'~'DNR',   'Doxorubicin'~'DOX' ,'Epirubicin'~'EPI' , 'Mitoxantrone' ~ 'MTX',.default = id)) %>% 
+  unite('pairset',time,id ) %>%
   column_to_rownames('pairset') %>% dplyr::select(neg.log.pvalue) %>% as.matrix()
     
 Heatmap( crisp_pair_mat, name = "Doxcrispr pairwise enrichment \nchi square -log p values", 

@@ -30,6 +30,20 @@ library(scales)
 library(kableExtra)
 library(ComplexHeatmap)
 library(data.table)
+
+
+# library(tidyverse)
+library(ggpubr)
+library(ggsignif)
+
+# library(paletteer)
+# library(ggVennDiagram)
+# library(gridtext)
+# library(scales)
+# library(kableExtra)
+library(qvalue)
+# library(data.table)
+# library(ComplexHeatmap)
 ```
 
 
@@ -39,7 +53,7 @@ drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 Vargenes <- readRDS("data/geneset_24.RDS")
 expressedgenes <- read.csv("data/backGL.txt")
 venn24part <- VennDiagram::get.venn.partitions(Vargenes)
-
+backGL <- read.csv("data/backGL.txt", row.names = 1)
 
 
 toplistall <- readRDS("data/toplistall.RDS")
@@ -171,13 +185,13 @@ TOP2i_var24gost <- readRDS("data/DEG-GO/var/TOP2i_var24gost.RDS")
 TOP2i_var24_table <- TOP2i_var24gost$result %>% 
   dplyr::select(c(source, term_id, term_name,intersection_size, term_size, p_value))
 terms <- list()
-terms[1] <- DOX_table %>% filter(source=="GO:BP") %>% slice_min(.,p_value, n=3) %>% list()
-terms[2] <- EPI_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
-terms[3] <- DNR_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
-terms[4] <- MTX_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
-terms[5] <- TRZ_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
-terms[6] <- AC_share_var24_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
-terms[7] <- TOP2i_var24_table %>% filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[1] <- DOX_table %>% dplyr::filter(source=="GO:BP") %>% slice_min(.,p_value, n=3) %>% list()
+terms[2] <- EPI_table %>% dplyr::filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[3] <- DNR_table %>% dplyr::filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[4] <- MTX_table %>% dplyr::filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[5] <- TRZ_table %>% dplyr::filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[6] <- AC_share_var24_table %>% dplyr::filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
+terms[7] <- TOP2i_var24_table %>% dplyr::filter(source=="GO:BP") %>%slice_min(.,p_value, n=3) %>% list()
 names(terms) <- c("DOX", "EPI","DNR", "MTX", "TRZ", "AC_shared", "TOP2i_shared")
 termlist <- rbindlist(terms)
 termlistid <- c("GO:0010867","GO:0043508","GO:0070932")
@@ -262,7 +276,7 @@ names(Seoane_2019) <- "ENTREZID"
 Sup1seoane <- (unique(Seoane_2019$ENTREZID))
 Sup4genes <- read.csv("output/Sup4seoane.csv", row.names = 1)
 Sup4seoane <- Sup4genes  %>% 
-  filter(pval.expAnth<0.05) %>% 
+  dplyr::filter(pval.expAnth<0.05) %>% 
   distinct(entrez, .keep_all = TRUE) %>% 
   dplyr::select(entrez) %>% 
   rename("ENTREZID"='entrez')
@@ -309,8 +323,7 @@ ggVennDiagram::ggVennDiagram(sup1overlap,
   #                      guide = "colorbar", limits=c(0, 100)) +
   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)#+
   # scale_fill_manual(values = cbp1)+
-  labs(title = "24 hour DOX egenes in other DEG sets",
-       caption = paste("n =", length(unique(re_incommon)),"genes"))+
+  labs(title = "24 hour DOX egenes in other DEG sets")+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 
 
@@ -347,8 +360,7 @@ ggVennDiagram::ggVennDiagram(sup4overlap,
   #                      guide = "colorbar", limits=c(0, 100)) +
   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)#+
   # scale_fill_manual(values = cbp1)+
-  labs(title = "24 hour DOX egenes in other DEG sets",
-       caption = paste("n =", length(unique(re_incommon)),"genes"))+
+  labs(title = "24 hour DOX egenes in other DEG sets")+
   theme(plot.title = element_text(size = rel(1.6), hjust = 0.5, vjust =1))
 ```
 
@@ -426,12 +438,12 @@ burr_genes <-  readRDS("data/BurridgeDOXTOX.RDS")
 
 storeEPI <- readRDS("data/qvalueEPItemp.RDS")
 VennDiagram::get.venn.partitions(list(storeEPI$ENTREZID, DOXreQTLs$ENTREZID))
-intersect(DOX_reqtls, burr_genes$entrezgene_id)
+intersect(DOXreQTLs$ENTREZID, burr_genes$entrezgene_id)
 # DOX_reqtls <-$ENTREZID %>% as.integer()
-  DOXreQTLs %>% filter(ENTREZID %in% storeEPI$ENTREZID) %>%  tally( )
+  DOXreQTLs %>% dplyr::filter(ENTREZID %in% storeEPI$ENTREZID) %>%  tally( )
  burr_genes %>% 
-   filter(entrezgene_id%in% backGL$ENTREZID) %>% 
-   filter(entrezgene_id %in% storeEPI$ENTREZID)
+   dplyr::filter(entrezgene_id%in% backGL$ENTREZID) %>% 
+   dplyr::filter(entrezgene_id %in% storeEPI$ENTREZID)
 
 
 
@@ -440,9 +452,105 @@ VennDiagram::get.venn.partitions(list(storeEPI$ENTREZID, burr_genes$entrezgene_i
 ### looking at the overlap of egenes and  EPI 508 var
 
 storeEPI %>% 
-  filter (ENTREZID %in% DOXreQTLs$ENTREZID) %>% 
+  dplyr::filter (ENTREZID %in% DOXreQTLs$ENTREZID) %>% 
   left_join(., backGL, by=c("ENTREZID"))
 
 
 
 ```
+
+
+
+### looking at heatmaps
+```{r Variance heatmaps}
+mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
+
+
+drug_frame <- mean_vardrug1 %>%
+  rownames_to_column(var = "entrezid") %>%
+  pivot_longer(cols = mean.Da.3:var.Ve.24,
+               names_to = "short",
+               values_to = "values") %>%
+  separate(short, into = c("calc", "treatment", "time")) %>%
+  # mutate(treatment = factor(
+  #   treatment,
+  #   levels = c("Do", "Ep", "Da", "Mi", "Tr", "Ve"),
+  #   labels = c("DOX", "EPI", "DNR", "MTX", "TRZ", "VEH")
+  # )) %>%
+  # mutate(time = factor(
+  #   time,
+  #   levels = c("3", "24"),
+  #   labels = c("3 hours", "24 hours")
+  # )) %>%
+  # group_by(treatment, time, calc) %>%
+  as.data.frame
+
+```
+
+
+```{r individual matrix}
+
+v_DNR_24 <- drug_frame %>% 
+  dplyr::filter(calc !="mean", treatment =="Da", time=="24") %>% 
+  select(entrezid,values)%>% 
+  rename("DNR"="values")
+  
+v_DOX_24 <- drug_frame %>% 
+  dplyr::filter(calc !="mean", treatment =="Do", time=="24") %>% 
+  select(entrezid,values)%>% 
+  rename("DOX"="values")
+
+v_EPI_24 <- drug_frame %>% 
+  dplyr::filter(calc !="mean", treatment =="Ep", time=="24") %>% 
+  select(entrezid,values)%>% 
+  rename("EPI"="values")
+
+v_MTX_24 <- drug_frame %>% 
+  dplyr::filter(calc !="mean", treatment =="Mi", time=="24") %>% 
+  select(entrezid,values)%>% 
+  rename("MTX"="values")
+
+v_TRZ_24 <- drug_frame %>% 
+  dplyr::filter(calc !="mean", treatment =="Tr", time=="24") %>% 
+  select(entrezid,values)%>% 
+  rename("TRZ"="values")
+
+v_VEH_24 <- drug_frame %>% 
+  dplyr::filter(calc !="mean", treatment =="Ve", time=="24") %>% 
+  select(entrezid,values)%>% 
+  rename("VEH"="values")
+        
+val_mat_24 <- left_join(v_DNR_24,v_DOX_24,
+                        by=c("entrezid"))%>%
+  left_join(.,v_EPI_24, by=c("entrezid")) %>%
+  left_join(.,v_MTX_24, by=c("entrezid")) %>% 
+  left_join(.,v_TRZ_24, by=c("entrezid")) %>% 
+  left_join(.,v_VEH_24, by=c("entrezid")) %>% 
+  column_to_rownames("entrezid") %>% 
+  as.matrix
+summary(val_mat_24)
+col_fun = circlize::colorRamp2(c(0, 0.4, 2), c("#377EB8", "white", "#E41A1C"))
+Heatmap(val_mat_24, col=col_fun,
+        show_row_names = FALSE, 
+        # width = unit(5, "mm"),
+        cluster_columns = FALSE)
+
+
+```
+
+
+
+```{r eval=FALSE, include=FALSE}
+
+
+
+
+DNR.VEH.24 <- organized_drugframe %>% 
+  dplyr::select(c(starts_with("Da")&ends_with("24h")),
+         c(starts_with("Ve")&ends_with("24h"))) %>%
+  rowwise() %>% 
+  mutate(broom::tidy(var.test(c_across(starts_with("Da")),c_across(starts_with("Ve")))))
+  
+```
+
+
