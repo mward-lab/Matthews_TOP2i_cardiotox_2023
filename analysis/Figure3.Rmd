@@ -99,71 +99,383 @@ PCA_plot_group
 ```
 More information on overall RNA-seq analysis can be found [at this link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html#PCA_by_treatment_and_as_a_whole)
 
-## B. *Top2*$\beta$ expression
 
-```{r function,echo=TRUE}
-cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
-  ##GOI needs to be ENTREZID
-  df <- cpmcounts
-    df_plot <- df %>% 
-      dplyr::filter(rownames(.)==GOI) %>%
-      pivot_longer(everything(),
-                   names_to = "treatment",values_to = "counts") %>%
-      separate(treatment, c("drug","indv","time")) %>%
-      mutate(time=factor(time, levels =c("3h", "24h"), labels=c("3 hours","24 hours"))) %>%
-      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-      mutate(drug =case_match(drug, "Da"~"DNR",
-                          "Do"~"DOX",
-                          "Ep"~"EPI",
-                          "Mi"~"MTX",
-                          "Tr"~"TRZ",
-                          "Ve"~"VEH", .default = drug)) %>%
-  mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH')))
-    plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
-      geom_boxplot(position="identity",aes(fill=drug))+
-      geom_point(aes(col=indv, size=2, alpha=0.5))+
-      guides(alpha= "none", size= "none", fill = "none")+
-      scale_color_brewer(palette = brewer_palette, name = "Individual")+
-      scale_fill_manual(values=fill_colors, name="treatment")+
-      facet_wrap("time", nrow=1, ncol=2)+
-      theme_bw()+
-      ylab(ylab)+
-      xlab("")+
-      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          
-          axis.line = element_line(linewidth = 1.0),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(face = "bold"))
-    print(plot)
-}
+
+```{r packages loading converge}
+
+library(data.table)
+
+library(broom)
+library(limma)
+library(corrplot)
+library(ggVennDiagram)
+library(ComplexHeatmap)
+library(gridtext)
+library(paletteer)
 ```
 
-
-```{r top2b, fig.width=6, fig.height=3}
-
-toplistall <- readRDS("data/toplistall.RDS") 
+```{r data loading converge}
+toplistall <- readRDS("data/toplistall.RDS")
+siglist <- readRDS("data/siglist_final.RDS")
+list2env(siglist, envir = .GlobalEnv)
 cpmcounts <- readRDS("data/cpmcount.RDS")
-Top2b <- cpm_boxplot(cpmcounts,GOI='7155',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("Top2"*beta)~log[2]~"cpm ")))) 
-# legendbot <- get_legend(Top2b + guides(fill="none"))
-# nlTop2b <- Top2b+  theme(legend.position = "none")
-
-
-```
-
-
-## B. *Top2*$\alpha$ expression
-```{r Top2a,fig.width=6,fig.height=3}
-
-Top2a <- cpm_boxplot(cpmcounts,GOI='7153',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("Top2"*alpha)~log[2]~"cpm "))))
-# nlTop2a <- Top2a +  theme(legend.position = "none")
-# nlTop2a
 
 ```
 
 
 
+## B. Pairwise correlation of drug responses in pairwise analysis
+
+```{r corrFC, fig.height=5,fig.width=7}
+efit2 <- readRDS("data/efit2_final.RDS")
+FCmatrix <- subset(efit2$coefficients)
+
+colnames(FCmatrix) <-
+  c(
+    "DNR\n3h",
+    "DOX\n3h",
+    "EPI\n3h",
+    "MTX\n3h",
+    "TRZ\n3h",
+    "DNR\n24h",
+    "DOX\n24h",
+    "EPI\n24h",
+    "MTX\n24h",
+    "TRZ\n24h"
+  )
+
+
+mat_col <-
+  data.frame(
+    time = c(rep("3 hours", 5), rep("24 hours", 5)),
+    class = (c(
+      "AC", "AC", "AC", "nAC", "nAC", "AC", "AC", "AC", "nAC", "nAC"
+    )),
+    TOP2i = c(rep("yes", 4), "no", rep("yes", 4), "no")
+  )
+rownames(mat_col) <- colnames(FCmatrix)
+
+mat_colors <-
+  list(
+    time = c("pink", "chocolate4"),
+    class = c("yellow1", "lightgreen"),
+    TOP2i = c("darkgreen", "goldenrod")
+  )
+names(mat_colors$time) <- unique(mat_col$time)
+names(mat_colors$class) <- unique(mat_col$class)
+names(mat_colors$TOP2i) <- unique(mat_col$TOP2i)
+corrFC <- cor(FCmatrix)
+ComplexHeatmap::pheatmap(
+  corrFC,
+  display_numbers = TRUE,
+  number_format = "%.2f",
+  main = ("Correlation of all expressed FC values, n=14084"),
+  annotation_col = mat_col,
+  annotation_colors = mat_colors,
+  fontsize = 10,
+  fontsize_row = 8,
+  angle_col = "0",
+  treeheight_row = 25,
+  fontsize_col = 8,
+  treeheight_col = 20
+)
+HMcorr <- ComplexHeatmap::pheatmap(
+  corrFC,
+  display_numbers = TRUE,
+  number_format = "%.2f",
+  annotation_col = mat_col,
+  annotation_colors = mat_colors,
+  fontsize = 10,
+  fontsize_row = 8,
+  angle_col = "0",
+  treeheight_row = 25,
+  fontsize_col = 8,
+  treeheight_col = 20
+)
+
+```
+
+
+
+
+Additional code and information can be [found here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html#Visualization_of_FC_correlation)
+
+## C. Venn Diagram of 3 hour DEGs
+
+
+```{r 3_hr_venn, fig.height=4, fig.width=6}
+
+total3 <- list(sigVDA3$ENTREZID,sigVDX3$ENTREZID, sigVEP3$ENTREZID,sigVMT3$ENTREZID)
+totalin_common3 <- c(sigVDA3$SYMBOL,sigVDX3$SYMBOL, sigVEP3$SYMBOL,sigVMT3$SYMBOL)
+
+
+fig3hrvenn <- ggVennDiagram::ggVennDiagram(total3,
+              category.names = c("DNR    \nn = 532\n",
+                                 "DOX\n  n = 19\n",
+                                 "EPI\n   n = 210\n",
+                                 " MTX\n   n = 75\n"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(5,5,5,5),
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              caption_size = 4,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .2))+
+  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  scale_fill_distiller(palette="Spectral", direction = -1, limits=c(0,4500))+
+  labs(title = "3 hour",
+       caption = paste("n =", length(unique(totalin_common3)),"genes\n "))+
+  theme(plot.title = element_text(size = rel(1.5), hjust = 0.5, vjust =1),
+        plot.caption=element_text(size=12))
+fig3hrvenn 
+
+```
+
+
+
+
+
+## D.  Venn Diagram of 24 hour DEGs
+
+
+```{r 24_hr_venn, fig.height=4, fig.width=6}
+
+
+total24 <-
+  list(sigVDA24$ENTREZID,
+       sigVDX24$ENTREZID,
+       sigVEP24$ENTREZID,
+       sigVMT24$ENTREZID)
+in_common24 <-
+  c(sigVDA24$ENTREZID,
+    sigVDX24$ENTREZID,
+    sigVEP24$ENTREZID,
+    sigVMT24$ENTREZID)
+
+
+fig24hrvenn <- ggVennDiagram::ggVennDiagram(
+  total24,
+  category.names = c(
+    "DNR \nn = 7017  \n ",
+    "DOX\n n = 6645\n",
+    "EPI\n n = 6328\n",
+    " MTX\n   n = 1115\n "
+  ),
+  show_intersect = FALSE,
+  set_color = "black",
+  category_size = c(5, 5, 5, 5),
+  label = "count",
+  label_percent_digit = 1,
+  label_size = 4,
+  label_alpha = 0,
+  label_color = "black",
+  edge_lty = "solid",
+  set_size = 4
+) +
+  scale_x_continuous(expand = expansion(mult = .3)) +
+  scale_y_continuous(expand = expansion(mult = .2)) +
+  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus") +
+  scale_fill_distiller(palette = "Spectral", direction = -1) +
+  labs(title = "24 hour",
+       caption = paste("n =", length(unique(in_common24)), "genes\n ")) +
+  
+  theme(
+    plot.title = element_text(
+      size = rel(1.6),
+      hjust = 0.5,
+      vjust = 1
+    ),
+    plot.caption = element_text(size = 12)
+  )
+fig24hrvenn
+
+
+```
+
+More information can be found [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html#Venn_Diagrams).
+
+## E.  3 hour top enriched KEGG pathways 
+
+```{r KEGG3, fig.height=4, fig.width=6}
+
+kegglistDEG3 <- readRDS("data/kegglistDEG3.RDS")
+list2env(kegglistDEG3, envir = .GlobalEnv)
+
+keggDEGlong3 <- list(
+  "DOX" = DXdeg3k,
+  "EPI" = EPdeg3k,
+  "DNR" = DAdeg3k,
+  "MTX" = MTdeg3k,
+  "Anthracyclines" = DDEdeg3k,
+  "TOP2Bi" = DDEMdeg3k
+)
+col_funkegg = circlize::colorRamp2(c(0, 31), c("white", "darkred"))
+keggtable3 <-
+  data.table::rbindlist(keggDEGlong3,
+                        idcol = "deg",
+                        fill = TRUE,
+                        use.names = TRUE) #%>% complete(deg = names(keglistDEG3))
+
+kegg_sig_mat3 <- keggtable3 %>%
+  dplyr::select(deg, p_value, term_name) %>%
+  add_row(deg = "TOP2i",
+          p_value = 1,
+          term_name = "Herpes simplex virus 1 infection") %>%
+  mutate(
+    term_name = case_match(
+      term_name,
+      "Cell cycle" ~ "Cell\ncycle",
+      "p53 signaling pathway" ~ "p53\nsig.\npath.",
+      "Base excision repair" ~ "Base\nexcision\nrepair",
+      "Herpes simplex virus 1 infection" ~ "HSV1\ninfection"	,
+      "DNA replication" ~ "DNA\nrep.",
+      .default = term_name
+    )
+  ) %>%
+  pivot_wider(
+    id_cols = everything(),
+    names_from = "term_name",
+    values_from = "p_value",
+    values_fill = list(p_value = 1)
+  ) %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
+
+kegg_mat3 <- keggtable3 %>%
+  dplyr::select(deg, log_val, term_name) %>%
+  add_row(deg = "TOP2i",
+          log_val = NA,
+          term_name = "Herpes simplex virus 1 infection") %>%
+  mutate(
+    term_name = case_match(
+      term_name,
+      "p53 signaling pathway" ~ "p53\nsig.\npath.",
+      "Base excision repair" ~ "Base\nexcision\nrepair",
+      "Herpes simplex virus 1 infection" ~ "HSV1\ninfection"	,
+      "DNA replication" ~ "DNA\nrep.",
+      .default = term_name
+    )
+  ) %>%
+  pivot_wider(id_cols = everything(),
+              names_from = "term_name",
+              values_from = "log_val") %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
+
+draw(
+  Heatmap(
+    kegg_mat3,
+    column_title = "KEGG Pathway -log 10(p value)",
+    name = "-log10 (p value)",
+    cluster_rows = FALSE,
+    cluster_columns = FALSE,
+    column_names_rot = 0,
+    column_names_centered = TRUE,
+    row_names_max_width = max_text_width(rownames(kegg_mat3),
+                                         gp = gpar(fontsize = 10)),
+    col = col_funkegg,
+    na_col = "lightyellow",
+    column_labels = gt_render(c("HSV-1 infx.",
+                                "p53\nsig.\npath.")),
+    cell_fun = function(j, i, x, y, width, height, fill) {
+      if (kegg_sig_mat3[i, j] < 0.05)
+        grid.text("*", x, y, gp = gpar(fontsize = 20))
+    }
+  )
+)
+
+```
+More information can be found [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html#Venn_Diagrams).
+
+
+
+## F.  24 hour top enriched KEGG Pathways 
+```{r KEGG24}
+
+library(grid)
+kegglistDEG24 <- readRDS("data/kegglistDEG24.RDS")
+list2env(kegglistDEG24, envir = .GlobalEnv)
+
+
+keggDEGlong <- list(
+  "DOX" = DXdegk,
+  "EPI" = EPdegk,
+  "DNR" = DAdegk,
+  "MTX" = MTdegk,
+  "Anthracyclines" = DDEdegk,
+  "TOP2i" = DDEMdegk
+)
+col_funkegg = circlize::colorRamp2(c(0, 31), c("white", "darkred"))
+keggtable <- data.table::rbindlist(keggDEGlong, idcol = "deg")
+
+kegg_sig_mat <- keggtable %>%
+  dplyr::select(deg, p_value, term_name) %>%
+  mutate(
+    term_name = case_match(
+      term_name,
+      "Cell cycle" ~ "Cell\ncycle",
+      "p53 signaling pathway" ~ "p53\nsig.\npath.",
+      "Base excision repair" ~ "Base\nexcision\nrepair",
+      "DNA replication" ~ "DNA\nrep.",
+      .default = term_name
+    )
+  ) %>%
+  pivot_wider(
+    id_cols = everything(),
+    names_from = "term_name",
+    values_from = "p_value",
+    values_fill = list(p_value = 1)
+  ) %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
+
+kegg_mat <- keggtable %>%
+  dplyr::select(deg, log_val, term_name) %>%
+  mutate(
+    term_name = case_match(
+      term_name,
+      "Cell cycle" ~ "Cell\ncycle",
+      "p53 signaling pathway" ~ "p53\nsig.\npath.",
+      "Base excision repair" ~ "Base\nexcision\nrepair",
+      "DNA replication" ~ "DNA\nrep.",
+      .default = term_name
+    )
+  ) %>%
+  pivot_wider(id_cols = everything(),
+              names_from = "term_name",
+              values_from = "log_val") %>%
+  column_to_rownames('deg') %>%
+  as.matrix()#
+
+Heatmap(
+  kegg_mat,
+  column_title = "KEGG Pathway -log p values",
+  name = "-log10 (p value)",
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  column_names_rot = 0,
+  column_names_centered = TRUE,
+  row_names_max_width = max_text_width(rownames(kegg_mat),
+                                       gp = gpar(fontsize = 10)),
+  col = col_funkegg,
+  na_col = "lightyellow",
+  column_labels = gt_render(c(
+    "p53\nsig.\npath.",
+    "B.E.R.",
+    "Cell\ncycle",
+    "DNA\nrep."
+  )),
+  cell_fun = function(j, i, x, y, width, height, fill) {
+    if (kegg_sig_mat[i, j] < 0.05)
+      grid.text("*", x, y, gp = gpar(fontsize = 20))
+  }
+)
+```
+
+Further KEGG analysis information and code may be [found here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html#KEGG_pathway_intersection_of_pairwise_DEG_sets)
 
