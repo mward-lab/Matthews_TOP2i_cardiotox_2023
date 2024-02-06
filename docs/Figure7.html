@@ -522,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treed3bb5e9da66699fae2867fe44e4a731e4240b31etargetblankd3bb5e9a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree5a1f2a65b68054797aacaea50ca1465bad3ce36ftargetblank5a1f2a6a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/d3bb5e9da66699fae2867fe44e4a731e4240b31e" target="_blank">d3bb5e9</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/5a1f2a65b68054797aacaea50ca1465bad3ce36f" target="_blank">5a1f2a6</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treed3bb5e9da66699fae2867fe44e4a731e4240b31etargetblankd3bb5e9a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree5a1f2a65b68054797aacaea50ca1465bad3ce36ftargetblank5a1f2a6a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -540,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/d3bb5e9da66699fae2867fe44e4a731e4240b31e" target="_blank">d3bb5e9</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/5a1f2a65b68054797aacaea50ca1465bad3ce36f" target="_blank">5a1f2a6</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -947,6 +947,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/5a1f2a65b68054797aacaea50ca1465bad3ce36f/analysis/Figure7.Rmd" target="_blank">5a1f2a6</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+<td>
+updates to final figure
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/7308a2e83675be93f8aacb5f4bfc466baaee2b6c/docs/Figure7.html" target="_blank">7308a2e</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/d3bb5e9da66699fae2867fe44e4a731e4240b31e/analysis/Figure7.Rmd" target="_blank">d3bb5e9</a>
 </td>
 <td>
@@ -1253,9 +1287,8 @@ gtex_counts_matrix&lt;- counts_v8_heart_left_ventricle_gct %&gt;%
   
 # cpm &lt;- cpm(gtex_counts_matrix)
 lcpm &lt;- cpm(gtex_counts_matrix, log=TRUE)  ### for determining the basic cutoffs
-dim(lcpm)</code></pre>
-<pre><code>[1] 56200   432</code></pre>
-<pre class="r"><code>row_means &lt;- rowMeans(lcpm)
+
+row_means &lt;- rowMeans(lcpm)
 gtex_x &lt;- lcpm[row_means &gt; 0,]
 GTEX_heartLV_log2cpm &lt;- gtex_x %&gt;% 
   as.data.frame() %&gt;%
@@ -1287,6 +1320,8 @@ id="figure-7-genes-in-ac-toxicity-associated-loci-respond-to-top2i."
 class="section level2">
 <h2>Figure 7: Genes in AC toxicity-associated loci respond to
 TOP2i.</h2>
+<div id="hours" class="section level3">
+<h3>24 hours</h3>
 <pre class="r"><code>orderit &lt;- data.frame(SYMBOL=c(SGWAS_order_frame$SYMBOL,&#39;RARG&#39;,
                         &#39;TNS2&#39;, 
                         &#39;ZNF740&#39;,
@@ -1547,7 +1582,7 @@ Heatmap(GWASabsFC, name = &quot;Fold change\nvalues&quot;,
         row_names_side = &quot;left&quot;,
         col = col_funFC,
         row_order = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;, &#39;MTX&#39;,&#39;TRZ&#39;),
-        column_title = &quot;Fold change values of GWAS and TWAS genes n = 38&quot;, 
+        column_title = &quot;24 hours Fold Change of AC-toxicity associated loci&quot;, 
         column_title_side = &quot;top&quot;,
         column_title_gp = gpar(fontsize = 16, fontface = &quot;bold&quot;),
         column_order= orderit$SYMBOL,
@@ -1561,6 +1596,43 @@ Heatmap(GWASabsFC, name = &quot;Fold change\nvalues&quot;,
             grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
 })</code></pre>
 <p><img src="figure/Figure7.Rmd/Finfig_hm%2024%20hours-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Finfig_hm-24-hours-1">
+Past versions of "Finfig_hm 24 hours-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Finfig_hm-24-hours-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/7308a2e83675be93f8aacb5f4bfc466baaee2b6c/docs/figure/Figure7.Rmd/Finfig_hm 24 hours-1.png" target="_blank">7308a2e</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>GWASabsFCsig_3 &lt;- 
   toplistall %&gt;% 
     mutate(drug=factor(id, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
@@ -1571,7 +1643,7 @@ Heatmap(GWASabsFC, name = &quot;Fold change\nvalues&quot;,
               names_from = SYMBOL, 
               values_from =adj.P.Val)
   
-gwas_sig_mat_3 &lt;- GWASabsFCsig %&gt;% 
+gwas_sig_mat_3 &lt;- GWASabsFCsig_3 %&gt;% 
    column_to_rownames(var=&quot;id&quot;) %&gt;%
   dplyr::select(orderit$SYMBOL) %&gt;%
   as.matrix()
@@ -1580,7 +1652,7 @@ gwas_sig_mat_3 &lt;- GWASabsFCsig %&gt;%
 GWASabsFC_3 &lt;- toplistall %&gt;% 
   
   # filter(id !=&quot;TRZ&quot;) %&gt;% 
-  filter(time==&quot;24_hours&quot;) %&gt;% 
+  filter(time==&quot;3_hours&quot;) %&gt;% 
   mutate(logFC= logFC*(-1)) %&gt;%
   filter(ENTREZID %in% orderit$ENTREZID) %&gt;% 
   dplyr::select(SYMBOL ,time, id, logFC) %&gt;% 
@@ -1607,7 +1679,7 @@ Heatmap(GWASabsFC_3, name = &quot;Fold change\nvalues&quot;,
         row_names_side = &quot;left&quot;,
         col = col_funFC,
         row_order = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;, &#39;MTX&#39;,&#39;TRZ&#39;),
-        column_title = &quot;Fold change values of GWAS and TWAS genes\n 3 hours n = 38&quot;, 
+        column_title = &quot;3 hours Log2 Foldchange of AC-toxicity associated loci&quot;, 
         column_title_side = &quot;top&quot;,
         column_title_gp = gpar(fontsize = 16, fontface = &quot;bold&quot;),
         column_order= orderit$SYMBOL,
@@ -1621,6 +1693,43 @@ Heatmap(GWASabsFC_3, name = &quot;Fold change\nvalues&quot;,
             grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
 })</code></pre>
 <p><img src="figure/Figure7.Rmd/Finfig_hm%203%20hours-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Finfig_hm-3-hours-1">
+Past versions of "Finfig_hm 3 hours-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Finfig_hm-3-hours-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/7308a2e83675be93f8aacb5f4bfc466baaee2b6c/docs/figure/Figure7.Rmd/Finfig_hm 3 hours-1.png" target="_blank">7308a2e</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>More analysis GWAS and TWAS SNPs found in the Schneider data <a
 href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html#Top_50_SNP_and_eGenes_from_Schneider_GWAS">at
 this link</a>.</p>
@@ -1693,6 +1802,7 @@ loaded via a namespace (and not attached):
 [79] Rcpp_1.0.11         svglite_2.1.2       whisker_0.4.1      
 [82] xfun_0.41           fs_1.6.3            getPass_0.2-2      
 [85] pkgconfig_2.0.3     GlobalOptions_0.1.2</code></pre>
+</div>
 </div>
 </div>
 
