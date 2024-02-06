@@ -74,7 +74,6 @@ gtex_counts_matrix<- counts_v8_heart_left_ventricle_gct %>%
   
 # cpm <- cpm(gtex_counts_matrix)
 lcpm <- cpm(gtex_counts_matrix, log=TRUE)  ### for determining the basic cutoffs
-dim(lcpm)
 
 row_means <- rowMeans(lcpm)
 gtex_x <- lcpm[row_means > 0,]
@@ -110,6 +109,7 @@ resp_egene <-readRDS("output/knowles5.RDS")
 ## Figure 7: Genes in AC toxicity-associated loci respond to TOP2i. 
 
 
+### 24 hours
 
 ```{r Finfig_hm 24 hours}
 
@@ -184,7 +184,7 @@ Heatmap(GWASabsFC, name = "Fold change\nvalues",
         row_names_side = "left",
         col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Fold change values of GWAS and TWAS genes n = 38", 
+        column_title = "24 hours Fold Change of AC-toxicity associated loci", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         column_order= orderit$SYMBOL,
@@ -212,7 +212,7 @@ GWASabsFCsig_3 <-
               names_from = SYMBOL, 
               values_from =adj.P.Val)
   
-gwas_sig_mat_3 <- GWASabsFCsig %>% 
+gwas_sig_mat_3 <- GWASabsFCsig_3 %>% 
    column_to_rownames(var="id") %>%
   dplyr::select(orderit$SYMBOL) %>%
   as.matrix()
@@ -221,7 +221,7 @@ gwas_sig_mat_3 <- GWASabsFCsig %>%
 GWASabsFC_3 <- toplistall %>% 
   
   # filter(id !="TRZ") %>% 
-  filter(time=="24_hours") %>% 
+  filter(time=="3_hours") %>% 
   mutate(logFC= logFC*(-1)) %>%
   filter(ENTREZID %in% orderit$ENTREZID) %>% 
   dplyr::select(SYMBOL ,time, id, logFC) %>% 
@@ -248,7 +248,7 @@ Heatmap(GWASabsFC_3, name = "Fold change\nvalues",
         row_names_side = "left",
         col = col_funFC,
         row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
-        column_title = "Fold change values of GWAS and TWAS genes\n 3 hours n = 38", 
+        column_title = "3 hours Log2 Foldchange of AC-toxicity associated loci", 
         column_title_side = "top",
         column_title_gp = gpar(fontsize = 16, fontface = "bold"),
         column_order= orderit$SYMBOL,
