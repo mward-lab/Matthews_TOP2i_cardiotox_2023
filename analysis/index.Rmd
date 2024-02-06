@@ -26,9 +26,6 @@ Welcome to my workflowr Cardiotoxicity research website. I am using workflowr to
 
 [Figure 7](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Figure7.html)  
 
-[Figure 8](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Figure8.html)  
-
-[Figure 9](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Figure9.html)  
 [Supplementary Figures](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Supplementary_figures.html)
 
 
@@ -55,13 +52,17 @@ Welcome to my workflowr Cardiotoxicity research website. I am using workflowr to
 
 [DRC analysis](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DRC_analysis.html)
 
-Data set comparisons  
+GWAS/TWAS/and other data set comparisons  
 
-[reQTLS](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2019.html)  
+[Knowles data](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2018.html)  
+[Additional Knowles data](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles_trop_analysis.html) 
 
 [GTEx data](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GTEx_genes.html)  
 
 [Other data/GWAS/crispr](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/other_analysis.html)
 
 [Seoane data](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Seoane_chrom.html)
+
+
+
 
