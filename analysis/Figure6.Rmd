@@ -1,5 +1,5 @@
 ---
-title: "Figure 6: Chromatin regulators that mediate breast cancer sensitivity to ACs are enriched amongst early TOP2i response genes. "
+title: "Figure 6: DOX response eGenes are enriched amongst TOP2i response genes "
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -28,216 +28,355 @@ pre[class] {
 ```
 
 ```{r packages loading}
-
 library(tidyverse)
-library(tinytex)
 library(BiocGenerics)
+library(data.table)
 library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
-library(ComplexHeatmap)
+library(ggVennDiagram)
+library(paletteer)
 ```
 
-```{r data loading, message=FALSE, warning=FALSE}
+```{r data loading, message=FALSE, warning=FALSE, include=TRUE}
 toplistall <- readRDS("data/toplistall.RDS")
 siglist <- readRDS("data/siglist_final.RDS")
 list2env(siglist, envir = .GlobalEnv)
 cpmcounts <- readRDS("data/cpmcount.RDS")
-DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
-list2env(DEG_cormotif,envir=.GlobalEnv)
+
+my_exp_genes <- read.csv("data/backGL.txt")
+GTEx_genes <- read.csv("data/GTEx_gene_list.csv",row.names = 1)
+not_eqtls <- read.csv("output/not_eqtls_GTEX.csv",row.names = 1)
+heart_gtex <- read.csv("output/heart_gtex.csv",row.names = 1)
+egenes <- read.csv("output/egenes.csv",row.names = 1)
+
+```
+
+```{r ggvennoverride function, include=TRUE}
+
+plot_venn <- function (x, show_intersect, set_color, set_size, label, label_geom,
+                       label_alpha, label_color, label_size, label_percent_digit,
+                       label_txtWidth, edge_lty, edge_size, ...)  {
+  
+  venn <- ggVennDiagram::Venn(x)
+  
+  data <- process_data(venn)
+  p <- ggplot() + 
+    geom_sf(aes_string(fill = "count"), data = data@region) +
+    geom_sf(aes_string(color = "name"), data = data@setEdge, show.legend = F, lty = edge_lty, size = edge_size, color = set_color) +
+    geom_sf_text(aes_string(label = "name"), data = data@setLabel, size = set_size, color = set_color) + 
+    theme_void()
+  if (label != "none" & show_intersect == FALSE) {
+    region_label <- data@region %>% 
+      dplyr::filter(.data$component =="region") %>%
+      dplyr::mutate(percent = paste(round(.data$count * 100/sum(.data$count), digits = label_percent_digit),"%", sep = "")) %>% dplyr::mutate (both = paste(.data$count, paste0("(", .data$percent, ")"), sep = "\n"))
+    
+    if (label_geom == "label") {
+      p <- p + 
+        geom_sf_label(aes_string(label = label),data = region_label, alpha = label_alpha, color = label_color,size = label_size, lineheight = 0.85, label.size = NA)
+    }
+    if (label_geom == "text") {
+      p <- p + 
+        geom_sf_text(aes_string(label = label),data = region_label, alpha = label_alpha, color = label_color, size = label_size, lineheight = 0.85)
+    }
+  }
+  if (show_intersect == TRUE) {
+    items <- data@region %>% dplyr::rowwise() %>% dplyr::mutate(text = stringr::str_wrap(paste0(.data$item, collapse = " "), width = label_txtWidth)) %>%
+      sf::st_as_sf()
+    label_coord = sf::st_centroid(items$geometry) %>%
+      sf::st_coordinates()
+    
+    p <- ggplot(items) + 
+      geom_sf(aes_string(fill = "count")) +
+      geom_sf_text(aes_string(label = "name"), data = data@setLabel,
+                   inherit.aes = F) + 
+      geom_text(aes_string(label = "count", text = "text"), x = label_coord[, 1], y = label_coord[,2], show.legend = FALSE) +
+      theme_void()
+    
+    ax <- list(showline = FALSE)
+    p <- plotly::ggplotly(p, tooltip = c("text")) %>% 
+      plotly::layout(xaxis = ax, yaxis = ax)
+  }
+  p
+}
+
+```   
+
+
+
+
+## Figure 6: DOX response eGenes are enriched amongst TOP2i response genes​.
+
+
+
+### A. 24 hour DEG enrichment in GTEx genes
+```{r  GTEx enrich, fig.height=3, fig.width=8}
+## create GTEx data set from my data
+GTEx <- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
+## exclude GTEX and create nQTL set with other expressed genes
+nQTLmy <- my_exp_genes %>%
+   dplyr:: filter(!ENTREZID %in%GTEx)
+drug_palspc <- c("darkblue","cornflowerblue","darkblue","cornflowerblue")
 drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
-col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
-## supplement 1
-chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
-Seoane_2019 <- chrom_reg_Seoane[,2]
-names(Seoane_2019) <- "ENTREZID"
-chrom_genes <- (unique(Seoane_2019$ENTREZID))
+#GET nQTL umbers
+nQTLsum <- toplistall %>%
+  mutate(id =dplyr::case_match(id, "Daunorubicin"~"DNR",
+                               "Doxorubicin"~"DOX",
+                               "Epirubicin"~"EPI",
+                               "Mitoxantrone"~"MTX",
+                               "Trastuzumab"~"TRZ",
+                               "Vehicle"~"VEH",
+                               .default = id)) %>% 
+  dplyr::filter(time=="24_hours") %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
+  mutate(nQTL=if_else(ENTREZID %in% nQTLmy$ENTREZID,'nQTL_y','nQTL_no')) %>% 
+  group_by(id,nQTL) %>% 
+  tally() %>% 
+  separate(nQTL, into=c('set', 'group')) %>% 
+  mutate(total=length(nQTLmy$ENTREZID) - n) %>% 
+  dplyr::filter(group=="y")
+#GETx GTEX numbers
+GTExsum <- toplistall %>%
+  mutate(id =dplyr::case_match(id, "Daunorubicin"~"DNR",
+                               "Doxorubicin"~"DOX",
+                               "Epirubicin"~"EPI",
+                               "Mitoxantrone"~"MTX",
+                               "Trastuzumab"~"TRZ",
+                               "Vehicle"~"VEH", 
+                               .default = id)) %>% 
+  dplyr::filter(time=="24_hours") %>%
+  dplyr::filter(adj.P.Val <0.05) %>%
+  mutate(GTEx=if_else(ENTREZID %in%GTEx,"GTEx_y","GTEx_no")) %>% 
+  group_by(id,GTEx) %>% 
+  tally() %>% 
+  separate(GTEx, into=c('set', 'group')) %>% 
+  mutate(total=length(GTEx) - n) %>% 
+  dplyr::filter(group=="y")
 
-# supplement 4
-Sup4seoane <- read.csv("output/Sup4seoane.csv", row.names = 1)
-Sup4genes <- Sup4seoane  %>% 
-  filter(pval.expAnth<0.05) %>% 
-  distinct(entrez, .keep_all = TRUE) %>% 
-  dplyr::select(entrez)
+##combine and create long data frame for plot
+GTEXcr8z <- GTExsum %>% 
+  rbind(., nQTLsum) %>% 
+  dplyr::select(id,set, n,total) %>%
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+  pivot_longer(cols=n:total, 
+               names_to="group",
+               values_to="total") %>%
+   mutate(group=factor(group,levels = c("total", "n"),labels=c("not DE","DE"))) %>% 
+  mutate(set=factor(set,levels = c("GTEx","nQTL"), labels =c("eGene", "not eGene")))
 
+ 
+GTEXcr8z %>% 
+  ggplot(., aes(x=set,y=total, fill=group))+
+  geom_col(position='fill')+
+  facet_wrap(~id,nrow=2,ncol=4)+
+  theme_classic()+
+  scale_fill_manual(values=drug_palspc)+
+  ylab("Heart: left ventricle eGenes")+
+  xlab("")+
+  scale_y_continuous( expand = expansion(c(0, 0.01))) +
+  theme(strip.background = element_rect(fill = "white",
+                                        linetype=1, 
+                                        linewidth = 0.5),
+        plot.title = element_text(size=12,
+                                  hjust = 0.5,
+                                  face="bold"),
+        axis.title = element_text(size = 12, 
+                                  color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.text = element_text(color = "black"),
+        panel.background = element_rect(colour = "black",
+                                        size=1),
+        strip.text.x = element_text(size=12,
+                                    face = "bold"))#+
+  
 ```
 
-## Figure 6: Chromatin regulators that mediate breast cancer sensitivity to ACs are enriched amongst early TOP2i response genes. 
+Additonal GTEx analysis and code is found [here]()
 
-### A. Heatmap of Chromatin regulator gene sets
+### B. 24 hour DEG enrichment in DOX-iPSC-DM eGenes
+```{r reQTLenrich,fig.height=3, fig.width=8}
 
-n= 408 is the Supplemental of curated Chromatin regulators
-
-n= 54 were designated Dox response chromatin regulators according to Seoane analysis
-
-
-```{r Chrom reg heatmap}
-
-toplist24hr <- toplistall  %>% 
-  filter(time =="24_hours")
- motifSeoanesummary1 <- toplist24hr %>% 
-  distinct(ENTREZID) %>% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
-  mutate(chrom = if_else(ENTREZID %in% chrom_genes, "y", "no")) %>% 
-  group_by(chrom,ER,TI,LR,NR) %>% 
-  dplyr::summarize(n=n()) %>% 
-  as.tibble  %>% 
-  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
-  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
-
-chi_list1 <- toplist24hr %>% 
-  distinct(ENTREZID) %>% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
-  mutate(chrom=if_else(ENTREZID %in% chrom_genes,"y","no")) %>% 
-  group_by(chrom,ER,TI,LR,NR) %>% 
-  dplyr::summarize(n=n()) %>% 
-  as.tibble  %>% 
-  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
-  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
-
-chisup1LR <- chisq.test(chi_list1[,c('NR','LR')])
-
-chisup1ER <- chisq.test(chi_list1[,c('NR','ER')])
-
-chisup1TI <- chisq.test(chi_list1[,c('NR','TI')])
-
-
-motifSeoanesummary4 <- toplist24hr %>% 
-  distinct(ENTREZID) %>% 
-  mutate(ER=if_else(ENTREZID %in% motif_ER,"y","no")) %>% 
-  mutate(LR=if_else(ENTREZID %in% motif_LR,"y","no")) %>%
-  mutate(TI=if_else(ENTREZID %in% motif_TI,"y","no")) %>%
-  mutate(NR=if_else(ENTREZID %in% motif_NR,"y","no")) %>%
-  mutate(chrom = if_else(ENTREZID %in% Sup4genes$entrez, "y", "no")) %>% 
-  group_by(chrom,ER,TI,LR,NR) %>% 
-  dplyr::summarize(n=n()) %>% 
-  as.tibble  %>% 
-  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
-  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
-
-chi_list4 <- toplist24hr %>% 
-  distinct(ENTREZID) %>% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,"y","no")) %>% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,"y","no")) %>%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,"y","no")) %>%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,"y","no")) %>%
-  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,"y","no")) %>% 
-  group_by(chrom,ER,TI,LR,NR) %>% 
-  dplyr::summarize(n=n()) %>% 
-  as.tibble  %>% 
-  pivot_wider(id_cols = c(chrom), names_from = c('ER', 'TI', 'LR', 'NR'), values_from= n) %>% 
-  rename(.,c("chrom"=chrom,"none"= 2 , "ER" = 3 , "TI" = 4 , "LR" = 5 ,"NR" = 6))
-
-chisup4LR <- chisq.test(chi_list4[,c('NR','LR')])
-
-chisup4ER <- chisq.test(chi_list4[,c('NR','ER')])
-
-chisup4TI <- chisq.test(chi_list4[,c('NR','TI')])
-
-supp45X <- NULL
-motif <- c('EAR','ESR','LR')
-pval1=c(chisup1ER$p.value,chisup1TI$p.value,chisup1LR$p.value)
-pval4=c(chisup4ER$p.value ,chisup4TI$p.value ,chisup4LR$p.value)
-supp45X <- tibble("motif"=motif,"pval1"=pval1,"pval4"=pval4)
-supp45Xmat <- supp45X %>% 
-  mutate(pval1=(-1*log10(pval1))) %>% 
-  mutate(pval4=(-1*log10(pval4))) %>% 
-  column_to_rownames('motif') %>% 
-  rename(c("All chromatin regulators\nn = 408"= pval1, "AC sensitivity chromatin regulators\nn = 54"=pval4)) %>% 
-  as.matrix()
-ht_opt$DIMNAME_PADDING= unit(5,"mm")
-ht_map=Heatmap(supp45Xmat,
-         column_title="Chromatin regulator enrichment p values", 
-         name = "-log 10\n(p value)", 
-         cluster_rows = FALSE, 
-         cluster_columns = FALSE, 
-        column_names_centered = TRUE,
-         column_names_rot = 0,
-        column_names_gp = gpar(lineheight = 1),
-         col = col_fun5,
-        heatmap_width= unit(6,"in"),
-        heatmap_height = unit(3,"in"),
-         cell_fun = function(j, i, x, y, width, height, fill) {
-        if(supp45Xmat[i, j] > -log10(0.05))
-            grid.text("*", x, y, gp = gpar(fontsize = 20))
-})
-draw(ht_map, heatmap_legend_side="left")
-
-# ht_opt(RESET = TRUE)
+knowles4 <-readRDS("output/knowles4.RDS")
+knowles5 <-readRDS("output/knowles5.RDS")
+Knowles_count <- 
+  toplistall %>%
+  mutate(id = dplyr::case_match(id, "Daunorubicin"~"DNR",
+                                "Doxorubicin"~"DOX",
+                                "Epirubicin"~"EPI",
+                                "Mitoxantrone"~"MTX",
+                                "Trastuzumab"~"TRZ",
+                                "Vehicle"~"VEH", 
+                                .default = id)) %>%
+  filter(id!='TRZ') %>% 
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%
+  mutate(time=factor(time, levels=c("3_hours","24_hours"))) %>%
+  group_by(time, id) %>%
+  mutate(K4 = if_else(ENTREZID %in% knowles4$entrezgene_id,1,0))%>%
+  mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,1,0))%>%
+  filter(adj.P.Val<0.05) %>%
+  dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %>% 
+  as.tibble() %>% 
+  dplyr::select(time,id,K4,K5) %>% 
+  rename("K4_y"='K4',"K5_y"='K5') %>% 
+  mutate(time = case_match(time, '3_hours'~'3 hrs',
+                           '24_hours'~'24 hrs',
+                           .default = time)) %>% 
+  mutate(K4_n= 417-K4_y, K5_n=273-K5_y) %>% 
+  pivot_longer(!c(time,id), 
+               names_to='QTL',
+               values_to="gene_count") %>%
+  separate(QTL,into=c("QTL_type",'group'),sep = '_') %>% 
+  mutate(QTL_type =case_match(QTL_type, 
+                              'K4'~'base\neGenes',
+                              'K5'~'response\neGenes',.default = QTL_type)) %>%
+  mutate(time=factor(time, levels=c("3 hrs","24 hrs"))) %>% 
+  group_by(id,time,QTL_type) %>% 
+  mutate(percent=gene_count/sum(gene_count)*100)  %>% 
+  ungroup() %>% 
+  filter(time=="24 hrs") %>% 
+  mutate(id=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>%  mutate(group=factor(group, levels= c("n","y"), labels=c("not DE","DE")))
+  
+  
+  ggplot(Knowles_count, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
+    geom_col(position='fill')+
+    facet_wrap(~id,nrow=1,ncol=4)+
+    theme_classic()+
+    ylab("iPSC-CM DOX eGenes ")+
+    xlab(" ")+
+    scale_color_manual(values=drug_palspc)+
+    scale_fill_manual(values=drug_palspc)+
+    scale_y_continuous( expand = expansion(c(0, 0.01))) +
+    theme(strip.background = element_rect(fill = "white",
+                                        linetype=1, 
+                                        linewidth = 0.5),
+        plot.title = element_text(size=12,
+                                  hjust = 0.5,
+                                  face="bold"),
+        axis.title = element_text(size = 12, 
+                                  color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.text = element_text(color = "black"),
+        panel.background = element_rect(colour = "black",
+                                        size=1),
+        strip.text.x = element_text(size=12,
+                                    face = "bold"))
 ```
 
-More analysis of the Seoane data is at [this link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Seoane_chrom.html)
 
-### B.  Log~2~ cpm of *KAT6B*
+Additonal analysis and code for the Knowles data is found [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2019.html#Dox-reQTLs)
 
 
-```{r logcpm kat6b, fig.width=6, fig.height=4}
-cpm_boxplot <-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
-  ##GOI needs to be ENTREZID
-  df <- cpmcounts
-    df_plot <- df %>% 
-      dplyr::filter(rownames(.)==GOI) %>%
+### C. DOXreQTLS strongly overlap other TOP2i drugs
+```{r DOXreQTLs across other treatments,fig.height=4, fig.width=8, eval=TRUE, include=TRUE}
+DOXreQTLs <- readRDS("output/DOXreQTLs.RDS")
+
+# assignInNamespace(x = "plot_venn", value=plot_venn, ns="ggVennDiagram") 
+
+reQTL_overlapDE24 <- list(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+re_incommon <- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+
+names(reQTL_overlapDE24) <- c("Dox_reQTLS", "DNR DEGs","EPI DEGs","MTX DEGs")
+
+DEG_incommon <-c(sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+uniqueDEGs_incommon <- unique(DEG_incommon)
+two_venn <- list(DOXreQTLs$ENTREZID, uniqueDEGs_incommon)
+
+ggVennDiagram(two_venn,
+                             category.names = c("DOX egenes\nn = 142","union of TOP2i DEGs\n     n = 7838"),
+              show_intersect = FALSE,
+              set_color = "black",
+              category_size = c(6,6),
+              label = "count",
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = "black",
+              edge_lty = "solid", set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .1))+
+   scale_fill_distiller(palette="Spectral", direction = -1, limits= c(1,200),oob=scales::squish)
+```
+
+### D. Stringently idetified DOX-only DE genes and DOX egenes only share ~JPH3~
+
+```{r DOXreQTLvDOXspeDEG, fig.height=4, fig.width=8}
+cpm_boxplot24h <-
+  function(cpmcounts,
+           GOI,
+           brewer_palette,
+           fill_colors,
+           ylab) {
+    ##GOI needs to be ENTREZID
+    df <- cpmcounts
+    df_plot <- df %>%
+      dplyr::filter(rownames(.) == GOI) %>%
       pivot_longer(everything(),
                    names_to = "treatment",
                    values_to = "counts") %>%
-      separate(treatment, c("drug","indv","time")) %>%
-      mutate(time=factor(time, levels =c("3h", "24h"),labels=c("3 hours","24 hours"))) %>%
-      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %>%
-      mutate(drug =case_match(drug, "Da"~"DNR",
-                            "Do"~"DOX",
-                            "Ep"~"EPI",
-                            "Mi"~"MTX",
-                            "Tr"~"TRZ",
-                            "Ve"~"VEH", .default = drug)) %>% 
-      mutate(drug=factor(drug, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH')))
-    plot <- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
-      geom_boxplot(position="identity",aes(fill=drug))+
-      geom_point(aes(col=indv, size=1.5, alpha=0.5))+
-      guides(alpha= "none", size= "none")+
-      scale_color_brewer(palette = brewer_palette, name="individual")+
-      scale_fill_manual(values=fill_colors, name = "treatment")+
-      facet_wrap(~time, nrow=1, ncol=2)+
-      theme_bw()+
-      ylab(ylab)+
-      xlab("")+
-      theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          
-          axis.line = element_line(linewidth = 1.0),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(face = "bold"))
+      separate(treatment, c("drug", "indv", "time")) %>%
+      mutate(time = case_match(time, "24h" ~ "24 hours", "3h" ~ "3 hours")) %>%
+      mutate(indv = factor(indv, levels = c(1, 2, 3, 4, 5, 6))) %>%
+      mutate(
+        drug = case_match(
+          drug,
+          "Da" ~ "DNR",
+          "Do" ~ "DOX",
+          "Ep" ~ "EPI",
+          "Mi" ~ "MTX",
+          "Tr" ~ "TRZ",
+          "Ve" ~ "VEH",
+          .default = drug
+        )
+      ) %>%
+      mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH'))) %>%
+      dplyr::filter(time == "24 hours")
+    plot <- ggplot2::ggplot(df_plot, aes(x = drug, y = counts)) +
+      geom_boxplot(position = "identity", aes(fill = drug)) +
+      geom_point(aes(
+        col = indv,
+        size = 2,
+        alpha = 0.5
+      )) +
+      guides(alpha = "none", size = "none") +
+      scale_color_brewer(palette = brewer_palette, name = "Individual") +
+      scale_fill_manual(values = fill_colors) +
+      # facet_wrap("time", nrow=1, ncol=2)+
+      theme_bw() +
+      ylab(ylab) +
+      xlab("") +
+      ggtitle("24 hours") +
+      theme(
+        strip.background = element_rect(
+          fill = "white",
+          linetype = 1,
+          linewidth = 0.5
+        ),
+        plot.title = element_text(
+          size = 12,
+          hjust = 0.5,
+          face = "bold"
+        ),
+        axis.title = element_text(
+          size = 15,
+          color = "black",
+          face = "bold"
+        ),
+        axis.ticks = element_line(linewidth = 1.0),
+        panel.background = element_rect(colour = "black", size = 1),
+        axis.text.x = element_blank(),
+        strip.text.x = element_text(margin = margin(2, 0, 2, 0, "pt"), face = "bold")
+      )
     print(plot)
-}
+  }
+cpm_boxplot24h(cpmcounts,
+               GOI = '57338',
+               "Dark2",
+               drug_pal_fact,
+               ylab = (expression(atop(
+                 " ", italic("JPH3") ~ log[2] ~ "cpm "
+               ))))
 
-Kat6save<- cpm_boxplot(cpmcounts,GOI='23522',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("KAT6B")~log[2]~"cpm "))))
-Katnl <- Kat6save+theme(legend.position = "NULL")
-top_bot_legend <- get_legend(Kat6save)
 
 ```
-
-
-### C.  Log~2~ cpm of *KDM4B*
-
-
-```{r logcpm kdm4b,fig.width=7, fig.height=6}
-library(cowplot)
-KDM4B_save <- cpm_boxplot(cpmcounts,GOI='23030',"Dark2",drug_pal_fact,
-  ylab=(expression(atop(" ",italic("KDM4B")~log[2]~"cpm "))))
-KDMnl <- KDM4B_save + theme(legend.position = "NULL")
-# KDMnl
-
-leftside<- plot_grid(Katnl,KDMnl, nrow=2)
-plot_grid(leftside,top_bot_legend,nrow=1, rel_widths = c(1,.2))
-
-```
-
-
+For additional stringently identified genes, you can visit the supplementary data [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Supplementary_figures.html) or analysis located [here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2019.html#More_investigation_of_24_hour_specific_genes).
