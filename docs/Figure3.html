@@ -522,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treebe9b3ad34509b2ce9e11d22fa0b6e43fde208177targetblankbe9b3ada">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treeb0e5bcc8e1e3eda7cd25098a463b229ae110e290targetblankb0e5bcca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/be9b3ad34509b2ce9e11d22fa0b6e43fde208177" target="_blank">be9b3ad</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/b0e5bcc8e1e3eda7cd25098a463b229ae110e290" target="_blank">b0e5bcc</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treebe9b3ad34509b2ce9e11d22fa0b6e43fde208177targetblankbe9b3ada"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treeb0e5bcc8e1e3eda7cd25098a463b229ae110e290targetblankb0e5bcca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -540,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/be9b3ad34509b2ce9e11d22fa0b6e43fde208177" target="_blank">be9b3ad</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/b0e5bcc8e1e3eda7cd25098a463b229ae110e290" target="_blank">b0e5bcc</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -945,6 +945,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/b0e5bcc8e1e3eda7cd25098a463b229ae110e290/analysis/Figure3.Rmd" target="_blank">b0e5bcc</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+<td>
+updates to Venn code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/2315be3b54b3ec3c79491461c7c0b7b385fe1a0e/docs/Figure3.html" target="_blank">2315be3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/be9b3ad34509b2ce9e11d22fa0b6e43fde208177/analysis/Figure3.Rmd" target="_blank">be9b3ad</a>
 </td>
 <td>
@@ -1306,7 +1340,16 @@ library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
-library(edgeR)</code></pre>
+library(edgeR)
+library(data.table)
+
+library(broom)
+library(limma)
+library(corrplot)
+library(ggVennDiagram)
+library(ComplexHeatmap)
+library(gridtext)
+library(paletteer)</code></pre>
 <div
 id="figure-3-top2i-induce-global-gene-expression-changes-over-24-hours."
 class="section level2">
@@ -1389,6 +1432,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/2315be3b54b3ec3c79491461c7c0b7b385fe1a0e/docs/figure/Figure3.Rmd/PCA-1.png" target="_blank">2315be3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/a745db35be21a635d86bf4d1774be9e1ee719b41/docs/figure/Figure3.Rmd/PCA-1.png" target="_blank">a745db3</a>
 </td>
 <td>
@@ -1449,15 +1503,6 @@ reneeisnowhere
 <p>More information on overall RNA-seq analysis can be found <a
 href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html#PCA_by_treatment_and_as_a_whole">at
 this link</a></p>
-<pre class="r"><code>library(data.table)
-
-library(broom)
-library(limma)
-library(corrplot)
-library(ggVennDiagram)
-library(ComplexHeatmap)
-library(gridtext)
-library(paletteer)</code></pre>
 <pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
 siglist &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
 list2env(siglist, envir = .GlobalEnv)</code></pre>
@@ -1520,6 +1565,43 @@ ComplexHeatmap::pheatmap(
   treeheight_col = 20
 )</code></pre>
 <p><img src="figure/Figure3.Rmd/corrFC-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-corrFC-1">
+Past versions of corrFC-1.png
+</button>
+</p>
+<div id="fig-corrFC-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/2315be3b54b3ec3c79491461c7c0b7b385fe1a0e/docs/figure/Figure3.Rmd/corrFC-1.png" target="_blank">2315be3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>HMcorr &lt;- ComplexHeatmap::pheatmap(
   corrFC,
   display_numbers = TRUE,
@@ -1560,7 +1642,7 @@ fig3hrvenn &lt;- ggVennDiagram::ggVennDiagram(total3,
               edge_lty = &quot;solid&quot;, set_size = 4.5)+
   scale_x_continuous(expand = expansion(mult = .3))+
   scale_y_continuous(expand = expansion(mult = .2))+
-  scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;)+
+  # scale_color_fish_d(option = &quot;Bodianus_pulchellus&quot;, direction = -1)+
   scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1, limits=c(0,4500))+
   labs(title = &quot;3 hour&quot;,
        caption = paste(&quot;n =&quot;, length(unique(totalin_common3)),&quot;genes\n &quot;))+
@@ -1568,6 +1650,43 @@ fig3hrvenn &lt;- ggVennDiagram::ggVennDiagram(total3,
         plot.caption=element_text(size=12))
 fig3hrvenn </code></pre>
 <p><img src="figure/Figure3.Rmd/3_hr_venn-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-3_hr_venn-1">
+Past versions of 3_hr_venn-1.png
+</button>
+</p>
+<div id="fig-3_hr_venn-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/2315be3b54b3ec3c79491461c7c0b7b385fe1a0e/docs/figure/Figure3.Rmd/3_hr_venn-1.png" target="_blank">2315be3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="d.-venn-diagram-of-24-hour-degs" class="section level2">
 <h2>D. Venn Diagram of 24 hour DEGs</h2>
@@ -1604,7 +1723,7 @@ fig24hrvenn &lt;- ggVennDiagram::ggVennDiagram(
 ) +
   scale_x_continuous(expand = expansion(mult = .3)) +
   scale_y_continuous(expand = expansion(mult = .2)) +
-  scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;) +
+  # scale_color_paletteer_d(palette = &quot;fishualize::Bodianus_pulchellus&quot;) +
   scale_fill_distiller(palette = &quot;Spectral&quot;, direction = -1) +
   labs(title = &quot;24 hour&quot;,
        caption = paste(&quot;n =&quot;, length(unique(in_common24)), &quot;genes\n &quot;)) +
@@ -1619,6 +1738,43 @@ fig24hrvenn &lt;- ggVennDiagram::ggVennDiagram(
   )
 fig24hrvenn</code></pre>
 <p><img src="figure/Figure3.Rmd/24_hr_venn-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-24_hr_venn-1">
+Past versions of 24_hr_venn-1.png
+</button>
+</p>
+<div id="fig-24_hr_venn-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/2315be3b54b3ec3c79491461c7c0b7b385fe1a0e/docs/figure/Figure3.Rmd/24_hr_venn-1.png" target="_blank">2315be3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>More information can be found <a
 href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html#Venn_Diagrams">here</a>.</p>
 </div>
@@ -1709,8 +1865,45 @@ draw(
     }
   )
 )</code></pre>
-<p><img src="figure/Figure3.Rmd/KEGG3-1.png" width="576" style="display: block; margin: auto;" />
-More information can be found <a
+<p><img src="figure/Figure3.Rmd/KEGG3-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-KEGG3-1">
+Past versions of KEGG3-1.png
+</button>
+</p>
+<div id="fig-KEGG3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/2315be3b54b3ec3c79491461c7c0b7b385fe1a0e/docs/figure/Figure3.Rmd/KEGG3-1.png" target="_blank">2315be3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>More information can be found <a
 href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html#Venn_Diagrams">here</a>.</p>
 </div>
 <div id="f.-24-hour-top-enriched-kegg-pathways" class="section level2">
@@ -1793,6 +1986,43 @@ Heatmap(
   }
 )</code></pre>
 <p><img src="figure/Figure3.Rmd/KEGG24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-KEGG24-1">
+Past versions of KEGG24-1.png
+</button>
+</p>
+<div id="fig-KEGG24-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/2315be3b54b3ec3c79491461c7c0b7b385fe1a0e/docs/figure/Figure3.Rmd/KEGG24-1.png" target="_blank">2315be3</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Further KEGG analysis information and code may be <a
 href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html#KEGG_pathway_intersection_of_pairwise_DEG_sets">found
 here</a></p>
@@ -1859,17 +2089,17 @@ loaded via a namespace (and not attached):
 [52] doParallel_1.0.17   codetools_0.2-19    processx_3.8.2     
 [55] lattice_0.22-5      withr_3.0.0         evaluate_0.23      
 [58] survival_3.5-7      xml2_1.3.5          circlize_0.4.15    
-[61] pillar_1.9.0        whisker_0.4.1       stats4_4.3.1       
-[64] foreach_1.5.2       generics_0.1.3      rprojroot_2.0.4    
-[67] S4Vectors_0.38.2    hms_1.1.3           commonmark_1.9.1   
+[61] pillar_1.9.0        whisker_0.4.1       foreach_1.5.2      
+[64] stats4_4.3.1        generics_0.1.3      rprojroot_2.0.4    
+[67] hms_1.1.3           S4Vectors_0.38.2    commonmark_1.9.1   
 [70] munsell_0.5.0       scales_1.3.0        gtools_3.9.4       
 [73] glue_1.6.2          tools_4.3.1         locfit_1.5-9.8     
 [76] fs_1.6.3            mvtnorm_1.2-3       plotrix_3.8-4      
 [79] colorspace_2.1-0    cli_3.6.1           fansi_1.0.5        
 [82] gtable_0.3.4        sass_0.4.7          digest_0.6.33      
-[85] prismatic_1.1.1     ggrepel_0.9.4       TH.data_1.1-2      
-[88] rjson_0.2.21        farver_2.1.1        htmltools_0.5.7    
-[91] lifecycle_1.0.4     httr_1.4.7          GlobalOptions_0.1.2</code></pre>
+[85] ggrepel_0.9.4       TH.data_1.1-2       farver_2.1.1       
+[88] rjson_0.2.21        htmltools_0.5.7     lifecycle_1.0.4    
+[91] httr_1.4.7          GlobalOptions_0.1.2</code></pre>
 </div>
 </div>
 
