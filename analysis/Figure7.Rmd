@@ -1,5 +1,5 @@
 ---
-title: "Figure 7: AC treatments induce transcriptional variation across individuals over time."
+title: "Figure 7: Genes in AC toxicity-associated loci respond to TOP2i."
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -26,230 +26,244 @@ pre[class] {
   max-height: 200px;
 }
 ```
+
+
 ```{r packages loading}
 
 library(tidyverse)
-library(ggpubr)
-library(ggsignif)
-library(gprofiler2)
-library(paletteer)
-library(ggVennDiagram)
 library(gridtext)
 library(scales)
 library(kableExtra)
 library(qvalue)
 library(data.table)
 library(ComplexHeatmap)
+library(readr)
+library(limma)
+library(edgeR)
+
+
+
 ```
 
 ```{r data loading, message=FALSE, warning=FALSE}
-toplistall <- readRDS("data/toplistall.RDS")
-siglist <- readRDS("data/siglist_final.RDS")
-list2env(siglist, envir = .GlobalEnv)
+drug_palc <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
+drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
+
 cpmcounts <- readRDS("data/cpmcount.RDS")
 DEG_cormotif <- readRDS("data/DEG_cormotif.RDS")
 list2env(DEG_cormotif,envir=.GlobalEnv)
-drug_pal_fact <- c("#8B006D" ,"#DF707E", "#F1B72B" ,"#3386DD", "#707031","#41B333")
+backGL <- read.csv("data/backGL.txt", row.names =1)
+col_fun1 = circlize::colorRamp2(c(-1, 3), c("white", "purple"))
+col_funFC= circlize::colorRamp2(c(-2,0, 2), c("darkgreen","white", "darkorange2"))
+col_funTOX = circlize::colorRamp2(c(-1,0, 1), c("darkviolet", "white","firebrick4"))
+
+
+DOXrespGene <- readRDS("output/DOXreQTLs.RDS")
+toplistall <- readRDS("data/toplistall.RDS")
+
+list2env(DEG_cormotif,envir=.GlobalEnv)
+
+counts_v8_heart_left_ventricle_gct <- readRDS("output/counts_v8_heart_left_ventricle_gct.RDS")
+names_gtex_genes <- counts_v8_heart_left_ventricle_gct %>% 
+  dplyr::select(Name, Description)
+gtex_counts_matrix<- counts_v8_heart_left_ventricle_gct %>% 
+  column_to_rownames("Name") %>% 
+  dplyr::select(!id) %>% 
+  dplyr::select(!Description) %>% 
+  as.matrix()
+  
+# cpm <- cpm(gtex_counts_matrix)
+lcpm <- cpm(gtex_counts_matrix, log=TRUE)  ### for determining the basic cutoffs
+dim(lcpm)
+
+row_means <- rowMeans(lcpm)
+gtex_x <- lcpm[row_means > 0,]
+GTEX_heartLV_log2cpm <- gtex_x %>% 
+  as.data.frame() %>%
+  mutate(Name = rownames(gtex_x)) %>% 
+  left_join(.,names_gtex_genes, by =c("Name"))
+
+
+
+
+
+SGWAS_order_frame <- read.csv("output/SGWAS_top50_order.csv", row.names = 1)
+
 col_fun5 = circlize::colorRamp2(c(0, 5), c("white", "purple"))
 ## supplement 1
 chrom_reg_Seoane <- read_csv(file = "data/Seonane2019supp1.txt",col_types = cols(...1 = col_skip()))
 Seoane_2019 <- chrom_reg_Seoane[,2]
 names(Seoane_2019) <- "ENTREZID"
-chrom_genes <- (unique(Seoane_2019$ENTREZID))
+Chrom_reg <- data.frame("entrez"=(unique(Seoane_2019$ENTREZID)))
 
-# supplement 4
 Sup4seoane <- read.csv("output/Sup4seoane.csv", row.names = 1)
-Sup4genes <- Sup4seoane  %>% 
+DOX_reg <- Sup4seoane  %>% 
   filter(pval.expAnth<0.05) %>% 
   distinct(entrez, .keep_all = TRUE) %>% 
   dplyr::select(entrez)
-
-```
-
-## Figure 7: AC treatments induce transcriptional variation across individuals over time.
-
-
-### A) Mean gene expression
-```{r meangene expr}
-mean_vardrug1 <- read.csv("data/mean_vardrug1.csv", row.names = 1)
-
-
-drug_frame<- mean_vardrug1 %>% 
-  rownames_to_column(var = "entrezid") %>% 
-  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = "short", values_to = "values") %>% 
-  separate(short, into=c("calc","treatment","time")) %>% 
-  mutate(treatment= factor(treatment, levels = c("Do","Ep","Da","Mi","Tr","Ve"),labels = c("DOX","EPI","DNR","MTX","TRZ","VEH"))) %>% 
-  mutate(time= factor(time, levels = c("3","24"), labels= c("3 hours","24 hours"))) %>% 
-  group_by(treatment, time, calc) %>% 
-  as.data.frame
-
-
-
-drug_frame %>% 
-  filter(calc!="var") %>% 
-  ggplot(., aes(x= treatment, y=values,fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c("TRZ","VEH"),
-                                c("MTX","VEH"),
-                                c("DNR","VEH"),
-                                c("EPI","VEH"),
-                                c("DOX","VEH")),
-              test= "t.test",
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=11,
-              step_increase = 0.05)+
-  facet_wrap(.~time)+
-  ggtitle("Means")+
-  ylim(0,18)+
- scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(" ")+
-  ylab(expression("counts log"[2]~"cpm "))+
-  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
-
+base_egene <-readRDS("output/knowles4.RDS")
+resp_egene <-readRDS("output/knowles5.RDS")
 
 
 ```
 
-
-### B) Variance in gene expression
-
-```{r graph of var by drug indv, fig.height=5, fig.width=6}
+## Figure 7: Genes in AC toxicity-associated loci respond to TOP2i. 
 
 
-drug_pal_fact <- c("#8B006D","#DF707E","#F1B72B", "#3386DD","#707031","#41B333")
 
-drug_frame %>% 
-  filter(calc!="mean") %>% 
-  ggplot(., aes(x= treatment, y=values, fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c("DOX","VEH"),
-                                c("EPI","VEH"),
-                                c("DNR","VEH"),
-                                c("MTX","VEH"),
-                                c("TRZ","VEH")),
-              test= "t.test",
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=0.85,
-              step_increase = 0.1)+
-  facet_wrap(~time)+
-  ggtitle("Variance")+
-  coord_cartesian(ylim = c(0,1))+
-  # ylim(0,2)+
-scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(" ")+
-  ylab(expression("variance of log "[2]~" cpm "))+
-  theme(strip.background = element_rect(fill = "white",linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face="bold"),
-          axis.title = element_text(size = 10, color = "black"),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = "black", size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, "mm"),face = "bold"))
+```{r Finfig_hm 24 hours}
 
-drug_frame %>% 
-  filter(calc!="mean") %>%
-  ggplot(., aes(x= treatment, y=values))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c("DOX","VEH"),
-                                c("EPI","VEH"),
-                                c("DNR","VEH"),
-                                c("MTX","VEH"),
-                                c("TRZ","VEH")),
-              test= "t.test",
-              map_signif_level=FALSE,
-              textsize =4,
-               y_position=(.5),
-              step_increase = 0.1)+
-  facet_wrap(~time)+
-  ggtitle("var")#+
-  # ylim(0,0.5)
+orderit <- data.frame(SYMBOL=c(SGWAS_order_frame$SYMBOL,'RARG',
+                        'TNS2', 
+                        'ZNF740',
+                        'SLC28A3',
+                        'RMI1',
+                        'EEF1B2',
+                        'FRS2', 
+                        'HDDC2')) %>% 
+  left_join(.,backGL) %>% 
+  mutate(motif= if_else(ENTREZID %in% motif_ER, "ER", if_else(ENTREZID %in% motif_LR, "LR",if_else(ENTREZID %in% motif_TI, "TI", "NR" )))) %>% 
+  mutate(chrom_gene= if_else(ENTREZID %in% Chrom_reg$entrez,"yes","no")) %>% 
+  mutate(Dox_respegene= if_else(ENTREZID %in% resp_egene$entrezgene_id, "yes","no")) %>% 
+  mutate(ACchrom_gene= if_else(ENTREZID %in%  DOX_reg$entrez,"yes","no")) %>%  
+  mutate(gTEX_heart=if_else(SYMBOL %in% GTEX_heartLV_log2cpm$Description,  "yes","no"))
+
+
+
+
+toplistall %>% 
+    mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+   filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) 
+ 
+
+GWASabsFCsig <- 
+  toplistall %>% 
+    mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+   filter(time =="24_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL)  %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val)
+  
+gwas_sig_mat <- GWASabsFCsig %>% 
+   column_to_rownames(var="id") %>%
+  dplyr::select(orderit$SYMBOL) %>%
+  as.matrix()
+ 
+
+GWASabsFC <- toplistall %>% 
+  
+  # filter(id !="TRZ") %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  dplyr::select(orderit$SYMBOL) %>%
+  as.matrix()
+
+study_anno <- data.frame(Study=c(rep("GWAS",35),rep("TWAS",3)),motif=orderit$motif,chrom_gene=orderit$chrom_gene,Dox_respegene=orderit$Dox_respegene, ACchrom_gene=orderit$ACchrom_gene,gTEX_heart=orderit$gTEX_heart)
+rownames(study_anno) <- colnames(GWASabsFC)
+ht <- HeatmapAnnotation(df = study_anno,
+              col = list(Study=c("GWAS"="darkorange","TWAS"= "blueviolet"),
+                         motif = c("LR"="#00BFC4", "NR"="#C77CFF", "ER"="#F8766D", "TI"="#7CAE00"),
+chrom_gene=c("yes"="darkred","no"="pink"),
+Dox_respegene=c("yes"="darkred","no"="pink"),
+ACchrom_gene=c("yes"="darkred","no"="pink"),
+gTEX_heart=c("yes"="darkred","no"="pink")))
+
+Heatmap(GWASabsFC, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change values of GWAS and TWAS genes n = 38", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_order= orderit$SYMBOL,
+        bottom_annotation = ht,
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(gwas_sig_mat[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+```
+
+
+```{r Finfig_hm 3 hours}
+
+GWASabsFCsig_3 <- 
+  toplistall %>% 
+    mutate(drug=factor(id, levels = c('DOX','EPI','DNR','MTX','TRZ','VEH'))) %>% 
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+   filter(time =="3_hours") %>% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL)  %>%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val)
+  
+gwas_sig_mat_3 <- GWASabsFCsig %>% 
+   column_to_rownames(var="id") %>%
+  dplyr::select(orderit$SYMBOL) %>%
+  as.matrix()
+ 
+
+GWASabsFC_3 <- toplistall %>% 
+  
+  # filter(id !="TRZ") %>% 
+  filter(time=="24_hours") %>% 
+  mutate(logFC= logFC*(-1)) %>%
+  filter(ENTREZID %in% orderit$ENTREZID) %>% 
+  dplyr::select(SYMBOL ,time, id, logFC) %>% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %>% 
+  column_to_rownames(var="id") %>%
+  dplyr::select(orderit$SYMBOL) %>%
+  as.matrix()
+
+# study_anno <- data.frame(Study=c(rep("GWAS",35),rep("TWAS",3)),motif=orderit$motif,chrom_gene=orderit$chrom_gene,Dox_respegene=orderit$Dox_respegene, ACchrom_gene=orderit$ACchrom_gene,gTEX_heart=orderit$gTEX_heart)
+# rownames(study_anno) <- colnames(GWASabsFC)
+# ht <- HeatmapAnnotation(df = study_anno,
+#               col = list(Study=c("GWAS"="darkorange","TWAS"= "blueviolet"),
+#                          motif = c("LR"="#00BFC4", "NR"="#C77CFF", "ER"="#F8766D", "TI"="#7CAE00"),
+# chrom_gene=c("yes"="darkred","no"="pink"),
+# Dox_respegene=c("yes"="darkred","no"="pink"),
+# ACchrom_gene=c("yes"="darkred","no"="pink"),
+# gTEX_heart=c("yes"="darkred","no"="pink")))
+
+Heatmap(GWASabsFC_3, name = "Fold change\nvalues", 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = "left",
+        col = col_funFC,
+        row_order = c('DOX','EPI','DNR', 'MTX','TRZ'),
+        column_title = "Fold change values of GWAS and TWAS genes\n 3 hours n = 38", 
+        column_title_side = "top",
+        column_title_gp = gpar(fontsize = 16, fontface = "bold"),
+        column_order= orderit$SYMBOL,
+        bottom_annotation = ht,
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 12,fontface="italic"),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(gwas_sig_mat_3[i, j] <0.05)
+            grid.text("*", x, y, gp = gpar(fontsize = 20))
+})
+
 
 
 ```
 
-
-
-### C) Pairwise correlation of drug response variance
-
-```{r FSTAT corr, fig.height=7, fig.width=7}
-
-organized_drugframe <- read.csv("data/organized_drugframe.csv",
-                                row.names = 1)
-Var_test_list3 <- readRDS("data/Var_test_list3.RDS")
-#Is the data normally distributed?
-
-set3 <- names(Var_test_list3)
-shorterlist <- Var_test_list3[[1]][[13]]
-names(shorterlist) <- rownames(organized_drugframe)
-
-statfun3 <- data.frame(ENTREZID=rownames(organized_drugframe))
-for (i in 1:length(set3)){
-  a <- set3[i]
-    s_list<- Var_test_list3[[i]][[13]]
-  names(s_list) <- rownames(organized_drugframe)
-  hold<- map_df(s_list, ~as.data.frame(.x$statistic), .id="ENTREZID")
-   statfun3[paste0(a)] <- hold$`.x$statistic`
- 
-}
-
-Var_test_list24 <- readRDS("data/Var_test_list24.RDS")
-set24 <- names(Var_test_list24) 
-
-statfun24 <- data.frame(ENTREZID=rownames(organized_drugframe))
-for (i in 1:length(set24)){
-  a <- set24[i]
-    s_list<- Var_test_list24[[i]][[13]]
-  names(s_list) <- rownames(organized_drugframe)
-  hold<- map_df(s_list, ~as.data.frame(.x$statistic), .id="ENTREZID")
-   statfun24[paste0(a)] <- hold$`.x$statistic`
- 
-}
-
-
-Fstatcor <- statfun24 %>% 
-  full_join(., statfun3, by="ENTREZID") %>% 
-   column_to_rownames('ENTREZID') %>% 
-   # as.matrix(.) %>% 
-   # rowwise() %>% 
-   cor(., method="spearman")
-
-
- col_fun <- circlize::colorRamp2(c(-1,0, 1), c("blue","white", "red"))
- 
-mat_colF <- data.frame(time= c(rep("24 hours",5), rep("3 hours",5)), class= (c("AC","AC","AC","nAC","nAC","AC","AC","AC","nAC","nAC")),TOP2i=c(rep("yes",4), "no", rep("yes",4),"no"))
-
-rownames(mat_colF) <- colnames(Fstatcor)
-
-
-
-mat_colors <- list(time=c("chocolate4", "pink"), class=c("yellow1","lightgreen"), TOP2i =c("darkgreen","goldenrod"))
-
-names(mat_colors$time) <- unique(mat_colF$time)
-names(mat_colors$class) <- unique(mat_colF$class)
-names(mat_colors$TOP2i) <- unique(mat_colF$TOP2i)
-         
-ha <- HeatmapAnnotation(df=mat_colF, col=mat_colors)
-
-   Heatmap(Fstatcor, 
-           column_title = "3 & 24 hr F stat corr", 
-           col=col_fun,
-          top_annotation = ha,
-           cell_fun = function(j, i, x, y, width, height, fill) {
-        grid.text(sprintf("%.2f", Fstatcor[i, j]), x, y, gp = gpar(fontsize = 10))})
-
-   
- 
-```
-More analysis of the variablity in gene expression can be found [at this link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/variance_scrip.html).
+More analysis GWAS and TWAS SNPs found in the Schneider data [at this link](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html#Top_50_SNP_and_eGenes_from_Schneider_GWAS).
