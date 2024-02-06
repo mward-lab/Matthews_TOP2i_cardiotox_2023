@@ -11,11 +11,11 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-09-28" />
+<meta name="date" content="2024-02-06" />
 
-<title>Figure 7: AC treatments induce transcriptional variation across individuals over time.</title>
+<title>Figure 7: Genes in AC toxicity-associated loci respond to TOP2i.</title>
 
-<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -359,10 +359,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 7: AC treatments induce
-transcriptional variation across individuals over time.</h1>
+<h1 class="title toc-ignore">Figure 7: Genes in AC toxicity-associated
+loci respond to TOP2i.</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-09-28</h4>
+<h4 class="date">2024-02-06</h4>
 
 </div>
 
@@ -391,7 +391,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-09-28
+<strong>Last updated:</strong> 2024-02-06
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -522,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree87a496b21c2984c46a7bcb3f599abb642299e3eatargetblank87a496ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treed3bb5e9da66699fae2867fe44e4a731e4240b31etargetblankd3bb5e9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/87a496b21c2984c46a7bcb3f599abb642299e3ea" target="_blank">87a496b</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/d3bb5e9da66699fae2867fe44e4a731e4240b31e" target="_blank">d3bb5e9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree87a496b21c2984c46a7bcb3f599abb642299e3eatargetblank87a496ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treed3bb5e9da66699fae2867fe44e4a731e4240b31etargetblankd3bb5e9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -540,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/87a496b21c2984c46a7bcb3f599abb642299e3ea" target="_blank">87a496b</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/d3bb5e9da66699fae2867fe44e4a731e4240b31e" target="_blank">d3bb5e9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -558,6 +558,7 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/variance_values by gene.png
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -566,6 +567,10 @@ Ignored files:
     Ignored:    data/CADGWASgene_table.csv
     Ignored:    data/CAD_geneset.RDS
     Ignored:    data/CALIMA_Data/
+    Ignored:    data/CMD04_75DRCviability.csv
+    Ignored:    data/CMD04_87DRCviability.csv
+    Ignored:    data/CMD05_75DRCviability.csv
+    Ignored:    data/CMD05_87DRCviability.csv
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
     Ignored:    data/Counts_RNA_ERMatthews.txt
@@ -583,6 +588,8 @@ Ignored files:
     Ignored:    data/Dx_reQTL_specific.txt
     Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/FC_necela.RDS
+    Ignored:    data/FC_necela_names.RDS
     Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
@@ -598,18 +605,26 @@ Ignored files:
     Ignored:    data/K_cluster
     Ignored:    data/K_cluster_kisthree.csv
     Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/Knowles_log2cpm_real.RDS
+    Ignored:    data/Knowles_variation_data.RDS
+    Ignored:    data/Knowles_variation_data_conc.RDS
+    Ignored:    data/Knowlesvarlist.RDS
     Ignored:    data/LD50_05via.csv
     Ignored:    data/LDH48hoursdata.csv
     Ignored:    data/Mt24counts.txt
     Ignored:    data/NoRespDEG_final.csv
     Ignored:    data/RINsamplelist.txt
+    Ignored:    data/RNA_seq_trial.RDS
+    Ignored:    data/Schneider_GWAS.txt
     Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/Sup_replicate_values.csv
     Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
     Ignored:    data/TableS10.csv
     Ignored:    data/TableS11.csv
     Ignored:    data/TableS9.csv
+    Ignored:    data/Top2_expression.RDS
     Ignored:    data/Top2biresp_cluster24h.csv
     Ignored:    data/Var_test_list.RDS
     Ignored:    data/Var_test_list24.RDS
@@ -624,8 +639,10 @@ Ignored files:
     Ignored:    data/allmymatrix.RDS
     Ignored:    data/annotation_data_frame.RDS
     Ignored:    data/averageviabilitytable.RDS
+    Ignored:    data/averageviabilitytable.csv
     Ignored:    data/avgLD50.RDS
     Ignored:    data/avg_LD50.RDS
+    Ignored:    data/avg_via_table.csv
     Ignored:    data/backGL.txt
     Ignored:    data/burr_genes.RDS
     Ignored:    data/calcium_data.RDS
@@ -655,6 +672,7 @@ Ignored files:
     Ignored:    data/filtered_raw_counts.csv
     Ignored:    data/filtermatrix_x.RDS
     Ignored:    data/folder_05top/
+    Ignored:    data/framefun24.RDS
     Ignored:    data/geneDoxonlyQTL.csv
     Ignored:    data/gene_corr_df.RDS
     Ignored:    data/gene_corr_frame.RDS
@@ -668,6 +686,7 @@ Ignored files:
     Ignored:    data/gostrescoNR
     Ignored:    data/gtex/
     Ignored:    data/heartgenes.csv
+    Ignored:    data/highly_var_genelist.RDS
     Ignored:    data/hsa_kegg_anno.RDS
     Ignored:    data/individualDRCfile.RDS
     Ignored:    data/individual_DRC48.RDS
@@ -689,6 +708,7 @@ Ignored files:
     Ignored:    data/norm_counts.csv
     Ignored:    data/old_sets/
     Ignored:    data/organized_drugframe.csv
+    Ignored:    data/pca_all_anno.csv
     Ignored:    data/plan2plot.png
     Ignored:    data/plot_intv_list.RDS
     Ignored:    data/plot_list_DRC.RDS
@@ -697,6 +717,8 @@ Ignored files:
     Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
+    Ignored:    data/sampsettrz.RDS
+    Ignored:    data/schneider_closest_output.RDS
     Ignored:    data/sigVDA24.txt
     Ignored:    data/sigVDA3.txt
     Ignored:    data/sigVDX24.txt
@@ -715,7 +737,9 @@ Ignored files:
     Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
+    Ignored:    data/supp_viadata.csv
     Ignored:    data/table3a.omar
+    Ignored:    data/test_run_sample_list.txt
     Ignored:    data/testlist.txt
     Ignored:    data/toplistall.RDS
     Ignored:    data/trtonly_24h_genes.RDS
@@ -736,12 +760,21 @@ Untracked files:
     Untracked:  Doxorubicin_vehicle_3_24.csv
     Untracked:  Doxtoplist.csv
     Untracked:  EPIqvalue_analysis.Rmd
+    Untracked:  Final.sup.pdf
     Untracked:  GWAS_list_of_interest.xlsx
     Untracked:  KEGGpathwaylist.R
+    Untracked:  NA
     Untracked:  OmicNavigator_learn.R
+    Untracked:  SNP_egenes_allfiles.RDS
+    Untracked:  SNP_frame_pdf
+    Untracked:  SNP_frame_pdf.pdf
     Untracked:  SigDoxtoplist.csv
+    Untracked:  analysis/DRC_viability_check.Rmd
+    Untracked:  analysis/New_code_dec-23.R
+    Untracked:  analysis/cellcycle_kegg_genes.R
     Untracked:  analysis/ciFIT.R
     Untracked:  analysis/export_to_excel.R
+    Untracked:  analysis/featureCountsPLAY.R
     Untracked:  cleanupfiles_script.R
     Untracked:  code/biomart_gene_names.R
     Untracked:  code/constantcode.R
@@ -756,37 +789,81 @@ Untracked files:
     Untracked:  code/venndiagramcolor_control.R
     Untracked:  cormotif_p.post.list_4.csv
     Untracked:  figS1024h.pdf
+    Untracked:  final.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
+    Untracked:  listoftranscripts
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/ABHD8_dif_values.RDS
+    Untracked:  output/C3orf18_dif_values.RDS
+    Untracked:  output/Cardiotox_dif_values.RDS
     Untracked:  output/DNR_DEGlist.csv
     Untracked:  output/DNRvenn.RDS
     Untracked:  output/DOX_DEGlist.csv
+    Untracked:  output/DOX_de_goi.csv
     Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EEF1B2_dif_values.RDS
+    Untracked:  output/EEIG1_dif_values.RDS
     Untracked:  output/EPI_DEGlist.csv
     Untracked:  output/EPIvenn.RDS
+    Untracked:  output/ESGN_rds.RDS
+    Untracked:  output/FC_necela.RDS
+    Untracked:  output/FC_necela_names.RDS
+    Untracked:  output/FRS2_dif_values.RDS
     Untracked:  output/Figures/
+    Untracked:  output/GTEXv8_gene_median_tpm.RDS
+    Untracked:  output/GTEXv8_gene_tpm_heart_left_ventricle.RDS
+    Untracked:  output/HDDC2_dif_values.RDS
+    Untracked:  output/HER2_gene.RDS
+    Untracked:  output/KEGGcellcyclegenes.RDS
+    Untracked:  output/Knowles_S13.csv
+    Untracked:  output/Knowles_log2cpm.csv
+    Untracked:  output/Knowles_supp13.csv
+    Untracked:  output/LD50tox_table.RDS
     Untracked:  output/MTX_DEGlist.csv
     Untracked:  output/MTXvenn.RDS
+    Untracked:  output/PEX16_dif_values.RDS
+    Untracked:  output/RASIP1_dif_values.RDS
+    Untracked:  output/RMI1_dif_values.RDS
+    Untracked:  output/RSID_QTL_list_full.txt
+    Untracked:  output/SETA_analysis_reyes.RDS
+    Untracked:  output/SGWAS_top50_order.csv
+    Untracked:  output/SLC27A1_dif_values.RDS
+    Untracked:  output/SLC28A3_dif_values.RDS
+    Untracked:  output/SNP_egenes_allfiles.RDS
+    Untracked:  output/SNP_list_ID.RDS
+    Untracked:  output/SNP_list_full.txt
+    Untracked:  output/SNP_supp.RDS
+    Untracked:  output/TGFBR3L_dif_values.RDS
+    Untracked:  output/TNS2_dif_values.RDS
+    Untracked:  output/TOP_50SNPreffile.csv
     Untracked:  output/TRZ_DEGlist.csv
     Untracked:  output/TableS8.csv
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
+    Untracked:  output/ZNF740_dif_values.RDS
     Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/counts_v8_heart_left_ventricle_gct.RDS
+    Untracked:  output/crisprfoldchange.RDS
     Untracked:  output/endocytosisgenes.csv
+    Untracked:  output/expre7k.csv
+    Untracked:  output/expressed_egenes_by_RSID.csv
     Untracked:  output/gene_corr_fig9.RDS
+    Untracked:  output/genes.RDS
     Untracked:  output/legend_b.RDS
     Untracked:  output/motif_ERrep.RDS
     Untracked:  output/motif_LRrep.RDS
     Untracked:  output/motif_NRrep.RDS
     Untracked:  output/motif_TI_rep.RDS
+    Untracked:  output/near_genes_SNP1.RDS
+    Untracked:  output/necela_list_test.RDS
+    Untracked:  output/necela_val_genes.RDS
     Untracked:  output/output-old/
     Untracked:  output/rank24genes.csv
     Untracked:  output/rank3genes.csv
-    Untracked:  output/reneem@ls6.tacc.utexas.edu
     Untracked:  output/sequencinginformationforsupp.csv
     Untracked:  output/sequencinginformationforsupp.prn
     Untracked:  output/sigVDA24.txt
@@ -800,16 +877,19 @@ Untracked files:
     Untracked:  output/sigVTR24.txt
     Untracked:  output/sigVTR3.txt
     Untracked:  output/supplementary_motif_list_GO.RDS
+    Untracked:  output/test_biomart_run.RDS
     Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/trop_knowles_fun.csv
     Untracked:  output/tvl24hour.txt
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/GOI_plots.Rmd
-    Modified:   analysis/LDH_analysis.Rmd
-    Modified:   analysis/Supplementary_figures.Rmd
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/DRC_analysis.Rmd
+    Modified:   analysis/Figure4.Rmd
+    Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/GTEx_genes.Rmd
+    Deleted:    analysis/Knowles2019.Rmd
     Modified:   output/daplot.RDS
     Modified:   output/dxplot.RDS
     Modified:   output/epplot.RDS
@@ -862,6 +942,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/d3bb5e9da66699fae2867fe44e4a731e4240b31e/analysis/Figure7.Rmd" target="_blank">d3bb5e9</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+<td>
+updates to final figure
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/ffba2b7a076cab6a2a258f923ff48bc62517f081/docs/Figure7.html" target="_blank">ffba2b7</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1101,325 +1215,414 @@ pre[class] {
 }
 </style>
 <pre class="r"><code>library(tidyverse)
-library(ggpubr)
-library(ggsignif)
-library(gprofiler2)
-library(paletteer)
-library(ggVennDiagram)
 library(gridtext)
 library(scales)
 library(kableExtra)
 library(qvalue)
 library(data.table)
-library(ComplexHeatmap)</code></pre>
-<pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
-siglist &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
-list2env(siglist, envir = .GlobalEnv)</code></pre>
-<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
-<pre class="r"><code>cpmcounts &lt;- readRDS(&quot;data/cpmcount.RDS&quot;)
+library(ComplexHeatmap)
+library(readr)
+library(limma)
+library(edgeR)</code></pre>
+<pre class="r"><code>drug_palc &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
+drug_pal_fact &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;,&quot;#41B333&quot;)
+
+cpmcounts &lt;- readRDS(&quot;data/cpmcount.RDS&quot;)
 DEG_cormotif &lt;- readRDS(&quot;data/DEG_cormotif.RDS&quot;)
 list2env(DEG_cormotif,envir=.GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
-<pre class="r"><code>drug_pal_fact &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;,&quot;#41B333&quot;)
+<pre class="r"><code>backGL &lt;- read.csv(&quot;data/backGL.txt&quot;, row.names =1)
+col_fun1 = circlize::colorRamp2(c(-1, 3), c(&quot;white&quot;, &quot;purple&quot;))
+col_funFC= circlize::colorRamp2(c(-2,0, 2), c(&quot;darkgreen&quot;,&quot;white&quot;, &quot;darkorange2&quot;))
+col_funTOX = circlize::colorRamp2(c(-1,0, 1), c(&quot;darkviolet&quot;, &quot;white&quot;,&quot;firebrick4&quot;))
+
+
+DOXrespGene &lt;- readRDS(&quot;output/DOXreQTLs.RDS&quot;)
+toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
+
+list2env(DEG_cormotif,envir=.GlobalEnv)</code></pre>
+<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
+<pre class="r"><code>counts_v8_heart_left_ventricle_gct &lt;- readRDS(&quot;output/counts_v8_heart_left_ventricle_gct.RDS&quot;)
+names_gtex_genes &lt;- counts_v8_heart_left_ventricle_gct %&gt;% 
+  dplyr::select(Name, Description)
+gtex_counts_matrix&lt;- counts_v8_heart_left_ventricle_gct %&gt;% 
+  column_to_rownames(&quot;Name&quot;) %&gt;% 
+  dplyr::select(!id) %&gt;% 
+  dplyr::select(!Description) %&gt;% 
+  as.matrix()
+  
+# cpm &lt;- cpm(gtex_counts_matrix)
+lcpm &lt;- cpm(gtex_counts_matrix, log=TRUE)  ### for determining the basic cutoffs
+dim(lcpm)</code></pre>
+<pre><code>[1] 56200   432</code></pre>
+<pre class="r"><code>row_means &lt;- rowMeans(lcpm)
+gtex_x &lt;- lcpm[row_means &gt; 0,]
+GTEX_heartLV_log2cpm &lt;- gtex_x %&gt;% 
+  as.data.frame() %&gt;%
+  mutate(Name = rownames(gtex_x)) %&gt;% 
+  left_join(.,names_gtex_genes, by =c(&quot;Name&quot;))
+
+
+
+
+
+SGWAS_order_frame &lt;- read.csv(&quot;output/SGWAS_top50_order.csv&quot;, row.names = 1)
+
 col_fun5 = circlize::colorRamp2(c(0, 5), c(&quot;white&quot;, &quot;purple&quot;))
 ## supplement 1
 chrom_reg_Seoane &lt;- read_csv(file = &quot;data/Seonane2019supp1.txt&quot;,col_types = cols(...1 = col_skip()))
 Seoane_2019 &lt;- chrom_reg_Seoane[,2]
 names(Seoane_2019) &lt;- &quot;ENTREZID&quot;
-chrom_genes &lt;- (unique(Seoane_2019$ENTREZID))
+Chrom_reg &lt;- data.frame(&quot;entrez&quot;=(unique(Seoane_2019$ENTREZID)))
 
-# supplement 4
 Sup4seoane &lt;- read.csv(&quot;output/Sup4seoane.csv&quot;, row.names = 1)
-Sup4genes &lt;- Sup4seoane  %&gt;% 
+DOX_reg &lt;- Sup4seoane  %&gt;% 
   filter(pval.expAnth&lt;0.05) %&gt;% 
   distinct(entrez, .keep_all = TRUE) %&gt;% 
-  dplyr::select(entrez)</code></pre>
+  dplyr::select(entrez)
+base_egene &lt;-readRDS(&quot;output/knowles4.RDS&quot;)
+resp_egene &lt;-readRDS(&quot;output/knowles5.RDS&quot;)</code></pre>
 <div
-id="figure-7-ac-treatments-induce-transcriptional-variation-across-individuals-over-time."
+id="figure-7-genes-in-ac-toxicity-associated-loci-respond-to-top2i."
 class="section level2">
-<h2>Figure 7: AC treatments induce transcriptional variation across
-individuals over time.</h2>
-<div id="a-mean-gene-expression" class="section level3">
-<h3>A) Mean gene expression</h3>
-<pre class="r"><code>mean_vardrug1 &lt;- read.csv(&quot;data/mean_vardrug1.csv&quot;, row.names = 1)
+<h2>Figure 7: Genes in AC toxicity-associated loci respond to
+TOP2i.</h2>
+<pre class="r"><code>orderit &lt;- data.frame(SYMBOL=c(SGWAS_order_frame$SYMBOL,&#39;RARG&#39;,
+                        &#39;TNS2&#39;, 
+                        &#39;ZNF740&#39;,
+                        &#39;SLC28A3&#39;,
+                        &#39;RMI1&#39;,
+                        &#39;EEF1B2&#39;,
+                        &#39;FRS2&#39;, 
+                        &#39;HDDC2&#39;)) %&gt;% 
+  left_join(.,backGL) %&gt;% 
+  mutate(motif= if_else(ENTREZID %in% motif_ER, &quot;ER&quot;, if_else(ENTREZID %in% motif_LR, &quot;LR&quot;,if_else(ENTREZID %in% motif_TI, &quot;TI&quot;, &quot;NR&quot; )))) %&gt;% 
+  mutate(chrom_gene= if_else(ENTREZID %in% Chrom_reg$entrez,&quot;yes&quot;,&quot;no&quot;)) %&gt;% 
+  mutate(Dox_respegene= if_else(ENTREZID %in% resp_egene$entrezgene_id, &quot;yes&quot;,&quot;no&quot;)) %&gt;% 
+  mutate(ACchrom_gene= if_else(ENTREZID %in%  DOX_reg$entrez,&quot;yes&quot;,&quot;no&quot;)) %&gt;%  
+  mutate(gTEX_heart=if_else(SYMBOL %in% GTEX_heartLV_log2cpm$Description,  &quot;yes&quot;,&quot;no&quot;))
 
 
-drug_frame&lt;- mean_vardrug1 %&gt;% 
-  rownames_to_column(var = &quot;entrezid&quot;) %&gt;% 
-  pivot_longer(cols = mean.Da.3:var.Ve.24, names_to = &quot;short&quot;, values_to = &quot;values&quot;) %&gt;% 
-  separate(short, into=c(&quot;calc&quot;,&quot;treatment&quot;,&quot;time&quot;)) %&gt;% 
-  mutate(treatment= factor(treatment, levels = c(&quot;Do&quot;,&quot;Ep&quot;,&quot;Da&quot;,&quot;Mi&quot;,&quot;Tr&quot;,&quot;Ve&quot;),labels = c(&quot;DOX&quot;,&quot;EPI&quot;,&quot;DNR&quot;,&quot;MTX&quot;,&quot;TRZ&quot;,&quot;VEH&quot;))) %&gt;% 
-  mutate(time= factor(time, levels = c(&quot;3&quot;,&quot;24&quot;), labels= c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;% 
-  group_by(treatment, time, calc) %&gt;% 
-  as.data.frame
 
 
-
-drug_frame %&gt;% 
-  filter(calc!=&quot;var&quot;) %&gt;% 
-  ggplot(., aes(x= treatment, y=values,fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c(&quot;TRZ&quot;,&quot;VEH&quot;),
-                                c(&quot;MTX&quot;,&quot;VEH&quot;),
-                                c(&quot;DNR&quot;,&quot;VEH&quot;),
-                                c(&quot;EPI&quot;,&quot;VEH&quot;),
-                                c(&quot;DOX&quot;,&quot;VEH&quot;)),
-              test= &quot;t.test&quot;,
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=11,
-              step_increase = 0.05)+
-  facet_wrap(.~time)+
-  ggtitle(&quot;Means&quot;)+
-  ylim(0,18)+
- scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(&quot; &quot;)+
-  ylab(expression(&quot;counts log&quot;[2]~&quot;cpm &quot;))+
-  theme(strip.background = element_rect(fill = &quot;white&quot;,linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face=&quot;bold&quot;),
-          axis.title = element_text(size = 10, color = &quot;black&quot;),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = &quot;black&quot;, size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, &quot;mm&quot;),face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Figure7.Rmd/meangene%20expr-1.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="b-variance-in-gene-expression" class="section level3">
-<h3>B) Variance in gene expression</h3>
-<pre class="r"><code>drug_pal_fact &lt;- c(&quot;#8B006D&quot;,&quot;#DF707E&quot;,&quot;#F1B72B&quot;, &quot;#3386DD&quot;,&quot;#707031&quot;,&quot;#41B333&quot;)
-
-drug_frame %&gt;% 
-  filter(calc!=&quot;mean&quot;) %&gt;% 
-  ggplot(., aes(x= treatment, y=values, fill=treatment))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c(&quot;DOX&quot;,&quot;VEH&quot;),
-                                c(&quot;EPI&quot;,&quot;VEH&quot;),
-                                c(&quot;DNR&quot;,&quot;VEH&quot;),
-                                c(&quot;MTX&quot;,&quot;VEH&quot;),
-                                c(&quot;TRZ&quot;,&quot;VEH&quot;)),
-              test= &quot;t.test&quot;,
-              tip_length = 0.01,
-              map_signif_level=FALSE,
-              textsize =4,
-              y_position=0.85,
-              step_increase = 0.1)+
-  facet_wrap(~time)+
-  ggtitle(&quot;Variance&quot;)+
-  coord_cartesian(ylim = c(0,1))+
-  # ylim(0,2)+
-scale_fill_manual(values=drug_pal_fact)+
-  theme_bw()+
-  xlab(&quot; &quot;)+
-  ylab(expression(&quot;variance of log &quot;[2]~&quot; cpm &quot;))+
-  theme(strip.background = element_rect(fill = &quot;white&quot;,linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face=&quot;bold&quot;),
-          axis.title = element_text(size = 10, color = &quot;black&quot;),
-          axis.ticks = element_line(linewidth = 1.0),
-          panel.background = element_rect(colour = &quot;black&quot;, size=1),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(margin = margin(2,0,2,0, &quot;mm&quot;),face = &quot;bold&quot;))</code></pre>
-<p><img src="figure/Figure7.Rmd/graph%20of%20var%20by%20drug%20indv-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-graph-of-var-by-drug-indv-1">
-Past versions of "graph of var by drug indv-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-graph-of-var-by-drug-indv-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/89d033381db3d84365fecc0422ba02ed4bd2dbc3/docs/figure/Figure7.Rmd/graph of var by drug indv-1.png" target="_blank">89d0333</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-08-15
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>drug_frame %&gt;% 
-  filter(calc!=&quot;mean&quot;) %&gt;%
-  ggplot(., aes(x= treatment, y=values))+
-  geom_boxplot(outlier.shape=NA)+
-  geom_signif(comparisons =list(c(&quot;DOX&quot;,&quot;VEH&quot;),
-                                c(&quot;EPI&quot;,&quot;VEH&quot;),
-                                c(&quot;DNR&quot;,&quot;VEH&quot;),
-                                c(&quot;MTX&quot;,&quot;VEH&quot;),
-                                c(&quot;TRZ&quot;,&quot;VEH&quot;)),
-              test= &quot;t.test&quot;,
-              map_signif_level=FALSE,
-              textsize =4,
-               y_position=(.5),
-              step_increase = 0.1)+
-  facet_wrap(~time)+
-  ggtitle(&quot;var&quot;)#+</code></pre>
-<p><img src="figure/Figure7.Rmd/graph%20of%20var%20by%20drug%20indv-2.png" width="576" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-graph-of-var-by-drug-indv-2">
-Past versions of "graph of var by drug indv-2.png"
-</button>
-</p>
-<div id="fig-no-spaces-graph-of-var-by-drug-indv-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/89d033381db3d84365fecc0422ba02ed4bd2dbc3/docs/figure/Figure7.Rmd/graph of var by drug indv-2.png" target="_blank">89d0333</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-08-15
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>  # ylim(0,0.5)</code></pre>
-</div>
-<div id="c-pairwise-correlation-of-drug-response-variance"
-class="section level3">
-<h3>C) Pairwise correlation of drug response variance</h3>
-<pre class="r"><code>organized_drugframe &lt;- read.csv(&quot;data/organized_drugframe.csv&quot;,
-                                row.names = 1)
-Var_test_list3 &lt;- readRDS(&quot;data/Var_test_list3.RDS&quot;)
-#Is the data normally distributed?
-
-set3 &lt;- names(Var_test_list3)
-shorterlist &lt;- Var_test_list3[[1]][[13]]
-names(shorterlist) &lt;- rownames(organized_drugframe)
-
-statfun3 &lt;- data.frame(ENTREZID=rownames(organized_drugframe))
-for (i in 1:length(set3)){
-  a &lt;- set3[i]
-    s_list&lt;- Var_test_list3[[i]][[13]]
-  names(s_list) &lt;- rownames(organized_drugframe)
-  hold&lt;- map_df(s_list, ~as.data.frame(.x$statistic), .id=&quot;ENTREZID&quot;)
-   statfun3[paste0(a)] &lt;- hold$`.x$statistic`
+toplistall %&gt;% 
+    mutate(drug=factor(id, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
+  filter(ENTREZID %in% orderit$ENTREZID) %&gt;% 
+   filter(time ==&quot;24_hours&quot;) %&gt;% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL) </code></pre>
+<pre><code>             ENTREZID  id        logFC    adj.P.Val  SYMBOL
+3958...1         3958 DNR -2.841654211 1.243290e-13  LGALS3
+55020...2       55020 DNR  1.333658801 1.747225e-12   TTC38
+5095...3         5095 DNR  1.071448603 1.388146e-07    PCCA
+29899...4       29899 DNR  1.954225576 4.986630e-07   GPSM2
+23371...5       23371 DNR  1.604978233 1.056163e-06    TNS2
+57161...6       57161 DNR -2.383146876 3.370044e-06   PELI2
+283337...7     283337 DNR -0.579733508 1.525722e-04  ZNF740
+150383...8     150383 DNR  1.104262721 1.726928e-04   CDPF1
+80856...9       80856 DNR  0.822616727 3.110247e-04    LNPK
+4023...10        4023 DNR  1.549451664 5.464607e-04     LPL
+51020...11      51020 DNR  0.837500708 1.303926e-03   HDDC2
+23262...12      23262 DNR  0.672772048 1.871912e-03 PPIP5K2
+10818...13      10818 DNR -0.546865539 1.991410e-03    FRS2
+6272...14        6272 DNR  0.621888001 5.362112e-03   SORT1
+5916...15        5916 DNR -1.329791599 7.072597e-03    RARG
+54826...16      54826 DNR  0.590225431 9.667914e-03    GIN1
+78996...17      78996 DNR -0.386375935 1.795971e-02   CYREN
+9620...18        9620 DNR  0.363295608 3.669460e-02  CELSR1
+80010...19      80010 DNR  0.671889247 4.031601e-02    RMI1
+23151...20      23151 DNR  0.436443420 4.741931e-02  GRAMD4
+23155...21      23155 DNR  0.337151049 5.197844e-02   CLCC1
+64078...22      64078 DNR  1.330462721 5.950696e-02 SLC28A3
+10499...23      10499 DNR  0.411899518 6.955554e-02   NCOA2
+54477...24      54477 DNR  0.487103345 7.152302e-02 PLEKHA5
+23327...25      23327 DNR -0.256622161 8.379995e-02  NEDD4L
+4692...26        4692 DNR  0.226204661 1.454533e-01     NDN
+57110...27      57110 DNR -0.448716677 3.213072e-01  PLAAT1
+344595...28    344595 DNR -0.399962237 4.100997e-01    DUBR
+1933...29        1933 DNR -0.107304755 4.912870e-01  EEF1B2
+5066...30        5066 DNR  0.154685819 5.472580e-01     PAM
+323...31          323 DNR -0.210918044 5.566906e-01   APBB2
+80059...32      80059 DNR -0.239094603 6.889705e-01  LRRTM4
+8803...33        8803 DNR  0.080349938 7.278560e-01  SUCLA2
+8214...34        8214 DNR -0.108231532 7.767081e-01   DGCR6
+7991...35        7991 DNR  0.040113972 8.234825e-01   TUSC3
+108...36          108 DNR -0.126695676 8.273045e-01   ADCY2
+79730...37      79730 DNR -0.057772199 9.021996e-01   NSUN7
+11128...38      11128 DNR  0.029517711 9.059731e-01  POLR3A
+3958...39        3958 DOX -2.592937478 2.490015e-12  LGALS3
+55020...40      55020 DOX  1.283014820 2.916892e-12   TTC38
+29899...41      29899 DOX  2.518139384 2.101681e-09   GPSM2
+5095...42        5095 DOX  1.010845341 2.818499e-07    PCCA
+23371...43      23371 DOX  1.598507639 6.706429e-07    TNS2
+57161...44      57161 DOX -2.341492097 3.836758e-06   PELI2
+4023...45        4023 DOX  1.808675205 7.124618e-05     LPL
+80856...46      80856 DOX  0.895190712 8.678073e-05    LNPK
+10818...47      10818 DOX -0.676539058 1.291338e-04    FRS2
+78996...48      78996 DOX -0.537877803 7.555844e-04   CYREN
+150383...49    150383 DOX  0.858362938 2.193138e-03   CDPF1
+9620...50        9620 DOX  0.517275591 2.869762e-03  CELSR1
+51020...51      51020 DOX  0.701624821 5.731184e-03   HDDC2
+283337...52    283337 DOX -0.381694054 1.117693e-02  ZNF740
+23155...53      23155 DOX  0.405344826 1.791996e-02   CLCC1
+23151...54      23151 DOX  0.508471630 1.886110e-02  GRAMD4
+6272...55        6272 DOX  0.534740395 1.924261e-02   SORT1
+23262...56      23262 DOX  0.461885237 2.888855e-02 PPIP5K2
+64078...57      64078 DOX  1.500098762 2.987324e-02 SLC28A3
+80010...58      80010 DOX  0.668904577 3.576733e-02    RMI1
+5916...59        5916 DOX -0.964405340 5.402876e-02    RARG
+54826...60      54826 DOX  0.421260779 5.998781e-02    GIN1
+1933...61        1933 DOX -0.212731820 1.537205e-01  EEF1B2
+7991...62        7991 DOX -0.205234135 2.053194e-01   TUSC3
+54477...63      54477 DOX  0.334744068 2.250581e-01 PLEKHA5
+79730...64      79730 DOX  0.476855272 2.404724e-01   NSUN7
+344595...65    344595 DOX -0.524001048 2.637491e-01    DUBR
+80059...66      80059 DOX -0.569911090 2.893850e-01  LRRTM4
+4692...67        4692 DOX  0.144561267 3.736745e-01     NDN
+8214...68        8214 DOX -0.302754712 3.788465e-01   DGCR6
+57110...69      57110 DOX -0.354560827 4.421703e-01  PLAAT1
+10499...70      10499 DOX  0.147512070 5.431318e-01   NCOA2
+23327...71      23327 DOX -0.080177636 6.273533e-01  NEDD4L
+8803...72        8803 DOX -0.087400124 7.094227e-01  SUCLA2
+11128...73      11128 DOX  0.060765550 7.943625e-01  POLR3A
+108...74          108 DOX  0.127672688 8.270659e-01   ADCY2
+5066...75        5066 DOX  0.059664456 8.344395e-01     PAM
+323...76          323 DOX -0.031367303 9.393574e-01   APBB2
+3958...77        3958 EPI -2.258936236 2.519057e-10  LGALS3
+55020...78      55020 EPI  0.974047987 7.331358e-09   TTC38
+57161...79      57161 EPI -2.714417489 2.189093e-07   PELI2
+29899...80      29899 EPI  1.863235071 1.590451e-06   GPSM2
+23371...81      23371 EPI  1.548244317 2.483790e-06    TNS2
+5095...82        5095 EPI  0.829217065 1.522752e-05    PCCA
+9620...83        9620 EPI  0.673682504 1.442416e-04  CELSR1
+10818...84      10818 EPI -0.662974585 2.169251e-04    FRS2
+80856...85      80856 EPI  0.839945811 2.618033e-04    LNPK
+150383...86    150383 EPI  0.942381848 1.099590e-03   CDPF1
+23151...87      23151 EPI  0.734875425 1.137112e-03  GRAMD4
+51020...88      51020 EPI  0.832885435 1.421275e-03   HDDC2
+4023...89        4023 EPI  1.351101119 2.328703e-03     LPL
+54826...90      54826 EPI  0.674858946 3.507401e-03    GIN1
+23262...91      23262 EPI  0.602541437 5.337053e-03 PPIP5K2
+283337...92    283337 EPI -0.415051660 7.118210e-03  ZNF740
+5916...93        5916 EPI -1.219583078 1.479648e-02    RARG
+64078...94      64078 EPI  1.702459586 1.707977e-02 SLC28A3
+23155...95      23155 EPI  0.369459458 3.478725e-02   CLCC1
+6272...96        6272 EPI  0.464185845 4.419093e-02   SORT1
+54477...97      54477 EPI  0.512315022 6.054740e-02 PLEKHA5
+78996...98      78996 EPI -0.300441979 7.403190e-02   CYREN
+7991...99        7991 EPI -0.242241759 1.322443e-01   TUSC3
+80010...100     80010 EPI  0.469909001 1.524626e-01    RMI1
+1933...101       1933 EPI -0.213535720 1.551221e-01  EEF1B2
+11128...102     11128 EPI  0.224307657 2.966829e-01  POLR3A
+79730...103     79730 EPI  0.417825538 3.192457e-01   NSUN7
+4692...104       4692 EPI -0.153538531 3.515660e-01     NDN
+8214...105       8214 EPI -0.277219655 4.398229e-01   DGCR6
+57110...106     57110 EPI -0.339243025 4.802483e-01  PLAAT1
+323...107         323 EPI -0.187249253 6.196852e-01   APBB2
+23327...108     23327 EPI -0.075188817 6.598565e-01  NEDD4L
+10499...109     10499 EPI  0.100464458 7.011245e-01   NCOA2
+344595...110   344595 EPI -0.182858257 7.439904e-01    DUBR
+8803...111       8803 EPI -0.071967777 7.700056e-01  SUCLA2
+80059...112     80059 EPI -0.148755480 8.211226e-01  LRRTM4
+5066...113       5066 EPI -0.045912799 8.793958e-01     PAM
+108...114         108 EPI -0.039274665 9.511661e-01   ADCY2
+29899...115     29899 MTX  1.934044382 3.815931e-06   GPSM2
+4023...116       4023 MTX  1.451134843 5.826444e-03     LPL
+80010...117     80010 MTX  1.092226550 6.604137e-03    RMI1
+5095...118       5095 MTX  0.577769680 7.822416e-03    PCCA
+80856...119     80856 MTX  0.685663398 1.284470e-02    LNPK
+283337...120   283337 MTX -0.280222769 1.954044e-01  ZNF740
+10818...121     10818 MTX -0.303886126 2.378802e-01    FRS2
+79730...122     79730 MTX  0.628036510 2.868955e-01   NSUN7
+3958...123       3958 MTX -0.499180352 3.094334e-01  LGALS3
+51020...124     51020 MTX  0.366332291 3.373271e-01   HDDC2
+23327...125     23327 MTX  0.198830941 3.917168e-01  NEDD4L
+9620...126       9620 MTX  0.208898350 4.712695e-01  CELSR1
+64078...127     64078 MTX  0.768540550 4.758212e-01 SLC28A3
+57161...128     57161 MTX -0.611530252 5.080329e-01   PELI2
+5066...129       5066 MTX  0.250853051 5.499338e-01     PAM
+23151...130     23151 MTX  0.209526820 5.825203e-01  GRAMD4
+23155...131     23155 MTX  0.164554919 5.877302e-01   CLCC1
+8803...132       8803 MTX  0.173292448 6.485778e-01  SUCLA2
+80059...133     80059 MTX -0.403073184 6.821231e-01  LRRTM4
+6272...134       6272 MTX  0.179183592 6.859679e-01   SORT1
+5916...135       5916 MTX -0.340441408 7.425170e-01    RARG
+55020...136     55020 MTX  0.085053540 7.601342e-01   TTC38
+150383...137   150383 MTX -0.154959612 7.638427e-01   CDPF1
+7991...138       7991 MTX  0.093568355 7.664325e-01   TUSC3
+108...139         108 MTX  0.297466826 7.704286e-01   ADCY2
+57110...140     57110 MTX  0.264958653 7.734792e-01  PLAAT1
+8214...141       8214 MTX  0.189812119 7.812516e-01   DGCR6
+1933...142       1933 MTX  0.074340382 8.149139e-01  EEF1B2
+54826...143     54826 MTX -0.107587669 8.166223e-01    GIN1
+23371...144     23371 MTX  0.132833588 8.258590e-01    TNS2
+78996...145     78996 MTX -0.079577280 8.278189e-01   CYREN
+23262...146     23262 MTX  0.094249849 8.424378e-01 PPIP5K2
+323...147         323 MTX  0.133742960 8.617852e-01   APBB2
+54477...148     54477 MTX  0.102791888 8.679409e-01 PLEKHA5
+11128...149     11128 MTX -0.065059234 8.900008e-01  POLR3A
+10499...150     10499 MTX  0.065432833 9.015410e-01   NCOA2
+344595...151   344595 MTX -0.094804211 9.359175e-01    DUBR
+4692...152       4692 MTX  0.024324107 9.507869e-01     NDN
+23371...153     23371 TRZ -0.360682790 9.999716e-01    TNS2
+283337...154   283337 TRZ -0.182311739 9.999716e-01  ZNF740
+5916...155       5916 TRZ -0.416339236 9.999716e-01    RARG
+29899...156     29899 TRZ  0.234391483 9.999716e-01   GPSM2
+4023...157       4023 TRZ  0.314414654 9.999716e-01     LPL
+54826...158     54826 TRZ -0.147747416 9.999716e-01    GIN1
+80856...159     80856 TRZ  0.154476640 9.999716e-01    LNPK
+23151...160     23151 TRZ -0.128233102 9.999716e-01  GRAMD4
+79730...161     79730 TRZ -0.218396111 9.999716e-01   NSUN7
+9620...162       9620 TRZ -0.105210839 9.999716e-01  CELSR1
+64078...163     64078 TRZ -0.302421643 9.999716e-01 SLC28A3
+78996...164     78996 TRZ -0.077524620 9.999716e-01   CYREN
+57161...165     57161 TRZ  0.238798361 9.999716e-01   PELI2
+150383...166   150383 TRZ -0.102010613 9.999716e-01   CDPF1
+323...167         323 TRZ -0.127795059 9.999716e-01   APBB2
+51020...168     51020 TRZ  0.096587761 9.999716e-01   HDDC2
+55020...169     55020 TRZ -0.049872370 9.999716e-01   TTC38
+10499...170     10499 TRZ -0.076894497 9.999716e-01   NCOA2
+1933...171       1933 TRZ  0.045717271 9.999716e-01  EEF1B2
+6272...172       6272 TRZ  0.072173304 9.999716e-01   SORT1
+80010...173     80010 TRZ  0.089587489 9.999716e-01    RMI1
+3958...174       3958 TRZ -0.086684248 9.999716e-01  LGALS3
+80059...175     80059 TRZ  0.137665553 9.999716e-01  LRRTM4
+23327...176     23327 TRZ -0.037600446 9.999716e-01  NEDD4L
+8803...177       8803 TRZ  0.047787071 9.999716e-01  SUCLA2
+5095...178       5095 TRZ -0.035722392 9.999716e-01    PCCA
+23262...179     23262 TRZ  0.043344764 9.999716e-01 PPIP5K2
+8214...180       8214 TRZ  0.066369745 9.999716e-01   DGCR6
+10818...181     10818 TRZ  0.034157048 9.999716e-01    FRS2
+7991...182       7991 TRZ -0.028941499 9.999716e-01   TUSC3
+4692...183       4692 TRZ -0.023636849 9.999716e-01     NDN
+11128...184     11128 TRZ  0.028833971 9.999716e-01  POLR3A
+54477...185     54477 TRZ -0.035791323 9.999716e-01 PLEKHA5
+108...186         108 TRZ -0.043025639 9.999716e-01   ADCY2
+57110...187     57110 TRZ  0.031961542 9.999716e-01  PLAAT1
+23155...188     23155 TRZ -0.005764121 9.999716e-01   CLCC1
+344595...189   344595 TRZ -0.007991521 9.999716e-01    DUBR
+5066...190       5066 TRZ -0.001493139 9.999716e-01     PAM</code></pre>
+<pre class="r"><code>GWASabsFCsig &lt;- 
+  toplistall %&gt;% 
+    mutate(drug=factor(id, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
+  filter(ENTREZID %in% orderit$ENTREZID) %&gt;% 
+   filter(time ==&quot;24_hours&quot;) %&gt;% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL)  %&gt;%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val)
+  
+gwas_sig_mat &lt;- GWASabsFCsig %&gt;% 
+   column_to_rownames(var=&quot;id&quot;) %&gt;%
+  dplyr::select(orderit$SYMBOL) %&gt;%
+  as.matrix()
  
-}
 
-Var_test_list24 &lt;- readRDS(&quot;data/Var_test_list24.RDS&quot;)
-set24 &lt;- names(Var_test_list24) 
+GWASabsFC &lt;- toplistall %&gt;% 
+  
+  # filter(id !=&quot;TRZ&quot;) %&gt;% 
+  filter(time==&quot;24_hours&quot;) %&gt;% 
+  mutate(logFC= logFC*(-1)) %&gt;%
+  filter(ENTREZID %in% orderit$ENTREZID) %&gt;% 
+  dplyr::select(SYMBOL ,time, id, logFC) %&gt;% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %&gt;% 
+  column_to_rownames(var=&quot;id&quot;) %&gt;%
+  dplyr::select(orderit$SYMBOL) %&gt;%
+  as.matrix()
 
-statfun24 &lt;- data.frame(ENTREZID=rownames(organized_drugframe))
-for (i in 1:length(set24)){
-  a &lt;- set24[i]
-    s_list&lt;- Var_test_list24[[i]][[13]]
-  names(s_list) &lt;- rownames(organized_drugframe)
-  hold&lt;- map_df(s_list, ~as.data.frame(.x$statistic), .id=&quot;ENTREZID&quot;)
-   statfun24[paste0(a)] &lt;- hold$`.x$statistic`
+study_anno &lt;- data.frame(Study=c(rep(&quot;GWAS&quot;,35),rep(&quot;TWAS&quot;,3)),motif=orderit$motif,chrom_gene=orderit$chrom_gene,Dox_respegene=orderit$Dox_respegene, ACchrom_gene=orderit$ACchrom_gene,gTEX_heart=orderit$gTEX_heart)
+rownames(study_anno) &lt;- colnames(GWASabsFC)
+ht &lt;- HeatmapAnnotation(df = study_anno,
+              col = list(Study=c(&quot;GWAS&quot;=&quot;darkorange&quot;,&quot;TWAS&quot;= &quot;blueviolet&quot;),
+                         motif = c(&quot;LR&quot;=&quot;#00BFC4&quot;, &quot;NR&quot;=&quot;#C77CFF&quot;, &quot;ER&quot;=&quot;#F8766D&quot;, &quot;TI&quot;=&quot;#7CAE00&quot;),
+chrom_gene=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;),
+Dox_respegene=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;),
+ACchrom_gene=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;),
+gTEX_heart=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;)))
+
+Heatmap(GWASabsFC, name = &quot;Fold change\nvalues&quot;, 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = &quot;left&quot;,
+        col = col_funFC,
+        row_order = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;, &#39;MTX&#39;,&#39;TRZ&#39;),
+        column_title = &quot;Fold change values of GWAS and TWAS genes n = 38&quot;, 
+        column_title_side = &quot;top&quot;,
+        column_title_gp = gpar(fontsize = 16, fontface = &quot;bold&quot;),
+        column_order= orderit$SYMBOL,
+        bottom_annotation = ht,
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 12,fontface=&quot;italic&quot;),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(gwas_sig_mat[i, j] &lt;0.05)
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+})</code></pre>
+<p><img src="figure/Figure7.Rmd/Finfig_hm%2024%20hours-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>GWASabsFCsig_3 &lt;- 
+  toplistall %&gt;% 
+    mutate(drug=factor(id, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;% 
+  filter(ENTREZID %in% orderit$ENTREZID) %&gt;% 
+   filter(time ==&quot;3_hours&quot;) %&gt;% 
+  dplyr::select(ENTREZID , id,logFC, adj.P.Val, SYMBOL)  %&gt;%
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from =adj.P.Val)
+  
+gwas_sig_mat_3 &lt;- GWASabsFCsig %&gt;% 
+   column_to_rownames(var=&quot;id&quot;) %&gt;%
+  dplyr::select(orderit$SYMBOL) %&gt;%
+  as.matrix()
  
-}
 
+GWASabsFC_3 &lt;- toplistall %&gt;% 
+  
+  # filter(id !=&quot;TRZ&quot;) %&gt;% 
+  filter(time==&quot;24_hours&quot;) %&gt;% 
+  mutate(logFC= logFC*(-1)) %&gt;%
+  filter(ENTREZID %in% orderit$ENTREZID) %&gt;% 
+  dplyr::select(SYMBOL ,time, id, logFC) %&gt;% 
+  pivot_wider(id_cols=id, 
+              names_from = SYMBOL, 
+              values_from = logFC) %&gt;% 
+  column_to_rownames(var=&quot;id&quot;) %&gt;%
+  dplyr::select(orderit$SYMBOL) %&gt;%
+  as.matrix()
 
-Fstatcor &lt;- statfun24 %&gt;% 
-  full_join(., statfun3, by=&quot;ENTREZID&quot;) %&gt;% 
-   column_to_rownames(&#39;ENTREZID&#39;) %&gt;% 
-   # as.matrix(.) %&gt;% 
-   # rowwise() %&gt;% 
-   cor(., method=&quot;spearman&quot;)
+# study_anno &lt;- data.frame(Study=c(rep(&quot;GWAS&quot;,35),rep(&quot;TWAS&quot;,3)),motif=orderit$motif,chrom_gene=orderit$chrom_gene,Dox_respegene=orderit$Dox_respegene, ACchrom_gene=orderit$ACchrom_gene,gTEX_heart=orderit$gTEX_heart)
+# rownames(study_anno) &lt;- colnames(GWASabsFC)
+# ht &lt;- HeatmapAnnotation(df = study_anno,
+#               col = list(Study=c(&quot;GWAS&quot;=&quot;darkorange&quot;,&quot;TWAS&quot;= &quot;blueviolet&quot;),
+#                          motif = c(&quot;LR&quot;=&quot;#00BFC4&quot;, &quot;NR&quot;=&quot;#C77CFF&quot;, &quot;ER&quot;=&quot;#F8766D&quot;, &quot;TI&quot;=&quot;#7CAE00&quot;),
+# chrom_gene=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;),
+# Dox_respegene=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;),
+# ACchrom_gene=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;),
+# gTEX_heart=c(&quot;yes&quot;=&quot;darkred&quot;,&quot;no&quot;=&quot;pink&quot;)))
 
-
- col_fun &lt;- circlize::colorRamp2(c(-1,0, 1), c(&quot;blue&quot;,&quot;white&quot;, &quot;red&quot;))
- 
-mat_colF &lt;- data.frame(time= c(rep(&quot;24 hours&quot;,5), rep(&quot;3 hours&quot;,5)), class= (c(&quot;AC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;nAC&quot;,&quot;nAC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;AC&quot;,&quot;nAC&quot;,&quot;nAC&quot;)),TOP2i=c(rep(&quot;yes&quot;,4), &quot;no&quot;, rep(&quot;yes&quot;,4),&quot;no&quot;))
-
-rownames(mat_colF) &lt;- colnames(Fstatcor)
-
-
-
-mat_colors &lt;- list(time=c(&quot;chocolate4&quot;, &quot;pink&quot;), class=c(&quot;yellow1&quot;,&quot;lightgreen&quot;), TOP2i =c(&quot;darkgreen&quot;,&quot;goldenrod&quot;))
-
-names(mat_colors$time) &lt;- unique(mat_colF$time)
-names(mat_colors$class) &lt;- unique(mat_colF$class)
-names(mat_colors$TOP2i) &lt;- unique(mat_colF$TOP2i)
-         
-ha &lt;- HeatmapAnnotation(df=mat_colF, col=mat_colors)
-
-   Heatmap(Fstatcor, 
-           column_title = &quot;3 &amp; 24 hr F stat corr&quot;, 
-           col=col_fun,
-          top_annotation = ha,
-           cell_fun = function(j, i, x, y, width, height, fill) {
-        grid.text(sprintf(&quot;%.2f&quot;, Fstatcor[i, j]), x, y, gp = gpar(fontsize = 10))})</code></pre>
-<p><img src="figure/Figure7.Rmd/FSTAT%20corr-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-FSTAT-corr-1">
-Past versions of "FSTAT corr-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-FSTAT-corr-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/89d033381db3d84365fecc0422ba02ed4bd2dbc3/docs/figure/Figure7.Rmd/FSTAT corr-1.png" target="_blank">89d0333</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-08-15
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>More analysis of the variablity in gene expression can be found <a
-href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/variance_scrip.html">at
+Heatmap(GWASabsFC_3, name = &quot;Fold change\nvalues&quot;, 
+         cluster_rows = FALSE,
+        cluster_columns = FALSE, 
+        row_names_side = &quot;left&quot;,
+        col = col_funFC,
+        row_order = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;, &#39;MTX&#39;,&#39;TRZ&#39;),
+        column_title = &quot;Fold change values of GWAS and TWAS genes\n 3 hours n = 38&quot;, 
+        column_title_side = &quot;top&quot;,
+        column_title_gp = gpar(fontsize = 16, fontface = &quot;bold&quot;),
+        column_order= orderit$SYMBOL,
+        bottom_annotation = ht,
+        
+        column_names_rot = 90, 
+        column_names_gp = gpar(fontsize = 12,fontface=&quot;italic&quot;),
+        column_names_centered =TRUE,
+         cell_fun = function(j, i, x, y, width, height, fill) {
+        if(gwas_sig_mat_3[i, j] &lt;0.05)
+            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
+})</code></pre>
+<p><img src="figure/Figure7.Rmd/Finfig_hm%203%20hours-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>More analysis GWAS and TWAS SNPs found in the Schneider data <a
+href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html#Top_50_SNP_and_eGenes_from_Schneider_GWAS">at
 this link</a>.</p>
 <br>
 <p>
@@ -1452,49 +1655,44 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] ComplexHeatmap_2.16.0 data.table_1.14.8     qvalue_2.32.0        
- [4] kableExtra_1.3.4      scales_1.2.1          gridtext_0.1.5       
- [7] ggVennDiagram_1.2.3   paletteer_1.5.0       gprofiler2_0.2.2     
-[10] ggsignif_0.6.4        ggpubr_0.6.0          lubridate_1.9.2      
-[13] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.3          
-[16] purrr_1.0.2           readr_2.1.4           tidyr_1.3.0          
-[19] tibble_3.2.1          ggplot2_3.4.3         tidyverse_2.0.0      
-[22] workflowr_1.7.1      
+ [1] edgeR_3.42.4          limma_3.56.2          ComplexHeatmap_2.16.0
+ [4] data.table_1.14.8     qvalue_2.32.0         kableExtra_1.3.4     
+ [7] scales_1.3.0          gridtext_0.1.5        lubridate_1.9.3      
+[10] forcats_1.0.0         stringr_1.5.0         dplyr_1.1.3          
+[13] purrr_1.0.2           readr_2.1.4           tidyr_1.3.0          
+[16] tibble_3.2.1          ggplot2_3.4.4         tidyverse_2.0.0      
+[19] workflowr_1.7.1      
 
 loaded via a namespace (and not attached):
- [1] rematch2_2.1.2      rlang_1.1.1         magrittr_2.0.3     
- [4] clue_0.3-64         GetoptLong_1.0.5    git2r_0.32.0       
- [7] matrixStats_1.0.0   compiler_4.3.1      getPass_0.2-2      
-[10] png_0.1-8           systemfonts_1.0.4   callr_3.7.3        
-[13] vctrs_0.6.3         reshape2_1.4.4      rvest_1.0.3        
-[16] shape_1.4.6         pkgconfig_2.0.3     crayon_1.5.2       
-[19] fastmap_1.1.1       magick_2.7.5        backports_1.4.1    
-[22] labeling_0.4.3      utf8_1.2.3          promises_1.2.1     
-[25] rmarkdown_2.24      tzdb_0.4.0          ps_1.7.5           
-[28] bit_4.0.5           xfun_0.40           cachem_1.0.8       
-[31] jsonlite_1.8.7      RVenn_1.1.0         later_1.3.1        
-[34] cluster_2.1.4       broom_1.0.5         parallel_4.3.1     
-[37] R6_2.5.1            RColorBrewer_1.1-3  bslib_0.5.1        
-[40] stringi_1.7.12      car_3.1-2           jquerylib_0.1.4    
-[43] Rcpp_1.0.11         iterators_1.0.14    knitr_1.44         
-[46] IRanges_2.34.1      httpuv_1.6.11       splines_4.3.1      
-[49] timechange_0.2.0    tidyselect_1.2.0    rstudioapi_0.15.0  
-[52] abind_1.4-5         yaml_2.3.7          doParallel_1.0.17  
-[55] codetools_0.2-19    processx_3.8.2      plyr_1.8.8         
-[58] withr_2.5.0         evaluate_0.21       xml2_1.3.5         
-[61] circlize_0.4.15     pillar_1.9.0        carData_3.0-5      
-[64] whisker_0.4.1       stats4_4.3.1        foreach_1.5.2      
-[67] plotly_4.10.2       generics_0.1.3      vroom_1.6.3        
-[70] rprojroot_2.0.3     S4Vectors_0.38.1    hms_1.1.3          
-[73] munsell_0.5.0       glue_1.6.2          lazyeval_0.2.2     
-[76] tools_4.3.1         webshot_0.5.5       fs_1.6.3           
-[79] colorspace_2.1-0    cli_3.6.1           fansi_1.0.4        
-[82] viridisLite_0.4.2   svglite_2.1.1       gtable_0.3.4       
-[85] rstatix_0.7.2       sass_0.4.7          digest_0.6.33      
-[88] BiocGenerics_0.46.0 farver_2.1.1        rjson_0.2.21       
-[91] htmlwidgets_1.6.2   htmltools_0.5.6     lifecycle_1.0.3    
-[94] httr_1.4.7          GlobalOptions_0.1.2 bit64_4.0.5        </code></pre>
-</div>
+ [1] tidyselect_1.2.0    viridisLite_0.4.2   fastmap_1.1.1      
+ [4] promises_1.2.1      digest_0.6.33       timechange_0.2.0   
+ [7] lifecycle_1.0.4     cluster_2.1.4       processx_3.8.2     
+[10] magrittr_2.0.3      compiler_4.3.1      rlang_1.1.2        
+[13] sass_0.4.7          tools_4.3.1         utf8_1.2.4         
+[16] yaml_2.3.7          knitr_1.45          bit_4.0.5          
+[19] plyr_1.8.9          xml2_1.3.5          RColorBrewer_1.1-3 
+[22] withr_3.0.0         BiocGenerics_0.46.0 stats4_4.3.1       
+[25] fansi_1.0.5         git2r_0.32.0        colorspace_2.1-0   
+[28] iterators_1.0.14    cli_3.6.1           rmarkdown_2.25     
+[31] crayon_1.5.2        generics_0.1.3      rstudioapi_0.15.0  
+[34] httr_1.4.7          reshape2_1.4.4      tzdb_0.4.0         
+[37] rjson_0.2.21        cachem_1.0.8        splines_4.3.1      
+[40] rvest_1.0.3         parallel_4.3.1      matrixStats_1.1.0  
+[43] vctrs_0.6.4         webshot_0.5.5       jsonlite_1.8.7     
+[46] callr_3.7.3         IRanges_2.34.1      hms_1.1.3          
+[49] GetoptLong_1.0.5    S4Vectors_0.38.2    bit64_4.0.5        
+[52] clue_0.3-65         magick_2.8.1        systemfonts_1.0.5  
+[55] locfit_1.5-9.8      foreach_1.5.2       jquerylib_0.1.4    
+[58] glue_1.6.2          codetools_0.2-19    ps_1.7.5           
+[61] shape_1.4.6         stringi_1.7.12      gtable_0.3.4       
+[64] later_1.3.1         munsell_0.5.0       pillar_1.9.0       
+[67] htmltools_0.5.7     circlize_0.4.15     R6_2.5.1           
+[70] doParallel_1.0.17   rprojroot_2.0.4     vroom_1.6.5        
+[73] lattice_0.22-5      evaluate_0.23       highr_0.10         
+[76] png_0.1-8           httpuv_1.6.12       bslib_0.6.1        
+[79] Rcpp_1.0.11         svglite_2.1.2       whisker_0.4.1      
+[82] xfun_0.41           fs_1.6.3            getPass_0.2-2      
+[85] pkgconfig_2.0.3     GlobalOptions_0.1.2</code></pre>
 </div>
 </div>
 
