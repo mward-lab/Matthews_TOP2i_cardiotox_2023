@@ -620,7 +620,7 @@ for (f in facs) {
 }
 
 ```
-To see more RNA-seq related analysis [click here](9)https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html)
+To see more RNA-seq related analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html)
 
 
 ## S8 Fig: Thousands of gene expression changes are induced in response to TOP2i treatment over 24 hours.
@@ -629,7 +629,7 @@ To see more RNA-seq related analysis [click here](9)https://mward-lab.github.io/
 Volcanoplots <- readRDS("output/Volcanoplot_10.RDS")
 Volcanoplots
 ```
-(To see more RNA-seq related analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html#Volcano_plots_from_pairwise_gene_analysis)
+To see more RNA-seq related analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/run_all_analysis.html#Volcano_plots_from_pairwise_gene_analysis)
 
 
 
@@ -938,7 +938,80 @@ for (g in seq(from=1, to=length(sub_samp$ENTREZID))){
 
 ```
 
-More on TRZ expression [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html)
+
+```{r TRZpathways}
+
+list3hr <- readRDS("data/DEG-GO/list3hr.RDS")
+list24hr <- readRDS("data/DEG-GO/list24hr.RDS")
+KEGGtrz3 <- c("KEGG:05202", "KEGG:04115", "KEGG:05223", "KEGG:05212","KEGG:05222")
+KEGGtrz24 <- c("KEGG:05202", "KEGG:05215", "KEGG:00510")
+# testframe <- lapply(list3hr, `[`,'result')
+
+hr3_results <- list3hr |> 
+  map(~ .x$result |> dplyr::select(p_value,term_id,term_name,intersection_size))
+hr24_results <- list24hr |> 
+  map(~ .x$result |> dplyr::select(p_value,term_id,term_name,intersection_size))
+
+table_3hr <- list_rbind(hr3_results,names_to = "set")%>%
+  mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(term_id %in% KEGGtrz3) %>% 
+  mutate(treatment = case_when(set =="DAgostres3"~"DNR",set=="DXgostres" ~ "DOX",set=="EPgostres"~"EPI",set=="MTgostres"~"MTX",set=="TRZresgenes3h"~"TRZ",set=="DDEgostres23only"~"AC",set=="DDEMgostres3"~"TOP2i"))
+
+
+table_24hr <- list_rbind(hr24_results,names_to = "set") %>%
+  mutate(log_val = -log10(p_value))%>% 
+  dplyr::filter(term_id %in% KEGGtrz24) %>% 
+  mutate(treatment = case_when(set =="DAgostres24"~"DNR",set=="DXgostres24" ~ "DOX",set=="EPgostres24"~"EPI",set=="MTgostres24"~"MTX",set=="TRZresgenes243h"~"TRZ",set=="DDEgostres24only"~"AC",set=="DDEMgostres24"~"TOP2i"))
+
+
+hr3_results[["TRZresgenes3h"]]  %>% 
+    mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(str_detect(term_id,"^KEGG:")) %>% 
+  slice_min(., n=5,order_by=p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value),col=intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::label_wrap(30))+
+  geom_vline(xintercept = (-log10(0.05)), col="red")+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TRZ 3 hour nominal DE\n KEGG pathway enrichment') +
+    xlab(expression(" -"~log[10]~("nominal p-value")))+
+    ylab("KEGG")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+
+
+
+
+hr24_results[["TRZresgenes243h"]]  %>% 
+    mutate(log_val = -log10(p_value)) %>% 
+  dplyr::filter(str_detect(term_id,"^KEGG:")) %>% 
+  slice_min(., n=5,order_by=p_value) %>%
+    ggplot(., aes(x = log_val, y =reorder(term_name,p_value), col=intersection_size)) +
+    geom_point(aes(size = intersection_size)) +
+    scale_y_discrete(labels = scales::label_wrap(30))+
+   geom_vline(xintercept = (-log10(0.05)), col="red")+
+    guides(col="none", size=guide_legend(title = "# of intersected \n terms"))+
+    ggtitle('TRZ 24 hour nominal DE\n KEGG pathway enrichment') +
+    xlab(expression(" -"~log[10]~("nominal p-value")))+
+    ylab("KEGG")+
+    theme_bw()+
+    theme(plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = 15, color = "black"),
+        axis.ticks = element_line(linewidth = 1.5),
+        # axis.line = element_line(linewidth = 1.5),
+        axis.text = element_text(size = 10, color = "black", angle = 0),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"))
+```
+```
+
+
+More on TRZ expression [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html)  
+OR GO [analysis here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/GO_after_comments.html)
 
 ## S13 Fig: Four gene expression signatures capture the response to TOP2i over time.
 ### S13 FigA
