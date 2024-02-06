@@ -11,11 +11,11 @@
 
 <meta name="author" content="ERM" />
 
-<meta name="date" content="2023-09-28" />
+<meta name="date" content="2024-02-06" />
 
-<title>Figure 6: Chromatin regulators that mediate breast cancer sensitivity to ACs are enriched amongst early TOP2i response genes.</title>
+<title>Figure 6: DOX response eGenes are enriched amongst TOP2i response genes</title>
 
-<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -359,11 +359,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Figure 6: Chromatin regulators that mediate
-breast cancer sensitivity to ACs are enriched amongst early TOP2i
-response genes.</h1>
+<h1 class="title toc-ignore">Figure 6: DOX response eGenes are enriched
+amongst TOP2i response genes</h1>
 <h4 class="author">ERM</h4>
-<h4 class="date">2023-09-28</h4>
+<h4 class="date">2024-02-06</h4>
 
 </div>
 
@@ -392,7 +391,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-09-28
+<strong>Last updated:</strong> 2024-02-06
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -523,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree87a496b21c2984c46a7bcb3f599abb642299e3eatargetblank87a496ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treee26b2498752745c3d3c37e5fd0ec20442cb408a0targetblanke26b249a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/87a496b21c2984c46a7bcb3f599abb642299e3ea" target="_blank">87a496b</a>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/e26b2498752745c3d3c37e5fd0ec20442cb408a0" target="_blank">e26b249</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023tree87a496b21c2984c46a7bcb3f599abb642299e3eatargetblank87a496ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcommwardlabMatthewsTOP2icardiotox2023treee26b2498752745c3d3c37e5fd0ec20442cb408a0targetblanke26b249a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -541,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/87a496b21c2984c46a7bcb3f599abb642299e3ea" target="_blank">87a496b</a>.
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/tree/e26b2498752745c3d3c37e5fd0ec20442cb408a0" target="_blank">e26b249</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,6 +558,8 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
+    Ignored:    analysis/variance_values by gene.png
     Ignored:    data/41588_2018_171_MOESM3_ESMeQTL_ST2_for paper.csv
     Ignored:    data/Arr_GWAS.txt
     Ignored:    data/Arr_geneset.RDS
@@ -567,6 +568,10 @@ Ignored files:
     Ignored:    data/CADGWASgene_table.csv
     Ignored:    data/CAD_geneset.RDS
     Ignored:    data/CALIMA_Data/
+    Ignored:    data/CMD04_75DRCviability.csv
+    Ignored:    data/CMD04_87DRCviability.csv
+    Ignored:    data/CMD05_75DRCviability.csv
+    Ignored:    data/CMD05_87DRCviability.csv
     Ignored:    data/Clamp_Summary.csv
     Ignored:    data/Cormotif_24_k1-5_raw.RDS
     Ignored:    data/Counts_RNA_ERMatthews.txt
@@ -584,6 +589,8 @@ Ignored files:
     Ignored:    data/Dx_reQTL_specific.txt
     Ignored:    data/EPIstorelist24.RDS
     Ignored:    data/Ep24counts.txt
+    Ignored:    data/FC_necela.RDS
+    Ignored:    data/FC_necela_names.RDS
     Ignored:    data/Full_LD_rep.csv
     Ignored:    data/GOIsig.csv
     Ignored:    data/GOplots.R
@@ -599,18 +606,26 @@ Ignored files:
     Ignored:    data/K_cluster
     Ignored:    data/K_cluster_kisthree.csv
     Ignored:    data/K_cluster_kistwo.csv
+    Ignored:    data/Knowles_log2cpm_real.RDS
+    Ignored:    data/Knowles_variation_data.RDS
+    Ignored:    data/Knowles_variation_data_conc.RDS
+    Ignored:    data/Knowlesvarlist.RDS
     Ignored:    data/LD50_05via.csv
     Ignored:    data/LDH48hoursdata.csv
     Ignored:    data/Mt24counts.txt
     Ignored:    data/NoRespDEG_final.csv
     Ignored:    data/RINsamplelist.txt
+    Ignored:    data/RNA_seq_trial.RDS
+    Ignored:    data/Schneider_GWAS.txt
     Ignored:    data/Seonane2019supp1.txt
+    Ignored:    data/Sup_replicate_values.csv
     Ignored:    data/TMMnormed_x.RDS
     Ignored:    data/TOP2Bi-24hoursGO_analysis.csv
     Ignored:    data/TR24counts.txt
     Ignored:    data/TableS10.csv
     Ignored:    data/TableS11.csv
     Ignored:    data/TableS9.csv
+    Ignored:    data/Top2_expression.RDS
     Ignored:    data/Top2biresp_cluster24h.csv
     Ignored:    data/Var_test_list.RDS
     Ignored:    data/Var_test_list24.RDS
@@ -625,8 +640,10 @@ Ignored files:
     Ignored:    data/allmymatrix.RDS
     Ignored:    data/annotation_data_frame.RDS
     Ignored:    data/averageviabilitytable.RDS
+    Ignored:    data/averageviabilitytable.csv
     Ignored:    data/avgLD50.RDS
     Ignored:    data/avg_LD50.RDS
+    Ignored:    data/avg_via_table.csv
     Ignored:    data/backGL.txt
     Ignored:    data/burr_genes.RDS
     Ignored:    data/calcium_data.RDS
@@ -656,6 +673,7 @@ Ignored files:
     Ignored:    data/filtered_raw_counts.csv
     Ignored:    data/filtermatrix_x.RDS
     Ignored:    data/folder_05top/
+    Ignored:    data/framefun24.RDS
     Ignored:    data/geneDoxonlyQTL.csv
     Ignored:    data/gene_corr_df.RDS
     Ignored:    data/gene_corr_frame.RDS
@@ -669,6 +687,7 @@ Ignored files:
     Ignored:    data/gostrescoNR
     Ignored:    data/gtex/
     Ignored:    data/heartgenes.csv
+    Ignored:    data/highly_var_genelist.RDS
     Ignored:    data/hsa_kegg_anno.RDS
     Ignored:    data/individualDRCfile.RDS
     Ignored:    data/individual_DRC48.RDS
@@ -690,6 +709,7 @@ Ignored files:
     Ignored:    data/norm_counts.csv
     Ignored:    data/old_sets/
     Ignored:    data/organized_drugframe.csv
+    Ignored:    data/pca_all_anno.csv
     Ignored:    data/plan2plot.png
     Ignored:    data/plot_intv_list.RDS
     Ignored:    data/plot_list_DRC.RDS
@@ -698,6 +718,8 @@ Ignored files:
     Ignored:    data/qvalueEPItemp.RDS
     Ignored:    data/raw_counts.csv
     Ignored:    data/response_cluster24h.csv
+    Ignored:    data/sampsettrz.RDS
+    Ignored:    data/schneider_closest_output.RDS
     Ignored:    data/sigVDA24.txt
     Ignored:    data/sigVDA3.txt
     Ignored:    data/sigVDX24.txt
@@ -716,7 +738,9 @@ Ignored files:
     Ignored:    data/supp10_3hlist.RDS
     Ignored:    data/supp_normLDH48.RDS
     Ignored:    data/supp_pca_all_anno.RDS
+    Ignored:    data/supp_viadata.csv
     Ignored:    data/table3a.omar
+    Ignored:    data/test_run_sample_list.txt
     Ignored:    data/testlist.txt
     Ignored:    data/toplistall.RDS
     Ignored:    data/trtonly_24h_genes.RDS
@@ -737,12 +761,21 @@ Untracked files:
     Untracked:  Doxorubicin_vehicle_3_24.csv
     Untracked:  Doxtoplist.csv
     Untracked:  EPIqvalue_analysis.Rmd
+    Untracked:  Final.sup.pdf
     Untracked:  GWAS_list_of_interest.xlsx
     Untracked:  KEGGpathwaylist.R
+    Untracked:  NA
     Untracked:  OmicNavigator_learn.R
+    Untracked:  SNP_egenes_allfiles.RDS
+    Untracked:  SNP_frame_pdf
+    Untracked:  SNP_frame_pdf.pdf
     Untracked:  SigDoxtoplist.csv
+    Untracked:  analysis/DRC_viability_check.Rmd
+    Untracked:  analysis/New_code_dec-23.R
+    Untracked:  analysis/cellcycle_kegg_genes.R
     Untracked:  analysis/ciFIT.R
     Untracked:  analysis/export_to_excel.R
+    Untracked:  analysis/featureCountsPLAY.R
     Untracked:  cleanupfiles_script.R
     Untracked:  code/biomart_gene_names.R
     Untracked:  code/constantcode.R
@@ -757,37 +790,81 @@ Untracked files:
     Untracked:  code/venndiagramcolor_control.R
     Untracked:  cormotif_p.post.list_4.csv
     Untracked:  figS1024h.pdf
+    Untracked:  final.pdf
     Untracked:  individual-legenddark2.png
     Untracked:  installed_old.rda
+    Untracked:  listoftranscripts
     Untracked:  motif_ER.txt
     Untracked:  motif_LR.txt
     Untracked:  motif_NR.txt
     Untracked:  motif_TI.txt
+    Untracked:  output/ABHD8_dif_values.RDS
+    Untracked:  output/C3orf18_dif_values.RDS
+    Untracked:  output/Cardiotox_dif_values.RDS
     Untracked:  output/DNR_DEGlist.csv
     Untracked:  output/DNRvenn.RDS
     Untracked:  output/DOX_DEGlist.csv
+    Untracked:  output/DOX_de_goi.csv
     Untracked:  output/DOXvenn.RDS
+    Untracked:  output/EEF1B2_dif_values.RDS
+    Untracked:  output/EEIG1_dif_values.RDS
     Untracked:  output/EPI_DEGlist.csv
     Untracked:  output/EPIvenn.RDS
+    Untracked:  output/ESGN_rds.RDS
+    Untracked:  output/FC_necela.RDS
+    Untracked:  output/FC_necela_names.RDS
+    Untracked:  output/FRS2_dif_values.RDS
     Untracked:  output/Figures/
+    Untracked:  output/GTEXv8_gene_median_tpm.RDS
+    Untracked:  output/GTEXv8_gene_tpm_heart_left_ventricle.RDS
+    Untracked:  output/HDDC2_dif_values.RDS
+    Untracked:  output/HER2_gene.RDS
+    Untracked:  output/KEGGcellcyclegenes.RDS
+    Untracked:  output/Knowles_S13.csv
+    Untracked:  output/Knowles_log2cpm.csv
+    Untracked:  output/Knowles_supp13.csv
+    Untracked:  output/LD50tox_table.RDS
     Untracked:  output/MTX_DEGlist.csv
     Untracked:  output/MTXvenn.RDS
+    Untracked:  output/PEX16_dif_values.RDS
+    Untracked:  output/RASIP1_dif_values.RDS
+    Untracked:  output/RMI1_dif_values.RDS
+    Untracked:  output/RSID_QTL_list_full.txt
+    Untracked:  output/SETA_analysis_reyes.RDS
+    Untracked:  output/SGWAS_top50_order.csv
+    Untracked:  output/SLC27A1_dif_values.RDS
+    Untracked:  output/SLC28A3_dif_values.RDS
+    Untracked:  output/SNP_egenes_allfiles.RDS
+    Untracked:  output/SNP_list_ID.RDS
+    Untracked:  output/SNP_list_full.txt
+    Untracked:  output/SNP_supp.RDS
+    Untracked:  output/TGFBR3L_dif_values.RDS
+    Untracked:  output/TNS2_dif_values.RDS
+    Untracked:  output/TOP_50SNPreffile.csv
     Untracked:  output/TRZ_DEGlist.csv
     Untracked:  output/TableS8.csv
     Untracked:  output/Volcanoplot_10
     Untracked:  output/Volcanoplot_10.RDS
+    Untracked:  output/ZNF740_dif_values.RDS
     Untracked:  output/allfinal_sup10.RDS
+    Untracked:  output/counts_v8_heart_left_ventricle_gct.RDS
+    Untracked:  output/crisprfoldchange.RDS
     Untracked:  output/endocytosisgenes.csv
+    Untracked:  output/expre7k.csv
+    Untracked:  output/expressed_egenes_by_RSID.csv
     Untracked:  output/gene_corr_fig9.RDS
+    Untracked:  output/genes.RDS
     Untracked:  output/legend_b.RDS
     Untracked:  output/motif_ERrep.RDS
     Untracked:  output/motif_LRrep.RDS
     Untracked:  output/motif_NRrep.RDS
     Untracked:  output/motif_TI_rep.RDS
+    Untracked:  output/near_genes_SNP1.RDS
+    Untracked:  output/necela_list_test.RDS
+    Untracked:  output/necela_val_genes.RDS
     Untracked:  output/output-old/
     Untracked:  output/rank24genes.csv
     Untracked:  output/rank3genes.csv
-    Untracked:  output/reneem@ls6.tacc.utexas.edu
     Untracked:  output/sequencinginformationforsupp.csv
     Untracked:  output/sequencinginformationforsupp.prn
     Untracked:  output/sigVDA24.txt
@@ -801,16 +878,19 @@ Untracked files:
     Untracked:  output/sigVTR24.txt
     Untracked:  output/sigVTR3.txt
     Untracked:  output/supplementary_motif_list_GO.RDS
+    Untracked:  output/test_biomart_run.RDS
     Untracked:  output/toptablebydrug.RDS
+    Untracked:  output/trop_knowles_fun.csv
     Untracked:  output/tvl24hour.txt
     Untracked:  output/x_counts.RDS
     Untracked:  reneebasecode.R
 
 Unstaged changes:
-    Modified:   analysis/GOI_plots.Rmd
-    Modified:   analysis/LDH_analysis.Rmd
-    Modified:   analysis/Supplementary_figures.Rmd
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/DRC_analysis.Rmd
+    Modified:   analysis/Figure4.Rmd
+    Modified:   analysis/Figure5.Rmd
+    Modified:   analysis/GTEx_genes.Rmd
+    Deleted:    analysis/Knowles2019.Rmd
     Modified:   output/daplot.RDS
     Modified:   output/dxplot.RDS
     Modified:   output/epplot.RDS
@@ -863,6 +943,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/e26b2498752745c3d3c37e5fd0ec20442cb408a0/analysis/Figure6.Rmd" target="_blank">e26b249</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2024-02-06
+</td>
+<td>
+updates
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mward-lab/Matthews_TOP2i_cardiotox_2023/ffba2b7a076cab6a2a258f923ff48bc62517f081/docs/Figure6.html" target="_blank">ffba2b7</a>
+</td>
+<td>
+reneeisnowhere
+</td>
+<td>
+2023-09-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1153,397 +1267,347 @@ pre[class] {
 }
 </style>
 <pre class="r"><code>library(tidyverse)
-library(tinytex)
 library(BiocGenerics)
+library(data.table)
 library(cowplot)
 library(ggsignif)
 library(RColorBrewer)
 library(broom)
-library(ComplexHeatmap)</code></pre>
+library(ggVennDiagram)
+library(paletteer)</code></pre>
 <pre class="r"><code>toplistall &lt;- readRDS(&quot;data/toplistall.RDS&quot;)
 siglist &lt;- readRDS(&quot;data/siglist_final.RDS&quot;)
 list2env(siglist, envir = .GlobalEnv)</code></pre>
 <pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
 <pre class="r"><code>cpmcounts &lt;- readRDS(&quot;data/cpmcount.RDS&quot;)
-DEG_cormotif &lt;- readRDS(&quot;data/DEG_cormotif.RDS&quot;)
-list2env(DEG_cormotif,envir=.GlobalEnv)</code></pre>
-<pre><code>&lt;environment: R_GlobalEnv&gt;</code></pre>
-<pre class="r"><code>drug_pal_fact &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;,&quot;#41B333&quot;)
-col_fun5 = circlize::colorRamp2(c(0, 5), c(&quot;white&quot;, &quot;purple&quot;))
-## supplement 1
-chrom_reg_Seoane &lt;- read_csv(file = &quot;data/Seonane2019supp1.txt&quot;,col_types = cols(...1 = col_skip()))
-Seoane_2019 &lt;- chrom_reg_Seoane[,2]
-names(Seoane_2019) &lt;- &quot;ENTREZID&quot;
-chrom_genes &lt;- (unique(Seoane_2019$ENTREZID))
 
-# supplement 4
-Sup4seoane &lt;- read.csv(&quot;output/Sup4seoane.csv&quot;, row.names = 1)
-Sup4genes &lt;- Sup4seoane  %&gt;% 
-  filter(pval.expAnth&lt;0.05) %&gt;% 
-  distinct(entrez, .keep_all = TRUE) %&gt;% 
-  dplyr::select(entrez)</code></pre>
+my_exp_genes &lt;- read.csv(&quot;data/backGL.txt&quot;)
+GTEx_genes &lt;- read.csv(&quot;data/GTEx_gene_list.csv&quot;,row.names = 1)
+not_eqtls &lt;- read.csv(&quot;output/not_eqtls_GTEX.csv&quot;,row.names = 1)
+heart_gtex &lt;- read.csv(&quot;output/heart_gtex.csv&quot;,row.names = 1)
+egenes &lt;- read.csv(&quot;output/egenes.csv&quot;,row.names = 1)</code></pre>
+<pre class="r"><code>plot_venn &lt;- function (x, show_intersect, set_color, set_size, label, label_geom,
+                       label_alpha, label_color, label_size, label_percent_digit,
+                       label_txtWidth, edge_lty, edge_size, ...)  {
+  
+  venn &lt;- ggVennDiagram::Venn(x)
+  
+  data &lt;- process_data(venn)
+  p &lt;- ggplot() + 
+    geom_sf(aes_string(fill = &quot;count&quot;), data = data@region) +
+    geom_sf(aes_string(color = &quot;name&quot;), data = data@setEdge, show.legend = F, lty = edge_lty, size = edge_size, color = set_color) +
+    geom_sf_text(aes_string(label = &quot;name&quot;), data = data@setLabel, size = set_size, color = set_color) + 
+    theme_void()
+  if (label != &quot;none&quot; &amp; show_intersect == FALSE) {
+    region_label &lt;- data@region %&gt;% 
+      dplyr::filter(.data$component ==&quot;region&quot;) %&gt;%
+      dplyr::mutate(percent = paste(round(.data$count * 100/sum(.data$count), digits = label_percent_digit),&quot;%&quot;, sep = &quot;&quot;)) %&gt;% dplyr::mutate (both = paste(.data$count, paste0(&quot;(&quot;, .data$percent, &quot;)&quot;), sep = &quot;\n&quot;))
+    
+    if (label_geom == &quot;label&quot;) {
+      p &lt;- p + 
+        geom_sf_label(aes_string(label = label),data = region_label, alpha = label_alpha, color = label_color,size = label_size, lineheight = 0.85, label.size = NA)
+    }
+    if (label_geom == &quot;text&quot;) {
+      p &lt;- p + 
+        geom_sf_text(aes_string(label = label),data = region_label, alpha = label_alpha, color = label_color, size = label_size, lineheight = 0.85)
+    }
+  }
+  if (show_intersect == TRUE) {
+    items &lt;- data@region %&gt;% dplyr::rowwise() %&gt;% dplyr::mutate(text = stringr::str_wrap(paste0(.data$item, collapse = &quot; &quot;), width = label_txtWidth)) %&gt;%
+      sf::st_as_sf()
+    label_coord = sf::st_centroid(items$geometry) %&gt;%
+      sf::st_coordinates()
+    
+    p &lt;- ggplot(items) + 
+      geom_sf(aes_string(fill = &quot;count&quot;)) +
+      geom_sf_text(aes_string(label = &quot;name&quot;), data = data@setLabel,
+                   inherit.aes = F) + 
+      geom_text(aes_string(label = &quot;count&quot;, text = &quot;text&quot;), x = label_coord[, 1], y = label_coord[,2], show.legend = FALSE) +
+      theme_void()
+    
+    ax &lt;- list(showline = FALSE)
+    p &lt;- plotly::ggplotly(p, tooltip = c(&quot;text&quot;)) %&gt;% 
+      plotly::layout(xaxis = ax, yaxis = ax)
+  }
+  p
+}</code></pre>
 <div
-id="figure-6-chromatin-regulators-that-mediate-breast-cancer-sensitivity-to-acs-are-enriched-amongst-early-top2i-response-genes."
+id="figure-6-dox-response-egenes-are-enriched-amongst-top2i-response-genes."
 class="section level2">
-<h2>Figure 6: Chromatin regulators that mediate breast cancer
-sensitivity to ACs are enriched amongst early TOP2i response genes.</h2>
-<div id="a.-heatmap-of-chromatin-regulator-gene-sets"
+<h2>Figure 6: DOX response eGenes are enriched amongst TOP2i response
+genes​.</h2>
+<div id="a.-24-hour-deg-enrichment-in-gtex-genes"
 class="section level3">
-<h3>A. Heatmap of Chromatin regulator gene sets</h3>
-<p>n= 408 is the Supplemental of curated Chromatin regulators</p>
-<p>n= 54 were designated Dox response chromatin regulators according to
-Seoane analysis</p>
-<pre class="r"><code>toplist24hr &lt;- toplistall  %&gt;% 
-  filter(time ==&quot;24_hours&quot;)
- motifSeoanesummary1 &lt;- toplist24hr %&gt;% 
-  distinct(ENTREZID) %&gt;% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(chrom = if_else(ENTREZID %in% chrom_genes, &quot;y&quot;, &quot;no&quot;)) %&gt;% 
-  group_by(chrom,ER,TI,LR,NR) %&gt;% 
-  dplyr::summarize(n=n()) %&gt;% 
-  as.tibble  %&gt;% 
-  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
-  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
+<h3>A. 24 hour DEG enrichment in GTEx genes</h3>
+<pre class="r"><code>## create GTEx data set from my data
+GTEx &lt;- intersect(GTEx_genes$entrezgene_id,my_exp_genes$ENTREZID)
+## exclude GTEX and create nQTL set with other expressed genes
+nQTLmy &lt;- my_exp_genes %&gt;%
+   dplyr:: filter(!ENTREZID %in%GTEx)
+drug_palspc &lt;- c(&quot;darkblue&quot;,&quot;cornflowerblue&quot;,&quot;darkblue&quot;,&quot;cornflowerblue&quot;)
+drug_pal_fact &lt;- c(&quot;#8B006D&quot; ,&quot;#DF707E&quot;, &quot;#F1B72B&quot; ,&quot;#3386DD&quot;, &quot;#707031&quot;,&quot;#41B333&quot;)
+#GET nQTL umbers
+nQTLsum &lt;- toplistall %&gt;%
+  mutate(id =dplyr::case_match(id, &quot;Daunorubicin&quot;~&quot;DNR&quot;,
+                               &quot;Doxorubicin&quot;~&quot;DOX&quot;,
+                               &quot;Epirubicin&quot;~&quot;EPI&quot;,
+                               &quot;Mitoxantrone&quot;~&quot;MTX&quot;,
+                               &quot;Trastuzumab&quot;~&quot;TRZ&quot;,
+                               &quot;Vehicle&quot;~&quot;VEH&quot;,
+                               .default = id)) %&gt;% 
+  dplyr::filter(time==&quot;24_hours&quot;) %&gt;%
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
+  mutate(nQTL=if_else(ENTREZID %in% nQTLmy$ENTREZID,&#39;nQTL_y&#39;,&#39;nQTL_no&#39;)) %&gt;% 
+  group_by(id,nQTL) %&gt;% 
+  tally() %&gt;% 
+  separate(nQTL, into=c(&#39;set&#39;, &#39;group&#39;)) %&gt;% 
+  mutate(total=length(nQTLmy$ENTREZID) - n) %&gt;% 
+  dplyr::filter(group==&quot;y&quot;)
+#GETx GTEX numbers
+GTExsum &lt;- toplistall %&gt;%
+  mutate(id =dplyr::case_match(id, &quot;Daunorubicin&quot;~&quot;DNR&quot;,
+                               &quot;Doxorubicin&quot;~&quot;DOX&quot;,
+                               &quot;Epirubicin&quot;~&quot;EPI&quot;,
+                               &quot;Mitoxantrone&quot;~&quot;MTX&quot;,
+                               &quot;Trastuzumab&quot;~&quot;TRZ&quot;,
+                               &quot;Vehicle&quot;~&quot;VEH&quot;, 
+                               .default = id)) %&gt;% 
+  dplyr::filter(time==&quot;24_hours&quot;) %&gt;%
+  dplyr::filter(adj.P.Val &lt;0.05) %&gt;%
+  mutate(GTEx=if_else(ENTREZID %in%GTEx,&quot;GTEx_y&quot;,&quot;GTEx_no&quot;)) %&gt;% 
+  group_by(id,GTEx) %&gt;% 
+  tally() %&gt;% 
+  separate(GTEx, into=c(&#39;set&#39;, &#39;group&#39;)) %&gt;% 
+  mutate(total=length(GTEx) - n) %&gt;% 
+  dplyr::filter(group==&quot;y&quot;)
 
-chi_list1 &lt;- toplist24hr %&gt;% 
-  distinct(ENTREZID) %&gt;% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(chrom=if_else(ENTREZID %in% chrom_genes,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  group_by(chrom,ER,TI,LR,NR) %&gt;% 
-  dplyr::summarize(n=n()) %&gt;% 
-  as.tibble  %&gt;% 
-  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
-  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
+##combine and create long data frame for plot
+GTEXcr8z &lt;- GTExsum %&gt;% 
+  rbind(., nQTLsum) %&gt;% 
+  dplyr::select(id,set, n,total) %&gt;%
+  mutate(id=factor(id, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;%
+  pivot_longer(cols=n:total, 
+               names_to=&quot;group&quot;,
+               values_to=&quot;total&quot;) %&gt;%
+   mutate(group=factor(group,levels = c(&quot;total&quot;, &quot;n&quot;),labels=c(&quot;not DE&quot;,&quot;DE&quot;))) %&gt;% 
+  mutate(set=factor(set,levels = c(&quot;GTEx&quot;,&quot;nQTL&quot;), labels =c(&quot;eGene&quot;, &quot;not eGene&quot;)))
 
-chisup1LR &lt;- chisq.test(chi_list1[,c(&#39;NR&#39;,&#39;LR&#39;)])
-
-chisup1ER &lt;- chisq.test(chi_list1[,c(&#39;NR&#39;,&#39;ER&#39;)])
-
-chisup1TI &lt;- chisq.test(chi_list1[,c(&#39;NR&#39;,&#39;TI&#39;)])
-
-
-motifSeoanesummary4 &lt;- toplist24hr %&gt;% 
-  distinct(ENTREZID) %&gt;% 
-  mutate(ER=if_else(ENTREZID %in% motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  mutate(LR=if_else(ENTREZID %in% motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(TI=if_else(ENTREZID %in% motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(NR=if_else(ENTREZID %in% motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(chrom = if_else(ENTREZID %in% Sup4genes$entrez, &quot;y&quot;, &quot;no&quot;)) %&gt;% 
-  group_by(chrom,ER,TI,LR,NR) %&gt;% 
-  dplyr::summarize(n=n()) %&gt;% 
-  as.tibble  %&gt;% 
-  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
-  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
-
-chi_list4 &lt;- toplist24hr %&gt;% 
-  distinct(ENTREZID) %&gt;% 
-  mutate(ER=if_else(ENTREZID %in%motif_ER,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  mutate(LR=if_else(ENTREZID %in%motif_LR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(TI=if_else(ENTREZID %in%motif_TI,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(NR=if_else(ENTREZID %in%motif_NR,&quot;y&quot;,&quot;no&quot;)) %&gt;%
-  mutate(chrom=if_else(ENTREZID %in%Sup4genes$entrez,&quot;y&quot;,&quot;no&quot;)) %&gt;% 
-  group_by(chrom,ER,TI,LR,NR) %&gt;% 
-  dplyr::summarize(n=n()) %&gt;% 
-  as.tibble  %&gt;% 
-  pivot_wider(id_cols = c(chrom), names_from = c(&#39;ER&#39;, &#39;TI&#39;, &#39;LR&#39;, &#39;NR&#39;), values_from= n) %&gt;% 
-  rename(.,c(&quot;chrom&quot;=chrom,&quot;none&quot;= 2 , &quot;ER&quot; = 3 , &quot;TI&quot; = 4 , &quot;LR&quot; = 5 ,&quot;NR&quot; = 6))
-
-chisup4LR &lt;- chisq.test(chi_list4[,c(&#39;NR&#39;,&#39;LR&#39;)])
-
-chisup4ER &lt;- chisq.test(chi_list4[,c(&#39;NR&#39;,&#39;ER&#39;)])
-
-chisup4TI &lt;- chisq.test(chi_list4[,c(&#39;NR&#39;,&#39;TI&#39;)])
-
-supp45X &lt;- NULL
-motif &lt;- c(&#39;EAR&#39;,&#39;ESR&#39;,&#39;LR&#39;)
-pval1=c(chisup1ER$p.value,chisup1TI$p.value,chisup1LR$p.value)
-pval4=c(chisup4ER$p.value ,chisup4TI$p.value ,chisup4LR$p.value)
-supp45X &lt;- tibble(&quot;motif&quot;=motif,&quot;pval1&quot;=pval1,&quot;pval4&quot;=pval4)
-supp45Xmat &lt;- supp45X %&gt;% 
-  mutate(pval1=(-1*log10(pval1))) %&gt;% 
-  mutate(pval4=(-1*log10(pval4))) %&gt;% 
-  column_to_rownames(&#39;motif&#39;) %&gt;% 
-  rename(c(&quot;All chromatin regulators\nn = 408&quot;= pval1, &quot;AC sensitivity chromatin regulators\nn = 54&quot;=pval4)) %&gt;% 
-  as.matrix()
-ht_opt$DIMNAME_PADDING= unit(5,&quot;mm&quot;)
-ht_map=Heatmap(supp45Xmat,
-         column_title=&quot;Chromatin regulator enrichment p values&quot;, 
-         name = &quot;-log 10\n(p value)&quot;, 
-         cluster_rows = FALSE, 
-         cluster_columns = FALSE, 
-        column_names_centered = TRUE,
-         column_names_rot = 0,
-        column_names_gp = gpar(lineheight = 1),
-         col = col_fun5,
-        heatmap_width= unit(6,&quot;in&quot;),
-        heatmap_height = unit(3,&quot;in&quot;),
-         cell_fun = function(j, i, x, y, width, height, fill) {
-        if(supp45Xmat[i, j] &gt; -log10(0.05))
-            grid.text(&quot;*&quot;, x, y, gp = gpar(fontsize = 20))
-})
-draw(ht_map, heatmap_legend_side=&quot;left&quot;)</code></pre>
-<p><img src="figure/Figure6.Rmd/Chrom%20reg%20heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Chrom-reg-heatmap-1">
-Past versions of "Chrom reg heatmap-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-Chrom-reg-heatmap-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c6faf910ebd1dc0cadcfc57d81f7a51ef33eb7e0/docs/figure/Figure6.Rmd/Chrom reg heatmap-1.png" target="_blank">c6faf91</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure6.Rmd/Chrom reg heatmap-1.png" target="_blank">c40aced</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-26
-</td>
-</tr>
-</tbody>
-</table>
+ 
+GTEXcr8z %&gt;% 
+  ggplot(., aes(x=set,y=total, fill=group))+
+  geom_col(position=&#39;fill&#39;)+
+  facet_wrap(~id,nrow=2,ncol=4)+
+  theme_classic()+
+  scale_fill_manual(values=drug_palspc)+
+  ylab(&quot;Heart: left ventricle eGenes&quot;)+
+  xlab(&quot;&quot;)+
+  scale_y_continuous( expand = expansion(c(0, 0.01))) +
+  theme(strip.background = element_rect(fill = &quot;white&quot;,
+                                        linetype=1, 
+                                        linewidth = 0.5),
+        plot.title = element_text(size=12,
+                                  hjust = 0.5,
+                                  face=&quot;bold&quot;),
+        axis.title = element_text(size = 12, 
+                                  color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.text = element_text(color = &quot;black&quot;),
+        panel.background = element_rect(colour = &quot;black&quot;,
+                                        size=1),
+        strip.text.x = element_text(size=12,
+                                    face = &quot;bold&quot;))#+</code></pre>
+<p><img src="figure/Figure6.Rmd/GTEx%20enrich-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Additonal GTEx analysis and code is found <a href="">here</a></p>
 </div>
+<div id="b.-24-hour-deg-enrichment-in-dox-ipsc-dm-egenes"
+class="section level3">
+<h3>B. 24 hour DEG enrichment in DOX-iPSC-DM eGenes</h3>
+<pre class="r"><code>knowles4 &lt;-readRDS(&quot;output/knowles4.RDS&quot;)
+knowles5 &lt;-readRDS(&quot;output/knowles5.RDS&quot;)
+Knowles_count &lt;- 
+  toplistall %&gt;%
+  mutate(id = dplyr::case_match(id, &quot;Daunorubicin&quot;~&quot;DNR&quot;,
+                                &quot;Doxorubicin&quot;~&quot;DOX&quot;,
+                                &quot;Epirubicin&quot;~&quot;EPI&quot;,
+                                &quot;Mitoxantrone&quot;~&quot;MTX&quot;,
+                                &quot;Trastuzumab&quot;~&quot;TRZ&quot;,
+                                &quot;Vehicle&quot;~&quot;VEH&quot;, 
+                                .default = id)) %&gt;%
+  filter(id!=&#39;TRZ&#39;) %&gt;% 
+  mutate(id=factor(id, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3_hours&quot;,&quot;24_hours&quot;))) %&gt;%
+  group_by(time, id) %&gt;%
+  mutate(K4 = if_else(ENTREZID %in% knowles4$entrezgene_id,1,0))%&gt;%
+  mutate(K5 = if_else(ENTREZID %in% knowles5$entrezgene_id,1,0))%&gt;%
+  filter(adj.P.Val&lt;0.05) %&gt;%
+  dplyr::summarize(n=n(), K4=sum(K4), K5=sum(K5)) %&gt;% 
+  as.tibble() %&gt;% 
+  dplyr::select(time,id,K4,K5) %&gt;% 
+  rename(&quot;K4_y&quot;=&#39;K4&#39;,&quot;K5_y&quot;=&#39;K5&#39;) %&gt;% 
+  mutate(time = case_match(time, &#39;3_hours&#39;~&#39;3 hrs&#39;,
+                           &#39;24_hours&#39;~&#39;24 hrs&#39;,
+                           .default = time)) %&gt;% 
+  mutate(K4_n= 417-K4_y, K5_n=273-K5_y) %&gt;% 
+  pivot_longer(!c(time,id), 
+               names_to=&#39;QTL&#39;,
+               values_to=&quot;gene_count&quot;) %&gt;%
+  separate(QTL,into=c(&quot;QTL_type&quot;,&#39;group&#39;),sep = &#39;_&#39;) %&gt;% 
+  mutate(QTL_type =case_match(QTL_type, 
+                              &#39;K4&#39;~&#39;base\neGenes&#39;,
+                              &#39;K5&#39;~&#39;response\neGenes&#39;,.default = QTL_type)) %&gt;%
+  mutate(time=factor(time, levels=c(&quot;3 hrs&quot;,&quot;24 hrs&quot;))) %&gt;% 
+  group_by(id,time,QTL_type) %&gt;% 
+  mutate(percent=gene_count/sum(gene_count)*100)  %&gt;% 
+  ungroup() %&gt;% 
+  filter(time==&quot;24 hrs&quot;) %&gt;% 
+  mutate(id=factor(id, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;))) %&gt;%  mutate(group=factor(group, levels= c(&quot;n&quot;,&quot;y&quot;), labels=c(&quot;not DE&quot;,&quot;DE&quot;)))
+  
+  
+  ggplot(Knowles_count, aes(x=QTL_type,y=gene_count, group=group,  fill=group))+
+    geom_col(position=&#39;fill&#39;)+
+    facet_wrap(~id,nrow=1,ncol=4)+
+    theme_classic()+
+    ylab(&quot;iPSC-CM DOX eGenes &quot;)+
+    xlab(&quot; &quot;)+
+    scale_color_manual(values=drug_palspc)+
+    scale_fill_manual(values=drug_palspc)+
+    scale_y_continuous( expand = expansion(c(0, 0.01))) +
+    theme(strip.background = element_rect(fill = &quot;white&quot;,
+                                        linetype=1, 
+                                        linewidth = 0.5),
+        plot.title = element_text(size=12,
+                                  hjust = 0.5,
+                                  face=&quot;bold&quot;),
+        axis.title = element_text(size = 12, 
+                                  color = &quot;black&quot;),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.text = element_text(color = &quot;black&quot;),
+        panel.background = element_rect(colour = &quot;black&quot;,
+                                        size=1),
+        strip.text.x = element_text(size=12,
+                                    face = &quot;bold&quot;))</code></pre>
+<p><img src="figure/Figure6.Rmd/reQTLenrich-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Additonal analysis and code for the Knowles data is found <a
+href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2019.html#Dox-reQTLs">here</a></p>
 </div>
-<pre class="r"><code># ht_opt(RESET = TRUE)</code></pre>
-<p>More analysis of the Seoane data is at <a
-href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Seoane_chrom.html">this
-link</a></p>
+<div id="c.-doxreqtls-strongly-overlap-other-top2i-drugs"
+class="section level3">
+<h3>C. DOXreQTLS strongly overlap other TOP2i drugs</h3>
+<pre class="r"><code>DOXreQTLs &lt;- readRDS(&quot;output/DOXreQTLs.RDS&quot;)
+
+# assignInNamespace(x = &quot;plot_venn&quot;, value=plot_venn, ns=&quot;ggVennDiagram&quot;) 
+
+reQTL_overlapDE24 &lt;- list(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+re_incommon &lt;- c(DOXreQTLs$ENTREZID,sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+
+names(reQTL_overlapDE24) &lt;- c(&quot;Dox_reQTLS&quot;, &quot;DNR DEGs&quot;,&quot;EPI DEGs&quot;,&quot;MTX DEGs&quot;)
+
+DEG_incommon &lt;-c(sigVDA24$ENTREZID, sigVEP24$ENTREZID, sigVMT24$ENTREZID)
+uniqueDEGs_incommon &lt;- unique(DEG_incommon)
+two_venn &lt;- list(DOXreQTLs$ENTREZID, uniqueDEGs_incommon)
+
+ggVennDiagram(two_venn,
+                             category.names = c(&quot;DOX egenes\nn = 142&quot;,&quot;union of TOP2i DEGs\n     n = 7838&quot;),
+              show_intersect = FALSE,
+              set_color = &quot;black&quot;,
+              category_size = c(6,6),
+              label = &quot;count&quot;,
+              label_percent_digit = 1,
+              label_size = 4,
+              label_alpha = 0,
+              label_color = &quot;black&quot;,
+              edge_lty = &quot;solid&quot;, set_size = 4.5)+
+  scale_x_continuous(expand = expansion(mult = .3))+
+  scale_y_continuous(expand = expansion(mult = .1))+
+   scale_fill_distiller(palette=&quot;Spectral&quot;, direction = -1, limits= c(1,200),oob=scales::squish)</code></pre>
+<p><img src="figure/Figure6.Rmd/DOXreQTLs%20across%20other%20treatments-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
-<div id="b.-log2-cpm-of-kat6b" class="section level3">
-<h3>B. Log<sub>2</sub> cpm of <em>KAT6B</em></h3>
-<pre class="r"><code>cpm_boxplot &lt;-function(cpmcounts, GOI,brewer_palette, fill_colors, ylab) {
-  ##GOI needs to be ENTREZID
-  df &lt;- cpmcounts
-    df_plot &lt;- df %&gt;% 
-      dplyr::filter(rownames(.)==GOI) %&gt;%
+<div
+id="d.-stringently-idetified-dox-only-de-genes-and-dox-egenes-only-share-jph3"
+class="section level3">
+<h3>D. Stringently idetified DOX-only DE genes and DOX egenes only share
+<sub>JPH3</sub></h3>
+<pre class="r"><code>cpm_boxplot24h &lt;-
+  function(cpmcounts,
+           GOI,
+           brewer_palette,
+           fill_colors,
+           ylab) {
+    ##GOI needs to be ENTREZID
+    df &lt;- cpmcounts
+    df_plot &lt;- df %&gt;%
+      dplyr::filter(rownames(.) == GOI) %&gt;%
       pivot_longer(everything(),
                    names_to = &quot;treatment&quot;,
                    values_to = &quot;counts&quot;) %&gt;%
-      separate(treatment, c(&quot;drug&quot;,&quot;indv&quot;,&quot;time&quot;)) %&gt;%
-      mutate(time=factor(time, levels =c(&quot;3h&quot;, &quot;24h&quot;),labels=c(&quot;3 hours&quot;,&quot;24 hours&quot;))) %&gt;%
-      mutate(indv=factor(indv, levels = c(1,2,3,4,5,6))) %&gt;%
-      mutate(drug =case_match(drug, &quot;Da&quot;~&quot;DNR&quot;,
-                            &quot;Do&quot;~&quot;DOX&quot;,
-                            &quot;Ep&quot;~&quot;EPI&quot;,
-                            &quot;Mi&quot;~&quot;MTX&quot;,
-                            &quot;Tr&quot;~&quot;TRZ&quot;,
-                            &quot;Ve&quot;~&quot;VEH&quot;, .default = drug)) %&gt;% 
-      mutate(drug=factor(drug, levels = c(&#39;DOX&#39;,&#39;EPI&#39;,&#39;DNR&#39;,&#39;MTX&#39;,&#39;TRZ&#39;,&#39;VEH&#39;)))
-    plot &lt;- ggplot2::ggplot(df_plot, aes(x=drug, y=counts))+
-      geom_boxplot(position=&quot;identity&quot;,aes(fill=drug))+
-      geom_point(aes(col=indv, size=1.5, alpha=0.5))+
-      guides(alpha= &quot;none&quot;, size= &quot;none&quot;)+
-      scale_color_brewer(palette = brewer_palette, name=&quot;individual&quot;)+
-      scale_fill_manual(values=fill_colors, name = &quot;treatment&quot;)+
-      facet_wrap(~time, nrow=1, ncol=2)+
-      theme_bw()+
-      ylab(ylab)+
-      xlab(&quot;&quot;)+
-      theme(strip.background = element_rect(fill = &quot;white&quot;,linetype=1, linewidth = 0.5),
-          plot.title = element_text(size=12,hjust = 0.5,face=&quot;bold&quot;),
-          axis.title = element_text(size = 10, color = &quot;black&quot;),
-          
-          axis.line = element_line(linewidth = 1.0),
-          axis.text.x = element_blank(),
-          strip.text.x = element_text(face = &quot;bold&quot;))
+      separate(treatment, c(&quot;drug&quot;, &quot;indv&quot;, &quot;time&quot;)) %&gt;%
+      mutate(time = case_match(time, &quot;24h&quot; ~ &quot;24 hours&quot;, &quot;3h&quot; ~ &quot;3 hours&quot;)) %&gt;%
+      mutate(indv = factor(indv, levels = c(1, 2, 3, 4, 5, 6))) %&gt;%
+      mutate(
+        drug = case_match(
+          drug,
+          &quot;Da&quot; ~ &quot;DNR&quot;,
+          &quot;Do&quot; ~ &quot;DOX&quot;,
+          &quot;Ep&quot; ~ &quot;EPI&quot;,
+          &quot;Mi&quot; ~ &quot;MTX&quot;,
+          &quot;Tr&quot; ~ &quot;TRZ&quot;,
+          &quot;Ve&quot; ~ &quot;VEH&quot;,
+          .default = drug
+        )
+      ) %&gt;%
+      mutate(drug = factor(drug, levels = c(&#39;DOX&#39;, &#39;EPI&#39;, &#39;DNR&#39;, &#39;MTX&#39;, &#39;TRZ&#39;, &#39;VEH&#39;))) %&gt;%
+      dplyr::filter(time == &quot;24 hours&quot;)
+    plot &lt;- ggplot2::ggplot(df_plot, aes(x = drug, y = counts)) +
+      geom_boxplot(position = &quot;identity&quot;, aes(fill = drug)) +
+      geom_point(aes(
+        col = indv,
+        size = 2,
+        alpha = 0.5
+      )) +
+      guides(alpha = &quot;none&quot;, size = &quot;none&quot;) +
+      scale_color_brewer(palette = brewer_palette, name = &quot;Individual&quot;) +
+      scale_fill_manual(values = fill_colors) +
+      # facet_wrap(&quot;time&quot;, nrow=1, ncol=2)+
+      theme_bw() +
+      ylab(ylab) +
+      xlab(&quot;&quot;) +
+      ggtitle(&quot;24 hours&quot;) +
+      theme(
+        strip.background = element_rect(
+          fill = &quot;white&quot;,
+          linetype = 1,
+          linewidth = 0.5
+        ),
+        plot.title = element_text(
+          size = 12,
+          hjust = 0.5,
+          face = &quot;bold&quot;
+        ),
+        axis.title = element_text(
+          size = 15,
+          color = &quot;black&quot;,
+          face = &quot;bold&quot;
+        ),
+        axis.ticks = element_line(linewidth = 1.0),
+        panel.background = element_rect(colour = &quot;black&quot;, size = 1),
+        axis.text.x = element_blank(),
+        strip.text.x = element_text(margin = margin(2, 0, 2, 0, &quot;pt&quot;), face = &quot;bold&quot;)
+      )
     print(plot)
-}
-
-Kat6save&lt;- cpm_boxplot(cpmcounts,GOI=&#39;23522&#39;,&quot;Dark2&quot;,drug_pal_fact,
-  ylab=(expression(atop(&quot; &quot;,italic(&quot;KAT6B&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
-<p><img src="figure/Figure6.Rmd/logcpm%20kat6b-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-logcpm-kat6b-1">
-Past versions of "logcpm kat6b-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-logcpm-kat6b-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c6faf910ebd1dc0cadcfc57d81f7a51ef33eb7e0/docs/figure/Figure6.Rmd/logcpm kat6b-1.png" target="_blank">c6faf91</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure6.Rmd/logcpm kat6b-1.png" target="_blank">c40aced</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>Katnl &lt;- Kat6save+theme(legend.position = &quot;NULL&quot;)
-top_bot_legend &lt;- get_legend(Kat6save)</code></pre>
-</div>
-<div id="c.-log2-cpm-of-kdm4b" class="section level3">
-<h3>C. Log<sub>2</sub> cpm of <em>KDM4B</em></h3>
-<pre class="r"><code>library(cowplot)
-KDM4B_save &lt;- cpm_boxplot(cpmcounts,GOI=&#39;23030&#39;,&quot;Dark2&quot;,drug_pal_fact,
-  ylab=(expression(atop(&quot; &quot;,italic(&quot;KDM4B&quot;)~log[2]~&quot;cpm &quot;))))</code></pre>
-<p><img src="figure/Figure6.Rmd/logcpm%20kdm4b-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-logcpm-kdm4b-1">
-Past versions of "logcpm kdm4b-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-logcpm-kdm4b-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c6faf910ebd1dc0cadcfc57d81f7a51ef33eb7e0/docs/figure/Figure6.Rmd/logcpm kdm4b-1.png" target="_blank">c6faf91</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure6.Rmd/logcpm kdm4b-1.png" target="_blank">c40aced</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>KDMnl &lt;- KDM4B_save + theme(legend.position = &quot;NULL&quot;)
-# KDMnl
-
-leftside&lt;- plot_grid(Katnl,KDMnl, nrow=2)
-plot_grid(leftside,top_bot_legend,nrow=1, rel_widths = c(1,.2))</code></pre>
-<p><img src="figure/Figure6.Rmd/logcpm%20kdm4b-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-logcpm-kdm4b-2">
-Past versions of "logcpm kdm4b-2.png"
-</button>
-</p>
-<div id="fig-no-spaces-logcpm-kdm4b-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c6faf910ebd1dc0cadcfc57d81f7a51ef33eb7e0/docs/figure/Figure6.Rmd/logcpm kdm4b-2.png" target="_blank">c6faf91</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mward-lab/Matthews_TOP2i_cardiotox_2023/blob/c40acedc05ec91d8a51949f526029e724151c0b5/docs/figure/Figure6.Rmd/logcpm kdm4b-2.png" target="_blank">c40aced</a>
-</td>
-<td>
-reneeisnowhere
-</td>
-<td>
-2023-07-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+  }
+cpm_boxplot24h(cpmcounts,
+               GOI = &#39;57338&#39;,
+               &quot;Dark2&quot;,
+               drug_pal_fact,
+               ylab = (expression(atop(
+                 &quot; &quot;, italic(&quot;JPH3&quot;) ~ log[2] ~ &quot;cpm &quot;
+               ))))</code></pre>
+<p><img src="figure/Figure6.Rmd/DOXreQTLvDOXspeDEG-1.png" width="768" style="display: block; margin: auto;" />
+For additional stringently identified genes, you can visit the
+supplementary data <a
+href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Supplementary_figures.html">here</a>
+or analysis located <a
+href="https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowles2019.html#More_investigation_of_24_hour_specific_genes">here</a>.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1571,44 +1635,33 @@ time zone: America/Chicago
 tzcode source: internal
 
 attached base packages:
-[1] grid      stats     graphics  grDevices utils     datasets  methods  
-[8] base     
+[1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] ComplexHeatmap_2.16.0 broom_1.0.5           RColorBrewer_1.1-3   
- [4] ggsignif_0.6.4        cowplot_1.1.1         BiocGenerics_0.46.0  
- [7] tinytex_0.46          lubridate_1.9.2       forcats_1.0.0        
-[10] stringr_1.5.0         dplyr_1.1.3           purrr_1.0.2          
-[13] readr_2.1.4           tidyr_1.3.0           tibble_3.2.1         
-[16] ggplot2_3.4.3         tidyverse_2.0.0       workflowr_1.7.1      
+ [1] paletteer_1.6.0     ggVennDiagram_1.5.0 broom_1.0.5        
+ [4] RColorBrewer_1.1-3  ggsignif_0.6.4      cowplot_1.1.1      
+ [7] data.table_1.14.8   BiocGenerics_0.46.0 lubridate_1.9.3    
+[10] forcats_1.0.0       stringr_1.5.0       dplyr_1.1.3        
+[13] purrr_1.0.2         readr_2.1.4         tidyr_1.3.0        
+[16] tibble_3.2.1        ggplot2_3.4.4       tidyverse_2.0.0    
+[19] workflowr_1.7.1    
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.2.0    farver_2.1.1        fastmap_1.1.1      
- [4] promises_1.2.1      digest_0.6.33       timechange_0.2.0   
- [7] lifecycle_1.0.3     cluster_2.1.4       processx_3.8.2     
-[10] magrittr_2.0.3      compiler_4.3.1      rlang_1.1.1        
-[13] sass_0.4.7          tools_4.3.1         utf8_1.2.3         
-[16] yaml_2.3.7          knitr_1.44          labeling_0.4.3     
-[19] bit_4.0.5           withr_2.5.0         stats4_4.3.1       
-[22] fansi_1.0.4         git2r_0.32.0        colorspace_2.1-0   
-[25] scales_1.2.1        iterators_1.0.14    cli_3.6.1          
-[28] rmarkdown_2.24      crayon_1.5.2        generics_0.1.3     
-[31] rstudioapi_0.15.0   httr_1.4.7          tzdb_0.4.0         
-[34] rjson_0.2.21        cachem_1.0.8        parallel_4.3.1     
-[37] matrixStats_1.0.0   vctrs_0.6.3         jsonlite_1.8.7     
-[40] callr_3.7.3         IRanges_2.34.1      hms_1.1.3          
-[43] GetoptLong_1.0.5    S4Vectors_0.38.1    bit64_4.0.5        
-[46] clue_0.3-64         magick_2.7.5        foreach_1.5.2      
-[49] jquerylib_0.1.4     glue_1.6.2          codetools_0.2-19   
-[52] ps_1.7.5            stringi_1.7.12      gtable_0.3.4       
-[55] shape_1.4.6         later_1.3.1         munsell_0.5.0      
-[58] pillar_1.9.0        htmltools_0.5.6     circlize_0.4.15    
-[61] R6_2.5.1            doParallel_1.0.17   rprojroot_2.0.3    
-[64] vroom_1.6.3         evaluate_0.21       png_0.1-8          
-[67] backports_1.4.1     httpuv_1.6.11       bslib_0.5.1        
-[70] Rcpp_1.0.11         whisker_0.4.1       xfun_0.40          
-[73] fs_1.6.3            getPass_0.2-2       pkgconfig_2.0.3    
-[76] GlobalOptions_0.1.2</code></pre>
+ [1] gtable_0.3.4      xfun_0.41         bslib_0.6.1       processx_3.8.2   
+ [5] callr_3.7.3       tzdb_0.4.0        vctrs_0.6.4       tools_4.3.1      
+ [9] ps_1.7.5          generics_0.1.3    fansi_1.0.5       highr_0.10       
+[13] pkgconfig_2.0.3   lifecycle_1.0.4   farver_2.1.1      compiler_4.3.1   
+[17] git2r_0.32.0      munsell_0.5.0     getPass_0.2-2     httpuv_1.6.12    
+[21] htmltools_0.5.7   sass_0.4.7        yaml_2.3.7        later_1.3.1      
+[25] pillar_1.9.0      jquerylib_0.1.4   whisker_0.4.1     cachem_1.0.8     
+[29] tidyselect_1.2.0  digest_0.6.33     stringi_1.7.12    rematch2_2.1.2   
+[33] labeling_0.4.3    rprojroot_2.0.4   fastmap_1.1.1     grid_4.3.1       
+[37] colorspace_2.1-0  cli_3.6.1         magrittr_2.0.3    utf8_1.2.4       
+[41] withr_3.0.0       scales_1.3.0      promises_1.2.1    backports_1.4.1  
+[45] timechange_0.2.0  rmarkdown_2.25    httr_1.4.7        hms_1.1.3        
+[49] evaluate_0.23     knitr_1.45        rlang_1.1.2       Rcpp_1.0.11      
+[53] glue_1.6.2        rstudioapi_0.15.0 jsonlite_1.8.7    R6_2.5.1         
+[57] fs_1.6.3         </code></pre>
 </div>
 </div>
 </div>
