@@ -1,5 +1,5 @@
 ---
-title: "Appendix 1: Supplementary figures"
+title: "Supplementary figures"
 author: "ERM"
 date: "`r Sys.Date()`"
 output:
@@ -90,6 +90,77 @@ cpm_boxplot_time <-function(cpmcounts,timex, GOI,brewer_palette, fill_colors, yl
           strip.text.x = element_text(margin = margin(2,0,2,0, "pt"),face = "bold"))
     print(plot)
 }
+
+drug_pal <- c("#707031","#41B333")
+# use "Dark2" for individuals, and drug_pal for drug fill
+
+cpm_TRZ <-
+  function(cpmcounts,
+           GOI,
+           ylab,
+           titlename) {
+    ##GOI needs to be ENTREZID
+    df <- trz_veh_count %>% 
+      column_to_rownames("ENTREZID")
+    df_plot <- df %>%
+      dplyr::filter(rownames(.) == GOI) %>%
+      pivot_longer(everything(),
+                   names_to = "treatment",
+                   values_to = "counts") %>%
+      separate(treatment, c("drug", "indv", "time")) %>%
+      mutate(time = factor(time, levels = c("3h", "24h"))) %>%
+      mutate(indv = factor(indv, levels = c(1, 2, 3, 4, 5, 6))) %>%
+      mutate(
+        drug = case_match(
+          drug,
+          "Da" ~ "DNR",
+          "Do" ~ "DOX",
+          "Ep" ~ "EPI",
+          "Mi" ~ "MTX",
+          "Tr" ~ "TRZ",
+          "Ve" ~ "VEH",
+          .default = drug
+        )
+      ) %>%
+      mutate(drug = factor(drug, levels = c('DOX', 'EPI', 'DNR', 'MTX', 'TRZ', 'VEH')))
+    plot <-
+    ggplot2::ggplot(df_plot, aes(x = drug, y = counts)) +
+      geom_boxplot(position = "identity", aes(fill = drug)) +
+      geom_point(aes(
+        col = indv,
+        size = 1.5,
+        alpha = 0.5
+      )) +
+      guides(alpha = "none", size = "none") +
+      # scale_color_brewer(palette = "Dark2", guide = "none") +
+      scale_fill_manual(values = drug_pal) +
+      facet_wrap("time", nrow = 1, ncol = 2) +
+      theme_bw() +
+      ylab(ylab) +
+      xlab("") +
+      ggtitle(titlename)+
+      theme(
+        strip.background = element_rect(
+          fill = "white",
+          linetype = 1,
+          linewidth = 0.5
+        ),
+        plot.title = element_text(
+          size = 10,
+          hjust = 0.5,
+          face = "bold"
+        ),
+        axis.title = element_text(size = 10, color = "black"),
+        axis.ticks = element_line(linewidth = 1.0),
+        axis.line = element_line(linewidth = 1.0),
+        axis.text.x = element_blank(),
+        strip.text.x = element_text(margin = margin(2, 0, 2, 0, "pt"), face = "bold")
+      )
+    print(plot)
+  }
+
+
+
 ```
 
 
@@ -220,7 +291,7 @@ viability %>%
   theme_bw()+
   xlab("Average viability of cardiomyocytes/100") +
   ylab("Average LDH") +
-  ggtitle("Cell stress and viability correlation")+
+  ggtitle("Cancer drugs that decrease cardiomyocyte viability induce cellular stress")+
   scale_color_brewer(palette = "Dark2",name = "Individual", label = c("1","2","3","4","5","6"))+
   ggpubr::stat_cor(method="pearson",
                    aes(label = paste(..r.label.., ..p.label.., sep = "*`,`~")),
@@ -743,7 +814,7 @@ Mtx3_sp_DEGtable  %>%
 
 ```
 
-###24 hours
+### 24 hours
 ```{r FigS11 24h- drug spec path}
 
 DX_sp_DEGgostres <- readRDS("data/DEG-GO/gostresDOXdeg_sp.RDS")
@@ -806,18 +877,68 @@ MT_sp_DEGtable  %>%
 
 
 ```
-## S12 Fig: Most genes that are differentially expressed in response to treatment at three hours are also differentially expressed at 24 hours.
+## S12 Fig: Nominally significant TRZ response genes show enrichment in cancer-related pathways. 
 
 
-```{r Fig venntimepoints}
-DNRvenn<- readRDS ("output/DNRvenn.RDS")
-DOXvenn<- readRDS ("output/DOXvenn.RDS")
-EPIvenn<- readRDS ("output/EPIvenn.RDS")
-MTXvenn<- readRDS ("output/MTXvenn.RDS")
+```{r TRZ expression}
+FC_mine <- readRDS("data/toplistall.RDS")
 
-plot_grid(DNRvenn,DOXvenn,EPIvenn,MTXvenn,nrow=2, ncol = 2)
+TRZ_list <- FC_mine %>% 
+  dplyr::filter(id=="TRZ",P.Value < 0.05) 
+
+TRZ_list %>% 
+  group_by(time) %>% 
+ count() %>% 
+  mutate(time = factor(time, levels = c("3_hours", "24_hours"), labels = c("3 hours", "24 hours")))%>% 
+  
+  ggplot(., aes(x=time, y=n))+
+  geom_col()+
+   theme_bw() +
+  ggtitle("Number of nominal pvalue TRZ genes by time"
+  )+
+  ylab(expression("count")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    # axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
+
 ```
-More on DE gene analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/DEG-GO_analysis.html)
+
+```{r  cpmTRZ}
+all_cpmcount <-   readRDS("data/cpmcount.RDS") %>% rownames_to_column(var = "ENTREZID")
+##pulled all my logcpm, now choosing only TRZ and VEH for plotting
+
+trz_veh_count <- all_cpmcount %>% 
+  dplyr::select(ENTREZID, starts_with("Tr"), starts_with("Ve"))
+
+
+
+sampset <- readRDS("data/sampsettrz.RDS")
+sub_samp <- sampset %>% 
+  dplyr::filter(SYMBOL=="PHLDA1"|SYMBOL== "ANKRD2")
+#  <- TRZ_list %>% 
+#   distinct(ENTREZID,.keep_all = TRUE) %>% 
+#   sample_n(.,6)
+for (g in seq(from=1, to=length(sub_samp$ENTREZID))){
+  a <- sub_samp$SYMBOL[g]
+  cpm_TRZ(trz_veh_count,GOI=sub_samp[g,3],
+          ylab=bquote(~italic(.(a))~log[2]~"cpm "), 
+          titlename=bquote(~italic(.(a))~"gene "))
+
+}
+
+```
+
+More on TRZ expression [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html)
 
 ## S13 Fig: Four gene expression signatures capture the response to TOP2i over time.
 ### S13 FigA
@@ -921,77 +1042,135 @@ grid.draw(g)
 More on Baysian gene analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Cormotifcluster_analysis.html).
 
 
-## S14 Fig: AC treatments induce a small number of gene expression variation changes across individuals.
-```{r qvalue S14}
-library(qvalue)
- 
-organized_drugframe <- read.csv("data/organized_drugframe.csv",
-                                row.names = 1)
+## S14 Fig: Gene expression variance across 45 individuals increases in iPSC-CMs treated with DOX. 
 
-Var_test_list24 <- readRDS("data/Var_test_list24.RDS")
-set24 <- names(Var_test_list24) 
+```{r Knowlesvariance}
+store_var <- readRDS("data/Knowles_variation_data.RDS")
 
-framefun24 <- data.frame(ENTREZID=rownames(organized_drugframe))
-for (i in 1:length(set24)){
-  a <- set24[i]
-    s_list<- Var_test_list24[[i]][[13]]
-  names(s_list) <- rownames(organized_drugframe)
-  hold<- map_df(s_list, ~as.data.frame(.x$p.value), .id="ENTREZID")
-   framefun24[paste0(a)] <- hold$`.x$p.value`
- 
-}
+knowlesdrug<- store_var %>% 
+  dplyr::select("ESGN","mean_DOX","var_DOX","mean_NT", "var_NT") %>% 
+  pivot_longer(cols = !"ESGN", names_to = "short", values_to = "values") %>% 
+  separate(short, into=c("calc","treatment")) #%>% 
+knowlesdrug %>% 
+  as.data.frame() %>% 
+  dplyr::filter(calc == "mean") %>% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot()+
+  ggtitle("Knowles Means across all genes")+
+  geom_signif(
+    comparisons = list(
+      c("DOX", "NT")),
+    test = "t.test",
+    tip_length = 0.01,
+    map_signif_level = FALSE
+    # textsize = 4,
+    # # y_position = 11,
+    # step_increase = 0.05
+  )+
+  theme_bw() +
+  # xlab(" ") +
+  ylab(expression("counts log"[2] ~ "cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    # axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
 
-est24pDNR <- qvalue(p=framefun24$DNR.VEH.24)
-est24pDOX <- qvalue(p=framefun24$DOX.VEH.24)
-est24pEPI <- qvalue(p=framefun24$EPI.VEH.24)
-est24pMTX <- qvalue(p=framefun24$MTX.VEH.24)
-est24pTRZ <- qvalue(p=framefun24$TRZ.VEH.24)
-
-  
-hist(est24pDNR)+labs(caption= "DNR 24")
-hist(est24pDOX)+labs(caption= "DOX 24")
-hist(est24pEPI)+labs(caption= "EPI 24")
-hist(est24pMTX)+labs(caption= "MTX 24")
-hist(est24pTRZ)+labs(caption= "TRZ 24")
+knowlesdrug %>% 
+  as.data.frame() %>% 
+  dplyr::filter(calc == "var") %>% 
+  ggplot(., aes(x= treatment, y=values))+
+  geom_boxplot(outlier.shape= NA)+
+  ggtitle(" Knowles Variance across all genes")+
+  geom_signif(
+    comparisons = list(
+      c("DOX", "NT")),
+    test = "var.test",
+    tip_length = 0.01,
+    y_position = 0.5,
+    # vjust=1,
+    map_signif_level = FALSE)+
+   coord_cartesian(ylim = c(NA, 1.5), expand = TRUE)+
+theme_bw() +
+  # xlab(" ") +
+  ylab(expression("counts log"[2] ~ "cpm ")) +
+  theme(
+    strip.background = element_rect(
+      fill = "white",
+      linetype = 1,
+      linewidth = 0.5
+    ),
+    plot.title = element_text(size = 12, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 10, color = "black"),
+    axis.ticks = element_line(linewidth = 1.0),
+    panel.background = element_rect(colour = "black", size = 1),
+    # axis.text.x = element_blank(),
+    strip.text.x = element_text(margin = margin(2, 0, 2, 0, "mm"), face = "bold")
+  )
 
 ```
 
-## S15 Fig: TOP2i treatments induce expression changes in some genes that correlate with cardiotoxicity.
+More on Knowles gene analysis [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/Knowels_trop_analysis.html#Replication_of_variance_figures_using_Knowels_data).
 
 
-```{r Fig S15,fig.height=3, fig.width=12,out.width="80%"}
-gene_corr_frame <- readRDS("data/gene_corr_frame.RDS")
-GOI_genelist <- read.csv("output/GOI_genelist.txt",row.names = 1)
 
-for (gene in GOI_genelist$entrezgene_id){
-    gene_plot <- gene_corr_frame %>% 
-      dplyr::filter(entrezgene_id == gene) %>%
-      ggplot(., aes(x=tox, y=counts))+
-      geom_point(aes(col=indv))+
-      geom_smooth(method="lm")+
-      # scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
-      facet_wrap(hgnc_symbol~Drug, scales="free", nrow = 1)+
-      theme_classic()+
-      xlab("Toxicity score") +
-      ylab(expression("counts in log "[2]*" cpm")) +
-      # ggtitle(expression(paste("Correlation between counts and toxicity by drug")))+
-      scale_color_brewer(palette = "Dark2")+#,name = "Individual", label = c("1","2","3","4","5","6"))+
-      guides(color="none")+
-      ggpubr::stat_cor(method="pearson",
-               cor.coef.name="rho",
-               aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),
-               color = "red",
-               label.x.npc = 0.01,
-               label.y.npc=0.01, 
-               size = 3)+
-      theme(plot.title = element_text(hjust = 0.5,face = "bold"),
-            axis.title = element_text(size = 12, color = "black"),
-            axis.ticks = element_line(size = 1.5),
-            axis.text = element_text(size = 8, color = "black", angle =0),
-            strip.text.x = element_text(size = 12, color = "black", face = "italic"))
-   plot(gene_plot)
-   
- }
+## S15 Fig: Replication of gene expression response in AC-induced cardiotoxicity loci. 
+
+
+```{r Fig S15,fig.height=12, fig.width=12,out.width="80%"}
+DOX_de_genes_interest <- read.csv("output/DOX_de_goi.csv", row.names = 1)
+
+
+all_cpmcounts <-  read_table("data/Counts_RNA_ERMatthews.txt")
+##all my count data
+Knowles_log2cpm <- readRDS("data/Knowles_log2cpm_real.RDS") 
+##all Knowles count data, down with my method in analysis/after_comments.Rmd
+store_box <- Knowles_log2cpm%>% 
+  dplyr::select( 'ESGN',ends_with(c('0.625', '0'))) %>%
+  dplyr::filter(ESGN %in% DOX_de_genes_interest$ensembl_gene_id) %>% 
+  pivot_longer(cols=!ESGN, names_to = "ind", values_to = "counts") %>% 
+  separate(ind,into=c("cell_line","dosage"), sep = ":")%>%
+  left_join(., DOX_de_genes_interest, by = c("ESGN" = "ensembl_gene_id")) %>% 
+  mutate(expr="K")
+
+
+lcpm_24h <- all_cpmcounts %>% 
+  column_to_rownames("ENTREZID") %>% 
+  cpm(., log=TRUE) %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = "ENTREZID") %>% 
+  # dplyr::select(ENTREZID, all_of(starts_with(c("DOX","VEH")))) %>%
+  dplyr::select(ENTREZID, all_of(ends_with("24h")))  %>% 
+  dplyr::filter(ENTREZID %in% DOX_de_genes_interest$ENTREZID) %>% 
+  pivot_longer(cols=!ENTREZID, names_to = "ind", values_to = "counts") %>%   mutate(ENTREZID = as.numeric(ENTREZID)) %>% 
+  full_join(., DOX_de_genes_interest, by = c("ENTREZID"="ENTREZID")) %>% 
+  mutate(expr="ME") %>% 
+  rename("ESGN"="ensembl_gene_id") %>% 
+  separate(ind, into = c("dosage","cell_line",NA)) %>% 
+  mutate(dosage=case_match(dosage,"DOX"~"0.5", .default = dosage)) 
+
+my_fill_colors <-  c("#41B333","#8B006D","#41B333","#8B006D","#DF707E","#F1B72B", "#3386DD","#707031")
+
+lcpm_24h %>% 
+  rbind(.,store_box) %>% 
+  mutate(dosage=factor(dosage, levels=c('0','0.625',"1.25","2.5","5","VEH","0.5","EPI","DNR", "MTX","TRZ"))) %>% 
+  ggplot(., aes(x=dosage,y=counts))+
+  geom_boxplot(aes(fill=dosage))+
+  facet_wrap(~hgnc_symbol, scales="free_y", nrow=10, ncol = 3 )+
+  theme_bw()+
+  scale_fill_manual(values=my_fill_colors)
+
+
+
+
 
 
 ```
