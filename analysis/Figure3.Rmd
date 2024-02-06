@@ -39,6 +39,15 @@ library(ggsignif)
 library(RColorBrewer)
 library(broom)
 library(edgeR)
+library(data.table)
+
+library(broom)
+library(limma)
+library(corrplot)
+library(ggVennDiagram)
+library(ComplexHeatmap)
+library(gridtext)
+library(paletteer)
 
 ```
 
@@ -103,15 +112,7 @@ More information on overall RNA-seq analysis can be found [at this link](https:/
 
 ```{r packages loading converge}
 
-library(data.table)
 
-library(broom)
-library(limma)
-library(corrplot)
-library(ggVennDiagram)
-library(ComplexHeatmap)
-library(gridtext)
-library(paletteer)
 ```
 
 ```{r data loading converge}
@@ -226,7 +227,7 @@ fig3hrvenn <- ggVennDiagram::ggVennDiagram(total3,
               edge_lty = "solid", set_size = 4.5)+
   scale_x_continuous(expand = expansion(mult = .3))+
   scale_y_continuous(expand = expansion(mult = .2))+
-  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus")+
+  # scale_color_fish_d(option = "Bodianus_pulchellus", direction = -1)+
   scale_fill_distiller(palette="Spectral", direction = -1, limits=c(0,4500))+
   labs(title = "3 hour",
        caption = paste("n =", length(unique(totalin_common3)),"genes\n "))+
@@ -279,7 +280,7 @@ fig24hrvenn <- ggVennDiagram::ggVennDiagram(
 ) +
   scale_x_continuous(expand = expansion(mult = .3)) +
   scale_y_continuous(expand = expansion(mult = .2)) +
-  scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus") +
+  # scale_color_paletteer_d(palette = "fishualize::Bodianus_pulchellus") +
   scale_fill_distiller(palette = "Spectral", direction = -1) +
   labs(title = "24 hour",
        caption = paste("n =", length(unique(in_common24)), "genes\n ")) +
