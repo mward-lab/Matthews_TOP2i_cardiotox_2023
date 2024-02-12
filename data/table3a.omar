@@ -1,0 +1,21 @@
+source,term_id,term_name,intersection_size,term_size,p_value
+GO:BP,GO:0007049,cell cycle,314,1550,1.4295244025528857e-33
+GO:BP,GO:0022402,cell cycle process,242,1091,1.831716775347737e-31
+GO:BP,GO:0000278,mitotic cell cycle,205,845,1.831716775347737e-31
+GO:BP,GO:1903047,mitotic cell cycle process,183,710,1.831716775347737e-31
+GO:BP,GO:0007059,chromosome segregation,118,383,7.385157522097667e-27
+GO:BP,GO:0000280,nuclear division,111,360,3.180418759231674e-25
+GO:BP,GO:0051726,regulation of cell cycle,209,972,7.535475357850141e-25
+GO:BP,GO:0010564,regulation of cell cycle process,156,630,1.3387490375172476e-24
+GO:BP,GO:0051301,cell division,145,577,2.015760760635496e-23
+GO:BP,GO:0140014,mitotic nuclear division,90,267,2.3123652474271388e-23
+GO:BP,GO:0051276,chromosome organization,139,553,1.9191970550178796e-22
+GO:BP,GO:0098813,nuclear chromosome segregation,93,292,3.24958692757775e-22
+GO:BP,GO:0048285,organelle fission,112,403,1.4845026880906994e-21
+GO:BP,GO:0000070,mitotic sister chromatid segregation,71,195,1.983140233420933e-20
+GO:BP,GO:0000819,sister chromatid segregation,78,236,1.4446356705839504e-19
+GO:BP,GO:0000075,cell cycle checkpoint signaling,66,183,1.1226762144170912e-18
+GO:BP,GO:0007093,mitotic cell cycle checkpoint signaling,56,138,1.694617154204983e-18
+GO:BP,GO:0045786,negative regulation of cell cycle,92,344,2.6744338765739234e-16
+GO:BP,GO:0007346,regulation of mitotic cell cycle,109,447,2.6744338765739234e-16
+GO:BP,GO:0044770,cell cycle phase transition,118,507,4.366961404460481e-16

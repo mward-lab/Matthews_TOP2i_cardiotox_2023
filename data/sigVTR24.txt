@@ -1,0 +1,1 @@
+"sigVTR24.ENTREZID","sigVTR24.SYMBOL","sigVTR24.logFC","sigVTR24.AveExpr","sigVTR24.t","sigVTR24.P.Value","sigVTR24.adj.P.Val","sigVTR24.B"

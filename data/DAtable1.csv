@@ -1,0 +1,52 @@
+source,term_id,term_name,intersection_size,term_size,p_value
+GO:BP,GO:0006366,transcription by RNA polymerase II,214,2053,4.075514563942842e-32
+GO:BP,GO:0006357,regulation of transcription by RNA polymerase II,208,1976,7.933389826315799e-32
+GO:BP,GO:0097659,nucleic acid-templated transcription,248,2761,3.870690444644765e-29
+GO:BP,GO:0006351,DNA-templated transcription,248,2760,3.870690444644765e-29
+GO:BP,GO:0032774,RNA biosynthetic process,248,2792,1.7678066405248202e-28
+GO:BP,GO:0006355,regulation of DNA-templated transcription,239,2654,1.6009298269477202e-27
+GO:BP,GO:1903506,regulation of nucleic acid-templated transcription,239,2656,1.6009298269477202e-27
+GO:BP,GO:0051252,regulation of RNA metabolic process,252,2927,2.308952962309061e-27
+GO:BP,GO:2001141,regulation of RNA biosynthetic process,239,2674,3.61996693429308e-27
+GO:BP,GO:0019219,regulation of nucleobase-containing compound metabolic process,259,3189,9.09779023715885e-25
+GO:BP,GO:0010556,regulation of macromolecule biosynthetic process,253,3100,1.4958558674523731e-24
+GO:BP,GO:0034654,nucleobase-containing compound biosynthetic process,253,3170,1.025962149115847e-22
+GO:BP,GO:0018130,heterocycle biosynthetic process,255,3235,2.6937501713256326e-22
+GO:BP,GO:0031326,regulation of cellular biosynthetic process,254,3212,2.6937501713256326e-22
+GO:BP,GO:0019438,aromatic compound biosynthetic process,254,3237,9.88450356632642e-22
+GO:BP,GO:0009889,regulation of biosynthetic process,255,3267,1.0876393096125392e-21
+GO:BP,GO:1901362,organic cyclic compound biosynthetic process,257,3344,1.2429882140762643e-20
+GO:BP,GO:0009059,macromolecule biosynthetic process,225,3824,3.1072870673647714e-20
+GO:BP,GO:0044271,cellular nitrogen compound biosynthetic process,219,3851,7.152652378398772e-17
+GO:BP,GO:0031323,regulation of cellular metabolic process,240,4432,7.152652378398772e-17
+GO:BP,GO:0080090,regulation of primary metabolic process,240,4576,2.1662078010372547e-14
+GO:BP,GO:0051171,regulation of nitrogen compound metabolic process,235,4456,3.486027731020648e-14
+GO:BP,GO:0044249,cellular biosynthetic process,234,4584,3.959615242833199e-13
+GO:BP,GO:1901576,organic substance biosynthetic process,234,4658,3.133872742747794e-12
+GO:BP,GO:0000122,negative regulation of transcription by RNA polymerase II,83,759,3.960416551143444e-12
+GO:BP,GO:0009058,biosynthetic process,235,4721,8.874951608344722e-12
+GO:BP,GO:0045892,negative regulation of DNA-templated transcription,100,1038,1.3921146771430056e-11
+GO:BP,GO:1903507,negative regulation of nucleic acid-templated transcription,100,1040,1.4776863222754745e-11
+GO:BP,GO:1902679,negative regulation of RNA biosynthetic process,100,1050,2.774069017303827e-11
+GO:BP,GO:0051253,negative regulation of RNA metabolic process,105,1145,4.34759597093082e-11
+GO:BP,GO:0010468,regulation of gene expression,218,3691,2.3282604467991036e-10
+GO:BP,GO:1903508,positive regulation of nucleic acid-templated transcription,110,1341,9.723614468329632e-10
+GO:BP,GO:0045893,positive regulation of DNA-templated transcription,110,1341,9.723614468329632e-10
+GO:BP,GO:0051254,positive regulation of RNA metabolic process,116,1469,1.1394507499484723e-9
+GO:BP,GO:1902680,positive regulation of RNA biosynthetic process,110,1348,1.1889443962838977e-9
+GO:BP,GO:0045934,negative regulation of nucleobase-containing compound metabolic process,107,1247,1.3241379452536208e-9
+GO:BP,GO:0010558,negative regulation of macromolecule biosynthetic process,106,1241,2.0743706505394094e-9
+GO:BP,GO:0010557,positive regulation of macromolecule biosynthetic process,118,1542,4.41689177067072e-9
+GO:BP,GO:0031328,positive regulation of cellular biosynthetic process,121,1617,1.4156992315493425e-8
+GO:BP,GO:0031327,negative regulation of cellular biosynthetic process,106,1284,1.8284629325067964e-8
+GO:BP,GO:0009891,positive regulation of biosynthetic process,121,1646,4.689433407870608e-8
+GO:BP,GO:0009890,negative regulation of biosynthetic process,106,1310,5.329387980432955e-8
+GO:BP,GO:0045935,positive regulation of nucleobase-containing compound metabolic process,119,1643,8.52703546263354e-8
+GO:BP,GO:0045944,positive regulation of transcription by RNA polymerase II,83,951,1.0425595530207001e-7
+GO:BP,GO:0060255,regulation of macromolecule metabolic process,115,4781,3.066323586352395e-7
+GO:BP,GO:0031324,negative regulation of cellular metabolic process,128,1825,5.870623517502103e-7
+GO:BP,GO:0019222,regulation of metabolic process,119,5198,1.538083944005802e-6
+GO:BP,GO:0031325,positive regulation of cellular metabolic process,125,2443,1.1944790931388959e-5
+GO:BP,GO:0051173,positive regulation of nitrogen compound metabolic process,126,2494,1.8405250086063726e-5
+GO:BP,GO:0051172,negative regulation of nitrogen compound metabolic process,127,1912,5.317353803930295e-5
+KEGG,KEGG:05168,Herpes simplex virus 1 infection,61,424,4.0193230297085595e-15

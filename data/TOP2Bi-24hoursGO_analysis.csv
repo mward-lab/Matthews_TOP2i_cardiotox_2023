@@ -1,0 +1,192 @@
+"","source","term_id","term_name","intersection_size","term_size","p_value"
+"1","GO:BP","GO:0007049","cell cycle",308,1529,5.34408635224458e-32
+"2","GO:BP","GO:0000278","mitotic cell cycle",200,841,4.68970868873415e-29
+"3","GO:BP","GO:1903047","mitotic cell cycle process",177,704,1.30166762190406e-28
+"4","GO:BP","GO:0022402","cell cycle process",227,1051,3.53992500660964e-27
+"5","GO:BP","GO:0051726","regulation of cell cycle",205,959,1.29947273371443e-23
+"6","GO:BP","GO:0051301","cell division",145,577,3.6477650078294e-23
+"7","GO:BP","GO:0000280","nuclear division",113,389,3.6477650078294e-23
+"8","GO:BP","GO:0010564","regulation of cell cycle process",152,622,4.3157058121614e-23
+"9","GO:BP","GO:0007059","chromosome segregation",100,327,3.01525825059506e-22
+"10","GO:BP","GO:0051276","chromosome organization",133,523,1.04889354964386e-21
+"11","GO:BP","GO:0140014","mitotic nuclear division",92,297,7.72979950392427e-21
+"12","GO:BP","GO:0048285","organelle fission",114,432,8.19644335003444e-20
+"13","GO:BP","GO:0098813","nuclear chromosome segregation",85,269,8.19644335003444e-20
+"14","GO:BP","GO:0000819","sister chromatid segregation",73,215,7.05943611567651e-19
+"15","GO:BP","GO:0000070","mitotic sister chromatid segregation",68,192,1.14015720155998e-18
+"16","GO:BP","GO:0000075","cell cycle checkpoint signaling",65,182,4.96023080589615e-18
+"17","GO:BP","GO:0007093","mitotic cell cycle checkpoint signaling",55,139,1.84436002852115e-17
+"18","GO:BP","GO:0007346","regulation of mitotic cell cycle",108,447,1.0923657309713e-15
+"19","GO:BP","GO:0045786","negative regulation of cell cycle",91,344,1.10098856414927e-15
+"20","GO:BP","GO:0044770","cell cycle phase transition",115,504,7.51486158922471e-15
+"21","GO:BP","GO:0045930","negative regulation of mitotic cell cycle",66,212,7.51486158922471e-15
+"22","GO:BP","GO:0006260","DNA replication",75,262,8.65999610134429e-15
+"23","GO:BP","GO:1901988","negative regulation of cell cycle phase transition",70,235,9.6827981236587e-15
+"24","GO:BP","GO:1901987","regulation of cell cycle phase transition",96,392,2.60781081059222e-14
+"25","GO:BP","GO:0010948","negative regulation of cell cycle process",76,273,2.60781081059222e-14
+"26","GO:BP","GO:0051783","regulation of nuclear division",46,118,2.88698699947586e-14
+"27","GO:BP","GO:0044772","mitotic cell cycle phase transition",100,419,3.40992795444213e-14
+"28","GO:BP","GO:0007088","regulation of mitotic nuclear division",42,103,8.63875225118447e-14
+"29","GO:BP","GO:0090068","positive regulation of cell cycle process",63,207,9.71534501156666e-14
+"30","GO:BP","GO:0006261","DNA-templated DNA replication",52,152,1.66422535825641e-13
+"31","GO:BP","GO:0051983","regulation of chromosome segregation",45,119,2.03329770688330e-13
+"32","GO:BP","GO:1901990","regulation of mitotic cell cycle phase transition",80,310,3.58235621350926e-13
+"33","GO:BP","GO:1901991","negative regulation of mitotic cell cycle phase transition",54,167,6.55041201407417e-13
+"34","GO:BP","GO:0033048","negative regulation of mitotic sister chromatid segregation",27,48,7.11773135158892e-13
+"35","GO:BP","GO:0033046","negative regulation of sister chromatid segregation",27,48,7.11773135158892e-13
+"36","GO:BP","GO:2000816","negative regulation of mitotic sister chromatid separation",27,48,7.11773135158892e-13
+"37","GO:BP","GO:1905819","negative regulation of chromosome separation",27,49,1.35785048093975e-12
+"38","GO:BP","GO:0051985","negative regulation of chromosome segregation",27,49,1.35785048093975e-12
+"39","GO:BP","GO:0033047","regulation of mitotic sister chromatid segregation",28,53,1.72375185051166e-12
+"40","GO:BP","GO:0007051","spindle organization",57,187,1.72375185051166e-12
+"41","GO:BP","GO:1903046","meiotic cell cycle process",48,141,2.00837634320479e-12
+"42","GO:BP","GO:0000226","microtubule cytoskeleton organization",116,554,2.07761570715071e-12
+"43","GO:BP","GO:1905818","regulation of chromosome separation",40,103,2.07761570715071e-12
+"44","GO:BP","GO:0045841","negative regulation of mitotic metaphase/anaphase transition",26,47,3.29263102868209e-12
+"45","GO:BP","GO:1902100","negative regulation of metaphase/anaphase transition of cell cycle",26,48,6.35133038188668e-12
+"46","GO:BP","GO:0051304","chromosome separation",43,121,7.89341646306581e-12
+"47","GO:BP","GO:0071173","spindle assembly checkpoint signaling",25,45,8.29653358124667e-12
+"48","GO:BP","GO:0007094","mitotic spindle assembly checkpoint signaling",25,45,8.29653358124667e-12
+"49","GO:BP","GO:0071174","mitotic spindle checkpoint signaling",25,45,8.29653358124667e-12
+"50","GO:BP","GO:0045787","positive regulation of cell cycle",72,282,1.11881551674102e-11
+"51","GO:BP","GO:0031577","spindle checkpoint signaling",25,46,1.5789551380406e-11
+"52","GO:BP","GO:1902850","microtubule cytoskeleton organization involved in mitosis",49,154,1.64072720960246e-11
+"53","GO:BP","GO:0051321","meiotic cell cycle",56,193,2.27253912494972e-11
+"54","GO:BP","GO:0006259","DNA metabolic process",162,908,2.44852324335884e-11
+"55","GO:BP","GO:0051784","negative regulation of nuclear division",28,58,2.44852324335884e-11
+"56","GO:BP","GO:0045839","negative regulation of mitotic nuclear division",27,55,3.87299533301322e-11
+"57","GO:BP","GO:0033045","regulation of sister chromatid segregation",37,99,6.32568067599527e-11
+"58","GO:BP","GO:0010965","regulation of mitotic sister chromatid separation",35,92,1.45270769400251e-10
+"59","GO:BP","GO:0140013","meiotic nuclear division",42,126,1.46280676823514e-10
+"60","GO:BP","GO:0006974","cellular response to DNA damage stimulus",145,801,1.54407699354347e-10
+"61","GO:BP","GO:0031570","DNA integrity checkpoint signaling",42,127,1.91029439615829e-10
+"62","GO:BP","GO:0007052","mitotic spindle organization",42,129,3.38716359522567e-10
+"63","GO:BP","GO:0051306","mitotic sister chromatid separation",35,95,3.99399872091817e-10
+"64","GO:BP","GO:0007091","metaphase/anaphase transition of mitotic cell cycle",34,91,5.0608110587384e-10
+"65","GO:BP","GO:0044784","metaphase/anaphase transition of cell cycle",34,92,7.14411563429141e-10
+"66","GO:BP","GO:0007017","microtubule-based process",138,769,1.00223416214768e-09
+"67","GO:BP","GO:0065004","protein-DNA complex assembly",50,177,1.09614803281047e-09
+"68","GO:BP","GO:0030071","regulation of mitotic metaphase/anaphase transition",33,89,1.25961406548172e-09
+"69","GO:BP","GO:1902099","regulation of metaphase/anaphase transition of cell cycle",33,90,1.77170815127487e-09
+"70","GO:BP","GO:2001251","negative regulation of chromosome organization",33,93,4.89129332134789e-09
+"71","GO:BP","GO:0016043","cellular component organization",634,5135,5.47018854305033e-09
+"72","GO:BP","GO:0006996","organelle organization",403,3007,5.9253067739004e-09
+"73","GO:BP","GO:0051225","spindle assembly",38,119,6.09005027955195e-09
+"74","GO:BP","GO:0008608","attachment of spindle microtubules to kinetochore",21,42,8.5727841762508e-09
+"75","GO:BP","GO:0033554","cellular response to stress",250,1699,1.47812606116968e-08
+"76","GO:BP","GO:0044839","cell cycle G2/M phase transition",43,150,1.64965752613371e-08
+"77","GO:BP","GO:0051716","cellular response to stimulus",631,5146,2.3385387676686e-08
+"78","GO:BP","GO:0000086","G2/M transition of mitotic cell cycle",40,135,2.33863842361851e-08
+"79","GO:BP","GO:0044774","mitotic DNA integrity checkpoint signaling",30,84,2.76403606034362e-08
+"80","GO:BP","GO:0051310","metaphase plate congression",27,70,2.85165541430068e-08
+"81","GO:BP","GO:0032465","regulation of cytokinesis",29,80,3.52077102203909e-08
+"82","GO:BP","GO:0050896","response to stimulus",716,5975,3.52077102203909e-08
+"83","GO:BP","GO:0000910","cytokinesis",44,164,9.34721252235828e-08
+"84","GO:BP","GO:0050000","chromosome localization",29,83,9.34721252235828e-08
+"85","GO:BP","GO:0006270","DNA replication initiation",18,35,9.34721252235828e-08
+"86","GO:BP","GO:0071459","protein localization to chromosome, centromeric region",18,35,9.34721252235828e-08
+"87","GO:BP","GO:0006281","DNA repair",100,539,1.09656732274199e-07
+"88","GO:BP","GO:0051302","regulation of cell division",41,148,1.18471532905571e-07
+"89","GO:BP","GO:0071840","cellular component organization or biogenesis",644,5328,1.72317637327546e-07
+"90","GO:BP","GO:0035556","intracellular signal transduction",293,2117,2.08842982333886e-07
+"91","GO:BP","GO:0051303","establishment of chromosome localization",27,76,2.14403767768341e-07
+"92","GO:BP","GO:0090329","regulation of DNA-templated DNA replication",22,53,2.17076471081151e-07
+"93","GO:BP","GO:0033044","regulation of chromosome organization",55,238,2.98758827169764e-07
+"94","GO:BP","GO:0000077","DNA damage checkpoint signaling",35,119,3.20826539590477e-07
+"95","GO:BP","GO:0051383","kinetochore organization",14,23,3.37070375645952e-07
+"96","GO:BP","GO:0061982","meiosis I cell cycle process",28,83,3.94562927604182e-07
+"97","GO:BP","GO:0071824","protein-DNA complex subunit organization",50,209,4.34771866609518e-07
+"98","GO:BP","GO:0034508","centromere complex assembly",16,31,6.65036048917519e-07
+"99","GO:BP","GO:0042770","signal transduction in response to DNA damage",44,175,7.05055232654657e-07
+"100","GO:BP","GO:0044773","mitotic DNA damage checkpoint signaling",27,80,7.05055232654657e-07
+"101","GO:BP","GO:0034502","protein localization to chromosome",31,103,1.26806288622109e-06
+"102","GO:BP","GO:0010389","regulation of G2/M transition of mitotic cell cycle",29,93,1.50471939175767e-06
+"103","GO:BP","GO:0006275","regulation of DNA replication",34,122,2.19341002947756e-06
+"104","GO:BP","GO:0000076","DNA replication checkpoint signaling",11,16,2.41688128495946e-06
+"105","GO:BP","GO:0006950","response to stress",367,2838,3.54780768095338e-06
+"106","GO:BP","GO:0007080","mitotic metaphase plate congression",21,56,3.70335398532763e-06
+"107","GO:BP","GO:0001932","regulation of protein phosphorylation",134,842,3.90091664311201e-06
+"108","GO:BP","GO:0009314","response to radiation",70,359,3.92221599260627e-06
+"109","GO:BP","GO:0000281","mitotic cytokinesis",26,81,3.93352494672779e-06
+"110","GO:BP","GO:0007098","centrosome cycle",34,125,3.96959541395505e-06
+"111","GO:BP","GO:1902749","regulation of cell cycle G2/M phase transition",30,104,5.69503789893108e-06
+"112","GO:BP","GO:0051256","mitotic spindle midzone assembly",8,9,6.67312594648334e-06
+"113","GO:BP","GO:0010212","response to ionizing radiation",35,134,7.45794533175158e-06
+"114","GO:BP","GO:0044786","cell cycle DNA replication",17,40,7.63732474191615e-06
+"115","GO:BP","GO:0007127","meiosis I",25,79,9.1260575432055e-06
+"116","GO:BP","GO:0006468","protein phosphorylation",180,1231,9.1260575432055e-06
+"117","GO:BP","GO:0065009","regulation of molecular function",316,2407,9.17338269692763e-06
+"118","GO:BP","GO:0071478","cellular response to radiation",39,161,1.20741801103754e-05
+"119","GO:BP","GO:0051984","positive regulation of chromosome segregation",13,25,1.25755705855216e-05
+"120","GO:BP","GO:0051988","regulation of attachment of spindle microtubules to kinetochore",11,18,1.25755705855216e-05
+"121","GO:BP","GO:0051255","spindle midzone assembly",9,12,1.25755705855216e-05
+"122","GO:BP","GO:0048523","negative regulation of cellular process",461,3736,1.2605215389503e-05
+"123","GO:BP","GO:0033043","regulation of organelle organization",156,1040,1.33152312140196e-05
+"124","GO:BP","GO:0007010","cytoskeleton organization",180,1239,1.34274174671366e-05
+"125","GO:BP","GO:0032467","positive regulation of cytokinesis",15,33,1.34274174671366e-05
+"126","GO:BP","GO:0016310","phosphorylation",210,1493,1.38771556091511e-05
+"127","GO:BP","GO:0048518","positive regulation of biological process",564,4711,1.60393837816138e-05
+"128","GO:BP","GO:0042325","regulation of phosphorylation",146,962,1.6114041282904e-05
+"129","GO:BP","GO:0009411","response to UV",35,139,1.72533366966795e-05
+"130","GO:BP","GO:0010639","negative regulation of organelle organization",63,326,2.09649811396716e-05
+"131","GO:BP","GO:0032508","DNA duplex unwinding",26,88,2.09649811396716e-05
+"132","GO:BP","GO:0007154","cell communication",529,4390,2.12009747377088e-05
+"133","GO:BP","GO:0045132","meiotic chromosome segregation",22,67,2.17770142259445e-05
+"134","GO:BP","GO:0042771","intrinsic apoptotic signaling pathway in response to DNA damage by p53 class mediator",17,43,2.2827332567306e-05
+"135","GO:BP","GO:0032392","DNA geometric change",27,94,2.2827332567306e-05
+"136","GO:BP","GO:0140694","non-membrane-bounded organelle assembly",67,356,2.380047964268e-05
+"137","GO:BP","GO:0031023","microtubule organizing center organization",34,135,2.38484868276512e-05
+"138","GO:BP","GO:0000022","mitotic spindle elongation",8,10,2.46554606180799e-05
+"139","GO:BP","GO:0051338","regulation of transferase activity",117,740,3.15642420690488e-05
+"140","GO:BP","GO:0008283","cell population proliferation",201,1438,3.76117656800709e-05
+"141","GO:BP","GO:0023052","signaling",521,4341,4.57761168397461e-05
+"142","GO:BP","GO:0033260","nuclear DNA replication",15,36,4.72816134222505e-05
+"143","GO:BP","GO:0061640","cytoskeleton-dependent cytokinesis",28,104,5.65315958437935e-05
+"144","GO:BP","GO:0048522","positive regulation of cellular process",514,4283,5.7446006781682e-05
+"145","GO:BP","GO:0050790","regulation of catalytic activity",248,1856,6.12825375832611e-05
+"146","GO:BP","GO:0072332","intrinsic apoptotic signaling pathway by p53 class mediator",23,77,7.18597162411348e-05
+"147","GO:BP","GO:0000079","regulation of cyclin-dependent protein serine/threonine kinase activity",26,94,7.61883190865945e-05
+"148","GO:BP","GO:0051231","spindle elongation",8,11,7.6758685110609e-05
+"149","GO:BP","GO:1902969","mitotic DNA replication",9,14,7.68944758708054e-05
+"150","GO:BP","GO:0045859","regulation of protein kinase activity",89,534,7.84552511049438e-05
+"151","GO:BP","GO:0007143","female meiotic nuclear division",12,25,9.15345619522912e-05
+"152","GO:CC","GO:0000775","chromosome, centromeric region",74,229,1.81210059430078e-17
+"153","GO:CC","GO:0098687","chromosomal region",95,353,6.40807058902694e-17
+"154","GO:CC","GO:0000793","condensed chromosome",74,239,9.76498092529783e-17
+"155","GO:CC","GO:0005694","chromosome",242,1392,3.48071983351555e-16
+"156","GO:CC","GO:0005819","spindle",96,388,7.84799015154648e-15
+"157","GO:CC","GO:0000779","condensed chromosome, centromeric region",54,167,4.55730256627815e-13
+"158","GO:CC","GO:0000776","kinetochore",52,158,5.65126445514807e-13
+"159","GO:CC","GO:0015630","microtubule cytoskeleton",200,1179,3.92188094957117e-12
+"160","GO:CC","GO:0043232","intracellular non-membrane-bounded organelle",548,4181,7.19677864418545e-12
+"161","GO:CC","GO:0043228","non-membrane-bounded organelle",548,4181,7.19677864418545e-12
+"162","GO:CC","GO:0072686","mitotic spindle",51,166,1.45478646441218e-11
+"163","GO:CC","GO:0005856","cytoskeleton",284,1894,4.42876756063635e-11
+"164","GO:CC","GO:0000922","spindle pole",47,161,8.45719683979246e-10
+"165","GO:CC","GO:0044815","DNA packaging complex",37,111,1.7385949387534e-09
+"166","GO:CC","GO:0000228","nuclear chromosome",52,207,2.74966664051079e-08
+"167","GO:CC","GO:0099513","polymeric cytoskeletal fiber",101,539,3.52283368965928e-08
+"168","GO:CC","GO:0099080","supramolecular complex",171,1075,3.66886424031363e-08
+"169","GO:CC","GO:0005815","microtubule organizing center",126,743,1.66315782291963e-07
+"170","GO:CC","GO:0005874","microtubule",77,387,2.37766779512764e-07
+"171","GO:CC","GO:0099512","supramolecular fiber",126,749,2.47804373070724e-07
+"172","GO:CC","GO:0030496","midbody",47,192,3.34681368495181e-07
+"173","GO:CC","GO:0099081","supramolecular polymer",126,757,4.34479293300627e-07
+"174","GO:CC","GO:0005813","centrosome",102,577,5.18070131509332e-07
+"175","GO:CC","GO:0051233","spindle midzone",16,34,1.87388568084933e-06
+"176","GO:CC","GO:0071162","CMG complex",9,11,2.11636106498052e-06
+"177","GO:CC","GO:0032993","protein-DNA complex",40,164,3.96038068406216e-06
+"178","GO:CC","GO:0005876","spindle microtubule",25,79,4.94731469468587e-06
+"179","GO:CC","GO:0005657","replication fork",23,69,5.20592236217404e-06
+"180","GO:CC","GO:0031261","DNA replication preinitiation complex",9,12,6.63730274828929e-06
+"181","GO:CC","GO:0000794","condensed nuclear chromosome",19,53,1.63872767844497e-05
+"182","GO:CC","GO:0005875","microtubule associated complex",33,136,4.86616282959289e-05
+"183","GO:CC","GO:0000786","nucleosome",22,73,5.95486441523438e-05
+"184","GO:CC","GO:0005871","kinesin complex",16,43,6.76427160724583e-05
+"185","GO:MF","GO:0017116","single-stranded DNA helicase activity",15,23,2.26087859933767e-07
+"186","GO:MF","GO:0030527","structural constituent of chromatin",22,47,2.26087859933767e-07
+"187","GO:MF","GO:0003774","cytoskeletal motor activity",30,90,7.90517877319855e-07
+"188","GO:MF","GO:0003777","microtubule motor activity",23,56,7.90517877319855e-07
+"189","GO:MF","GO:0140657","ATP-dependent activity",83,451,1.59253051942193e-05
+"190","GO:MF","GO:0046982","protein heterodimerization activity",52,247,5.9324651987712e-05
+"191","GO:MF","GO:0005515","protein binding",1204,11164,5.9324651987712e-05
