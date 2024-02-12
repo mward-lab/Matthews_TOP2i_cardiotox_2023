@@ -1007,7 +1007,7 @@ hr24_results[["TRZresgenes243h"]]  %>%
         axis.text = element_text(size = 10, color = "black", angle = 0),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"))
 ```
-```
+
 
 
 More on TRZ expression [click here](https://mward-lab.github.io/Matthews_TOP2i_cardiotox_2023/after_comments.html)  
